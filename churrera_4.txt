@@ -6,3 +6,11 @@ Juegos:
 * Cheril the Goddess
 * Ramiro 1, 2, 3 (versión original; las "R" de 2016 se construyeron con MK2)
 * Johnny Limite (sin terminar)
+
+I cleaned it up and trimmed a bit:
+
+31453 (orig)
+31354 (remove locals from mainloop.h)
+31122 (remove sp_LookupKey)
+31113 (first small rehash & mainloop.h cleanup)
+30966 (sub. local "i" in mainloop.h for global)

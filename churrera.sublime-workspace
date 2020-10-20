@@ -1,0 +1,1019 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"lo",
+				"loading.bin\tabc"
+			],
+			[
+				"baddies",
+				"baddiesCountGenital"
+			],
+			[
+				"baddiesCou",
+				"baddiesCountGenital\tabc"
+			],
+			[
+				"textMap",
+				"textMapH\tabc"
+			],
+			[
+				"textT",
+				"textTilesetfile\tabc"
+			],
+			[
+				"TextBox",
+				"TextBox_GetText\tabc"
+			],
+			[
+				"text",
+				"textEnemsLoadFile\tabc"
+			],
+			[
+				"textt",
+				"textTilesetfile\tabc"
+			],
+			[
+				"button",
+				"buttonTilesetfile\tabc"
+			],
+			[
+				"Button_",
+				"Button_Event\tabc"
+			],
+			[
+				"buttonC",
+				"buttonCreateNew\tabc"
+			],
+			[
+				"Text",
+				"TextBox_GetText\tabc"
+			],
+			[
+				"textScr",
+				"textScrW\tabc"
+			],
+			[
+				"Textb",
+				"TextBox_New\tabc"
+			],
+			[
+				"TILANI",
+				"TILANIMS_TYPE_SELECT_FLAG\tabc"
+			],
+			[
+				"TILANIMS_SE",
+				"TILANIMS_TYPE_SELECT_FLAG\t(config.h)"
+			],
+			[
+				"TILANIMS_TP",
+				"TILANIMS_TYPE_ONE\tabc"
+			],
+			[
+				"TILAN",
+				"TILANIMS_PERIOD\t(config.h)"
+			],
+			[
+				"ENABLE",
+				"ENABLE_DROPS\tabc"
+			],
+			[
+				"_va_coll",
+				"_va_collision_done\tabc"
+			],
+			[
+				"MA",
+				"MAX_BULLETS\tabc"
+			],
+			[
+				"clausuas",
+				"clausulasUsed\tabc"
+			],
+			[
+				"CUSTOM",
+				"CUSTOM_HIT\t(player.h)"
+			],
+			[
+				"PLAY_SAM",
+				"PLAY_SAMPLE_ON_DEATH\t(config.h)"
+			],
+			[
+				"LEVEL_ENDING",
+				"LEVEL_ENDING_GOOD\t(script.spt)"
+			],
+			[
+				"LEVEL_END",
+				"LEVEL_ENDING_BAD\t(script.spt)"
+			],
+			[
+				"LEVEL_CAS",
+				"LEVEL_CASTLE_B\t(script.spt)"
+			],
+			[
+				"main",
+				"mainloop\tabc"
+			],
+			[
+				"PLA",
+				"PLAYER_DRUNK_EXPR\t(va_genital.h)"
+			],
+			[
+				"_player_mvoe",
+				"_player_move_af_holed_set\tabc"
+			],
+			[
+				"_player_move",
+				"_player_move_af_incframe_done\tabc"
+			],
+			[
+				"p_ct",
+				"p_state_ct\tabc"
+			],
+			[
+				"EST_",
+				"EST_HOLED\tabc"
+			],
+			[
+				"_enems",
+				"_enems_move_pregotten_set\tabc"
+			],
+			[
+				"bye",
+				"byteCoordinates\tabc"
+			],
+			[
+				"sp_nana",
+				"sp_nanako_0"
+			],
+			[
+				"nanako_may",
+				"nanako_may_move_horz"
+			],
+			[
+				"sp_mar",
+				"sp_marcador_vidas_1"
+			],
+			[
+				"cwit",
+				"cwithheader"
+			],
+			[
+				"He",
+				"fOutHeader"
+			],
+			[
+				"PLAT",
+				"PLATFORM_SG1000"
+			],
+			[
+				"metaSpri",
+				"metaSpriteIndex"
+			],
+			[
+				"metasprite",
+				"metaSpriteIndex"
+			],
+			[
+				"metaSpr",
+				"metaSpriteType"
+			],
+			[
+				"wMeta",
+				"wMetaPixels"
+			],
+			[
+				"PLATFORM_",
+				"PLATFORM_CPC"
+			],
+			[
+				"PLATFORM",
+				"PLATFORM_ZX"
+			],
+			[
+				"TMS",
+				"TMS9918"
+			],
+			[
+				"TMS9918Get",
+				"TMS9918GetBitmapFrom"
+			],
+			[
+				"TMS9918",
+				"TMS9918Colour"
+			],
+			[
+				"double_hots",
+				"double_hotspots_do\t(mainloop.h)"
+			],
+			[
+				"double",
+				"double_hotspots_paint"
+			],
+			[
+				"attr",
+				"attr_table_offset"
+			],
+			[
+				"togg",
+				"toggle_switch\t(extra_vars.h)"
+			],
+			[
+				"toggle",
+				"toggle_timer\t(extra_vars.h)"
+			],
+			[
+				"HOTSPOT_TYPE_TO",
+				"HOTSPOT_TYPE_TOGGLE_OFF\t(extra_vars.h)"
+			],
+			[
+				"wate",
+				"water_strip\t(on_entering_screen.h)"
+			],
+			[
+				"PPU_CTRL",
+				"PPU_CTRL_VAR1\t(neslib.s)"
+			],
+			[
+				"frame",
+				"frame_counter"
+			],
+			[
+				"stri",
+				"strictMscNumeric"
+			],
+			[
+				"e",
+				"e24to9"
+			],
+			[
+				"ImgIn",
+				"imgIn"
+			],
+			[
+				"calcua",
+				"calculateHugePal"
+			],
+			[
+				"ig",
+				"imgIn"
+			],
+			[
+				"SPING",
+				"SPRING_SPIKE_TILE"
+			],
+			[
+				"custom",
+				"custom_text2\t(custom_texts.h)"
+			],
+			[
+				"customScr",
+				"customScriptOrder"
+			],
+			[
+				"customScir",
+				"customScriptOrder"
+			],
+			[
+				"MAX_CHAC",
+				"MAX_CHAC_CHACKS_QUEUED"
+			],
+			[
+				"chac_chacs_Q",
+				"chac_chacs_queue_read"
+			],
+			[
+				"chac_chacs_queu",
+				"chac_chacs_queue_write\t(bss.h)"
+			],
+			[
+				"chac",
+				"chac_chacs_read"
+			],
+			[
+				"inte",
+				"interactives_index"
+			],
+			[
+				"interactives",
+				"interactives_yx"
+			],
+			[
+				"MAP_",
+				"MAP_FORMAT_PACKED"
+			],
+			[
+				"RLE",
+				"MAP_FORMAT_RLE16"
+			],
+			[
+				"CHAC_CHAC",
+				"CHAC_CHAC_FROM_MAP"
+			],
+			[
+				"max_",
+				"max_chac_chacs\t(tile_chac_chac.h)"
+			],
+			[
+				"ENABLE_CH",
+				"ENABLE_TILE_CHAC_CHAC\t(map_detectors.h)"
+			],
+			[
+				"chac_chac",
+				"chac_chacs_ct\t(tile_chac_chac.h)"
+			],
+			[
+				"chac_c",
+				"chac_chacs_state\t(tile_chac_chac.h)"
+			],
+			[
+				"addressboo",
+				"addressbook_export\t(export.inc)"
+			],
+			[
+				"bedework_rec",
+				"bedework_records_starting_with\t(simple_bedework_rest_client.php)"
+			],
+			[
+				"start",
+				"start_row"
+			],
+			[
+				"bedewo",
+				"bedework_client"
+			],
+			[
+				"allow",
+				"allow_report"
+			],
+			[
+				"bedew",
+				"bedework_client"
+			],
+			[
+				"bede",
+				"bedework_client"
+			],
+			[
+				"cookie",
+				"cookie_jar"
+			],
+			[
+				"curl",
+				"curl_setup"
+			],
+			[
+				"cooke",
+				"cookie_jar"
+			],
+			[
+				"coo",
+				"cookie_jar"
+			],
+			[
+				"current",
+				"current_rule"
+			],
+			[
+				"getg",
+				"get_group\t(list.inc)"
+			],
+			[
+				"rcmail",
+				"rcmail::write_log"
+			],
+			[
+				"grou",
+				"group_id"
+			],
+			[
+				"vcard_",
+				"vcard_filename"
+			],
+			[
+				"toa",
+				"total_entries"
+			],
+			[
+				"write",
+				"write_log"
+			],
+			[
+				"webdav_abook",
+				"webdav_abook_user_url"
+			],
+			[
+				"u",
+				"uid\t(rcube_webdav_addressbook.php)"
+			],
+			[
+				"webdav_aboo",
+				"webdav_abook_dir"
+			],
+			[
+				"sande",
+				"rcube_sandetel"
+			],
+			[
+				"uploadf",
+				"uploadform\t(app.js)"
+			],
+			[
+				"back",
+				"background-position"
+			],
+			[
+				"upload_pr",
+				"upload_progress_start\t(app.js)"
+			],
+			[
+				"upload_progres",
+				"upload_progress_time\t(app.js)"
+			],
+			[
+				"async",
+				"async_upload_form_consigna"
+			],
+			[
+				"rcube",
+				"rcube_sandetel"
+			],
+			[
+				"wri",
+				"write_log"
+			],
+			[
+				"prefsf",
+				"prefs_file"
+			],
+			[
+				"rcu",
+				"rcube_sandetel"
+			],
+			[
+				"sqm",
+				"sqm_bookmarks_file"
+			],
+			[
+				"bookmar",
+				"bookmark_a"
+			],
+			[
+				"sq",
+				"sqm_bookmarks_file"
+			],
+			[
+				"home",
+				"homeDirectory"
+			],
+			[
+				"pass",
+				"pass_caducado"
+			],
+			[
+				"permiso",
+				"permiso_organismo"
+			],
+			[
+				"labeled",
+				"labeledUri"
+			],
+			[
+				"nusoap",
+				"nusoap_client"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"num",
+				"numGroups"
+			],
+			[
+				"Hash",
+				"HashMap"
+			],
+			[
+				"dir",
+				"dirEscritura"
+			],
+			[
+				"modificaAtribu",
+				"modificaAtributoGUIA"
+			],
+			[
+				"modificaAtri",
+				"modificaAtributoGUIA"
+			],
+			[
+				"ExcepcionConex",
+				"ExcepcionConexionYaAbierta"
+			],
+			[
+				"codi",
+				"codides"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "@echo off\nrem Cambia \"%1\" por el nombre de tu güego.\necho Compilando script\ncd ..\\script\nmsc %1.spt msc.h 25 > nul\ncopy *.h ..\\dev > nul\ncd ..\\dev\necho Convirtiendo mapa\n..\\utils\\mapcnv.exe ..\\map\\mapa.map 5 5 15 10 15 packed > nul\ncd ..\\dev\necho Convirtiendo enemigos/hotspots\n..\\utils\\ene2h.exe ..\\enems\\enems.ene enems.h\necho Importando GFX\n..\\utils\\ts2bin.exe ..\\gfx\\font.png ..\\gfx\\work.png tileset.bin >nul\n..\\utils\\png2scr.exe ..\\gfx\\title.png ..\\gfx\\title.scr > nul\n..\\utils\\png2scr.exe ..\\gfx\\marco.png ..\\gfx\\marco.scr > nul\n..\\utils\\png2scr.exe ..\\gfx\\ending.png ..\\gfx\\ending.scr > nul\n..\\utils\\png2scr.exe ..\\gfx\\loading.png ..\\gfx\\loading.bin > nul\n..\\utils\\apack.exe ..\\gfx\\title.scr title.bin > nul\n..\\utils\\apack.exe ..\\gfx\\marco.scr marco.bin > nul\n..\\utils\\apack.exe ..\\gfx\\ending.scr ending.bin > nul\n..\\utils\\sprcnv.exe ..\\gfx\\sprites.png sprites.h > nul\necho Compilando guego\nzcc +zx -vn %1.c -o %1.bin -lndos -lsplib2 -zorg=24200\necho Construyendo cinta\nrem cambia LOADER por el nombre que quieres que salga en Program:\n..\\utils\\bas2tap -a10 -sLOADER loader.bas loader.tap\n..\\utils\\bin2tap -o screen.tap -a 16384 loading.bin\n..\\utils\\bin2tap -o main.tap -a 24200 %1.bin\ncopy /b loader.tap + screen.tap + main.tap %1.tap\necho Limpiando\ndel loader.tap\ndel screen.tap\ndel main.tap\ndel %1.bin\necho ¡Hecho!\n",
+			"file": "dev/make.bat",
+			"file_size": 1361,
+			"file_write_time": 132228864730434496,
+			"settings":
+			{
+				"buffer_size": 1325,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "// MTE MK1 (la Churrera) v3.99.99 (final)\n// Copyleft 2010-2017 by the Mojon Twins\n\n// Pantallas.h\n// Carga las pantallas fijas\n// Copyleft 2010 The Mojon Twins\n\n#ifndef MODE_128K\nextern unsigned char s_title [];\nextern unsigned char s_marco [];\nextern unsigned char s_ending [];\n\n#asm\n\t._s_title\n\t\tBINARY \"title.bin\"\n\t._s_marco\n#endasm\n#ifndef DIRECT_TO_PLAY\n#asm\n\t\tBINARY \"marco.bin\"\n#endasm\n#endif\n#asm\n\t._s_ending\n\t\tBINARY \"ending.bin\"\n#endasm\n#endif\n\nvoid blackout (void) {\n\t#asm\n\t\tld hl, 22528\n\t\tld (hl), 0\n\t\tpush hl\n\t\tpop de\n\t\tinc de\n\t\tld bc, 767\n\t\tldir\n\t#endasm\n}\n",
+			"file": "dev/pantallas.h",
+			"file_size": 611,
+			"file_write_time": 132228862286104689,
+			"settings":
+			{
+				"buffer_size": 572,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "// MTE MK1 (la Churrera) v3.99.99 (final)\n// Copyleft 2010-2017 by the Mojon Twins\n\n// mk1.c\n// Esqueleto de juegos de la churrera\n// Copyleft 2010-2014 The Mojon Twins\n\n#include <spritepack.h>\n\n// NUMBLOCKS es el número de bloques necesario para mover los sprites\n// Configurar bien este número es MUY IMPORTANTE\n\n#define NUMBLOCKS 40\n\n// La regla es esta: cada sprite de 16x16 ocupa 10 bloques.\n// Cada proyectil ocupa 5 bloques.\n\n// Si, por ejemplo, tu juego no tiene disparos, sólo necesitas bloques\n// para el sprite principal y tres enemigos, o sea, 4*10 = 40 bloques.\n\n// Si, por ejemplo, tu juego además lleva 3 proyectiles, necesitarás\n// 4*10 + 3*5 = 55 bloques.\n\n// Versión para 48K\n#pragma output STACKPTR=61952\n#define FREEPOOL 61440\n#define AD_FREE FREEPOOL - NUMBLOCKS * 15\n\n// Versión para 128K\n//#pragma output STACKPTR=24199\n//#define FREEPOOL 61697\n//#define AD_FREE 61440 - NUMBLOCKS * 15\n\n// Optimal place to compile if using COMPRESSED_LEVELS:\n// 23296 + MAP_W * MAP_H * (108) + MAX_CERROJOS * 4 + 49\n\n#include \"config.h\"\n\n// Cosas del juego:\n\n#include \"definitions.h\"\n\n#ifdef ACTIVATE_SCRIPTING\n\t#include \"msc-config.h\"\n#endif\n\n#ifdef MODE_128K\n\t#include \"128k.h\"\n#endif\n\n#include \"aplib.h\"\n#include \"pantallas.h\"\n\n#ifdef MODE_128K\n\t#include \"librarian.h\"\n\t\n\t#ifdef COMPRESSED_LEVELS\n\t\t#include \"levels128.h\"\n\t#else\n\t\t#include \"mapa.h\"\n\t\t#include \"tileset.h\"\n\t\t#include \"sprites.h\"\n\t\t#include \"extrasprites.h\"\n\t\t#include \"enems.h\"\n\t#endif\n\n#else\n\n\t#ifdef COMPRESSED_LEVELS\n\t\t#include \"levels.h\"\n\t#else\n\t\t#include \"mapa.h\"\n\t#endif\n\n\t#include \"tileset.h\"\n\t#include \"sprites.h\"\n\t#include \"extrasprites.h\"\n\t\n\t#ifndef COMPRESSED_LEVELS\n\t\t#include \"enems.h\"\n\t#endif\n\n#endif\n\n#ifdef MODE_128K\n\t#include \"wyzplayer.h\"\n#else\n\t#include \"beeper.h\"\n#endif\n\n#include \"printer.h\"\n\n#ifdef ACTIVATE_SCRIPTING\n\t#ifdef ENABLE_EXTERN_CODE\n\t\t#include \"extern.h\"\n\t#endif\n\t#include \"msc.h\"\n#endif\n\n#include \"engine.h\"\n\n#ifdef ENABLE_CHECKPOINTS\n\t#include \"savegame.h\"\n#endif\n\n#include \"mainloop.h\"\n\n#ifndef MODE_128K\n// From beepola. Phaser engine by Shiru.\n#include \"music.h\"\n#endif\n",
+			"file": "dev/mk1.c",
+			"file_size": 2196,
+			"file_write_time": 132228861190492023,
+			"settings":
+			{
+				"buffer_size": 2085,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "// MTE MK1 (la Churrera) v3.99.99 (final)\n// Copyleft 2010-2017 by the Mojon Twins\n\nextern unsigned char tileset [0];\n#asm\n\t._tileset\n\t\tBINARY \"tileset.bin\"\n#endasm\n",
+			"file": "dev/tileset.h",
+			"file_size": 173,
+			"file_write_time": 132228861413604785,
+			"settings":
+			{
+				"buffer_size": 165,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 132.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"beauti",
+				"Beautify::Beautify File"
+			],
+			[
+				"mini",
+				"Minify::Default File Settings"
+			],
+			[
+				"format",
+				"Format: Javascript"
+			],
+			[
+				"boxy",
+				"Boxy Theme: Preferences"
+			],
+			[
+				"markdow",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"remove ",
+				"Package Control: Remove Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"ter",
+				"Terminal: Open"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 382.0
+	},
+	"console":
+	{
+		"height": 118.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/git/mk1"
+	],
+	"file_history":
+	[
+		"/C/git/mk1/utils/sprcnv.bas",
+		"/C/Users/na_th_an/Desktop/Work/Cadàveriön/dev/tileset.h",
+		"/C/Users/na_th_an/Desktop/Work/Cadàveriön/enems/enems.h",
+		"/C/git/MK2/src/utils/enems.h",
+		"/C/git/MK2/src/utils/src/ponedor.bas",
+		"/C/git/MK2/src/utils/src/enems.h",
+		"/C/git/MK2/src/utils/src/gui.bas",
+		"/C/git/MK2/src/utils/src/absolute_to_relative.bas",
+		"/C/git/MK2/src/utils/src/gui.bi",
+		"/C/git/MK2/examples/gimmick/dev/mainloop/mainloop.h",
+		"/C/git/MK2/examples/gimmick/dev/my/before_flick.h",
+		"/C/git/MK2/examples/gimmick/dev/my/config.h",
+		"/C/git/MK2/examples/gimmick/dev/definitions.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/tilanim.h",
+		"/C/git/MK2/docs/tilanims_v3.md",
+		"/C/git/MK2/docs/code_injection.md",
+		"/C/git/MK2/src/dev/my/sfx_config.h",
+		"/C/git/MK2/src/dev/mk2.c",
+		"/C/git/MK2/src/dev/definitions.h",
+		"/C/git/MK2/src/dev/my/config.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/my/config.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/definitions.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/mk2.c",
+		"/C/git/MK2/examples/ninjajar_v2/dev/my/sfx_config.h",
+		"/C/git/MK2/examples/gimmick/dev/my/extern.h",
+		"/C/git/MK2/src/dev/engine/enems.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/enemmods/kill_enemy.h",
+		"/C/git/MK2/examples/gimmick/dev/config.h",
+		"/C/git/MK2/examples/gimmick/script/script.spt",
+		"/C/git/MK2/examples/gimmick/dev/sound/wyzplayer.h",
+		"/C/git/MK2/examples/gimmick/dev/mk2.c",
+		"/C/git/MK2/examples/gimmick/dev/sound/nosoundplayer.h",
+		"/C/git/MK2/examples/gimmick/dev/sound/arkosplayer.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/isrc.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/enemmods/move_linear.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/enems.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/enemmods/bullets.h",
+		"/C/git/MK2/examples/gimmick/dev/addons/arrows/sprites.h",
+		"/C/git/MK2/examples/gimmick/dev/addons/drops/init.h",
+		"/C/git/MK2/examples/gimmick/dev/addons/drops/move.h",
+		"/C/git/MK2/examples/gimmick/dev/addons/arrows/move.h",
+		"/C/git/MK2/src/dev/engine/collision.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/player.h",
+		"/C/git/MK2/src/utils/src/textstuffer2.bas",
+		"/C/git/MK2/examples/gimmick/dev/compile.bat",
+		"/C/git/MK2/src/utils/src/textstuffer.bas",
+		"/C/git/MK2/examples/gimmick/dev/engine/playermods/va_collision_asm.h",
+		"/C/git/MK2/examples/gimmick/dev/build_levels.bat",
+		"/C/Users/na_th_an/Downloads/Telegram Desktop/cosas raras.txt",
+		"/C/git/MK2/examples/gimmick/script/level6.spt",
+		"/C/git/MK2/examples/ninjajar_v2/script/script.spt",
+		"/C/git/MK2/examples/gimmick/dev/engine/drawscr.h",
+		"/C/git/MK2/src/utils/src/msc3_mk2_1.bas",
+		"/C/Users/na_th_an/Downloads/Telegram Desktop/config.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/clevels.h",
+		"/C/git/MK2/examples/gimmick/dev/my/new_level.h",
+		"/C/git/MK2/examples/gimmick/dev/my/title_screen.h",
+		"/C/git/MK2/examples/gimmick/dev/my/msc.h",
+		"/C/git/MK2/examples/gimmick/dev/mainloop/hide_sprites.h",
+		"/C/git/MK2/renew.md",
+		"/C/git/MK2/examples/hobbit_v2/dev/mainloop/hide_sprites.h",
+		"/C/git/MK2/examples/gimmick/dev/engine/scripting.h",
+		"/C/git/MK2/examples/gimmick/fixme.md",
+		"/C/git/MK2/examples/gimmick/dev/engine/printer.h",
+		"/C/git/MK2/examples/ninjajar_v2/fixme.md",
+		"/C/git/MK2/examples/ninjajar_v2/dev/mainloop/mainloop.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/my/msc.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/playermods/va.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/playermods/possee.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/enemmods/move_fanty_asm.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/enemmods/move_fanty.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/config.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/enems.h",
+		"/C/git/MK2/examples/ninjajar_v2/README.md",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/enemmods/move_clouds.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/enemmods/helper_funcs.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/enems.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/config.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/player.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/mainloop/level_init.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/mainloop/update_sprites.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/mainloop/die_and_respawn.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/mainloop/timer.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/phantomas.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/bombs-s.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/engine.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/playermove.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/lava.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/hitter.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/bullets.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/breakable-s.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/breakable.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/my/extern.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/work/ninjajar!.map",
+		"/C/git/MK2/examples/ninjajar_v2/dev/sound/wyzplayer.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine/blocks.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/engine.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/mainloop.h",
+		"/C/Users/na_th_an/Desktop/Work/Ninjajar/dev/definitions.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/printer.h",
+		"/C/git/MK2/examples/journey/dev/engine/printer.h",
+		"/C/git/MK2/examples/ninjajar_v2/bin/RAM6.bin",
+		"/C/git/MK2/examples/ninjajar_v2/dev/work/ninjajar!.asm",
+		"/C/git/MK2/examples/ninjajar_v2/dev/compile.bat",
+		"/C/git/MK2/examples/ninjajar_v2/dev/my/msc-config.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/assets/levels128.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/playermods/ha_conveyors.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/assets/sprites-empty.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/engine/playermods/va_swimming.h",
+		"/C/git/MK2/examples/ninjajar_v2/dev/loader/loaderzx.asm-orig",
+		"/C/git/MK2/examples/hobbit_v2/README.md",
+		"/C/git/MK2/examples/hobbit_v2/script/script.spt",
+		"/C/git/MK2/examples/hobbit_v2/dev/config.h",
+		"/C/git/MK2/.editorconfig",
+		"/C/git/MK2/examples/hobbit_v2/dev/engine/printer.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/my/msc.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/mainloop/level_init.h",
+		"/C/git/MK2/examples/hobbit_v2/script/msc.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/mainloop/mainloop.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/compile.bat",
+		"/C/git/MK2/examples/hobbit_v2/dev/hobbit_v2.c",
+		"/C/git/MK2/examples/hobbit_v2/dev/definitions.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/mainloop/title_screen.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/engine/isrc.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/engine/player.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/work/mk2.asm",
+		"/C/git/MK2/examples/hobbit_v2/dev/system/aplib.h",
+		"/C/git/MK2/examples/hobbit_v2/dev/sound/music.h"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 135.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "dev/make.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1325,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1324,
+								1324
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "dev/pantallas.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 572,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "dev/mk1.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2085,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								90,
+								90
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C Improved/C Improved.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "dev/tileset.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 165,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								164,
+								164
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 43.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "churrera.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"D:\\Proyectos\\remote\\desccobuz05.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 186.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

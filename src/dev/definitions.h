@@ -4,7 +4,13 @@
 // definitions.h
 // Contains type definitions and global variables
 
-struct sp_UDK keys;
+struct sp_UDK keys = {
+	0x047f, // .fire
+	0x01df, // .right
+	0x02df, // .left
+	0x01fd, // .down
+	0x01fb	// .up
+};
 void *joyfunc;				// Pointer to the control function selected
 
 void *my_malloc(uint bytes) {

@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"STAC",
+				"STACK_ADDR\tabc"
+			],
+			[
+				"NUM",
+				"NUMBLOCKS\t(mainloop.h)"
+			],
+			[
 				"rcube",
 				"rcube_sandetel\t(avelsieve.php)"
 			],
@@ -506,26 +514,11 @@
 			[
 				"SMS_setTile",
 				"SMS_setTileatXY"
-			],
-			[
-				"VDPS",
-				"VDPStatusPort"
-			],
-			[
-				"overfl",
-				"VDPSpriteOverflow"
 			]
 		]
 	},
 	"buffers":
 	[
-		{
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -603,10 +596,19 @@
 	},
 	"expanded_folders":
 	[
-		"/D/git/MK1"
+		"/C/git/mk1",
+		"/C/git/mk1/src",
+		"/C/git/mk1/src/dev"
 	],
 	"file_history":
 	[
+		"/C/git/mk1/src/dev/engine.h",
+		"/C/git/newspectrum/MK1/fred/dev/my/config.h",
+		"/C/git/mk1/churrera_4.txt",
+		"/C/git/mk1/src/dev/definitions.h",
+		"/C/git/mk1/src/dev/churromain.c",
+		"/C/git/mk1/src/dev/mainloop.h",
+		"/C/git/mk1/src/dev/zcc_opt.def",
 		"/D/git/MK1/README.md",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/consigna_attachments/consigna_attachments.js",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/masinfo/masinfo.php",
@@ -727,24 +729,18 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/config/translation.php",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/config/acl.php",
 		"/C/Users/jcastano/AppData/Local/Temp/correo.juntadeandalucia.es.conf-en-preccobuz12.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/Configuration.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/config/authsources.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/config/authmemcookie.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/log/simplesamlphp.log",
-		"/C/Users/jcastano/AppData/Local/Temp/7zOCEF646AF/sandetel.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/skins/larry_sandetel/templates/login.html",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/index.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/lib/Roundcube/rcube.php"
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/Configuration.php"
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
 		"height": 128.0,
 		"where_history":
 		[
+			"C:\\git\\mk1\\src\\dev",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program\\js",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es",
@@ -871,8 +867,7 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook\\lib",
 			"D:\\Proyectos\\remote\\desccobuz05",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es"
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins"
 		]
 	},
 	"find_state":
@@ -880,6 +875,31 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"_old",
+			"gpit",
+			"i",
+			"gpit",
+			"i",
+			"gpit",
+			"lookup",
+			"main_(i|j)",
+			"main_y",
+			"main_x",
+			"random_respawn",
+			"(x|y)",
+			"i",
+			"j",
+			"(i|j|x|y)",
+			"key_",
+			"reentered",
+			"_old",
+			"maincounter",
+			"playing",
+			"allpurposepuntero",
+			"(x|y)",
+			"i",
+			"j",
+			"playing",
 			"adm",
 			"roundcube_browser",
 			"msie",
@@ -982,32 +1002,7 @@
 			"ldap",
 			"ldap_public",
 			"init_ldap",
-			"lookup_user_name",
-			"new_user_identity_onlogin",
-			"insert_identity",
-			"identit",
-			"identi",
-			"identities",
-			"google.com",
-			"google",
-			"load_config",
-			"config",
-			"rcmail_config",
-			"server",
-			"function request_log",
-			"request_log",
-			"CheckConnectionRequest",
-			"caldav",
-			"init",
-			"class rcube_plugin_api",
-			"plugins",
-			"class rcube",
-			"plugins",
-			"wl",
-			"google.com",
-			"google",
-			"ipinfo",
-			"ipinfo.io"
+			"lookup_user_name"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1015,6 +1010,19 @@
 		"regex": false,
 		"replace_history":
 		[
+			"enit",
+			"gpit",
+			"pad0",
+			"gpit",
+			"rd\\1",
+			"rdy",
+			"rdx",
+			"main_\\1",
+			"main_i",
+			"main_j",
+			"main_\\1",
+			"main_i",
+			"main_j",
 			"    /var/www/html/correo.juntadeandalucia.es/",
 			"masinfo",
 			"",
@@ -1129,20 +1137,7 @@
 			"bookmarks",
 			"BOOKMARK",
 			"bookmark",
-			"BOOKMARK",
-			"bookmark",
-			"bookmarkslist",
-			"bookmarks",
-			"bookmarkslist",
-			"bookmarks",
-			"bookmarks_list",
-			"bookmark",
-			"bookmarks_list",
-			"bookmark",
-			"// Sandetel ---->8----",
-			"// Sandetel",
-			"bookmarks",
-			"bookmark"
+			"BOOKMARK"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1153,43 +1148,14 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -1238,7 +1204,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 74.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1280,7 +1246,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 287.0,
+	"side_bar_width": 131.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
