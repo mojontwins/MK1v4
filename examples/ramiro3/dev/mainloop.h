@@ -460,7 +460,7 @@ void main (void) {
 				player.is_dead = 0;
 				if (player.life > 0) {
 					#ifdef RESPAWN_REENTER
-						explode_player (rdx, rdy);
+						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
 							draw_scr ();
 							init_player_values ();

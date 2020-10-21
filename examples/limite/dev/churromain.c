@@ -41,9 +41,9 @@
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc.h"
 #endif
+#include "msc_extern.h"
 #include "engine.h"
 #include "boxes.h"
-#include "msc_extern.h"
 #include "mainloop.h"
 
 // From beepola. Phaser engine by Shiru. We stick this at the end 'cause

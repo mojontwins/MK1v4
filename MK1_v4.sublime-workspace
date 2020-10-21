@@ -520,20 +520,19 @@
 	"buffers":
 	[
 		{
-			"file": "examples/limite/dev/config.h",
+			"file": "examples/ramiro3/utils/msc.bas",
 			"settings":
 			{
-				"buffer_size": 11971,
+				"buffer_size": 36909,
 				"encoding": "Western (Windows 1252)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "examples/limite/dev/comp.bat",
+			"contents": "",
 			"settings":
 			{
-				"buffer_size": 1165,
-				"encoding": "UTF-8",
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		}
@@ -616,21 +615,37 @@
 	[
 		"/D/git/MK1",
 		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/limite",
-		"/D/git/MK1/examples/limite/dev",
-		"/D/git/MK1/examples/limite/script",
-		"/D/git/MK1/examples/limite/utils",
+		"/D/git/MK1/examples/ramiro3",
+		"/D/git/MK1/examples/ramiro3/dev",
+		"/D/git/MK1/examples/ramiro3/script",
+		"/D/git/MK1/examples/ramiro3/utils",
 		"/D/git/MK1/src",
-		"/D/git/MK1/src/dev",
 		"/D/git/MK1/src/utils",
 		"/D/git/MK1/src/utils/src"
 	],
 	"file_history":
 	[
-		"/D/git/MK1/src/dev/msc_extern.h",
+		"/D/git/MK1/examples/ramiro3/utils/msc.bas",
+		"/D/git/MK1/examples/ramiro3/dev/msc.h",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/msc-config.h",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/msc.h",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dist/Churrera4.5/msc/msc.bas",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dev_Utils/msc/msc.bas",
+		"/D/git/MK1/examples/ramiro3/dev/churromain.c",
+		"/D/git/MK1/examples/ramiro3/dev/msc_extern.h",
+		"/D/git/MK1/examples/ramiro3/README.md",
+		"/D/git/MK1/examples/ramiro3/dev/comp.bat",
+		"/D/git/MK1/examples/ramiro3/dev/mainloop.h",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/engine.h",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/config.h",
+		"/D/git/MK1/examples/ramiro3/dev/config.h",
+		"/D/git/MK1/examples/limite/dev/mainloop.h",
+		"/D/git/MK1/examples/limite/dev/engine.h",
+		"/D/git/MK1/examples/limite/dev/boxes.h",
 		"/D/git/MK1/examples/limite/dev/comp.bat",
 		"/D/git/MK1/src/dev/comp.bat",
-		"/D/git/MK1/examples/limite/dev/engine.h",
+		"/D/git/MK1/examples/limite/dev/config.h",
+		"/D/git/MK1/src/dev/msc_extern.h",
 		"/D/git/MK1/examples/limite/README.md",
 		"/D/git/MK1/examples/limite/dev/msc_extern.h",
 		"/D/git/MK1/examples/limite/dev/msc-config.h",
@@ -737,24 +752,7 @@
 		"/C/java/applications/webmovil/src/p3sAgen.properties",
 		"/C/Users/jcastano/Desktop/errors",
 		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/bedework",
-		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/debug",
-		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/decrypt.log",
-		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/errors",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/lib/Roundcube/imap_utf7_local.php",
-		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/password",
-		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/bookmarks",
-		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/sendmail",
-		"/C/Users/jcastano/AppData/Local/Temp/errors-1.txt",
-		"/D/Proyectos/2020/20200421a - Restaurar Avelsieve Webmail V3/instrucciones.txt",
-		"/C/Users/jcastano/AppData/Local/Temp/imap_utf7_local.php.html",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/imapapi/config.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/ldapapi/config.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/acl/acl.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/agata_addressbook/config/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/automatic_addressbook/config/config.inc.php.dist",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/calendar/config/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/update.md",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/vacation/config.ini"
+		"/D/Proyectos/copias producción/logs_wmccor_pre_20200424/debug"
 	],
 	"find":
 	{
@@ -765,6 +763,8 @@
 		"height": 128.0,
 		"where_history":
 		[
+			"D:\\git\\MK1\\examples\\ramiro3\\dev",
+			"D:\\git\\MK1\\examples\\limite\\dev",
 			"D:\\git\\MK1\\src\\dev",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program\\js",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program",
@@ -890,9 +890,7 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\agata_addressbook",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook\\lib",
-			"D:\\Proyectos\\remote\\desccobuz05",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins"
+			"D:\\Proyectos\\remote\\desccobuz05"
 		]
 	},
 	"find_state":
@@ -900,6 +898,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"flags",
+			"(res|i|x|y|c|n|m|terminado|continuar)",
+			"(i|x|y|c|n|m|terminado|continuar)",
+			"items",
+			"flags [",
+			"draw_objs",
+			"msc_extern",
+			"gpx",
+			"explode_player",
 			"aplib",
 			"scr_fin",
 			"pant_final",
@@ -1018,23 +1025,15 @@
 			"config",
 			"rcmail_config",
 			"server",
-			"function request_log",
-			"request_log",
-			"CheckConnectionRequest",
-			"caldav",
-			"init",
-			"class rcube_plugin_api",
-			"plugins",
-			"class rcube",
-			"plugins",
-			"wl"
+			"function request_log"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			"sc_\\1",
 			"apack",
 			"    /var/www/html/correo.juntadeandalucia.es/",
 			"masinfo",
@@ -1161,8 +1160,7 @@
 			"bookmarks_list",
 			"bookmark",
 			"// Sandetel ---->8----",
-			"// Sandetel",
-			"bookmarks"
+			"// Sandetel"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1178,19 +1176,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "examples/limite/dev/config.h",
+					"file": "examples/ramiro3/utils/msc.bas",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11971,
+						"buffer_size": 36909,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								443,
-								443
+								36909,
+								36909
 							]
 						],
 						"settings":
@@ -1198,39 +1196,43 @@
 							"incomplete_sync": null,
 							"remote_loading": false,
 							"synced": false,
-							"syntax": "Packages/C++/C++.sublime-syntax",
+							"syntax": "Packages/Syntax QBasic/QBasic.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 12331.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
 				{
 					"buffer": 1,
-					"file": "examples/limite/dev/comp.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1165,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								772,
-								772
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+							"syntax": "Packages/Syntax QBasic/QBasic.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1240,16 +1242,11 @@
 					"type": "text"
 				}
 			]
-		},
-		{
-			"sheets":
-			[
-			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 37.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -1305,7 +1302,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 70.0
+		"height": 88.0
 	},
 	"save_all_on_build": true,
 	"select_file":

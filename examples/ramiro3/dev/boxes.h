@@ -91,7 +91,7 @@
 							#ifdef BOXES_KILL_PLAYER
 								// Check for player killed!
 								if (gpx >= boxx - 15 && gpx <= boxx + 15 && gpy >= boyy - 15 && gpy <= boyy + 15) {
-									explode_player (gpx, gpy);						
+									explode_player ();	
 									player.life --;
 									player.is_dead = 1;
 								}

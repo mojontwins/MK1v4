@@ -316,9 +316,9 @@ void game_over (void) {
 #endif
 
 #if defined RESPAWN_REENTER || defined BOXES_KILL_PLAYER
-	void explode_player (unsigned char x, unsigned char y) {
+	void explode_player (void) {
 		player.next_frame = sprite_17_a;
-		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (y >> 3), VIEWPORT_X + (x >> 3), x & 7, y & 7);
+		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
 		player.current_frame = player.next_frame;
 		sp_UpdateNow ();
 		peta_el_beeper (10);	
