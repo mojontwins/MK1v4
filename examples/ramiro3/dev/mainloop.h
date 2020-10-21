@@ -60,9 +60,7 @@ void main (void) {
 
 	while (1) {
 		// Here the title screen
-		sp_UpdateNow();
-		unpack ((unsigned int) (s_title));
-		select_joyfunc ();
+		title_screen ();
 		
 		#ifndef DIRECT_TO_PLAY
 			// Clear screen and show game frame

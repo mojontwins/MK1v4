@@ -182,6 +182,8 @@
 #define LINE_OF_TEXT_SUBSTR		2
 #define LINE_OF_TEXT_ATTR 		7		
 
+#define GAME_OVER_ATTR			15
+
 // Graphic FX, uncomment which applies...
 
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes

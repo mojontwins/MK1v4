@@ -7,7 +7,7 @@
 #include <spritepack.h>
 
 #define STACK_ADDR		61952
-#define STACK_SIZE 		128
+#define STACK_SIZE 		96
 
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
@@ -28,7 +28,6 @@
 	#include "msc-config.h"
 #endif
 #include "aplib.h"
-#include "pantallas.h"
 #include "mapa.h"
 #include "tileset.h"
 #include "sprites.h"
@@ -38,6 +37,7 @@
 #include "enems.h"
 #include "beeper.h"
 #include "printer.h"
+#include "pantallas.h"
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc.h"
 #endif

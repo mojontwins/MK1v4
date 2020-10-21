@@ -11,18 +11,71 @@ void draw_rectangle (unsigned char x1, unsigned char y1, unsigned char x2, unsig
 }
 
 void attr (char x, char y) {
-	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
-	#ifdef PLAYER_AUTO_CHANGE_SCREEN
-		if (x < 0 || y < 0 || x > 14 || y > 9) return 0;
-	#else
-		if (x < 0 || y < 0) return 8;
-	#endif
-	return map_attr [x + (y << 4) - y];	
+	#asm
+			ld  hl, 4
+			add hl, sp
+			ld  a, (hl) 	// x
+			cp  15
+			jr  c, _attr_1
+			ld  hl, 0
+			ret
+
+		._attr_1
+			ld  c, a
+			dec hl
+			dec hl
+			ld  a, (hl) 	// y
+			cp  10
+			jr  c, _attr_2
+			ld  hl, 0
+			ret
+
+		._attr_2
+			ld  b, a
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			add c
+
+			ld  d, 0
+			ld  e, a
+			ld  hl, _map_attr
+			add hl, de
+			ld  l, (hl)
+
+		._attr_end
+			ld  h, 0
+	#endasm
 }
 
 void qtile (unsigned char x, unsigned char y) {
-	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
-	return map_buff [x + (y << 4) - y];	
+	#asm
+			ld  hl, 4
+			add hl, sp
+			ld  c, (hl) 	// x
+		
+			dec hl
+			dec hl
+			ld  a, (hl) 	// y
+			
+			ld  b, a
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			add c
+
+			ld  d, 0
+			ld  e, a
+			ld  hl, _map_buff
+			add hl, de
+
+			ld  l, (hl)
+			ld  h, 0
+	#endasm
 }
 
 #ifdef UNPACKED_MAP

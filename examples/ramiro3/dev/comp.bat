@@ -18,7 +18,7 @@ echo Making %game%
 echo Making script
 ..\utils\msc.exe ..\script\script.spt msc.h 24 > nul
 
-zcc +zx -vn churromain.c -o %game%.bin -lndos -lsplib2 -zorg=24200  > nul
+zcc +zx -vn -m churromain.c -o %game%.bin -lndos -lsplib2 -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
 ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
 ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
