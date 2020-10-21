@@ -7,10 +7,23 @@ Juegos:
 * Ramiro 1, 2, 3 (versión original; las "R" de 2016 se construyeron con MK2)
 * Johnny Limite (sin terminar)
 
-I cleaned it up and trimmed a bit:
+I cleaned it up and trimmed a bit. These shavings should be bigger in more complex games.
 
 31453 (orig)
 31354 (remove locals from mainloop.h)
 31122 (remove sp_LookupKey)
 31113 (first small rehash & mainloop.h cleanup)
-30966 (sub. local "i" in mainloop.h for global)
+30966 (subs. local "i" in engine.h for global)
+30564 (subs. remaining locals, added 'void' to empty params)
+30537 (cleaned printer, undid draw_* hud functions)
+30500 (misc cleanup)
+30404 (smarter helper funcs)
+30387 (undid silly asm vars as pointers)
+30338 (more cleanup)
+30038 (moved screen buffers to free memory)
+30020 (moved en_an to free memory)
+29823 (cleanup 2)
+
+& done
+
+RESPAWN_REENTER||BOXES_KILL_PLAYER

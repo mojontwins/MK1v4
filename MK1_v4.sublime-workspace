@@ -4,14 +4,6 @@
 		"selected_items":
 		[
 			[
-				"STAC",
-				"STACK_ADDR\tabc"
-			],
-			[
-				"NUM",
-				"NUMBLOCKS\t(mainloop.h)"
-			],
-			[
 				"rcube",
 				"rcube_sandetel\t(avelsieve.php)"
 			],
@@ -514,11 +506,37 @@
 			[
 				"SMS_setTile",
 				"SMS_setTileatXY"
+			],
+			[
+				"VDPS",
+				"VDPStatusPort"
+			],
+			[
+				"overfl",
+				"VDPSpriteOverflow"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "examples/limite/dev/config.h",
+			"settings":
+			{
+				"buffer_size": 11971,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "examples/limite/dev/comp.bat",
+			"settings":
+			{
+				"buffer_size": 1165,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -596,19 +614,42 @@
 	},
 	"expanded_folders":
 	[
-		"/C/git/mk1",
-		"/C/git/mk1/src",
-		"/C/git/mk1/src/dev"
+		"/D/git/MK1",
+		"/D/git/MK1/examples",
+		"/D/git/MK1/examples/limite",
+		"/D/git/MK1/examples/limite/dev",
+		"/D/git/MK1/examples/limite/script",
+		"/D/git/MK1/examples/limite/utils",
+		"/D/git/MK1/src",
+		"/D/git/MK1/src/dev",
+		"/D/git/MK1/src/utils",
+		"/D/git/MK1/src/utils/src"
 	],
 	"file_history":
 	[
-		"/C/git/mk1/src/dev/engine.h",
-		"/C/git/newspectrum/MK1/fred/dev/my/config.h",
-		"/C/git/mk1/churrera_4.txt",
-		"/C/git/mk1/src/dev/definitions.h",
-		"/C/git/mk1/src/dev/churromain.c",
-		"/C/git/mk1/src/dev/mainloop.h",
-		"/C/git/mk1/src/dev/zcc_opt.def",
+		"/D/git/MK1/src/dev/msc_extern.h",
+		"/D/git/MK1/examples/limite/dev/comp.bat",
+		"/D/git/MK1/src/dev/comp.bat",
+		"/D/git/MK1/examples/limite/dev/engine.h",
+		"/D/git/MK1/examples/limite/README.md",
+		"/D/git/MK1/examples/limite/dev/msc_extern.h",
+		"/D/git/MK1/examples/limite/dev/msc-config.h",
+		"/D/git/MK1/src/dev/config.h",
+		"/D/git/MK1/src/dev/mainloop.h",
+		"/D/git/MK1/src/dev/engine.h",
+		"/D/git/MK1/src/dev/definitions.h",
+		"/C/Users/jcastano/AppData/Local/Temp/7zO007686FB/config.h",
+		"/C/Users/jcastano/AppData/Local/Temp/7zO0072EE77/tileset.h",
+		"/D/git/MK1/src/dev/tileset.h",
+		"/D/git/MK1/src/dev/churromain.c",
+		"/D/git/MK1/src/dev/extrasprites.h",
+		"/D/git/MK1/src/dev/music.h",
+		"/D/git/MK1/src/dev/pantallas.h",
+		"/D/git/MK1/src/dev/printer.h",
+		"/D/git/MK1/src/dev/aplib.h",
+		"/D/git/MK1/src/dev/beeper.h",
+		"/D/git/MK1/src/dev/boxes.h",
+		"/C/Users/jcastano/AppData/Local/Temp/7zE00708367/tileset.h",
 		"/D/git/MK1/README.md",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/consigna_attachments/consigna_attachments.js",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/masinfo/masinfo.php",
@@ -713,34 +754,18 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/automatic_addressbook/config/config.inc.php.dist",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/calendar/config/config.inc.php",
 		"/D/Proyectos/remote/desccobuz05/update.md",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/vacation/config.ini",
-		"/D/Proyectos/remote/desccobuz05/install.md",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/sso.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/password/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/ldap_search/config/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/imapapi/imap_utf7_local.php",
-		"/D/Proyectos/2020/20200417a - Código javascript de plugin Consigna más robusto Webmail V3/instrucciones.txt",
-		"/D/Proyectos/2020/20200414a - Comprobación de fallos de LDAP en login Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/sso_orig.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/config/config.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/www/authmemcookie.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/www/errorreport.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/www/index.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/config/translation.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/config/acl.php",
-		"/C/Users/jcastano/AppData/Local/Temp/correo.juntadeandalucia.es.conf-en-preccobuz12.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/simplesamlphp/Configuration.php"
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/vacation/config.ini"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 48.0
 	},
 	"find_in_files":
 	{
 		"height": 128.0,
 		"where_history":
 		[
-			"C:\\git\\mk1\\src\\dev",
+			"D:\\git\\MK1\\src\\dev",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program\\js",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es",
@@ -875,31 +900,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"_old",
-			"gpit",
-			"i",
-			"gpit",
-			"i",
-			"gpit",
-			"lookup",
-			"main_(i|j)",
-			"main_y",
-			"main_x",
-			"random_respawn",
-			"(x|y)",
-			"i",
-			"j",
-			"(i|j|x|y)",
-			"key_",
-			"reentered",
-			"_old",
-			"maincounter",
-			"playing",
-			"allpurposepuntero",
-			"(x|y)",
-			"i",
-			"j",
-			"playing",
+			"aplib",
+			"scr_fin",
+			"pant_final",
+			"NO_MAX_ENEMS",
 			"adm",
 			"roundcube_browser",
 			"msie",
@@ -1002,7 +1006,28 @@
 			"ldap",
 			"ldap_public",
 			"init_ldap",
-			"lookup_user_name"
+			"lookup_user_name",
+			"new_user_identity_onlogin",
+			"insert_identity",
+			"identit",
+			"identi",
+			"identities",
+			"google.com",
+			"google",
+			"load_config",
+			"config",
+			"rcmail_config",
+			"server",
+			"function request_log",
+			"request_log",
+			"CheckConnectionRequest",
+			"caldav",
+			"init",
+			"class rcube_plugin_api",
+			"plugins",
+			"class rcube",
+			"plugins",
+			"wl"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1010,19 +1035,7 @@
 		"regex": false,
 		"replace_history":
 		[
-			"enit",
-			"gpit",
-			"pad0",
-			"gpit",
-			"rd\\1",
-			"rdy",
-			"rdx",
-			"main_\\1",
-			"main_i",
-			"main_j",
-			"main_\\1",
-			"main_i",
-			"main_j",
+			"apack",
 			"    /var/www/html/correo.juntadeandalucia.es/",
 			"masinfo",
 			"",
@@ -1137,7 +1150,19 @@
 			"bookmarks",
 			"BOOKMARK",
 			"bookmark",
-			"BOOKMARK"
+			"BOOKMARK",
+			"bookmark",
+			"bookmarkslist",
+			"bookmarks",
+			"bookmarkslist",
+			"bookmarks",
+			"bookmarks_list",
+			"bookmark",
+			"bookmarks_list",
+			"bookmark",
+			"// Sandetel ---->8----",
+			"// Sandetel",
+			"bookmarks"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1148,6 +1173,75 @@
 	"groups":
 	[
 		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "examples/limite/dev/config.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11971,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								443,
+								443
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "examples/limite/dev/comp.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1165,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								772,
+								772
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		},
+		{
 			"sheets":
 			[
 			]
@@ -1155,7 +1249,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 37.0
 	},
 	"input":
 	{
@@ -1170,11 +1264,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -1204,7 +1305,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 74.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1246,7 +1347,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 131.0,
+	"side_bar_width": 218.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

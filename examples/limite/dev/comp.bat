@@ -1,6 +1,6 @@
 @echo off
 
-set game=lala4
+set game=limite
 
 echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 15 packed  > nul
@@ -15,8 +15,8 @@ echo Making %game%
 ..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
 
-rem echo Making script
-rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
+echo Making script
+..\utils\msc.exe ..\script\script.spt msc.h 30 > nul
 
 zcc +zx -vn churromain.c -o %game%.bin -lndos -lsplib2 -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
