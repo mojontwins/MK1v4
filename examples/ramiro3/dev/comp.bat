@@ -4,7 +4,7 @@ set game=ramiro3v1
 
 echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 4 15 10 15 packed  > nul
-..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
+..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul
 ..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul

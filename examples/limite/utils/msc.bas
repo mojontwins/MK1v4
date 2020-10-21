@@ -31,16 +31,22 @@ Sub stringToArray (in As String)
 	Dim m as Integer
 	Dim index as Integer
 	Dim character as String * 1
+	Dim comillas As Integer
 	
 	for m = 1 to LIST_WORDS_SIZE: listaPalabras (m) = "": Next m
 	
 	index = 0
 	listaPalabras (index) = ""
 	in = in + " "
+	comillas = 0
 	
 	For m = 1 To Len (in)
 		character = Ucase (Mid (in, m, 1))
-		If (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
+		If character = Chr (34) Then
+			comillas = Not comillas
+		ElseIf comillas Then 
+			listaPalabras (index) = listaPalabras (index) + character
+		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
 			listaPalabras (index) = listaPalabras (index) + character
 		Else
 			listaPalabras (index) = Ltrim (Rtrim (listaPalabras (index)))
@@ -54,6 +60,8 @@ Sub stringToArray (in As String)
 			listaPalabras (index) = ""
 		End If
 	Next m
+
+	'' For m = 0 To index: Print m;"[";listaPalabras (m); "] ":Next m:Print
 End Sub
 
 Sub displayMe (clausula As String) 
@@ -126,61 +134,43 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 							clausula = clausula + chr (&H1) + chr (pval (listaPalabras (2)))
 							numClausulas = numClausulas + 1
 							clausulasUsed (&H1) = -1
-							if maxItem < val (listaPalabras (2)) Then maxItem = val (listaPalabras (2))
 						Case "PLAYER_HASN'T_ITEM":
 							clausula = clausula + chr (&H2) + chr (pval (listaPalabras (2)))
 							numClausulas = numClausulas + 1
 							clausulasUsed (&H2) = -1
-							if maxItem < val (listaPalabras (2)) Then maxItem = val (listaPalabras (2))
 						Case "FLAG":
 							Select Case listaPalabras (3)
 								Case "=":
 									if listaPalabras (4) = "FLAG" Then
 										clausula = clausula + chr (&H14) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
 										clausulasUsed (&H14) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (5)) Then maxFlag = val (listaPalabras (5))
 									Else
 										clausula = clausula + chr (&H10) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
 										clausulasUsed (&H10) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (4)) Then maxFlag = val (listaPalabras (4))
 									End If
 								Case "<":
 									If listaPalabras (4) = "FLAG" Then
 										clausula = clausula + chr (&H15) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
 										clausulasUsed (&H15) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (5)) Then maxFlag = val (listaPalabras (5))
 									Else
 										clausula = clausula + chr (&H11) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
 										clausulasUsed (&H11) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (4)) Then maxFlag = val (listaPalabras (4))
 									End If
 								Case ">":
 									If listaPalabras (4) = "FLAG" Then
 										clausula = clausula + chr (&H16) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
 										clausulasUsed (&H16) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (5)) Then maxFlag = val (listaPalabras (5))
 									Else
 										clausula = clausula + chr (&H12) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
 										clausulasUsed (&H12) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (4)) Then maxFlag = val (listaPalabras (4))
 									End If
 								Case "<>", "!=":
 									If listaPalabras (4) = "FLAG" Then
 										clausula = clausula + chr (&H17) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
 										clausulasUsed (&H17) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (5)) Then maxFlag = val (listaPalabras (5))
 									Else
 										clausula = clausula + chr (&H13) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
 										clausulasUsed (&H13) = -1
-										if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-										if maxFlag < val (listaPalabras (4)) Then maxFlag = val (listaPalabras (4))
 									End If
 							End Select
 							numClausulas = numClausulas + 1
@@ -207,6 +197,10 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 						Case "PLAYER_HAS_OBJECTS"
 							clausula = clausula + chr (&H40)
 							clausulasUsed (&H40) = -1
+							numClausulas = numClausulas + 1
+						Case "OBJECT_COUNT"
+							clausula = clausula + chr (&H41) + chr (pval (listaPalabras (3)))
+							clausulasUsed (&H41) = -1
 							numClausulas = numClausulas + 1
 						Case "NPANT"
 							clausula = clausula + chr (&H50) + chr (pval (listaPalabras (2)))
@@ -238,11 +232,9 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 						Case "ITEM":
 							clausula = clausula + Chr (&H0) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))
 							actionsUsed (&H0) = -1
-							if maxItem < val (listaPalabras (2)) Then maxItem = val (listaPalabras (2))
 						Case "FLAG":
 							clausula = clausula + Chr (&H1) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))	
 							actionsUsed (&H1) = -1
-							if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
 						Case "TILE":
 							clausula = clausula + Chr (&H20) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5))) + Chr (pval (listaPalabras (8)))
 							actionsUsed (&H20) = -1
@@ -252,7 +244,6 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 						Case "FLAG":
 							clausula = clausula + Chr (&H10) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))	
 							actionsUsed (&H10) = -1
-							if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
 						Case "LIFE":
 							clausula = clausula + Chr (&H30) + Chr (pval (listaPalabras (2)))
 							actionsUsed (&H30) = -1
@@ -265,7 +256,6 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 						Case "FLAG":
 							clausula = clausula + Chr (&H11) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))						
 							actionsUsed (&H11) = -1
-							if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
 						Case "LIFE":
 							clausula = clausula + Chr (&H31) + Chr (pval (listaPalabras (2)))
 							actionsUsed (&H31) = -1
@@ -276,22 +266,69 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 				Case "ADD":
 					clausula = clausula + Chr (&H12) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))						
 					actionsUsed (&H12) = -1
-					if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-					if maxFlag < val (listaPalabras (4)) Then maxFlag = val (listaPalabras (4))
 				Case "SUB":
 					clausula = clausula + Chr (&H13) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))						
 					actionsUsed (&H13) = -1
-					if maxFlag < val (listaPalabras (2)) Then maxFlag = val (listaPalabras (2))
-					if maxFlag < val (listaPalabras (4)) Then maxFlag = val (listaPalabras (4))
 				Case "SWAP":
 					clausula = clausula + Chr (&H14) + Chr (pval (listaPalabras (1))) + chr (pval (listaPalabras (3)))
 					actionsUsed (&H14) = -1
+				Case "FLIPFLOP":
+					clausula = clausula + Chr (&H15) + Chr (pval (listaPalabras (1)))
+					actionsUsed (&H15) = -1		
+				Case "FLICKER":
+					clausula = clausula + Chr (&H32)
+					actionsUsed (&H32) = -1
+				Case "DIZZY":
+					clausula = clausula + Chr (&H33)
+					actionsUsed (&H33) = -1
 				Case "PRINT_TILE_AT":
 					clausula = clausula + Chr (&H50) + Chr (pval (listaPalabras (2))) + Chr (pval (listaPalabras (4))) + Chr (pval (listaPalabras (7)))
 					actionsUsed (&H50) = -1
 				Case "SET_FIRE_ZONE":
 					clausula = clausula + Chr (&H51) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5))) + Chr (pval (listaPalabras (7)))
 					actionsUsed (&H51) = -1
+				Case "SHOW_COINS":
+					clausula = clausula + Chr (&H60)
+					actionsUsed (&H60) = -1
+				Case "HIDE_COINS":
+					clausula = clausula + Chr (&H61)
+					actionsUsed (&H61) = -1
+				Case "ENABLE_KILL_SLOWLY"
+					clausula = clausula + Chr (&H62)
+					actionsUsed (&H62) = -1
+				Case "DISABLE_KILL_SLOWLY"
+					clausula = clausula + Chr (&H63)
+					actionsUsed (&H63) = -1
+				Case "ENABLE_TYPE_6"
+					clausula = clausula + Chr (&H64)
+					actionsUsed (&H64) = -1
+				Case "DISABLE_TYPE_6"
+					clausula = clausula + Chr (&H65)
+					actionsUsed (&H65) = -1
+				Case "ENABLE_MAKE_TYPE_6"
+					clausula = clausula + Chr (&H66)
+					actionsUsed (&H66) = -1
+				Case "DISABLE_MAKE_TYPE_6"
+					clausula = clausula + Chr (&H67)
+					actionsUsed (&H67) = -1
+				Case "SETY"
+					clausula = clausula + Chr (&H6A) + Chr (pval (listaPalabras (1)))
+					actionsUsed (&H6A) = -1	
+				Case "SETX"
+					clausula = clausula + Chr (&H6B) + Chr (pval (listaPalabras (1)))
+					actionsUsed (&H6B) = -1
+				Case "REPOSTN"
+					clausula = clausula + Chr (&H6C) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3)))
+					actionsUsed (&H6C) = -1
+				Case "WARP_TO"
+					clausula = clausula + Chr (&H6D) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5)))
+					actionsUsed (&H6D) = -1
+				Case "REDRAW"
+					clausula = clausula + Chr (&H6E)
+					actionsUsed (&H6E) = -1
+				Case "REENTER"
+					clausula = clausula + Chr (&H6F)
+					actionsUsed (&H6F) = -1
 				Case "SOUND":
 					clausula = clausula + Chr (&HE0) + Chr (pval (listaPalabras (1)))
 					actionsUsed (&HE0) = -1
@@ -301,12 +338,6 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 				Case "RECHARGE":
 					clausula = clausula + Chr (&HE2)
 					actionsUsed (&HE2) = -1
-				Case "FLICKER":
-					clausula = clausula + Chr (&H32)
-					actionsUsed (&H32) = -1
-				Case "DIZZY":
-					clausula = clausula + Chr (&H33)
-					actionsUsed (&H33) = -1
 				Case "TEXT":
 					clausula = clausula + Chr (&HE3)
 					for ai = 1 To Len (listaPalabras (1))
@@ -331,7 +362,7 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					clausulas = clausulas + clausula
 					numclausulas = 0
 					estado = 0
-					clausula = ""
+					clausula = ""				
 			End Select
 		End if
 	wend
@@ -367,7 +398,7 @@ maxItem = 0
 maxFlag = 0
 maxNPant = 0
 
-For i = 1 to LIST_CLAUSULES_SIZE
+For i = 0 to LIST_CLAUSULES_SIZE
 	listaClausulasEnter (i) = -1
 	listaClausulasFire (i) = -1
 Next i
@@ -431,6 +462,20 @@ While not eof (f)
 			Next i
 			
 			clausulasFireIdx = clausulasFireIdx + 1
+
+		Case "PLAYER_GETS_COIN":
+			clausulas = procesaClausulas (f, 0)
+			clausulasFire (clausulasFireIdx) = clausulas
+			listaClausulasFire (maxpants + 1) = clausulasFireIdx
+			clausulasFireIdx = clausulasFireIdx + 1
+		
+		Case "PLAYER_KILLS_ENEMY":
+			clausulas = procesaClausulas (f, 0)
+			clausulasFire (clausulasFireIdx) = clausulas
+			listaClausulasFire (maxpants + 2) = clausulasFireIdx
+			clausulasFireIdx = clausulasFireIdx + 1
+		
+
 	End Select
 Wend
 
@@ -500,13 +545,13 @@ print #f, "};"
 print #f, " "
 print #f, "unsigned char *f_scripts [] = {"
 o = ""
-for i = 0 to maxpants
+for i = 0 to maxpants + 2
 	if listaClausulasFire (i) <> -1 Then
 		o = o + "msccf_"+trim(str(listaClausulasFire (i)))
 	else
 		o = o + "0"
 	end if
-	if i < maxpants then o = o +", "
+	if i < maxpants + 2 then o = o +", "
 next i
 print #f, "    " + o
 print #f, "};"
@@ -739,6 +784,15 @@ if clausulasUsed (&H40) Then
 	print #f, "                     break;"
 End If
 
+If clausulasUsed (&H41) Then
+	print #f, "                case 0x41:"
+	print #f, "                     // IF OBJECT_COUNT = n"
+	print #f, "                     // Opcode: 41 n"
+	print #f, "                     sc_n = read_vbyte ();"
+	print #f, "                     sc_terminado = (player.objs != sc_n);"
+	print #f, "                     break;"
+End If
+
 If clausulasUsed (&H50) Then
 	print #f, "                case 0x50:"
 	print #f, "                     // IF NPANT n"
@@ -945,6 +999,126 @@ if actionsUsed (&H51) Then
 	print #f, "                        break;"
 End If
 
+if actionsUsed (&H60) Then
+	print #f, "                    case 0x60:"
+	print #f, "                        // SHOW_COINS"
+	print #f, "                        // Opciode: 60"
+	print #f, "                        scenery_info.show_coins = 1;"
+	print #f, "                        break;"
+End If
+
+if actionsUsed (&H61) Then
+	print #f, "                    case 0x61:"
+	print #f, "                        // HIDE_COINS"
+	print #f, "                        // Opcode: 61"
+	print #f, "                        scenery_info.show_coins = 0;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H62) Then
+	print #f, "                    case 0x62:"
+	print #f, "                        // ENABLE_KILL_SLOWLY"
+	print #f, "                        // Opcode: 62"
+	print #f, "                        scenery_info.evil_kills_slowly = 1;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H63) Then
+	print #f, "                    case 0x63:"
+	print #f, "                        // DISABLE_KILL_SLOWLY"
+	print #f, "                        // Opcode: 63"
+	print #f, "                        scenery_info.evil_kills_slowly = 0;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H64) Then
+	print #f, "                    case 0x64:"
+	print #f, "                        // ENABLE_TYPE_6"
+	print #f, "                        // Opcode: 64"
+	print #f, "                        scenery_info.allow_type_6 = 1;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H65) Then
+	print #f, "                    case 0x65:"
+	print #f, "                        // DISABLE_TYPE_6"
+	print #f, "                        // Opcode: 65"
+	print #f, "                        scenery_info.allow_type_6 = 0;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H66) THen 
+	print #f, "                    case 0x66:"
+	print #f, "                        // ENABLE_MAKE_TYPE_6"
+	print #f, "                        // Opcode: 66"
+	print #f, "                        scenery_info.make_type_6 = 1;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H67) THen 
+	print #f, "                    case 0x67:"
+	print #f, "                        // DISABLE_MAKE_TYPE_6"
+	print #f, "                        // Opcode: 67"
+	print #f, "                        scenery_info.make_type_6 = 0;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H6A) Then
+	print #f, "                    case 0x6A:"
+	print #f, "                        // SETY y"
+	print #f, "                        // Opcode: 6B y"
+	print #f, "                        player.y = read_vbyte () << 10;"
+	Print #f, "                        stop_player ();"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H6B) Then
+	print #f, "                    case 0x6B:"
+	print #f, "                        // SETX x"
+	print #f, "                        // Opcode: 6B sc_x"
+	print #f, "						   player.x = read_vbyte () << 10;"
+	Print #f, "                        stop_player ();"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H6C) Then
+	print #f, "                    case 0x6C:"
+	print #f, "                        // REPOSTN x y"
+	print #f, "                        // Opcode: 6C x y"
+	print #f, "                        player.x = read_vbyte () << 10;"
+	print #f, "                        player.y = read_vbyte () << 10;"
+	print #f, "                        player.vx = player.vy = 0;"
+	print #f, "                        script_result = 3; sc_terminado = 1;"
+	print #f, "                        break;"
+End If
+
+If actionsUsed (&H6D) Then
+	print #f, "                    case 0x6D:"
+	print #f, "                        // WARP_TO n"
+	print #f, "                        // Opcode: 6D n"
+	print #f, "                        n_pant = read_vbyte ();"
+	print #f, "                        player.x = read_vbyte () << 10;"
+	print #f, "                        player.y = read_vbyte () << 10;"
+	print #f, "                        script_result = 3; sc_terminado = 1;"
+	print #f, "                        break;"
+End If
+
+if actionsUsed (&H6E) Then
+	print #f, "                    case 0x6E:"
+	print #f, "                        // REDRAW"
+	print #f, "                        // Opcode: 6E"
+	print #f, "                        draw_scr_background ();"
+	print #f, "                        break;"
+End If
+
+if actionsUsed (&H6F) Then
+	print #f, "                    case 0x6F:"
+	print #f, "                        // REENTER"
+	print #f, "                        // Opcode: 6F"
+	print #f, "                        script_result = 3; sc_terminado = 1;"
+	print #f, "                        break;"
+End If
+
 if actionsUsed (&HE0) Then
 	print #f, "                    case 0xE0:"
 	print #f, "                        // SOUND n"
@@ -975,7 +1149,7 @@ if actionsUsed (&HE3) Then
 	print #f, "                        while (1) {"
 	print #f, "                           sc_n = read_byte ();"
 	print #f, "                           if (sc_n == 0xEE) break;"
-	print #f, "                           sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + sc_x, 71, sc_n);"
+	print #f, "                           sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + sc_x, LINE_OF_TEXT_ATTR, sc_n);"
 	print #f, "                           sc_x ++;"
 	print #f, "                        }"
 	print #f, "                        break;"
@@ -1012,3 +1186,5 @@ Close #f
 
 ' Joer, qué guarrada, pero no veas cómo funciona... Incredibly evil.
 ' Po eso. 
+
+Print "DONE: CE " & clausulasEnterIdx & ", CF " & clausulasFireIdx

@@ -7,7 +7,7 @@
 #include <spritepack.h>
 
 #define STACK_ADDR		61952
-#define STACK_SIZE 		64
+#define STACK_SIZE 		128
 
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.

@@ -31,16 +31,22 @@ Sub stringToArray (in As String)
 	Dim m as Integer
 	Dim index as Integer
 	Dim character as String * 1
+	Dim comillas As Integer
 	
 	for m = 1 to LIST_WORDS_SIZE: listaPalabras (m) = "": Next m
 	
 	index = 0
 	listaPalabras (index) = ""
 	in = in + " "
+	comillas = 0
 	
 	For m = 1 To Len (in)
 		character = Ucase (Mid (in, m, 1))
-		If (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
+		If character = Chr (34) Then
+			comillas = Not comillas
+		ElseIf comillas Then 
+			listaPalabras (index) = listaPalabras (index) + character
+		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
 			listaPalabras (index) = listaPalabras (index) + character
 		Else
 			listaPalabras (index) = Ltrim (Rtrim (listaPalabras (index)))
@@ -54,6 +60,8 @@ Sub stringToArray (in As String)
 			listaPalabras (index) = ""
 		End If
 	Next m
+
+	'' For m = 0 To index: Print m;"[";listaPalabras (m); "] ":Next m:Print
 End Sub
 
 Sub displayMe (clausula As String) 
@@ -390,7 +398,7 @@ maxItem = 0
 maxFlag = 0
 maxNPant = 0
 
-For i = 1 to LIST_CLAUSULES_SIZE
+For i = 0 to LIST_CLAUSULES_SIZE
 	listaClausulasEnter (i) = -1
 	listaClausulasFire (i) = -1
 Next i
@@ -454,6 +462,20 @@ While not eof (f)
 			Next i
 			
 			clausulasFireIdx = clausulasFireIdx + 1
+
+		Case "PLAYER_GETS_COIN":
+			clausulas = procesaClausulas (f, 0)
+			clausulasFire (clausulasFireIdx) = clausulas
+			listaClausulasFire (maxpants + 1) = clausulasFireIdx
+			clausulasFireIdx = clausulasFireIdx + 1
+		
+		Case "PLAYER_KILLS_ENEMY":
+			clausulas = procesaClausulas (f, 0)
+			clausulasFire (clausulasFireIdx) = clausulas
+			listaClausulasFire (maxpants + 2) = clausulasFireIdx
+			clausulasFireIdx = clausulasFireIdx + 1
+		
+
 	End Select
 Wend
 
@@ -523,13 +545,13 @@ print #f, "};"
 print #f, " "
 print #f, "unsigned char *f_scripts [] = {"
 o = ""
-for i = 0 to maxpants
+for i = 0 to maxpants + 2
 	if listaClausulasFire (i) <> -1 Then
 		o = o + "msccf_"+trim(str(listaClausulasFire (i)))
 	else
 		o = o + "0"
 	end if
-	if i < maxpants then o = o +", "
+	if i < maxpants + 2 then o = o +", "
 next i
 print #f, "    " + o
 print #f, "};"
@@ -1127,7 +1149,7 @@ if actionsUsed (&HE3) Then
 	print #f, "                        while (1) {"
 	print #f, "                           sc_n = read_byte ();"
 	print #f, "                           if (sc_n == 0xEE) break;"
-	print #f, "                           sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + sc_x, 71, sc_n);"
+	print #f, "                           sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + sc_x, LINE_OF_TEXT_ATTR, sc_n);"
 	print #f, "                           sc_x ++;"
 	print #f, "                        }"
 	print #f, "                        break;"
@@ -1164,3 +1186,5 @@ Close #f
 
 ' Joer, qué guarrada, pero no veas cómo funciona... Incredibly evil.
 ' Po eso. 
+
+Print "DONE: CE " & clausulasEnterIdx & ", CF " & clausulasFireIdx
