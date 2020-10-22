@@ -1,0 +1,16 @@
+- El juego es denoche, así que no te quemas en el exterior. Se sustituye por pantallas con un "centinela", que es un ojo que se abre y cierra a intervalos regulares en algunas habitaciones. Si está abierto, y no estás a cubierto, pierdes vida. Creo que podemos activar el centinela en las pantallas necesarias usando scripting, por ejemplo.
+
+- Las trampas cambian. Ahora entras en la cripta, generalmente desde un sitio alto que no se puede alcanzar. Cuando se coja el objeto que sea, se activa la trampa: un murciélago dando por culo (más tonto que el original) mientras caen bloques del techo y se van acumulando. Hay que estar atento para ir trepando y poder salir.
+
+-> Cuando un bloque te aplasta, perdemos vida, activamos el parpadeo y subimos a Ramiro sobre el bloque que le acaba de aplastar.
+
+Que vaya a visitar a su amigo José Ramón el Faraón.
+
+Podemos inventarnos algo de que estén ahí en Abu Cimbel poniéndose tibios a Tokais cuando José Ramón se acuerda del viejo misterio del Papiro del Templo de Ejemplo (dios de las demostraciones), que fue roto en cuatro partes por Akenatón el Mamón y escondido en cuatro cámaras mortuorias.
+
+Y tiene que salir la Momia Antonia.
+
+el papiro contiene el secreto del dios Atón para controlar los rayos del sol. Con la borrachera, a Ramiro le parece una genial idea ponerse a reunir el papiro, ya que, controlando los rayos del sol, podría crearse una especie de "noche portátil" alrededor suya y convertirse en el vampiro más temible del Condado (provincia de Badajoz).
+
+Además de ponerlo en la historia, dijimos de pintar a johnny jones empalao en unos pinchos :)
+
