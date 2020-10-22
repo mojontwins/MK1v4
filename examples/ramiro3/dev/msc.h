@@ -88,25 +88,56 @@ unsigned char *script;
 unsigned char *next_script;
 unsigned char sc_i, sc_x, sc_y, sc_c, sc_n, sc_m, sc_terminado, sc_continuar, sc_res;
  
-void msc_init_all () {
-    for (sc_i = 0; sc_i < MAX_FLAGS; sc_i ++)
-        flags [sc_i] = 0;
+void msc_init_all (void) {
+    #asm
+            ld  hl, _flags
+            ld  de, _flags+1
+            ld  bc, MAX_FLAGS-1
+            xor a
+            ld  (hl), a
+            ldir
+    #endasm
 }
  
-unsigned char read_byte () {
-    sc_c = script [0];
-    script ++;
-    return sc_c;
+unsigned char read_byte (void) {
+    #asm
+            ld  hl, (_script)
+            ld  a, (hl)
+            inc hl
+            ld  (_script), hl
+            ld  l, a
+            ld  h, 0
+   #endasm
 }
  
-unsigned char read_vbyte () {
-    sc_c = read_byte ();
-    if (sc_c & 128) return flags [sc_c & 127];
-    return sc_c;
+unsigned char read_vbyte (void) {
+    #asm
+            call _read_byte
+            ;ld  a, l
+            bit 7, a
+            ret z
+            and 127
+            ld  d, 0
+            ld  e, a
+            ld  hl, _flags
+            add hl, de
+            ld  l, (hl)
+            ld  h, 0
+    #endasm
+}
+void read_x_y (void) {
+    #asm
+            call _read_vbyte
+            ld  a, l
+            ld  (_sc_x), a
+            call _read_vbyte
+            ld  a, l
+            ld  (_sc_y), a
+    #endasm
 }
  
 // Ejecutamos el script apuntado por *script:
-unsigned char run_script () {
+unsigned char run_script (void) {
     sc_res = 0;
     sc_terminado = 0;
     sc_continuar = 0;
@@ -127,40 +158,32 @@ unsigned char run_script () {
                 case 0x10:
                     // IF FLAG x = n
                     // Opcode: 10 x n
-                    sc_x = read_vbyte ();
-                    sc_n = read_vbyte ();
-                    if (flags [sc_x] != sc_n)
-                        sc_terminado = 1;
+                    sc_terminado = (flags [read_vbyte ()] != read_vbyte ());
                     break;
                 case 0x20:
                     // IF PLAYER_TOUCHES x, y
                     // Opcode: 20 x y
-                    sc_x = read_vbyte ();
-                    sc_y = read_vbyte ();
-                    if (!((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15))
-                        sc_terminado = 1;
+                    read_x_y ();
+                    sc_terminado = (!((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15));
                     break;
                 case 0x21:
                     // IF PLAYER_IN_X x1, x2
                     // Opcode: 21 x1 x2
                     sc_x = read_byte ();
                     sc_y = read_byte ();
-                    if (!((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y))
-                        sc_terminado = 1;
+                    sc_terminado = (!((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y));
                     break;
                 case 0x22:
                     // IF PLAYER_IN_Y y1, y2
                     // Opcode: 22 y1 y2
                     sc_x = read_byte ();
                     sc_y = read_byte ();
-                    if (!((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y))
-                        sc_terminado = 1;
+                    sc_terminado = (!((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y));
                     break;
                 case 0x41:
                      // IF OBJECT_COUNT = n
                      // Opcode: 41 n
-                     sc_n = read_vbyte ();
-                     sc_terminado = (player.objs != sc_n);
+                     sc_terminado = (player.objs != read_vbyte ());
                      break;
                 case 0xF0:
                      // IF TRUE
@@ -183,22 +206,17 @@ unsigned char run_script () {
                     case 0x01:
                         // SET FLAG x = n
                         // Opcode: 01 x n
-                        sc_x = read_vbyte ();
-                        sc_n = read_vbyte ();
-                        flags [sc_x] = sc_n;
+                        flags [read_vbyte ()] = read_vbyte ();
                         break;
                     case 0x10:
                         // INC FLAG x, n
                         // Opcode: 10 x n
-                        sc_x = read_vbyte ();
-                        sc_n = read_vbyte ();
-                        flags [sc_x] += sc_n;
+                        flags [read_vbyte ()] += read_vbyte ();
                         break;
                     case 0x20:
                         // SET TILE (x, y) = n
                         // Opcode: 20 x y n
-                        sc_x = read_vbyte ();
-                        sc_y = read_vbyte ();
+                        read_x_y ();
                         sc_n = read_vbyte ();
                         map_buff [sc_x + (sc_y << 4) - sc_y] = sc_n;
                         map_attr [sc_x + (sc_y << 4) - sc_y] = comportamiento_tiles [sc_n];
@@ -207,14 +225,12 @@ unsigned char run_script () {
                     case 0x30:
                         // INC LIFE n
                         // Opcode: 30 n
-                        sc_n = read_vbyte ();
-                        player.life += sc_n;
+                        player.life += read_vbyte;
                         break;
                     case 0x40:
                         // INC OBJECTS n
                         // Opcode: 40 n
-                        sc_n = read_vbyte ();
-                        player.objs += sc_n;
+                        player.objs += read_vbyte;
                         break;
                     case 0x51:
                         // SET_FIRE_ZONE x1, y1, x2, y2
@@ -227,7 +243,7 @@ unsigned char run_script () {
                         break;
                     case 0x60:
                         // SHOW_COINS
-                        // Opciode: 60
+                        // Opcode: 60
                         scenery_info.show_coins = 1;
                         break;
                     case 0x61:
@@ -258,8 +274,7 @@ unsigned char run_script () {
                     case 0xE0:
                         // SOUND n
                         // Opcode: E0 n
-                        sc_n = read_vbyte ();
-                        peta_el_beeper (sc_n);
+                        peta_el_beeper (read_vbyte ());
                         break;
                     case 0xE1:
                         // SHOW

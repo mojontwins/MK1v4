@@ -574,29 +574,60 @@ print #f, "unsigned char *script;"
 print #f, "unsigned char *next_script;"
 print #f, "unsigned char sc_i, sc_x, sc_y, sc_c, sc_n, sc_m, sc_terminado, sc_continuar, sc_res;"
 print #f, " "
-print #f, "void msc_init_all () {"
+print #f, "void msc_init_all (void) {"
 If clausulasUsed (&H1) Or clausulasUsed (&H2) Then
 	print #f, "    for (sc_i = 0; sc_i < MSC_MAXITEMS; sc_i ++)"
 	print #f, "        items [sc_i].status = 0;"
 End If
-print #f, "    for (sc_i = 0; sc_i < MAX_FLAGS; sc_i ++)"
-print #f, "        flags [sc_i] = 0;"
+print #f, "    #asm"
+print #f, "            ld  hl, _flags"
+print #f, "            ld  de, _flags+1"
+print #f, "            ld  bc, MAX_FLAGS-1"
+print #f, "            xor a"
+print #f, "            ld  (hl), a"
+print #f, "            ldir"
+print #f, "    #endasm"
 print #f, "}"
 print #f, " "
-print #f, "unsigned char read_byte () {"
-print #f, "    sc_c = script [0];"
-print #f, "    script ++;"
-print #f, "    return sc_c;"
+print #f, "unsigned char read_byte (void) {"
+print #f, "    #asm"
+print #f, "            ld  hl, (_script)"
+print #f, "            ld  a, (hl)"
+print #f, "            inc hl"
+print #f, "            ld  (_script), hl"
+print #f, "            ld  l, a"
+print #f, "            ld  h, 0"
+print #f, "   #endasm"
 print #f, "}"
 print #f, " "
-print #f, "unsigned char read_vbyte () {"
-print #f, "    sc_c = read_byte ();"
-print #f, "    if (sc_c & 128) return flags [sc_c & 127];"
-print #f, "    return sc_c;"
+print #f, "unsigned char read_vbyte (void) {"
+print #f, "    #asm"
+print #f, "            call _read_byte"
+print #f, "            ;ld  a, l"
+print #f, "            bit 7, a"
+print #f, "            ret z"
+print #f, "            and 127"
+print #f, "            ld  d, 0"
+print #f, "            ld  e, a"
+print #f, "            ld  hl, _flags"
+print #f, "            add hl, de"
+print #f, "            ld  l, (hl)"
+print #f, "            ld  h, 0"
+print #f, "    #endasm"
+print #f, "}"
+print #f, "void read_x_y (void) {"
+print #f, "    #asm"
+print #f, "            call _read_vbyte"
+print #f, "            ld  a, l"
+print #f, "            ld  (_sc_x), a"
+print #f, "            call _read_vbyte"
+print #f, "            ld  a, l"
+print #f, "            ld  (_sc_y), a"
+print #f, "    #endasm"
 print #f, "}"
 print #f, " "
 print #f, "// Ejecutamos el script apuntado por *script:"
-print #f, "unsigned char run_script () {"
+print #f, "unsigned char run_script (void) {"
 print #f, "    sc_res = 0;"
 print #f, "    sc_terminado = 0;"
 print #f, "    sc_continuar = 0;"
@@ -619,9 +650,7 @@ if clausulasUsed (&H1) Then
 	print #f, "                case 0x01:"
 	print #f, "                    // IF PLAYER_HAS_ITEM x"
 	print #f, "                    // Opcode: 01 x"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    if (items [sc_x].status == 0)"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (items [read_vbyte ()].status == 0);"
 	print #f, "                    break;"
 end if
 
@@ -629,9 +658,7 @@ if clausulasUsed (&H2) Then
 	print #f, "                case 0x02:"
 	print #f, "                    // IF PLAYER_HASN'T_ITEM x"
 	print #f, "                    // Opcode: 02 sc_x"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    if (items [sc_x].status != 0)"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado =  (items [read_vbyte ()].status != 0);"
 	print #f, "                    break;"
 end if
 
@@ -639,21 +666,15 @@ if clausulasUsed (&H10) Then
 	print #f, "                case 0x10:"
 	print #f, "                    // IF FLAG x = n"
 	print #f, "                    // Opcode: 10 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_n = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] != sc_n)"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (flags [read_vbyte ()] != read_vbyte ());"
 	print #f, "                    break;"
 end if
 
 if clausulasUsed (&H11) Then
 	print #f, "                case 0x11:"
 	print #f, "                    // IF FLAG x < n"
-	print #f, "                    // Opcode: 11 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_n = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] >= sc_n)"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    // Opcode: 11 x n"	
+	print #f, "                    sc_terminado =  (flags [read_vbyte ()] >= read_vbyte ());"
 	print #f, "                    break;"
 end if
 
@@ -661,9 +682,7 @@ if clausulasUsed (&H12) Then
 	print #f, "                case 0x12:"
 	print #f, "                    // IF FLAG x > n"
 	print #f, "                    // Opcode: 12 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_n = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] <= sc_n)"
+	print #f, "                    sc_terminado =  (flags [read_vbyte ()] <= read_vbyte ());"
 	print #f, "                        sc_terminado = 1;"
 	print #f, "                    break;"
 end if
@@ -671,11 +690,8 @@ end if
 if clausulasUsed (&H13) Then
 	print #f, "                case 0x13:"
 	print #f, "                    // IF FLAG x <> n"
-	print #f, "                    // Opcode: 13 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_n = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] == sc_n)"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    // Opcode: 13 x n"	
+	print #f, "                    sc_terminado =  (flags [read_vbyte ()] == read_vbyte ());"
 	print #f, "                    break;"
 end if
 
@@ -683,10 +699,7 @@ if clausulasUsed (&H14) Then
 	print #f, "                case 0x14:"
 	print #f, "                    // IF FLAG x = FLAG y"
 	print #f, "                    // Opcode: 14 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_y = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] != flags [sc_y])"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado =  (flags [read_vbyte ()] != flags [read_vbyte ()];"
 	print #f, "                    break;"
 end if
 
@@ -694,10 +707,7 @@ if clausulasUsed (&H15) Then
 	print #f, "                case 0x15:"
 	print #f, "                    // IF FLAG x < FLAG y"
 	print #f, "                    // Opcode: 15 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_y = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] >= flags [sc_y])"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = if (flags [read_vbyte ()] >= flags [read_vbyte ()]);"
 	print #f, "                    break;"
 end if
 
@@ -705,10 +715,7 @@ if clausulasUsed (&H16) Then
 	print #f, "                case 0x16:"
 	print #f, "                    // IF FLAG x > FLAG y"
 	print #f, "                    // Opcode: 16 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_y = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] <= flags [sc_y])"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (flags [read_vbyte ()] <= flags [read_vbyte ()]);"
 	print #f, "                    break;"
 end if
 
@@ -716,10 +723,7 @@ if clausulasUsed (&H17) Then
 	print #f, "                case 0x17:"
 	print #f, "                    // IF FLAG x <> FLAG y"
 	print #f, "                    // Opcode: 17 x n"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_y = read_vbyte ();"	
-	print #f, "                    if (flags [sc_x] == flags [sc_y])"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (flags [read_vbyte ()] == flags [read_vbyte ()]);"
 	print #f, "                    break;"
 end if
 
@@ -727,10 +731,8 @@ if clausulasUsed (&H20) Then
 	print #f, "                case 0x20:"
 	print #f, "                    // IF PLAYER_TOUCHES x, y"
 	print #f, "                    // Opcode: 20 x y"
-	print #f, "                    sc_x = read_vbyte ();"
-	print #f, "                    sc_y = read_vbyte ();"	
-	print #f, "                    if (!((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15))"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    read_x_y ();"	
+	print #f, "                    sc_terminado = (!((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15));"
 	print #f, "                    break;"
 end if
 
@@ -740,8 +742,7 @@ if clausulasUsed (&H21) Then
 	print #f, "                    // Opcode: 21 x1 x2"
 	print #f, "                    sc_x = read_byte ();"
 	print #f, "                    sc_y = read_byte ();"	
-	print #f, "                    if (!((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y))"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (!((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y));"
 	print #f, "                    break;"
 end if
 	
@@ -751,8 +752,7 @@ if clausulasUsed (&H22) Then
 	print #f, "                    // Opcode: 22 y1 y2"
 	print #f, "                    sc_x = read_byte ();"
 	print #f, "                    sc_y = read_byte ();"	
-	print #f, "                    if (!((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y))"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (!((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y));"
 	print #f, "                    break;"
 end if
 
@@ -760,8 +760,7 @@ if clausulasUsed (&H30) Then
 	print #f, "                case 0x30:"
 	print #f, "                    // IF ALL_ENEMIES_DEAD"
 	print #f, "                    // Opcode: 30"
-	print #f, "                    if (player.killed != BADDIES_COUNT)"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (player.killed != BADDIES_COUNT);"
 	print #f, "                    break;"
 end if
 
@@ -769,9 +768,7 @@ if clausulasUsed (&H31) Then
 	print #f, "                case 0x31:"
 	print #f, "                    // IF ENEMIES_KILLED_EQUALS n"
 	print #f, "                    // Opcode: 31 n"
-	print #f, "                    sc_n = read_vbyte ();"
-	print #f, "                    if (player.killed != sc_n)"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                    sc_terminado = (player.killed != read_vbyte ());"
 	print #f, "                    break;"
 End If
 
@@ -779,8 +776,7 @@ if clausulasUsed (&H40) Then
 	print #f, "                case 0x40:"
 	print #f, "                     // IF PLAYER_HAS_OBJECTS"
 	print #f, "                     // Opcode: 40"
-	print #f, "                     if (player.objs == 0)"
-	print #f, "                         sc_terminado = 1;"
+	print #f, "                     sc_terminado = (player.objs == 0);"
 	print #f, "                     break;"
 End If
 
@@ -788,8 +784,7 @@ If clausulasUsed (&H41) Then
 	print #f, "                case 0x41:"
 	print #f, "                     // IF OBJECT_COUNT = n"
 	print #f, "                     // Opcode: 41 n"
-	print #f, "                     sc_n = read_vbyte ();"
-	print #f, "                     sc_terminado = (player.objs != sc_n);"
+	print #f, "                     sc_terminado = (player.objs != read_vbyte ());"
 	print #f, "                     break;"
 End If
 
@@ -797,9 +792,7 @@ If clausulasUsed (&H50) Then
 	print #f, "                case 0x50:"
 	print #f, "                     // IF NPANT n"
 	print #f, "                     // Opcode: 50 n"
-	print #f, "                     sc_n = read_vbyte ();"
-	print #f, "                     if (n_pant != sc_n)"
-	print #f, "                         sc_terminado = 1;"
+	print #f, "                     sc_terminado = (n_pant != read_vbyte ());"
 	print #f, "                     break;"
 End If
 
@@ -807,9 +800,7 @@ If clausulasUsed (&H51) Then
 	print #f, "                case 0x51:"
 	print #f, "                     // IF NPANT_NOT n"
 	print #f, "                     // Opcode: 51 n"
-	print #f, "                     sc_n = read_vbyte ();"
-	print #f, "                     if (n_pant == sc_n)"
-	print #f, "                         sc_terminado = 1;"
+	print #f, "                     sc_terminado = (n_pant == read_vbyte ());"
 	print #f, "                     break;"
 End If
 
@@ -841,9 +832,7 @@ if actionsUsed (&H0) Then
 	print #f, "                    case 0x00:"
 	print #f, "                        // SET ITEM x n"
 	print #f, "                        // Opcode: 00 x n"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        items [sc_x].status = sc_n;"
+	print #f, "                        items [read_vbyte ()].status = read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -851,9 +840,7 @@ if actionsUsed (&H1) Then
 	print #f, "                    case 0x01:"
 	print #f, "                        // SET FLAG x = n"
 	print #f, "                        // Opcode: 01 x n"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        flags [sc_x] = sc_n;"
+	print #f, "                        flags [read_vbyte ()] = read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -861,9 +848,7 @@ if actionsUsed (&H10) Then
 	print #f, "                    case 0x10:"
 	print #f, "                        // INC FLAG x, n"
 	print #f, "                        // Opcode: 10 x n"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        flags [sc_x] += sc_n;"
+	print #f, "                        flags [read_vbyte ()] += read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -871,9 +856,7 @@ if actionsUsed (&H11) Then
 	print #f, "                    case 0x11:"
 	print #f, "                        // DEC FLAG x, n"
 	print #f, "                        // Opcode: 11 x n"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        flags [sc_x] -= sc_n;"
+	print #f, "                        flags [read_vbyte ()] -= read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -881,9 +864,7 @@ if actionsUsed (&H12) Then
 	print #f, "                    case 0x12:"
 	print #f, "                        // ADD FLAGS x, y"
 	print #f, "                        // Opcode: 12 x y"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_y = read_vbyte ();"
-	print #f, "                        flags [sc_x] = flags [sc_x] + flags [sc_y];"
+	print #f, "                        flags [read_vbyte ()] += flags [read_vbyte ()];"
 	print #f, "                        break;"
 End If
 
@@ -891,9 +872,7 @@ if actionsUsed (&H13) Then
 	print #f, "                    case 0x13:"
 	print #f, "                        // SUB FLAGS x, y"
 	print #f, "                        // Opcode: 13 x y"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_y = read_vbyte ();"
-	print #f, "                        flags [sc_x] = flags [sc_x] - flags [sc_y];"
+	print #f, "                        flags [read_vbyte ()] -= flags [read_vbyte ()];"
 	print #f, "                        break;"
 End If
 
@@ -901,8 +880,7 @@ if actionsUsed (&H14) Then
 	print #f, "                    case 0x14:"
 	print #f, "                        // SWAP FLAGS x, y"
 	print #f, "                        // Opcode: 14 x y"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_y = read_vbyte ();"
+	print #f, "                        read_x_y ();"
 	print #f, "                        sc_n = flags [sc_x];"
 	print #f, "                        flags [sc_x] = flags [sc_y];"
 	print #f, "                        flags [sc_y] = sc_n;"
@@ -913,8 +891,7 @@ if actionsUsed (&H20) Then
 	print #f, "                    case 0x20:"
 	print #f, "                        // SET TILE (x, y) = n"
 	print #f, "                        // Opcode: 20 x y n"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_y = read_vbyte ();"
+	print #f, "                        read_x_y ();"
 	print #f, "                        sc_n = read_vbyte ();"
 	print #f, "                        map_buff [sc_x + (sc_y << 4) - sc_y] = sc_n;"
 	print #f, "                        map_attr [sc_x + (sc_y << 4) - sc_y] = comportamiento_tiles [sc_n];"
@@ -926,8 +903,7 @@ if actionsUsed (&H30) Then
 	print #f, "                    case 0x30:"
 	print #f, "                        // INC LIFE n"
 	print #f, "                        // Opcode: 30 n"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        player.life += sc_n;"
+	print #f, "                        player.life += read_vbyte;"
 	print #f, "                        break;"
 End If
 
@@ -935,8 +911,7 @@ if actionsUsed (&H31) Then
 	print #f, "                    case 0x31:"
 	print #f, "                        // DEC LIFE n"
 	print #f, "                        // Opcode: 31 n"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        player.life -= sc_n;"
+	print #f, "                        player.life -= read_vbyte;"
 	print #f, "                        break;"
 End If
 
@@ -962,8 +937,7 @@ if actionsUsed (&H40) Then
 	print #f, "                    case 0x40:"
 	print #f, "                        // INC OBJECTS n"
 	print #f, "                        // Opcode: 40 n"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        player.objs += sc_n;"
+	print #f, "                        player.objs += read_vbyte;"
 	print #f, "                        break;"
 End If
 
@@ -971,8 +945,7 @@ if actionsUsed (&H41) Then
 	print #f, "                    case 0x41:"
 	print #f, "                        // DEC OBJECTS n"
 	print #f, "                        // Opcode: 41 n"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        player.objs -= sc_n;"
+	print #f, "                        player.objs -= read_vbyte;"
 	print #f, "                        break;"
 End If
 
@@ -980,10 +953,7 @@ if actionsUsed (&H50) then
 	print #f, "                    case 0x50:"
 	print #f, "                        // PRINT_TILE_AT (X, Y) = N"
 	print #f, "                        // Opcode: 50 x y n"
-	print #f, "                        sc_x = read_vbyte ();"
-	print #f, "                        sc_y = read_vbyte ();"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        draw_coloured_tile (sc_x, sc_y, sc_n);"
+	print #f, "                        draw_coloured_tile (read_vbyte, read_vbyte, read_vbyte);"
 	print #f, "                        break;"
 end if
 
@@ -1002,7 +972,7 @@ End If
 if actionsUsed (&H60) Then
 	print #f, "                    case 0x60:"
 	print #f, "                        // SHOW_COINS"
-	print #f, "                        // Opciode: 60"
+	print #f, "                        // Opcode: 60"
 	print #f, "                        scenery_info.show_coins = 1;"
 	print #f, "                        break;"
 End If
@@ -1123,8 +1093,7 @@ if actionsUsed (&HE0) Then
 	print #f, "                    case 0xE0:"
 	print #f, "                        // SOUND n"
 	print #f, "                        // Opcode: E0 n"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        peta_el_beeper (sc_n);"
+	print #f, "                        peta_el_beeper (read_vbyte ());"
 	print #f, "                        break;"
 End If
 
