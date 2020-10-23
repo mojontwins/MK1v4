@@ -192,6 +192,7 @@ unsigned char gpx, gpy, gpxx, gpyy;
 int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
+unsigned char _x,_y,_t;
 
 #ifdef TWO_SETS
 	unsigned char tileoffset;

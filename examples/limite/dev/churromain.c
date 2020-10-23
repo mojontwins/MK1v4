@@ -6,6 +6,13 @@
 
 #include <spritepack.h>
 
+#asm
+		LIB SPInvalidate
+		LIB SPCompDListAddr
+		.fsClipStruct defb 0, 24, 0, 32
+#endasm
+
+
 #define STACK_ADDR		61952
 #define STACK_SIZE 		96
 
