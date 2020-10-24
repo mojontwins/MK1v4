@@ -259,29 +259,8 @@ void main (void) {
 						sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
 					}
 				}
-			#endif			
-			
-			// Update to screen
-			sp_UpdateNow();
-			
-			#ifdef PLAYER_CAN_FIRE
-				for (rdi = 0; rdi < 3; rdi ++)
-					if (en_an [rdi].morido == 1) {
-						peta_el_beeper (1);
-						en_an [rdi].morido = 0;
-					} 	
 			#endif
 
-			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER)
-				// Flickering
-				if (player.estado & EST_PARP) {
-					player.ct_estado --;
-					if (player.ct_estado == 0) {
-						player.estado = EST_NORMAL;
-					}	
-				}
-			#endif			
-			
 			#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
 			#else
 				// Hotspot interaction.
@@ -330,7 +309,32 @@ void main (void) {
 					hotspot_x = hotspot_y = 240;
 				}
 			#endif
-		
+
+			#ifdef ENABLE_CODE_HOOKS
+				hook_mainloop ();
+			#endif	
+			
+			// Update to screen
+			sp_UpdateNow();
+			
+			#ifdef PLAYER_CAN_FIRE
+				for (rdi = 0; rdi < 3; rdi ++)
+					if (en_an [rdi].morido == 1) {
+						peta_el_beeper (1);
+						en_an [rdi].morido = 0;
+					} 	
+			#endif
+
+			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER)
+				// Flickering
+				if (player.estado & EST_PARP) {
+					player.ct_estado --;
+					if (player.ct_estado == 0) {
+						player.estado = EST_NORMAL;
+					}	
+				}
+			#endif			
+			
 			rdi = (joyfunc) (&keys);
 
 			// Flick screen checks and scripting related stuff

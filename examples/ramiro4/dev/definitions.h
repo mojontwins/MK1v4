@@ -73,6 +73,7 @@ typedef struct {
 	unsigned char fixed_screens;
 	unsigned char show_level_info;
 	unsigned char evil_kills_slowly;
+	unsigned char evil_zone_active;
 	unsigned char allow_type_6;
 	unsigned char make_type_6;
 } SCENERY_INFO;
@@ -213,3 +214,4 @@ void saca_a_todo_el_mundo_de_aqui ();
 void draw_scr_background ();
 void draw_scr ();
 void init_player_values (); 
+unsigned char rand (void);

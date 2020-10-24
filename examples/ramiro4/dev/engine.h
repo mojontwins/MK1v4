@@ -704,10 +704,18 @@ unsigned char move (void) {
 	#ifndef DEACTIVATE_EVIL_ZONE
 		// Evil zone engine
 
+		/* 
+		//NO NEED FOR THIS TO BE THIS COMPLEX!! 
 		if (attr (gpxx, gpyy) == 3 || 
 			((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 3) ||
 			((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 3) ||
 			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 3)) {
+		*/
+		if (attr ((gpx+4) >> 4, (gpy+4) >> 4) == 3
+			#ifdef EVIL_ZONE_CONDITIONAL
+				&& scenery_info.evil_zone_active
+			#endif
+		) {
 			if (player.killingzone_beepcount >= EVIL_ZONE_BEEPS_COUNT || !scenery_info.evil_kills_slowly) {
 				if (!(player.estado & EST_PARP)) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
@@ -1202,6 +1210,10 @@ void draw_scr (void) {
 	#ifdef PLAYER_CAN_FIRE
 		init_bullets ();
 	#endif	
+
+	#ifdef ENABLE_CODE_HOOKS
+		hook_entering ();
+	#endif
 }
 
 #ifdef PLAYER_CAN_FIRE

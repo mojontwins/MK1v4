@@ -49,6 +49,7 @@
 	#include "msc.h"
 #endif
 #include "msc_extern.h"
+#include "custom.h"
 #include "engine.h"
 #include "boxes.h"
 #include "mainloop.h"

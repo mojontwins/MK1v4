@@ -14,7 +14,7 @@ End Sub
 
 sub usage () 
 	Print "** USO **"
-	Print "   MapCnv archivo.map ancho_mapa alto_mapa ancho_pantalla alto_pantalla tile_cerrojo packed"
+	Print "   MapCnv mapa.map mapa.h ancho_mapa alto_mapa ancho_pantalla alto_pantalla tile_cerrojo packed"
 	Print
 	Print "   - archivo.map : Archivo de entrada exportado con mappy en formato raw."
 	Print "   - ancho_mapa : Ancho del mapa en pantallas."
@@ -46,25 +46,19 @@ Dim As MyBolt Bolts (100)
 
 Print "Mapcnv v2.0 20201022a (fix) (2 sets native)"
 
-if 	Command (1) = "" Or _
-	Val (Command (2)) <= 0 Or _
-	Val (Command (3)) <= 0 Or _
-	Val (Command (4)) <= 0 Or _
-	Val (Command (5)) <= 0 Or _
-	Val (Command (6)) <= 0 Then
-	
+if 	Command (7) = "" Then
 	usage ()
 	end
 End If
 
-map_w = Val (Command (2))
-map_h = Val (Command (3))
-scr_w = Val (Command (4))
-scr_h = Val (Command (5))
-bolt = Val (Command (6))
+map_w = Val (Command (3))
+map_h = Val (Command (4))
+scr_w = Val (Command (5))
+scr_h = Val (Command (6))
+bolt = Val (Command (7))
 
-if lcase(Command (7)) = "packed" then
-	print lcase(command(7))
+if lcase(Command (8)) = "packed" then
+	print lcase(command(8))
 	packed = 1
 else
 	packed = 0
@@ -81,7 +75,7 @@ Open Command (1) for binary as #f
 For y = 0 To (map_h * scr_h - 1)
 	For x = 0 To (map_w * scr_w - 1)
 		get #f , , d
-		If packed <> 0 And d > 15 Then d = d And 15
+		If packed <> 0 And d > 15 And d < 64 Then d = d And 15
 		BigOrigMap (y, x) = d
 	Next x
 Next y
@@ -90,7 +84,7 @@ close f
 
 ' Construimos el nuevo mapa mientras rellenamos el array de cerrojos
 
-open "mapa.h" for output as #f
+open Command (2) for output as #f
 
 print #f, "// Mapa.h "
 print #f, "// Generado por MapCnv de la MTE MK1"

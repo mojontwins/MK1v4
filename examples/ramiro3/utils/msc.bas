@@ -1,4 +1,4 @@
-' Parser y compilador para los scripts de la MTE MK1 v4.7.
+' Parser y compilador para los scripts de la churrera 3.
 ' Copyleft 2010, 2011 The Mojon Twins, los masters del código guarro.
 ' Compilar con freeBasic (http://www.freebasic.net).
 
@@ -125,7 +125,8 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 	Dim numclausulas As Integer
 	Dim longitud As Integer
 	Dim ai As Integer
-	Dim As Integer opCode
+
+	Dim As Integer fzx1, fzx2, fzy1, fzy2
 	
 	terminado = 0
 	estado = 0
@@ -227,8 +228,24 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 							clausula = clausula + chr (&H21) + chr (val (listaPalabras (2))) + chr (val (listaPalabras (4)))
 							clausulasUsed (&H21) = -1
 							numClausulas = numClausulas + 1
+						Case "PLAYER_IN_X_TILES":
+							fzx1 = val (listaPalabras (2)) * 16 - 15
+							If fzx1 < 0 Then fzx1 = 0
+							fzx2 = val (listaPalabras (4)) * 16 + 15
+							If fzx2 > 255 Then fzx2 = 255
+							clausula = clausula + chr (&H21) + chr (fzx1) + chr (fzx2)
+							clausulasUsed (&H21) = -1
+							numClausulas = numClausulas + 1
 						Case "PLAYER_IN_Y":
 							clausula = clausula + chr (&H22) + chr (val (listaPalabras (2))) + chr (val (listaPalabras (4)))
+							clausulasUsed (&H22) = -1
+							numClausulas = numClausulas + 1
+						Case "PLAYER_IN_Y_TILES":
+							fzx1 = val (listaPalabras (2)) * 16 - 15
+							If fzx1 < 0 Then fzx1 = 0
+							fzx2 = val (listaPalabras (4)) * 16 + 15
+							If fzx2 > 191 Then fzx2 = 191
+							clausula = clausula + chr (&H22) + chr (fzx1) + chr (fzx2)
 							clausulasUsed (&H22) = -1
 							numClausulas = numClausulas + 1
 						Case "ALL_ENEMIES_DEAD"
@@ -355,6 +372,18 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					actionsUsed (&H50) = -1
 				Case "SET_FIRE_ZONE":
 					clausula = clausula + Chr (&H51) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5))) + Chr (pval (listaPalabras (7)))
+					actionsUsed (&H51) = -1
+				Case "SET_FIRE_ZONE_TILES":
+					fzx1 = pval (listaPalabras (1)) * 16 - 15
+					If fzx1 < 0 Then fzx1 = 0
+					fzy1 = pval (listaPalabras (3)) * 16 - 15
+					If fzy1 < 0 Then fzy1 = 0
+					fzx2 = pval (listaPalabras (5)) * 16 + 15
+					If fzx2 > 254 Then fzx2 = 254
+					fzy2 = pval (listaPalabras (7)) * 16 + 15
+					If fzy2 > 175 Then fzy2 = 175
+					
+					clausula = clausula + Chr (&H51) + Chr (fzx1) + Chr (fzy1) + Chr (fzx2) + Chr (fzy2)
 					actionsUsed (&H51) = -1
 				Case "SHOW_COINS":
 					clausula = clausula + Chr (&H60)

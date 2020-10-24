@@ -18,6 +18,7 @@ Dim Shared clausulasEnter (LIST_CLAUSULES_SIZE) As String
 Dim Shared clausulasFire (LIST_CLAUSULES_SIZE) As String
 Dim AddTo (LIST_WORDS_SIZE) As Integer
 Dim AddToIdx As Integer
+Dim Shared As Integer useFlipFlops
 
 Sub dump ()
 	Dim i As Integer
@@ -26,6 +27,20 @@ Sub dump ()
 	next i
 	print
 end sub
+
+Function inCommand (spec As String) As Integer
+	Dim As Integer res, i
+
+	i = 0: res = 0
+
+	Do
+		If Command (i) = "" Then Exit Do
+		If Command (i) = spec Then res = -1: Exit Do
+		i = i + 1
+	Loop
+
+	Return res
+End Function
 
 Sub stringToArray (in As String)
 	Dim m as Integer
@@ -110,6 +125,8 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 	Dim numclausulas As Integer
 	Dim longitud As Integer
 	Dim ai As Integer
+
+	Dim As Integer fzx1, fzx2, fzy1, fzy2
 	
 	terminado = 0
 	estado = 0
@@ -139,6 +156,35 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 							numClausulas = numClausulas + 1
 							clausulasUsed (&H2) = -1
 						Case "FLAG":
+							' Autodetect flipflops
+							If useFlipFlops Then
+								' 0  1    2 3 4
+								' IF FLAG x = 1
+
+								If Val (listaPalabras (2)) < 16 And _
+									Val (listaPalabras (4)) < 2 And _
+									(listaPalabras (3) = "=" Or listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") Then
+
+									If (listaPalabras (3) = "=" And Val (listaPalabras (4)) = 0) Or _
+										((listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") And Val (listaPalabras (4)) = 1) Then
+										clausula = clausula + chr (&HA0 + Val (listaPalabras (2)))
+										numclausulas = numclausulas + 1
+										clausulasUsed (&HA0) = -1
+										Print "IF FLAG " & listaPalabras (2) & " = 0 -> 0x" & Hex (&HA0 + Val (listaPalabras (2)),2)
+									End If
+
+									If (listaPalabras (3) = "=" And Val (listaPalabras (4)) = 1) Or _
+										((listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") And Val (listaPalabras (0)) = 1) Then
+										clausula = clausula + chr (&HB0 + Val (listaPalabras (2)))
+										numclausulas = numclausulas + 1
+										clausulasUsed (&HA0) = -1
+										Print "IF FLAG " & listaPalabras (2) & " = 0 -> 0x" & Hex (&HB0 + Val (listaPalabras (2)),2)
+									End If
+
+									Exit Select
+								End If
+							End If
+
 							Select Case listaPalabras (3)
 								Case "=":
 									if listaPalabras (4) = "FLAG" Then
@@ -182,8 +228,24 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 							clausula = clausula + chr (&H21) + chr (val (listaPalabras (2))) + chr (val (listaPalabras (4)))
 							clausulasUsed (&H21) = -1
 							numClausulas = numClausulas + 1
+						Case "PLAYER_IN_X_TILES":
+							fzx1 = val (listaPalabras (2)) * 16 - 15
+							If fzx1 < 0 Then fzx1 = 0
+							fzx2 = val (listaPalabras (4)) * 16 + 15
+							If fzx2 > 255 Then fzx2 = 255
+							clausula = clausula + chr (&H21) + chr (fzx1) + chr (fzx2)
+							clausulasUsed (&H21) = -1
+							numClausulas = numClausulas + 1
 						Case "PLAYER_IN_Y":
 							clausula = clausula + chr (&H22) + chr (val (listaPalabras (2))) + chr (val (listaPalabras (4)))
+							clausulasUsed (&H22) = -1
+							numClausulas = numClausulas + 1
+						Case "PLAYER_IN_Y_TILES":
+							fzx1 = val (listaPalabras (2)) * 16 - 15
+							If fzx1 < 0 Then fzx1 = 0
+							fzx2 = val (listaPalabras (4)) * 16 + 15
+							If fzx2 > 191 Then fzx2 = 191
+							clausula = clausula + chr (&H22) + chr (fzx1) + chr (fzx2)
 							clausulasUsed (&H22) = -1
 							numClausulas = numClausulas + 1
 						Case "ALL_ENEMIES_DEAD"
@@ -233,6 +295,30 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 							clausula = clausula + Chr (&H0) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))
 							actionsUsed (&H0) = -1
 						Case "FLAG":
+							' Autodetect flipflops
+							If useFlipFlops Then
+								' 0   1    2 3 4
+								' SET FLAG x = 1
+
+								If Val (listaPalabras (2)) < 16 And _
+									Val (listaPalabras (4)) < 2 And _
+									(listaPalabras (3) = "=" Or listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") Then
+
+									If Val (listaPalabras (4)) = 0 Then
+										clausula = clausula + chr (&HA0 + Val (listaPalabras (2)))
+										numclausulas = numclausulas + 1
+										actionsUsed (&HA0) = -1
+										Print "SET FLAG " & listaPalabras (2) & " = 0 -> 0x" & Hex (&HA0 + Val (listaPalabras (2)),2)
+									Else
+										clausula = clausula + chr (&HB0 + Val (listaPalabras (2)))
+										numclausulas = numclausulas + 1
+										actionsUsed (&HB0) = -1
+										Print "SET FLAG " & listaPalabras (2) & " = 1 -> 0x" & Hex (&HB0 + Val (listaPalabras (2)),2)
+									End If
+
+									Exit Select
+								End If
+							End If
 							clausula = clausula + Chr (&H1) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))	
 							actionsUsed (&H1) = -1
 						Case "TILE":
@@ -286,6 +372,18 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					actionsUsed (&H50) = -1
 				Case "SET_FIRE_ZONE":
 					clausula = clausula + Chr (&H51) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5))) + Chr (pval (listaPalabras (7)))
+					actionsUsed (&H51) = -1
+				Case "SET_FIRE_ZONE_TILES":
+					fzx1 = pval (listaPalabras (1)) * 16 - 15
+					If fzx1 < 0 Then fzx1 = 0
+					fzy1 = pval (listaPalabras (3)) * 16 - 15
+					If fzy1 < 0 Then fzy1 = 0
+					fzx2 = pval (listaPalabras (5)) * 16 + 15
+					If fzx2 > 254 Then fzx2 = 254
+					fzy2 = pval (listaPalabras (7)) * 16 + 15
+					If fzy2 > 175 Then fzy2 = 175
+					
+					clausula = clausula + Chr (&H51) + Chr (fzx1) + Chr (fzy1) + Chr (fzx2) + Chr (fzy2)
 					actionsUsed (&H51) = -1
 				Case "SHOW_COINS":
 					clausula = clausula + Chr (&H60)
@@ -387,10 +485,12 @@ inFileName = command (1)
 outFileName = command (2)
 maxpants = pval (command (3))
 
+useFlipFlops = inCommand ("flipflops")
+
 print "msc para MTE MK1 v4.7"
 
-if command (1) = "" or command (2) = "" or maxpants = 0 then
-	print "uso: msc input output maxpants"
+if command (2) = "" or maxpants = 0 then
+	print "uso: msc input output maxpants [flipflops]"
 	system
 end if
 
@@ -572,7 +672,7 @@ print #f, "#endasm"
 print #f, " "
 print #f, "unsigned char *script;"
 print #f, "unsigned char *next_script;"
-print #f, "unsigned char sc_i, sc_x, sc_y, sc_c, sc_n, sc_m, sc_terminado, sc_continuar, sc_res;"
+print #f, "unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar, sc_res;"
 print #f, " "
 print #f, "void msc_init_all (void) {"
 If clausulasUsed (&H1) Or clausulasUsed (&H2) Then
@@ -597,6 +697,13 @@ print #f, "            inc hl"
 print #f, "            ld  (_script), hl"
 print #f, "            ld  l, a"
 print #f, "            ld  h, 0"
+If useFlipFlops Then
+	print #f, "            and 0xF0"
+	print #f, "            ld  (_sc_i), a"
+	print #f, "            ld  a, l"
+	print #f, "            and 0x0f"
+	print #f, "            ld  (_sc_m), a"
+End If
 print #f, "   #endasm"
 print #f, "}"
 print #f, " "
@@ -629,8 +736,6 @@ print #f, " "
 print #f, "// Ejecutamos el script apuntado por *script:"
 print #f, "unsigned char run_script (void) {"
 print #f, "    sc_res = 0;"
-print #f, "    sc_terminado = 0;"
-print #f, "    sc_continuar = 0;"
 print #f, " "
 print #f, "    if (script == 0)"
 print #f, "        return; "
@@ -642,9 +747,15 @@ print #f, "        sc_c = read_byte ();"
 print #f, "        if (sc_c == 0xFF) break;"
 print #f, "        next_script = script + sc_c;"
 print #f, "        sc_terminado = sc_continuar = 0;"
-print #f, "        while (!sc_terminado) {"
+print #f, "        while (0 == sc_terminado) {"
 print #f, "            sc_c = read_byte ();"
-print #f, "            switch (sc_c) {"
+If useFlipFlops Then
+	print #f, "            if (sc_i == 0xa0) { sc_terminado = flags [sc_m]; }"
+	print #f, "            else if (sc_i == 0xb0) { sc_terminado = (! flags [sc_m]); }"
+	print #f, "            else switch (sc_c) {"
+Else
+	print #f, "            switch (sc_c) {"
+End If
 
 if clausulasUsed (&H1) Then
 	print #f, "                case 0x01:"
@@ -658,7 +769,7 @@ if clausulasUsed (&H2) Then
 	print #f, "                case 0x02:"
 	print #f, "                    // IF PLAYER_HASN'T_ITEM x"
 	print #f, "                    // Opcode: 02 sc_x"
-	print #f, "                    sc_terminado =  (items [read_vbyte ()].status != 0);"
+	print #f, "                    sc_terminado =  items [read_vbyte ()].status;"
 	print #f, "                    break;"
 end if
 
@@ -732,7 +843,7 @@ if clausulasUsed (&H20) Then
 	print #f, "                    // IF PLAYER_TOUCHES x, y"
 	print #f, "                    // Opcode: 20 x y"
 	print #f, "                    read_x_y ();"	
-	print #f, "                    sc_terminado = (!((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15));"
+	print #f, "                    sc_terminado = (! ((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15));"
 	print #f, "                    break;"
 end if
 
@@ -742,7 +853,7 @@ if clausulasUsed (&H21) Then
 	print #f, "                    // Opcode: 21 x1 x2"
 	print #f, "                    sc_x = read_byte ();"
 	print #f, "                    sc_y = read_byte ();"	
-	print #f, "                    sc_terminado = (!((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y));"
+	print #f, "                    sc_terminado = (! ((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y));"
 	print #f, "                    break;"
 end if
 	
@@ -752,7 +863,7 @@ if clausulasUsed (&H22) Then
 	print #f, "                    // Opcode: 22 y1 y2"
 	print #f, "                    sc_x = read_byte ();"
 	print #f, "                    sc_y = read_byte ();"	
-	print #f, "                    sc_terminado = (!((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y));"
+	print #f, "                    sc_terminado = (! ((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y));"
 	print #f, "                    break;"
 end if
 
@@ -814,9 +925,15 @@ End If
 print #f, "                case 0xFF:"
 print #f, "                    // THEN"
 print #f, "                    // Opcode: FF"
-print #f, "                    sc_terminado = 1;"
-print #f, "                    sc_continuar = 1;"
-print #f, "                    script_something_done = 1;"
+'print #f, "                    sc_terminado = 1;"
+'print #f, "                    sc_continuar = 1;"
+'print #f, "                    script_something_done = 1;"
+print #f, "                    #asm" 
+print #f, "                        ld  a, 1"
+print #f, "                        ld  (_sc_terminado), a"
+print #f, "                        ld  (_sc_continuar), a"
+print #f, "                        ld  (_script_something_done), a"
+print #f, "                    #endasm"
 print #f, "                    break;"
 
 print #f, "            }"
@@ -824,10 +941,15 @@ print #f, "        }"
 
 print #f, "        if (sc_continuar) {"
 print #f, "            sc_terminado = 0;"
-print #f, "            while (!sc_terminado) {"
+print #f, "            while (0 == sc_terminado) {"
 print #f, "                sc_c = read_byte ();"
-print #f, "                switch (sc_c) {"
-
+If useFlipFlops Then
+	print #f, "                if (sc_i == 0xa0) { flags [sc_m & 0x0f] = 0; }"
+	print #f, "                else if (sc_i == 0xb0) { flags [sc_m & 0x0f] = 1; }"
+	print #f, "                else switch (sc_c) {"
+Else
+	print #f, "                switch (sc_c) {"
+End If
 if actionsUsed (&H0) Then
 	print #f, "                    case 0x00:"
 	print #f, "                        // SET ITEM x n"
@@ -903,7 +1025,7 @@ if actionsUsed (&H30) Then
 	print #f, "                    case 0x30:"
 	print #f, "                        // INC LIFE n"
 	print #f, "                        // Opcode: 30 n"
-	print #f, "                        player.life += read_vbyte;"
+	print #f, "                        player.life += read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -911,7 +1033,7 @@ if actionsUsed (&H31) Then
 	print #f, "                    case 0x31:"
 	print #f, "                        // DEC LIFE n"
 	print #f, "                        // Opcode: 31 n"
-	print #f, "                        player.life -= read_vbyte;"
+	print #f, "                        player.life -= read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -937,7 +1059,7 @@ if actionsUsed (&H40) Then
 	print #f, "                    case 0x40:"
 	print #f, "                        // INC OBJECTS n"
 	print #f, "                        // Opcode: 40 n"
-	print #f, "                        player.objs += read_vbyte;"
+	print #f, "                        player.objs += read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -945,7 +1067,7 @@ if actionsUsed (&H41) Then
 	print #f, "                    case 0x41:"
 	print #f, "                        // DEC OBJECTS n"
 	print #f, "                        // Opcode: 41 n"
-	print #f, "                        player.objs -= read_vbyte;"
+	print #f, "                        player.objs -= read_vbyte ();"
 	print #f, "                        break;"
 End If
 
@@ -953,7 +1075,7 @@ if actionsUsed (&H50) then
 	print #f, "                    case 0x50:"
 	print #f, "                        // PRINT_TILE_AT (X, Y) = N"
 	print #f, "                        // Opcode: 50 x y n"
-	print #f, "                        draw_coloured_tile (read_vbyte, read_vbyte, read_vbyte);"
+	print #f, "                        draw_coloured_tile (read_vbyte (), read_vbyte (), read_vbyte ());"
 	print #f, "                        break;"
 end if
 
@@ -1133,8 +1255,11 @@ End If
 
 if actionsUsed (&HF1) Then
 	print #f, "                    case 0xF1:"
-	print #f, "                        script_result = 1;"
-	print #f, "                        sc_terminado = 1;"
+	print #f, "                        #asm" 
+	print #f, "                            ld  a, 1"
+	print #f, "                            ld  (_sc_terminado), a"
+	print #f, "                            ld  (_script_result), a"
+	print #f, "                    #endasm"
 	print #f, "                        break;"
 End If
 
