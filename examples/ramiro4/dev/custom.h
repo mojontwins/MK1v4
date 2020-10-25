@@ -92,11 +92,11 @@ unsigned char rda;
 						ld  hl, _trap_by
 						add hl, bc
 						ld  a, (hl)
-						or  a
+						cp  0xff
 						jr  z, trap_block_create_new
 
 						xor a
-						cp  0xff
+						or  c
 						jr  z, trap_block_find_done
 						jr  trap_block_find_loop
 
