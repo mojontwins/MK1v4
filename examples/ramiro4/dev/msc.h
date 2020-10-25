@@ -18,7 +18,7 @@ unsigned char *f_scripts [] = {
  
 #asm
 ._mscce_0
-    defb 0x05, 0xF0, 0xFF, 0x65, 0xB1, 0xFF, 0xFF
+    defb 0x04, 0xF0, 0xFF, 0xB1, 0xFF, 0xFF
 ._mscce_1
     defb 0x0D, 0xF0, 0xFF, 0xA0, 0x20, 0x0A, 0x02, 0x1B, 0x51, 0x91, 0x11, 0xAF, 0x2F, 0xFF, 0xFF
 ._mscce_2
@@ -149,11 +149,6 @@ unsigned char run_script (void) {
                         fzx2 = read_byte ();
                         fzy2 = read_byte ();
                         f_zone_ac = 1;
-                        break;
-                    case 0x65:
-                        // DISABLE_TYPE_6
-                        // Opcode: 65
-                        scenery_info.allow_type_6 = 0;
                         break;
                     case 0xE3:
                         sc_x = 0;

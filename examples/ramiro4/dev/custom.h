@@ -32,7 +32,8 @@ unsigned char evil_eye_screen;
 // Blocks trap
 
 #define MAX_TRAP_BLOCKS	3
-#define TRAP_CHANCE 	15 		// Power of two minus one!
+#define TRAP_CHANCE 	7 		// Power of two minus one!
+#define BLOCK_HIT 		5
 
 unsigned char trap_active;
 unsigned char trap_bx [MAX_TRAP_BLOCKS];
@@ -67,6 +68,7 @@ unsigned char rda;
 		// To make trap active, we detect the player got a new obj.
 		if (trap_screen && player.objs != objs_old) {
 			trap_active = 1;
+			scenery_info.allow_type_6 = 1;
 			#asm
 					ld  hl, _trap_by
 					ld  de, _trap_by + 1
@@ -99,19 +101,25 @@ unsigned char rda;
 					.trap_block_create_new
 						ld  (hl), 1
 
+						push bc
+					.trap_block_select_x
 						call _rand
+
 						ld  a, l
 						and 0xf
-						jr  z, trap_block_create_new
+						jr  z, trap_block_select_x
 						cp  15
-						jr  nc, trap_block_create_new
-
+						jr  nc, trap_block_select_x
+						pop bc
 
 						ld  hl, _trap_bx
 						add hl, bc
 						ld  (hl), a
 
+						push bc
 						call _rand
+						pop bc
+						
 						ld  a, l
 						and 1
 						add 6
@@ -127,8 +135,7 @@ unsigned char rda;
 			if (half_life) {
 				for (gpit = 0; gpit < MAX_TRAP_BLOCKS; gpit ++) {
 					_trap_by = trap_by [gpit];
-					draw_2_digits (gpit << 2, 1, _trap_by);
-
+					
 					if (_trap_by) {
 						_trap_bx = trap_bx [gpit];
 
@@ -148,6 +155,22 @@ unsigned char rda;
 
 							map_attr [rda] = 8;
 							draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), trap_bt [gpit]);
+
+							// Collision
+							if (player.estado != EST_PARP && attr ((gpx+4) >> 4, (gpy+4) >> 4) == 8) {
+								// Crushed!
+								sp_UpdateNow ();
+								peta_el_beeper (10);
+								player.life -= BLOCK_HIT; 
+								player.estado = EST_PARP;
+								player.ct_estado = 50;
+
+								// Reenter & reset
+								hotspots [n_pant].act = 1;
+								player.objs --;
+								draw_scr ();
+								break;
+							}
 						}
 
 						trap_by [gpit] = _trap_by;
@@ -162,6 +185,7 @@ unsigned char rda;
 		trap_screen = map_behaviours [n_pant] & 4;
 
 		scenery_info.evil_zone_active = 0;
+		scenery_info.allow_type_6 = 0;
 
 		if (map_behaviours [n_pant] & 2) {
 			draw_coloured_tile (EYE_X-2, EYE_Y, 28);
