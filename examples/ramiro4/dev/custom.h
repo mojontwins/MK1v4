@@ -69,6 +69,7 @@ unsigned char rda;
 		if (trap_screen && player.objs != objs_old) {
 			trap_active = 1;
 			seed = n_pant + 1;
+			player.life += BLOCK_HIT;
 			scenery_info.allow_type_6 = 1;
 			#asm
 					ld  hl, _trap_by
@@ -95,12 +96,13 @@ unsigned char rda;
 						jr  z, trap_block_create_new
 
 						xor a
-						or  c
+						cp  0xff
 						jr  z, trap_block_find_done
 						jr  trap_block_find_loop
 
 					.trap_block_create_new
-						ld  (hl), 1
+						xor a
+						ld  (hl), a
 
 						push bc
 					.trap_block_select_x
@@ -137,28 +139,32 @@ unsigned char rda;
 				for (gpit = 0; gpit < MAX_TRAP_BLOCKS; gpit ++) {
 					_trap_by = trap_by [gpit];
 					
-					if (_trap_by) {
+					if (_trap_by != 0xff) {
 						_trap_bx = trap_bx [gpit];
 
 						rda = _trap_bx + (_trap_by << 4) - _trap_by;
 
-						// Make fall?
+						// Make fall
+						if (rda >= 15) map_attr [rda] = 0;
+						
+						// Add 32 because this is tileset 2
+						draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), 32 + map_buff [rda]);
+						_trap_by ++; rda += 15;
+
+						map_attr [rda] = 8;
+						draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), trap_bt [gpit]);
 
 						if (map_attr [rda + 15]) {
 							// Set
 							map_buff [rda] = trap_bt [gpit];
-							_trap_by = 0;
-						} else {
-							map_attr [rda] = 0;
-							// Add 32 because this is tileset 2
-							draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), 32 + map_buff [rda]);
-							_trap_by ++; rda += 15;
+							_trap_by = 0xff;
+						}
 
-							map_attr [rda] = 8;
-							draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), trap_bt [gpit]);
-
-							// Collision
-							if (player.estado != EST_PARP && attr ((gpx+8) >> 4, (gpy+8) >> 4) == 8) {
+						trap_by [gpit] = _trap_by;
+						
+						// Collision
+						if (attr ((gpx+8) >> 4, (gpy+8) >> 4) == 8) {
+							if (player.estado != EST_PARP) {
 								// Crushed!
 								sp_UpdateNow ();
 								peta_el_beeper (10);
@@ -172,10 +178,10 @@ unsigned char rda;
 								//draw_scr ();
 								on_pant = 0xff;
 								break;
+							} else {
+								player.y -= 16<<6;
 							}
 						}
-
-						trap_by [gpit] = _trap_by;
 					}
 				}
 			}

@@ -129,7 +129,12 @@ INERCIA player;
 
 ANIMADO en_an [3] @ 23800;
 unsigned char enoffs;
-
+unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
+unsigned char en_cx, en_cy;
+unsigned char en_ccx, en_ccy;
+// Only one enemy may hurt the player at once, so we need this flag:
+unsigned char en_tocado = 0; 
+	
 // Tile behaviour array and tile array for the current screen
 
 unsigned char map_attr [150] @ 24050;

@@ -10,7 +10,7 @@
 #define MAP_W					5		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				10		// Initial screen
+#define SCR_INICIO				3//10		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -21,7 +21,7 @@
 #define PLAYER_REFILL			1		// Life recharge
 
 #define LINEAR_ENEMY_HIT		7		// Amount of life to substract when normal enemy hits
-#define FLYING_ENEMY_HIT		12		// Amount of life to substract when flying enemy hits
+#define FLYING_ENEMY_HIT		10		// Amount of life to substract when flying enemy hits
 
 #define ENABLE_CODE_HOOKS				// Hook at entering screen & each loop @ custom.h
 
@@ -99,8 +99,8 @@
 #define USE_TYPE_6						// If defined, type 6 enemies are enabled.
 //#define USE_SIGHT_DISTANCE			// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE		120		
-#define FANTY_MAX_V 			256 	// Flying enemies max speed.
-#define FANTY_A 				16		// Flying enemies acceleration.
+#define FANTY_MAX_V 			128 	// Flying enemies max speed.
+#define FANTY_A 				8		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
 
 // Scripting

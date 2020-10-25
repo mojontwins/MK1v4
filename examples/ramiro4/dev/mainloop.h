@@ -201,8 +201,8 @@ void main (void) {
 			maincounter ++;
 			half_life = !half_life;
 			
-			move ();
 			mueve_bicharracos ();
+			move ();
 
 			#ifdef PLAYER_CAN_FIRE
 				// Move bullets				

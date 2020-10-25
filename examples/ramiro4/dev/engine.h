@@ -13,9 +13,15 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	}
 }
 
-unsigned char collide (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+/*
+unsigned char collide_enem (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
 	// 13x13 box collision
-	return  (x1 + 13 >= x2 && x1 <= x2 + 13 && y1 + 13 >= y2 && y1 <= y2 + 13);
+	return  (x1 + 12 >= x2 && x1 <= x2 + 12 && y1 + 12 >= y2 && y1 <= y2 + 12);
+}
+*/
+unsigned char collide_enem (void) {
+	// en_x, en_y, en_ccx, en_ccy
+	return  (en_x + 12 >= en_ccx && en_x <= en_ccx + 12 && en_y + 12 >= en_ccy && en_y <= en_ccy + 12);
 }
 
 unsigned char rand (void) {
@@ -1192,13 +1198,7 @@ void draw_scr (void) {
 
 void mueve_bicharracos (void) {
 	// This function moves the active enemies.
-	
-	unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
-	unsigned char en_cx, en_cy;
-	unsigned char en_ccx, en_ccy;
-	// Only one enemy may hurt the player at once, so we need this flag:
-	unsigned char en_tocado = 0; 		
-
+	en_tocado = 0;
 	player.gotten = 0;
 	
 	for (enit = 0; enit < 3; enit ++) {
@@ -1356,15 +1356,15 @@ void mueve_bicharracos (void) {
 				// Collision with enemy
 				
 				#ifdef RANDOM_RESPAWN
-					} else if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && (malotes [enoffsmasi].t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
+					} else if (!en_tocado && collide_enem () && (malotes [enoffsmasi].t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
 				#else
-					} else if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && malotes [enoffsmasi].t < 16 && player.estado == EST_NORMAL)
+					} else if (!en_tocado && collide_enem () && malotes [enoffsmasi].t < 16 && player.estado == EST_NORMAL)
 				#endif
 			#else
 				#ifdef RANDOM_RESPAWN
-					if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && (malotes [enoffsmasi].t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
+					if (!en_tocado && collide_enem () && (malotes [enoffsmasi].t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
 				#else
-					if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && malotes [enoffsmasi].t < 16 && player.estado == EST_NORMAL)
+					if (!en_tocado && collide_enem () && malotes [enoffsmasi].t < 16 && player.estado == EST_NORMAL)
 				#endif
 			#endif			
 			{
