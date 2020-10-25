@@ -100,7 +100,7 @@ void main (void) {
 			init_bullets ();
 		#endif	
 			
-		n_pant = SCR_INICIO;
+		on_pant = n_pant = SCR_INICIO;
 		maincounter = 0;
 		
 		#ifdef ACTIVATE_SCRIPTING		
@@ -356,6 +356,7 @@ void main (void) {
 				}
 			#endif
 
+			/*
 			#ifndef FIXED_SCREENS
 				#ifdef PLAYER_AUTO_CHANGE_SCREEN
 					if (player.x == 0 && player.vx < 0) {
@@ -395,6 +396,28 @@ void main (void) {
 						peta_el_beeper (2);
 						player.life --;	
 					}
+				}
+			#endif
+			*/
+			#ifndef FIXED_SCREENS
+				if (gpx == 0 && player.vx < 0) {
+					n_pant --;
+					gpx = 224; player.x = 224<<6; 
+				} else if (gpx == 224 && player.vx > 0) {
+					n_pant ++;
+					gpx = player.x = 0;
+				}
+
+				if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
+					n_pant -= MAP_W;
+					gpy = 144; player.y = 144<<6;
+				} else if (gpy == 144 && player.vy > 0) {
+					n_pant += MAP_W;
+					gpy = player.y = 0;
+				}
+
+				if (n_pant != on_pant) {
+					draw_scr (); on_pant = n_pant;
 				}
 			#endif
 			

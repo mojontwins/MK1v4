@@ -68,6 +68,7 @@ unsigned char rda;
 		// To make trap active, we detect the player got a new obj.
 		if (trap_screen && player.objs != objs_old) {
 			trap_active = 1;
+			seed = n_pant + 1;
 			scenery_info.allow_type_6 = 1;
 			#asm
 					ld  hl, _trap_by
@@ -157,7 +158,7 @@ unsigned char rda;
 							draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), trap_bt [gpit]);
 
 							// Collision
-							if (player.estado != EST_PARP && attr ((gpx+4) >> 4, (gpy+4) >> 4) == 8) {
+							if (player.estado != EST_PARP && attr ((gpx+8) >> 4, (gpy+8) >> 4) == 8) {
 								// Crushed!
 								sp_UpdateNow ();
 								peta_el_beeper (10);
@@ -168,7 +169,8 @@ unsigned char rda;
 								// Reenter & reset
 								hotspots [n_pant].act = 1;
 								player.objs --;
-								draw_scr ();
+								//draw_scr ();
+								on_pant = 0xff;
 								break;
 							}
 						}

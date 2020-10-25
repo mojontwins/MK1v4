@@ -10,7 +10,7 @@
 #define MAP_W					5		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				3//10		// Initial screen
+#define SCR_INICIO				10		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -37,7 +37,6 @@
 // General directives:
 // -------------------
 
-#define PLAYER_AUTO_CHANGE_SCREEN		// Player changes screen automaticly (no need to press direction)
 #define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
 #define DEACTIVATE_KEYS					// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
