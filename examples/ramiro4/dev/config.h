@@ -10,7 +10,7 @@
 #define MAP_W					5		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				3//10		// Initial screen
+#define SCR_INICIO				10		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -55,9 +55,11 @@
 // Coins engine
 // ------------
 
-//#define USE_COINS						// Coin engine activated
-//#define COIN_TILE				13		// Coin is tile #X
-//#define COIN_FLAG				1		// Coins are counted in flag #N
+#define USE_COINS						// Coin engine activated
+#define COIN_TILE				18		// Coin is tile #X
+//#define COIN_BEH 				16 		// Detect coin by behaviour rather than tile nº
+#define COIN_FLAG				15		// Coins are counted in flag #N
+#define COINS_REFILL 			1		// If defined, add this to player.life
 //#define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
 //#define COINS_DEACTIVABLE				// Coins can be hidden.
 
@@ -184,7 +186,7 @@
 #define LINE_OF_TEXT_SUBSTR		2
 #define LINE_OF_TEXT_ATTR 		40		
 
-#define GAME_OVER_ATTR			96
+#define GAME_OVER_ATTR			104
 
 // Graphic FX, uncomment which applies...
 
@@ -195,7 +197,8 @@
 #define NO_MAX_ENEMS					// Less than 3 enems in some screens
 //#define NO_MASKS						// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
-#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
+//#define TWO_SETS						// If defined, two sets of tiles. Old < 4.8 version
+#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
 #define TWO_SETS_CONDITION		((map_behaviours [n_pant] & 1) ? 32 : 0) 	// Must return 32 if second tileset is active, 0 otherwise.
 
 // ============================================================================
@@ -239,11 +242,11 @@
 // 8 = Full obstacle (blocks player from all directions)
 
 #ifndef UNPACKED_MAP
-	#ifdef TWO_SETS
+	#if defined TWO_SETS || defined TWO_SETS_REAL
 	// Fill this array for dual tileset maps.
 	unsigned char comportamiento_tiles [] = {
 		0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 4, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0,16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 0, 3, 4, 1,
 
 	};

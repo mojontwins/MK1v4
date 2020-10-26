@@ -134,6 +134,10 @@ unsigned char en_cx, en_cy;
 unsigned char en_ccx, en_ccy;
 // Only one enemy may hurt the player at once, so we need this flag:
 unsigned char en_tocado = 0; 
+unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
+signed char _en_mx, _en_my;
+unsigned char _en_t, _en_life;
+unsigned char *_baddies_pointer;
 	
 // Tile behaviour array and tile array for the current screen
 
@@ -188,6 +192,9 @@ unsigned char jetpac_frame_counter;
 unsigned char playing;
 unsigned char maincounter;
 unsigned char objs_old, keys_old, life_old, killed_old, item_old, ezg_old;
+#ifdef USE_COINS
+	unsigned char coins_old;
+#endif
 unsigned char reentered;
 unsigned char success;
 unsigned char rdi;
@@ -198,9 +205,9 @@ unsigned char gpx, gpy, gpxx, gpyy;
 int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
-unsigned char _x,_y,_t;
+unsigned char _x, _y, _t, _n;
 
-#ifdef TWO_SETS
+#if defined TWO_SETS || defined TWO_SETS_REAL
 	unsigned char tileoffset;
 #endif
 	

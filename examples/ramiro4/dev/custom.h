@@ -42,9 +42,11 @@ unsigned char trap_by [MAX_TRAP_BLOCKS];
 unsigned char trap_bt [MAX_TRAP_BLOCKS];
 
 unsigned char trap_screen;
+unsigned char trap_coins;
 unsigned char _trap_bx;
 unsigned char _trap_by;
-unsigned char rda;
+unsigned char _trap_bt;
+unsigned char rda, rdb;
 
 #ifdef ENABLE_CODE_HOOKS
 
@@ -72,14 +74,20 @@ unsigned char rda;
 			seed = n_pant + 1;
 			player.life += BLOCK_HIT;
 			scenery_info.allow_type_6 = 1;
+			flags [COIN_FLAG] = 0;
 			#asm
 					ld  hl, _trap_by
 					ld  de, _trap_by + 1
 					ld  bc, MAX_TRAP_BLOCKS - 1
-					xor a
+					ld  a, 0xff
 					ld  (hl), a
 					ldir
 			#endasm
+			if (trap_coins) {
+				set_map_tile (13, 5, 0, 0);
+				sp_UpdateNow ();
+				peta_el_beeper (10);
+			}
 		}
 
 		if (trap_active) {
@@ -112,13 +120,17 @@ unsigned char rda;
 						ld  a, l
 						and 0xf
 						jr  z, trap_block_select_x
-						cp  15
+						cp  14
 						jr  nc, trap_block_select_x
 						pop bc
 
 						ld  hl, _trap_bx
 						add hl, bc
 						ld  (hl), a
+
+						ld  a, (_trap_coins)
+						or  a
+						jr  nz, trap_block_set_coins
 
 						push bc
 						call _rand
@@ -127,6 +139,12 @@ unsigned char rda;
 						ld  a, l
 						and 1
 						add 6
+						jr  trap_block_write
+
+					.trap_block_set_coins
+						ld  a, 18
+
+					.trap_block_write
 						ld  hl, _trap_bt
 						add hl, bc
 						ld  (hl), a
@@ -138,33 +156,72 @@ unsigned char rda;
 			// Animate
 			if (half_life) {
 				for (gpit = 0; gpit < MAX_TRAP_BLOCKS; gpit ++) {
+					/*
 					_trap_by = trap_by [gpit];
+					_trap_bx = trap_bx [gpit];
+					_trap_bt = trap_bt [gpit];
+					*/
+					#asm
+							ld  bc, (_gpit)
+							ld  b, 0
+
+							ld  hl, _trap_by
+							add hl, bc
+							ld  a, (hl)
+							ld  (__trap_by), a
+
+							ld  hl, _trap_bx
+							add hl, bc
+							ld  a, (hl)
+							ld  (__trap_bx), a
+
+							ld  hl, _trap_bt
+							add hl, bc
+							ld  a, (hl)
+							ld  (__trap_bt), a
+					#endasm
 					
 					if (_trap_by != 0xff) {
-						_trap_bx = trap_bx [gpit];
-
 						rda = _trap_bx + (_trap_by << 4) - _trap_by;
 
 						// Make fall
 						if (rda >= 15) map_attr [rda] = 0;
 						
-						// Add 32 because this is tileset 2
-						draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), 32 + map_buff [rda]);
+						set_map_tile (_trap_bx, _trap_by, map_buff [rda], 0);
 						_trap_by ++; rda += 15;
 
-						map_attr [rda] = 8;
-						draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), trap_bt [gpit]);
+						rdx = (gpx + 8) >> 4; rdy = (gpy + 8) >> 4;
 
-						if (map_attr [rda + 15]) {
-							// Set
-							map_buff [rda] = trap_bt [gpit];
+						if (trap_coins && rdx == _trap_bx && rdy == _trap_by) {
+							//get_coin ((gpx+8) >> 4, (gpy+8) >> 4);
+							flags [COIN_FLAG] ++;
+							peta_el_beeper (5);
+							player.life += COINS_REFILL;
+							_trap_by = 0xff;
+						} else if (map_attr [rda] == 1) {
+							_trap_by = 0xff;
+						} else {
+							map_attr [rda] = comportamiento_tiles [_trap_bt];
+							draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), _trap_bt);
+						
+							if (map_attr [rda + 15] & 12) {
+								map_buff [rda] = _trap_bt;
+								_trap_by = 0xff; 
+							}
+						}
+
+						rdb = attr (rdx, rdy);
+						/*
+						if (rdb & 16) {
+							get_coin ((gpx+8) >> 4, (gpy+8) >> 4);
 							_trap_by = 0xff;
 						}
+						*/
 
 						trap_by [gpit] = _trap_by;
 						
 						// Collision
-						if (attr ((gpx+8) >> 4, (gpy+8) >> 4) == 8) {
+						if (rdb & 8) {
 							if (player.estado != EST_PARP) {
 								// Crushed!
 								sp_UpdateNow ();
@@ -183,6 +240,14 @@ unsigned char rda;
 								player.y -= 16<<6;
 							}
 						}
+
+						// Finally
+						if (flags [COIN_FLAG] == 30) {
+							// Deativate trap!
+							sp_UpdateNow ();
+							peta_el_beeper (8);
+							on_pant = 0xff;
+						} 
 					}
 				}
 			}
@@ -192,6 +257,7 @@ unsigned char rda;
 	void hook_entering (void) {
 		evil_eye_screen = map_behaviours [n_pant] & 2;
 		trap_screen = map_behaviours [n_pant] & 4;
+		trap_coins = map_behaviours [n_pant] & 8;
 
 		scenery_info.evil_zone_active = 0;
 		scenery_info.allow_type_6 = 0;

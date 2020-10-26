@@ -136,7 +136,7 @@ void main (void) {
 			fall_frame_counter = 0;
 		#endif
 
-		objs_old = life_old = keys_old = killed_old = item_old = ezg_old = 0xff;
+		objs_old = life_old = keys_old = killed_old = item_old = ezg_old = coins_old = 0xff;
 
 		while (playing) {
 
@@ -195,6 +195,13 @@ void main (void) {
 				if (player.killingzone_beepcount != ezg_old) {
 					draw_2_digits (EVIL_GAUGE_X, EVIL_GAUGE_Y, EVIL_ZONE_BEEPS_COUNT - player.killingzone_beepcount);
 					ezg_old = player.killingzone_beepcount;
+				}
+			#endif
+
+			#ifdef USE_COINS
+				if (flags [COIN_FLAG] != coins_old) {
+					draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
+					coins_old = flags [COIN_FLAG];
 				}
 			#endif
 

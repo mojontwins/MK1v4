@@ -96,6 +96,7 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 			dec hl
 			ld  a, (hl)
 			ld  (__t), a
+		._draw_coloured_tile_do
 	#endasm
 
 	#if defined USE_AUTO_SHADOWS && !defined UNPACKED_MAP
@@ -237,6 +238,63 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 				call SPInvalidate	
 		#endasm
 	}		
+}
+
+void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned char n) {
+	#asm
+			; Copy params for speed & size
+			ld  hl, 8
+			add hl, sp
+			ld  a, (hl)
+			ld  (__x), a
+			ld  c, a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			ld  (__y), a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			ld  (__t), a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			ld  (__n), a
+
+			ld  a, (__y)
+			ld  b, a
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			add c
+
+			ld  b, 0
+			ld  c, a
+
+			ld  hl, _map_buff
+			add hl, bc
+			ld  a, (__t)
+			ld (hl), a
+
+			ld  hl, _map_attr
+			add hl, bc
+			ld  a, (__n)
+			ld (hl), a
+			
+			ld  a, (__x)
+			sla a
+			add VIEWPORT_X
+			ld  (__x), a
+
+			ld  a, (__y)
+			sla a
+			add VIEWPORT_Y
+			ld  (__y), a
+
+			jp _draw_coloured_tile_do
+	#endasm
 }
 
 void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
