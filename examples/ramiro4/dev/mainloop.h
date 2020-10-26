@@ -206,7 +206,7 @@ void main (void) {
 			#endif
 
 			maincounter ++;
-			half_life = !half_life;
+			half_life ^= 1;
 			
 			mueve_bicharracos ();
 			move ();

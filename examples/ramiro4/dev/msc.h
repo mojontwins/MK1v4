@@ -9,11 +9,11 @@ extern unsigned char mscce_2 [];
 extern unsigned char msccf_0 [];
  
 unsigned char *e_scripts [] = {
-    0, 0, mscce_1, 0, 0, 0, 0, 0, 0, 0, 0, mscce_2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, mscce_0, 0
+    0, 0, mscce_1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, mscce_2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, mscce_0, 0
 };
  
 unsigned char *f_scripts [] = {
-    0, 0, msccf_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    0, 0, msccf_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
  
 #asm

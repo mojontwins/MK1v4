@@ -10,11 +10,11 @@
 // bit 2 = trap!
 // bit 3 = trap but with coins
 unsigned char map_behaviours [] = {
-	 0,  0,  0,  5,  0,
-	 0,  0,  0,  3,  1,
-	 0,  0,  3,  3,  5,
-	 5,  1,  1,  1,  1, 
-	13,  1,  1,  1,  1 
+	 0,  0,  0,  5,  0,  0, 
+	 0,  0,  0,  3,  1,  0,
+	 0,  0,  3,  3,  5,  0,
+	 5,  1,  1,  1,  1,  0,
+	13,  1,  1,  1,  1,  0
 }; 
 
 // Evil eye things
@@ -63,8 +63,9 @@ unsigned char rda, rdb;
 				draw_coloured_tile (EYE_X, EYE_Y, evil_eye_state_tiles [evil_eye_state]);
 				scenery_info.evil_zone_active = (evil_eye_state == 2);
 			}
-			sp_Border (evil_eye_state == 2 ? 2 : 0);
-		} else sp_Border (0);
+		} //else sp_Border (0);
+
+		sp_Border ((scenery_info.evil_zone_active & half_life) ? 2 : 0);
 
 		// Block trap
 

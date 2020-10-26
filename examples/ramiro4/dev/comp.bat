@@ -3,7 +3,7 @@
 set game=ramiro4
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 5 5 15 10 99 packed  > nul
+..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 99 packed  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul
@@ -16,7 +16,7 @@ echo Making %game%
 ..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
 
 echo Making script
-..\utils\msc.exe ..\script\script.spt msc.h 25 flipflops > nul
+..\utils\msc.exe ..\script\script.spt msc.h 30 flipflops > nul
 
 zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
