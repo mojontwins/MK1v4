@@ -244,11 +244,9 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	sp_PrintAtInv (y, 1 + x, 71, 16 + value % 10);
 }
 
-void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
-	unsigned char m;
+void draw_text (unsigned char x, unsigned char y, unsigned char c, unsigned char *s) {
 	while (*s) {
-		m = (*s) - 32;
-		sp_PrintAtInv (y, x ++, c, m);
+		sp_PrintAtInv (y, x ++, c, (*s) - 32);
 		s ++;
 	}
 }
