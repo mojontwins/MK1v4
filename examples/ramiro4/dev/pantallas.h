@@ -53,7 +53,7 @@ void espera_activa (int espera) {
 		#asm
 			halt
 		#endasm
-		if (sp_GetKey()) {
+		if (any_key ()) {
 			break;
 		}
 	}

@@ -310,3 +310,15 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 		s ++;
 	}
 }
+
+void any_key (void) {
+	#asm
+			ld  hl, 0
+			xor a
+			in  a, (0xfe)
+			and 0x1f
+			cp  0x1f		// Issue 2/3 safe
+			ret z
+			ld  l, 1
+	#endasm
+}

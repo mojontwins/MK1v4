@@ -66,5 +66,5 @@ void do_extern_action (unsigned char n) {
 	}
 
 	sp_UpdateNow ();
-	while (sp_GetKey ()); while (!sp_GetKey ()); 
+	while (any_key ()); while (!any_key ()); 
 }
