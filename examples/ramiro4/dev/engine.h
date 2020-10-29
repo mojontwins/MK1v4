@@ -3,6 +3,8 @@
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+unsigned char line_of_text_clear [] = "                                ";
+
 unsigned char *player_cells [] = {
 	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
 	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
@@ -15,11 +17,48 @@ unsigned char *enem_cells [] = {
 
 void saca_a_todo_el_mundo_de_aqui (void) {
 	// ¡Saca a todo el mundo de aquí!
+	/*
 	sp_MoveSprAbs (sp_player, spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);				
 	for (gpit = 0; gpit < 3; gpit ++) {
 		if (malotes [enoffs + gpit].t != 0)
 			sp_MoveSprAbs (sp_moviles [gpit], spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);
 	}
+	*/
+	#asm
+			ld  ix, (_sp_player)
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+			call SPMoveSprAbs
+	
+			xor a
+		.hide_sprites_enems_loop
+			ld  (_gpit), a
+
+			sla a
+			ld  c, a
+			ld  b, 0
+			ld  hl, _sp_moviles
+			add hl, bc
+			ld  e, (hl)
+			inc hl
+			ld  d, (hl)
+			push de
+			pop ix
+
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+
+			call SPMoveSprAbs
+
+			ld  a, (_gpit)
+			inc a
+			cp  3
+			jr  nz, hide_sprites_enems_loop
+	#endasm
 }
 
 unsigned char collide_enem (void) {
@@ -285,7 +324,7 @@ void cortina (void) {
 
 #ifdef USE_COINS
 	void get_coin(unsigned char xx, unsigned char yy) {
-		++ flags [COIN_FLAG];
+		flags [COIN_FLAG] ++;
 		
 		set_map_tile (xx, yy, 0, 0);
 
@@ -327,6 +366,14 @@ void cortina (void) {
 		peta_el_beeper (10);	
 	}
 #endif
+
+void adjust_to_tile_x (void) {
+	gpx = gpxx << 4; player.x = gpx << 6;
+}
+
+void adjust_to_tile_y (void) {
+	gpy = gpyy << 4; player.y = gpy << 6;
+}
 
 unsigned char move (void) {
 	gpcx = player.x;
@@ -415,7 +462,9 @@ unsigned char move (void) {
 			if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 				// Stop and adjust.
 				player.vy = 0;
-				++ gpyy; gpy = gpyy << 4; player.y = gpy << 6;
+				gpyy ++;
+				// gpy = gpyy << 4; player.y = gpy << 6;
+				adjust_to_tile_y ();
 			}
 	} else if (player.vy > 0 && (gpy & 15) < 8) { 	// Going down
 		if (player.y < 9216)
@@ -423,7 +472,8 @@ unsigned char move (void) {
 			{
 				// Stop and adjust.
 				player.vy = 0;
-				gpy = gpyy << 4; player.y = gpy << 6;
+				// gpy = gpyy << 4; player.y = gpy << 6;
+				adjust_to_tile_y ();
 				player.possee = 1;
 			}
 	}
@@ -551,13 +601,16 @@ unsigned char move (void) {
 		if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
 			// Stop and adjust
 			player.vx = 0;
-			++ gpxx; gpx = gpxx << 4; player.x = gpx << 6;
+			gpxx ++; 
+			// gpx = gpxx << 4; player.x = gpx << 6;
+			adjust_to_tile_x ();
 		}
 	} else {
 		if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
 			// Stop and adjust
 			player.vx = 0;
-			gpx = gpxx << 4; player.x = gpx << 6;
+			// gpx = gpxx << 4; player.x = gpx << 6;
+			adjust_to_tile_x ();
 		}
 	}
 	
@@ -657,16 +710,25 @@ unsigned char move (void) {
 	#ifndef DEACTIVATE_EVIL_TILE	
 		// Evil tile engine
 
-		if (attr (gpxx, gpyy) == 1 || 
+		#ifdef EVIL_TILE_SIMPLE
+			if (attr ((gpx + 8) >> 4, (gpy + 14) >> 4) == 1)
+		#else
+			if (attr (gpxx, gpyy) == 1 || 
 			((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 1) ||
 			((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 1) ||
-			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) {		
+			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) 
+		#endif
+		{		
 			peta_el_beeper (2);
 			player.life -= LINEAR_ENEMY_HIT;	
 			player.x = gpcx;
 			player.y = gpcy;
-			player.vy = -player.vy;
-			//player.vx = -player.vx;
+			#ifdef PLAYER_MOGGY_STYLE
+				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
+				else player.vy = -player.vy;
+			#else
+				player.vy = -player.vy;
+			#endif
 			#ifdef PLAYER_FLICKERS
 				// Flickers. People seem to like this more than the bouncing behaviour.
 				player.estado = EST_PARP;
@@ -828,13 +890,6 @@ void init_player (void) {
 	}
 #endif
 
-#ifdef ACTIVATE_SCRIPTING
-	void delete_text (void) {
-		for (gpit = 0; gpit < 32 - LINE_OF_TEXT_SUBSTR; gpit ++)
-			sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + gpit, LINE_OF_TEXT_ATTR, 0);
-	}
-#endif
-
 #ifdef TWO_SETS_REAL
 	void draw_and_advance (void) {
 		map_attr [rdi] = comportamiento_tiles [_n];
@@ -845,6 +900,7 @@ void init_player (void) {
 			rdx = 0;
 			rdy += 2;
 		}
+		rdi ++;
 	}
 #endif
 
@@ -852,9 +908,9 @@ void draw_scr_background (void) {
 	rdx = 0; rdy = 0;
 	
 	#ifdef UNPACKED_MAP
-		idx = n_pant * 150;
+		gp_gen = mapa + (n_pant * 150);		
 	#else
-		idx = n_pant * 75;
+		gp_gen = mapa + (n_pant * 75);
 	#endif
 	
 	rdi = 0;
@@ -866,7 +922,7 @@ void draw_scr_background (void) {
 	#ifdef UNPACKED_MAP
 		// UNPACKED map, every byte represents one tile.
 		for (gpit = 0; gpit < 150; gpit ++) {
-			rdd = mapa [idx++];
+			rdd = *gp_gen ++;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdd == COIN_TILE && !scenery_info.show_coins) rdd = COIN_TILE_DEACT_SUBS;
 			#endif
@@ -883,9 +939,9 @@ void draw_scr_background (void) {
 	#elif defined TWO_SETS
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
+		rdi = 0; gp_gen = mapa;
 		for (gpit = 0; gpit < 75; gpit ++) {
-			rdi = 15 * (rdy >> 1) + (rdx >> 1);
-			rdd = mapa [idx++];
+			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
@@ -911,14 +967,15 @@ void draw_scr_background (void) {
 				rdx = 0;
 				rdy += 2;
 			}
+			rdi ++;
 		}
 	#elif defined TWO_SETS_REAL
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
 		// But *REAL* tile values are written to the buffers
-		for (gpit = 0; gpit < 75; gpit ++) {
-			rdi = 15 * (rdy >> 1) + (rdx >> 1);
-			rdd = mapa [idx++];
+		rdi = 0;
+		for (gpit = 0; gpit < 75; gpit ++) {			
+			rdd = *gp_gen ++;
 			rdt1 = (rdd >> 4) + tileoffset;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
@@ -928,15 +985,14 @@ void draw_scr_background (void) {
 				if (rdt2 == COIN_TILE && !scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
 			_n = rdt1; draw_and_advance ();
-			rdi ++;
 			_n = rdt2; draw_and_advance ();
 		}
 	#else	
 		// PACKED map, every byte contains two tiles, plus admits
 		// some special effects (autoshadows, see below).
-		for (gpit = 0; gpit < 75; gpit ++) {
-			rdi = 15 * (rdy >> 1) + (rdx >> 1);
-			rdd = mapa [idx++];
+		rdi = 0;
+		for (gpit = 0; gpit < 75; gpit ++) {			
+			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
@@ -970,6 +1026,7 @@ void draw_scr_background (void) {
 				rdx = 0;
 				rdy += 2;
 			}
+			rdi ++;
 		}
 	#endif	
 
@@ -1143,7 +1200,12 @@ void draw_scr (void) {
 		
 	#ifdef ACTIVATE_SCRIPTING
 		// Delete line of text
-		delete_text ();
+		#asm
+				xor a
+				ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
+		#endasm
+		draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+
 		// Run "ENTERING ANY" script (if available)
 		script = e_scripts [MAP_W * MAP_H + 1];
 		run_script ();
@@ -1374,8 +1436,8 @@ void mueve_bicharracos (void) {
 								if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 									// ajust:
 									++ gpyy;
-									gpy = gpyy << 4;
-									player.y = gpy << 6;
+									// gpy = gpyy << 4; player.y = gpy << 6;
+									adjust_to_tile_y ();
 								}
 						}
 					} else if (_en_my > 0) {
@@ -1386,8 +1448,8 @@ void mueve_bicharracos (void) {
 							if (player.y < 9216)
 								if (attr (gpxx, gpyy + 1) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
 									// ajust:
-									gpy = gpyy << 4;
-									player.y = gpy << 6;
+									// gpy = gpyy << 4; player.y = gpy << 6;
+									adjust_to_tile_y ();
 								}
 						}
 					}
@@ -1404,14 +1466,14 @@ void mueve_bicharracos (void) {
 							if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
 								player.vx = 0;
 								gpxx ++; 
-								gpx = gpxx >> 4;
-								player.x = gpx >> 6;
+								// gpx = gpxx << 4; player.x = gpx << 6;
+								adjust_to_tile_x ();
 							}
 						} else if (_en_mx > 0) {
 							if (attr (en_xx + 1, en_yy) & 8 || ((gpy & 15) != 0 && attr (en_xx + 1, en_yy + 1) & 8)) {
 								player.vx = 0;
-								gpx = gpxx >> 4;
-								player.x = gpx >> 6;
+								// gpx = gpxx << 4; player.x = gpx << 6;
+								adjust_to_tile_x ();
 							}
 						}					
 					}

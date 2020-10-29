@@ -6,10 +6,11 @@
 extern unsigned char mscce_0 [];
 extern unsigned char mscce_1 [];
 extern unsigned char mscce_2 [];
+extern unsigned char mscce_3 [];
 extern unsigned char msccf_0 [];
  
 unsigned char *e_scripts [] = {
-    0, 0, mscce_1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, mscce_2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, mscce_0, 0
+    0, 0, mscce_1, 0, 0, 0, 0, 0, 0, 0, 0, 0, mscce_2, mscce_3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, mscce_0, 0
 };
  
 unsigned char *f_scripts [] = {
@@ -22,9 +23,11 @@ unsigned char *f_scripts [] = {
 ._mscce_1
     defb 0x08, 0xF0, 0xFF, 0xA0, 0x20, 0x0A, 0x02, 0x1B, 0xFF, 0xFF
 ._mscce_2
+    defb 0x18, 0xF0, 0xFF, 0xE3, 0x12, 0x41, 0x4C, 0x55, 0x43, 0x49, 0x4E, 0x41, 0x20, 0x50, 0x45, 0x50, 0x49, 0x4E, 0x49, 0x4C, 0x4C, 0x4F, 0x53, 0x00, 0xFF, 0xFF
+._mscce_3
     defb 0x0B, 0xB1, 0xFF, 0x20, 0x03, 0x07, 0x00, 0x20, 0x03, 0x08, 0x00, 0xFF, 0xFF
 ._msccf_0
-    defb 0x2A, 0x20, 0x0A, 0x02, 0xA0, 0xFF, 0xE3, 0x39, 0x21, 0x00, 0x34, 0x25, 0x00, 0x28, 0x25, 0x00, 0x21, 0x22, 0x29, 0x25, 0x32, 0x34, 0x2F, 0x00, 0x2C, 0x21, 0x00, 0x30, 0x35, 0x25, 0x32, 0x34, 0x21, 0x00, 0x29, 0x33, 0x28, 0xEE, 0xB1, 0xB0, 0xE0, 0x0B, 0xFF, 0xFF
+    defb 0x2B, 0x20, 0x0A, 0x02, 0xA0, 0xFF, 0xE3, 0x1E, 0x59, 0x41, 0x20, 0x54, 0x45, 0x20, 0x48, 0x45, 0x20, 0x41, 0x42, 0x49, 0x45, 0x52, 0x54, 0x4F, 0x20, 0x4C, 0x41, 0x20, 0x50, 0x55, 0x45, 0x52, 0x54, 0x41, 0x20, 0x49, 0x53, 0x48, 0x00, 0xB1, 0xB0, 0xE0, 0x0B, 0xFF, 0xFF
 #endasm
  
 unsigned char *script;
@@ -135,11 +138,7 @@ unsigned char run_script (void) {
                     case 0x20:
                         // SET TILE (x, y) = n
                         // Opcode: 20 x y n
-                        read_x_y ();
-                        sc_n = read_vbyte ();
-                        map_buff [sc_x + (sc_y << 4) - sc_y] = sc_n;
-                        map_attr [sc_x + (sc_y << 4) - sc_y] = comportamiento_tiles [sc_n];
-                        draw_coloured_tile (VIEWPORT_X + sc_x + sc_x, VIEWPORT_Y + sc_y + sc_y, sc_n);
+                        set_map_tile (read_vbyte (), read_vbyte (), sc_n = read_vbyte (), comportamiento_tiles [sc_n]);
                         break;
                     case 0xE0:
                         // SOUND n
@@ -147,13 +146,9 @@ unsigned char run_script (void) {
                         peta_el_beeper (read_vbyte ());
                         break;
                     case 0xE3:
-                        sc_x = 0;
-                        while (1) {
-                           sc_n = read_byte ();
-                           if (sc_n == 0xEE) break;
-                           sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + sc_x, LINE_OF_TEXT_ATTR, sc_n);
-                           sc_x ++;
-                        }
+                        sc_n = read_byte ();
+                        draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, script);
+                        script += sc_n;
                         break;
                     case 0xFF:
                         sc_terminado = 1;

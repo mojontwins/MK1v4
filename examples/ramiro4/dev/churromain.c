@@ -9,7 +9,7 @@
 #asm
 		LIB SPInvalidate
 		LIB SPCompDListAddr
-		.fsClipStruct defb 0, 24, 0, 32
+		LIB SPMoveSprAbs		
 #endasm
 
 

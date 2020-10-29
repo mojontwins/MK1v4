@@ -437,16 +437,16 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					clausula = clausula + Chr (&HE2)
 					actionsUsed (&HE2) = -1
 				Case "TEXT":
-					clausula = clausula + Chr (&HE3)
+					If Len (listaPalabras (1)) > 30 Then listaPalabras (1) = Left (listaPalabras (1), 30)
+					clausula = clausula + Chr (&HE3) + Chr (Len (listaPalabras (1)))
 					for ai = 1 To Len (listaPalabras (1))
-						if ai = 31 Then Exit For
 						If Mid (listaPalabras (1), ai, 1) = "_" Then
-							clausula = clausula + Chr (0)
+							clausula = clausula + Chr (32)
 						Else
-							clausula = clausula + Chr (Asc(Mid (listaPalabras (1), ai, 1)) - 32)
+							clausula = clausula + Chr (Asc(Mid (listaPalabras (1), ai, 1)))
 						End If
 					Next ai
-					clausula = clausula + Chr (&HEE)
+					clausula = clausula + Chr (0)
 					actionsUsed (&HE3) = -1
 				Case "GAME":
 					clausula = clausula + Chr (240)
@@ -1013,11 +1013,12 @@ if actionsUsed (&H20) Then
 	print #f, "                    case 0x20:"
 	print #f, "                        // SET TILE (x, y) = n"
 	print #f, "                        // Opcode: 20 x y n"
-	print #f, "                        read_x_y ();"
-	print #f, "                        sc_n = read_vbyte ();"
-	print #f, "                        map_buff [sc_x + (sc_y << 4) - sc_y] = sc_n;"
-	print #f, "                        map_attr [sc_x + (sc_y << 4) - sc_y] = comportamiento_tiles [sc_n];"
-	print #f, "                        draw_coloured_tile (VIEWPORT_X + sc_x + sc_x, VIEWPORT_Y + sc_y + sc_y, sc_n);"
+	'print #f, "                        read_x_y ();"
+	'print #f, "                        sc_n = read_vbyte ();"
+	'print #f, "                        map_buff [sc_x + (sc_y << 4) - sc_y] = sc_n;"
+	'print #f, "                        map_attr [sc_x + (sc_y << 4) - sc_y] = comportamiento_tiles [sc_n];"
+	'print #f, "                        draw_coloured_tile (VIEWPORT_X + sc_x + sc_x, VIEWPORT_Y + sc_y + sc_y, sc_n);"
+	print #f, "                        set_map_tile (read_vbyte (), read_vbyte (), sc_n = read_vbyte (), comportamiento_tiles [sc_n]);"
 	print #f, "                        break;"
 End If
 
@@ -1236,13 +1237,16 @@ End If
 
 if actionsUsed (&HE3) Then
 	print #f, "                    case 0xE3:"
-	print #f, "                        sc_x = 0;"
-	print #f, "                        while (1) {"
-	print #f, "                           sc_n = read_byte ();"
-	print #f, "                           if (sc_n == 0xEE) break;"
-	print #f, "                           sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + sc_x, LINE_OF_TEXT_ATTR, sc_n);"
-	print #f, "                           sc_x ++;"
-	print #f, "                        }"
+	'print #f, "                        sc_x = 0;"
+	'print #f, "                        while (1) {"
+	'print #f, "                           sc_n = read_byte ();"
+	'print #f, "                           if (sc_n == 0xEE) break;"
+	'print #f, "                           sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + sc_x, LINE_OF_TEXT_ATTR, sc_n);"
+	'print #f, "                           sc_x ++;"
+	'print #f, "                        }"
+	print #f, "                        sc_n = read_byte ();"
+	print #f, "                        draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, script);"
+	print #f, "                        script += sc_n;"
 	print #f, "                        break;"
 End If
 

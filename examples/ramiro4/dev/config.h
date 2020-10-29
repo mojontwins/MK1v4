@@ -10,7 +10,7 @@
 #define MAP_W					6		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				12		// Initial screen
+#define SCR_INICIO				24//12		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -42,6 +42,7 @@
 //#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT				// If defined, only one object can be carried at a time.
 //#define DEACTIVATE_EVIL_TILE			// If defined, no killing tiles (behaviour 1) are detected.
+#define EVIL_TILE_SIMPLE				// For side view, only hit from below.
 //#define DEACTIVATE_EVIL_ZONE			// Zones kill you after a while. Read docs or ask na_th_an
 #define EVIL_ZONE_FRAME_COUNT	8		// For countdown in an evil zone.
 #define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing

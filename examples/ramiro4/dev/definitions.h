@@ -109,6 +109,11 @@ struct sp_SS *sp_moviles [3];
 struct sp_Rect spritesClipValues = { VIEWPORT_Y, VIEWPORT_X, 20, 30 };
 struct sp_Rect *spritesClip;
 
+#asm
+	.fsClipStruct defb 0, 24, 0, 32
+	.vpClipStruct defb VIEWPORT_Y, VIEWPORT_Y + 20, VIEWPORT_X, VIEWPORT_X + 30
+#endasm
+
 // Player
 
 INERCIA player;
