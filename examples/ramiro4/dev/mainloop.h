@@ -77,7 +77,9 @@ void main (void) {
 		#endif
 
 		#ifdef USE_TYPE_6
-			scenery_info.make_type_6 = 0;
+			#ifdef MAKE_TYPE_6
+				scenery_info.make_type_6 = 0;
+			#endif
 			scenery_info.allow_type_6 = 1;
 		#endif
 
@@ -225,13 +227,13 @@ void main (void) {
 			for (rdi = 0; rdi < 3; rdi ++) {
 				#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 					#ifdef RANDOM_RESPAWN
-						if (en_an [rdi].fanty_activo)
+						if (en_an_fanty_activo [rdi])
 					#else
 						if (malotes [enoffs + rdi].t == 6 || malotes [enoffs + rdi].t == 0)
 					#endif
 					{
-						rdx = en_an [rdi].x >> 6;
-						rdy = en_an [rdi].y >> 6;
+						rdx = en_an_x [rdi] >> 6;
+						rdy = en_an_y [rdi] >> 6;
 					} else 
 				#endif
 				{
@@ -363,49 +365,6 @@ void main (void) {
 				}
 			#endif
 
-			/*
-			#ifndef FIXED_SCREENS
-				#ifdef PLAYER_AUTO_CHANGE_SCREEN
-					if (player.x == 0 && player.vx < 0) {
-						n_pant --;
-						draw_scr ();
-						player.x = 14336;
-					}
-					if (player.x == 14336 && player.vx > 0) {
-						n_pant ++;
-						draw_scr ();
-						player.x = 0;
-					}
-				#else
-					if (player.x == 0 && ((rdi & sp_LEFT) == 0)) {
-						n_pant --;
-						draw_scr ();	
-						player.x = 14336;
-					}
-					if (player.x == 14336 && ((rdi & sp_RIGHT) == 0)) {		// 14336 = 224 * 64
-						n_pant ++;
-						draw_scr ();
-						player.x = 0;
-					}
-				#endif
-				if (player.y == 0 && player.vy < 0 && n_pant >= MAP_W) {
-					n_pant -= MAP_W;
-					draw_scr ();
-					player.y = 9216;	
-				}
-				if (player.y == 9216 && player.vy > 0) {				// 9216 = 144 * 64
-					if (n_pant < MAP_W * MAP_H - MAP_W) {
-						n_pant += MAP_W;
-						draw_scr ();
-						player.y = 0;
-					} else {
-						player.vy = -player.vy;
-						peta_el_beeper (2);
-						player.life --;	
-					}
-				}
-			#endif
-			*/
 			#ifndef FIXED_SCREENS
 				if (gpx == 0 && player.vx < 0) {
 					n_pant --;

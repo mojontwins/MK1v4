@@ -8,10 +8,10 @@
 #define EST_PARP 		2
 #define EST_MUR 		4
 #define EST_DIZZY		8
-#define sgni(n)			(n < 0 ? -1 : 1)
-#define min(a,b)		(a < b ? a : b)
-#define ctileoff(n) 	(n > 0 ? 1 : 0)
-#define saturate(n)		(n < 0 ? 0 : n)
+#define sgni(n)			((n) < 0 ? -1 : 1)
+#define min(a,b)		((a) < (b) ? (a) : (b))
+#define ctileoff(n) 	((n)>0) //(n > 0 ? 1 : 0)
+#define saturate(n)		((n) < 0 ? 0 : (n))
 
 #define TYPE_6_IDLE 		0
 #define TYPE_6_PURSUING		1
@@ -20,24 +20,25 @@
 #define MAX_FALLING_BOXES 8
 
 typedef struct {
-	int x, y, cx;
-	int vx, vy;
-	char g, ax, rx;
-	unsigned char salto, cont_salto;
-	unsigned char *current_frame, *next_frame;
-	unsigned char saltando;
-	unsigned char frame, subframe, facing;
-	unsigned char estado;
-	unsigned char ct_estado;
-	unsigned char gotten;
-	char objs, keys;
-	int life;
-	unsigned char fuel;
-	unsigned char killed;
-	unsigned char disparando;
-	unsigned char killingzone_framecount;
-	unsigned char killingzone_beepcount;
-	unsigned char is_dead;
+	int x, y, cx;										// 0, 2, 4
+	int vx, vy; 										// 6, 8
+	char g, ax, rx; 									// 10, 11, 12
+	unsigned char salto, cont_salto; 					// 13, 14
+	unsigned char *current_frame, *next_frame; 			// 15, 17
+	unsigned char saltando; 							// 19
+	unsigned char frame, subframe, facing; 				// 20, 21, 22
+	unsigned char estado; 								// 23
+	unsigned char ct_estado; 							// 24
+	unsigned char gotten; 								// 25
+	unsigned char possee; 								// 26
+	char objs, keys; 									// 27, 28
+	int life; 											// 29
+	unsigned char fuel; 								// 31
+	unsigned char killed; 								// 32
+	unsigned char disparando; 							// 33
+	unsigned char killingzone_framecount; 				// 34
+	unsigned char killingzone_beepcount; 				// 35
+	unsigned char is_dead; 								// 36
 } INERCIA;
 
 typedef struct {
@@ -46,18 +47,6 @@ typedef struct {
 	unsigned char *current_frame, *next_frame;
 	#ifdef PLAYER_CAN_FIRE
 		unsigned char morido;
-	#endif
-	#if defined(RANDOM_RESPAWN) || defined (USE_TYPE_6)
-		int x;
-		int y;
-		int vx;
-		int vy;
-		#ifdef RANDOM_RESPAWN
-			unsigned char fanty_activo;
-		#endif
-		#ifdef USE_TYPE_6
-			unsigned char state;
-		#endif	
 	#endif
 } ANIMADO;
 
@@ -75,7 +64,9 @@ typedef struct {
 	unsigned char evil_kills_slowly;
 	unsigned char evil_zone_active;
 	unsigned char allow_type_6;
-	unsigned char make_type_6;
+	#ifdef MAKE_TYPE_6
+		unsigned char make_type_6;
+	#endif
 } SCENERY_INFO;
 
 typedef struct {
@@ -128,6 +119,13 @@ INERCIA player;
 // Enemies
 
 ANIMADO en_an [3] @ 23800;
+signed int en_an_x [3], en_an_y [3], en_an_vx [3], en_an_vy [3];
+#ifdef RANDOM_RESPAWN
+	unsigned char en_an_fanty_activo [3];
+#endif
+#ifdef USE_TYPE_6
+	unsigned char en_an_state [3];
+#endif	
 unsigned char enoffs;
 unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
 unsigned char en_cx, en_cy;

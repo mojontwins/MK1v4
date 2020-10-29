@@ -104,6 +104,7 @@
 #define FANTY_MAX_V 			128 	// Flying enemies max speed.
 #define FANTY_A 				8		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
+//#define MAKE_TYPE_6					// Create fanties for missing enemies if scenery_info.make_type_6
 
 // Scripting
 // ---------

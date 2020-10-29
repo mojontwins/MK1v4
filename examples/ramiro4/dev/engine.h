@@ -1,8 +1,17 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.7 // Copyleft 2010, 2011 by The Mojon Twins
 
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
+
+unsigned char *player_cells [] = {
+	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
+	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+};
+
+unsigned char *enem_cells [] = {
+	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+};
 
 void saca_a_todo_el_mundo_de_aqui (void) {
 	// ¡Saca a todo el mundo de aquí!
@@ -278,9 +287,6 @@ void cortina (void) {
 	void get_coin(unsigned char xx, unsigned char yy) {
 		++ flags [COIN_FLAG];
 		
-		/*map_attr [15 * yy + xx] = 0;
-		map_buff [15 * yy + xx] = 0;
-		draw_coloured_tile (VIEWPORT_X + xx + xx, VIEWPORT_Y + yy + yy, 0);	*/
 		set_map_tile (xx, yy, 0, 0);
 
 		peta_el_beeper (5);
@@ -298,16 +304,6 @@ void cortina (void) {
 
 #ifdef PLAYER_PUSH_BOXES
 	void move_tile (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char act) {
-		/*
-		// Move the tile
-		map_attr [15 * y1 + x1] = 8;
-		map_buff [15 * y1 + x1] = 14;
-		map_attr [15 * y0 + x0] = 0;
-		map_buff [15 * y0 + x0] = 0;
-		// Draw
-		draw_coloured_tile (VIEWPORT_X + x0 + x0, VIEWPORT_Y + y0 + y0, 0);
-		draw_coloured_tile (VIEWPORT_X + x1 + x1, VIEWPORT_Y + y1 + y1, 14);
-		*/
 		set_map_tile (x0, y0, 0, 0);
 		set_map_tile (x1, y1, 14, 1);
 
@@ -413,16 +409,12 @@ unsigned char move (void) {
 	
 	// Cool
 
+	player.possee = 0;
 	if (player.vy < 0) { 			// Going up
 		//if (player.y >= 1024)
 			if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 				// Stop and adjust.
 				player.vy = 0;
-				/*
-				player.y = (gpyy + 1) << 10;
-				gpy = player.y >> 6;
-				gpyy = gpy >> 4;
-				*/
 				++ gpyy; gpy = gpyy << 4; player.y = gpy << 6;
 			}
 	} else if (player.vy > 0 && (gpy & 15) < 8) { 	// Going down
@@ -431,12 +423,8 @@ unsigned char move (void) {
 			{
 				// Stop and adjust.
 				player.vy = 0;
-				/*
-				player.y = gpyy << 10;
-				gpy = player.gpy >> 6;
-				gpyy = gpy >> 4;
-				*/
 				gpy = gpyy << 4; player.y = gpy << 6;
+				player.possee = 1;
 			}
 	}
 
@@ -563,22 +551,12 @@ unsigned char move (void) {
 		if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
 			// Stop and adjust
 			player.vx = 0;
-			/*
-			player.x = (gpxx + 1) << 10;
-			gpx = player.x >> 6;
-			gpxx = gpx >> 4;
-			*/
 			++ gpxx; gpx = gpxx << 4; player.x = gpx << 6;
 		}
 	} else {
 		if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
 			// Stop and adjust
 			player.vx = 0;
-			/*
-			player.x = gpxx << 10;
-			gpx = player.x >> 6;
-			gpxx = gpx >> 4;
-			*/
 			gpx = gpxx << 4; player.x = gpx << 6;
 		}
 	}
@@ -604,21 +582,11 @@ unsigned char move (void) {
 	#ifndef DEACTIVATE_KEYS
 		if ((gpx & 15) == 0 && (gpy & 15) == 0) {
 			if (qtile (gpxx + 1, gpyy) == 15 && player.keys > 0) {
-				/*
-				draw_coloured_tile (VIEWPORT_X + gpxx + gpxx + 2, VIEWPORT_Y + gpyy + gpyy, 0);
-				map_attr [15 * gpyy + gpxx + 1] = 0;
-				map_buff [15 * gpyy + gpxx + 1] = 0;
-				*/
 				set_map_tile (gpxx + 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx + 1, gpyy);
 				player.keys --;
 				peta_el_beeper (8);
 			} else if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
-				/*
-				map_attr [15 * gpyy + gpxx - 1] = 0;
-				map_buff [15 * gpyy + gpxx - 1] = 0;
-				draw_coloured_tile (VIEWPORT_X + gpxx + gpxx - 2, VIEWPORT_Y + gpyy + gpyy, 0);
-				*/
 				set_map_tile (gpxx - 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx - 1, gpyy);
 				player.keys --;
@@ -710,13 +678,6 @@ unsigned char move (void) {
 	#ifndef DEACTIVATE_EVIL_ZONE
 		// Evil zone engine
 
-		/* 
-		//NO NEED FOR THIS TO BE THIS COMPLEX!! 
-		if (attr (gpxx, gpyy) == 3 || 
-			((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 3) ||
-			((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 3) ||
-			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 3)) {
-		*/
 		if (attr ((gpx+4) >> 4, (gpy+4) >> 4) == 3
 			#ifdef EVIL_ZONE_CONDITIONAL
 				&& scenery_info.evil_zone_active
@@ -774,82 +735,34 @@ unsigned char move (void) {
 	#ifndef PLAYER_MOGGY_STYLE
 		// In this case, the spriteset is:
 		// 1  2  3  4  5  6  7  8
-		// R1 R2 R3 RJ L1 L2 L3 LJ
+		// R1 R2 R3 RJ L1 L2 L3 LJ	
 
-		if (player.vy != 0) {
-			if (player.facing == 0)
-				player.next_frame = sprite_8_a;
-			else
-				player.next_frame = sprite_4_a;
-		} else {
+		#asm
+			ld  a, (_player+22)					// player.facing
+			dec a
+			jr  z, _player_cell_sel_set_rdi		// if A = 1, DEC A = 0, so set 0
+			ld  a, 4							// if A = 0, DEC A = FF, so set 4
+		._player_cell_sel_set_rdi
+			ld  (_rdi), a
+		#endasm
+
+		if (!player.possee && !player.gotten) {
+			rdd = 3;
+		} else {			
 			if (player.vx == 0) {
-				if (player.facing == 0)
-					#ifdef PLAYER_ALTERNATE_ANIMATION
-						player.next_frame = sprite_5_a;
-					#else
-						player.next_frame = sprite_6_a;
-					#endif
-				else
-					#ifdef PLAYER_ALTERNATE_ANIMATION
-						player.next_frame = sprite_1_a;
-					#else
-						player.next_frame = sprite_2_a;
-					#endif
+				rdd = 1;
 			} else {
-				player.subframe ++;
-				if (player.subframe == 4) {
-					player.subframe = 0;
-					#ifdef PLAYER_ALTERNATE_ANIMATION
-						player.frame ++;
-						if (player.frame == 3) 
-							player.frame = 0;
-					#else
-						player.frame = (player.frame + 1) & 3;
-					#endif
-					step ();
-				}
-				
-				#ifdef PLAYER_ALTERNATE_ANIMATION
-					if (player.facing == 0) {
-						if (player.frame == 0)
-							player.next_frame = sprite_5_a;
-						else if (player.frame == 1)
-							player.next_frame = sprite_6_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_7_a;
-					} else {
-						if (player.frame == 0)
-							player.next_frame = sprite_1_a;
-						else if (player.frame == 1)
-							player.next_frame = sprite_2_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_3_a;	
-					}
-				#else			
-
-					if (player.facing == 0) {
-						if (player.frame == 1 || player.frame == 3)
-							player.next_frame = sprite_6_a;
-						else if (player.frame == 0)
-							player.next_frame = sprite_5_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_7_a;
-					} else {
-						if (player.frame == 1 || player.frame == 3)
-							player.next_frame = sprite_2_a;
-						else if (player.frame == 0)
-							player.next_frame = sprite_1_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_3_a;
-					}
-				#endif
-			}	
+				rdd = ((gpx + 4) >> 3) & 3;
+				if (rdd == 3) rdd = 1;
+			}			
 		}
+
+		player.next_frame = player_cells [rdi + rdd];
 	#else
 		// In this case, the spriteset is
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 L1 L2 U1 U2 D1 D2
-		
+
 		if (player.vx != 0 || player.vy != 0) {
 			player.subframe ++;
 			if (player.subframe == 4) {
@@ -858,30 +771,14 @@ unsigned char move (void) {
 				step (); 
 			}
 		}
-		
-		if (player.vx > 0) {
-			if (player.frame)
-				player.next_frame = sprite_1_a;
-			else	
-				player.next_frame = sprite_2_a;
-		} else if (player.vx < 0) {
-			if (player.frame)
-				player.next_frame = sprite_3_a;
-			else
-				player.next_frame = sprite_4_a;
-		} else {
-			if (player.vy < 0) {
-				if (player.frame)
-					player.next_frame = sprite_5_a;
-				else
-					player.next_frame = sprite_6_a;
-			} else {
-				if (player.frame)
-					player.next_frame = sprite_7_a;
-				else
-					player.next_frame = sprite_8_a;
-			}
-		}
+
+		rdd = player.frame;
+		if (player.vx == 0) {		
+			if (player.vy < 0) rdd += 4;
+			else rdd += 6; 
+		} else if (player.vx < 0) rdd += 2;
+
+		player.next_frame = player_cells [rdd];
 	#endif
 }
 
@@ -935,6 +832,19 @@ void init_player (void) {
 	void delete_text (void) {
 		for (gpit = 0; gpit < 32 - LINE_OF_TEXT_SUBSTR; gpit ++)
 			sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + gpit, LINE_OF_TEXT_ATTR, 0);
+	}
+#endif
+
+#ifdef TWO_SETS_REAL
+	void draw_and_advance (void) {
+		map_attr [rdi] = comportamiento_tiles [_n];
+		map_buff [rdi] = _n;
+		draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, _n);
+		rdx += 2;
+		if (rdx == 30) {
+			rdx = 0;
+			rdy += 2;
+		}
 	}
 #endif
 
@@ -1017,23 +927,9 @@ void draw_scr_background (void) {
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt2 == COIN_TILE && !scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
-			map_attr [rdi] = comportamiento_tiles [rdt1];
-			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, rdt1);
-			map_buff [rdi] = rdt1;
-			rdx += 2;
-			if (rdx == 30) {
-				rdx = 0;
-				rdy += 2;
-			}
+			_n = rdt1; draw_and_advance ();
 			rdi ++;
-			map_attr [rdi] = comportamiento_tiles [rdt2];
-			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, rdt2);
-			map_buff [rdi] = rdt2;
-			rdx += 2;
-			if (rdx == 30) {
-				rdx = 0;
-				rdy += 2;
-			}
+			_n = rdt2; draw_and_advance ();
 		}
 	#else	
 		// PACKED map, every byte contains two tiles, plus admits
@@ -1182,19 +1078,19 @@ void draw_scr (void) {
 		en_an [gpit].frame = 0;
 		en_an [gpit].count = 0;
 		#ifdef RANDOM_RESPAWN
-			en_an [gpit].fanty_activo = 0;
+			en_an_fanty_activo [gpit] = 0;
 		#endif
 
 		switch (malotes [enoffs + gpit].t) {
 			#ifdef NO_MAX_ENEMS
 				case 0:
-					#ifdef USE_TYPE_6
+					#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 						if (scenery_info.make_type_6) {
 							en_an [gpit].next_frame = sprite_13_a;
-							en_an [gpit].x = (rand () % 224) << 6;
-							en_an [gpit].y = (rand () % 144) << 6;
-							en_an [gpit].vx = en_an [gpit].vy = 0;
-							en_an [gpit].state = TYPE_6_IDLE;
+							en_an_x [gpit] = (rand () % 224) << 6;
+							en_an_y [gpit] = (rand () % 144) << 6;
+							en_an_vx [gpit] = en_an_vy [gpit] = 0;
+							en_an_state [gpit] = TYPE_6_IDLE;
 						} else {
 							en_an [gpit].next_frame = sprite_18_a;
 						}
@@ -1213,10 +1109,10 @@ void draw_scr (void) {
 			#ifdef USE_TYPE_6
 				case 6:
 					en_an [gpit].next_frame = sprite_13_a;
-					en_an [gpit].x = malotes [enoffs + gpit].x << 6;
-					en_an [gpit].y = malotes [enoffs + gpit].y << 6;
-					en_an [gpit].vx = en_an [gpit].vy = 0;
-					en_an [gpit].state = TYPE_6_IDLE;
+					en_an_x [gpit] = malotes [enoffs + gpit].x << 6;
+					en_an_y [gpit] = malotes [enoffs + gpit].y << 6;
+					en_an_vx [gpit] = en_an_vy [gpit] = 0;
+					en_an_state [gpit] = TYPE_6_IDLE;
 					break;
 			#endif
 			#if defined (PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE)			
@@ -1386,14 +1282,14 @@ void mueve_bicharracos (void) {
 		#endasm
 
 		if (_en_t != 0
-			#ifdef USE_TYPE_6
+			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 				|| scenery_info.make_type_6
 			#endif
 		) {
 			en_cx = _en_x;
 			en_cy = _en_y;
 			#ifdef RANDOM_RESPAWN
-				if (!en_an [enit].fanty_activo)
+				if (!en_an_fanty_activo [enit])
 			#endif
 			{
 				_en_x += _en_mx;
@@ -1426,33 +1322,25 @@ void mueve_bicharracos (void) {
 				en_an [enit].count = 0;
 				en_an [enit].frame = !en_an [enit].frame;
 
+
 				switch (_en_t) {
 					case 1:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_9_a : sprite_10_a;
-						break;
 					case 2:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_11_a : sprite_12_a;
-						break;
 					case 3:
-					case 6:
-					case 0:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_13_a : sprite_14_a;
-						break;
 					case 4:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_15_a : sprite_16_a;
-							break;
-					#ifdef RANDOM_RESPAWN
-						default:
-							if (en_an [enit].fanty_activo)
-								en_an [enit].next_frame = en_an [enit].frame ? sprite_13_a : sprite_14_a;
-					#endif					
+						rdd = ((_en_t - 1) << 1);
+						break;
+					default:
+						rdd = 4;
+						break;
 				}	
+				en_an [enit].next_frame = enem_cells [rdd + en_an [enit].frame];
 			}
 
 			#ifdef RANDOM_RESPAWN
-				if (en_an [enit].fanty_activo) {
-					en_ccx = en_an [enit].x >> 6;
-					en_ccy = en_an [enit].y >> 6;
+				if (en_an_fanty_activo [enit]) {
+					en_ccx = en_an_x [enit] >> 6;
+					en_ccy = en_an_y [enit] >> 6;
 				} else {
 					en_ccx = _en_x;
 					en_ccy = _en_y;
@@ -1460,8 +1348,8 @@ void mueve_bicharracos (void) {
 			#else
 				#ifdef USE_TYPE_6
 					if (_en_t == 6 || _en_t == 0) {
-						en_ccx = en_an [enit].x >> 6;
-						en_ccy = en_an [enit].y >> 6;
+						en_ccx = en_an_x [enit] >> 6;
+						en_ccy = en_an_y [enit] >> 6;
 					} else {
 						en_ccx = _en_x;
 						en_ccy = _en_y;
@@ -1531,13 +1419,13 @@ void mueve_bicharracos (void) {
 				// Collision with enemy
 				
 				#ifdef RANDOM_RESPAWN
-					} else if (!en_tocado && collide_enem () && (_en_t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
+					} else if (!en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
 				#else
 					} else if (!en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
 				#endif
 			#else
 				#ifdef RANDOM_RESPAWN
-					if (!en_tocado && collide_enem () && (_en_t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
+					if (!en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
 				#else
 					if (!en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
 				#endif
@@ -1579,15 +1467,15 @@ void mueve_bicharracos (void) {
 					#ifdef PLAYER_BOUNCES
 						#ifndef PLAYER_MOGGY_STYLE	
 							#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-								if (!en_an [enit].fanty_activo) {
+								if (!en_an_fanty_activo [enit]) {
 									// Bouncing!
 									if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
 									if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
 									if (_en_my > 0) player.vy = PLAYER_MAX_VX;
 									if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
 								} else {
-									player.vx = en_an [enit].vx + en_an [enit].vx;
-									player.vy = en_an [enit].vy + en_an [enit].vy;
+									player.vx = en_an_vx [enit] + en_an_vx [enit];
+									player.vy = en_an_vy [enit] + en_an_vy [enit];
 								}
 							#else
 								// Bouncing!
@@ -1630,36 +1518,36 @@ void mueve_bicharracos (void) {
 			// Trajectory limits for linear enemies
 			
 			#ifdef RANDOM_RESPAWN
-				if (en_an [enit].fanty_activo) { 
+				if (en_an_fanty_activo [enit]) { 
 					#ifdef PLAYER_CAN_HIDE			
 						if (player_hidden ()) {
-							if (player.x < en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-								en_an [enit].vx += FANTY_A >> 1;
-							else if (player.x > en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-								en_an [enit].vx -= FANTY_A >> 1;
-							if (player.y < en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-								en_an [enit].vy += FANTY_A >> 1;
-							else if (player.y > en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-								en_an [enit].vy -= FANTY_A >> 1;
+							if (player.x < en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+								en_an_vx [enit] += FANTY_A >> 1;
+							else if (player.x > en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+								en_an_vx [enit] -= FANTY_A >> 1;
+							if (player.y < en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+								en_an_vy [enit] += FANTY_A >> 1;
+							else if (player.y > en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+								en_an_vy [enit] -= FANTY_A >> 1;
 						} else
 					#endif 
 					if ((rand () & 7) > 1) {
-						if (player.x > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-							en_an [enit].vx += FANTY_A;
-						else if (player.x < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-							en_an [enit].vx -= FANTY_A;
-						if (player.y > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-							en_an [enit].vy += FANTY_A;
-						else if (player.y < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-							en_an [enit].vy -= FANTY_A;
+						if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+							en_an_vx [enit] += FANTY_A;
+						else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+							en_an_vx [enit] -= FANTY_A;
+						if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+							en_an_vy [enit] += FANTY_A;
+						else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+							en_an_vy [enit] -= FANTY_A;
 					}
 									
-					en_an [enit].x += en_an [enit].vx;
-					en_an [enit].y += en_an [enit].vy;
-					if (en_an [enit].x > 15360) en_an [enit].x = 15360;
-					if (en_an [enit].x < -1024) en_an [enit].x = -1024;
-					if (en_an [enit].y > 10240) en_an [enit].y = 10240;
-					if (en_an [enit].y < -1024) en_an [enit].y = -1024;
+					en_an_x [enit] += en_an_vx [enit];
+					en_an_y [enit] += en_an_vy [enit];
+					if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
+					if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+					if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 				} else
 			#endif
 
@@ -1668,25 +1556,25 @@ void mueve_bicharracos (void) {
 					#if defined (USE_SIGHT_DISTANCE) || defined (PLAYER_CAN_HIDE)
 						// Idle, retreat or pursue depending on player status (distance or hidden)
 
-						switch (en_an [enit].state) {
+						switch (en_an_state [enit]) {
 							case TYPE_6_IDLE:
 								#ifdef PLAYER_CAN_HIDE
 									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && !player_hidden ()) 
 								#else
 									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
 								#endif
-									en_an [enit].state = TYPE_6_PURSUING;
+									en_an_state [enit] = TYPE_6_PURSUING;
 								break;
 							case TYPE_6_PURSUING:
 								if ((rand () & 7) > 1) {
-									if (player.x > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-										en_an [enit].vx += FANTY_A;
-									else if (player.x < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-										en_an [enit].vx -= FANTY_A;
-									if (player.y > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-										en_an [enit].vy += FANTY_A;
-									else if (player.y < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-										en_an [enit].vy -= FANTY_A;
+									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+										en_an_vx [enit] += FANTY_A;
+									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+										en_an_vx [enit] -= FANTY_A;
+									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+										en_an_vy [enit] += FANTY_A;
+									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+										en_an_vy [enit] -= FANTY_A;
 								}
 								
 								#ifdef PLAYER_CAN_HIDE
@@ -1694,49 +1582,49 @@ void mueve_bicharracos (void) {
 								#else
 									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE)
 								#endif
-									en_an [enit].state = TYPE_6_RETREATING;
+									en_an_state [enit] = TYPE_6_RETREATING;
 								break;
 							case TYPE_6_RETREATING:
-								if ((_en_x << 6) > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-									en_an [enit].vx += FANTY_A;
-								else if ((_en_x << 6) < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-									en_an [enit].vx -= FANTY_A;
-								if ((_en_y << 6) > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-									en_an [enit].vy += FANTY_A;
-								else if ((_en_y << 6) < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-									en_an [enit].vy -= FANTY_A;
+								if ((_en_x << 6) > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+									en_an_vx [enit] += FANTY_A;
+								else if ((_en_x << 6) < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+									en_an_vx [enit] -= FANTY_A;
+								if ((_en_y << 6) > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+									en_an_vy [enit] += FANTY_A;
+								else if ((_en_y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+									en_an_vy [enit] -= FANTY_A;
 								
 								#ifdef PLAYER_CAN_HIDE
 									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && !player_hidden ()) 
 								#else
 									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
 								#endif
-									en_an [enit].state = TYPE_6_PURSUING;
+									en_an_state [enit] = TYPE_6_PURSUING;
 								break;	
 						}
 					#else
 						// Always pursue
 
 						if ((rand () & 7) > 1) {
-							if (player.x > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-								en_an [enit].vx += FANTY_A;
-							else if (player.x < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-								en_an [enit].vx -= FANTY_A;
-							if (player.y > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-								en_an [enit].vy += FANTY_A;
-							else if (player.y < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-								en_an [enit].vy -= FANTY_A;
+							if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+								en_an_vx [enit] += FANTY_A;
+							else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+								en_an_vx [enit] -= FANTY_A;
+							if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+								en_an_vy [enit] += FANTY_A;
+							else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+								en_an_vy [enit] -= FANTY_A;
 						}
 					#endif
 
 					if (scenery_info.allow_type_6) {
-						en_an [enit].x += en_an [enit].vx;
-						en_an [enit].y += en_an [enit].vy;
+						en_an_x [enit] += en_an_vx [enit];
+						en_an_y [enit] += en_an_vy [enit];
 					}
-					if (en_an [enit].x > 15360) en_an [enit].x = 15360;
-					if (en_an [enit].x < -1024) en_an [enit].x = -1024;
-					if (en_an [enit].y > 10240) en_an [enit].y = 10240;
-					if (en_an [enit].y < -1024) en_an [enit].y = -1024;
+					if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
+					if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+					if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 				} else 
 			#endif
 			{
@@ -1749,7 +1637,7 @@ void mueve_bicharracos (void) {
 			#ifdef PLAYER_CAN_FIRE
 				// Collision with bullets
 				#ifdef RANDOM_RESPAWN
-					if (_en_t < 16 || en_an [enit].fanty_activo == 1)
+					if (_en_t < 16 || en_an_fanty_activo [enit] == 1)
 				#else
 					if (_en_t < 16)
 				#endif
@@ -1759,11 +1647,11 @@ void mueve_bicharracos (void) {
 							if (bullets [en_j].y >= en_ccy - 4 && bullets [en_j].y <= en_ccy + 12 && bullets [en_j].x >= en_ccx - 4 && bullets [en_j].x <= en_ccx + 12) {
 								#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
 									#ifdef RANDOM_RESPAWN	
-										if (en_an [enit].fanty_activo) 
+										if (en_an_fanty_activo [enit]) 
 									#else
 										if (_en_t == 6)
 									#endif
-									en_an [enit].vx += (bullets [enit].mx > 0 ? 128 : -128);
+									en_an_vx [enit] += (bullets [enit].mx > 0 ? 128 : -128);
 								#endif
 								en_an [enit].next_frame = sprite_17_a;
 								en_an [enit].morido = 1;
@@ -1785,7 +1673,7 @@ void mueve_bicharracos (void) {
 										run_script ();
 									#endif								
 									#ifdef RANDOM_RESPAWN								
-										en_an [enit].fanty_activo = 0;
+										en_an_fanty_activo [enit] = 0;
 										_en_life = FANTIES_LIFE_GAUGE;
 									#endif
 								}
@@ -1798,17 +1686,16 @@ void mueve_bicharracos (void) {
 			#ifdef RANDOM_RESPAWN
 				// Activate fanty
 
-				if (_en_t > 15 && en_an [enit].fanty_activo == 0 && (rand () & 31) == 1) {
-					en_an [enit].fanty_activo = 1;
+				if (_en_t > 15 && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
+					en_an_fanty_activo [enit] = 1;
 					if (player.y > 5120)
-						en_an [enit].y = -1024;
+						en_an_y [enit] = -1024;
 					else
-						en_an [enit].y = 10240;
-					en_an [enit].x = (rand () % 240 - 8) << 6;
-					en_an [enit].vx = en_an [enit].vy = 0;
+						en_an_y [enit] = 10240;
+					en_an_x [enit] = (rand () % 240 - 8) << 6;
+					en_an_vx [enit] = en_an_vy [enit] = 0;
 				}
 			#endif
-
 		}
 
 		#asm		
