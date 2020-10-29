@@ -484,6 +484,10 @@ unsigned char move (void) {
 	*/
 
 	#ifdef PLAYER_HAS_JUMP
+		#ifdef RAMIRO_HOP
+			rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
+		#endif
+
 		if (
 			#if defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
 				(pad0 & sp_UP) == 0 
@@ -497,7 +501,13 @@ unsigned char move (void) {
 				player.cont_salto ++;
 				if (player.cont_salto == 8)
 					player.saltando = 0;
-			} else if (player.possee || player.gotten) {
+			} else if (
+			#ifdef RAMIRO_HOP
+				rdi
+			#else
+				player.possee 
+			#endif
+				|| player.gotten) {
 				player.saltando = 1;
 				player.cont_salto = 0;
 				peta_el_beeper (1);	
