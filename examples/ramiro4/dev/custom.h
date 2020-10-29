@@ -63,7 +63,7 @@ unsigned char rda, rdb;
 				draw_coloured_tile (EYE_X, EYE_Y, evil_eye_state_tiles [evil_eye_state]);
 				scenery_info.evil_zone_active = (evil_eye_state == 2);
 			}
-		} //else sp_Border (0);
+		}
 
 		sp_Border ((scenery_info.evil_zone_active & half_life) ? 2 : 0);
 
@@ -157,11 +157,7 @@ unsigned char rda, rdb;
 			// Animate
 			if (half_life) {
 				for (gpit = 0; gpit < MAX_TRAP_BLOCKS; gpit ++) {
-					/*
-					_trap_by = trap_by [gpit];
-					_trap_bx = trap_bx [gpit];
-					_trap_bt = trap_bt [gpit];
-					*/
+
 					#asm
 							ld  bc, (_gpit)
 							ld  b, 0
@@ -194,7 +190,6 @@ unsigned char rda, rdb;
 						rdx = (gpx + 8) >> 4; rdy = (gpy + 8) >> 4;
 
 						if (trap_coins && rdx == _trap_bx && rdy == _trap_by) {
-							//get_coin ((gpx+8) >> 4, (gpy+8) >> 4);
 							flags [COIN_FLAG] ++;
 							peta_el_beeper (5);
 							player.life += COINS_REFILL;
@@ -212,12 +207,6 @@ unsigned char rda, rdb;
 						}
 
 						rdb = attr (rdx, rdy);
-						/*
-						if (rdb & 16) {
-							get_coin ((gpx+8) >> 4, (gpy+8) >> 4);
-							_trap_by = 0xff;
-						}
-						*/
 
 						trap_by [gpit] = _trap_by;
 						

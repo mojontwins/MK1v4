@@ -263,3 +263,34 @@ void peta_el_beeper (unsigned char n) {
 		pop iy
 	#endasm
 }
+
+void beepet (void) {
+	/*
+	for (gpit = 0; gpit < 4; gpit ++) {
+		peta_el_beeper (6);
+		peta_el_beeper (3);
+	}
+	*/
+	#asm
+		push ix
+		push iy
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		pop iy
+		pop ix
+	#endasm
+}

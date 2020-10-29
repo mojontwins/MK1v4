@@ -88,27 +88,14 @@ void title_screen (void) {
 void game_ending (void) {
 	sp_UpdateNow();
 	unpack ((unsigned int) (s_ending));
-	
-	for (gpit = 0; gpit < 4; gpit ++) {
-		peta_el_beeper (6);
-		peta_el_beeper (3);
-	}
-	peta_el_beeper (11);
-	
+	beepet (); peta_el_beeper (11);
 	espera_activa (500);
 }
 
 void game_over (void) {
 	draw_rectangle (10, 11, 21, 13, GAME_OVER_ATTR);		
 	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
-
 	sp_UpdateNow ();
-		
-	for (gpit = 0; gpit < 4; gpit ++) {
-		peta_el_beeper (6);
-		peta_el_beeper (3);
-	}
-	peta_el_beeper (10);
-	
+	beepet (); peta_el_beeper (10);
 	espera_activa (500);
 }
