@@ -5,4 +5,3 @@ This game was left abandoned and unfinished due to lack of interest, more intere
 I managed to find and rescue some material and recreated as if it was made in 2013.
 
 Enjoy
-
