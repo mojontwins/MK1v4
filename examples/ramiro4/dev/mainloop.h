@@ -270,55 +270,65 @@ void main (void) {
 				}
 			#endif
 
-			#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
-			#else
-				// Hotspot interaction.
-				if (gpx >= hotspot_x - 15 && gpx <= hotspot_x + 15 && gpy >= hotspot_y - 15 && gpy <= hotspot_y + 15) {
-					// Deactivate hotspot
-					draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
-					// Was it an object, key or life boost?
+			#ifdef ENABLE_CODE_HOOKS
+				latest_hotspot = 0;
+			#endif
+
+			// Hotspot interaction.
+			if (gpx >= hotspot_x - 15 && gpx <= hotspot_x + 15 && gpy >= hotspot_y - 15 && gpy <= hotspot_y + 15) {	
+				#ifdef ENABLE_CODE_HOOKS
+					latest_hotspot = hotspots [n_pant].tipo;
+				#endif
+					
+				#ifndef DEACTIVATE_REFILLS
 					if (hotspots [n_pant].act == 0) {
 						player.life += PLAYER_REFILL;
 						if (player.life > PLAYER_LIFE)
 							player.life = PLAYER_LIFE;
 						hotspots [n_pant].act = 2;
 						peta_el_beeper (6);
-					}
-					#ifndef DEACTIVATE_OBJECTS
-						else if (hotspots [n_pant].tipo == 1) {
-							#ifdef ONLY_ONE_OBJECT
-								if (player.objs == 0) {
-									rdi = 1;
-									player.objs ++;
-									hotspots [n_pant].act = 0;
-									peta_el_beeper (6);	
-								} else {
-									rdi = 0;
-									peta_el_beeper (1);	
-									draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), 17);
-								}
-							#else
-								player.objs ++;
-								hotspots [n_pant].act = 0;
-								peta_el_beeper (6);
-								#ifdef OBJECT_COUNT
-									flags [OBJECT_COUNT] ++;
-								#endif
-							#endif
-						}
-					#endif
-					#ifndef DEACTIVATE_KEYS
-						else if (hotspots [n_pant].tipo == 2) {
-							player.keys ++;
-							hotspots [n_pant].act = 0;
-							peta_el_beeper (6);
-						}
-					#endif
-					// PLOP!!
-					hotspot_x = hotspot_y = 240;
-				}
-			#endif
+					} else 
+				#endif
 
+				rdi = 1;
+				#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
+					switch (hotspots [n_pant].tipo) {
+						#ifndef DEACTIVATE_OBJECTS
+							case 1:
+								#ifdef ONLY_ONE_OBJECT
+									if (player.objs == 0) {
+										player.objs ++;
+										peta_el_beeper (6);	
+									} else {
+										rdi = 0;
+										peta_el_beeper (1);	
+									}
+								#else
+									player.objs ++;
+									peta_el_beeper (6);
+									#ifdef OBJECT_COUNT
+										flags [OBJECT_COUNT] ++;
+									#endif
+								#endif
+								break;
+						#endif
+				
+						#ifndef DEACTIVATE_KEYS
+							case 2:
+								player.keys ++;
+								peta_el_beeper (6);
+								break;
+						#endif
+					}
+				#endif
+				
+				if (rdi)  {
+					draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
+					hotspot_x = hotspot_y = 240;
+					hotspots [n_pant].act = 0;
+				}
+			}
+			
 			#ifdef ENABLE_CODE_HOOKS
 				hook_mainloop ();
 			#endif	

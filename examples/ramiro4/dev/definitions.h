@@ -158,6 +158,10 @@ unsigned char hotspot_x;
 unsigned char hotspot_y;
 unsigned char orig_tile;	// Original background tile
 
+#ifdef ENABLE_CODE_HOOKS
+	latest_hotspot = 0;
+#endif
+
 // Game flow
 
 #ifndef WIN_ON_SCRIPTING

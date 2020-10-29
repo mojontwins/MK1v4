@@ -523,16 +523,8 @@
 			"file": "examples/ramiro4/dev/engine.h",
 			"settings":
 			{
-				"buffer_size": 48159,
+				"buffer_size": 48422,
 				"encoding": "Western (Windows 1252)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "examples/ramiro4/dev/enems.h",
-			"settings":
-			{
-				"buffer_size": 4201,
 				"line_ending": "Windows"
 			}
 		}
@@ -613,12 +605,9 @@
 	},
 	"expanded_folders":
 	[
-		"/D/git/MK1",
-		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/ramiro4",
-		"/D/git/MK1/examples/ramiro4/dev",
-		"/D/git/MK1/src",
-		"/D/git/MK1/src/utils"
+		"/C/git/MK1",
+		"/C/git/MK1/examples",
+		"/C/git/MK1/examples/ramiro4"
 	],
 	"file_history":
 	[
@@ -753,7 +742,7 @@
 	],
 	"find":
 	{
-		"height": 48.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
@@ -1027,7 +1016,7 @@
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
 			"en_y",
@@ -1168,7 +1157,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -1177,15 +1166,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 48159,
+						"buffer_size": 48422,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								46601,
-								46601
+								44720,
+								44734
 							]
 						],
 						"settings":
@@ -1197,39 +1186,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 21682.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "examples/ramiro4/dev/enems.h",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 4201,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1622.0,
+						"translation.y": 21942.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1245,7 +1202,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -1301,7 +1258,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 88.0
+		"height": 74.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1335,7 +1292,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 	},

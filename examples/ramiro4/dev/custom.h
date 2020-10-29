@@ -3,52 +3,52 @@
 
 // Add here your custom routines & vars
 
-// Custom routines for Ramiro 4
-
-// bit 0 = which set.
-// bit 1 = killing eye.
-// bit 2 = trap!
-// bit 3 = trap but with coins
-unsigned char map_behaviours [] = {
-	 0,  0,  0,  5,  0,  0, 
-	 0,  0,  0,  3,  1,  0,
-	 0,  0,  3,  3,  5,  0,
-	 5,  1,  1,  1,  1,  0,
-	13,  1,  1,  1,  1,  0
-}; 
-
-// Evil eye things
-
-#define EYE_X VIEWPORT_X+7*2
-#define EYE_Y VIEWPORT_Y+2*2
-
-unsigned char evil_eye_state;
-unsigned char evil_eye_counter;
-
-unsigned char evil_eye_state_cts [] = { 30, 30, 60, 5, 5 };
-unsigned char evil_eye_state_tiles [] = { 29, 30, 31, 30, 29 };
-
-unsigned char evil_eye_screen;
-
-// Blocks trap
-
-#define MAX_TRAP_BLOCKS	3
-#define TRAP_CHANCE 	7 		// Power of two minus one!
-#define BLOCK_HIT 		5
-
-unsigned char trap_active;
-unsigned char trap_bx [MAX_TRAP_BLOCKS];
-unsigned char trap_by [MAX_TRAP_BLOCKS];
-unsigned char trap_bt [MAX_TRAP_BLOCKS];
-
-unsigned char trap_screen;
-unsigned char trap_coins;
-unsigned char _trap_bx;
-unsigned char _trap_by;
-unsigned char _trap_bt;
-unsigned char rda, rdb;
-
 #ifdef ENABLE_CODE_HOOKS
+
+	// Custom routines for Ramiro 4
+
+	// bit 0 = which set.
+	// bit 1 = killing eye.
+	// bit 2 = trap!
+	// bit 3 = trap but with coins
+	unsigned char map_behaviours [] = {
+		 0,  0,  0,  5,  0,  0, 
+		 0,  0,  0,  3,  1,  0,
+		 0,  0,  3,  3,  5,  0,
+		 5,  1,  1,  1,  1,  0,
+		13,  1,  1,  1,  1,  0
+	}; 
+
+	// Evil eye things
+
+	#define EYE_X VIEWPORT_X+7*2
+	#define EYE_Y VIEWPORT_Y+2*2
+
+	unsigned char evil_eye_state;
+	unsigned char evil_eye_counter;
+
+	unsigned char evil_eye_state_cts [] = { 30, 30, 60, 5, 5 };
+	unsigned char evil_eye_state_tiles [] = { 29, 30, 31, 30, 29 };
+
+	unsigned char evil_eye_screen;
+
+	// Blocks trap
+
+	#define MAX_TRAP_BLOCKS	3
+	#define TRAP_CHANCE 	7 		// Power of two minus one!
+	#define BLOCK_HIT 		5
+
+	unsigned char trap_active;
+	unsigned char trap_bx [MAX_TRAP_BLOCKS];
+	unsigned char trap_by [MAX_TRAP_BLOCKS];
+	unsigned char trap_bt [MAX_TRAP_BLOCKS];
+
+	unsigned char trap_screen;
+	unsigned char trap_coins;
+	unsigned char _trap_bx;
+	unsigned char _trap_by;
+	unsigned char _trap_bt;
+	unsigned char rda, rdb;
 
 	void hook_mainloop (void) {
 
