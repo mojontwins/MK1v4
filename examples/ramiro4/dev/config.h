@@ -10,7 +10,7 @@
 #define MAP_W					6		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				24//12		// Initial screen
+#define SCR_INICIO				12		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -130,6 +130,7 @@
 // ----------
 
 #define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
+#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define PLAYER_HAS_JETPAC 			// If defined, player can thrust a vertical jetpac
 //#define JETPAC_DRAINS_LIFE			// If defined, flying drains life.
 //#define JETPAC_DRAIN_RATIO	3		// Drain 1 each X frames.

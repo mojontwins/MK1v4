@@ -344,16 +344,14 @@ void main (void) {
 				}
 			#endif			
 			
-			rdi = (joyfunc) (&keys);
-
 			// Flick screen checks and scripting related stuff
 		
 			#ifdef ACTIVATE_SCRIPTING		
 				#ifdef SCRIPTING_KEY_M			
-					if (sp_KeyPressed (key_m) || ((rdi & sp_FIRE) == 0))
+					if (sp_KeyPressed (key_m) || ((pad0 & sp_FIRE) == 0))
 				#endif
 				#ifdef SCRIPTING_DOWN
-					if ((rdi & sp_DOWN) == 0)
+					if ((pad0 & sp_DOWN) == 0)
 				#endif
 				{
 					script = f_scripts [max_screens];

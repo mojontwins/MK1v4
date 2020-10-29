@@ -41,3 +41,12 @@ El objeto que llevamos aparecerá con Ramiro usando un sprite. Por eso estoy usa
 	..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra > nul
 ```
 
+Cuando llevel objeto al que no es, te rechaza, te quita vida, y te suelta un insulto:
+
+```
+	TES KI YA CARAJAULA, LLEVATE ESO!
+	Y ESTO QUE ES BEBECHARCOS, ESCUCHAPEOS
+	PARA QUE QUIERO ESTO BOQUIMUELLE
+	¿PERO QUE ME TRAES? BOTARATE, TALLO DE CEBOLLA!
+```
+

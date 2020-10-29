@@ -76,7 +76,7 @@ typedef struct {
 // Controller
 
 struct sp_UDK keys = {
-	0x047f, // .fire
+	0x017f, // .fire
 	0x01df, // .right
 	0x02df, // .left
 	0x01fd, // .down
@@ -84,7 +84,9 @@ struct sp_UDK keys = {
 };
 void *joyfunc;
 
-int key_m = 0x047f;
+#ifdef SCRIPTING_KEY_M
+	int key_m = 0x047f;
+#endif
 #ifdef USE_SUICIDE_KEY
 	int key_s = 0x02fd;
 #endif

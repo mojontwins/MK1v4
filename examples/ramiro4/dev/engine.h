@@ -484,41 +484,27 @@ unsigned char move (void) {
 	*/
 
 	#ifdef PLAYER_HAS_JUMP
-		#ifdef PLAYER_CAN_FIRE
-			if (((pad0 & sp_UP) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))) || player.gotten)) {
-				player.saltando = 1;
-				player.cont_salto = 0;
-				peta_el_beeper (1);
-			}
-
-			if ( ((pad0 & sp_UP) == 0) && player.saltando ) {
+		if (
+			#if defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
+				(pad0 & sp_UP) == 0 
+			#else
+				(pad0 & sp_FIRE) == 0
+			#endif	
+		) {
+			if (player.saltando) {
 				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
 				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
 				player.cont_salto ++;
 				if (player.cont_salto == 8)
 					player.saltando = 0;
-			}
-			
-			if ((pad0 & sp_UP) != 0)
-				player.saltando = 0;
-		#else
-			if (((pad0 & sp_FIRE) == 0 || (pad0 & sp_UP) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))) || player.gotten)) {
+			} else if (player.possee || player.gotten) {
 				player.saltando = 1;
 				player.cont_salto = 0;
-				peta_el_beeper (1);
+				peta_el_beeper (1);	
 			}
-
-			if ( ((pad0 & sp_FIRE) == 0 || (pad0 & sp_UP) == 0) && player.saltando ) {
-				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
-				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-				player.cont_salto ++;
-				if (player.cont_salto == 8)
-					player.saltando = 0;
-			}
-			
-			if ((pad0 & sp_FIRE) != 0 && (pad0 & sp_UP) != 0)
-				player.saltando = 0;
-		#endif
+		} else {
+			player.saltando = 0;
+		}
 	#endif
 
 	#ifdef PLAYER_HAS_JETPAC
