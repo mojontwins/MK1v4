@@ -10,7 +10,7 @@
 #define MAP_W					6		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				12		// Initial screen
+#define SCR_INICIO				3//12		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -180,8 +180,8 @@
 #define COINS_X 				12 		// Coins coint character coordinates
 #define COINS_Y					23
 
-#define EVIL_GAUGE_X			21		// For evil zone counters
-#define EVIL_GAUGE_Y			23
+//#define EVIL_GAUGE_X			21		// For evil zone counters
+//#define EVIL_GAUGE_Y			23
 
 // Line of text
 

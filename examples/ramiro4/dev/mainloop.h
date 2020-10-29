@@ -144,9 +144,9 @@ void main (void) {
 
 			// Update  HUD
 
-			#ifndef DEACTIVATE_OBJECTS			
+			#if !defined DEACTIVATE_OBJECTS	&& (defined OBJECTS_ICON_X || defined OBJECTS_X)
 				if (player.objs != objs_old) {
-					#ifdef ONLY_ONE_OBJECT
+					#if defined ONLY_ONE_OBJECT && defined OBJECTS_ICON_X
 						if (player.objs) {
 							sp_PrintAtInv (OBJECTS_ICON_Y, OBJECTS_ICON_X, 135, 132);
 							sp_PrintAtInv (OBJECTS_ICON_Y, OBJECTS_ICON_X + 1, 135, 133);
@@ -155,31 +155,37 @@ void main (void) {
 						} else {
 							draw_coloured_tile (OBJECTS_ICON_X, OBJECTS_ICON_Y, 17);
 						}
-						draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
-					#else
-						draw_2_digits (OBJECTS_X, OBJECTS_Y, player.objs);
+					#endif
+					#ifdef OBJECTS_X
+						#ifdef ONLY_ONE_OBJECT
+							draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
+						#else
+							draw_2_digits (OBJECTS_X, OBJECTS_Y, player.objs);
+						#endif
 					#endif
 					objs_old = player.objs;
 				}
 			#endif
 			
-			if (player.life != life_old) {
-				if (player.life > 0) pti = (unsigned char) player.life; else pti = 0;
-				#ifdef DRAW_HI_DIGIT
-					sp_PrintAtInv (LIFE_H_Y, LIFE_H_X, 71, 16 + pti / 100);
-				#endif
-				draw_2_digits (LIFE_X, LIFE_Y, pti);
-				life_old = player.life;
-			}
+			#ifdef LIFE_X
+				if (player.life != life_old) {
+					if (player.life > 0) pti = (unsigned char) player.life; else pti = 0;
+					#ifdef DRAW_HI_DIGIT
+						sp_PrintAtInv (LIFE_H_Y, LIFE_H_X, 71, 16 + pti / 100);
+					#endif
+					draw_2_digits (LIFE_X, LIFE_Y, pti);
+					life_old = player.life;
+				}
+			#endif
 
-			#ifndef DEACTIVATE_KEYS
+			#if !defined DEACTIVATE_KEYS && defined KEYS_X
 				if (player.keys != keys_old) {
 					draw_2_digits (KEYS_X, KEYS_Y, player.keys);
 					keys_old = player.keys;
 				}
 			#endif
 
-			#ifdef PLAYER_KILLS_ENEMIES		
+			#if defined PLAYER_KILLS_ENEMIES && defined KILLED_X	 
 				if (player.killed != killed_old) {
 					draw_2_digits (KILLED_X, KILLED_Y, player.killed);
 					killed_old = player.killed;	
@@ -193,14 +199,14 @@ void main (void) {
 				}
 			#endif			
 
-			#ifndef DEACTIVATE_EVIL_ZONE
+			#if !defined DEACTIVATE_EVIL_ZONE && defined EVIL_GAUGE_X
 				if (player.killingzone_beepcount != ezg_old) {
 					draw_2_digits (EVIL_GAUGE_X, EVIL_GAUGE_Y, EVIL_ZONE_BEEPS_COUNT - player.killingzone_beepcount);
 					ezg_old = player.killingzone_beepcount;
 				}
 			#endif
 
-			#ifdef USE_COINS
+			#if defined USE_COINS && defined COINS_X
 				if (flags [COIN_FLAG] != coins_old) {
 					draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
 					coins_old = flags [COIN_FLAG];

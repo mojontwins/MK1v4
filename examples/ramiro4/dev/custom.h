@@ -50,6 +50,27 @@
 	unsigned char _trap_bt;
 	unsigned char rda, rdb;
 
+	void draw_falling_block (void) {
+		//draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), _trap_bt);
+		
+		#asm
+			ld  a, (__trap_bx)
+			sla a
+			add VIEWPORT_X
+			ld  (__x), a
+
+			ld  a, (__trap_by)
+			sla a
+			add VIEWPORT_Y
+			ld  (__y), a
+		
+			ld  a, (__trap_bt)
+			ld  (__t), a
+
+			jp _draw_coloured_tile_do	
+		#endasm
+	}
+
 	void hook_mainloop (void) {
 
 		// Eye of horus
@@ -182,54 +203,53 @@
 						rda = _trap_bx + (_trap_by << 4) - _trap_by;
 
 						// Make fall
-						if (rda >= 15) map_attr [rda] = 0;
+						if (_trap_by) map_attr [rda] = 0;
 						
 						set_map_tile (_trap_bx, _trap_by, map_buff [rda], 0);
 						_trap_by ++; rda += 15;
 
 						rdx = (gpx + 8) >> 4; rdy = (gpy + 8) >> 4;
 
-						if (trap_coins && rdx == _trap_bx && rdy == _trap_by) {
-							flags [COIN_FLAG] ++;
-							peta_el_beeper (5);
-							player.life += COINS_REFILL;
-							_trap_by = 0xff;
+						if (rdx == _trap_bx && rdy == _trap_by) {
+							if (trap_coins) { 
+								flags [COIN_FLAG] ++;
+								peta_el_beeper (5);
+								player.life += COINS_REFILL;
+								_trap_by = 0xff;
+							} else {
+								draw_falling_block ();
+						
+								if (player.estado != EST_PARP) {
+									// Crushed!
+									sp_UpdateNow ();
+									peta_el_beeper (10);
+									player.life -= BLOCK_HIT; 
+									player.estado = EST_PARP;
+									player.ct_estado = 50;
+
+									// Reenter & reset
+									hotspots [n_pant].act = 1;
+									player.objs --;
+									//draw_scr ();
+									on_pant = 0xff;
+									break;
+								} else {
+									player.y -= 16<<6;
+								}
+							}
 						} else if (map_attr [rda] == 1) {
 							_trap_by = 0xff;
 						} else {
-							map_attr [rda] = comportamiento_tiles [_trap_bt];
-							draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), _trap_bt);
+							draw_falling_block ();
 						
 							if (map_attr [rda + 15] & 12) {
+								map_attr [rda] = comportamiento_tiles [_trap_bt];
 								map_buff [rda] = _trap_bt;
 								_trap_by = 0xff; 
 							}
 						}
 
-						rdb = attr (rdx, rdy);
-
 						trap_by [gpit] = _trap_by;
-						
-						// Collision
-						if (rdb & 8) {
-							if (player.estado != EST_PARP) {
-								// Crushed!
-								sp_UpdateNow ();
-								peta_el_beeper (10);
-								player.life -= BLOCK_HIT; 
-								player.estado = EST_PARP;
-								player.ct_estado = 50;
-
-								// Reenter & reset
-								hotspots [n_pant].act = 1;
-								player.objs --;
-								//draw_scr ();
-								on_pant = 0xff;
-								break;
-							} else {
-								player.y -= 16<<6;
-							}
-						}
 
 						// Finally
 						if (flags [COIN_FLAG] == 30) {
