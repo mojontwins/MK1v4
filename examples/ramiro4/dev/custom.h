@@ -64,6 +64,8 @@
 	#define OFRENDAS_X 		21
 	#define OFRENDAS_Y 		23
 	unsigned char pofrendas, pofrendas_old; 
+	unsigned char ofrendas_order [] = { 1, 2, 3, 4 };
+	unsigned char ofrendas_idx;
 
 	// Text
 
@@ -158,6 +160,13 @@
 							  "ES LA LISTA DEL%"
 							  "MERCADONA.";
 
+	unsigned char text18 [] = "YA QUE ME TRAES UNA%"
+							  "OFRENDA, YO SOLTARE%"
+							  "PRENDA...";
+
+	unsigned char text19 [] = "HAZ BUEN USO DE LO%"
+							  "QUE TE HE DADO!";
+
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
 		text1, text2, text3, text4, 		// Altar describe objetos
@@ -165,7 +174,8 @@
 		text9, text10, text11, text12, 		// Presentación guardianes
 		text13, 							// Puedes pasar
 		text14, 							// Ramón el faraón
-		text15, text16, text17 				// Final
+		text15, text16, text17,				// Final
+		text18, text19 						// Más mensajes del altar
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -202,6 +212,14 @@
 				ld  (hl), a
 				ldir
 		#endasm
+	}
+
+	void redraw_from_buffer (void) {
+		rdx = 0; rdy = 0; for (gpit = 0; gpit < 150; gpit ++) {
+			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, map_buff [gpit]);
+			rdx += 2; if (rdx == 30) {rdx = 0; rdy += 2;}
+		}
+		sp_UpdateNow ();
 	}
 
 	void show_text_box (unsigned char n) {
@@ -251,6 +269,7 @@
 		}
 
 		while (any_key ()); while (!any_key ()); 
+		redraw_from_buffer ();
 	}
 
 	// Hooks
@@ -267,6 +286,44 @@
 		//pinv = 1; pinv_next_frame = object_cells [pinv];
 
 		pofrendas = 0; pofrendas_old = 0xff;
+		ofrendas_idx = 0;
+		#asm
+				ld b, 4
+				ld a, r 
+				ld (_seed), a
+
+			.shuffle_loop
+				push bc
+				call _rand
+				pop  bc
+				ld  a, l
+				and 3
+				ld  c, a
+				push bc
+				call _rand
+				pop  bc
+				ld  a, l
+				and 3
+				ld  d, 0
+				ld  e, a
+				ld  hl, _ofrendas_order
+				add hl, de
+				ld  a, (hl)
+				ld  (_rdi), a
+				ld  e, c
+				push hl
+				ld  hl, _ofrendas_order
+				add hl, de
+				ld  a, (hl)
+				pop hl
+				ld  (hl), a
+				ld  a, (_rdi)
+				ld  hl, _ofrendas_order
+				add hl, de
+				ld  (hl), a
+				
+				djnz shuffle_loop
+		#endasm
 	}
 
 	void hook_mainloop (void) {
