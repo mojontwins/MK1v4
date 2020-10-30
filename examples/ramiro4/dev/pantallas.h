@@ -25,20 +25,18 @@ extern unsigned char s_ending [];
 		BINARY "ending.bin"
 #endasm
 
-void unpack (unsigned int address) {
-	asm_int = address;
-	
+void unpack (void) {
 	#asm
 		ld hl, 22528
-		ld (hl), 0
-		push hl
-		pop de
-		inc de
+		ld de, 22529
 		ld bc, 767
+		xor a
+		ld (hl), a
 		ldir
+
 		ld hl, (_asm_int)
 		ld de, 16384
-		call depack
+		jp depack
 	#endasm
 }
 
@@ -64,7 +62,7 @@ void espera_activa (int espera) {
 
 void title_screen (void) {
 	sp_UpdateNow();
-	unpack ((unsigned int) (s_title));
+	asm_int = (unsigned int) (s_title); unpack ();
 
 	do_extern_action (0);
 
@@ -87,7 +85,7 @@ void title_screen (void) {
 
 void game_ending (void) {
 	sp_UpdateNow();
-	unpack ((unsigned int) (s_ending));
+	asm_int = (unsigned int) (s_ending); unpack ();
 	beepet (); peta_el_beeper (11);
 	espera_activa (500);
 }

@@ -19,7 +19,7 @@
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
 // Add 5 for each 8x8 sprite (such as bullets)
-#define NUMBLOCKS 		40
+#define NUMBLOCKS 		50 // 40
 
 // Tighten it even more... Gaining about 1.1 extra Kb 
 // You will probably have to tinker with this depending on your game.
@@ -48,8 +48,8 @@
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc.h"
 #endif
-#include "msc_extern.h"
 #include "custom.h"
+#include "msc_extern.h"
 #include "engine.h"
 #include "boxes.h"
 #include "mainloop.h"

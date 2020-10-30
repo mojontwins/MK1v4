@@ -303,11 +303,8 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 }
 
 void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
-	unsigned char m;
 	while (*s) {
-		m = (*s) - 32;
-		sp_PrintAtInv (y, x ++, c, m);
-		s ++;
+		sp_PrintAtInv (y, x ++, c, (*s) - 32); s ++;
 	}
 }
 

@@ -50,6 +50,23 @@
 	unsigned char _trap_bt;
 	unsigned char rda, rdb;
 
+	// Carrying an object
+
+	unsigned char *object_cells [] = {
+		0, extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a
+	};
+	unsigned char pinv;
+	struct sp_SS *sp_pinv;
+	unsigned char *pinv_next_frame, *pinv_current_frame;
+
+	// Offers
+
+	#define OFRENDAS_X 		21
+	#define OFRENDAS_Y 		23
+	unsigned char pofrendas, pofrendas_old; 
+
+	// Aux. functions
+
 	void draw_falling_block (void) {
 		//draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), _trap_bt);
 		
@@ -69,6 +86,22 @@
 
 			jp _draw_coloured_tile_do	
 		#endasm
+	}
+
+	// Hooks
+
+	void hook_system_inits (void) {
+		sp_pinv = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 3, TRANSPARENT);
+		sp_AddColSpr (sp_pinv, sprite_2_b, TRANSPARENT);
+		sp_AddColSpr (sp_pinv, sprite_2_c, TRANSPARENT);
+		pinv_current_frame = pinv_next_frame = sprite_2_a;
+	}
+
+	void hook_init_game (void) {
+		pinv = 0;
+		//pinv = 1; pinv_next_frame = object_cells [pinv];
+
+		pofrendas = 0; pofrendas_old = 0xff;
 	}
 
 	void hook_mainloop (void) {
@@ -262,9 +295,30 @@
 				}
 			}
 		}
+
+		// Carrying object
+		if (pinv) {
+			if (player.facing) rdx = gpx - 8; else rdx = gpx + 8;
+			rdy = gpy - 8;
+			sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
+				VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+			pinv_current_frame = pinv_next_frame;
+		}
+
+		// Offers
+		if (latest_hotspot == 2) {
+			pofrendas ++;
+			peta_el_beeper (5);
+		}
+
+		if (pofrendas != pofrendas_old) {
+			draw_2_digits (OFRENDAS_X, OFRENDAS_Y, pofrendas);
+			pofrendas_old = pofrendas;
+		}
 	}
 
-	void hook_entering (void) {
+	void hook_entering (void) {		
+
 		evil_eye_screen = map_behaviours [n_pant] & 2;
 		trap_screen = map_behaviours [n_pant] & 4;
 		trap_coins = map_behaviours [n_pant] & 8;

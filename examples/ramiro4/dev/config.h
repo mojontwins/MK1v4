@@ -10,7 +10,7 @@
 #define MAP_W					6		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				3//12		// Initial screen
+#define SCR_INICIO				12		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -63,6 +63,7 @@
 #define COINS_REFILL 			1		// If defined, add this to player.life
 //#define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
 //#define COINS_DEACTIVABLE				// Coins can be hidden.
+//#define COINS_SCRIPTING 				// Run script when player gets coin
 
 // Fixed screens engine
 // --------------------

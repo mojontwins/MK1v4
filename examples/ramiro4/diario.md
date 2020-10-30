@@ -50,3 +50,20 @@ Cuando llevel objeto al que no es, te rechaza, te quita vida, y te suelta un ins
 	¿PERO QUE ME TRAES? BOTARATE, TALLO DE CEBOLLA!
 ```
 
+## El objeto
+
+Como hemos dicho, Helmet llevará un objeto a cuestas. Para simplificar voy a hacer un array con cinco elementos: un 0 y luego los punteros a los cells extra con los cuatro objetos. Crearé una variable `pinv` que diga qué objeto llevamos. Si vale distinto de 0, pintaré el objeto a la espalda de Ramiro. Para ello lo definiré con menos prioridad y lo pintaré en `gpx - 8` o `gpx + 8` dependiendo del valor de `player.facing`. No me olvido de cambiar `NUMBLOCKS` de 40 a 50, pues un sprite más son 10 bloques más. 
+
+Para dar un objeto a ramiro, hay que asignarlo a `pinv` (1 a 4), y hacer `pinv_next_frame = object_cells [pinv];`. Para quitar el objeto, basta con hacer `pinv = 0`.
+
+Para controlar esto vamos a definir un par de externs en `msc_extern.h`. Aquí ya tengo el renderizador de textos, así que tendré que multiplexarlo. Vamos a hacer que `EXTERN n` con `n >= 64` asigne a `pinv` el valor `n - 64` y que si es diferente de 0 también asigne el sprite, `pinv = n - 64; if (pinv) pinv_next_frame = object_cells [pinv];`.
+
+## Las ofrendas
+
+Las ofrendas las voy a manejar con hotspots de tipo custom, por ejemplo el 2. Puedo detectar que tomo una ofrenda fácilmente ya que si tomo un hotspot, la variable `latest_hotspot` tomará su tipo durante el frame actual. Como he quitado el marcador del contador de quemazón ya que en este juego no tiene sentido, contaré las ofrendas aprovechando el sitio. Creo dos variables, `pofrendas` y `pofrendas_old`, la primera para contar y la segunda para llevar la actualización del marcador.
+
+## El altar
+
+Aunque podemos llevar varias ofrendas a la vez, el altar sólo nos dará un objeto si no llevamos.
+
+

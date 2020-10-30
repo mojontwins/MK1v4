@@ -112,44 +112,44 @@ unsigned char collide_enem (void) {
 
 unsigned char rand (void) {
 	#asm
-	.rand16
-		ld	hl, _seed
-		ld	a, (hl)
-		ld	e, a
-		inc	hl
-		ld	a, (hl)
-		ld	d, a
+		.rand16
+			ld	hl, _seed
+			ld	a, (hl)
+			ld	e, a
+			inc	hl
+			ld	a, (hl)
+			ld	d, a
+			
+			;; Ahora DE = [SEED]
+						
+			ld	a,	d
+			ld	h,	e
+			ld	l,	253
+			or	a
+			sbc	hl,	de
+			sbc	a, 	0
+			sbc	hl,	de
+			ld	d, 	0
+			sbc	a, 	d
+			ld	e,	a
+			sbc	hl,	de
+			jr	nc,	nextrand
+			inc	hl
+		.nextrand
+			ld	d,	h
+			ld	e,	l
+			ld	hl, _seed
+			ld	a,	e
+			ld	(hl), a
+			inc	hl
+			ld	a,	d
+			ld	(hl), a
+			
+			;; Ahora [SEED] = HL
 		
-		;; Ahora DE = [SEED]
-					
-		ld	a,	d
-		ld	h,	e
-		ld	l,	253
-		or	a
-		sbc	hl,	de
-		sbc	a, 	0
-		sbc	hl,	de
-		ld	d, 	0
-		sbc	a, 	d
-		ld	e,	a
-		sbc	hl,	de
-		jr	nc,	nextrand
-		inc	hl
-	.nextrand
-		ld	d,	h
-		ld	e,	l
-		ld	hl, _seed
-		ld	a,	e
-		ld	(hl), a
-		inc	hl
-		ld	a,	d
-		ld	(hl), a
-		
-		;; Ahora [SEED] = HL
-	
-		ld  l, e 
-		ld  h, 0		
-		;; Return 8 bit
+			ld  l, e 
+			ld  h, 0		
+			;; Return 8 bit
 	#endasm
 
 }
@@ -164,80 +164,80 @@ unsigned int abs (int n) {
 
 void step (void) {
 	#asm
-		ld a, 16
-		out (254), a
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		xor 16
-		out (254), a
+			ld a, 16
+			out (254), a
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			xor 16
+			out (254), a
 	#endasm	
 }
 
 void cortina (void) {
 	#asm
-		;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
-		;; para que no queden artefactos feos
-		
-		ld	de, 22528			; Apuntamos con DE a la zona de atributos
-		ld	b,	3				; Procesamos 3 tercios
-	.clearb1
-		push bc
-		
-		ld	b, 255				; Procesamos los 256 atributos de cada tercio
-	.clearb2
-	
-		ld	a, (de)				; Nos traemos un atributo
-		and	199					; Le hacemos la máscara 11000111 y dejamos PAPER a 0
-		ld	(de), a				; Y lo volvemos a poner
-		
-		inc de					; Siguiente atributo
-	
-		djnz clearb2
-		
-		pop bc
-		djnz clearb1
-		
-		;; Y ahora el código original que escribí para UWOL:	
-	
-		ld	a,	8
-	
-	.repitatodo
-		ld	c,	a			; Salvamos el contador de "repitatodo" en 'c'
-	
-		ld	hl, 16384
-		ld	a,	12
-	
-	.bucle
-		ld	b,	a			; Salvamos el contador de "bucle" en 'b'
-		ld	a,	255
-	
-	.bucle1
-		sla (hl)
-		inc hl
-		dec a
-		jr	nz, bucle1
+			;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
+			;; para que no queden artefactos feos
 			
-		ld	a,	255
-	.bucle2
-		srl (hl)
-		inc hl
-		dec a
-		jr	nz, bucle2
+			ld	de, 22528			; Apuntamos con DE a la zona de atributos
+			ld	b,	3				; Procesamos 3 tercios
+		.clearb1
+			push bc
 			
-		ld	a,	b			; Restituimos el contador de "bucle" a 'a'
-		dec a
-		jr	nz, bucle
-	
-		ld	a,	c			; Restituimos el contador de "repitatodo" a 'a'
-		dec a
-		jr	nz, repitatodo
+			ld	b, 255				; Procesamos los 256 atributos de cada tercio
+		.clearb2
+		
+			ld	a, (de)				; Nos traemos un atributo
+			and	199					; Le hacemos la máscara 11000111 y dejamos PAPER a 0
+			ld	(de), a				; Y lo volvemos a poner
+			
+			inc de					; Siguiente atributo
+		
+			djnz clearb2
+			
+			pop bc
+			djnz clearb1
+			
+			;; Y ahora el código original que escribí para UWOL:	
+		
+			ld	a,	8
+		
+		.repitatodo
+			ld	c,	a			; Salvamos el contador de "repitatodo" en 'c'
+		
+			ld	hl, 16384
+			ld	a,	12
+		
+		.bucle
+			ld	b,	a			; Salvamos el contador de "bucle" en 'b'
+			ld	a,	255
+		
+		.bucle1
+			sla (hl)
+			inc hl
+			dec a
+			jr	nz, bucle1
+				
+			ld	a,	255
+		.bucle2
+			srl (hl)
+			inc hl
+			dec a
+			jr	nz, bucle2
+				
+			ld	a,	b			; Restituimos el contador de "bucle" a 'a'
+			dec a
+			jr	nz, bucle
+		
+			ld	a,	c			; Restituimos el contador de "repitatodo" a 'a'
+			dec a
+			jr	nz, repitatodo
 	#endasm
 }
 
@@ -313,12 +313,12 @@ void cortina (void) {
 
 #if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 	#if defined PLAYER_CAN_HIDE
-	char player_hidden (void) {
-		if ( (gpy & 15) == 0 && player.vx == 0 )
-			if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-				return 1;
-		return 0;
-	}
+		char player_hidden (void) {
+			if ( (gpy & 15) == 0 && player.vx == 0 )
+				if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
+					return 1;
+			return 0;
+		}
 	#endif
 #endif
 
@@ -327,9 +327,9 @@ void cortina (void) {
 		flags [COIN_FLAG] ++;
 		
 		set_map_tile (xx, yy, 0, 0);
-
 		peta_el_beeper (5);
-		#ifdef ACTIVATE_SCRIPTING
+
+		#if defined ACTIVATE_SCRIPTING && defined COINS_SCRIPTING
 			// Run f_script #max_screens + 1
 			script = f_scripts [max_screens + 1];
 			run_script ();
@@ -373,6 +373,11 @@ void adjust_to_tile_x (void) {
 
 void adjust_to_tile_y (void) {
 	gpy = gpyy << 4; player.y = gpy << 6;
+}
+
+void player_flicker (void) {
+	player.estado = EST_PARP;
+	player.ct_estado = 50;
 }
 
 unsigned char move (void) {
@@ -467,7 +472,7 @@ unsigned char move (void) {
 				adjust_to_tile_y ();
 			}
 	} else if (player.vy > 0 && (gpy & 15) < 8) { 	// Going down
-		if (player.y < 9216)
+		//if (player.y < 9216)
 			if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			{
 				// Stop and adjust.
@@ -727,8 +732,7 @@ unsigned char move (void) {
 			#endif
 			#ifdef PLAYER_FLICKERS
 				// Flickers. People seem to like this more than the bouncing behaviour.
-				player.estado = EST_PARP;
-				player.ct_estado = 50;
+				player_flicker ();
 			#endif			
 		}
 	#endif
@@ -736,7 +740,7 @@ unsigned char move (void) {
 	#ifndef DEACTIVATE_EVIL_ZONE
 		// Evil zone engine
 
-		if (attr ((gpx+4) >> 4, (gpy+4) >> 4) == 3
+		if (attr ((gpx + 4) >> 4, (gpy + 4) >> 4) == 3
 			#ifdef EVIL_ZONE_CONDITIONAL
 				&& scenery_info.evil_zone_active
 			#endif
@@ -1030,13 +1034,13 @@ void draw_scr_background (void) {
 	#else
 		// Is there an object in this screen?
 		
-		hotspot_x = hotspot_y = 240;
-		if (hotspots [n_pant].act == 1) {
+		hotspot_y = 240;
+		if (hotspots [n_pant].act) {
 			#if defined(ACTIVATE_SCRIPTING) && defined(OBJECTS_ON_VAR)
-				if (flags [OBJECTS_ON_VAR] == 1)
+				if (flags [OBJECTS_ON_VAR])
 			#endif
 			{
-				if (hotspots [n_pant].tipo != 0) {
+				if (hotspots [n_pant].tipo) {
 					// Calculate tile coordinates
 					rdx = (hotspots [n_pant].xy >> 4);
 					rdy = (hotspots [n_pant].xy & 15);
@@ -1046,14 +1050,14 @@ void draw_scr_background (void) {
 					// Remember which tile was there
 					orig_tile = map_buff [15 * rdy + rdx];
 					// Draw the object.
-					draw_coloured_tile (VIEWPORT_X + rdx + rdx, VIEWPORT_Y + rdy + rdy, 16 + hotspots [n_pant].tipo);
+					draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), 16 + hotspots [n_pant].tipo);
 				}
 
 			}
 
 		}
 		#ifndef DEACTIVATE_REFILLS
-			else if (hotspots [n_pant].act == 0) {
+			else if (hotspots [n_pant].act) {
 				// Randomly, if there's no active object, we draw a recharge.
 				if (rand () % 3 == 2) {
 					rdx = (hotspots [n_pant].xy >> 4);
@@ -1061,7 +1065,7 @@ void draw_scr_background (void) {
 					hotspot_x = rdx << 4;
 					hotspot_y = rdy << 4;
 					orig_tile = map_buff [15 * rdy + rdx];
-					draw_coloured_tile (VIEWPORT_X + rdx + rdx, VIEWPORT_Y + rdy + rdy, 16);	
+					draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), 16);	
 				}
 			}
 		#endif
@@ -1072,7 +1076,7 @@ void draw_scr_background (void) {
 		// If so, delete it:
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
 			if (cerrojos [gpit].np == n_pant && !cerrojos [gpit].st) {
-				draw_coloured_tile (VIEWPORT_X + cerrojos [gpit].x + cerrojos [gpit].x, VIEWPORT_Y + cerrojos [gpit].y + cerrojos [gpit].y, 0);
+				draw_coloured_tile (VIEWPORT_X + (cerrojos [gpit].x << 1), VIEWPORT_Y + (cerrojos [gpit].y << 1), 0);
 				rdi = 15 * cerrojos [gpit].y + cerrojos [gpit].x;
 				map_attr [rdi] = 0;
 				map_buff [rdi] = 0;
@@ -1405,14 +1409,18 @@ void mueve_bicharracos (void) {
 				}
 			#else
 				#ifdef USE_TYPE_6
-					if (_en_t == 6 || _en_t == 0) {
+					if (_en_t == 6 
+						#ifdef MAKE_TYPE_6
+						|| _en_t == 0
+						#endif
+					) {
 						en_ccx = en_an_x [enit] >> 6;
 						en_ccy = en_an_y [enit] >> 6;
 					} else {
 						en_ccx = _en_x;
 						en_ccy = _en_y;
 					}
-					#else
+				#else
 					en_ccx = _en_x;
 					en_ccy = _en_y;
 				#endif
@@ -1421,11 +1429,11 @@ void mueve_bicharracos (void) {
 			// Moving platforms engine:
 
 			#ifndef PLAYER_MOGGY_STYLE	
-				if (_en_t == 4) {
-					// Vertical
+				if (_en_t == 4 && gpx >= en_ccx - 15 && gpx <= en_ccx + 15) {
+					// Vertical					
 					if (_en_my < 0) {
 						// Go up.
-						if (gpx >= en_ccx - 15 && gpx <= en_ccx + 15 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
+						if (gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
 							platform_get_player ();
 							// Collide?
 							if (player.y > 1024)
@@ -1438,7 +1446,7 @@ void mueve_bicharracos (void) {
 						}
 					} else if (_en_my > 0) {
 						// Go down.
-						if (gpx >= en_ccx - 15 && gpx <= en_ccx + 15 && gpy >= en_ccy - 20 && gpy <= en_ccy - 14 && player.vy >= 0) {
+						if (gpy >= en_ccy - 20 && gpy <= en_ccy - 14 && player.vy >= 0) {
 							platform_get_player ();
 							// Collide?
 							if (player.y < 9216)
@@ -1451,7 +1459,7 @@ void mueve_bicharracos (void) {
 					}
 
 					// Horizontal
-					if (_en_mx != 0 && gpx >= en_ccx - 15 && gpx <= en_ccx + 15 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
+					if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
 						platform_get_player ();
 						
 						gpx = gpx + _en_mx;
@@ -1567,8 +1575,7 @@ void mueve_bicharracos (void) {
 
 					#ifdef PLAYER_FLICKERS
 						// Flickers. People seem to like this more than the bouncing behaviour.
-						player.estado = EST_PARP;
-						player.ct_estado = 50;
+						player_flicker ();
 					#endif
 				}
 			}

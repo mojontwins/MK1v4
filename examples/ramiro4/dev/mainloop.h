@@ -58,6 +58,10 @@ void main (void) {
 		}
 	#endif
 
+	#ifdef ENABLE_CODE_HOOKS
+		hook_system_inits ();
+	#endif
+
 	while (1) {
 		// Here the title screen
 		title_screen ();
@@ -66,7 +70,7 @@ void main (void) {
 			// Clear screen and show game frame
 			cortina ();
 			sp_UpdateNow();
-			unpack ((unsigned int) (s_marco));
+			asm_int = (unsigned int) (s_marco); unpack ();
 		#endif
 
 		// Let's do it.
@@ -115,6 +119,10 @@ void main (void) {
 			// Execute "ENTERING GAME" script
 			script = e_scripts [max_screens];
 			run_script ();
+		#endif
+
+		#ifdef ENABLE_CODE_HOOKS
+			hook_init_game ();
 		#endif
 		
 		draw_scr ();
@@ -250,20 +258,8 @@ void main (void) {
 				en_an [rdi].current_frame = en_an [rdi].next_frame;
 			}
 
-			#ifdef ACTIVATE_SCRIPTING
-				if (f_zone_ac == 1) {
-					if (gpx >= fzx1 && gpx <= fzx2 && gpy >= fzy1 && gpy <= fzy2) {
-						script = f_scripts [n_pant];
-						run_script ();
-					}	
-				}
-			#endif
-			
-			if ( !(player.estado & EST_PARP) || !(half_life) )
-				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
-			else
-				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, -2, -2, 0, 0);
-			
+			rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
+			sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
 			player.current_frame = player.next_frame;
 			
 			#ifdef PLAYER_CAN_FIRE
@@ -276,6 +272,15 @@ void main (void) {
 				}
 			#endif
 
+			#ifdef ACTIVATE_SCRIPTING
+				if (f_zone_ac == 1) {
+					if (gpx >= fzx1 && gpx <= fzx2 && gpy >= fzy1 && gpy <= fzy2) {
+						script = f_scripts [n_pant];
+						run_script ();
+					}	
+				}
+			#endif
+			
 			#ifdef ENABLE_CODE_HOOKS
 				latest_hotspot = 0;
 			#endif
@@ -481,15 +486,14 @@ void main (void) {
 						#endif
 					#endif
 					#ifdef RESPAWN_FLICKER
-						player.estado = EST_PARP;
-						player.ct_estado = 50;
+						player_flicker ();
 					#endif
 				}
 			}
 
 			// Game over condition
 
-			if (player.life <= 0
+			if (player.life < 0
 				#ifdef ACTIVATE_SCRIPTING
 					|| script_result == 2
 				#endif
