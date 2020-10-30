@@ -448,6 +448,9 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					Next ai
 					clausula = clausula + Chr (0)
 					actionsUsed (&HE3) = -1
+				Case "EXTERN":
+					clausula = clausula + Chr (&HE4) + Chr (pval (listaPalabras (1)))
+					actionsUsed (&HE4) = -1
 				Case "GAME":
 					clausula = clausula + Chr (240)
 					actionsUsed (240) = -1
@@ -1247,6 +1250,14 @@ if actionsUsed (&HE3) Then
 	print #f, "                        sc_n = read_byte ();"
 	print #f, "                        draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, script);"
 	print #f, "                        script += sc_n;"
+	print #f, "                        break;"
+End If
+
+if actionsUsed (&HE4) Then
+	print #f, "                    case 0xE4:"
+	print #f, "                        // EXTERN n"
+	print #f, "                        // Opcode: E4 n"
+	print #f, "                        do_extern_action (read_byte ());"
 	print #f, "                        break;"
 End If
 
