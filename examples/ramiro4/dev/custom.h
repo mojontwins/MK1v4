@@ -67,6 +67,11 @@
 	unsigned char ofrendas_order [] = { 1, 2, 3, 4 };
 	unsigned char ofrendas_idx;
 
+	// Water trap
+
+	unsigned char water_level;
+	unsigned char water_ct;
+
 	// Text
 
 		unsigned char temp_string [] = "                        ";
@@ -181,6 +186,44 @@
 	unsigned char talk_sounds [] = { 7, 11 };
 
 	// Aux. functions
+
+	void paint_water_strip (void) {
+		// Paints a strip of character rda at rdy
+		#asm
+				ld  a, (_rdy)
+				cp  20
+				ret nc 						// Do not paint if rdy >= 20.
+
+				ld  c, VIEWPORT_X
+				call SPCompDListAddr
+				
+				// Now we have to write 30 chars
+				ld  b, 30
+				ld  a, (_rdi) 				// Which char
+				ld  c, 5 					// Colour
+			
+			.paint_water_strip_loop
+				ld  (hl), c 				// Paint colour
+				inc hl
+
+				ld  (hl), a
+				inc hl
+
+				inc hl
+				inc hl
+
+				djnz paint_water_strip_loop
+
+				// Now invalidate
+				ld  c, VIEWPORT_X
+				ld  e, VIEWPORT_X + 29
+				ld  a, (_rdy)
+				ld  b, a
+				ld  d, a
+				ld  iy, fsClipStruct
+				call SPInvalidate
+		#endasm
+	}
 
 	void draw_falling_block (void) {
 		//draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), _trap_bt);

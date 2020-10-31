@@ -64,6 +64,15 @@ Las ofrendas las voy a manejar con hotspots de tipo custom, por ejemplo el 2. Pu
 
 ## El altar
 
-Aunque podemos llevar varias ofrendas a la vez, el altar sólo nos dará un objeto si no llevamos.
+Aunque podemos llevar varias ofrendas a la vez, el altar sólo nos dará un objeto si no llevamos. La detección se hace desde el script, pero el manejo con `EXTERN 128` en `msc_extern.h`. 
 
+## La trampa de agua
 
+La trampa de agua se muestra en la columna derecha, esto es, en las pantallas 11, 17, 23 y 29. Cuando se active:
+
+- En cada pantalla se cierra la salida y solo se abre cuando se pulsen dos interruptores situados por algún sitio (!) de la pantalla.
+- Al entrar, hay que dar un boost al jugador en direccion vertical y tapar la entrada con una plataforma. Esto del boost se mantiene para la pantalla 5, aunque esta no tenga trampa de agua.
+
+Hay una variable `water_level` con el nivel del agua. Tendrá un valor entre 0 y 24, para que no se muestre el agua durante unos segundos. Indica la altura en caracteres. **Necesito una función que pinte una tira de caracteres N y la invalide si la altura es `< 20`.**
+
+Voy a empezar escribiendo esta rutina.
