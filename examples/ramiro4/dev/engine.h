@@ -402,10 +402,21 @@ unsigned char move (void) {
 		#ifndef PLAYER_MOGGY_STYLE
 			// If side view, get affected by gravity:
 			
-			if (player.vy < PLAYER_MAX_VY_CAYENDO)
-				player.vy += player.g;
-			else
-				player.vy = PLAYER_MAX_VY_CAYENDO;
+			#ifdef RAMIRO_HOVER
+			if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
+				pad0 |= sp_DOWN;
+				if (player.vy > PLAYER_MAX_VY_CAYENDO_H) 
+					player.vy = PLAYER_MAX_VY_CAYENDO_H;
+				else
+					player.vy += PLAYER_G_HOVER;
+			} else
+			#endif
+			{
+				if (player.vy < PLAYER_MAX_VY_CAYENDO)
+					player.vy += player.g;
+				else
+					player.vy = PLAYER_MAX_VY_CAYENDO;
+			}
 
 			if (player.gotten) player.vy = 0;		
 		#else
@@ -462,6 +473,7 @@ unsigned char move (void) {
 	// Cool
 
 	player.possee = 0;
+	player.ceiling = 0;
 	if (player.vy < 0) { 			// Going up
 		//if (player.y >= 1024)
 			if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
@@ -470,6 +482,7 @@ unsigned char move (void) {
 				gpyy ++;
 				// gpy = gpyy << 4; player.y = gpy << 6;
 				adjust_to_tile_y ();
+				player.ceiling = 1;
 			}
 	} else if (player.vy > 0 && (gpy & 15) < 8) { 	// Going down
 		//if (player.y < 9216)

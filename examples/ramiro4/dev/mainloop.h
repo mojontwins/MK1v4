@@ -380,7 +380,7 @@ void main (void) {
 					// Any scripts to run in this screen?
 					script = f_scripts [n_pant];
 					run_script ();
-					if (!script_something_done) peta_el_beeper (9);
+					//if (!script_something_done) peta_el_beeper (9);
 				}
 			#endif
 

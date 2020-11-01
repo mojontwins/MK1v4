@@ -133,6 +133,7 @@
 #define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
 #define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
 #define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
+#define RAMIRO_HOVER 					// press down to hover
 //#define PLAYER_HAS_JETPAC 			// If defined, player can thrust a vertical jetpac
 //#define JETPAC_DRAINS_LIFE			// If defined, flying drains life.
 //#define JETPAC_DRAIN_RATIO	3		// Drain 1 each X frames.
@@ -219,6 +220,9 @@
 
 #define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
 #define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
+
+#define PLAYER_MAX_VY_CAYENDO_H 32 		// For RAMIRO_HOVER
+#define PLAYER_G_HOVER 			1
 
 #define PLAYER_VY_INICIAL_SALTO 128		// Initial junp velocity (64/64 = 1 píxel/frame)
 #define PLAYER_MAX_VY_SALTANDO	256 	// Max jump velocity (320/64 = 5 píxels/frame)

@@ -68,11 +68,46 @@ Aunque podemos llevar varias ofrendas a la vez, el altar sólo nos dará un obje
 
 ## La trampa de agua
 
-La trampa de agua se muestra en la columna derecha, esto es, en las pantallas 11, 17, 23 y 29. Cuando se active:
+La trampa de agua se activa cuando cogemos una ofrenda en la pantalla 29.
+
+Cuando el agua te mata se desactiva la trampa y se vuelve a la pantalla 5.
+
+Se muestra en la columna derecha, esto es, en las pantallas 11, 17, 23 y 29. Cuando se active:
 
 - En cada pantalla se cierra la salida y solo se abre cuando se pulsen dos interruptores situados por algún sitio (!) de la pantalla.
 - Al entrar, hay que dar un boost al jugador en direccion vertical y tapar la entrada con una plataforma. Esto del boost se mantiene para la pantalla 5, aunque esta no tenga trampa de agua.
 
-Hay una variable `water_level` con el nivel del agua. Tendrá un valor entre 0 y 24, para que no se muestre el agua durante unos segundos. Indica la altura en caracteres. **Necesito una función que pinte una tira de caracteres N y la invalide si la altura es `< 20`.**
+Hay una variable `water_level` con el nivel del agua. Tendrá un valor entre 0 y 24, para que no se muestre el agua durante unos segundos. Indica la altura en caracteres. **Necesito una función que pinte una tira de caracteres N y la invalide si la altura es `< 20`.** - `paint_water_strip` pintará en `rdy` una fila de caracteres `rdi`.
 
-Voy a empezar escribiendo esta rutina.
+Para detectar que golpeamos un tile desde abajo usaremos `player.ceiling` y luego buscaremos el tile con `qtile`.
+
+Para activar la planta usaremos una función `water_trap_setup` que podamos llamar al coger la ofrenda de la pantalla 29 o al entrar en alguna de las pantallas con la trampa activada.
+
+Activar la trampa de agua debe:
+	- Tapar la salida inferior si la hay
+	- Tapar la salida superior si la hay
+	- Pintar los tiles que abren la trampa.
+
+El tema es generalizar esto lo más posible para ocupar lo mínimo posible.
+
+La tapa de arriba está en (11, 0) para las pantallas 11 y 23 y en (2, 0) para las pantallas 17 y 29.
+
+La tapa de abajo está en (11, 9) para las pantallas 5 y 17 y en (2, 9) para las pantallas 11 y 23.
+
+Si divido `n_pant` entre 6 puedo usar par/impar:
+
+- Es > 1; bloquear top, impar (11, 0), par (2, 0).
+- Es < 4; bloquear bottom, impar (2, 9), par (11, 9).
+
+La trampa se desactiva al entrar en la pantalla 5 tras haber pintado las cosas.
+
+Me queda ver cómo colocar los tiles que abren la trampa y luego detectarlos. Para eso tengo que diseñar un poco las pantallas de la trampa y haerme una idea.
+
+~~ 
+
+Puedo tener un array indexado por `n_pant / 6` que se pinte si `n_pant > 5` en el que cada byte empaquete dos posiciones X para pintar en la fila 0, con estos datos (tomados mientras pinto las pantallas):
+
+```
+	{ 0, , , 0x57, 0x79 }
+```
+

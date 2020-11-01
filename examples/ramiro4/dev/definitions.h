@@ -39,6 +39,7 @@ typedef struct {
 	unsigned char killingzone_framecount; 				// 34
 	unsigned char killingzone_beepcount; 				// 35
 	unsigned char is_dead; 								// 36
+	unsigned char ceiling; 								// 37
 } INERCIA;
 
 typedef struct {

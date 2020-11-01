@@ -69,6 +69,7 @@
 
 	// Water trap
 
+	#define WATER_PERIOD 20
 	unsigned char water_level;
 	unsigned char water_ct;
 
@@ -315,6 +316,32 @@
 		redraw_from_buffer ();
 	}
 
+	void trap_kill (void) {
+		sp_UpdateNow ();
+		peta_el_beeper (10);
+		player.life -= BLOCK_HIT; 
+		player.estado = EST_PARP;
+		player.ct_estado = 50;
+	}
+
+	void water_trap_setup (void) {
+		rdi = n_pant / 6;
+
+		// Paint top
+		if (rdi > 0) {
+			rdx = (rdy & 1) ? 11 : 2;
+			set_map_tile (rdx, 0, 6, 8);
+			set_map_tile (rdx+1, 0, 7, 8);
+		}
+
+		// Paint bottom 
+		if (rdi < 4) {
+			rdx = (rdy & 1) ? 2 : 11;
+			set_map_tile (rdx, 9, 46, 4);
+			set_map_tile (rdx+1, 9, 46, 4);
+		}
+	}
+
 	// Hooks
 
 	void hook_system_inits (void) {
@@ -367,6 +394,8 @@
 				
 				djnz shuffle_loop
 		#endasm
+
+		water_level = 0;
 	}
 
 	void hook_mainloop (void) {
@@ -519,11 +548,7 @@
 						
 								if (player.estado != EST_PARP) {
 									// Crushed!
-									sp_UpdateNow ();
-									peta_el_beeper (10);
-									player.life -= BLOCK_HIT; 
-									player.estado = EST_PARP;
-									player.ct_estado = 50;
+									trap_kill ();
 
 									// Reenter & reset
 									hotspots [n_pant].act = 1;
@@ -579,6 +604,35 @@
 		if (pofrendas != pofrendas_old) {
 			draw_2_digits (OFRENDAS_X, OFRENDAS_Y, pofrendas);
 			pofrendas_old = pofrendas;
+
+			// Activate water trap
+			if (n_pant == 29) {
+				water_level = 25;
+				water_trap_setup ();
+			}
+		}
+
+		// Water level
+		if (water_level) {
+
+			// Move water
+			if (water_ct) water_ct --; else {
+				water_level --;
+				rdy = water_level; rdi = 62; paint_water_strip ();
+				rdy ++; rdi = 63; paint_water_strip ();
+				water_ct = WATER_PERIOD;
+			}
+
+			// Detect collision
+			if ((water_level << 3) < (gpy + 12)) {
+				trap_kill ();
+
+				// Reset trap!
+				pofrendas --;
+				n_pant = 5;
+				gpy = player.y = 0;
+				gpx = 120; player.x = 120<<6;				
+			}
 		}
 	}
 
@@ -600,5 +654,14 @@
 		evil_eye_counter = 0;
 
 		trap_active = 0;
+
+		// Water level:
+		if (water_level) {
+			player.vy = -PLAYER_MAX_VY_SALTANDO;
+			water_trap_setup ();
+
+			if (n_pant == 5) water_level = 0;
+			else water_level = 25;
+		}
 	}
 #endif
