@@ -13,10 +13,10 @@
 	// bit 3 = trap but with coins
 	unsigned char map_behaviours [] = {
 		 0,  0,  0,  5,  0,  0, 
-		 0,  0,  0,  3,  1,  0,
-		 0,  0,  3,  3,  5,  0,
-		 5,  1,  1,  1,  1,  0,
-		13,  1,  1,  1,  1,  0
+		 0,  0,  0,  3,  1,  1,
+		 0,  0,  3,  3,  5,  1,
+		 5,  1,  1,  1,  1,  1,
+		13,  1,  1,  1,  1,  1
 	}; 
 
 	// Evil eye things
@@ -72,6 +72,8 @@
 	#define WATER_PERIOD 20
 	unsigned char water_level;
 	unsigned char water_ct;
+
+	unsigned char water_pushplates [] = { 0, 0x26, 0x4E, 0x57, 0x79 };
 
 	// Text
 
@@ -195,11 +197,11 @@
 				cp  20
 				ret nc 						// Do not paint if rdy >= 20.
 
-				ld  c, VIEWPORT_X
+				ld  c, VIEWPORT_X+2
 				call SPCompDListAddr
 				
 				// Now we have to write 30 chars
-				ld  b, 30
+				ld  b, 26
 				ld  a, (_rdi) 				// Which char
 				ld  c, 5 					// Colour
 			
@@ -332,6 +334,10 @@
 			rdx = (rdy & 1) ? 11 : 2;
 			set_map_tile (rdx, 0, 6, 8);
 			set_map_tile (rdx+1, 0, 7, 8);
+
+			rda = water_pushplates [rdi];
+			set_map_tile (rda >> 4, 0, 19, 8);
+			set_map_tile (rda & 15, 0, 19, 8);
 		}
 
 		// Paint bottom 
@@ -599,17 +605,17 @@
 		if (latest_hotspot == 2) {
 			pofrendas ++;
 			peta_el_beeper (5);
-		}
-
-		if (pofrendas != pofrendas_old) {
-			draw_2_digits (OFRENDAS_X, OFRENDAS_Y, pofrendas);
-			pofrendas_old = pofrendas;
-
+			
 			// Activate water trap
 			if (n_pant == 29) {
 				water_level = 25;
 				water_trap_setup ();
 			}
+		}
+
+		if (pofrendas != pofrendas_old) {
+			draw_2_digits (OFRENDAS_X, OFRENDAS_Y, pofrendas);
+			pofrendas_old = pofrendas;
 		}
 
 		// Water level
@@ -618,7 +624,7 @@
 			// Move water
 			if (water_ct) water_ct --; else {
 				water_level --;
-				rdy = water_level; rdi = 62; paint_water_strip ();
+				rdy = water_level + VIEWPORT_Y; rdi = 62; paint_water_strip ();
 				rdy ++; rdi = 63; paint_water_strip ();
 				water_ct = WATER_PERIOD;
 			}

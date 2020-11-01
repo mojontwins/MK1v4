@@ -10,7 +10,7 @@
 #define MAP_W					6		//
 #define MAP_H					5		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				8//12		// Initial screen
+#define SCR_INICIO				29//12		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -221,8 +221,8 @@
 #define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
 #define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
 
-#define PLAYER_MAX_VY_CAYENDO_H 32 		// For RAMIRO_HOVER
-#define PLAYER_G_HOVER 			1
+#define PLAYER_MAX_VY_CAYENDO_H 256		// For RAMIRO_HOVER
+#define PLAYER_G_HOVER 			4
 
 #define PLAYER_VY_INICIAL_SALTO 128		// Initial junp velocity (64/64 = 1 píxel/frame)
 #define PLAYER_MAX_VY_SALTANDO	256 	// Max jump velocity (320/64 = 5 píxels/frame)

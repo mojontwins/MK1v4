@@ -108,6 +108,6 @@ Me queda ver cómo colocar los tiles que abren la trampa y luego detectarlos. Pa
 Puedo tener un array indexado por `n_pant / 6` que se pinte si `n_pant > 5` en el que cada byte empaquete dos posiciones X para pintar en la fila 0, con estos datos (tomados mientras pinto las pantallas):
 
 ```
-	{ 0, , , 0x57, 0x79 }
+	{ 0, 0x26, 0x4E, 0x57, 0x79 }
 ```
 

@@ -403,19 +403,63 @@ unsigned char move (void) {
 			// If side view, get affected by gravity:
 			
 			#ifdef RAMIRO_HOVER
-			if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
-				pad0 |= sp_DOWN;
-				if (player.vy > PLAYER_MAX_VY_CAYENDO_H) 
-					player.vy = PLAYER_MAX_VY_CAYENDO_H;
-				else
-					player.vy += PLAYER_G_HOVER;
-			} else
+				if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
+					#asm
+						._player_hover
+							ld  a, (_pad0)
+							or  sp_DOWN
+							ld  (_pad0), a
+
+							ld  hl, (_player + 8) 		// player.vy
+							ld  de, PLAYER_MAX_VY_CAYENDO_H - PLAYER_G_HOVER
+							or  a
+							push hl 
+							sbc hl, de 
+							pop hl 
+							jr  nc, player_hover_maximum
+
+							ld  de, PLAYER_G_HOVER
+							add hl, de 
+							jr  player_hover_set
+
+						.player_hover_maximum
+							ld  hl, PLAYER_MAX_VY_CAYENDO_H
+
+						.player_hover_set
+							ld  (_player + 8), hl
+					#endasm
+				} else
 			#endif
 			{
-				if (player.vy < PLAYER_MAX_VY_CAYENDO)
-					player.vy += player.g;
-				else
-					player.vy = PLAYER_MAX_VY_CAYENDO;
+				#asm
+					._player_gravity
+						// Signed comparison shortcut by my picha
+						// If player.vy < 0 add PLAYER_G
+						// If player.vy > 0 do a signed comparison
+						ld  hl, (_player + 8) 		// player.vy
+						bit 7, h
+						jr  nz, player_gravity_add  // < 0
+
+						ld  de, PLAYER_MAX_VY_CAYENDO - PLAYER_G
+						or  a
+						push hl 
+						sbc hl, de 
+						pop hl 
+						jr  nc, player_gravity_maximum
+
+					.player_gravity_add
+						ld  de, PLAYER_G
+						add hl, de 
+						jr  player_gravity_vy_set
+
+					.player_gravity_maximum
+						ld  hl, PLAYER_MAX_VY_CAYENDO
+
+					.player_gravity_vy_set
+						ld  (_player + 8), hl 
+
+					.player_gravity_done
+				#endasm
 			}
 
 			if (player.gotten) player.vy = 0;		
@@ -458,7 +502,6 @@ unsigned char move (void) {
 		
 	if (player.y > 9216)
 		player.y = 9216;
-
 	
 	/* 
 		Check for collisions with obstacles. If so, we have to move
@@ -481,7 +524,6 @@ unsigned char move (void) {
 				// Stop and adjust.
 				player.vy = 0;
 				gpyy ++;
-				// gpy = gpyy << 4; player.y = gpy << 6;
 				adjust_to_tile_y ();
 				player.ceiling = 1;
 			}
@@ -490,7 +532,6 @@ unsigned char move (void) {
 			{
 				// Stop and adjust.
 				player.vy = 0;
-				// gpy = gpyy << 4; player.y = gpy << 6;
 				adjust_to_tile_y ();
 				player.possee = 1;
 			}
