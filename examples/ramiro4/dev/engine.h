@@ -474,8 +474,9 @@ unsigned char move (void) {
 
 	player.possee = 0;
 	player.ceiling = 0;
-	if (player.vy < 0) { 			// Going up
-		//if (player.y >= 1024)
+	rdj = (player.vy + ptgmy);
+	if (rdj) {
+		if (rdj < 0) { 			// Going up
 			if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 				// Stop and adjust.
 				player.vy = 0;
@@ -484,8 +485,7 @@ unsigned char move (void) {
 				adjust_to_tile_y ();
 				player.ceiling = 1;
 			}
-	} else if (player.vy > 0 && (gpy & 15) < 8) { 	// Going down
-		//if (player.y < 9216)
+		} else if ((gpy & 15) < 8) { 	// Going down
 			if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			{
 				// Stop and adjust.
@@ -494,6 +494,7 @@ unsigned char move (void) {
 				adjust_to_tile_y ();
 				player.possee = 1;
 			}
+		}
 	}
 
 	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
@@ -599,6 +600,7 @@ unsigned char move (void) {
 	#endif
 
 	player.x += player.vx;
+	player.x += ptgmx;
 	
 	// Safe
 	
@@ -611,7 +613,7 @@ unsigned char move (void) {
 	gpx = player.x >> 6;
 	gpxx = gpx >> 4;
 	
-	if (player.vx < 0) {
+	if (player.vx + ptgmx < 0) {
 		if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
 			// Stop and adjust
 			player.vx = 0;
@@ -1270,12 +1272,14 @@ void platform_get_player (void) {
 	player.y = gpy << 6;
 	player.vy = 0;						
 	gpyy = gpy >> 4;
+	ptgmy = (_en_my << 6);
 }
 
 void mueve_bicharracos (void) {
 	// This function moves the active enemies.
 	en_tocado = 0;
 	player.gotten = 0;
+	 ptgmx =  ptgmy = 0;
 	
 	for (enit = 0; enit < 3; enit ++) {
 		enoffsmasi = enoffs + enit;
@@ -1448,51 +1452,18 @@ void mueve_bicharracos (void) {
 						// Go up.
 						if (gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
 							platform_get_player ();
-							// Collide?
-							if (player.y > 1024)
-								if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
-									// ajust:
-									++ gpyy;
-									// gpy = gpyy << 4; player.y = gpy << 6;
-									adjust_to_tile_y ();
-								}
 						}
 					} else if (_en_my > 0) {
 						// Go down.
 						if (gpy >= en_ccy - 20 && gpy <= en_ccy - 14 && player.vy >= 0) {
 							platform_get_player ();
-							// Collide?
-							if (player.y < 9216)
-								if (attr (gpxx, gpyy + 1) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
-									// ajust:
-									// gpy = gpyy << 4; player.y = gpy << 6;
-									adjust_to_tile_y ();
-								}
 						}
 					}
 
 					// Horizontal
 					if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
 						platform_get_player ();
-						
-						gpx = gpx + _en_mx;
-						player.x = gpx << 6;
-						en_xx = gpx >> 4;
-
-						if (_en_mx < 0) {
-							if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
-								player.vx = 0;
-								gpxx ++; 
-								// gpx = gpxx << 4; player.x = gpx << 6;
-								adjust_to_tile_x ();
-							}
-						} else if (_en_mx > 0) {
-							if (attr (en_xx + 1, en_yy) & 8 || ((gpy & 15) != 0 && attr (en_xx + 1, en_yy + 1) & 8)) {
-								player.vx = 0;
-								// gpx = gpxx << 4; player.x = gpx << 6;
-								adjust_to_tile_x ();
-							}
-						}					
+						ptgmx = (_en_mx << 6);
 					}
 					
 				// Collision with enemy

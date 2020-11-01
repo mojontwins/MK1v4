@@ -123,6 +123,7 @@ INERCIA player;
 #ifdef PLAYER_CAN_FIRE
 	BULLET bullets [MAX_BULLETS];
 #endif
+signed int ptgmx, ptgmy;
 
 // Enemies
 
