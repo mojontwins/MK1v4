@@ -72,6 +72,8 @@
 	#define WATER_PERIOD 20
 	unsigned char water_level;
 	unsigned char water_ct;
+	unsigned char water_locks;
+	unsigned char water_top_door_x;
 
 	unsigned char water_pushplates [] = { 0, 0x26, 0x4E, 0x57, 0x79 };
 
@@ -331,9 +333,9 @@
 
 		// Paint top
 		if (rdi > 0) {
-			rdx = (rdy & 1) ? 11 : 2;
-			set_map_tile (rdx, 0, 6, 8);
-			set_map_tile (rdx+1, 0, 7, 8);
+			water_top_door_x = (rdy & 1) ? 11 : 2;
+			set_map_tile (water_top_door_x, 0, 6, 8);
+			set_map_tile (water_top_door_x + 1, 0, 7, 8);
 
 			rda = water_pushplates [rdi];
 			set_map_tile (rda >> 4, 0, 19, 8);
@@ -344,7 +346,7 @@
 		if (rdi < 4) {
 			rdx = (rdy & 1) ? 2 : 11;
 			set_map_tile (rdx, 9, 46, 4);
-			set_map_tile (rdx+1, 9, 46, 4);
+			set_map_tile (rdx + 1, 9, 46, 4);
 		}
 	}
 
@@ -639,6 +641,22 @@
 				gpy = player.y = 0;
 				gpx = 120; player.x = 120<<6;				
 			}
+
+			// Detect horus tiles
+			rdx = (gpx + 8) >> 4; rdy = (gpy - 2) >> 4
+			if (player.ceiling && qtile (rdx, rdy) == 19) {
+				water_locks ++:
+				set_map_tile (rdx, rdy, 11, 8);
+				sp_UpdateNow ();
+				peta_el_beeper (5);
+				if (water_locks == 2) {
+					// Open trap!
+					set_map_tile (water_top_door_x, 0, 0, 0);
+					set_map_tile (water_top_door_x + 1, 0, 0, 0);
+					sp_UpdateNow ();
+					peta_el_beeper (8);
+				}
+			}
 		}
 	}
 
@@ -665,6 +683,7 @@
 		if (water_level) {
 			player.vy = -PLAYER_MAX_VY_SALTANDO;
 			water_trap_setup ();
+			water_locks = 0;
 
 			if (n_pant == 5) water_level = 0;
 			else water_level = 25;

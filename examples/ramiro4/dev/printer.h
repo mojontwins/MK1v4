@@ -59,7 +59,8 @@ void qtile (unsigned char x, unsigned char y) {
 			dec hl
 			dec hl
 			ld  a, (hl) 	// y
-			
+
+		.qtile_do	
 			ld  b, a
 			sla a
 			sla a
