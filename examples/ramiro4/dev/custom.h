@@ -75,7 +75,7 @@
 	unsigned char water_locks;
 	unsigned char water_top_door_x;
 
-	unsigned char water_pushplates [] = { 0, 0x26, 0x4E, 0x57, 0x79 };
+	unsigned char water_pushplates [] = { 0, 0x26, 0x4D, 0x57, 0x79 };
 
 	// Text
 
@@ -196,7 +196,7 @@
 		// Paints a strip of character rda at rdy
 		#asm
 				ld  a, (_rdy)
-				cp  20
+				cp  VIEWPORT_Y+20
 				ret nc 						// Do not paint if rdy >= 20.
 
 				ld  c, VIEWPORT_X+2
@@ -333,7 +333,7 @@
 
 		// Paint top
 		if (rdi > 0) {
-			water_top_door_x = (rdy & 1) ? 11 : 2;
+			water_top_door_x = (rdi & 1) ? 11 : 2;
 			set_map_tile (water_top_door_x, 0, 6, 8);
 			set_map_tile (water_top_door_x + 1, 0, 7, 8);
 
@@ -344,10 +344,12 @@
 
 		// Paint bottom 
 		if (rdi < 4) {
-			rdx = (rdy & 1) ? 2 : 11;
+			rdx = (rdi & 1) ? 2 : 11;
 			set_map_tile (rdx, 9, 46, 4);
 			set_map_tile (rdx + 1, 9, 46, 4);
 		}
+
+		water_locks = 0;
 	}
 
 	// Hooks
@@ -632,10 +634,12 @@
 			}
 
 			// Detect collision
-			if ((water_level << 3) < (gpy + 12)) {
+			if ((water_level << 3) <= gpy) {
 				trap_kill ();
 
 				// Reset trap!
+				water_level = 0;
+				hotspots [29].act = 1;
 				pofrendas --;
 				n_pant = 5;
 				gpy = player.y = 0;
@@ -643,9 +647,9 @@
 			}
 
 			// Detect horus tiles
-			rdx = (gpx + 8) >> 4; rdy = (gpy - 2) >> 4
+			rdx = (gpx + 8) >> 4; rdy = (gpy - 2) >> 4;
 			if (player.ceiling && qtile (rdx, rdy) == 19) {
-				water_locks ++:
+				water_locks ++;
 				set_map_tile (rdx, rdy, 11, 8);
 				sp_UpdateNow ();
 				peta_el_beeper (5);
@@ -683,8 +687,7 @@
 		if (water_level) {
 			player.vy = -PLAYER_MAX_VY_SALTANDO;
 			water_trap_setup ();
-			water_locks = 0;
-
+			
 			if (n_pant == 5) water_level = 0;
 			else water_level = 25;
 		}
