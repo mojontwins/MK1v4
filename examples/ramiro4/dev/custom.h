@@ -665,7 +665,6 @@
 	}
 
 	void hook_entering (void) {		
-
 		evil_eye_screen = map_behaviours [n_pant] & 2;
 		trap_screen = map_behaviours [n_pant] & 4;
 		trap_coins = map_behaviours [n_pant] & 8;
@@ -673,7 +672,7 @@
 		scenery_info.evil_zone_active = 0;
 		scenery_info.allow_type_6 = 0;
 
-		if (map_behaviours [n_pant] & 2) {
+		if (evil_eye_screen) {
 			draw_coloured_tile (EYE_X-2, EYE_Y, 28);
 			draw_coloured_tile (EYE_X, EYE_Y, 29);
 		}
