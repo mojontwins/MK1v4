@@ -5,6 +5,10 @@
 # flags:
 # 0 - Al pullpose no repeat
 # 1	- Open pyramid
+# 2 - Trap Gustavo
+# 3 - Trap Sonia
+# 4 - Trap Clemente
+# 5 - Trap Marisa
 
 ENTERING GAME
 	IF TRUE
@@ -13,18 +17,18 @@ ENTERING GAME
 	END
 END
 
-ENTERING SCREEN 2
+ENTERING SCREEN 0
 	IF TRUE
 	THEN
 		     #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		TEXT "       RAMON EL FARAON"
 		SET FLAG 0 = 0
-		SET TILE (10, 2) = 27
+		SET TILE (2, 6) = 27
 	END
 END
 
-PRESS_FIRE AT SCREEN 2
-	IF PLAYER_TOUCHES 10,2
+PRESS_FIRE AT SCREEN 0
+	IF PLAYER_TOUCHES 2, 6
 	IF FLAG 0 = 0
 	THEN
 		EXTERN 14

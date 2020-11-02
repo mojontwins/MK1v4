@@ -111,3 +111,7 @@ Puedo tener un array indexado por `n_pant / 6` que se pinte si `n_pant > 5` en e
 	{ 0, 0x26, 0x4E, 0x57, 0x79 }
 ```
 
+## Los guardianes de las trampas
+
+Necesito 4 flags para marcar que las ofrendas correspondientes han sido entregadas y que las trampas están abiertas. En el mapa las puertas estarán cerradas pero las tendré que abrir de acuerdo a estos flags.
+

@@ -15,7 +15,7 @@
 		 0,  0,  0,  5,  0,  0, 
 		 0,  0,  0,  3,  1,  1,
 		 0,  0,  3,  3,  5,  1,
-		 5,  1,  1,  1,  1,  1,
+		13,  1,  1,  1,  1,  1,
 		13,  1,  1,  1,  1,  1
 	}; 
 
@@ -337,9 +337,9 @@
 			set_map_tile (water_top_door_x, 0, 6, 8);
 			set_map_tile (water_top_door_x + 1, 0, 7, 8);
 
-			rda = water_pushplates [rdi];
-			set_map_tile (rda >> 4, 0, 19, 8);
-			set_map_tile (rda & 15, 0, 19, 8);
+			rdx = water_pushplates [rdi];
+			set_map_tile (rdx >> 4, 0, 19, 8);
+			set_map_tile (rdx & 15, 0, 19, 8);
 		}
 
 		// Paint bottom 
