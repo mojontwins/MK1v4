@@ -13,4 +13,8 @@ A partir de entonces MK1 avanzó a partir de ahí con las diferentes revisiones 
 
 Finalmente, a principios de 2020 retomamos MK1 v3.99 (nueva vuelta atrás), y seguimos avanzando construyendo las versiones 5.x y posteriormente las 6.x y más allá.
 
-La v4.7 se quedó ahí en un limbo congelado con algunos juegos sin terminar. Y la conservamos aquí, en ese estado monstruoso aunque entrañable.
+La v4.7 se quedó ahí en un limbo congelado con algunos juegos sin terminar. 
+
+La idea era conservarla congelada en ambar, pero nah, eso es de cobardes. Así que hemos rescatado el proyecto perdido de Ramiro 4 (que en 2013 quedó a medias por destrucción de pendrive) y con ese pretexto hemos corregido bugs, mejorado la modularidad (originalmente había muchas cosas pertenecientes a funcionalidades que se quedaban en el código sin tener la funcionalidad activada, o había combinaciones que directamente no funcionaban), traducido funciones auxiliares a ensamble y ordenado un poco mejor todo.
+
+Os presentamos la última versión de la rama olvidada de **MTE MK1**, la **v4.8 codename "zombie"**.
