@@ -112,44 +112,44 @@ unsigned char collide_enem (void) {
 
 unsigned char rand (void) {
 	#asm
-		.rand16
-			ld	hl, _seed
-			ld	a, (hl)
-			ld	e, a
-			inc	hl
-			ld	a, (hl)
-			ld	d, a
-			
-			;; Ahora DE = [SEED]
-						
-			ld	a,	d
-			ld	h,	e
-			ld	l,	253
-			or	a
-			sbc	hl,	de
-			sbc	a, 	0
-			sbc	hl,	de
-			ld	d, 	0
-			sbc	a, 	d
-			ld	e,	a
-			sbc	hl,	de
-			jr	nc,	nextrand
-			inc	hl
-		.nextrand
-			ld	d,	h
-			ld	e,	l
-			ld	hl, _seed
-			ld	a,	e
-			ld	(hl), a
-			inc	hl
-			ld	a,	d
-			ld	(hl), a
-			
-			;; Ahora [SEED] = HL
+	.rand16
+		ld	hl, _seed
+		ld	a, (hl)
+		ld	e, a
+		inc	hl
+		ld	a, (hl)
+		ld	d, a
 		
-			ld  l, e 
-			ld  h, 0		
-			;; Return 8 bit
+		;; Ahora DE = [SEED]
+					
+		ld	a,	d
+		ld	h,	e
+		ld	l,	253
+		or	a
+		sbc	hl,	de
+		sbc	a, 	0
+		sbc	hl,	de
+		ld	d, 	0
+		sbc	a, 	d
+		ld	e,	a
+		sbc	hl,	de
+		jr	nc,	nextrand
+		inc	hl
+	.nextrand
+		ld	d,	h
+		ld	e,	l
+		ld	hl, _seed
+		ld	a,	e
+		ld	(hl), a
+		inc	hl
+		ld	a,	d
+		ld	(hl), a
+		
+		;; Ahora [SEED] = HL
+	
+		ld  l, e 
+		ld  h, 0		
+		;; Return 8 bit
 	#endasm
 
 }
@@ -164,80 +164,80 @@ unsigned int abs (int n) {
 
 void step (void) {
 	#asm
-			ld a, 16
-			out (254), a
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			xor 16
-			out (254), a
+		ld a, 16
+		out (254), a
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		xor 16
+		out (254), a
 	#endasm	
 }
 
 void cortina (void) {
 	#asm
-			;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
-			;; para que no queden artefactos feos
+		;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
+		;; para que no queden artefactos feos
+		
+		ld	de, 22528			; Apuntamos con DE a la zona de atributos
+		ld	b,	3				; Procesamos 3 tercios
+	.clearb1
+		push bc
+		
+		ld	b, 255				; Procesamos los 256 atributos de cada tercio
+	.clearb2
+	
+		ld	a, (de)				; Nos traemos un atributo
+		and	199					; Le hacemos la máscara 11000111 y dejamos PAPER a 0
+		ld	(de), a				; Y lo volvemos a poner
+		
+		inc de					; Siguiente atributo
+	
+		djnz clearb2
+		
+		pop bc
+		djnz clearb1
+		
+		;; Y ahora el código original que escribí para UWOL:	
+	
+		ld	a,	8
+	
+	.repitatodo
+		ld	c,	a			; Salvamos el contador de "repitatodo" en 'c'
+	
+		ld	hl, 16384
+		ld	a,	12
+	
+	.bucle
+		ld	b,	a			; Salvamos el contador de "bucle" en 'b'
+		ld	a,	255
+	
+	.bucle1
+		sla (hl)
+		inc hl
+		dec a
+		jr	nz, bucle1
 			
-			ld	de, 22528			; Apuntamos con DE a la zona de atributos
-			ld	b,	3				; Procesamos 3 tercios
-		.clearb1
-			push bc
+		ld	a,	255
+	.bucle2
+		srl (hl)
+		inc hl
+		dec a
+		jr	nz, bucle2
 			
-			ld	b, 255				; Procesamos los 256 atributos de cada tercio
-		.clearb2
-		
-			ld	a, (de)				; Nos traemos un atributo
-			and	199					; Le hacemos la máscara 11000111 y dejamos PAPER a 0
-			ld	(de), a				; Y lo volvemos a poner
-			
-			inc de					; Siguiente atributo
-		
-			djnz clearb2
-			
-			pop bc
-			djnz clearb1
-			
-			;; Y ahora el código original que escribí para UWOL:	
-		
-			ld	a,	8
-		
-		.repitatodo
-			ld	c,	a			; Salvamos el contador de "repitatodo" en 'c'
-		
-			ld	hl, 16384
-			ld	a,	12
-		
-		.bucle
-			ld	b,	a			; Salvamos el contador de "bucle" en 'b'
-			ld	a,	255
-		
-		.bucle1
-			sla (hl)
-			inc hl
-			dec a
-			jr	nz, bucle1
-				
-			ld	a,	255
-		.bucle2
-			srl (hl)
-			inc hl
-			dec a
-			jr	nz, bucle2
-				
-			ld	a,	b			; Restituimos el contador de "bucle" a 'a'
-			dec a
-			jr	nz, bucle
-		
-			ld	a,	c			; Restituimos el contador de "repitatodo" a 'a'
-			dec a
-			jr	nz, repitatodo
+		ld	a,	b			; Restituimos el contador de "bucle" a 'a'
+		dec a
+		jr	nz, bucle
+	
+		ld	a,	c			; Restituimos el contador de "repitatodo" a 'a'
+		dec a
+		jr	nz, repitatodo
 	#endasm
 }
 
@@ -277,8 +277,7 @@ void cortina (void) {
 			#ifdef PLAYER_CAN_FIRE
 				malotes [gpit].life = ENEMIES_LIFE_GAUGE;
 				#ifdef RANDOM_RESPAWN
-				if (malotes [gpit].t == 5)
-					malotes [gpit].t |= 16;
+					if (malotes [gpit].t == 5) malotes [gpit].t |= 16;
 				#endif
 			#endif
 		}
@@ -313,12 +312,12 @@ void cortina (void) {
 
 #if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 	#if defined PLAYER_CAN_HIDE
-		char player_hidden (void) {
-			if ( (gpy & 15) == 0 && player.vx == 0 )
-				if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-					return 1;
-			return 0;
-		}
+	char player_hidden (void) {
+		if ( (gpy & 15) == 0 && player.vx == 0 )
+			if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
+				return 1;
+		return 0;
+	}
 	#endif
 #endif
 
@@ -344,7 +343,7 @@ void cortina (void) {
 #ifdef PLAYER_PUSH_BOXES
 	void move_tile (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char act) {
 		set_map_tile (x0, y0, 0, 0);
-		set_map_tile (x1, y1, 14, 1);
+		set_map_tile (x1, y1, 14, 8);
 
 		// Sound
 		if (act) {
@@ -502,7 +501,7 @@ unsigned char move (void) {
 		
 	if (player.y > 9216)
 		player.y = 9216;
-	
+
 	/* 
 		Check for collisions with obstacles. If so, we have to move
 		back until the edge of the tile.
@@ -535,7 +534,7 @@ unsigned char move (void) {
 				adjust_to_tile_y ();
 				player.possee = 1;
 			}
-		}
+			}
 	}
 
 	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
@@ -564,17 +563,17 @@ unsigned char move (void) {
 			} else if (
 			#ifdef RAMIRO_HOP
 				rdi
-			#else
+		#else
 				player.possee 
 			#endif
 				|| player.gotten) {
 				player.saltando = 1;
 				player.cont_salto = 0;
-				peta_el_beeper (1);	
+				peta_el_beeper (1);
 			}
 		} else {
-			player.saltando = 0;
-		}
+					player.saltando = 0;
+			}
 	#endif
 
 	#ifdef PLAYER_HAS_JETPAC
@@ -712,55 +711,55 @@ unsigned char move (void) {
 			if ((pad0 & sp_FIRE) == 0)
 		#endif
 		{
-			
-			// In side-view mode, you can't push boxes vertically.
-			#ifdef PLAYER_MOGGY_STYLE
-				// Vertically, only when player.y is tile-aligned.
-				if ((gpy & 15) == 0) {
-					if ((pad0 & sp_UP) == 0 && gpyy > 1) {
-						if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2))
-							move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
-						}
-						if ((gpx & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
-								move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
+				
+				// In side-view mode, you can't push boxes vertically.
+				#ifdef PLAYER_MOGGY_STYLE
+					// Vertically, only when player.y is tile-aligned.
+					if ((gpy & 15) == 0) {
+						if ((pad0 & sp_UP) == 0 && gpyy > 1) {
+							if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2))
+								move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
+							}
+							if ((gpx & 15) != 0) {
+								if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
+									move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
+								}
+							}
+						} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
+							if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
+								move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
+							}
+							if ((gpx & 15) != 0) {
+								if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
+									move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
+								}	
 							}
 						}
-					} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
-						if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
-							move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
-						}
-						if ((gpx & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
-								move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
-							}	
-						}
 					}
-				}
-			#endif
+				#endif
 
-			// Horizontally, only when player.x is tile-aligned.
-			if ((gpx & 15) == 0) {
-				if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
-					if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
-						move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
-					}
-					if ((gpy & 15) != 0) {
-						if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
-							move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
+				// Horizontally, only when player.x is tile-aligned.
+				if ((gpx & 15) == 0) {
+					if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
+						if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
+							move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
 						}
-					}
-				} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
-					if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
-						move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
-					}
-					if ((gpy & 15) != 0) {
-						if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
-							move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
+						if ((gpy & 15) != 0) {
+							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
+								move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
+							}
 						}
-					}
-				}	
-			}				
+					} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
+						if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
+							move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
+						}
+						if ((gpy & 15) != 0) {
+							if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
+								move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
+							}
+						}
+					}	
+				}			
 		}
 	#endif
 
@@ -770,7 +769,7 @@ unsigned char move (void) {
 		#ifdef EVIL_TILE_SIMPLE
 			if (attr ((gpx + 8) >> 4, (gpy + 14) >> 4) == 1)
 		#else
-			if (attr (gpxx, gpyy) == 1 || 
+		if (attr (gpxx, gpyy) == 1 || 
 			((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 1) ||
 			((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 1) ||
 			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) 
@@ -784,7 +783,7 @@ unsigned char move (void) {
 				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
 				else player.vy = -player.vy;
 			#else
-				player.vy = -player.vy;
+			player.vy = -player.vy;
 			#endif
 			#ifdef PLAYER_FLICKERS
 				// Flickers. People seem to like this more than the bouncing behaviour.
@@ -837,15 +836,15 @@ unsigned char move (void) {
 			if ((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & COIN_BEH)
 				get_coin (gpxx + 1, gpyy + 1);
 		#else
-			if (qtile (gpxx, gpyy) == COIN_TILE)
-				get_coin (gpxx, gpyy);
-			if ((gpx & 15) != 0 && qtile (gpxx + 1, gpyy) == COIN_TILE)
-				get_coin (gpxx + 1, gpyy);
-			if ((gpy & 15) != 0 && qtile (gpxx, gpyy + 1) == COIN_TILE) 
-				get_coin (gpxx, gpyy + 1);
-			if ((gpx & 15) != 0 && (gpy & 15) != 0 && qtile (gpxx + 1, gpyy + 1) == COIN_TILE)
-				get_coin (gpxx + 1, gpyy + 1);
-		#endif
+		if (qtile (gpxx, gpyy) == COIN_TILE)
+			get_coin (gpxx, gpyy);
+		if ((gpx & 15) != 0 && qtile (gpxx + 1, gpyy) == COIN_TILE)
+			get_coin (gpxx + 1, gpyy);
+		if ((gpy & 15) != 0 && qtile (gpxx, gpyy + 1) == COIN_TILE) 
+			get_coin (gpxx, gpyy + 1);
+		if ((gpx & 15) != 0 && (gpy & 15) != 0 && qtile (gpxx + 1, gpyy + 1) == COIN_TILE)
+			get_coin (gpxx + 1, gpyy + 1);			
+	#endif
 	#endif
 
 	// Select next frame to paint...
@@ -853,7 +852,7 @@ unsigned char move (void) {
 	#ifndef PLAYER_MOGGY_STYLE
 		// In this case, the spriteset is:
 		// 1  2  3  4  5  6  7  8
-		// R1 R2 R3 RJ L1 L2 L3 LJ	
+		// R1 R2 R3 RJ L1 L2 L3 LJ
 
 		#asm
 			ld  a, (_player+22)					// player.facing
@@ -866,21 +865,21 @@ unsigned char move (void) {
 
 		if (!player.possee && !player.gotten) {
 			rdd = 3;
-		} else {			
+		} else {
 			if (player.vx == 0) {
 				rdd = 1;
 			} else {
 				rdd = ((gpx + 4) >> 3) & 3;
 				if (rdd == 3) rdd = 1;
-			}			
-		}
+				}
+					}
 
 		player.next_frame = player_cells [rdi + rdd];
 	#else
 		// In this case, the spriteset is
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 L1 L2 U1 U2 D1 D2
-
+		
 		if (player.vx != 0 || player.vy != 0) {
 			player.subframe ++;
 			if (player.subframe == 4) {
@@ -889,7 +888,7 @@ unsigned char move (void) {
 				step (); 
 			}
 		}
-
+		
 		rdd = player.frame;
 		if (player.vx == 0) {		
 			if (player.vy < 0) rdd += 4;
@@ -995,7 +994,7 @@ void draw_scr_background (void) {
 	#elif defined TWO_SETS
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
-		rdi = 0; gp_gen = mapa;
+		rdi = 0; 
 		for (gpit = 0; gpit < 75; gpit ++) {
 			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
@@ -1047,7 +1046,7 @@ void draw_scr_background (void) {
 		// PACKED map, every byte contains two tiles, plus admits
 		// some special effects (autoshadows, see below).
 		rdi = 0;
-		for (gpit = 0; gpit < 75; gpit ++) {			
+		for (gpit = 0; gpit < 75; gpit ++) {
 			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
@@ -1414,7 +1413,7 @@ void mueve_bicharracos (void) {
 			{
 				_en_x += _en_mx;
 				_en_y += _en_my;
-			}
+				}
 
 			#ifdef PLAYER_PUSH_BOXES			
 				// Check for collisions.
@@ -1449,8 +1448,8 @@ void mueve_bicharracos (void) {
 					case 3:
 					case 4:
 						rdd = ((_en_t - 1) << 1);
-						break;
-					default:
+							break;
+						default:
 						rdd = 4;
 						break;
 				}	
@@ -1478,7 +1477,7 @@ void mueve_bicharracos (void) {
 						en_ccx = _en_x;
 						en_ccy = _en_y;
 					}
-				#else
+					#else
 					en_ccx = _en_x;
 					en_ccy = _en_y;
 				#endif
@@ -1488,7 +1487,7 @@ void mueve_bicharracos (void) {
 
 			#ifndef PLAYER_MOGGY_STYLE	
 				if (_en_t == 4 && gpx >= en_ccx - 15 && gpx <= en_ccx + 15) {
-					// Vertical					
+					// Vertical
 					if (_en_my < 0) {
 						// Go up.
 						if (gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
@@ -1498,8 +1497,8 @@ void mueve_bicharracos (void) {
 						// Go down.
 						if (gpy >= en_ccy - 20 && gpy <= en_ccy - 14 && player.vy >= 0) {
 							platform_get_player ();
+								}
 						}
-					}
 
 					// Horizontal
 					if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {

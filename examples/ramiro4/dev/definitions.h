@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // definitions.h
 // Contains type definitions and global variables
@@ -66,7 +66,7 @@ typedef struct {
 	unsigned char evil_zone_active;
 	unsigned char allow_type_6;
 	#ifdef MAKE_TYPE_6
-		unsigned char make_type_6;
+	unsigned char make_type_6;
 	#endif
 } SCENERY_INFO;
 
@@ -145,7 +145,7 @@ unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
 signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
 unsigned char *_baddies_pointer;
-	
+
 // Tile behaviour array and tile array for the current screen
 
 unsigned char map_attr [150] @ 24050;
@@ -168,7 +168,7 @@ unsigned char orig_tile;	// Original background tile
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
-	unsigned char pant_final = SCR_FIN;
+		unsigned char pant_final = SCR_FIN;
 	#endif
 #endif
 unsigned char n_pant, on_pant;
@@ -203,10 +203,10 @@ unsigned char jetpac_frame_counter;
 unsigned char playing;
 unsigned char maincounter;
 unsigned char objs_old, keys_old, life_old, killed_old, item_old, ezg_old;
-#ifdef USE_COINS
-	unsigned char coins_old;
+unsigned char coins_old;
+#ifdef REENTER_ON_ALL_OBJECTS
+	unsigned char reentered;
 #endif
-unsigned char reentered;
 unsigned char success;
 unsigned char rdi;
 signed int rdj;

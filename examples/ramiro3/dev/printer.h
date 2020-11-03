@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // printer.h
 // Miscellaneous printing functions (tiles, status, etc).
@@ -59,7 +59,8 @@ void qtile (unsigned char x, unsigned char y) {
 			dec hl
 			dec hl
 			ld  a, (hl) 	// y
-			
+
+		.qtile_do	
 			ld  b, a
 			sla a
 			sla a
@@ -96,6 +97,7 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 			dec hl
 			ld  a, (hl)
 			ld  (__t), a
+		._draw_coloured_tile_do
 	#endasm
 
 	#if defined USE_AUTO_SHADOWS && !defined UNPACKED_MAP
@@ -239,16 +241,82 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 	}		
 }
 
+void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned char n) {
+	#asm
+			; Copy params for speed & size
+			ld  hl, 8
+			add hl, sp
+			ld  a, (hl)
+			ld  (__x), a
+			ld  c, a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			ld  (__y), a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			ld  (__t), a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			ld  (__n), a
+
+			ld  a, (__y)
+			ld  b, a
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			add c
+
+			ld  b, 0
+			ld  c, a
+
+			ld  hl, _map_buff
+			add hl, bc
+			ld  a, (__t)
+			ld (hl), a
+
+			ld  hl, _map_attr
+			add hl, bc
+			ld  a, (__n)
+			ld (hl), a
+			
+			ld  a, (__x)
+			sla a
+			add VIEWPORT_X
+			ld  (__x), a
+
+			ld  a, (__y)
+			sla a
+			add VIEWPORT_Y
+			ld  (__y), a
+
+			jp _draw_coloured_tile_do
+	#endasm
+}
+
 void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	sp_PrintAtInv (y, x, 71, 16 + (value % 100) / 10);
 	sp_PrintAtInv (y, 1 + x, 71, 16 + value % 10);
 }
 
 void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
-	unsigned char m;
 	while (*s) {
-		m = (*s) - 32;
-		sp_PrintAtInv (y, x ++, c, m);
-		s ++;
+		sp_PrintAtInv (y, x ++, c, (*s) - 32); s ++;
 	}
+}
+
+void any_key (void) {
+	#asm
+			ld  hl, 0
+			xor a
+			in  a, (0xfe)
+			and 0x1f
+			cp  0x1f		// Issue 2/3 safe
+			ret z
+			ld  l, 1
+	#endasm
 }

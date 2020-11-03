@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // definitions.h
 // Contains type definitions and global variables
@@ -8,10 +8,10 @@
 #define EST_PARP 		2
 #define EST_MUR 		4
 #define EST_DIZZY		8
-#define sgni(n)			(n < 0 ? -1 : 1)
-#define min(a,b)		(a < b ? a : b)
-#define ctileoff(n) 	(n > 0 ? 1 : 0)
-#define saturate(n)		(n < 0 ? 0 : n)
+#define sgni(n)			((n) < 0 ? -1 : 1)
+#define min(a,b)		((a) < (b) ? (a) : (b))
+#define ctileoff(n) 	((n)>0) //(n > 0 ? 1 : 0)
+#define saturate(n)		((n) < 0 ? 0 : (n))
 
 #define TYPE_6_IDLE 		0
 #define TYPE_6_PURSUING		1
@@ -20,24 +20,26 @@
 #define MAX_FALLING_BOXES 8
 
 typedef struct {
-	int x, y, cx;
-	int vx, vy;
-	char g, ax, rx;
-	unsigned char salto, cont_salto;
-	unsigned char *current_frame, *next_frame;
-	unsigned char saltando;
-	unsigned char frame, subframe, facing;
-	unsigned char estado;
-	unsigned char ct_estado;
-	unsigned char gotten;
-	char objs, keys;
-	int life;
-	unsigned char fuel;
-	unsigned char killed;
-	unsigned char disparando;
-	unsigned char killingzone_framecount;
-	unsigned char killingzone_beepcount;
-	unsigned char is_dead;
+	int x, y, cx;										// 0, 2, 4
+	int vx, vy; 										// 6, 8
+	char g, ax, rx; 									// 10, 11, 12
+	unsigned char salto, cont_salto; 					// 13, 14
+	unsigned char *current_frame, *next_frame; 			// 15, 17
+	unsigned char saltando; 							// 19
+	unsigned char frame, subframe, facing; 				// 20, 21, 22
+	unsigned char estado; 								// 23
+	unsigned char ct_estado; 							// 24
+	unsigned char gotten; 								// 25
+	unsigned char possee; 								// 26
+	char objs, keys; 									// 27, 28
+	int life; 											// 29
+	unsigned char fuel; 								// 31
+	unsigned char killed; 								// 32
+	unsigned char disparando; 							// 33
+	unsigned char killingzone_framecount; 				// 34
+	unsigned char killingzone_beepcount; 				// 35
+	unsigned char is_dead; 								// 36
+	unsigned char ceiling; 								// 37
 } INERCIA;
 
 typedef struct {
@@ -46,18 +48,6 @@ typedef struct {
 	unsigned char *current_frame, *next_frame;
 	#ifdef PLAYER_CAN_FIRE
 		unsigned char morido;
-	#endif
-	#if defined(RANDOM_RESPAWN) || defined (USE_TYPE_6)
-		int x;
-		int y;
-		int vx;
-		int vy;
-		#ifdef RANDOM_RESPAWN
-			unsigned char fanty_activo;
-		#endif
-		#ifdef USE_TYPE_6
-			unsigned char state;
-		#endif	
 	#endif
 } ANIMADO;
 
@@ -73,8 +63,11 @@ typedef struct {
 	unsigned char fixed_screens;
 	unsigned char show_level_info;
 	unsigned char evil_kills_slowly;
+	unsigned char evil_zone_active;
 	unsigned char allow_type_6;
+	#ifdef MAKE_TYPE_6
 	unsigned char make_type_6;
+	#endif
 } SCENERY_INFO;
 
 typedef struct {
@@ -84,7 +77,7 @@ typedef struct {
 // Controller
 
 struct sp_UDK keys = {
-	0x047f, // .fire
+	0x017f, // .fire
 	0x01df, // .right
 	0x02df, // .left
 	0x01fd, // .down
@@ -92,7 +85,9 @@ struct sp_UDK keys = {
 };
 void *joyfunc;
 
-int key_m = 0x047f;
+#ifdef SCRIPTING_KEY_M
+	int key_m = 0x047f;
+#endif
 #ifdef USE_SUICIDE_KEY
 	int key_s = 0x02fd;
 #endif
@@ -117,17 +112,39 @@ struct sp_SS *sp_moviles [3];
 struct sp_Rect spritesClipValues = { VIEWPORT_Y, VIEWPORT_X, 20, 30 };
 struct sp_Rect *spritesClip;
 
+#asm
+	.fsClipStruct defb 0, 24, 0, 32
+	.vpClipStruct defb VIEWPORT_Y, VIEWPORT_Y + 20, VIEWPORT_X, VIEWPORT_X + 30
+#endasm
+
 // Player
 
 INERCIA player;
 #ifdef PLAYER_CAN_FIRE
 	BULLET bullets [MAX_BULLETS];
 #endif
+signed int ptgmx, ptgmy;
 
 // Enemies
 
 ANIMADO en_an [3] @ 23800;
+signed int en_an_x [3], en_an_y [3], en_an_vx [3], en_an_vy [3];
+#ifdef RANDOM_RESPAWN
+	unsigned char en_an_fanty_activo [3];
+#endif
+#ifdef USE_TYPE_6
+	unsigned char en_an_state [3];
+#endif	
 unsigned char enoffs;
+unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
+unsigned char en_cx, en_cy;
+unsigned char en_ccx, en_ccy;
+// Only one enemy may hurt the player at once, so we need this flag:
+unsigned char en_tocado = 0; 
+unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
+signed char _en_mx, _en_my;
+unsigned char _en_t, _en_life;
+unsigned char *_baddies_pointer;
 
 // Tile behaviour array and tile array for the current screen
 
@@ -143,11 +160,15 @@ unsigned char hotspot_x;
 unsigned char hotspot_y;
 unsigned char orig_tile;	// Original background tile
 
+#ifdef ENABLE_CODE_HOOKS
+	unsigned char latest_hotspot;
+#endif
+
 // Game flow
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
-	unsigned char pant_final = SCR_FIN;
+		unsigned char pant_final = SCR_FIN;
 	#endif
 #endif
 unsigned char n_pant, on_pant;
@@ -182,7 +203,10 @@ unsigned char jetpac_frame_counter;
 unsigned char playing;
 unsigned char maincounter;
 unsigned char objs_old, keys_old, life_old, killed_old, item_old, ezg_old;
-unsigned char reentered;
+unsigned char coins_old;
+#ifdef REENTER_ON_ALL_OBJECTS
+	unsigned char reentered;
+#endif
 unsigned char success;
 unsigned char rdi;
 signed int rdj;
@@ -192,9 +216,9 @@ unsigned char gpx, gpy, gpxx, gpyy;
 int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
-unsigned char _x,_y,_t;
+unsigned char _x, _y, _t, _n;
 
-#ifdef TWO_SETS
+#if defined TWO_SETS || defined TWO_SETS_REAL
 	unsigned char tileoffset;
 #endif
 	
@@ -213,3 +237,4 @@ void saca_a_todo_el_mundo_de_aqui ();
 void draw_scr_background ();
 void draw_scr ();
 void init_player_values (); 
+unsigned char rand (void);

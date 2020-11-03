@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // pantallas.h
 // Includes the binary of the aplib-compressed static screens.

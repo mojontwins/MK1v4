@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // churromain.c
 // Program skeleton. Rename to your game title.c
@@ -9,7 +9,7 @@
 #asm
 		LIB SPInvalidate
 		LIB SPCompDListAddr
-		.fsClipStruct defb 0, 24, 0, 32
+		LIB SPMoveSprAbs		
 #endasm
 
 
@@ -19,7 +19,7 @@
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
 // Add 5 for each 8x8 sprite (such as bullets)
-#define NUMBLOCKS 		40
+#define NUMBLOCKS 		50 // 40
 
 // Tighten it even more... Gaining about 1.1 extra Kb 
 // You will probably have to tinker with this depending on your game.
@@ -44,12 +44,12 @@
 #include "enems.h"
 #include "beeper.h"
 #include "printer.h"
-#include "pantallas.h"
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc.h"
 #endif
-#include "msc_extern.h"
 #include "custom.h"
+#include "pantallas.h"
+#include "msc_extern.h"
 #include "engine.h"
 #include "boxes.h"
 #include "mainloop.h"

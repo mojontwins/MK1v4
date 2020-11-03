@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // beeper.h
 // Cointains Beeper sound effects
@@ -261,5 +261,36 @@ void peta_el_beeper (unsigned char n) {
 		call sound_play
 		pop ix
 		pop iy
+	#endasm
+}
+
+void beepet (void) {
+	/*
+	for (gpit = 0; gpit < 4; gpit ++) {
+		peta_el_beeper (6);
+		peta_el_beeper (3);
+	}
+	*/
+	#asm
+		push ix
+		push iy
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		ld  a, 6
+		call sound_play
+		ld  a, 3
+		call sound_play
+		pop iy
+		pop ix
 	#endasm
 }

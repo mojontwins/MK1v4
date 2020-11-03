@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
@@ -9,8 +9,8 @@ void main (void) {
 	sp_Initialize (7, 0);
 	sp_Border (BLACK);
 	sp_AddMemory(0, NUMBLOCKS, 14, AD_FREE);
-	// Define keys and default controls
 
+	// Define keys and default controls
 	joyfunc = sp_JoyKeyboard;
 
 	// Load tileset
@@ -133,13 +133,16 @@ void main (void) {
 			#endif
 			#ifdef SHOW_TOTAL
 				// Show total of enemies next to the killed amount.
-
 				sp_PrintAtInv (KILLED_Y, 2 + KILLED_X, 71, 15);
 				sp_PrintAtInv (KILLED_Y, 3 + KILLED_X, 71, 16 + BADDIES_COUNT / 10);
 				sp_PrintAtInv (KILLED_Y, 4 + KILLED_X, 71, 16 + BADDIES_COUNT % 10);
 			#endif
 		#endif
-		reentered = 0;
+				
+		#ifdef REENTER_ON_ALL_OBJECTS
+			reentered = 0;
+		#endif
+
 		half_life = 0;
 		
 		#if defined(FALLING_BOXES) && defined(PLAYER_PUSH_BOXES)

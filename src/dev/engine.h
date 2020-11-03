@@ -1,21 +1,113 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.7 // Copyleft 2010, 2011 by The Mojon Twins
 
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+unsigned char line_of_text_clear [] = "                                ";
+
+unsigned char *player_cells [] = {
+	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
+	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+};
+
+unsigned char *enem_cells [] = {
+	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+};
+
 void saca_a_todo_el_mundo_de_aqui (void) {
 	// ¡Saca a todo el mundo de aquí!
+	/*
 	sp_MoveSprAbs (sp_player, spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);				
 	for (gpit = 0; gpit < 3; gpit ++) {
 		if (malotes [enoffs + gpit].t != 0)
 			sp_MoveSprAbs (sp_moviles [gpit], spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);
 	}
+	*/
+	#asm
+			ld  ix, (_sp_player)
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+			call SPMoveSprAbs
+	
+			xor a
+		.hide_sprites_enems_loop
+			ld  (_gpit), a
+
+			sla a
+			ld  c, a
+			ld  b, 0
+			ld  hl, _sp_moviles
+			add hl, bc
+			ld  e, (hl)
+			inc hl
+			ld  d, (hl)
+			push de
+			pop ix
+
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+
+			call SPMoveSprAbs
+
+			ld  a, (_gpit)
+			inc a
+			cp  3
+			jr  nz, hide_sprites_enems_loop
+	#endasm
 }
 
-unsigned char collide (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
-	// 13x13 box collision
-	return  (x1 + 13 >= x2 && x1 <= x2 + 13 && y1 + 13 >= y2 && y1 <= y2 + 13);
+unsigned char collide_enem (void) {
+	#asm
+			ld  hl, 0
+			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 12 >= gpy && en_ccy <= gpy + 12)
+
+			// en_ccx + 12 >= gpx
+			ld  a, (_gpx)
+			ld  c, a
+			ld  a, (_en_ccx)
+			
+			add 12
+			
+			cp  c
+			ret c
+
+			// en_ccx <= gpx + 12; gpx + 12 >= en_ccx
+			ld  a, (_en_ccx)
+			ld  c, a
+			ld  a, (_gpx)
+			
+			add 12
+			
+			cp  c
+			ret c
+
+			// en_ccy + 12 >= gpy
+			ld  a, (_gpy)
+			ld  c, a
+			ld  a, (_en_ccy)
+			
+			add 12
+			
+			cp  c
+			ret c
+
+			// en_ccy <= gpy + 12; gpy + 12 >= en_ccy
+			ld  a, (_en_ccy)
+			ld  c, a
+			ld  a, (_gpy)
+			
+			add 12
+			
+			cp  c
+			ret c
+
+			ld  l, 1
+	#endasm
 }
 
 unsigned char rand (void) {
@@ -185,8 +277,7 @@ void cortina (void) {
 			#ifdef PLAYER_CAN_FIRE
 				malotes [gpit].life = ENEMIES_LIFE_GAUGE;
 				#ifdef RANDOM_RESPAWN
-				if (malotes [gpit].t == 5)
-					malotes [gpit].t |= 16;
+					if (malotes [gpit].t == 5) malotes [gpit].t |= 16;
 				#endif
 			#endif
 		}
@@ -232,30 +323,28 @@ void cortina (void) {
 
 #ifdef USE_COINS
 	void get_coin(unsigned char xx, unsigned char yy) {
-		++ flags [COIN_FLAG];
-		draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
-		map_attr [15 * yy + xx] = 0;
-		map_buff [15 * yy + xx] = 0;
-		draw_coloured_tile (VIEWPORT_X + xx + xx, VIEWPORT_Y + yy + yy, 0);	
+		flags [COIN_FLAG] ++;
+		
+		set_map_tile (xx, yy, 0, 0);
 		peta_el_beeper (5);
-		#ifdef ACTIVATE_SCRIPTING
+
+		#if defined ACTIVATE_SCRIPTING && defined COINS_SCRIPTING
 			// Run f_script #max_screens + 1
 			script = f_scripts [max_screens + 1];
 			run_script ();
+		#endif
+
+		#ifdef COINS_REFILL
+			player.life += COINS_REFILL;
 		#endif
 	}
 #endif
 
 #ifdef PLAYER_PUSH_BOXES
 	void move_tile (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char act) {
-		// Move the tile
-		map_attr [15 * y1 + x1] = 8;
-		map_buff [15 * y1 + x1] = 14;
-		map_attr [15 * y0 + x0] = 0;
-		map_buff [15 * y0 + x0] = 0;
-		// Draw
-		draw_coloured_tile (VIEWPORT_X + x0 + x0, VIEWPORT_Y + y0 + y0, 0);
-		draw_coloured_tile (VIEWPORT_X + x1 + x1, VIEWPORT_Y + y1 + y1, 14);
+		set_map_tile (x0, y0, 0, 0);
+		set_map_tile (x1, y1, 14, 8);
+
 		// Sound
 		if (act) {
 			peta_el_beeper (8);
@@ -276,6 +365,19 @@ void cortina (void) {
 		peta_el_beeper (10);	
 	}
 #endif
+
+void adjust_to_tile_x (void) {
+	gpx = gpxx << 4; player.x = gpx << 6;
+}
+
+void adjust_to_tile_y (void) {
+	gpy = gpyy << 4; player.y = gpy << 6;
+}
+
+void player_flicker (void) {
+	player.estado = EST_PARP;
+	player.ct_estado = 50;
+}
 
 unsigned char move (void) {
 	gpcx = player.x;
@@ -299,10 +401,65 @@ unsigned char move (void) {
 		#ifndef PLAYER_MOGGY_STYLE
 			// If side view, get affected by gravity:
 			
-			if (player.vy < PLAYER_MAX_VY_CAYENDO)
-				player.vy += player.g;
-			else
-				player.vy = PLAYER_MAX_VY_CAYENDO;
+			#ifdef RAMIRO_HOVER
+				if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
+					#asm
+						._player_hover
+							ld  a, (_pad0)
+							or  sp_DOWN
+							ld  (_pad0), a
+
+							ld  hl, (_player + 8) 		// player.vy
+							ld  de, PLAYER_MAX_VY_CAYENDO_H - PLAYER_G_HOVER
+							or  a
+							push hl 
+							sbc hl, de 
+							pop hl 
+							jr  nc, player_hover_maximum
+
+							ld  de, PLAYER_G_HOVER
+							add hl, de 
+							jr  player_hover_set
+
+						.player_hover_maximum
+							ld  hl, PLAYER_MAX_VY_CAYENDO_H
+
+						.player_hover_set
+							ld  (_player + 8), hl
+					#endasm
+				} else
+			#endif
+			{
+				#asm
+					._player_gravity
+						// Signed comparison shortcut by my picha
+						// If player.vy < 0 add PLAYER_G
+						// If player.vy > 0 do a signed comparison
+						ld  hl, (_player + 8) 		// player.vy
+						bit 7, h
+						jr  nz, player_gravity_add  // < 0
+
+						ld  de, PLAYER_MAX_VY_CAYENDO - PLAYER_G
+						or  a
+						push hl 
+						sbc hl, de 
+						pop hl 
+						jr  nc, player_gravity_maximum
+
+					.player_gravity_add
+						ld  de, PLAYER_G
+						add hl, de 
+						jr  player_gravity_vy_set
+
+					.player_gravity_maximum
+						ld  hl, PLAYER_MAX_VY_CAYENDO
+
+					.player_gravity_vy_set
+						ld  (_player + 8), hl 
+
+					.player_gravity_done
+				#endasm
+			}
 
 			if (player.gotten) player.vy = 0;		
 		#else
@@ -345,7 +502,6 @@ unsigned char move (void) {
 	if (player.y > 9216)
 		player.y = 9216;
 
-	
 	/* 
 		Check for collisions with obstacles. If so, we have to move
 		back until the edge of the tile.
@@ -358,30 +514,26 @@ unsigned char move (void) {
 	
 	// Cool
 
-	if (player.vy < 0) { 			// Going up
-		//if (player.y >= 1024)
-			if (attr (gpxx, gpyy) > 7 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) > 7)) {
+	player.possee = 0;
+	player.ceiling = 0;
+	rdj = (player.vy + ptgmy);
+	if (rdj) {
+		if (rdj < 0) { 			// Going up
+			if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 				// Stop and adjust.
 				player.vy = 0;
-				/*
-				player.y = (gpyy + 1) << 10;
-				gpy = player.y >> 6;
-				gpyy = gpy >> 4;
-				*/
-				++ gpyy; gpy = gpyy << 4; player.y = gpy << 6;
+				gpyy ++;
+				adjust_to_tile_y ();
+				player.ceiling = 1;
 			}
-	} else if (player.vy > 0 && (gpy & 15) < 8) { 	// Going down
-		if (player.y < 9216)
-			if (attr (gpxx, gpyy + 1) > 3 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) > 3))
+		} else if ((gpy & 15) < 8) { 	// Going down
+			if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			{
 				// Stop and adjust.
 				player.vy = 0;
-				/*
-				player.y = gpyy << 10;
-				gpy = player.gpy >> 6;
-				gpyy = gpy >> 4;
-				*/
-				gpy = gpyy << 4; player.y = gpy << 6;
+				adjust_to_tile_y ();
+				player.possee = 1;
+			}
 			}
 	}
 
@@ -391,41 +543,37 @@ unsigned char move (void) {
 	*/
 
 	#ifdef PLAYER_HAS_JUMP
-		#ifdef PLAYER_CAN_FIRE
-			if (((pad0 & sp_UP) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (gpxx, gpyy + 1) > 3 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) > 3))) || player.gotten)) {
-				player.saltando = 1;
-				player.cont_salto = 0;
-				peta_el_beeper (1);
-			}
-
-			if ( ((pad0 & sp_UP) == 0) && player.saltando ) {
-				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
-				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-				player.cont_salto ++;
-				if (player.cont_salto == 8)
-					player.saltando = 0;
-			}
-			
-			if ((pad0 & sp_UP) != 0)
-				player.saltando = 0;
-		#else
-			if (((pad0 & sp_FIRE) == 0 || (pad0 & sp_UP) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (gpxx, gpyy + 1) > 3 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) > 3))) || player.gotten)) {
-				player.saltando = 1;
-				player.cont_salto = 0;
-				peta_el_beeper (1);
-			}
-
-			if ( ((pad0 & sp_FIRE) == 0 || (pad0 & sp_UP) == 0) && player.saltando ) {
-				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
-				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-				player.cont_salto ++;
-				if (player.cont_salto == 8)
-					player.saltando = 0;
-			}
-			
-			if ((pad0 & sp_FIRE) != 0 && (pad0 & sp_UP) != 0)
-				player.saltando = 0;
+		#ifdef RAMIRO_HOP
+			rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
 		#endif
+
+		if (
+			#if defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
+				(pad0 & sp_UP) == 0 
+			#else
+				(pad0 & sp_FIRE) == 0
+			#endif	
+		) {
+			if (player.saltando) {
+				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
+				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
+				player.cont_salto ++;
+				if (player.cont_salto == 8)
+					player.saltando = 0;
+			} else if (
+			#ifdef RAMIRO_HOP
+				rdi
+		#else
+				player.possee 
+			#endif
+				|| player.gotten) {
+				player.saltando = 1;
+				player.cont_salto = 0;
+				peta_el_beeper (1);
+			}
+		} else {
+					player.saltando = 0;
+			}
 	#endif
 
 	#ifdef PLAYER_HAS_JETPAC
@@ -492,6 +640,7 @@ unsigned char move (void) {
 	#endif
 
 	player.x += player.vx;
+	player.x += ptgmx;
 	
 	// Safe
 	
@@ -504,27 +653,20 @@ unsigned char move (void) {
 	gpx = player.x >> 6;
 	gpxx = gpx >> 4;
 	
-	if (player.vx < 0) {
-		if (attr (gpxx, gpyy) > 7 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) > 7)) {
+	if (player.vx + ptgmx < 0) {
+		if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
 			// Stop and adjust
 			player.vx = 0;
-			/*
-			player.x = (gpxx + 1) << 10;
-			gpx = player.x >> 6;
-			gpxx = gpx >> 4;
-			*/
-			++ gpxx; gpx = gpxx << 4; player.x = gpx << 6;
+			gpxx ++; 
+			// gpx = gpxx << 4; player.x = gpx << 6;
+			adjust_to_tile_x ();
 		}
 	} else {
-		if (attr (gpxx + 1, gpyy) > 7 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) > 7)) {
+		if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
 			// Stop and adjust
 			player.vx = 0;
-			/*
-			player.x = gpxx << 10;
-			gpx = player.x >> 6;
-			gpxx = gpx >> 4;
-			*/
-			gpx = gpxx << 4; player.x = gpx << 6;
+			// gpx = gpxx << 4; player.x = gpx << 6;
+			adjust_to_tile_x ();
 		}
 	}
 	
@@ -549,17 +691,13 @@ unsigned char move (void) {
 	#ifndef DEACTIVATE_KEYS
 		if ((gpx & 15) == 0 && (gpy & 15) == 0) {
 			if (qtile (gpxx + 1, gpyy) == 15 && player.keys > 0) {
-				map_attr [15 * gpyy + gpxx + 1] = 0;
-				map_buff [15 * gpyy + gpxx + 1] = 0;
+				set_map_tile (gpxx + 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx + 1, gpyy);
-				draw_coloured_tile (VIEWPORT_X + gpxx + gpxx + 2, VIEWPORT_Y + gpyy + gpyy, 0);
 				player.keys --;
 				peta_el_beeper (8);
 			} else if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
-				map_attr [15 * gpyy + gpxx - 1] = 0;
-				map_buff [15 * gpyy + gpxx - 1] = 0;
+				set_map_tile (gpxx - 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx - 1, gpyy);
-				draw_coloured_tile (VIEWPORT_X + gpxx + gpxx - 2, VIEWPORT_Y + gpyy + gpyy, 0);
 				player.keys --;
 				peta_el_beeper (8);
 			}
@@ -573,10 +711,6 @@ unsigned char move (void) {
 			if ((pad0 & sp_FIRE) == 0)
 		#endif
 		{
-			#ifdef PLAYER_AUTO_CHANGE_SCREEN
-				// In this case, there's nothing in the screen boundaries which will stop
-				// the boxes from getting out of the screen, so we have to explicitly 
-				// make sure that this won't happen.
 				
 				// In side-view mode, you can't push boxes vertically.
 				#ifdef PLAYER_MOGGY_STYLE
@@ -626,77 +760,34 @@ unsigned char move (void) {
 						}
 					}	
 				}			
-			#else
-
-				// In side-view mode, you can't push boxes vertically.
-				#ifdef PLAYER_MOGGY_STYLE
-					// Vertically, only when player.y is tile-aligned.
-					if ((gpy & 15) == 0) {
-						if ((pad0 & sp_UP) == 0) {
-							if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2)) {
-								move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
-							}
-							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {
-									move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
-								}
-							}
-						} else if ((pad0 & sp_DOWN) == 0) {
-							if (can_move_box (gpxx, gpyy + 1, gpxx, gpyy + 2)) {
-								move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
-							}
-							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
-									move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
-								}	
-							}
-						}
-					}
-				#endif
-
-				// Horizontally, only when player.x is tile-aligned.
-				if ((gpx & 15) == 0) {
-					if ((pad0 & sp_RIGHT) == 0) {
-						if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
-							move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
-						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
-								move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
-							}
-						}
-					} else if ((pad0 & sp_LEFT) == 0) {
-						if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
-							move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
-						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
-								move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
-							}
-						}
-					}	
-				}	
-			#endif
 		}
 	#endif
 
 	#ifndef DEACTIVATE_EVIL_TILE	
 		// Evil tile engine
 
+		#ifdef EVIL_TILE_SIMPLE
+			if (attr ((gpx + 8) >> 4, (gpy + 14) >> 4) == 1)
+		#else
 		if (attr (gpxx, gpyy) == 1 || 
 			((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 1) ||
 			((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 1) ||
-			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) {		
+			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) 
+		#endif
+		{		
 			peta_el_beeper (2);
 			player.life -= LINEAR_ENEMY_HIT;	
 			player.x = gpcx;
 			player.y = gpcy;
+			#ifdef PLAYER_MOGGY_STYLE
+				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
+				else player.vy = -player.vy;
+			#else
 			player.vy = -player.vy;
-			//player.vx = -player.vx;
+			#endif
 			#ifdef PLAYER_FLICKERS
 				// Flickers. People seem to like this more than the bouncing behaviour.
-				player.estado = EST_PARP;
-				player.ct_estado = 50;
+				player_flicker ();
 			#endif			
 		}
 	#endif
@@ -704,10 +795,11 @@ unsigned char move (void) {
 	#ifndef DEACTIVATE_EVIL_ZONE
 		// Evil zone engine
 
-		if (attr (gpxx, gpyy) == 3 || 
-			((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 3) ||
-			((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 3) ||
-			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 3)) {
+		if (attr ((gpx + 4) >> 4, (gpy + 4) >> 4) == 3
+			#ifdef EVIL_ZONE_CONDITIONAL
+				&& scenery_info.evil_zone_active
+			#endif
+		) {
 			if (player.killingzone_beepcount >= EVIL_ZONE_BEEPS_COUNT || !scenery_info.evil_kills_slowly) {
 				if (!(player.estado & EST_PARP)) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
@@ -734,6 +826,16 @@ unsigned char move (void) {
 	#ifdef USE_COINS
 		// Coins interaction
 		
+		#ifdef COIN_BEH
+			if (attr (gpxx, gpyy) & COIN_BEH)
+				get_coin (gpxx, gpyy);
+			if ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & COIN_BEH)
+				get_coin (gpxx + 1, gpyy);
+			if ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & COIN_BEH) 
+				get_coin (gpxx, gpyy + 1);
+			if ((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & COIN_BEH)
+				get_coin (gpxx + 1, gpyy + 1);
+		#else
 		if (qtile (gpxx, gpyy) == COIN_TILE)
 			get_coin (gpxx, gpyy);
 		if ((gpx & 15) != 0 && qtile (gpxx + 1, gpyy) == COIN_TILE)
@@ -743,6 +845,7 @@ unsigned char move (void) {
 		if ((gpx & 15) != 0 && (gpy & 15) != 0 && qtile (gpxx + 1, gpyy + 1) == COIN_TILE)
 			get_coin (gpxx + 1, gpyy + 1);			
 	#endif
+	#endif
 
 	// Select next frame to paint...
 
@@ -751,75 +854,27 @@ unsigned char move (void) {
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 R3 RJ L1 L2 L3 LJ
 
-		if (player.vy != 0) {
-			if (player.facing == 0)
-				player.next_frame = sprite_8_a;
-			else
-				player.next_frame = sprite_4_a;
+		#asm
+			ld  a, (_player+22)					// player.facing
+			dec a
+			jr  z, _player_cell_sel_set_rdi		// if A = 1, DEC A = 0, so set 0
+			ld  a, 4							// if A = 0, DEC A = FF, so set 4
+		._player_cell_sel_set_rdi
+			ld  (_rdi), a
+		#endasm
+
+		if (!player.possee && !player.gotten) {
+			rdd = 3;
 		} else {
 			if (player.vx == 0) {
-				if (player.facing == 0)
-					#ifdef PLAYER_ALTERNATE_ANIMATION
-						player.next_frame = sprite_5_a;
-					#else
-						player.next_frame = sprite_6_a;
-					#endif
-				else
-					#ifdef PLAYER_ALTERNATE_ANIMATION
-						player.next_frame = sprite_1_a;
-					#else
-						player.next_frame = sprite_2_a;
-					#endif
+				rdd = 1;
 			} else {
-				player.subframe ++;
-				if (player.subframe == 4) {
-					player.subframe = 0;
-					#ifdef PLAYER_ALTERNATE_ANIMATION
-						player.frame ++;
-						if (player.frame == 3) 
-							player.frame = 0;
-					#else
-						player.frame = (player.frame + 1) & 3;
-					#endif
-					step ();
+				rdd = ((gpx + 4) >> 3) & 3;
+				if (rdd == 3) rdd = 1;
 				}
-				
-				#ifdef PLAYER_ALTERNATE_ANIMATION
-					if (player.facing == 0) {
-						if (player.frame == 0)
-							player.next_frame = sprite_5_a;
-						else if (player.frame == 1)
-							player.next_frame = sprite_6_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_7_a;
-					} else {
-						if (player.frame == 0)
-							player.next_frame = sprite_1_a;
-						else if (player.frame == 1)
-							player.next_frame = sprite_2_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_3_a;	
 					}
-				#else			
 
-					if (player.facing == 0) {
-						if (player.frame == 1 || player.frame == 3)
-							player.next_frame = sprite_6_a;
-						else if (player.frame == 0)
-							player.next_frame = sprite_5_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_7_a;
-					} else {
-						if (player.frame == 1 || player.frame == 3)
-							player.next_frame = sprite_2_a;
-						else if (player.frame == 0)
-							player.next_frame = sprite_1_a;
-						else if (player.frame == 2)
-							player.next_frame = sprite_3_a;
-					}
-				#endif
-			}	
-		}
+		player.next_frame = player_cells [rdi + rdd];
 	#else
 		// In this case, the spriteset is
 		// 1  2  3  4  5  6  7  8
@@ -834,29 +889,13 @@ unsigned char move (void) {
 			}
 		}
 		
-		if (player.vx > 0) {
-			if (player.frame)
-				player.next_frame = sprite_1_a;
-			else	
-				player.next_frame = sprite_2_a;
-		} else if (player.vx < 0) {
-			if (player.frame)
-				player.next_frame = sprite_3_a;
-			else
-				player.next_frame = sprite_4_a;
-		} else {
-			if (player.vy < 0) {
-				if (player.frame)
-					player.next_frame = sprite_5_a;
-				else
-					player.next_frame = sprite_6_a;
-			} else {
-				if (player.frame)
-					player.next_frame = sprite_7_a;
-				else
-					player.next_frame = sprite_8_a;
-			}
-		}
+		rdd = player.frame;
+		if (player.vx == 0) {		
+			if (player.vy < 0) rdd += 4;
+			else rdd += 6; 
+		} else if (player.vx < 0) rdd += 2;
+
+		player.next_frame = player_cells [rdd];
 	#endif
 }
 
@@ -906,10 +945,17 @@ void init_player (void) {
 	}
 #endif
 
-#ifdef ACTIVATE_SCRIPTING
-	void delete_text (void) {
-		for (gpit = 0; gpit < 32 - LINE_OF_TEXT_SUBSTR; gpit ++)
-			sp_PrintAtInv (LINE_OF_TEXT, LINE_OF_TEXT_X + gpit, LINE_OF_TEXT_ATTR, 0);
+#ifdef TWO_SETS_REAL
+	void draw_and_advance (void) {
+		map_attr [rdi] = comportamiento_tiles [_n];
+		map_buff [rdi] = _n;
+		draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, _n);
+		rdx += 2;
+		if (rdx == 30) {
+			rdx = 0;
+			rdy += 2;
+		}
+		rdi ++;
 	}
 #endif
 
@@ -917,21 +963,21 @@ void draw_scr_background (void) {
 	rdx = 0; rdy = 0;
 	
 	#ifdef UNPACKED_MAP
-		idx = n_pant * 150;
+		gp_gen = mapa + (n_pant * 150);		
 	#else
-		idx = n_pant * 75;
+		gp_gen = mapa + (n_pant * 75);
 	#endif
 	
 	rdi = 0;
 	
-	#ifdef TWO_SETS
+	#if defined TWO_SETS || defined TWO_SETS_REAL
 		tileoffset = TWO_SETS_CONDITION;
 	#endif
 
 	#ifdef UNPACKED_MAP
 		// UNPACKED map, every byte represents one tile.
 		for (gpit = 0; gpit < 150; gpit ++) {
-			rdd = mapa [idx++];
+			rdd = *gp_gen ++;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdd == COIN_TILE && !scenery_info.show_coins) rdd = COIN_TILE_DEACT_SUBS;
 			#endif
@@ -948,9 +994,9 @@ void draw_scr_background (void) {
 	#elif defined TWO_SETS
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
+		rdi = 0; 
 		for (gpit = 0; gpit < 75; gpit ++) {
-			rdi = 15 * (rdy >> 1) + (rdx >> 1);
-			rdd = mapa [idx++];
+			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
@@ -976,14 +1022,32 @@ void draw_scr_background (void) {
 				rdx = 0;
 				rdy += 2;
 			}
+			rdi ++;
 		}
-		//
+	#elif defined TWO_SETS_REAL
+		// TWO_SETS_PACKED map, every byte contains two tiles,
+		// plus uses several tilesets
+		// But *REAL* tile values are written to the buffers
+		rdi = 0;
+		for (gpit = 0; gpit < 75; gpit ++) {			
+			rdd = *gp_gen ++;
+			rdt1 = (rdd >> 4) + tileoffset;
+			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
+				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
+			#endif
+			rdt2 = (rdd & 15) + tileoffset;
+			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
+				if (rdt2 == COIN_TILE && !scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
+			#endif
+			_n = rdt1; draw_and_advance ();
+			_n = rdt2; draw_and_advance ();
+		}
 	#else	
 		// PACKED map, every byte contains two tiles, plus admits
 		// some special effects (autoshadows, see below).
+		rdi = 0;
 		for (gpit = 0; gpit < 75; gpit ++) {
-			rdi = 15 * (rdy >> 1) + (rdx >> 1);
-			rdd = mapa [idx++];
+			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
@@ -1017,6 +1081,7 @@ void draw_scr_background (void) {
 				rdx = 0;
 				rdy += 2;
 			}
+			rdi ++;
 		}
 	#endif	
 
@@ -1024,13 +1089,13 @@ void draw_scr_background (void) {
 	#else
 		// Is there an object in this screen?
 		
-		hotspot_x = hotspot_y = 240;
-		if (hotspots [n_pant].act == 1) {
+		hotspot_y = 240;
+		if (hotspots [n_pant].act) {
 			#if defined(ACTIVATE_SCRIPTING) && defined(OBJECTS_ON_VAR)
-				if (flags [OBJECTS_ON_VAR] == 1)
+				if (flags [OBJECTS_ON_VAR])
 			#endif
 			{
-				if (hotspots [n_pant].tipo != 0) {
+				if (hotspots [n_pant].tipo) {
 					// Calculate tile coordinates
 					rdx = (hotspots [n_pant].xy >> 4);
 					rdy = (hotspots [n_pant].xy & 15);
@@ -1040,14 +1105,14 @@ void draw_scr_background (void) {
 					// Remember which tile was there
 					orig_tile = map_buff [15 * rdy + rdx];
 					// Draw the object.
-					draw_coloured_tile (VIEWPORT_X + rdx + rdx, VIEWPORT_Y + rdy + rdy, 16 + hotspots [n_pant].tipo);
+					draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), 16 + hotspots [n_pant].tipo);
 				}
 
 			}
 
 		}
 		#ifndef DEACTIVATE_REFILLS
-			else if (hotspots [n_pant].act == 0) {
+			else if (hotspots [n_pant].act) {
 				// Randomly, if there's no active object, we draw a recharge.
 				if (rand () % 3 == 2) {
 					rdx = (hotspots [n_pant].xy >> 4);
@@ -1055,7 +1120,7 @@ void draw_scr_background (void) {
 					hotspot_x = rdx << 4;
 					hotspot_y = rdy << 4;
 					orig_tile = map_buff [15 * rdy + rdx];
-					draw_coloured_tile (VIEWPORT_X + rdx + rdx, VIEWPORT_Y + rdy + rdy, 16);	
+					draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), 16);	
 				}
 			}
 		#endif
@@ -1066,7 +1131,7 @@ void draw_scr_background (void) {
 		// If so, delete it:
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
 			if (cerrojos [gpit].np == n_pant && !cerrojos [gpit].st) {
-				draw_coloured_tile (VIEWPORT_X + cerrojos [gpit].x + cerrojos [gpit].x, VIEWPORT_Y + cerrojos [gpit].y + cerrojos [gpit].y, 0);
+				draw_coloured_tile (VIEWPORT_X + (cerrojos [gpit].x << 1), VIEWPORT_Y + (cerrojos [gpit].y << 1), 0);
 				rdi = 15 * cerrojos [gpit].y + cerrojos [gpit].x;
 				map_attr [rdi] = 0;
 				map_buff [rdi] = 0;
@@ -1125,19 +1190,19 @@ void draw_scr (void) {
 		en_an [gpit].frame = 0;
 		en_an [gpit].count = 0;
 		#ifdef RANDOM_RESPAWN
-			en_an [gpit].fanty_activo = 0;
+			en_an_fanty_activo [gpit] = 0;
 		#endif
 
 		switch (malotes [enoffs + gpit].t) {
 			#ifdef NO_MAX_ENEMS
 				case 0:
-					#ifdef USE_TYPE_6
+					#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 						if (scenery_info.make_type_6) {
 							en_an [gpit].next_frame = sprite_13_a;
-							en_an [gpit].x = (rand () % 224) << 6;
-							en_an [gpit].y = (rand () % 144) << 6;
-							en_an [gpit].vx = en_an [gpit].vy = 0;
-							en_an [gpit].state = TYPE_6_IDLE;
+							en_an_x [gpit] = (rand () % 224) << 6;
+							en_an_y [gpit] = (rand () % 144) << 6;
+							en_an_vx [gpit] = en_an_vy [gpit] = 0;
+							en_an_state [gpit] = TYPE_6_IDLE;
 						} else {
 							en_an [gpit].next_frame = sprite_18_a;
 						}
@@ -1156,10 +1221,10 @@ void draw_scr (void) {
 			#ifdef USE_TYPE_6
 				case 6:
 					en_an [gpit].next_frame = sprite_13_a;
-					en_an [gpit].x = malotes [enoffs + gpit].x << 6;
-					en_an [gpit].y = malotes [enoffs + gpit].y << 6;
-					en_an [gpit].vx = en_an [gpit].vy = 0;
-					en_an [gpit].state = TYPE_6_IDLE;
+					en_an_x [gpit] = malotes [enoffs + gpit].x << 6;
+					en_an_y [gpit] = malotes [enoffs + gpit].y << 6;
+					en_an_vx [gpit] = en_an_vy [gpit] = 0;
+					en_an_state [gpit] = TYPE_6_IDLE;
 					break;
 			#endif
 			#if defined (PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE)			
@@ -1190,7 +1255,12 @@ void draw_scr (void) {
 		
 	#ifdef ACTIVATE_SCRIPTING
 		// Delete line of text
-		delete_text ();
+		#asm
+				xor a
+				ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
+		#endasm
+		draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+
 		// Run "ENTERING ANY" script (if available)
 		script = e_scripts [MAP_W * MAP_H + 1];
 		run_script ();
@@ -1202,6 +1272,10 @@ void draw_scr (void) {
 	#ifdef PLAYER_CAN_FIRE
 		init_bullets ();
 	#endif	
+
+	#ifdef ENABLE_CODE_HOOKS
+		hook_entering ();
+	#endif
 }
 
 #ifdef PLAYER_CAN_FIRE
@@ -1211,7 +1285,7 @@ void draw_scr (void) {
 		#else	
 			for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
 				bullets [gpit].x += bullets [gpit].mx;
-				if (attr (bullets [gpit].x >> 4, bullets [gpit].y >> 4) > 7) {
+				if (attr (bullets [gpit].x >> 4, bullets [gpit].y >> 4) & 8) {
 					bullets [gpit].estado = 0;
 				}
 				if (bullets [gpit].x < 8 || bullets [gpit].x > 240)
@@ -1232,54 +1306,132 @@ void draw_scr (void) {
 	}
 #endif
 
+void platform_get_player (void) {
+	player.gotten = 1;
+	gpy = en_ccy - 16; 
+	player.y = gpy << 6;
+	player.vy = 0;						
+	gpyy = gpy >> 4;
+	ptgmy = (_en_my << 6);
+}
 
 void mueve_bicharracos (void) {
 	// This function moves the active enemies.
-	
-	unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
-	unsigned char en_cx, en_cy;
-	unsigned char en_ccx, en_ccy;
-	// Only one enemy may hurt the player at once, so we need this flag:
-	unsigned char en_tocado = 0; 		
-
+	en_tocado = 0;
 	player.gotten = 0;
+	 ptgmx =  ptgmy = 0;
 	
 	for (enit = 0; enit < 3; enit ++) {
 		enoffsmasi = enoffs + enit;
-		if (malotes [enoffsmasi].t != 0
-			#ifdef USE_TYPE_6
+
+		// Copy array values to temporary variables as fast as possible
+		
+		#asm
+				// Those values are stored in this order:
+				// x, y, x1, y1, x2, y2, mx, my, t[, life]
+				// Point HL to baddies [enoffsmasi]. The struct is 9 or 10 bytes long
+				// so this is baddies + enoffsmasi*(9|10) depending on PLAYER_CAN_FIRE
+				ld 	hl, (_enoffsmasi)
+				ld  h, 0
+
+			#ifdef PLAYER_CAN_FIRE
+				add hl, hl 				// x2
+				ld  d, h
+				ld  e, l 				// DE = x2
+				add hl, hl 				// x4
+				add hl, hl 				// x8
+
+				add hl, de 				// HL = x8 + x2 = x10
+			#else
+				ld  d, h
+				ld  e, l 				// DE = x1
+				add hl, hl 				// x2
+				add hl, hl 				// x4
+				add hl, hl 				// x8
+
+				add hl, de 				// HL = x8 + x1 = x9
+			#endif
+
+				ld  de, _malotes
+				add hl, de
+
+				ld  (__baddies_pointer), hl 		// Save address for later
+
+				ld  a, (hl)
+				ld  (__en_x), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_y), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_x1), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_y1), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_x2), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_y2), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_mx), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_my), a
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_t), a
+
+			#ifdef PLAYER_CAN_FIRE
+				inc hl 
+
+				ld  a, (hl)
+				ld  (__en_life), a
+			#endif
+		#endasm
+
+		if (_en_t != 0
+			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 				|| scenery_info.make_type_6
 			#endif
 		) {
-			en_cx = malotes [enoffsmasi].x;
-			en_cy = malotes [enoffsmasi].y;
+			en_cx = _en_x;
+			en_cy = _en_y;
 			#ifdef RANDOM_RESPAWN
-				if (!en_an [enit].fanty_activo) {
-					malotes [enoffsmasi].x += malotes [enoffsmasi].mx;
-					malotes [enoffsmasi].y += malotes [enoffsmasi].my;
-				}
-			#else
-				malotes [enoffsmasi].x += malotes [enoffsmasi].mx;
-				malotes [enoffsmasi].y += malotes [enoffsmasi].my;
+				if (!en_an_fanty_activo [enit])
 			#endif
+			{
+				_en_x += _en_mx;
+				_en_y += _en_my;
+				}
 
 			#ifdef PLAYER_PUSH_BOXES			
 				// Check for collisions.
-				en_x = malotes [enoffsmasi].x >> 4;
-				en_y = malotes [enoffsmasi].y >> 4;
+				en_xx = _en_x >> 4;
+				en_yy = _en_y >> 4;
 
-				if (malotes [enoffsmasi].mx != 0) {
-					if (attr (en_x + ctileoff (malotes [enoffsmasi].mx), en_y) > 7 || 
-					((malotes [enoffsmasi].y & 15) != 0 && attr (en_x + ctileoff (malotes [enoffsmasi].mx), en_y + 1) > 7)) {
-						malotes [enoffsmasi].mx = -malotes [enoffsmasi].mx;
-						malotes [enoffsmasi].x = en_cx;
+				if (_en_mx != 0) {
+					if (attr (en_xx + ctileoff (_en_mx), en_yy) & 8 || 
+					((_en_y & 15) != 0 && attr (en_xx + ctileoff (_en_mx), en_yy + 1) & 8)) {
+						_en_mx = -_en_mx;
+						_en_x = en_cx;
 					}
 				}
-				if (malotes [enoffsmasi].my != 0) {
-					if (attr (en_x, en_y + ctileoff (malotes [enoffsmasi].my)) > 7 || 
-					((malotes [enoffsmasi].x & 15) != 0 && attr (en_x + 1, en_y + ctileoff (malotes [enoffsmasi].mx)) > 7)) {
-						malotes [enoffsmasi].my = -malotes [enoffsmasi].my;
-						malotes [enoffsmasi].y = en_cy;
+				if (_en_my != 0) {
+					if (attr (en_xx, en_yy + ctileoff (_en_my)) & 8 || 
+					((_en_x & 15) != 0 && attr (en_xx + 1, en_yy + ctileoff (_en_mx)) & 8)) {
+						_en_my = -_en_my;
+						_en_y = en_cy;
 					}
 				}
 			#endif
@@ -1289,130 +1441,88 @@ void mueve_bicharracos (void) {
 				en_an [enit].count = 0;
 				en_an [enit].frame = !en_an [enit].frame;
 
-				switch (malotes [enoffsmasi].t) {
+
+				switch (_en_t) {
 					case 1:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_9_a : sprite_10_a;
-						break;
 					case 2:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_11_a : sprite_12_a;
-						break;
 					case 3:
-					case 6:
-					case 0:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_13_a : sprite_14_a;
-						break;
 					case 4:
-						en_an [enit].next_frame = en_an [enit].frame ? sprite_15_a : sprite_16_a;
+						rdd = ((_en_t - 1) << 1);
 							break;
-					#ifdef RANDOM_RESPAWN
 						default:
-							if (en_an [enit].fanty_activo)
-								en_an [enit].next_frame = en_an [enit].frame ? sprite_13_a : sprite_14_a;
-					#endif					
+						rdd = 4;
+						break;
 				}	
+				en_an [enit].next_frame = enem_cells [rdd + en_an [enit].frame];
 			}
 
-			en_x = player.x >> 6;
-			en_y = player.y >> 6;
-			
 			#ifdef RANDOM_RESPAWN
-				if (en_an [enit].fanty_activo) {
-					en_ccx = en_an [enit].x >> 6;
-					en_ccy = en_an [enit].y >> 6;
+				if (en_an_fanty_activo [enit]) {
+					en_ccx = en_an_x [enit] >> 6;
+					en_ccy = en_an_y [enit] >> 6;
 				} else {
-					en_ccx = malotes [enoffsmasi].x;
-					en_ccy = malotes [enoffsmasi].y;
+					en_ccx = _en_x;
+					en_ccy = _en_y;
 				}
 			#else
 				#ifdef USE_TYPE_6
-					if (malotes [enoffsmasi].t == 6 || malotes [enoffsmasi].t == 0) {
-						en_ccx = en_an [enit].x >> 6;
-						en_ccy = en_an [enit].y >> 6;
+					if (_en_t == 6 
+						#ifdef MAKE_TYPE_6
+						|| _en_t == 0
+						#endif
+					) {
+						en_ccx = en_an_x [enit] >> 6;
+						en_ccy = en_an_y [enit] >> 6;
 					} else {
-						en_ccx = malotes [enoffsmasi].x;
-						en_ccy = malotes [enoffsmasi].y;
+						en_ccx = _en_x;
+						en_ccy = _en_y;
 					}
 					#else
-					en_ccx = malotes [enoffsmasi].x;
-					en_ccy = malotes [enoffsmasi].y;
+					en_ccx = _en_x;
+					en_ccy = _en_y;
 				#endif
 			#endif
 				
 			// Moving platforms engine:
 
 			#ifndef PLAYER_MOGGY_STYLE	
-				if (malotes [enoffsmasi].t == 4) {
-					en_xx = player.x >> 10;
+				if (_en_t == 4 && gpx >= en_ccx - 15 && gpx <= en_ccx + 15) {
 					// Vertical
-					if (malotes [enoffsmasi].my < 0) {
+					if (_en_my < 0) {
 						// Go up.
-						if (en_x >= en_ccx - 15 && en_x <= en_ccx + 15 && en_y >= en_ccy - 16 && en_y <= en_ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
-							player.gotten = 1;
-							player.y = (en_ccy - 16) << 6;
-							player.vy = 0;						
-							en_yy = player.y >> 10;
-							// Collide?
-							if (player.y > 1024)
-								if (attr (en_xx, en_yy) > 7 || ((en_x & 15) != 0 && attr (en_xx + 1, en_yy) > 7)) {
-									// ajust:
-									player.y = (en_yy + 1) << 10;
-								}
+						if (gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
+							platform_get_player ();
 						}
-					} else if (malotes [enoffsmasi].my > 0) {
+					} else if (_en_my > 0) {
 						// Go down.
-						if (en_x >= en_ccx - 15 && en_x <= en_ccx + 15 && en_y >= en_ccy - 20 && en_y <= en_ccy - 14 && player.vy >= 0) {
-							player.gotten = 1;
-							player.y = (en_ccy - 16) << 6;
-							player.vy = 0;
-							en_yy = player.y >> 10;
-							// Collide?
-							if (player.y < 9216)
-								if (attr (en_xx, en_yy + 1) > 7 || ((en_x & 15) != 0 && attr (en_xx + 1, en_yy + 1) > 7)) {
-									// ajust:
-									player.y = en_yy << 10;
+						if (gpy >= en_ccy - 20 && gpy <= en_ccy - 14 && player.vy >= 0) {
+							platform_get_player ();
 								}
 						}
-					}
-					en_y = player.y >> 6;
-					en_yy = player.y >> 10;
+
 					// Horizontal
-					if (malotes [enoffsmasi].mx != 0 && en_x >= en_ccx - 15 && en_x <= en_ccx + 15 && en_y >= en_ccy - 16 && en_y <= en_ccy - 11 && player.vy >= 0) {
-						player.gotten = 1;
-						player.y = (en_ccy - 16) << 6;
-						en_yy = player.y >> 10;
-						en_x = en_x + malotes [enoffsmasi].mx;
-						player.x = en_x << 6;
-						en_xx = player.x >> 10;
-						if (malotes [enoffsmasi].mx < 0) {
-							if (attr (en_xx, en_yy) > 7 || ((en_y & 15) != 0 && attr (en_xx, en_yy + 1) > 7)) {
-								player.vx = 0;
-								player.x = (en_xx + 1) << 10;
-							}
-						} else if (malotes [enoffsmasi].mx > 0) {
-							if (attr (en_xx + 1, en_yy) > 7 || ((en_y & 15) != 0 && attr (en_xx + 1, en_yy + 1) > 7)) {
-								player.vx = 0;
-								player.x = en_xx << 10;
-							}
-						}					
+					if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
+						platform_get_player ();
+						ptgmx = (_en_mx << 6);
 					}
 					
 				// Collision with enemy
 				
 				#ifdef RANDOM_RESPAWN
-					} else if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && (malotes [enoffsmasi].t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
+					} else if (!en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
 				#else
-					} else if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && malotes [enoffsmasi].t < 16 && player.estado == EST_NORMAL)
+					} else if (!en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
 				#endif
 			#else
 				#ifdef RANDOM_RESPAWN
-					if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && (malotes [enoffsmasi].t < 16 || en_an [enit].fanty_activo == 1) && player.estado == EST_NORMAL)
+					if (!en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
 				#else
-					if (!en_tocado && collide (en_x, en_y, en_ccx, en_ccy) && malotes [enoffsmasi].t < 16 && player.estado == EST_NORMAL)
+					if (!en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
 				#endif
 			#endif			
 			{
 				#ifdef PLAYER_KILLS_ENEMIES
-					if (en_y < en_ccy - 8 && player.vy > 0 && malotes [enoffsmasi].t >= PLAYER_MIN_KILLABLE) {
+					if (gpy < en_ccy - 8 && player.vy > 0 && _en_t >= PLAYER_MIN_KILLABLE) {
 						// Step on enemy and kill it.
 						en_an [enit].next_frame = sprite_17_a;
 						sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an [enit].next_frame - en_an [enit].current_frame, VIEWPORT_Y + (malotes [enoffs + enit].y >> 3), VIEWPORT_X + (malotes [enoffs + enit].x >> 3), malotes [enoffs + enit].x & 7, malotes [enoffs + enit].y & 7);
@@ -1420,7 +1530,7 @@ void mueve_bicharracos (void) {
 						sp_UpdateNow ();
 						peta_el_beeper (10);
 						en_an [enit].next_frame = sprite_18_a;
-						malotes [enoffsmasi].t |= 16;			// Marked as "dead"
+						_en_t |= 16;			// Marked as "dead"
 						// Count it
 						player.killed ++;
 						#ifdef ACTIVATE_SCRIPTING
@@ -1436,7 +1546,7 @@ void mueve_bicharracos (void) {
 					
 					// We decide which kind of life drain we do:
 					#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-						if (malotes [enoffsmasi].t > 4) {
+						if (_en_t > 4) {
 							player.life -= FLYING_ENEMY_HIT;
 						} else
 					#endif
@@ -1447,41 +1557,41 @@ void mueve_bicharracos (void) {
 					#ifdef PLAYER_BOUNCES
 						#ifndef PLAYER_MOGGY_STYLE	
 							#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-								if (!en_an [enit].fanty_activo) {
+								if (!en_an_fanty_activo [enit]) {
 									// Bouncing!
-									if (malotes [enoffsmasi].mx > 0) player.vx = PLAYER_MAX_VX;
-									if (malotes [enoffsmasi].mx < 0) player.vx = -PLAYER_MAX_VX;
-									if (malotes [enoffsmasi].my > 0) player.vy = PLAYER_MAX_VX;
-									if (malotes [enoffsmasi].my < 0) player.vy = -PLAYER_MAX_VX;
+									if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
+									if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
+									if (_en_my > 0) player.vy = PLAYER_MAX_VX;
+									if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
 								} else {
-									player.vx = en_an [enit].vx + en_an [enit].vx;
-									player.vy = en_an [enit].vy + en_an [enit].vy;
+									player.vx = en_an_vx [enit] + en_an_vx [enit];
+									player.vy = en_an_vy [enit] + en_an_vy [enit];
 								}
 							#else
 								// Bouncing!
-								if (malotes [enoffsmasi].mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-								if (malotes [enoffsmasi].mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-								if (malotes [enoffsmasi].my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-								if (malotes [enoffsmasi].my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+								if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+								if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+								if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+								if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
 							#endif
 						#else
 							// Bouncing:
 							
 							// x
-							if (malotes [enoffsmasi].mx != 0) {
-								if (en_x < en_ccx) {
-									player.vx = - (abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].mx) << 7);
+							if (_en_mx != 0) {
+								if (gpx < en_ccx) {
+									player.vx = - (abs (_en_mx + _en_mx) << 7);
 								} else {
-									player.vx = abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].mx) << 7;
+									player.vx = abs (_en_mx + _en_mx) << 7;
 								}
 							}
 							
 							// y
-							if (malotes [enoffsmasi].my != 0) {
-								if (en_y < en_ccy) {
-									player.vy = - (abs (malotes [enoffsmasi].my + malotes [enoffsmasi].my) << 7);
+							if (_en_my != 0) {
+								if (gpy < en_ccy) {
+									player.vy = - (abs (_en_my + _en_my) << 7);
 								} else {
-									player.vy = abs (malotes [enoffsmasi].my + malotes [enoffsmasi].my) << 7;
+									player.vy = abs (_en_my + _en_my) << 7;
 								}
 							}
 						#endif
@@ -1489,8 +1599,7 @@ void mueve_bicharracos (void) {
 
 					#ifdef PLAYER_FLICKERS
 						// Flickers. People seem to like this more than the bouncing behaviour.
-						player.estado = EST_PARP;
-						player.ct_estado = 50;
+						player_flicker ();
 					#endif
 				}
 			}
@@ -1498,128 +1607,128 @@ void mueve_bicharracos (void) {
 			// Trajectory limits for linear enemies
 			
 			#ifdef RANDOM_RESPAWN
-				if (en_an [enit].fanty_activo) { 
+				if (en_an_fanty_activo [enit]) { 
 					#ifdef PLAYER_CAN_HIDE			
 						if (player_hidden ()) {
-							if (player.x < en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-								en_an [enit].vx += FANTY_A >> 1;
-							else if (player.x > en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-								en_an [enit].vx -= FANTY_A >> 1;
-							if (player.y < en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-								en_an [enit].vy += FANTY_A >> 1;
-							else if (player.y > en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-								en_an [enit].vy -= FANTY_A >> 1;
+							if (player.x < en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+								en_an_vx [enit] += FANTY_A >> 1;
+							else if (player.x > en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+								en_an_vx [enit] -= FANTY_A >> 1;
+							if (player.y < en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+								en_an_vy [enit] += FANTY_A >> 1;
+							else if (player.y > en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+								en_an_vy [enit] -= FANTY_A >> 1;
 						} else
 					#endif 
 					if ((rand () & 7) > 1) {
-						if (player.x > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-							en_an [enit].vx += FANTY_A;
-						else if (player.x < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-							en_an [enit].vx -= FANTY_A;
-						if (player.y > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-							en_an [enit].vy += FANTY_A;
-						else if (player.y < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-							en_an [enit].vy -= FANTY_A;
+						if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+							en_an_vx [enit] += FANTY_A;
+						else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+							en_an_vx [enit] -= FANTY_A;
+						if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+							en_an_vy [enit] += FANTY_A;
+						else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+							en_an_vy [enit] -= FANTY_A;
 					}
 									
-					en_an [enit].x += en_an [enit].vx;
-					en_an [enit].y += en_an [enit].vy;
-					if (en_an [enit].x > 15360) en_an [enit].x = 15360;
-					if (en_an [enit].x < -1024) en_an [enit].x = -1024;
-					if (en_an [enit].y > 10240) en_an [enit].y = 10240;
-					if (en_an [enit].y < -1024) en_an [enit].y = -1024;
+					en_an_x [enit] += en_an_vx [enit];
+					en_an_y [enit] += en_an_vy [enit];
+					if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
+					if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+					if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 				} else
 			#endif
 
 			#ifdef USE_TYPE_6
-				if (malotes [enoffsmasi].t == 6 || malotes [enoffsmasi].t == 0) {
+				if (_en_t == 6 || _en_t == 0) {
 					#if defined (USE_SIGHT_DISTANCE) || defined (PLAYER_CAN_HIDE)
 						// Idle, retreat or pursue depending on player status (distance or hidden)
 
-						switch (en_an [enit].state) {
+						switch (en_an_state [enit]) {
 							case TYPE_6_IDLE:
 								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, en_x, en_y) <= SIGHT_DISTANCE && !player_hidden ()) 
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && !player_hidden ()) 
 								#else
-									if (distance (en_ccx, en_ccy, en_x, en_y) <= SIGHT_DISTANCE) 
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
 								#endif
-									en_an [enit].state = TYPE_6_PURSUING;
+									en_an_state [enit] = TYPE_6_PURSUING;
 								break;
 							case TYPE_6_PURSUING:
 								if ((rand () & 7) > 1) {
-									if (player.x > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-										en_an [enit].vx += FANTY_A;
-									else if (player.x < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-										en_an [enit].vx -= FANTY_A;
-									if (player.y > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-										en_an [enit].vy += FANTY_A;
-									else if (player.y < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-										en_an [enit].vy -= FANTY_A;
+									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+										en_an_vx [enit] += FANTY_A;
+									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+										en_an_vx [enit] -= FANTY_A;
+									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+										en_an_vy [enit] += FANTY_A;
+									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+										en_an_vy [enit] -= FANTY_A;
 								}
 								
 								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, en_x, en_y) >= SIGHT_DISTANCE || player_hidden ()) 
+									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE || player_hidden ()) 
 								#else
-									if (distance (en_ccx, en_ccy, en_x, en_y) >= SIGHT_DISTANCE)
+									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE)
 								#endif
-									en_an [enit].state = TYPE_6_RETREATING;
+									en_an_state [enit] = TYPE_6_RETREATING;
 								break;
 							case TYPE_6_RETREATING:
-								if ((malotes [enoffsmasi].x << 6) > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-									en_an [enit].vx += FANTY_A;
-								else if ((malotes [enoffsmasi].x << 6) < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-									en_an [enit].vx -= FANTY_A;
-								if ((malotes [enoffsmasi].y << 6) > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-									en_an [enit].vy += FANTY_A;
-								else if ((malotes [enoffsmasi].y << 6) < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-									en_an [enit].vy -= FANTY_A;
+								if ((_en_x << 6) > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+									en_an_vx [enit] += FANTY_A;
+								else if ((_en_x << 6) < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+									en_an_vx [enit] -= FANTY_A;
+								if ((_en_y << 6) > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+									en_an_vy [enit] += FANTY_A;
+								else if ((_en_y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+									en_an_vy [enit] -= FANTY_A;
 								
 								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, en_x, en_y) <= SIGHT_DISTANCE && !player_hidden ()) 
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && !player_hidden ()) 
 								#else
-									if (distance (en_ccx, en_ccy, en_x, en_y) <= SIGHT_DISTANCE) 
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
 								#endif
-									en_an [enit].state = TYPE_6_PURSUING;
+									en_an_state [enit] = TYPE_6_PURSUING;
 								break;	
 						}
 					#else
 						// Always pursue
 
 						if ((rand () & 7) > 1) {
-							if (player.x > en_an [enit].x && en_an [enit].vx < FANTY_MAX_V)
-								en_an [enit].vx += FANTY_A;
-							else if (player.x < en_an [enit].x && en_an [enit].vx > -FANTY_MAX_V)
-								en_an [enit].vx -= FANTY_A;
-							if (player.y > en_an [enit].y && en_an [enit].vy < FANTY_MAX_V)
-								en_an [enit].vy += FANTY_A;
-							else if (player.y < en_an [enit].y && en_an [enit].vy > -FANTY_MAX_V)
-								en_an [enit].vy -= FANTY_A;
+							if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+								en_an_vx [enit] += FANTY_A;
+							else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+								en_an_vx [enit] -= FANTY_A;
+							if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+								en_an_vy [enit] += FANTY_A;
+							else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+								en_an_vy [enit] -= FANTY_A;
 						}
 					#endif
 
 					if (scenery_info.allow_type_6) {
-						en_an [enit].x += en_an [enit].vx;
-						en_an [enit].y += en_an [enit].vy;
+						en_an_x [enit] += en_an_vx [enit];
+						en_an_y [enit] += en_an_vy [enit];
 					}
-					if (en_an [enit].x > 15360) en_an [enit].x = 15360;
-					if (en_an [enit].x < -1024) en_an [enit].x = -1024;
-					if (en_an [enit].y > 10240) en_an [enit].y = 10240;
-					if (en_an [enit].y < -1024) en_an [enit].y = -1024;
+					if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
+					if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+					if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 				} else 
 			#endif
 			{
-				if (en_ccx == malotes [enoffsmasi].x1 || en_ccx == malotes [enoffsmasi].x2)
-					malotes [enoffsmasi].mx = -malotes [enoffsmasi].mx;
-				if (en_ccy == malotes [enoffsmasi].y1 || en_ccy == malotes [enoffsmasi].y2)
-					malotes [enoffsmasi].my = -malotes [enoffsmasi].my;
+				if (en_ccx == _en_x1 || en_ccx == _en_x2)
+					_en_mx = -_en_mx;
+				if (en_ccy == _en_y1 || en_ccy == _en_y2)
+					_en_my = -_en_my;
 			}
 									
 			#ifdef PLAYER_CAN_FIRE
 				// Collision with bullets
 				#ifdef RANDOM_RESPAWN
-					if (malotes [enoffsmasi].t < 16 || en_an [enit].fanty_activo == 1)
+					if (_en_t < 16 || en_an_fanty_activo [enit] == 1)
 				#else
-					if (malotes [enoffsmasi].t < 16)
+					if (_en_t < 16)
 				#endif
 				{
 					for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {		
@@ -1627,25 +1736,25 @@ void mueve_bicharracos (void) {
 							if (bullets [en_j].y >= en_ccy - 4 && bullets [en_j].y <= en_ccy + 12 && bullets [en_j].x >= en_ccx - 4 && bullets [en_j].x <= en_ccx + 12) {
 								#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
 									#ifdef RANDOM_RESPAWN	
-										if (en_an [enit].fanty_activo) 
+										if (en_an_fanty_activo [enit]) 
 									#else
-										if (malotes [enoffsmasi].t == 6)
+										if (_en_t == 6)
 									#endif
-									en_an [enit].vx += (bullets [enit].mx > 0 ? 128 : -128);
+									en_an_vx [enit] += (bullets [enit].mx > 0 ? 128 : -128);
 								#endif
 								en_an [enit].next_frame = sprite_17_a;
 								en_an [enit].morido = 1;
 								bullets [en_j].estado = 0;
-								if (malotes [enoffsmasi].t != 4)
-									malotes [enoffsmasi].life --;
-								if (malotes [enoffsmasi].life == 0) {
+								if (_en_t != 4)
+									_en_life --;
+								if (_en_life == 0) {
 									// Kill enemy
 									sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an [enit].next_frame - en_an [enit].current_frame, VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
 									en_an [enit].current_frame = en_an [enit].next_frame;
 									sp_UpdateNow ();
 									peta_el_beeper (10);
 									en_an [enit].next_frame = sprite_18_a;
-									malotes [enoffsmasi].t |= 16;			// dead
+									_en_t |= 16;			// dead
 									// Count
 									player.killed ++;
 									#ifdef ACTIVATE_SCRIPTING
@@ -1653,8 +1762,8 @@ void mueve_bicharracos (void) {
 										run_script ();
 									#endif								
 									#ifdef RANDOM_RESPAWN								
-										en_an [enit].fanty_activo = 0;
-										malotes [enoffsmasi].life = FANTIES_LIFE_GAUGE;
+										en_an_fanty_activo [enit] = 0;
+										_en_life = FANTIES_LIFE_GAUGE;
 									#endif
 								}
 							}
@@ -1666,17 +1775,64 @@ void mueve_bicharracos (void) {
 			#ifdef RANDOM_RESPAWN
 				// Activate fanty
 
-				if (malotes [enoffsmasi].t > 15 && en_an [enit].fanty_activo == 0 && (rand () & 31) == 1) {
-					en_an [enit].fanty_activo = 1;
+				if (_en_t > 15 && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
+					en_an_fanty_activo [enit] = 1;
 					if (player.y > 5120)
-						en_an [enit].y = -1024;
+						en_an_y [enit] = -1024;
 					else
-						en_an [enit].y = 10240;
-					en_an [enit].x = (rand () % 240 - 8) << 6;
-					en_an [enit].vx = en_an [enit].vy = 0;
+						en_an_y [enit] = 10240;
+					en_an_x [enit] = (rand () % 240 - 8) << 6;
+					en_an_vx [enit] = en_an_vy [enit] = 0;
 				}
 			#endif
-
 		}
+
+		#asm		
+				// Those values are stored in this order:
+				// x, y, x1, y1, x2, y2, mx, my, t[, life]
+
+				ld  hl, (__baddies_pointer) 		// Restore pointer
+
+				ld  a, (__en_x)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_y)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_x1)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_y1)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_x2)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_y2)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_mx)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_my)
+				ld  (hl), a
+				inc hl
+
+				ld  a, (__en_t)
+				ld  (hl), a
+				inc hl
+
+			#ifdef PLAYER_CAN_FIRE
+				ld  a, (__en_life)
+				ld  (hl), a
+			#endif
+		#endasm	
 	}
 }

@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // ============================================================================
 // I. General configuration
@@ -257,7 +257,6 @@
 		0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 4, 0,
 		0, 0,16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 0, 3, 4, 1,
-
 	};
 	#else
 	// Fill this array for normal, packed maps. The second row

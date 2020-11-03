@@ -20,30 +20,59 @@ unsigned char *f_scripts [] = {
  
 unsigned char *script;
 unsigned char *next_script;
-unsigned char sc_i, sc_x, sc_y, sc_c, sc_n, sc_m, sc_terminado, sc_continuar, sc_res;
+unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar, sc_res;
  
-void msc_init_all () {
-    for (sc_i = 0; sc_i < MAX_FLAGS; sc_i ++)
-        flags [sc_i] = 0;
+void msc_init_all (void) {
+    #asm
+            ld  hl, _flags
+            ld  de, _flags+1
+            ld  bc, MAX_FLAGS-1
+            xor a
+            ld  (hl), a
+            ldir
+    #endasm
 }
  
-unsigned char read_byte () {
-    sc_c = script [0];
-    script ++;
-    return sc_c;
+unsigned char read_byte (void) {
+    #asm
+            ld  hl, (_script)
+            ld  a, (hl)
+            inc hl
+            ld  (_script), hl
+            ld  l, a
+            ld  h, 0
+   #endasm
 }
  
-unsigned char read_vbyte () {
-    sc_c = read_byte ();
-    if (sc_c & 128) return flags [sc_c & 127];
-    return sc_c;
+unsigned char read_vbyte (void) {
+    #asm
+            call _read_byte
+            ;ld  a, l
+            bit 7, a
+            ret z
+            and 127
+            ld  d, 0
+            ld  e, a
+            ld  hl, _flags
+            add hl, de
+            ld  l, (hl)
+            ld  h, 0
+    #endasm
+}
+void read_x_y (void) {
+    #asm
+            call _read_vbyte
+            ld  a, l
+            ld  (_sc_x), a
+            call _read_vbyte
+            ld  a, l
+            ld  (_sc_y), a
+    #endasm
 }
  
 // Ejecutamos el script apuntado por *script:
-unsigned char run_script () {
+unsigned char run_script (void) {
     sc_res = 0;
-    sc_terminado = 0;
-    sc_continuar = 0;
  
     if (script == 0)
         return; 
@@ -55,53 +84,52 @@ unsigned char run_script () {
         if (sc_c == 0xFF) break;
         next_script = script + sc_c;
         sc_terminado = sc_continuar = 0;
-        while (!sc_terminado) {
+        while (0 == sc_terminado) {
             sc_c = read_byte ();
             switch (sc_c) {
                 case 0x31:
                     // IF ENEMIES_KILLED_EQUALS n
                     // Opcode: 31 n
-                    sc_n = read_vbyte ();
-                    if (player.killed != sc_n)
-                        sc_terminado = 1;
+                    sc_terminado = (player.killed != read_vbyte ());
                     break;
                 case 0x50:
                      // IF NPANT n
                      // Opcode: 50 n
-                     sc_n = read_vbyte ();
-                     if (n_pant != sc_n)
-                         sc_terminado = 1;
+                     sc_terminado = (n_pant != read_vbyte ());
                      break;
                 case 0x51:
                      // IF NPANT_NOT n
                      // Opcode: 51 n
-                     sc_n = read_vbyte ();
-                     if (n_pant == sc_n)
-                         sc_terminado = 1;
+                     sc_terminado = (n_pant == read_vbyte ());
                      break;
                 case 0xFF:
                     // THEN
                     // Opcode: FF
-                    sc_terminado = 1;
-                    sc_continuar = 1;
-                    script_something_done = 1;
+                    #asm
+                        ld  a, 1
+                        ld  (_sc_terminado), a
+                        ld  (_sc_continuar), a
+                        ld  (_script_something_done), a
+                    #endasm
                     break;
             }
         }
         if (sc_continuar) {
             sc_terminado = 0;
-            while (!sc_terminado) {
+            while (0 == sc_terminado) {
                 sc_c = read_byte ();
                 switch (sc_c) {
                     case 0xE0:
                         // SOUND n
                         // Opcode: E0 n
-                        sc_n = read_vbyte ();
-                        peta_el_beeper (sc_n);
+                        peta_el_beeper (read_vbyte ());
                         break;
                     case 0xF1:
-                        script_result = 1;
-                        sc_terminado = 1;
+                        #asm
+                            ld  a, 1
+                            ld  (_sc_terminado), a
+                            ld  (_script_result), a
+                    #endasm
                         break;
                     case 0xFF:
                         sc_terminado = 1;

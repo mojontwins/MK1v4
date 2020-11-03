@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // pantallas.h
 // Includes the binary of the aplib-compressed static screens.
@@ -25,20 +25,18 @@ extern unsigned char s_ending [];
 		BINARY "ending.bin"
 #endasm
 
-void unpack (unsigned int address) {
-	asm_int = address;
-	
+void unpack (void) {
 	#asm
 		ld hl, 22528
-		ld (hl), 0
-		push hl
-		pop de
-		inc de
+		ld de, 22529
 		ld bc, 767
+		xor a
+		ld (hl), a
 		ldir
+
 		ld hl, (_asm_int)
 		ld de, 16384
-		call depack
+		jp depack
 	#endasm
 }
 
@@ -53,7 +51,7 @@ void espera_activa (int espera) {
 		#asm
 			halt
 		#endasm
-		if (sp_GetKey()) {
+		if (any_key ()) {
 			break;
 		}
 	}
@@ -64,7 +62,7 @@ void espera_activa (int espera) {
 
 void title_screen (void) {
 	sp_UpdateNow();
-	unpack ((unsigned int) (s_title));
+	asm_int = (unsigned int) (s_title); unpack ();
 
 	// CUSTOM {
 	draw_text (7, 4, 71, "RAMIRO, EL VAMPIRO");
@@ -102,28 +100,15 @@ void title_screen (void) {
 
 void game_ending (void) {
 	sp_UpdateNow();
-	unpack ((unsigned int) (s_ending));
-	
-	for (gpit = 0; gpit < 4; gpit ++) {
-		peta_el_beeper (6);
-		peta_el_beeper (3);
-	}
-	peta_el_beeper (11);
-	
+	asm_int = (unsigned int) (s_ending); unpack ();
+	beepet (); peta_el_beeper (11);
 	espera_activa (500);
 }
 
 void game_over (void) {
 	draw_rectangle (10, 11, 21, 13, GAME_OVER_ATTR);		
 	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
-
 	sp_UpdateNow ();
-		
-	for (gpit = 0; gpit < 4; gpit ++) {
-		peta_el_beeper (6);
-		peta_el_beeper (3);
-	}
-	peta_el_beeper (10);
-	
+	beepet (); peta_el_beeper (10);
 	espera_activa (500);
 }

@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"talk",
+				"talk_sounds\tabc"
+			],
+			[
+				"pof",
+				"pofrendas\tabc"
+			],
+			[
+				"OFRE",
+				"OFRENDAS_Y\tabc"
+			],
+			[
+				"OFREN",
+				"OFRENDAS_X\tabc"
+			],
+			[
+				"pofre",
+				"pofrendas_old\tabc"
+			],
+			[
+				"VIER",
+				"VIEWPORT_Y\tabc"
+			],
+			[
+				"VIEW",
+				"VIEWPORT_X\tabc"
+			],
+			[
+				"extra_sprite_19_",
+				"extra_sprite_19_a\t(sprites.h)"
+			],
+			[
 				"comp",
 				"comportamiento_tiles\tabc"
 			],
@@ -14,10 +46,6 @@
 			[
 				"VIEWP",
 				"VIEWPORT_X\tabc"
-			],
-			[
-				"VIEW",
-				"VIEWPORT_Y\tabc"
 			],
 			[
 				"VIE",
@@ -486,34 +514,6 @@
 			[
 				"pgt",
 				"pgtmx_meemaid"
-			],
-			[
-				"PSTAT_",
-				"PSTATE_NAKED"
-			],
-			[
-				"draw_",
-				"draw_game_tile"
-			],
-			[
-				"FAN",
-				"FANTY_MAXV"
-			],
-			[
-				"show_",
-				"show_coins_vs"
-			],
-			[
-				"GP_",
-				"GM_2P_VS"
-			],
-			[
-				"PSTATE",
-				"PSTATE_DEAD"
-			],
-			[
-				"pf",
-				"pflickering"
 			]
 		]
 	},
@@ -523,9 +523,36 @@
 			"file": "examples/ramiro4/dev/engine.h",
 			"settings":
 			{
-				"buffer_size": 48422,
+				"buffer_size": 45804,
 				"encoding": "Western (Windows 1252)",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/instrucciones.txt",
+			"settings":
+			{
+				"buffer_size": 2346,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "examples/ramiro4/diario.md",
+			"settings":
+			{
+				"buffer_size": 8059,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/Proyectos/2020/20200917b - Anexo 3 - Mi Cuenta 1.1.0/instrucciones.txt",
+			"settings":
+			{
+				"buffer_size": 1637,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -605,24 +632,34 @@
 	},
 	"expanded_folders":
 	[
-		"/C/git/MK1",
-		"/C/git/MK1/examples",
-		"/C/git/MK1/examples/ramiro4"
+		"/D/git/MK1",
+		"/D/git/MK1/examples",
+		"/D/git/MK1/examples/ramiro4",
+		"/D/git/MK1/examples/ramiro4/dev",
+		"/D/git/MK1/examples/ramiro4/gfx"
 	],
 	"file_history":
 	[
-		"/D/git/MK1/examples/ramiro4/dev/engine.h",
-		"/D/git/MK1/examples/ramiro4/dev/custom.h",
-		"/D/git/MK1/examples/ramiro4/dev/config.h",
-		"/D/git/MK1/examples/ramiro4/dev/printer.h",
-		"/D/git/MK1/examples/ramiro4/dev/definitions.h",
+		"/D/git/MK1/examples/ramiro3/dev/custom.h",
+		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/DirectorioCorporativo.properties",
+		"/D/Proyectos/2020/20201029b - Actualización ldapUtil en Webservice Corporativo/instrucciones.txt",
+		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/instrucciones.txt",
+		"/D/git/MK1/examples/ramiro4/dev/msc_extern.h",
 		"/D/git/MK1/examples/ramiro4/dev/mainloop.h",
+		"/D/git/MK1/examples/ramiro4/dev/definitions.h",
+		"/D/Proyectos/CIs.txt",
+		"/D/git/MK1/examples/ramiro4/dev/config.h",
+		"/D/git/MK1/examples/ramiro4/dev/engine.h",
+		"/D/git/MK1/examples/ramiro4/dev/printer.h",
+		"/D/git/MK1/examples/ramiro4/dev/pantallas.h",
+		"/D/git/MK1/examples/ramiro4/dev/custom.h",
+		"/D/git/MK1/examples/ramiro4/diario.md",
+		"/D/git/MK1/examples/ramiro4/dev/churromain.c",
 		"/D/git/MK1/examples/ramiro3/utils/msc.bas",
 		"/D/git/MK1/examples/ramiro3/dev/printer.h",
 		"/D/git/MK1/examples/ramiro3/dev/ramiro3v1.tap",
 		"/D/git/MK1/examples/ramiro3/dev/comp.bat",
 		"/D/git/MK1/examples/ramiro3/dev/churromain.c",
-		"/D/Proyectos/CIs.txt",
 		"/D/git/MK1/examples/ramiro3/dev/definitions.h",
 		"/D/git/MK1/examples/ramiro3/dev/msc.h",
 		"/D/git/MK1/src/utils/mapcnv.bas",
@@ -730,25 +767,21 @@
 		"/D/Proyectos/2020/20200525a - Corrección búsqueda LDAP Webmail V3/instrucciones.txt",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/openpgp.min.js",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.min.js",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.js",
-		"/C/Users/jcastano/Desktop/LDAP Browser/webmail.usuario",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/ldap_search/ldap_search.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/agendaapi/get_all/index.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/agendaapi/general.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es-old/webmail/plugins/ldap_search/config/config.inc.php",
-		"/C/Users/jcastano/Desktop/carpetas_juans.ojeda.txxt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/avelsieve/lib/filters.php",
-		"/D/Proyectos/2020/20200515a - Actualización Webmail V3 - Filtros en UTF-8/instrucciones.txt"
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.js"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 48.0
 	},
 	"find_in_files":
 	{
 		"height": 128.0,
 		"where_history":
 		[
+			"D:\\git\\MK1\\examples\\ramiro4",
+			"D:\\git\\MK1\\examples\\ramiro4\\dev",
+			"D:\\git\\MK1\\examples\\ramiro4",
+			"D:\\git\\MK1\\examples\\ramiro4\\dev",
 			"D:\\git\\MK1\\examples\\ramiro4",
 			"D:\\git\\MK1\\examples\\ramiro4\\dev",
 			"D:\\git\\MK1\\examples\\ramiro3\\dev",
@@ -872,11 +905,7 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar\\program",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail\\plugins\\password",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\agata_addressbook",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook"
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail"
 		]
 	},
 	"find_state":
@@ -884,6 +913,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"reentered",
+			"viewport_x",
+			"hotspots",
+			"EST_PARP",
+			"en_ccx",
+			"unpack",
+			"depack",
+			"_old",
+			"pinv",
 			"_en_y",
 			"_en_x",
 			" + 8",
@@ -1002,16 +1040,7 @@
 			"todos",
 			"algo no marcha bien",
 			"makesinglerule",
-			"actionradio",
-			"decodeBASE64",
-			"decodebase64",
-			"juntadeand",
-			"correo.junta",
-			"14",
-			"log_sandetel",
-			"write_log",
-			"mail",
-			"error subiendo archivo a consigna"
+			"actionradio"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1157,7 +1186,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1166,15 +1195,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 48422,
+						"buffer_size": 45804,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								44720,
-								44734
+								5605,
+								5605
 							]
 						],
 						"settings":
@@ -1186,7 +1215,38 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 21942.0,
+						"translation.y": 6864.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/instrucciones.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2346,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2344,
+								2344
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1195,14 +1255,77 @@
 			]
 		},
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 2,
+					"file": "examples/ramiro4/diario.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8059,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3711,
+								3757
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1763.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/D/Proyectos/2020/20200917b - Anexo 3 - Mi Cuenta 1.1.0/instrucciones.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1637,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1252,
+								1637
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -1258,7 +1381,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 74.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1292,7 +1415,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},

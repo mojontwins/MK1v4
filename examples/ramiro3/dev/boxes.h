@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 #ifdef PLAYER_PUSH_BOXES
 	unsigned char boxx, boyy;
@@ -7,9 +7,10 @@
 	unsigned char can_move_box (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1) {
 		#ifdef ENEMIES_BLOCK_BOXES	
 			boxx = x1 << 4; boyy = y1 << 4;
-			for (rdi = 0; rdi < 3; rdi ++) {
-				if (malotes [enoffs + rdi].x >= boxx - 15 && malotes [enoffs + rdi].x <= boxx + 15 &&
-					malotes [enoffs + rdi].y >= boyy - 15 && malotes [enoffs + rdi].y <= boyy + 15) {
+			rdd = enoffs + 3;
+			for (rdi = enoffs; rdi < rdd; rdi ++) {
+				if (malotes [rdi].x >= boxx - 12 && malotes [rdi].x <= boxx + 12 &&
+					malotes [rdi].y >= boyy - 12 && malotes [rdi].y <= boyy + 12) {
 					peta_el_beeper (9);
 					return 0;
 				}

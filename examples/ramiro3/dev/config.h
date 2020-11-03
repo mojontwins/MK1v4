@@ -1,5 +1,5 @@
-// MTE MK1 v4.7
-// Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // ============================================================================
 // I. General configuration
@@ -23,6 +23,8 @@
 #define LINEAR_ENEMY_HIT		7		// Amount of life to substract when normal enemy hits
 #define FLYING_ENEMY_HIT		12		// Amount of life to substract when flying enemy hits
 
+//#define ENABLE_CODE_HOOKS				// Hook at entering screen & each loop @ custom.h
+
 // ============================================================================
 // II. Engine type
 // ============================================================================
@@ -35,15 +37,16 @@
 // General directives:
 // -------------------
 
-#define PLAYER_AUTO_CHANGE_SCREEN		// Player changes screen automaticly (no need to press direction)
 #define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
 #define DEACTIVATE_KEYS					// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT				// If defined, only one object can be carried at a time.
 //#define DEACTIVATE_EVIL_TILE			// If defined, no killing tiles (behaviour 1) are detected.
+#define EVIL_TILE_SIMPLE				// For side view, only hit from below.
 //#define DEACTIVATE_EVIL_ZONES			// Zones kill you after a while. Read docs or ask na_th_an
 #define EVIL_ZONE_FRAME_COUNT	8		// For countdown in an evil zone.
 #define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing
+//#define EVIL_ZONE_CONDITIONAL 		// Active if scenery_info.evil_zone_active
 //#define PLAYER_BOUNCES				// If defined, collisions make player bounce
 #define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
 #define DEACTIVATE_REFILLS				// If defined, no refills.
@@ -55,9 +58,12 @@
 
 #define USE_COINS						// Coin engine activated
 #define COIN_TILE				13		// Coin is tile #X
+//#define COIN_BEH 				16 		// Detect coin by behaviour rather than tile nº
 #define COIN_FLAG				1		// Coins are counted in flag #N
+//#define COINS_REFILL 			1		// If defined, add this to player.life
 #define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
 #define COINS_DEACTIVABLE				// Coins can be hidden.
+#define COINS_SCRIPTING 				// Run script when player gets coin
 
 // Fixed screens engine
 // --------------------
@@ -100,6 +106,7 @@
 #define FANTY_MAX_V 			256 	// Flying enemies max speed.
 #define FANTY_A 				16		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
+//#define MAKE_TYPE_6					// Create fanties for missing enemies if scenery_info.make_type_6
 
 // Scripting
 // ---------
@@ -124,6 +131,9 @@
 // ----------
 
 #define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
+#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
+#define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
+#define RAMIRO_HOVER 					// press down to hover
 //#define PLAYER_HAS_JETPAC 			// If defined, player can thrust a vertical jetpac
 //#define JETPAC_DRAINS_LIFE			// If defined, flying drains life.
 //#define JETPAC_DRAIN_RATIO	3		// Drain 1 each X frames.
@@ -193,7 +203,8 @@
 #define NO_MAX_ENEMS					// Less than 3 enems in some screens
 //#define NO_MASKS						// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
-#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
+#define TWO_SETS						// If defined, two sets of tiles. Old < 4.8 version
+//#define TWO_SETS_REAL 				// Tiles have their real value in map_buff
 #define TWO_SETS_CONDITION		tileset_offset_calc() 	// Must return 32 if second tileset is active, 0 otherwise.
 
 // ============================================================================
@@ -209,6 +220,9 @@
 
 #define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
 #define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
+
+#define PLAYER_MAX_VY_CAYENDO_H 256		// For RAMIRO_HOVER
+#define PLAYER_G_HOVER 			4
 
 #define PLAYER_VY_INICIAL_SALTO 128		// Initial junp velocity (64/64 = 1 píxel/frame)
 #define PLAYER_MAX_VY_SALTANDO	256 	// Max jump velocity (320/64 = 5 píxels/frame)
@@ -237,28 +251,28 @@
 // 8 = Full obstacle (blocks player from all directions)
 
 #ifndef UNPACKED_MAP
-	#ifdef TWO_SETS
-	// Fill this array for dual tileset maps.
-	unsigned char comportamiento_tiles [] = {
-	0, 3, 3, 3, 3, 3, 8, 8, 8, 4, 8, 8, 4, 0, 0, 0,
-	8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0, 0, 0, 8,
-	0, 0, 8, 0, 1, 4, 8, 8, 8, 8, 0, 0, 4, 0, 0, 0	
-	};
+	#if defined TWO_SETS || defined TWO_SETS_REAL
+		// Fill this array for dual tileset maps.
+		unsigned char comportamiento_tiles [] = {
+		0, 3, 3, 3, 3, 3, 8, 8, 8, 4, 8, 8, 4, 0, 0, 0,
+		8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0, 0, 0, 8,
+		0, 0, 8, 0, 1, 4, 8, 8, 8, 8, 0, 0, 4, 0, 0, 0	
+		};
 	#else
-	// Fill this array for normal, packed maps. The second row
-	// is defined if you want to use tiles 20-31 in your scripts.
-	// Remove it if you are not using extra tiles at all. And remember
-	// that tiles 16 to 19 MUST be 0.
-	unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8,
-	0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0
-	};
+		// Fill this array for normal, packed maps. The second row
+		// is defined if you want to use tiles 20-31 in your scripts.
+		// Remove it if you are not using extra tiles at all. And remember
+		// that tiles 16 to 19 MUST be 0.
+		unsigned char comportamiento_tiles [] = {
+		0, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8,
+		0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0
+		};
 	#endif
 #else
-// Fill this array if you are using unpacked maps.
-unsigned char comportamiento_tiles [] = {
-	0, 0, 0, 0, 0, 0, 8, 8, 8, 4, 8, 8, 4, 2, 2, 0,
-	0, 0, 4, 8, 8, 4, 8, 8, 4, 4, 8, 0, 0, 2, 0, 0,
-	0, 0, 4, 4, 0, 8, 2, 2, 2, 2, 8, 0, 2, 2, 2, 8	
-};
+	// Fill this array if you are using unpacked maps.
+	unsigned char comportamiento_tiles [] = {
+		0, 0, 0, 0, 0, 0, 8, 8, 8, 4, 8, 8, 4, 2, 2, 0,
+		0, 0, 4, 8, 8, 4, 8, 8, 4, 4, 8, 0, 0, 2, 0, 0,
+		0, 0, 4, 4, 0, 8, 2, 2, 2, 2, 8, 0, 2, 2, 2, 8	
+	};
 #endif
