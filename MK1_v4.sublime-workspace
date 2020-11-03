@@ -4,60 +4,56 @@
 		"selected_items":
 		[
 			[
-				"talk",
-				"talk_sounds\tabc"
-			],
-			[
-				"pof",
-				"pofrendas\tabc"
-			],
-			[
-				"OFRE",
-				"OFRENDAS_Y\tabc"
-			],
-			[
-				"OFREN",
-				"OFRENDAS_X\tabc"
-			],
-			[
-				"pofre",
-				"pofrendas_old\tabc"
-			],
-			[
-				"VIER",
+				"VIEW",
 				"VIEWPORT_Y\tabc"
 			],
 			[
-				"VIEW",
-				"VIEWPORT_X\tabc"
+				"water_",
+				"water_locks\tabc"
 			],
 			[
-				"extra_sprite_19_",
-				"extra_sprite_19_a\t(sprites.h)"
+				"VI",
+				"VIEWPORT_Y\tabc"
 			],
 			[
-				"comp",
-				"comportamiento_tiles\tabc"
+				"PLAYER_MAX",
+				"PLAYER_MAX_VY_CAYENDO_H\tabc"
 			],
 			[
-				"time",
-				"timed_deleter_ct\tabc"
+				"player_hover",
+				"player_hover_maximum\tabc"
 			],
 			[
-				"VIEWP",
-				"VIEWPORT_X\tabc"
+				"player_gra",
+				"player_gravity_maximum\tabc"
 			],
 			[
-				"VIE",
-				"VIEWPORT_X\tabc"
+				"PLAYER_MAX_",
+				"PLAYER_MAX_VY_CAYENDO_H\t(config.h)"
 			],
 			[
-				"coins",
-				"trap_coins"
+				"pain",
+				"paint_water_strip_loop\tabc"
 			],
 			[
-				"clausu",
-				"clausulasUsed\tabc"
+				"saca",
+				"saca_a_todo_el_mundo_de_aqui\t(definitions.h)"
+			],
+			[
+				"show",
+				"show_text_box\t(msc_extern.h)"
+			],
+			[
+				"CAN_",
+				"PLAYER_CAN_FIRE"
+			],
+			[
+				"fill_",
+				"fill_buffer_end\tabc"
+			],
+			[
+				"fill",
+				"fill_buffer_loop\tabc"
 			],
 			[
 				"rcube",
@@ -514,25 +510,46 @@
 			[
 				"pgt",
 				"pgtmx_meemaid"
+			],
+			[
+				"PSTAT_",
+				"PSTATE_NAKED"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "examples/ramiro4/dev/engine.h",
+			"file": "examples/ramiro4/dev/mainloop.h",
 			"settings":
 			{
-				"buffer_size": 45804,
-				"encoding": "Western (Windows 1252)",
+				"buffer_size": 13135,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/instrucciones.txt",
+			"file": "examples/ramiro4/dev/custom.h",
 			"settings":
 			{
-				"buffer_size": 2346,
+				"buffer_size": 14978,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "examples/ramiro4/dev/msc_extern.h",
+			"settings":
+			{
+				"buffer_size": 509,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "examples/ramiro4/script/script.spt",
+			"settings":
+			{
+				"buffer_size": 1047,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -544,15 +561,6 @@
 				"buffer_size": 8059,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/Proyectos/2020/20200917b - Anexo 3 - Mi Cuenta 1.1.0/instrucciones.txt",
-			"settings":
-			{
-				"buffer_size": 1637,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
 			}
 		}
 	],
@@ -632,44 +640,56 @@
 	},
 	"expanded_folders":
 	[
-		"/D/git/MK1",
-		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/ramiro4",
-		"/D/git/MK1/examples/ramiro4/dev",
-		"/D/git/MK1/examples/ramiro4/gfx"
+		"/C/git/mk1",
+		"/C/git/mk1/examples",
+		"/C/git/mk1/examples/ramiro4",
+		"/C/git/mk1/examples/ramiro4/dev",
+		"/C/git/mk1/examples/ramiro4/script"
 	],
 	"file_history":
 	[
-		"/D/git/MK1/examples/ramiro3/dev/custom.h",
-		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/DirectorioCorporativo.properties",
-		"/D/Proyectos/2020/20201029b - Actualización ldapUtil en Webservice Corporativo/instrucciones.txt",
-		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/instrucciones.txt",
-		"/D/git/MK1/examples/ramiro4/dev/msc_extern.h",
-		"/D/git/MK1/examples/ramiro4/dev/mainloop.h",
-		"/D/git/MK1/examples/ramiro4/dev/definitions.h",
-		"/D/Proyectos/CIs.txt",
-		"/D/git/MK1/examples/ramiro4/dev/config.h",
-		"/D/git/MK1/examples/ramiro4/dev/engine.h",
-		"/D/git/MK1/examples/ramiro4/dev/printer.h",
-		"/D/git/MK1/examples/ramiro4/dev/pantallas.h",
-		"/D/git/MK1/examples/ramiro4/dev/custom.h",
-		"/D/git/MK1/examples/ramiro4/diario.md",
-		"/D/git/MK1/examples/ramiro4/dev/churromain.c",
+		"/C/git/mk1/examples/ramiro4/dev/config.h",
+		"/C/git/mk1/examples/ramiro4/dev/custom.h",
+		"/C/git/mk1/examples/ramiro4/dev/definitions.h",
+		"/C/z88dk10-orig/include/spritepack.h",
+		"/C/git/mk1/examples/ramiro4/dev/printer.h",
+		"/C/git/mk1/examples/ramiro4/dev/ramiro4.map",
+		"/C/git/mk1/examples/ramiro4/dev/engine.h",
+		"/C/git/mk1/examples/ramiro4/dev/churromain.c",
+		"/C/git/mk1/examples/ramiro4/dev/pantallas.h",
+		"/C/git/mk1/examples/ramiro4/script/script.spt",
+		"/C/git/mk1/examples/ramiro4/dev/msc_extern.h",
+		"/C/git/mk1/examples/ramiro4/dev/msc.h",
+		"/C/git/mk1/examples/ramiro4/utils/msc.bas",
+		"/C/git/mk1/examples/ramiro4/diario.md",
+		"/C/git/mk1/examples/limite/dev/printer.h",
+		"/C/git/mk1/examples/ramiro4/dev/mainloop.h",
+		"/C/git/mk1/examples/ramiro3/dev/engine.h",
+		"/C/git/mk1/examples/ramiro3/dev/config.h",
+		"/C/git/mk1/examples/ramiro3/dev/mainloop.h",
+		"/C/git/mk1/examples/ramiro3/dev/pantallas.h",
+		"/C/git/mk1/examples/ramiro3/dev/churromain.c",
+		"/C/cosas/speccy_vault/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/mainloop.h",
+		"/C/git/mk1/examples/ramiro3/dev/ramiro3v1.map",
+		"/C/git/mk1/examples/ramiro3/dev/comp.bat",
+		"/C/git/mk1/examples/ramiro3/dev/printer.h",
+		"/C/git/mk1/examples/ramiro3/dev/ramiro3v1.asm",
+		"/C/git/mk1/examples/ramiro3/dev/msc.h",
+		"/C/git/mk1/examples/ramiro3/dev/mapa.h",
+		"/C/git/mk1/examples/ramiro3/script/script.spt",
+		"/C/git/mk1/examples/ramiro3/utils/msc.bas",
+		"/C/cosas/speccy_vault/MK1/Dev_Utils/msc/msc.bas",
+		"/C/git/newspectrum/MK1/fred/utils/src/ts2bin.bas",
 		"/D/git/MK1/examples/ramiro3/utils/msc.bas",
-		"/D/git/MK1/examples/ramiro3/dev/printer.h",
-		"/D/git/MK1/examples/ramiro3/dev/ramiro3v1.tap",
-		"/D/git/MK1/examples/ramiro3/dev/comp.bat",
-		"/D/git/MK1/examples/ramiro3/dev/churromain.c",
-		"/D/git/MK1/examples/ramiro3/dev/definitions.h",
 		"/D/git/MK1/examples/ramiro3/dev/msc.h",
-		"/D/git/MK1/src/utils/mapcnv.bas",
-		"/D/git/MK1/examples/ramiro4/README.md",
-		"/D/git/MK1/examples/ramiro3/README.md",
-		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dev_Utils/msc/msc.bas",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/msc-config.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/msc.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dist/Churrera4.5/msc/msc.bas",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dev_Utils/msc/msc.bas",
+		"/D/git/MK1/examples/ramiro3/dev/churromain.c",
 		"/D/git/MK1/examples/ramiro3/dev/msc_extern.h",
+		"/D/git/MK1/examples/ramiro3/README.md",
+		"/D/git/MK1/examples/ramiro3/dev/comp.bat",
 		"/D/git/MK1/examples/ramiro3/dev/mainloop.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/engine.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/config.h",
@@ -714,6 +734,7 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/js/common.js",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/calendar/program/js/calendar.gui.js",
 		"/D/Proyectos/2020/20200917g - Banner 'MiCuenta' en Webmail/instrucciones.txt",
+		"/D/Proyectos/CIs.txt",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/skins/larry_sandetel/includes/appbar.html",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/sandetel/sandetel.php",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/config/config.inc.php",
@@ -754,36 +775,19 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_driver.php",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/token/decrypt.php",
 		"/C/Users/jcastano/AppData/Local/Temp/7zOC2663D71/sandetel_login.php",
-		"/C/java/applications/webmovil/src/p3s.properties",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es-old/webmail/plugins/avelsieve/avelsieve.php",
-		"/D/Proyectos/2020/20200617a - Arreglo formulario Masinfo Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/userinfo/userinfo.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/mypic.php",
-		"/D/Proyectos/2020/20200610a - Soporte de guiones en los uid de mypic en Webmail/instrucciones.txt",
-		"/D/Proyectos/2020/20200601a - Arreglo subida de imagen LDAP Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/userinfo/userinfo.php-orig.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/ldap_search/config/config.inc.php.dist",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/ldap_search/localization/es_ES.inc",
-		"/D/Proyectos/2020/20200525a - Corrección búsqueda LDAP Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/openpgp.min.js",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.min.js",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.js"
+		"/C/java/applications/webmovil/src/p3s.properties"
 	],
 	"find":
 	{
-		"height": 48.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
 		"height": 128.0,
 		"where_history":
 		[
-			"D:\\git\\MK1\\examples\\ramiro4",
-			"D:\\git\\MK1\\examples\\ramiro4\\dev",
-			"D:\\git\\MK1\\examples\\ramiro4",
-			"D:\\git\\MK1\\examples\\ramiro4\\dev",
-			"D:\\git\\MK1\\examples\\ramiro4",
-			"D:\\git\\MK1\\examples\\ramiro4\\dev",
+			"C:\\git\\mk1\\examples\\ramiro4\\dev",
+			"C:\\git\\mk1\\examples\\ramiro3\\dev",
 			"D:\\git\\MK1\\examples\\ramiro3\\dev",
 			"D:\\git\\MK1\\examples\\limite\\dev",
 			"D:\\git\\MK1\\src\\dev",
@@ -905,7 +909,11 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar\\program",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail\\plugins\\password",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail"
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\agata_addressbook",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook"
 		]
 	},
 	"find_state":
@@ -913,52 +921,41 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"reentered",
-			"viewport_x",
-			"hotspots",
-			"EST_PARP",
-			"en_ccx",
-			"unpack",
-			"depack",
-			"_old",
-			"pinv",
-			"_en_y",
-			"_en_x",
-			" + 8",
-			"gp",
-			"get_coin",
-			"_old",
-			"COINS",
-			"get_coin",
-			"TWO_SET",
-			"get_coin",
-			"> 3",
-			"> 7",
-			"== COIN_TILE",
-			"qtile",
-			"timed_de",
-			"draw_coloured_tile",
-			"USE_COINS",
-			"trap_screen",
-			"++ _t",
-			"++ gp_gen",
-			"t",
-			"(x|y)",
-			"read_vbyte",
-			"0 ==",
-			"!",
-			"sc_n",
-			"sc_m",
-			"sc_i",
-			"useflipf",
-			"churrera 3",
-			"churrera",
-			"terminado",
-			"clausulasUsed (&H40)",
+			"msc_init_all",
+			"water_locks",
+			"reset",
+			"rdi",
+			"paint_water_strip",
+			"++;\n",
+			"water_strip",
+			"water_level",
+			"pushp",
+			"rdj",
+			"ptgmx",
+			"pgt",
+			"player.vx",
+			"platform_get_player",
+			"adjust_to_tile_x@",
+			"adjust_to_tile_x",
+			"water_level",
+			"pvy",
+			"peta_el_beeper (10)",
+			"paint",
+			"extern",
+			"rdi",
+			"key",
+			"game_over",
+			"clausulasfire",
+			"listaclausulasfire",
+			"coin",
+			"defaultInk",
 			"text",
-			"&H51",
-			"show_coins",
-			"maxflag",
+			"SET_TILE",
+			"_",
+			"listaclausulasEnter",
+			"print_number2",
+			"0x20",
+			"tile",
 			"flags",
 			"(res|i|x|y|c|n|m|terminado|continuar)",
 			"(i|x|y|c|n|m|terminado|continuar)",
@@ -1040,30 +1037,29 @@
 			"todos",
 			"algo no marcha bien",
 			"makesinglerule",
-			"actionradio"
+			"actionradio",
+			"decodeBASE64",
+			"decodebase64",
+			"juntadeand",
+			"correo.junta",
+			"14",
+			"log_sandetel",
+			"write_log",
+			"mail",
+			"error subiendo archivo a consigna",
+			"create",
+			"\t\t\t\n"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
-			"en_y",
-			"en_x",
-			" + 12",
-			"en_cc",
-			"& 12",
-			"& 8",
-			"& COIN_BEH",
-			"attr",
-			"_t ++",
-			"t ++",
-			"gp_gen ++",
-			"_t",
-			"_\\1",
-			"MTE MK1 v4.7",
-			"MTE MK1",
-			"sc_terminado",
+			"ptg",
+			" ptg",
+			" ",
+			"draw_2_digits",
 			"sc_\\1",
 			"apack",
 			"    /var/www/html/correo.juntadeandalucia.es/",
@@ -1175,7 +1171,19 @@
 			"DB",
 			"$patata",
 			"bookmarks",
-			"empty"
+			"empty",
+			"is_empty",
+			"bookmarks",
+			"BOOKMARK",
+			"bookmark",
+			"BOOKMARK",
+			"bookmark",
+			"bookmarkslist",
+			"bookmarks",
+			"bookmarkslist",
+			"bookmarks",
+			"bookmarks_list",
+			"bookmark"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1191,75 +1199,128 @@
 			[
 				{
 					"buffer": 0,
-					"file": "examples/ramiro4/dev/engine.h",
+					"file": "examples/ramiro4/dev/mainloop.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 45804,
+						"buffer_size": 13135,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5605,
-								5605
+								10288,
+								10288
 							]
 						],
 						"settings":
 						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 6864.0,
+						"translation.y": 4823.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "examples/ramiro4/dev/custom.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14978,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2565,
+								2697
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1048.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "examples/ramiro4/dev/msc_extern.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 509,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								503,
+								503
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 3,
+					"file": "examples/ramiro4/script/script.spt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1047,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/instrucciones.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2346,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2344,
-								2344
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 1,
-			"sheets":
-			[
-				{
-					"buffer": 2,
+					"buffer": 4,
 					"file": "examples/ramiro4/diario.md",
 					"semi_transient": false,
 					"settings":
@@ -1271,53 +1332,19 @@
 						"selection":
 						[
 							[
-								3711,
-								3757
+								8059,
+								8059
 							]
 						],
 						"settings":
 						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
 							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1763.0,
+						"translation.y": 2555.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/D/Proyectos/2020/20200917b - Anexo 3 - Mi Cuenta 1.1.0/instrucciones.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1637,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1252,
-								1637
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -1325,7 +1352,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -1381,7 +1408,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 74.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1423,7 +1450,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 218.0,
+	"side_bar_width": 135.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

@@ -11,11 +11,13 @@ void do_extern_action (unsigned char n) {
 			pinv_next_frame = object_cells [pinv];
 			show_text_box (pinv);
 		} else show_text_box (0);
-	} else if (n < 64) {
+	} else if (n < 65) {
 		show_text_box (n);
 	} else {
-		// Change carried object.
-
-		pinv = n - 64; if (pinv) pinv_next_frame = object_cells [pinv];
+		// Work with characters n-64:
+		// 1 - Gustavo
+		// 2 - Sonia
+		// 3 - Clemente
+		// 4 - Marisa
 	}
 }
