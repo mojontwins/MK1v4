@@ -26,6 +26,8 @@
 #pragma output STACKPTR=61952
 #define AD_FREE			STACK_ADDR-STACK_SIZE-(NUMBLOCKS*15)
 
+#define MAX_ENEMS 		3
+
 #include "config.h"
 
 // Program modules in strict order...

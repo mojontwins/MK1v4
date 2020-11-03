@@ -7,7 +7,7 @@
 	unsigned char can_move_box (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1) {
 		#ifdef ENEMIES_BLOCK_BOXES	
 			boxx = x1 << 4; boyy = y1 << 4;
-			rdd = enoffs + 3;
+			rdd = enoffs + MAX_ENEMS;
 			for (rdi = enoffs; rdi < rdd; rdi ++) {
 				if (malotes [rdi].x >= boxx - 12 && malotes [rdi].x <= boxx + 12 &&
 					malotes [rdi].y >= boyy - 12 && malotes [rdi].y <= boyy + 12) {
@@ -62,7 +62,7 @@
 							#ifdef BOXES_KILL_ENEMIES
 								// Check for enemy killed!
 
-								for (rdi = 0; rdi < 3; rdi ++) {
+								for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 									#ifdef BOXES_ONLY_KILL_TYPE
 										if (malotes [enoffs + rdi].t == BOXES_ONLY_KILL_TYPE)
 									#else
@@ -71,12 +71,12 @@
 									{
 										if (malotes [enoffs + rdi].x >= boxx - 15 && malotes [enoffs + rdi].x <= boxx + 15 &&
 											malotes [enoffs + rdi].y >= boyy - 15 && malotes [enoffs + rdi].y <= boyy + 15) {
-											en_an [rdi].next_frame = sprite_17_a;
-											sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an [rdi].next_frame - en_an [rdi].current_frame, VIEWPORT_Y + (malotes [enoffs + rdi].y >> 3), VIEWPORT_X + (malotes [enoffs + rdi].x >> 3), malotes [enoffs + rdi].x & 7, malotes [enoffs + rdi].y & 7);
-											en_an [rdi].current_frame = en_an [rdi].next_frame;
+											en_an_next_frame [rdi] = sprite_17_a;
+											sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an_next_frame [rdi] - en_an_current_frame [rdi], VIEWPORT_Y + (malotes [enoffs + rdi].y >> 3), VIEWPORT_X + (malotes [enoffs + rdi].x >> 3), malotes [enoffs + rdi].x & 7, malotes [enoffs + rdi].y & 7);
+											en_an_current_frame [rdi] = en_an_next_frame [rdi];
 											sp_UpdateNow ();
 											peta_el_beeper (10);
-											en_an [rdi].next_frame = sprite_18_a;
+											en_an_next_frame [rdi] = sprite_18_a;
 											malotes [enoffs + rdi].t |= 16;			// Marked as "dead"
 											// Count it
 											player.killed ++;

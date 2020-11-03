@@ -56,7 +56,7 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 
 			ld  a, (_gpit)
 			inc a
-			cp  3
+			cp  MAX_ENEMS
 			jr  nz, hide_sprites_enems_loop
 	#endasm
 }
@@ -112,44 +112,44 @@ unsigned char collide_enem (void) {
 
 unsigned char rand (void) {
 	#asm
-	.rand16
-		ld	hl, _seed
-		ld	a, (hl)
-		ld	e, a
-		inc	hl
-		ld	a, (hl)
-		ld	d, a
+		.rand16
+			ld	hl, _seed
+			ld	a, (hl)
+			ld	e, a
+			inc	hl
+			ld	a, (hl)
+			ld	d, a
+			
+			;; Ahora DE = [SEED]
+						
+			ld	a,	d
+			ld	h,	e
+			ld	l,	253
+			or	a
+			sbc	hl,	de
+			sbc	a, 	0
+			sbc	hl,	de
+			ld	d, 	0
+			sbc	a, 	d
+			ld	e,	a
+			sbc	hl,	de
+			jr	nc,	nextrand
+			inc	hl
+		.nextrand
+			ld	d,	h
+			ld	e,	l
+			ld	hl, _seed
+			ld	a,	e
+			ld	(hl), a
+			inc	hl
+			ld	a,	d
+			ld	(hl), a
+			
+			;; Ahora [SEED] = HL
 		
-		;; Ahora DE = [SEED]
-					
-		ld	a,	d
-		ld	h,	e
-		ld	l,	253
-		or	a
-		sbc	hl,	de
-		sbc	a, 	0
-		sbc	hl,	de
-		ld	d, 	0
-		sbc	a, 	d
-		ld	e,	a
-		sbc	hl,	de
-		jr	nc,	nextrand
-		inc	hl
-	.nextrand
-		ld	d,	h
-		ld	e,	l
-		ld	hl, _seed
-		ld	a,	e
-		ld	(hl), a
-		inc	hl
-		ld	a,	d
-		ld	(hl), a
-		
-		;; Ahora [SEED] = HL
-	
-		ld  l, e 
-		ld  h, 0		
-		;; Return 8 bit
+			ld  l, e 
+			ld  h, 0		
+			;; Return 8 bit
 	#endasm
 
 }
@@ -164,80 +164,80 @@ unsigned int abs (int n) {
 
 void step (void) {
 	#asm
-		ld a, 16
-		out (254), a
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		xor 16
-		out (254), a
+			ld a, 16
+			out (254), a
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			nop
+			xor 16
+			out (254), a
 	#endasm	
 }
 
 void cortina (void) {
 	#asm
-		;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
-		;; para que no queden artefactos feos
-		
-		ld	de, 22528			; Apuntamos con DE a la zona de atributos
-		ld	b,	3				; Procesamos 3 tercios
-	.clearb1
-		push bc
-		
-		ld	b, 255				; Procesamos los 256 atributos de cada tercio
-	.clearb2
-	
-		ld	a, (de)				; Nos traemos un atributo
-		and	199					; Le hacemos la máscara 11000111 y dejamos PAPER a 0
-		ld	(de), a				; Y lo volvemos a poner
-		
-		inc de					; Siguiente atributo
-	
-		djnz clearb2
-		
-		pop bc
-		djnz clearb1
-		
-		;; Y ahora el código original que escribí para UWOL:	
-	
-		ld	a,	8
-	
-	.repitatodo
-		ld	c,	a			; Salvamos el contador de "repitatodo" en 'c'
-	
-		ld	hl, 16384
-		ld	a,	12
-	
-	.bucle
-		ld	b,	a			; Salvamos el contador de "bucle" en 'b'
-		ld	a,	255
-	
-	.bucle1
-		sla (hl)
-		inc hl
-		dec a
-		jr	nz, bucle1
+			;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
+			;; para que no queden artefactos feos
 			
-		ld	a,	255
-	.bucle2
-		srl (hl)
-		inc hl
-		dec a
-		jr	nz, bucle2
+			ld	de, 22528			; Apuntamos con DE a la zona de atributos
+			ld	b,	3				; Procesamos 3 tercios
+		.clearb1
+			push bc
 			
-		ld	a,	b			; Restituimos el contador de "bucle" a 'a'
-		dec a
-		jr	nz, bucle
-	
-		ld	a,	c			; Restituimos el contador de "repitatodo" a 'a'
-		dec a
-		jr	nz, repitatodo
+			ld	b, 255				; Procesamos los 256 atributos de cada tercio
+		.clearb2
+		
+			ld	a, (de)				; Nos traemos un atributo
+			and	199					; Le hacemos la máscara 11000111 y dejamos PAPER a 0
+			ld	(de), a				; Y lo volvemos a poner
+			
+			inc de					; Siguiente atributo
+		
+			djnz clearb2
+			
+			pop bc
+			djnz clearb1
+			
+			;; Y ahora el código original que escribí para UWOL:	
+		
+			ld	a,	8
+		
+		.repitatodo
+			ld	c,	a			; Salvamos el contador de "repitatodo" en 'c'
+		
+			ld	hl, 16384
+			ld	a,	12
+		
+		.bucle
+			ld	b,	a			; Salvamos el contador de "bucle" en 'b'
+			ld	a,	255
+		
+		.bucle1
+			sla (hl)
+			inc hl
+			dec a
+			jr	nz, bucle1
+				
+			ld	a,	255
+		.bucle2
+			srl (hl)
+			inc hl
+			dec a
+			jr	nz, bucle2
+				
+			ld	a,	b			; Restituimos el contador de "bucle" a 'a'
+			dec a
+			jr	nz, bucle
+		
+			ld	a,	c			; Restituimos el contador de "repitatodo" a 'a'
+			dec a
+			jr	nz, repitatodo
 	#endasm
 }
 
@@ -272,7 +272,7 @@ void cortina (void) {
 #if defined(PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE) || defined(BOXES_KILL_ENEMIES)
 	void init_malotes (void) {
 		
-		for (gpit = 0; gpit < MAP_W * MAP_H * 3; gpit ++) {
+		for (gpit = 0; gpit < MAP_W * MAP_H * MAX_ENEMS; gpit ++) {
 			malotes [gpit].t = malotes [gpit].t & 15;	
 			#ifdef PLAYER_CAN_FIRE
 				malotes [gpit].life = ENEMIES_LIFE_GAUGE;
@@ -312,12 +312,12 @@ void cortina (void) {
 
 #if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 	#if defined PLAYER_CAN_HIDE
-	char player_hidden (void) {
-		if ( (gpy & 15) == 0 && player.vx == 0 )
-			if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-				return 1;
-		return 0;
-	}
+		char player_hidden (void) {
+			if ( (gpy & 15) == 0 && player.vx == 0 )
+				if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
+					return 1;
+			return 0;
+		}
 	#endif
 #endif
 
@@ -1180,15 +1180,15 @@ void draw_scr (void) {
 
 	// Set up enemies.
 	
-	enoffs = n_pant * 3;
+	enoffs = n_pant * MAX_ENEMS;
 
 	#ifdef COUNT_KILLABLE_ON
 		flags [COUNT_KILLABLE_ON] = 0;
 	#endif
 
-	for (gpit = 0; gpit < 3; gpit ++) {
-		en_an [gpit].frame = 0;
-		en_an [gpit].count = 0;
+	for (gpit = 0; gpit < MAX_ENEMS; gpit ++) {
+		en_an_frame [gpit] = 0;
+		en_an_count [gpit] = 0;
 		#ifdef RANDOM_RESPAWN
 			en_an_fanty_activo [gpit] = 0;
 		#endif
@@ -1198,16 +1198,16 @@ void draw_scr (void) {
 				case 0:
 					#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 						if (scenery_info.make_type_6) {
-							en_an [gpit].next_frame = sprite_13_a;
+							en_an_next_frame [gpit] = sprite_13_a;
 							en_an_x [gpit] = (rand () % 224) << 6;
 							en_an_y [gpit] = (rand () % 144) << 6;
 							en_an_vx [gpit] = en_an_vy [gpit] = 0;
 							en_an_state [gpit] = TYPE_6_IDLE;
 						} else {
-							en_an [gpit].next_frame = sprite_18_a;
+							en_an_next_frame [gpit] = sprite_18_a;
 						}
 					#else
-						en_an [gpit].next_frame = sprite_18_a;
+						en_an_next_frame [gpit] = sprite_18_a;
 					#endif
 					break;
 			#endif
@@ -1216,11 +1216,11 @@ void draw_scr (void) {
 			case 2:
 			case 3:
 			case 4:
-				en_an [gpit].next_frame = sprite_9_a + 288 * (malotes [enoffs + gpit].t - 1);
+				en_an_next_frame [gpit] = sprite_9_a + 288 * (malotes [enoffs + gpit].t - 1);
 				break;
 			#ifdef USE_TYPE_6
 				case 6:
-					en_an [gpit].next_frame = sprite_13_a;
+					en_an_next_frame [gpit] = sprite_13_a;
 					en_an_x [gpit] = malotes [enoffs + gpit].x << 6;
 					en_an_y [gpit] = malotes [enoffs + gpit].y << 6;
 					en_an_vx [gpit] = en_an_vy [gpit] = 0;
@@ -1229,7 +1229,7 @@ void draw_scr (void) {
 			#endif
 			#if defined (PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE)			
 				default:
-					en_an [gpit].next_frame = sprite_18_a;
+					en_an_next_frame [gpit] = sprite_18_a;
 			#endif
 		}
 		
@@ -1319,9 +1319,9 @@ void mueve_bicharracos (void) {
 	// This function moves the active enemies.
 	en_tocado = 0;
 	player.gotten = 0;
-	 ptgmx =  ptgmy = 0;
+	ptgmx =  ptgmy = 0;
 	
-	for (enit = 0; enit < 3; enit ++) {
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		enoffsmasi = enoffs + enit;
 
 		// Copy array values to temporary variables as fast as possible
@@ -1436,10 +1436,10 @@ void mueve_bicharracos (void) {
 				}
 			#endif
 
-			en_an [enit].count ++; 
-			if (en_an [enit].count == 4) {
-				en_an [enit].count = 0;
-				en_an [enit].frame = !en_an [enit].frame;
+			en_an_count [enit] ++; 
+			if (en_an_count [enit] == 4) {
+				en_an_count [enit] = 0;
+				en_an_frame [enit] = !en_an_frame [enit];
 
 
 				switch (_en_t) {
@@ -1453,7 +1453,7 @@ void mueve_bicharracos (void) {
 						rdd = 4;
 						break;
 				}	
-				en_an [enit].next_frame = enem_cells [rdd + en_an [enit].frame];
+				en_an_next_frame [enit] = enem_cells [rdd + en_an_frame [enit]];
 			}
 
 			#ifdef RANDOM_RESPAWN
@@ -1524,12 +1524,12 @@ void mueve_bicharracos (void) {
 				#ifdef PLAYER_KILLS_ENEMIES
 					if (gpy < en_ccy - 8 && player.vy > 0 && _en_t >= PLAYER_MIN_KILLABLE) {
 						// Step on enemy and kill it.
-						en_an [enit].next_frame = sprite_17_a;
-						sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an [enit].next_frame - en_an [enit].current_frame, VIEWPORT_Y + (malotes [enoffs + enit].y >> 3), VIEWPORT_X + (malotes [enoffs + enit].x >> 3), malotes [enoffs + enit].x & 7, malotes [enoffs + enit].y & 7);
-						en_an [enit].current_frame = en_an [enit].next_frame;
+						en_an_next_frame [enit] = sprite_17_a;
+						sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffs + enit].y >> 3), VIEWPORT_X + (malotes [enoffs + enit].x >> 3), malotes [enoffs + enit].x & 7, malotes [enoffs + enit].y & 7);
+						en_an_current_frame [enit] = en_an_next_frame [enit];
 						sp_UpdateNow ();
 						peta_el_beeper (10);
-						en_an [enit].next_frame = sprite_18_a;
+						en_an_next_frame [enit] = sprite_18_a;
 						_en_t |= 16;			// Marked as "dead"
 						// Count it
 						player.killed ++;
@@ -1742,18 +1742,18 @@ void mueve_bicharracos (void) {
 									#endif
 									en_an_vx [enit] += (bullets [enit].mx > 0 ? 128 : -128);
 								#endif
-								en_an [enit].next_frame = sprite_17_a;
-								en_an [enit].morido = 1;
+								en_an_next_frame [enit] = sprite_17_a;
+								en_an_morido [enit] = 1;
 								bullets [en_j].estado = 0;
 								if (_en_t != 4)
 									_en_life --;
 								if (_en_life == 0) {
 									// Kill enemy
-									sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an [enit].next_frame - en_an [enit].current_frame, VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
-									en_an [enit].current_frame = en_an [enit].next_frame;
+									sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
+									en_an_current_frame [enit] = en_an_next_frame [enit];
 									sp_UpdateNow ();
 									peta_el_beeper (10);
-									en_an [enit].next_frame = sprite_18_a;
+									en_an_next_frame [enit] = sprite_18_a;
 									_en_t |= 16;			// dead
 									// Count
 									player.killed ++;

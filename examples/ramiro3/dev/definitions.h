@@ -43,15 +43,6 @@ typedef struct {
 } INERCIA;
 
 typedef struct {
-	unsigned char frame;
-	unsigned char count;
-	unsigned char *current_frame, *next_frame;
-	#ifdef PLAYER_CAN_FIRE
-		unsigned char morido;
-	#endif
-} ANIMADO;
-
-typedef struct {
 	unsigned char x;
 	unsigned char y;
 	char mx;
@@ -105,7 +96,7 @@ void *u_free = sp_FreeBlock;
 // Sprite structs
 
 struct sp_SS *sp_player;
-struct sp_SS *sp_moviles [3];
+struct sp_SS *sp_moviles [MAX_ENEMS];
 #ifdef PLAYER_CAN_FIRE
 	struct sp_SS *sp_bullets [MAX_BULLETS];
 #endif
@@ -127,14 +118,18 @@ signed int ptgmx, ptgmy;
 
 // Enemies
 
-ANIMADO en_an [3] @ 23800;
-signed int en_an_x [3], en_an_y [3], en_an_vx [3], en_an_vy [3];
-#ifdef RANDOM_RESPAWN
-	unsigned char en_an_fanty_activo [3];
-#endif
-#ifdef USE_TYPE_6
-	unsigned char en_an_state [3];
-#endif	
+unsigned char en_an_frame [MAX_ENEMS]				@ 23800;
+unsigned char en_an_count [MAX_ENEMS]				@ (23800 + MAX_ENEMS);
+unsigned char *en_an_current_frame [MAX_ENEMS]		@ (23800 + MAX_ENEMS*2);
+unsigned char *en_an_next_frame [MAX_ENEMS]			@ (23800 + MAX_ENEMS*4);
+unsigned char en_an_morido [MAX_ENEMS] 				@ (23800 + MAX_ENEMS*6);
+signed int en_an_x [MAX_ENEMS] 						@ (23800 + MAX_ENEMS*7);
+signed int en_an_y [MAX_ENEMS]						@ (23800 + MAX_ENEMS*9);
+signed int en_an_vx [MAX_ENEMS]						@ (23800 + MAX_ENEMS*11);
+signed int en_an_vy [MAX_ENEMS]	 					@ (23800 + MAX_ENEMS*13);
+unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (23800 + MAX_ENEMS*15);
+unsigned char en_an_state [MAX_ENEMS]				@ (23800 + MAX_ENEMS*16);
+
 unsigned char enoffs;
 unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
 unsigned char en_cx, en_cy;

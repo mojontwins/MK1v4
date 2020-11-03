@@ -31,11 +31,11 @@ void main (void) {
 		sp_AddColSpr (sp_player, sprite_2_c, TRANSPARENT);
 		player.current_frame = player.next_frame = sprite_2_a;
 		
-		for (rdi = 0; rdi < 3; rdi ++) {
+		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 			sp_moviles [rdi] = sp_CreateSpr(sp_XOR_SPRITE, 3, sprite_9_a, 1, TRANSPARENT);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_b, TRANSPARENT);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_c, TRANSPARENT);	
-			en_an [rdi].current_frame = sprite_9_a;
+			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#else
 		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1, TRANSPARENT);
@@ -43,11 +43,11 @@ void main (void) {
 		sp_AddColSpr (sp_player, sprite_2_c, TRANSPARENT);
 		player.current_frame = player.next_frame = sprite_2_a;
 		
-		for (rdi = 0; rdi < 3; rdi ++) {
+		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 			sp_moviles [rdi] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2, TRANSPARENT);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_b, TRANSPARENT);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_c, TRANSPARENT);	
-			en_an [rdi].current_frame = sprite_9_a;
+			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#endif
 
@@ -241,7 +241,7 @@ void main (void) {
 			#endif
 
 			// Render		
-			for (rdi = 0; rdi < 3; rdi ++) {
+			for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 				#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 					#ifdef RANDOM_RESPAWN
 						if (en_an_fanty_activo [rdi])
@@ -257,8 +257,8 @@ void main (void) {
 					rdx = malotes [enoffs + rdi].x;
 					rdy = malotes [enoffs + rdi].y;
 				}
-				sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an [rdi].next_frame - en_an [rdi].current_frame, VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7);
-				en_an [rdi].current_frame = en_an [rdi].next_frame;
+				sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an_next_frame [rdi] - en_an_current_frame [rdi], VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7);
+				en_an_current_frame [rdi] = en_an_next_frame [rdi];
 			}
 
 			rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
@@ -352,9 +352,9 @@ void main (void) {
 			
 			#ifdef PLAYER_CAN_FIRE
 				for (rdi = 0; rdi < 3; rdi ++)
-					if (en_an [rdi].morido == 1) {
+					if (en_an_morido [rdi] == 1) {
 						peta_el_beeper (1);
-						en_an [rdi].morido = 0;
+						en_an_morido [rdi] = 0;
 					} 	
 			#endif
 
