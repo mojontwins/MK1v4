@@ -9,7 +9,8 @@
 #asm
 		LIB SPInvalidate
 		LIB SPCompDListAddr
-		LIB SPMoveSprAbs		
+		LIB SPMoveSprAbs	
+		LIB SPTileArray	
 #endasm
 
 

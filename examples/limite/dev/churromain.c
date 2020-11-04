@@ -10,6 +10,7 @@
 		LIB SPInvalidate
 		LIB SPCompDListAddr
 		LIB SPMoveSprAbs		
+		LIB SPTileArray	
 #endasm
 
 
@@ -19,7 +20,7 @@
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
 // Add 5 for each 8x8 sprite (such as bullets)
-#define NUMBLOCKS 		50 // 40
+#define NUMBLOCKS 		40
 
 // Tighten it even more... Gaining about 1.1 extra Kb 
 // You will probably have to tinker with this depending on your game.

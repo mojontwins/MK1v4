@@ -812,7 +812,6 @@ unsigned char move (void) {
 					player.killingzone_beepcount ++;
 					sp_Border (2);
 					peta_el_beeper (4);
-					sp_Border (0);
 				} else {
 					player.killingzone_framecount ++;
 				}

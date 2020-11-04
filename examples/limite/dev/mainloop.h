@@ -14,47 +14,61 @@ void main (void) {
 	joyfunc = sp_JoyKeyboard;
 
 	// Load tileset
-	gp_gen = tileset;
-	gpit = 0; do {
-		sp_TileArray (gpit, gp_gen);
-		gp_gen += 8;
-		gpit ++;
-	} while (gpit);
+	#asm
+			ld  b, 0
+			ld  hl, SPTileArray
+			ld  de, _tileset
+		.load_tileset_loop
+			ld  (hl), e
+			inc h
+			ld  (hl), d
+			dec h
+			inc hl
+			inc de
+			inc de
+			inc de
+			inc de
+			inc de
+			inc de
+			inc de
+			inc de
+			djnz load_tileset_loop
+	#endasm
 
 	// Clipping rectangle	
 	spritesClip = &spritesClipValues;
 	
 	// Sprite creation
 	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (sp_XOR_SPRITE, 3, sprite_2_a, 1, TRANSPARENT);
-		sp_AddColSpr (sp_player, sprite_2_b, TRANSPARENT);
-		sp_AddColSpr (sp_player, sprite_2_c, TRANSPARENT);
+		sp_player = sp_CreateSpr (sp_XOR_SPRITE, 3, sprite_2_a, 1);
+		sp_AddColSpr (sp_player, sprite_2_b);
+		sp_AddColSpr (sp_player, sprite_2_c);
 		player.current_frame = player.next_frame = sprite_2_a;
 		
 		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
-			sp_moviles [rdi] = sp_CreateSpr(sp_XOR_SPRITE, 3, sprite_9_a, 1, TRANSPARENT);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_b, TRANSPARENT);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c, TRANSPARENT);	
+			sp_moviles [rdi] = sp_CreateSpr(sp_XOR_SPRITE, 3, sprite_9_a, 1);
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
 			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#else
-		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1, TRANSPARENT);
-		sp_AddColSpr (sp_player, sprite_2_b, TRANSPARENT);
-		sp_AddColSpr (sp_player, sprite_2_c, TRANSPARENT);
+		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1);
+		sp_AddColSpr (sp_player, sprite_2_b);
+		sp_AddColSpr (sp_player, sprite_2_c);
 		player.current_frame = player.next_frame = sprite_2_a;
 		
 		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
-			sp_moviles [rdi] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2, TRANSPARENT);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_b, TRANSPARENT);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c, TRANSPARENT);	
+			sp_moviles [rdi] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2);
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
 			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#endif
 
 	#ifdef PLAYER_CAN_FIRE
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
-			sp_bullets [rdi] = sp_CreateSpr (sp_OR_SPRITE, 2, sprite_19_a, 1, TRANSPARENT);
-			sp_AddColSpr (sp_bullets [rdi], sprite_19_b, TRANSPARENT);
+			sp_bullets [rdi] = sp_CreateSpr (sp_OR_SPRITE, 2, sprite_19_a, 1);
+			sp_AddColSpr (sp_bullets [rdi], sprite_19_b);
 		}
 	#endif
 
@@ -224,8 +238,16 @@ void main (void) {
 				}
 			#endif
 
-			maincounter ++;
-			half_life ^= 1;
+			#asm
+				// maincounter ++;
+				ld  hl, _maincounter
+				inc (hl)
+
+				// half_life ^= 1;
+				ld  a, (_half_life)
+				xor 1
+				ld  (_half_life), a
+			#endasm
 			
 			mueve_bicharracos ();
 			move ();
@@ -289,7 +311,42 @@ void main (void) {
 			#endif
 
 			// Hotspot interaction.
-			if (gpx >= hotspot_x - 15 && gpx <= hotspot_x + 15 && gpy >= hotspot_y - 15 && gpy <= hotspot_y + 15) {	
+
+			//if (gpx >= hotspot_x - 15 && gpx <= hotspot_x + 15 && gpy >= hotspot_y - 15 && gpy <= hotspot_y + 15) 
+			#asm
+					// gpx >= hotspot_x - 15 -> gpx + 15 >= hotspot_x
+					ld  a, (_hotspot_x)
+					ld  c, a
+					ld  a, (_gpx) 
+					add 12
+					cp  c
+					jp  c, _hotspots_done
+
+					// gpx <= hotspot_x + 15 -> hotspot_x + 15 >= gpx
+					ld  a, (_gpx)
+					ld  c, a
+					ld  a, (_hotspot_x)
+					add 12
+					cp  c
+					jp  c, _hotspots_done
+
+					// gpy >= hotspot_y - 15 -> gpy + 15 >= hotspot_y
+					ld  a, (_hotspot_y)
+					ld  c, a
+					ld  a, (_gpy)
+					add 12
+					cp  c 
+					jp  c, _hotspots_done
+
+					// gpy <= hotspot_y + 15 -> hotspot_y + 15 >= gpy
+					ld  a, (_gpy)
+					ld  c, a
+					ld  a, (_hotspot_y)
+					add 12
+					cp  c
+					jp  c, _hotspots_done
+			#endasm
+			{	
 				#ifdef ENABLE_CODE_HOOKS
 					latest_hotspot = hotspots [n_pant].tipo;
 				#endif
@@ -342,6 +399,11 @@ void main (void) {
 					hotspots [n_pant].act = 0;
 				}
 			}
+			#asm
+				._hotspots_done
+			#endasm
+			
+			// Code hooks
 			
 			#ifdef ENABLE_CODE_HOOKS
 				hook_mainloop ();
@@ -350,6 +412,8 @@ void main (void) {
 			// Update to screen
 			sp_UpdateNow();
 			
+			// Dead enemies
+
 			#ifdef PLAYER_CAN_FIRE
 				for (rdi = 0; rdi < 3; rdi ++)
 					if (en_an_morido [rdi] == 1) {
@@ -360,12 +424,24 @@ void main (void) {
 
 			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER)
 				// Flickering
-				if (player.estado & EST_PARP) {
-					player.ct_estado --;
-					if (player.ct_estado == 0) {
-						player.estado = EST_NORMAL;
-					}	
-				}
+				#asm
+					.player_flicker_done_check
+						ld  a, (_player + 23)		// player.estado
+						and EST_PARP
+						jr  z, player_flicker_check_done
+
+						ld  a, (_player + 24) 		// player.ct_estado
+						dec a
+						jr  nz, player_flicker_ct_write
+
+						xor a
+						ld  (_player + 23), a
+
+					.player_flicker_ct_write
+						ld  (_player + 24), a
+
+					.player_flicker_check_done
+				#endasm
 			#endif			
 			
 			// Flick screen checks and scripting related stuff

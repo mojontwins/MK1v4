@@ -208,7 +208,7 @@
 		text13, 							// Puedes pasar
 		text14, 							// Ramón el faraón
 		text15, text16, text17,				// Final
-		text18, text19 						// Más mensajes del altar
+		text18, text19,						// Más mensajes del altar
 		text20 								// Ya te abrí.
 	};
 
@@ -287,10 +287,41 @@
 	}
 
 	void redraw_from_buffer (void) {
-		rdx = 0; rdy = 0; for (gpit = 0; gpit < 150; gpit ++) {
-			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, map_buff [gpit]);
-			rdx += 2; if (rdx == 30) {rdx = 0; rdy += 2;}
-		}
+		#asm
+				ld  a, VIEWPORT_X
+				ld  (__x), a
+				ld  a, VIEWPORT_Y
+				ld  (__y), a
+				
+				xor a
+			.redraw_from_buffer_loop
+				ld  (_gpit), a
+
+				ld  bc, (_gpit)
+				ld  b, 0
+				ld  hl, _map_buff
+				add hl, bc
+				ld  a, (hl)
+				ld  (__t), a
+
+				call _draw_coloured_tile_do
+
+				ld  a, (__x)
+				add a, 2
+				cp  VIEWPORT_X + 30
+				jr  nz, redraw_from_buffer_set_x
+				ld  a, (__y)
+				add a, 2
+				ld  (__y), a
+				ld  a, VIEWPORT_X
+			.redraw_from_buffer_set_x
+				ld  (__x), a
+
+				ld  a, (_gpit)
+				inc a
+				cp  150
+				jr  nz, redraw_from_buffer_loop
+		#endasm
 	}
 
 	void show_text_box (unsigned char n) {
@@ -378,9 +409,9 @@
 	// Hooks
 
 	void hook_system_inits (void) {
-		sp_pinv = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 3, TRANSPARENT);
-		sp_AddColSpr (sp_pinv, sprite_2_b, TRANSPARENT);
-		sp_AddColSpr (sp_pinv, sprite_2_c, TRANSPARENT);
+		sp_pinv = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 3);
+		sp_AddColSpr (sp_pinv, sprite_2_b);
+		sp_AddColSpr (sp_pinv, sprite_2_c);
 		pinv_current_frame = pinv_next_frame = sprite_2_a;
 	}
 
@@ -621,8 +652,8 @@
 
 		// Carrying object
 		if (pinv) {
-			if (player.facing) rdx = gpx - 8; else rdx = gpx + 8;
-			rdy = gpy - 8;
+			if (player.facing) rdx = gpx - 4; else rdx = gpx + 4;
+			rdy = gpy - 4;
 			sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
 				VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
 			pinv_current_frame = pinv_next_frame;

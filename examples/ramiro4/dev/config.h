@@ -8,9 +8,9 @@
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W					6		//
-#define MAP_H					5		// Map dimmensions in screens
+#define MAP_H					6		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				18//12		// Initial screen
+#define SCR_INICIO				12		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -117,7 +117,7 @@
 //#define COUNT_KILLABLE_ON		2		// Count killable enemies on flag #N (per screen basis)
 //#define SCRIPTING_KEY_M				// Use M as the action key instead.
 //#define OBJECTS_ON_VAR		2		// If defined, only show objects if var # is set.
-#define OBJECT_COUNT			2		// Defines which FLAG will be used to store the object count.
+//#define OBJECT_COUNT			2		// Defines which FLAG will be used to store the object count.
 //#define REENTER_ON_ALL_OBJECTS		// If set, re-enter screen when all objects are got, instead of ending
 
 // Top view:
