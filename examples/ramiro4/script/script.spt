@@ -9,6 +9,12 @@
 # 3 - Trap Marisa
 # 4 - Trap Gustavo
 # 6	- Open pyramid
+# 10 - COIN_FLAG
+# 11 - Trap Sonia done
+# 12 - Trap Clemente done
+# 13 - Trap Marisa done
+# 14 - Trap Gustavo done
+# 15 - Trap number
 
 ENTERING GAME
 	IF TRUE
@@ -59,6 +65,19 @@ PRESS_FIRE AT SCREEN 2
 	END
 END
 
+ENTERING SCREEN 3
+	IF TRUE
+	THEN
+		SET FLAG 15 = 4
+	END
+
+	IF FLAG 14 = 1 
+	THEN
+		SET TILE (1, 5) = 46
+		SET TILE (2, 8) = 11
+	END
+END
+
 ## Trampa de Marisa la Sacerdotisa
 
 ENTERING SCREEN 10
@@ -81,6 +100,20 @@ PRESS_FIRE AT SCREEN 10
 	END
 END
 
+ENTERING SCREEN 16
+	IF TRUE
+	THEN 
+		SET FLAG 15 = 3
+	END IF
+
+	IF FLAG 13 = 1 
+	THEN
+		SET TILE (7, 2) = 46
+		SET TILE (6, 5) = 46
+		SET TILE (7, 8) = 11
+	END
+END
+
 ## Trampa de Clemente la Serpiente
 
 ENTERING SCREEN 19
@@ -96,7 +129,7 @@ ENTERING SCREEN 19
 	END
 END
 
-PRESS_FIRE AT SCREEN 10
+PRESS_FIRE AT SCREEN 19
 	IF PLAYER_TOUCHES 2, 2
 	THEN
 		EXTERN 66
@@ -118,7 +151,7 @@ ENTERING SCREEN 25
 	END
 END
 
-PRESS_FIRE AT SCREEN 10
+PRESS_FIRE AT SCREEN 25
 	IF PLAYER_TOUCHES 2, 2
 	THEN
 		EXTERN 65

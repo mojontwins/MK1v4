@@ -13,10 +13,11 @@
 	// bit 3 = trap but with coins
 	unsigned char map_behaviours [] = {
 		 0,  0,  0,  5,  0,  0, 
-		 0,  0,  0,  3,  1,  1,
+		 0,  0,  0,  3,  3,  1,
 		 0,  0,  3,  3,  5,  1,
 		13,  1,  1,  1,  1,  1,
-		13,  1,  1,  1,  1,  1
+		13,  1,  1,  1,  1,  1,
+		 0,  1,  1,  1,  1,  1
 	}; 
 
 	// Evil eye things
@@ -209,7 +210,8 @@
 		text14, 							// Ramón el faraón
 		text15, text16, text17,				// Final
 		text18, text19,						// Más mensajes del altar
-		text20 								// Ya te abrí.
+		text20, 							// Ya te abrí.
+		text21, text22, text23, text24 		// Gracias por el objeto
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -326,6 +328,7 @@
 
 	void show_text_box (unsigned char n) {
 		saca_a_todo_el_mundo_de_aqui ();
+		sp_MoveSprAbs (sp_pinv, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
 
 		gp_gen = texts [n];
 
@@ -417,7 +420,7 @@
 
 	void hook_init_game (void) {
 		pinv = 0;
-		//pinv = 1; pinv_next_frame = object_cells [pinv];
+		pinv = 3; pinv_next_frame = object_cells [pinv];
 
 		pofrendas = 0; pofrendas_old = 0xff;
 		ofrendas_idx = 0;
@@ -483,6 +486,7 @@
 
 		// To make trap active, we detect the player got a new obj.
 		if (trap_screen && player.objs != objs_old) {
+			flags [10 + flags [15]] = 1;
 			trap_active = 1;
 			seed = n_pant + 1;
 			player.life += BLOCK_HIT;
@@ -601,39 +605,37 @@
 
 						rdx = (gpx + 8) >> 4; rdy = (gpy + 8) >> 4;
 
-						if (rdx == _trap_bx && rdy == _trap_by) {
-							if (trap_coins) { 
-								flags [COIN_FLAG] ++;
-								peta_el_beeper (5);
-								player.life += COINS_REFILL;
-								_trap_by = 0xff;
-							} else {
-								draw_falling_block ();
-						
-								if (player.estado != EST_PARP) {
-									// Crushed!
-									trap_kill ();
-
-									// Reenter & reset
-									hotspots [n_pant].act = 1;
-									player.objs --;
-									//draw_scr ();
-									on_pant = 0xff;
-									break;
-								} else {
-									player.y -= 16<<6;
-								}
-							}
+						if (rdx == _trap_bx && rdy == _trap_by && trap_coins) {
+							flags [COIN_FLAG] ++;
+							peta_el_beeper (5);
+							player.life += COINS_REFILL;
+							_trap_by = 0xff;
 						} else if (map_attr [rda] == 1) {
 							_trap_by = 0xff;
 						} else {
 							draw_falling_block ();
 						
 							if (map_attr [rda + 15] & 12) {
+								if (rdx == _trap_bx && rdy == _trap_by) {
+									if (player.estado != EST_PARP) {
+										// Crushed!
+										trap_kill ();
+
+										// Reenter & reset
+										hotspots [n_pant].act = 1;
+										player.objs --;
+										on_pant = 0xff;
+										flags [10 + flags [15]] = 0;
+										break;
+									} else {
+										player.y -= 16<<6;
+									}
+								}
 								map_attr [rda] = comportamiento_tiles [_trap_bt];
 								map_buff [rda] = _trap_bt;
 								_trap_by = 0xff; 
 							}
+
 						}
 
 						trap_by [gpit] = _trap_by;
@@ -654,10 +656,11 @@
 		if (pinv) {
 			if (player.facing) rdx = gpx - 4; else rdx = gpx + 4;
 			rdy = gpy - 4;
-			sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
-				VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
-			pinv_current_frame = pinv_next_frame;
-		}
+		} else rdx = 240;
+
+		sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
+			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+		pinv_current_frame = pinv_next_frame;
 
 		// Offers
 		if (latest_hotspot == 2) {

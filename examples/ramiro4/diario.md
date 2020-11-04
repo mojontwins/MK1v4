@@ -140,3 +140,19 @@ Los guardianes lanzarán un EXTERN N con N-64 -> guardían (1, 2, 3, 4). Se segu
 	}
 ```
 
+## Trampas clausuradas
+
+¿Qué pasa si alguien vuelve a las trampas después de haberlas completado? No podrá salir. Ahora tengo que ver como controlo esto.
+
+Si hablas con un personaje que te abre una trampa y almaceno cual es no me vale tampoco porque bien te puedes ir a por otra trampa. Tiene que ser al coger el objeto pero ¿Cómo sé en qué trampa estoy sin ocupar un montón? Si pongo el número de trampa en un flag al entrar en la pantalla desde el script lo podría tener. Y con esto, la próxima vez que entre puedo tener un modificador que pinte cosas.
+
+Este es el proceso:
+
+- En el entering de la pantalla ponemos FLAG 15 al número de la trampa (1-4).
+- Al coger el objeto, en `custom.h` se pone a 1 el flag 10 + numero de trampa.
+- Si se reinicia la trampa, se pone a 0 el flag.
+- En el entering de la pantalla se mira el flag 10 + numero de trampa para pintar un cierre.
+
+## Mejoras de pulido
+
+Tengo que integrar el `sp_UpdateNow` con parámetro para pasar de los sprites, porque si no lo de los cuadros de texto queda super cutre. Tengo que modificar msc para que los `SET TILE` ocupe 3 bytes en vez de 4.

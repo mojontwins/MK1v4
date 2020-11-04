@@ -10,7 +10,7 @@
 #define MAP_W					6		//
 #define MAP_H					6		// Map dimmensions in screens
 #define TOTAL_SCREENS			25		// 
-#define SCR_INICIO				12		// Initial screen
+#define SCR_INICIO				10//12		// Initial screen
 #define PLAYER_INI_X			3		//
 #define PLAYER_INI_Y			3		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -46,6 +46,7 @@
 //#define DEACTIVATE_EVIL_ZONE			// Zones kill you after a while. Read docs or ask na_th_an
 #define EVIL_ZONE_FRAME_COUNT	8		// For countdown in an evil zone.
 #define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing
+#define EVIL_ZONE_FREQ 			3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 #define EVIL_ZONE_CONDITIONAL 			// Active if scenery_info.evil_zone_active
 //#define PLAYER_BOUNCES				// If defined, collisions make player bounce
 #define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
@@ -59,7 +60,7 @@
 #define USE_COINS						// Coin engine activated
 #define COIN_TILE				18		// Coin is tile #X
 //#define COIN_BEH 				16 		// Detect coin by behaviour rather than tile nº
-#define COIN_FLAG				15		// Coins are counted in flag #N
+#define COIN_FLAG				10		// Coins are counted in flag #N
 #define COINS_REFILL 			1		// If defined, add this to player.life
 //#define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
 //#define COINS_DEACTIVABLE				// Coins can be hidden.

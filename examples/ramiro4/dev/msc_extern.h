@@ -29,6 +29,7 @@ void do_extern_action (unsigned char n) {
 			show_text_box (13);
 			on_pant = 0xff; 		// Force reenter
 			flags [which_character] = 1;
+			pinv = 0;
 			peta_el_beeper (6);
 		}
 	}

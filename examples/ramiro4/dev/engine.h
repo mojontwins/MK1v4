@@ -465,7 +465,7 @@ unsigned char move (void) {
 		#else
 			// If top-down view, vertical movement = horizontal movement.
 			
-			if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0))
+			if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0))
 				if (player.vy > 0) {
 					player.vy -= player.rx;
 					if (player.vy < 0)
@@ -609,9 +609,9 @@ unsigned char move (void) {
 	#ifdef PLAYER_NO_INERTIA
 		if ((pad0 & sp_LEFT) == 0) player.vx = -PLAYER_CONST_V;
 		if ((pad0 & sp_RIGHT) == 0) player.vx = PLAYER_CONST_V;
-		if ( ! ((pad0 & sp_LEFT) == 0 || (pad0 & sp_RIGHT) == 0)) player.vx = 0;
+		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
 	#else
-		if ( ! ((pad0 & sp_LEFT) == 0 || (pad0 & sp_RIGHT) == 0))
+		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0)
 			if (player.vx > 0) {
 				player.vx -= player.rx;
 				if (player.vx < 0)
@@ -800,10 +800,14 @@ unsigned char move (void) {
 				&& scenery_info.evil_zone_active
 			#endif
 		) {
-			if (player.killingzone_beepcount >= EVIL_ZONE_BEEPS_COUNT || !scenery_info.evil_kills_slowly) {
-				if (!(player.estado & EST_PARP)) {
+			if (player.killingzone_beepcount >= EVIL_ZONE_BEEPS_COUNT || 0 == scenery_info.evil_kills_slowly) {
+				if (0 == (player.estado & EST_PARP)
+					#ifdef EVIL_ZONE_FREQ
+						&& 0 == (maincounter & EVIL_ZONE_FREQ)
+					#endif
+				) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
-					if (!player.killingzone_framecount) peta_el_beeper (3);
+					if (0 == player.killingzone_framecount) peta_el_beeper (3);
 					player.life --;	
 				}
 			} else {
@@ -862,7 +866,7 @@ unsigned char move (void) {
 			ld  (_rdi), a
 		#endasm
 
-		if (!player.possee && !player.gotten) {
+		if (0 == player.possee && 0 == player.gotten) {
 			rdd = 3;
 		} else {
 			if (player.vx == 0) {
@@ -978,7 +982,7 @@ void draw_scr_background (void) {
 		for (gpit = 0; gpit < 150; gpit ++) {
 			rdd = *gp_gen ++;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdd == COIN_TILE && !scenery_info.show_coins) rdd = COIN_TILE_DEACT_SUBS;
+				if (rdd == COIN_TILE && 0 == scenery_info.show_coins) rdd = COIN_TILE_DEACT_SUBS;
 			#endif
 			map_attr [rdi] = comportamiento_tiles [rdd];
 			map_buff [rdi] = rdd;
@@ -998,11 +1002,11 @@ void draw_scr_background (void) {
 			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
+				if (rdt1 == COIN_TILE && 0 == scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
 			#endif
 			rdt2 = rdd & 15;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt2 == COIN_TILE && !scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
+				if (rdt2 == COIN_TILE && 0 == scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
 			map_attr [rdi] = comportamiento_tiles [tileoffset + rdt1];
 			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, tileoffset + rdt1);
@@ -1032,11 +1036,11 @@ void draw_scr_background (void) {
 			rdd = *gp_gen ++;
 			rdt1 = (rdd >> 4) + tileoffset;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
+				if (rdt1 == COIN_TILE && 0 == scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
 			#endif
 			rdt2 = (rdd & 15) + tileoffset;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt2 == COIN_TILE && !scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
+				if (rdt2 == COIN_TILE && 0 == scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
 			_n = rdt1; draw_and_advance ();
 			_n = rdt2; draw_and_advance ();
@@ -1049,11 +1053,11 @@ void draw_scr_background (void) {
 			rdd = *gp_gen ++;
 			rdt1 = rdd >> 4;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt1 == COIN_TILE && !scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
+				if (rdt1 == COIN_TILE && 0 == scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
 			#endif
 			rdt2 = rdd & 15;
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt2 == COIN_TILE && !scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
+				if (rdt2 == COIN_TILE && 0 == scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
 			map_attr [rdi] = comportamiento_tiles [rdt1];
 			#ifndef NO_ALT_BG
@@ -1129,7 +1133,7 @@ void draw_scr_background (void) {
 		// Is there a bolt which has been already opened in this screen?
 		// If so, delete it:
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
-			if (cerrojos [gpit].np == n_pant && !cerrojos [gpit].st) {
+			if (cerrojos [gpit].np == n_pant && 0 == cerrojos [gpit].st) {
 				draw_coloured_tile (VIEWPORT_X + (cerrojos [gpit].x << 1), VIEWPORT_Y + (cerrojos [gpit].y << 1), 0);
 				rdi = 15 * cerrojos [gpit].y + cerrojos [gpit].x;
 				map_attr [rdi] = 0;
@@ -1407,7 +1411,7 @@ void mueve_bicharracos (void) {
 			en_cx = _en_x;
 			en_cy = _en_y;
 			#ifdef RANDOM_RESPAWN
-				if (!en_an_fanty_activo [enit])
+				if (0 == en_an_fanty_activo [enit])
 			#endif
 			{
 				_en_x += _en_mx;
@@ -1508,15 +1512,15 @@ void mueve_bicharracos (void) {
 				// Collision with enemy
 				
 				#ifdef RANDOM_RESPAWN
-					} else if (!en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
+					} else if (0 == en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
 				#else
-					} else if (!en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
+					} else if (0 == en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
 				#endif
 			#else
 				#ifdef RANDOM_RESPAWN
-					if (!en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
+					if (0 == en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
 				#else
-					if (!en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
+					if (0 == en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
 				#endif
 			#endif			
 			{
@@ -1556,7 +1560,7 @@ void mueve_bicharracos (void) {
 					#ifdef PLAYER_BOUNCES
 						#ifndef PLAYER_MOGGY_STYLE	
 							#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-								if (!en_an_fanty_activo [enit]) {
+								if (0 == en_an_fanty_activo [enit]) {
 									// Bouncing!
 									if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
 									if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
@@ -1577,7 +1581,7 @@ void mueve_bicharracos (void) {
 							// Bouncing:
 							
 							// x
-							if (_en_mx != 0) {
+							if (_en_mx) {
 								if (gpx < en_ccx) {
 									player.vx = - (abs (_en_mx + _en_mx) << 7);
 								} else {
@@ -1586,7 +1590,7 @@ void mueve_bicharracos (void) {
 							}
 							
 							// y
-							if (_en_my != 0) {
+							if (_en_my) {
 								if (gpy < en_ccy) {
 									player.vy = - (abs (_en_my + _en_my) << 7);
 								} else {
@@ -1647,7 +1651,7 @@ void mueve_bicharracos (void) {
 						switch (en_an_state [enit]) {
 							case TYPE_6_IDLE:
 								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && !player_hidden ()) 
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
 								#else
 									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
 								#endif
@@ -1683,7 +1687,7 @@ void mueve_bicharracos (void) {
 									en_an_vy [enit] -= FANTY_A;
 								
 								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && !player_hidden ()) 
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
 								#else
 									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
 								#endif
