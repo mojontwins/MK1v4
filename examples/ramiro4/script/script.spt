@@ -4,16 +4,16 @@
 
 # flags:
 # 0 - Al pullpose no repeat
-# 1	- Open pyramid
-# 2 - Trap Gustavo
-# 3 - Trap Sonia
-# 4 - Trap Clemente
-# 5 - Trap Marisa
+# 1 - Trap Sonia
+# 2 - Trap Clemente
+# 3 - Trap Marisa
+# 4 - Trap Gustavo
+# 6	- Open pyramid
 
 ENTERING GAME
 	IF TRUE
 	THEN
-		SET FLAG 1 = 1
+		SET FLAG 6 = 1
 	END
 END
 
@@ -32,18 +32,20 @@ PRESS_FIRE AT SCREEN 0
 	IF FLAG 0 = 0
 	THEN
 		EXTERN 14
-		SET FLAG 1 = 1
+		SET FLAG 6 = 1
 		SET FLAG 0 = 1
 	END
 END
 
+## Trampa de Gustavo el Esclavo
+
 ENTERING SCREEN 2
 	IF TRUE 
 	THEN
-		SET TILE (9, 7) = 25
+		SET TILE (9, 7) = 26
 	END
 
-	IF FLAG 2 = 1
+	IF FLAG 4 = 1
 	THEN
 		SET TILE (14, 1) = 0
 		SET TILE (14, 2) = 0
@@ -53,9 +55,77 @@ END
 PRESS_FIRE AT SCREEN 2
 	IF PLAYER_TOUCHES 9, 7
 	THEN
+		EXTERN 68
+	END
+END
+
+## Trampa de Marisa la Sacerdotisa
+
+ENTERING SCREEN 10
+	IF TRUE
+	THEN
+		SET TILE (7, 5) = 25
+	END
+
+	IF FLAG 3 = 1
+	THEN
+		SET TILE (5, 7) = 0
+		SET TILE (5, 8) = 0
+	END
+END
+
+PRESS_FIRE AT SCREEN 10
+	IF PLAYER_TOUCHES 7, 5
+	THEN
+		EXTERN 67
+	END
+END
+
+## Trampa de Clemente la Serpiente
+
+ENTERING SCREEN 19
+	IF TRUE
+	THEN
+		SET TILE (2, 2) = 24
+	END
+
+	IF FLAG 2 = 1
+	THEN
+		SET TILE (0, 1) = 0
+		SET TILE (0, 2) = 0
+	END
+END
+
+PRESS_FIRE AT SCREEN 10
+	IF PLAYER_TOUCHES 2, 2
+	THEN
+		EXTERN 66
+	END
+END
+
+## Trampa de Sonia la Momia
+
+ENTERING SCREEN 25
+	IF TRUE
+	THEN
+		SET TILE (2, 2) = 23
+	END
+
+	IF FLAG 1 = 1
+	THEN
+		SET TILE (0, 1) = 0
+		SET TILE (0, 2) = 0
+	END
+END
+
+PRESS_FIRE AT SCREEN 10
+	IF PLAYER_TOUCHES 2, 2
+	THEN
 		EXTERN 65
 	END
 END
+
+## Altar de las ofrendas
 
 ENTERING SCREEN 13
 	IF TRUE

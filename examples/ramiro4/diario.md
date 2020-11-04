@@ -115,3 +115,28 @@ Puedo tener un array indexado por `n_pant / 6` que se pinte si `n_pant > 5` en e
 
 Necesito 4 flags para marcar que las ofrendas correspondientes han sido entregadas y que las trampas están abiertas. En el mapa las puertas estarán cerradas pero las tendré que abrir de acuerdo a estos flags.
 
+Los guardianes lanzarán un EXTERN N con N-64 -> guardían (1, 2, 3, 4). Se seguirá esta lógica:
+
+- Si flags [g] = 1 -> texto20.
+- Si inv = 0 -> texto 8+g
+- Si inv != g -> texto 4+g
+- Si inv == g -> texto20+g, texto 13
+
+```c
+	// Work with characters n-64:
+	which_character = n - 64;
+	if (flags [which_character]) {
+		show_text_box (20);
+	} else if (pinv == 0) {
+		show_text_box (8 + which_character);
+	} else if (pinv != which_character) {
+		show_text_box (4 + which_character);
+	} else {
+		show_text_box (20 + which_character);
+		show_text_box (13);
+		on_pant = 0xff; 		// Force reenter
+		flags [which_character] = 1;
+		peta_el_beeper (6);
+	}
+```
+

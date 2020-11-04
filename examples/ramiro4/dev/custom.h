@@ -177,6 +177,29 @@
 	unsigned char text19 [] = "HAZ BUEN USO DE LO%"
 							  "QUE TE HE DADO!";
 
+	unsigned char text20 [] = "YA TE ABRI. AHORA%"
+							  "JUYE... JUYE!!";
+
+	unsigned char text21 [] = "OH, QUE SUAVE ES!%"
+							  "Y AHORA, PORFA, VETE%"
+							  "QUE HARE CACA Y ME%"
+							  "LIMPIARE EL OJETE";
+
+	unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
+							  "CON FEO SU SONIDO%"
+							  "EN SOLO UNOS MITUTOS%"
+							  "YA ESTARE DORMIDO%";
+
+	unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
+							  "RECIBO CON ALBOROTO%"
+							  "TU BELLO REGALO: UNAS%"
+							  "BRAGAS PA MI TOTO";
+
+	unsigned char text24 [] = "QUE LUSTROSO QUEDARA%"
+							  "EL CUERO DE MI ARNES%"
+							  "IRE VISITAR A MARISA%"
+							  "A CHUPARLE LOS PIES";
+
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
 		text1, text2, text3, text4, 		// Altar describe objetos
@@ -186,6 +209,7 @@
 		text14, 							// Ramón el faraón
 		text15, text16, text17,				// Final
 		text18, text19 						// Más mensajes del altar
+		text20 								// Ya te abrí.
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -267,7 +291,6 @@
 			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, map_buff [gpit]);
 			rdx += 2; if (rdx == 30) {rdx = 0; rdy += 2;}
 		}
-		sp_UpdateNow ();
 	}
 
 	void show_text_box (unsigned char n) {

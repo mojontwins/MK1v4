@@ -2,6 +2,8 @@
 // Add code here at your wish.
 // Will be run from scripting (EXTERN n)
 
+unsigned char which_character;
+
 void do_extern_action (unsigned char n) {
 	if (n == 128) {
 		if (pinv) {
@@ -15,9 +17,19 @@ void do_extern_action (unsigned char n) {
 		show_text_box (n);
 	} else {
 		// Work with characters n-64:
-		// 1 - Gustavo
-		// 2 - Sonia
-		// 3 - Clemente
-		// 4 - Marisa
+		which_character = n - 64;
+		if (flags [which_character]) {
+			show_text_box (20);
+		} else if (pinv == 0) {
+			show_text_box (8 + which_character);
+		} else if (pinv != which_character) {
+			show_text_box (4 + which_character);
+		} else {
+			show_text_box (20 + which_character);
+			show_text_box (13);
+			on_pant = 0xff; 		// Force reenter
+			flags [which_character] = 1;
+			peta_el_beeper (6);
+		}
 	}
 }
