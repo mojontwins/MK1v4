@@ -520,12 +520,12 @@
 	"buffers":
 	[
 		{
-			"file": "examples/ramiro4/dev/mainloop.h",
+			"file": "/C/Users/jcastano/Desktop/bbcode.php",
 			"settings":
 			{
-				"buffer_size": 14413,
+				"buffer_size": 18800,
 				"encoding": "UTF-8",
-				"line_ending": "Windows"
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -613,15 +613,24 @@
 	],
 	"file_history":
 	[
+		"/D/git/MK1/examples/ramiro4/dev/mainloop.h",
+		"/D/git/MK1/lib/splib2/cwrapper/sp_CreateSpr.c",
+		"/D/git/MK1/lib/splib2/sprites/SPCreateSpr.asm",
+		"/D/git/MK1/lib/splib2/sprites/SPAddColSpr.asm",
+		"/D/git/MK1/lib/splib2/cwrapper/sp_AddColSpr.c",
+		"/D/git/MK1/lib/splib2/spritepack.h",
+		"/D/git/MK1/lib/splib2/miscellaneous/SPInitialize.asm",
+		"/D/git/MK1/lib/splib2/updater/SPUpdateNow.asm",
+		"/D/git/MK1/lib/splib2/Copia de sp.lst",
+		"/D/git/MK1/lib/splib2/Makefile.bat",
+		"/D/git/MK1/examples/ramiro4/dev/custom.h",
 		"/D/git/MK1/examples/ramiro4/dev/churromain.c",
 		"/D/git/MK1/examples/ramiro4/dev/engine.h",
 		"/D/git/MK1/examples/ramiro4/dev/config.h",
-		"/D/git/MK1/examples/ramiro4/dev/mainloop.h",
 		"/D/Proyectos/2019/20190827a - Script para Sympa/install-php--20200210.txt",
 		"/C/Users/jcastano/AppData/Local/Temp/7zO825E904B/auto_max_att_size.php",
 		"/D/git/MK1/examples/ramiro4/script/script.spt",
 		"/D/git/MK1/examples/ramiro4/dev/comp.bat",
-		"/D/git/MK1/examples/ramiro4/dev/custom.h",
 		"/D/git/MK1/examples/ababol2_demo/dev/printer.h",
 		"/D/git/MK1/examples/ramiro4/dev/msc_extern.h",
 		"/D/git/MK1/examples/ramiro4/diario.md",
@@ -731,16 +740,7 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/avelsieve/localization/en_US.inc",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/avelsieve/localization/es_ES.inc",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_driver_gnupg.php",
-		"/C/Users/jcastano/Desktop/LDAP Browser/_DESARROLLO ON - corporativo.cfg",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_engine.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/config/mime.types",
-		"/D/Proyectos/2020/20200720b - Cambiar ubicación de certificados PGP Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/README",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_error.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/config.inc.php.dist",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/composer.json"
+		"/C/Users/jcastano/Desktop/LDAP Browser/_DESARROLLO ON - corporativo.cfg"
 	],
 	"find":
 	{
@@ -751,6 +751,7 @@
 		"height": 128.0,
 		"where_history":
 		[
+			"D:\\git\\MK1\\lib\\splib2",
 			"D:\\git\\MK1\\examples\\ramiro4\\dev",
 			"D:\\git\\MK1\\src\\dev",
 			"D:\\git\\MK1\\examples\\limite\\dev",
@@ -877,8 +878,7 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program\\lib\\Roundcube",
 			"D:\\Proyectos\\remote\\desccobuz05",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\bin",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar\\program"
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar"
 		]
 	},
 	"find_state":
@@ -886,6 +886,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"pinv",
+			"sp_Huff",
+			"Huff",
+			"tempcolour",
+			"tempgraphic",
+			"af'",
+			", TRANSPARENT",
 			"mueve_bicharracos",
 			"size_limit",
 			"sp_ClearRect",
@@ -1006,14 +1013,7 @@
 			"list_",
 			"refina sus",
 			"organismo",
-			"facturacion",
-			"admin",
-			"facturacion",
-			"gc_handlers",
-			"gc_db",
-			"delete from",
-			"session",
-			"delete from session"
+			"facturacion"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1021,6 +1021,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"",
 			"en_an_\\2 [\\1]",
 			"en_y",
 			"en_x",
@@ -1147,8 +1148,7 @@
 			"config",
 			"F8",
 			"DB",
-			"$patata",
-			"bookmarks"
+			"$patata"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1164,19 +1164,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "examples/ramiro4/dev/mainloop.h",
+					"file": "/C/Users/jcastano/Desktop/bbcode.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14413,
+						"buffer_size": 18800,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								356,
-								356
+								2740,
+								2740
 							]
 						],
 						"settings":
@@ -1184,11 +1184,11 @@
 							"incomplete_sync": null,
 							"remote_loading": false,
 							"synced": false,
-							"syntax": "Packages/C++/C++.sublime-syntax",
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 820.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1204,7 +1204,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 48.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -1302,7 +1302,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 218.0,
+	"side_bar_width": 239.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
