@@ -13,9 +13,9 @@
 	// bit 3 = trap but with coins
 	unsigned char map_behaviours [] = {
 		 0,  0,  0,  5,  0,  0, 
-		 0,  0,  0,  3,  3,  1,
+		 0,  0,  0,  3,  1,  1,
 		 0,  0,  3,  3,  5,  1,
-		13,  1,  1,  1,  1,  1,
+		13,  1,  1,  3,  3,  1,
 		13,  1,  1,  1,  1,  1,
 		 0,  1,  1,  1,  1,  1
 	}; 
@@ -144,8 +144,7 @@
 							  "PERO EL CUERO ES MI%"
 							  "VICIO...";
 
-	unsigned char text13 [] = "JUSTO LO QUE QUERIA!%"
-							  "PUEDES PASAR.";
+	unsigned char text13 [] = "";
 
 	unsigned char text14 [] = "VAYA INSISTENCIA, TE%"
 							  "ABRO MI PIRAMIDE,%"
@@ -330,6 +329,17 @@
 		saca_a_todo_el_mundo_de_aqui ();
 		sp_MoveSprAbs (sp_pinv, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
 
+		// Validate whole screen so sprites stay on next update
+		#asm
+				LIB SPValidate
+				ld  c, VIEWPORT_X
+				ld  b, VIEWPORT_Y
+				ld  d, VIEWPORT_X+29
+				ld  e, VIEWPORT_Y+19
+				ld  iy, fsClipStruct
+				call SPValidate
+		#endasm
+
 		gp_gen = texts [n];
 
 		// Text renderer will read the string and
@@ -420,7 +430,7 @@
 
 	void hook_init_game (void) {
 		pinv = 0;
-		pinv = 3; pinv_next_frame = object_cells [pinv];
+		//pinv = 3; pinv_next_frame = object_cells [pinv];
 
 		pofrendas = 0; pofrendas_old = 0xff;
 		ofrendas_idx = 0;
@@ -598,9 +608,9 @@
 						rda = _trap_bx + (_trap_by << 4) - _trap_by;
 
 						// Make fall
-						if (_trap_by) map_attr [rda] = 0;
+						if (_trap_by)				
+							set_map_tile (_trap_bx, _trap_by, map_buff [rda], 0);
 						
-						set_map_tile (_trap_bx, _trap_by, map_buff [rda], 0);
 						_trap_by ++; rda += 15;
 
 						rdx = (gpx + 8) >> 4; rdy = (gpy + 8) >> 4;
@@ -643,9 +653,10 @@
 						// Finally
 						if (flags [COIN_FLAG] == 30) {
 							// Deativate trap!
-							sp_UpdateNow ();
+							scenery_info.allow_type_6 = 0;
 							peta_el_beeper (8);
-							on_pant = 0xff;
+							trap_active = 0;
+							draw_scr_background ();
 						} 
 					}
 				}

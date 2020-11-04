@@ -26,7 +26,7 @@ void do_extern_action (unsigned char n) {
 			show_text_box (4 + which_character);
 		} else {
 			show_text_box (20 + which_character);
-			show_text_box (13);
+			draw_text (LINE_OF_TEXT_X + 1, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, "CRIPTA ABIERTA! PUEDES PASAR");
 			on_pant = 0xff; 		// Force reenter
 			flags [which_character] = 1;
 			pinv = 0;
