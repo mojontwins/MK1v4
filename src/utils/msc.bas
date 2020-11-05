@@ -1,4 +1,4 @@
-' Parser y compilador para los scripts de la churrera 3.
+' Parser y compilador para los scripts de de MTE MK1 v4.
 ' Copyleft 2010, 2011 The Mojon Twins, los masters del código guarro.
 ' Compilar con freeBasic (http://www.freebasic.net).
 
@@ -490,7 +490,7 @@ maxpants = pval (command (3))
 
 useFlipFlops = inCommand ("flipflops")
 
-print "msc para MTE MK1 v4.7"
+print "msc para MTE MK1 v4"
 
 if command (2) = "" or maxpants = 0 then
 	print "uso: msc input output maxpants [flipflops]"
@@ -596,7 +596,7 @@ f = FreeFile
 open "msc-config.h" for output as #f
 
 print #f, "// msc.h"
-print #f, "// Generado por Mojon Script Compiler de la Churrera"
+print #f, "// Generado por Mojon Script Compiler de MTE MK1 v4"
 print #f, "// Copyleft 2011 The Mojon Twins"
 print #f, " "
 If clausulasUsed (&H1) Or clausulasUsed (&H2) Then
@@ -618,7 +618,7 @@ close #f
 
 open outFileName for output as #f
 print #f, "// msc.h"
-print #f, "// Generado por Mojon Script Compiler de la Churrera"
+print #f, "// Generado por Mojon Script Compiler de MTE MK1 v4"
 print #f, "// Copyleft 2011 The Mojon Twins"
 print #f, " "
 print #f, "// Script data & pointers"

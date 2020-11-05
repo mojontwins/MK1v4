@@ -1,6 +1,6 @@
 # Diario (o postmortem, depende de cuando lo leas)
 
-¿Por qué estoy haciendo este juego en la Churrera 4 en lugar de en v5 o en la v6 WIP? Por dos razones: *dat Ramiro vives*, y porque hacer Ramiro en v4 es muy sencillo, ya que v4 era, esencialmente, el motor de Ramiro.
+¿Por qué estoy haciendo este juego en MTE MK1 v4 en lugar de en v5 o en la v6 WIP? Por dos razones: *dat Ramiro vives*, y porque hacer Ramiro en v4 es muy sencillo, ya que v4 era, esencialmente, el motor de Ramiro.
 
 He reescrito partes y pasado funciones auxiliares a ensamble. Todo es más fluido, pero se comporta igual que el original, que era lo importante (*dat Ramiro vibes*).
 
@@ -16,7 +16,7 @@ Cada habitación tiene asignado un byte de atributo que sirve para decidir con c
 
 ## El ojo de Horus
 
-En este juego se usan las cosas de la Churrera 4 que se metieron con calzador para los ramiros originales, pero jamás se activará el estado `kill_slowly`. Este estado era el que te otorgaba el *hechizo postizo* y hacía que las *evil zones* mataran más despacio. Aquí no. Cuando el ojo está abierto (estado 2) se activarán las *evil zones*. Para que esto sea viable, se ha definido `EVIL_ZONE_CONDITIONAL` de forma que las *evil zones* sólo restarán vidas si `scenery_info.evil_zone_active` vale 1. El ojo de Horus no es más que una simple máquina de estados con tiempos diferentes para cada estado, definidos en `evil_eye_state_cts`, que se pinta con los tiles definidos en `evil_eye_state_tiles`. 
+En este juego se usan las cosas de MTE MK1 v4 que se metieron con calzador para los ramiros originales, pero jamás se activará el estado `kill_slowly`. Este estado era el que te otorgaba el *hechizo postizo* y hacía que las *evil zones* mataran más despacio. Aquí no. Cuando el ojo está abierto (estado 2) se activarán las *evil zones*. Para que esto sea viable, se ha definido `EVIL_ZONE_CONDITIONAL` de forma que las *evil zones* sólo restarán vidas si `scenery_info.evil_zone_active` vale 1. El ojo de Horus no es más que una simple máquina de estados con tiempos diferentes para cada estado, definidos en `evil_eye_state_cts`, que se pinta con los tiles definidos en `evil_eye_state_tiles`. 
 
 ## Las trampas
 

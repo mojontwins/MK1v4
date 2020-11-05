@@ -1,6 +1,6 @@
-# El Vampiro Ramiro en el bosque del suspiro
-# Copyleft 2013 by The Mojon Twins.
-# Churrera 4.7
+# El Vampiro Ramiro y el misterio del Papiro
+# Copyleft 2013, 2020 by The Mojon Twins.
+# MTE MK1 4.8
 
 # flags:
 # 0 - Al pullpose no repeat
@@ -15,13 +15,6 @@
 # 13 - Trap Marisa done
 # 14 - Trap Gustavo done
 # 15 - Trap number
-
-ENTERING GAME
-	IF TRUE
-	THEN
-		SET FLAG 6 = 1
-	END
-END
 
 ENTERING SCREEN 0
 	IF TRUE
@@ -114,6 +107,32 @@ ENTERING SCREEN 16
 	END
 END
 
+## Altar de las ofrendas
+
+ENTERING SCREEN 13
+	IF TRUE
+	THEN
+		     #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		TEXT "    ALTAR DE LAS OFRENDAS!"
+		SET TILE (9, 8) = 21
+		SET TILE (10, 8) = 22
+	END 
+
+	IF FLAG 6 = 1
+	THEN
+		SET TILE (3, 7) = 0
+		SET TILE (3, 8) = 0
+	END
+END
+
+PRESS_FIRE AT SCREEN 13
+	IF PLAYER_IN_X_TILES 9, 10
+	IF PLAYER_IN_Y_TILES 8, 8
+	THEN
+		EXTERN 128
+	END
+END
+
 ## Trampa de Clemente la Serpiente
 
 ENTERING SCREEN 19
@@ -158,26 +177,11 @@ PRESS_FIRE AT SCREEN 25
 	END
 END
 
-## Altar de las ofrendas
+## Remove when finished...
 
-ENTERING SCREEN 13
+ENTERING GAME
 	IF TRUE
 	THEN
-		SET TILE (9, 8) = 21
-		SET TILE (10, 8) = 22
-	END 
-
-	IF FLAG 6 = 1
-	THEN
-		SET TILE (3, 7) = 0
-		SET TILE (3, 8) = 0
-	END
-END
-
-PRESS_FIRE AT SCREEN 13
-	IF PLAYER_IN_X_TILES 9, 10
-	IF PLAYER_IN_Y_TILES 8, 8
-	THEN
-		EXTERN 128
+		SET FLAG 6 = 1
 	END
 END
