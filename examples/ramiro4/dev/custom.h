@@ -16,7 +16,7 @@
 		 0,  0,  0,  3,  1,  1,
 		 0,  0,  3,  3,  5,  1,
 		13,  1,  1,  3,  3,  1,
-		13,  1,  1,  1,  1,  1,
+		13,  1,  3,  1,  1,  1,
 		 0,  1,  1,  1,  1,  1
 	}; 
 
@@ -144,7 +144,10 @@
 							  "PERO EL CUERO ES MI%"
 							  "VICIO...";
 
-	unsigned char text13 [] = "";
+	unsigned char text13 [] = "RECUPERA LOS CUATRO%"
+							  "TROZOS DEL PAPIRO%"
+							  "Y VUELVE AQUI PARA%"
+							  "HACER EL HECHIZO";
 
 	unsigned char text14 [] = "VAYA INSISTENCIA, TE%"
 							  "ABRO MI PIRAMIDE,%"

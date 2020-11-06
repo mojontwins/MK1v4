@@ -12,6 +12,7 @@ void do_extern_action (unsigned char n) {
 			pinv = ofrendas_order [ofrendas_idx ++];
 			pinv_next_frame = object_cells [pinv];
 			show_text_box (pinv);
+			pofrendas --;
 		} else show_text_box (0);
 	} else if (n < 65) {
 		show_text_box (n);

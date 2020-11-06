@@ -47,7 +47,7 @@ Sub stringToArray (in As String)
 	Dim m as Integer
 	Dim index as Integer
 	Dim character as String * 1
-	Dim comillas As Integer
+	Dim As Integer comillas, hadComillas
 	
 	for m = 1 to LIST_WORDS_SIZE: lP (m) = "": Next m
 	
@@ -55,17 +55,20 @@ Sub stringToArray (in As String)
 	lP (index) = ""
 	in = in + " "
 	comillas = 0
+	hadComillas = 0
 	
 	For m = 1 To Len (in)
 		character = Ucase (Mid (in, m, 1))
 		If character = Chr (34) Then
 			comillas = Not comillas
+			hadComillas = -1
 		ElseIf comillas Then 
 			lP (index) = lP (index) + character
 		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
 			lP (index) = lP (index) + character
 		Else
-			lP (index) = Ltrim (Rtrim (lP (index)))
+			If Not hadComillas Then lP (index) = Ltrim (Rtrim (lP (index)))
+			hadComillas = 0
 			If lP (index) <> "" Then
 				index = index + 1
 			End If
@@ -76,8 +79,6 @@ Sub stringToArray (in As String)
 			lP (index) = ""
 		End If
 	Next m
-
-	'' For m = 0 To index: Print m;"[";lP (m); "] ":Next m:Print
 End Sub
 
 Sub displayMe (clausula As String) 

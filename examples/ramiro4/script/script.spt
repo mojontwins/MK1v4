@@ -3,12 +3,13 @@
 # MTE MK1 4.8
 
 # flags:
-# 0 - Al pullpose no repeat
-# 1 - Trap Sonia
-# 2 - Trap Clemente
-# 3 - Trap Marisa
-# 4 - Trap Gustavo
-# 6	- Open pyramid
+#  0 - Al pullpose no repeat
+#  1 - Trap Sonia
+#  2 - Trap Clemente
+#  3 - Trap Marisa
+#  4 - Trap Gustavo
+#  6 - Open pyramid
+#  9 - Lower floor door
 # 10 - COIN_FLAG
 # 11 - Trap Sonia done
 # 12 - Trap Clemente done
@@ -27,12 +28,25 @@ ENTERING SCREEN 0
 END
 
 PRESS_FIRE AT SCREEN 0
+	IF OBJECT_COUNT = 4
+	THEN
+		WIN GAME
+	END
+
 	IF PLAYER_TOUCHES 2, 6
 	IF FLAG 0 = 0
 	THEN
 		EXTERN 14
+		SET_FIRE_ZONE_TILES 7, 0, 7, 9
 		SET FLAG 6 = 1
 		SET FLAG 0 = 1
+	END
+
+	IF PLAYER_IN_X_TILES 7, 7
+	IF FLAG 0 = 1
+	THEN
+		EXTERN 13
+		SET_FIRE_ZONE_TILES 15, 15, 15, 15
 	END
 END
 
@@ -177,11 +191,43 @@ PRESS_FIRE AT SCREEN 25
 	END
 END
 
+## Lower floor gate
+
+ENTERING SCREEN 30
+	IF FLAG 9 = 0
+	THEN
+		SET TILE (3, 8) = 20
+	END
+
+	IF FLAG 9 = 1
+	THEN
+		SET TILE (3, 8) = 16
+	END
+END
+
+PRESS_FIRE AT SCREEN 30
+	IF PLAYER_TOUCHES 3, 8
+	IF FLAG 9 = 0
+	THEN
+		SET FLAG 9 = 1
+		SET TILE (3, 8) = 16
+		SHOW
+		SOUND 8
+	END
+END
+
+ENTERING SCREEN 35
+	IF FLAG 9 = 0
+	THEN
+		SET TILE (7, 2) = 10
+	END
+END
+
 ## Remove when finished...
 
 ENTERING GAME
 	IF TRUE
 	THEN
-		SET FLAG 6 = 1
+	#	SET FLAG 6 = 1
 	END
 END

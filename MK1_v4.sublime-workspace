@@ -4,88 +4,56 @@
 		"selected_items":
 		[
 			[
-				"_hots",
-				"_hotspots_done\tabc"
-			],
-			[
-				"_hotps",
-				"_hotspot_x\tabc"
-			],
-			[
-				"redraw",
-				"redraw_from_buffer_loop\tabc"
-			],
-			[
-				"_draw_colo",
-				"_draw_coloured_tile_do\tabc"
-			],
-			[
-				"VIRW",
-				"VIEWPORT_Y"
-			],
-			[
-				"whihc",
-				"which_character\tabc"
-			],
-			[
-				"which",
-				"which_character\tabc"
-			],
-			[
-				"talk",
-				"talk_sounds\tabc"
-			],
-			[
-				"pof",
-				"pofrendas\tabc"
-			],
-			[
-				"OFRE",
-				"OFRENDAS_Y\tabc"
-			],
-			[
-				"OFREN",
-				"OFRENDAS_X\tabc"
-			],
-			[
-				"pofre",
-				"pofrendas_old\tabc"
-			],
-			[
-				"VIER",
+				"VIEW",
 				"VIEWPORT_Y\tabc"
 			],
 			[
-				"VIEW",
-				"VIEWPORT_X\tabc"
+				"water_",
+				"water_locks\tabc"
 			],
 			[
-				"extra_sprite_19_",
-				"extra_sprite_19_a\t(sprites.h)"
+				"VI",
+				"VIEWPORT_Y\tabc"
 			],
 			[
-				"comp",
-				"comportamiento_tiles\tabc"
+				"PLAYER_MAX",
+				"PLAYER_MAX_VY_CAYENDO_H\tabc"
 			],
 			[
-				"time",
-				"timed_deleter_ct\tabc"
+				"player_hover",
+				"player_hover_maximum\tabc"
 			],
 			[
-				"VIEWP",
-				"VIEWPORT_X\tabc"
+				"player_gra",
+				"player_gravity_maximum\tabc"
 			],
 			[
-				"VIE",
-				"VIEWPORT_X\tabc"
+				"PLAYER_MAX_",
+				"PLAYER_MAX_VY_CAYENDO_H\t(config.h)"
 			],
 			[
-				"coins",
-				"trap_coins"
+				"pain",
+				"paint_water_strip_loop\tabc"
 			],
 			[
-				"clausu",
-				"clausulasUsed\tabc"
+				"saca",
+				"saca_a_todo_el_mundo_de_aqui\t(definitions.h)"
+			],
+			[
+				"show",
+				"show_text_box\t(msc_extern.h)"
+			],
+			[
+				"CAN_",
+				"PLAYER_CAN_FIRE"
+			],
+			[
+				"fill_",
+				"fill_buffer_end\tabc"
+			],
+			[
+				"fill",
+				"fill_buffer_loop\tabc"
 			],
 			[
 				"rcube",
@@ -514,20 +482,43 @@
 			[
 				"SG",
 				"SG_setTile"
+			],
+			[
+				"SG_",
+				"SG_setNextTileatXY"
+			],
+			[
+				"MS",
+				"MS_MAX"
+			],
+			[
+				"UNSA",
+				"UNSAFE_SG_copySpritestoSAT"
+			],
+			[
+				"UNS",
+				"UNSAFE_SG_copySpritestoSAT"
+			],
+			[
+				"MS_",
+				"MS_TYPE_EMPTY"
+			],
+			[
+				"pgo",
+				"pgotten_uwol"
+			],
+			[
+				"pgt",
+				"pgtmx_meemaid"
+			],
+			[
+				"PSTAT_",
+				"PSTATE_NAKED"
 			]
 		]
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/jcastano/Desktop/bbcode.php",
-			"settings":
-			{
-				"buffer_size": 18800,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -605,83 +596,64 @@
 	},
 	"expanded_folders":
 	[
-		"/D/git/MK1",
-		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/ramiro4",
-		"/D/git/MK1/examples/ramiro4/dev",
-		"/D/git/MK1/examples/ramiro4/script"
+		"/C/git/mk1",
+		"/C/git/mk1/examples",
+		"/C/git/mk1/examples/ramiro4",
+		"/C/git/mk1/examples/ramiro4/dev",
+		"/C/git/mk1/examples/ramiro4/script",
+		"/C/git/mk1/examples/ramiro4/utils"
 	],
 	"file_history":
 	[
-		"/D/git/MK1/examples/ramiro4/dev/mainloop.h",
-		"/D/git/MK1/lib/splib2/cwrapper/sp_CreateSpr.c",
-		"/D/git/MK1/lib/splib2/sprites/SPCreateSpr.asm",
-		"/D/git/MK1/lib/splib2/sprites/SPAddColSpr.asm",
-		"/D/git/MK1/lib/splib2/cwrapper/sp_AddColSpr.c",
-		"/D/git/MK1/lib/splib2/spritepack.h",
-		"/D/git/MK1/lib/splib2/miscellaneous/SPInitialize.asm",
-		"/D/git/MK1/lib/splib2/updater/SPUpdateNow.asm",
-		"/D/git/MK1/lib/splib2/Copia de sp.lst",
-		"/D/git/MK1/lib/splib2/Makefile.bat",
-		"/D/git/MK1/examples/ramiro4/dev/custom.h",
-		"/D/git/MK1/examples/ramiro4/dev/churromain.c",
-		"/D/git/MK1/examples/ramiro4/dev/engine.h",
-		"/D/git/MK1/examples/ramiro4/dev/config.h",
-		"/D/Proyectos/2019/20190827a - Script para Sympa/install-php--20200210.txt",
-		"/C/Users/jcastano/AppData/Local/Temp/7zO825E904B/auto_max_att_size.php",
-		"/D/git/MK1/examples/ramiro4/script/script.spt",
-		"/D/git/MK1/examples/ramiro4/dev/comp.bat",
-		"/D/git/MK1/examples/ababol2_demo/dev/printer.h",
-		"/D/git/MK1/examples/ramiro4/dev/msc_extern.h",
-		"/D/git/MK1/examples/ramiro4/diario.md",
-		"/D/git/MK1/examples/ramiro4/dev/ramiro4.asm",
-		"/D/git/MK1/examples/ramiro4/dev/msc.h",
-		"/D/git/MK1/examples/ramiro4/dev/printer.h",
-		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Sir Ababol 2/48K-B/dev/engine.h",
-		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta 1.2.0.0/instrucciones.txt",
-		"/D/Proyectos/2020/20201103b - Actualización admdir 1.31.0.0/instrucciones.txt",
-		"/D/git/MK1/src/dev/engine.h",
-		"/D/git/MK1/src/dev/mainloop.h",
-		"/D/git/MK1/src/dev/boxes.h",
-		"/D/git/MK1/src/dev/churromain.c",
-		"/D/git/MK1/src/dev/definitions.h",
-		"/D/git/MK1/src/dev/enems.h",
-		"/D/git/MK1/README.md",
-		"/D/git/MK1/src/utils/ene2h.bas",
-		"/D/Proyectos/2020/20201103b - Actualización admdir 1.31.0.0/login_inicial.jsp",
-		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta 1.2.0.0/login_inicial.jsp",
-		"/D/git/MK1/examples/limite/dev/definitions.h",
-		"/D/git/MK1/examples/limite/dev/boxes.h",
-		"/D/git/MK1/examples/limite/dev/engine.h",
-		"/D/git/MK1/examples/ramiro3/dev/engine.h",
-		"/D/Proyectos/2020/20200917b - Anexo 3 - Mi Cuenta 1.1.0/instrucciones.txt",
-		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/instrucciones.txt",
-		"/D/git/MK1/examples/ramiro3/dev/custom.h",
-		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta/DirectorioCorporativo.properties",
-		"/D/Proyectos/2020/20201029b - Actualización ldapUtil en Webservice Corporativo/instrucciones.txt",
-		"/D/git/MK1/examples/ramiro4/dev/definitions.h",
-		"/D/Proyectos/CIs.txt",
-		"/D/git/MK1/examples/ramiro4/dev/pantallas.h",
+		"/C/git/mk1/examples/ramiro4/diario.md",
+		"/C/git/mk1/examples/ramiro4/script/script.spt",
+		"/C/git/mk1/examples/ramiro4/dev/msc_extern.h",
+		"/C/git/mk1/examples/ramiro4/dev/config.h",
+		"/C/git/mk1/examples/ramiro4/dev/mainloop.h",
+		"/C/git/mk1/examples/ramiro4/dev/custom.h",
+		"/C/git/mk1/examples/ramiro4/dev/msc.h",
+		"/C/git/mk1/examples/ramiro4/dev/engine.h",
+		"/C/git/mk1/examples/ramiro4/dev/definitions.h",
+		"/C/z88dk10-orig/include/spritepack.h",
+		"/C/git/mk1/examples/ramiro4/dev/printer.h",
+		"/C/git/mk1/examples/ramiro4/dev/ramiro4.map",
+		"/C/git/mk1/examples/ramiro4/dev/churromain.c",
+		"/C/git/mk1/examples/ramiro4/dev/pantallas.h",
+		"/C/git/mk1/examples/ramiro4/utils/msc.bas",
+		"/C/git/mk1/examples/limite/dev/printer.h",
+		"/C/git/mk1/examples/ramiro3/dev/engine.h",
+		"/C/git/mk1/examples/ramiro3/dev/config.h",
+		"/C/git/mk1/examples/ramiro3/dev/mainloop.h",
+		"/C/git/mk1/examples/ramiro3/dev/pantallas.h",
+		"/C/git/mk1/examples/ramiro3/dev/churromain.c",
+		"/C/cosas/speccy_vault/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/mainloop.h",
+		"/C/git/mk1/examples/ramiro3/dev/ramiro3v1.map",
+		"/C/git/mk1/examples/ramiro3/dev/comp.bat",
+		"/C/git/mk1/examples/ramiro3/dev/printer.h",
+		"/C/git/mk1/examples/ramiro3/dev/ramiro3v1.asm",
+		"/C/git/mk1/examples/ramiro3/dev/msc.h",
+		"/C/git/mk1/examples/ramiro3/dev/mapa.h",
+		"/C/git/mk1/examples/ramiro3/script/script.spt",
+		"/C/git/mk1/examples/ramiro3/utils/msc.bas",
+		"/C/cosas/speccy_vault/MK1/Dev_Utils/msc/msc.bas",
+		"/C/git/newspectrum/MK1/fred/utils/src/ts2bin.bas",
 		"/D/git/MK1/examples/ramiro3/utils/msc.bas",
-		"/D/git/MK1/examples/ramiro3/dev/printer.h",
-		"/D/git/MK1/examples/ramiro3/dev/ramiro3v1.tap",
-		"/D/git/MK1/examples/ramiro3/dev/comp.bat",
-		"/D/git/MK1/examples/ramiro3/dev/churromain.c",
-		"/D/git/MK1/examples/ramiro3/dev/definitions.h",
 		"/D/git/MK1/examples/ramiro3/dev/msc.h",
-		"/D/git/MK1/src/utils/mapcnv.bas",
-		"/D/git/MK1/examples/ramiro4/README.md",
-		"/D/git/MK1/examples/ramiro3/README.md",
-		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dev_Utils/msc/msc.bas",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/msc-config.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/msc.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dist/Churrera4.5/msc/msc.bas",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Dev_Utils/msc/msc.bas",
+		"/D/git/MK1/examples/ramiro3/dev/churromain.c",
 		"/D/git/MK1/examples/ramiro3/dev/msc_extern.h",
+		"/D/git/MK1/examples/ramiro3/README.md",
+		"/D/git/MK1/examples/ramiro3/dev/comp.bat",
 		"/D/git/MK1/examples/ramiro3/dev/mainloop.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/engine.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/config.h",
 		"/D/git/MK1/examples/ramiro3/dev/config.h",
 		"/D/git/MK1/examples/limite/dev/mainloop.h",
+		"/D/git/MK1/examples/limite/dev/engine.h",
+		"/D/git/MK1/examples/limite/dev/boxes.h",
 		"/D/git/MK1/examples/limite/dev/comp.bat",
 		"/D/git/MK1/src/dev/comp.bat",
 		"/D/git/MK1/examples/limite/dev/config.h",
@@ -690,16 +662,22 @@
 		"/D/git/MK1/examples/limite/dev/msc_extern.h",
 		"/D/git/MK1/examples/limite/dev/msc-config.h",
 		"/D/git/MK1/src/dev/config.h",
+		"/D/git/MK1/src/dev/mainloop.h",
+		"/D/git/MK1/src/dev/engine.h",
+		"/D/git/MK1/src/dev/definitions.h",
 		"/C/Users/jcastano/AppData/Local/Temp/7zO007686FB/config.h",
 		"/C/Users/jcastano/AppData/Local/Temp/7zO0072EE77/tileset.h",
 		"/D/git/MK1/src/dev/tileset.h",
+		"/D/git/MK1/src/dev/churromain.c",
 		"/D/git/MK1/src/dev/extrasprites.h",
 		"/D/git/MK1/src/dev/music.h",
 		"/D/git/MK1/src/dev/pantallas.h",
 		"/D/git/MK1/src/dev/printer.h",
 		"/D/git/MK1/src/dev/aplib.h",
 		"/D/git/MK1/src/dev/beeper.h",
+		"/D/git/MK1/src/dev/boxes.h",
 		"/C/Users/jcastano/AppData/Local/Temp/7zE00708367/tileset.h",
+		"/D/git/MK1/README.md",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/consigna_attachments/consigna_attachments.js",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/masinfo/masinfo.php",
 		"/C/Users/jcastano/Desktop/ldif_import.ldif",
@@ -713,6 +691,7 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/js/common.js",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/calendar/program/js/calendar.gui.js",
 		"/D/Proyectos/2020/20200917g - Banner 'MiCuenta' en Webmail/instrucciones.txt",
+		"/D/Proyectos/CIs.txt",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/skins/larry_sandetel/includes/appbar.html",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/sandetel/sandetel.php",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/config/config.inc.php",
@@ -740,27 +719,32 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/avelsieve/localization/en_US.inc",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/avelsieve/localization/es_ES.inc",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_driver_gnupg.php",
-		"/C/Users/jcastano/Desktop/LDAP Browser/_DESARROLLO ON - corporativo.cfg"
+		"/C/Users/jcastano/Desktop/LDAP Browser/_DESARROLLO ON - corporativo.cfg",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/config.inc.php",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_engine.php",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/config/mime.types",
+		"/D/Proyectos/2020/20200720b - Cambiar ubicación de certificados PGP Webmail V3/instrucciones.txt",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/README",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_error.php",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.php",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/config.inc.php.dist",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/composer.json",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_driver.php",
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/token/decrypt.php",
+		"/C/Users/jcastano/AppData/Local/Temp/7zOC2663D71/sandetel_login.php",
+		"/C/java/applications/webmovil/src/p3s.properties"
 	],
 	"find":
 	{
-		"height": 48.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
 		"height": 128.0,
 		"where_history":
 		[
-			"D:\\git\\MK1\\lib\\splib2",
-			"D:\\git\\MK1\\examples\\ramiro4\\dev",
-			"D:\\git\\MK1\\src\\dev",
-			"D:\\git\\MK1\\examples\\limite\\dev",
-			"D:\\git\\MK1\\examples\\ramiro4",
-			"D:\\git\\MK1\\examples\\ramiro4\\dev",
-			"D:\\git\\MK1\\examples\\ramiro4",
-			"D:\\git\\MK1\\examples\\ramiro4\\dev",
-			"D:\\git\\MK1\\examples\\ramiro4",
-			"D:\\git\\MK1\\examples\\ramiro4\\dev",
+			"C:\\git\\mk1\\examples\\ramiro4\\dev",
+			"C:\\git\\mk1\\examples\\ramiro3\\dev",
 			"D:\\git\\MK1\\examples\\ramiro3\\dev",
 			"D:\\git\\MK1\\examples\\limite\\dev",
 			"D:\\git\\MK1\\src\\dev",
@@ -878,7 +862,15 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program\\lib\\Roundcube",
 			"D:\\Proyectos\\remote\\desccobuz05",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\bin",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar"
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\calendar\\program",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail\\plugins\\password",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\agata_addressbook",
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook"
 		]
 	},
 	"find_state":
@@ -886,82 +878,46 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"&HE1",
 			"pinv",
-			"sp_Huff",
-			"Huff",
-			"tempcolour",
-			"tempgraphic",
-			"af'",
-			", TRANSPARENT",
-			"mueve_bicharracos",
-			"size_limit",
-			"sp_ClearRect",
-			"sp_Invalidate",
-			"sp_",
-			"draw_text",
-			"breakable",
-			"s_on",
-			"p_swording",
-			"sword",
-			"EST_ICE",
-			"mueve",
-			"EST_ICE",
-			"frigoababol",
-			"en_an \\[([A-Za-z0-9_]+)\\]\\.(frame|count|current_frame|next_frame|morido)",
-			"3",
-			"bullets",
-			"3",
-			"enoffs",
-			"[3]",
-			"rdi",
-			"can_move_box",
-			"move_tile",
-			"reentered",
-			"viewport_x",
-			"hotspots",
-			"EST_PARP",
-			"en_ccx",
-			"unpack",
-			"depack",
-			"_old",
-			"pinv",
-			"_en_y",
-			"_en_x",
-			" + 8",
-			"gp",
-			"get_coin",
-			"_old",
-			"COINS",
-			"get_coin",
-			"TWO_SET",
-			"get_coin",
-			"> 3",
-			"> 7",
-			"== COIN_TILE",
-			"qtile",
-			"timed_de",
-			"draw_coloured_tile",
-			"USE_COINS",
-			"trap_screen",
-			"++ _t",
-			"++ gp_gen",
-			"t",
-			"(x|y)",
-			"read_vbyte",
-			"0 ==",
+			"frame_counter",
+			"mueve ",
 			"!",
-			"sc_n",
-			"sc_m",
-			"sc_i",
-			"useflipf",
-			"churrera 3",
-			"churrera",
-			"terminado",
-			"clausulasUsed (&H40)",
+			"msc_init_all",
+			"water_locks",
+			"reset",
+			"rdi",
+			"paint_water_strip",
+			"++;\n",
+			"water_strip",
+			"water_level",
+			"pushp",
+			"rdj",
+			"ptgmx",
+			"pgt",
+			"player.vx",
+			"platform_get_player",
+			"adjust_to_tile_x@",
+			"adjust_to_tile_x",
+			"water_level",
+			"pvy",
+			"peta_el_beeper (10)",
+			"paint",
+			"extern",
+			"rdi",
+			"key",
+			"game_over",
+			"clausulasfire",
+			"listaclausulasfire",
+			"coin",
+			"defaultInk",
 			"text",
-			"&H51",
-			"show_coins",
-			"maxflag",
+			"SET_TILE",
+			"_",
+			"listaclausulasEnter",
+			"print_number2",
+			"0x20",
+			"tile",
 			"flags",
 			"(res|i|x|y|c|n|m|terminado|continuar)",
 			"(i|x|y|c|n|m|terminado|continuar)",
@@ -1013,7 +969,43 @@
 			"list_",
 			"refina sus",
 			"organismo",
-			"facturacion"
+			"facturacion",
+			"admin",
+			"facturacion",
+			"gc_handlers",
+			"gc_db",
+			"delete from",
+			"session",
+			"delete from session",
+			"this->contact",
+			"from",
+			"utf7",
+			"my_imap",
+			"mail to",
+			"mail",
+			"[]",
+			"juntadeandalucia.es",
+			"21a",
+			"$this.",
+			"imap_utf7_local::imap_utf7_decode_local",
+			"imap_utf7",
+			"utf7",
+			"$this.",
+			"this",
+			"decodeBASE64",
+			"decodebase64",
+			"todos",
+			"nrw_part2_error",
+			"todos",
+			"algo no marcha bien",
+			"makesinglerule",
+			"actionradio",
+			"decodeBASE64",
+			"decodebase64",
+			"juntadeand",
+			"correo.junta",
+			"14",
+			"log_sandetel"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1021,24 +1013,10 @@
 		"regex": false,
 		"replace_history":
 		[
-			"",
-			"en_an_\\2 [\\1]",
-			"en_y",
-			"en_x",
-			" + 12",
-			"en_cc",
-			"& 12",
-			"& 8",
-			"& COIN_BEH",
-			"attr",
-			"_t ++",
-			"t ++",
-			"gp_gen ++",
-			"_t",
-			"_\\1",
-			"MTE MK1 v4.7",
-			"MTE MK1",
-			"sc_terminado",
+			"ptg",
+			" ptg",
+			" ",
+			"draw_2_digits",
 			"sc_\\1",
 			"apack",
 			"    /var/www/html/correo.juntadeandalucia.es/",
@@ -1148,7 +1126,21 @@
 			"config",
 			"F8",
 			"DB",
-			"$patata"
+			"$patata",
+			"bookmarks",
+			"empty",
+			"is_empty",
+			"bookmarks",
+			"BOOKMARK",
+			"bookmark",
+			"BOOKMARK",
+			"bookmark",
+			"bookmarkslist",
+			"bookmarks",
+			"bookmarkslist",
+			"bookmarks",
+			"bookmarks_list",
+			"bookmark"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1159,44 +1151,6 @@
 	"groups":
 	[
 		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/jcastano/Desktop/bbcode.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 18800,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2740,
-								2740
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 820.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
-			]
-		},
-		{
 			"sheets":
 			[
 			]
@@ -1204,7 +1158,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -1219,18 +1173,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
@@ -1260,7 +1207,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 88.0
+		"height": 48.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1302,7 +1249,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 239.0,
+	"side_bar_width": 135.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
