@@ -4,7 +4,7 @@
 
 Const LIST_WORDS_SIZE = 20
 Const LIST_CLAUSULES_SIZE = 100
-Dim Shared listaPalabras (LIST_WORDS_SIZE) As String
+Dim Shared lP (LIST_WORDS_SIZE) As String
 Dim Shared listaClausulasEnter (LIST_CLAUSULES_SIZE) As Integer
 Dim Shared listaClausulasFire (LIST_CLAUSULES_SIZE) As Integer
 Dim Shared clausulasUsed (255) As Integer
@@ -19,11 +19,12 @@ Dim Shared clausulasFire (LIST_CLAUSULES_SIZE) As String
 Dim AddTo (LIST_WORDS_SIZE) As Integer
 Dim AddToIdx As Integer
 Dim Shared As Integer useFlipFlops
+Dim Shared As Integer useShortSetTile
 
 Sub dump ()
 	Dim i As Integer
 	For i = 0 to LIST_WORDS_SIZE
-		Print "["+listaPalabras (i) + "]";
+		Print "["+lP (i) + "]";
 	next i
 	print
 end sub
@@ -48,10 +49,10 @@ Sub stringToArray (in As String)
 	Dim character as String * 1
 	Dim comillas As Integer
 	
-	for m = 1 to LIST_WORDS_SIZE: listaPalabras (m) = "": Next m
+	for m = 1 to LIST_WORDS_SIZE: lP (m) = "": Next m
 	
 	index = 0
-	listaPalabras (index) = ""
+	lP (index) = ""
 	in = in + " "
 	comillas = 0
 	
@@ -60,23 +61,23 @@ Sub stringToArray (in As String)
 		If character = Chr (34) Then
 			comillas = Not comillas
 		ElseIf comillas Then 
-			listaPalabras (index) = listaPalabras (index) + character
+			lP (index) = lP (index) + character
 		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
-			listaPalabras (index) = listaPalabras (index) + character
+			lP (index) = lP (index) + character
 		Else
-			listaPalabras (index) = Ltrim (Rtrim (listaPalabras (index)))
-			If listaPalabras (index) <> "" Then
+			lP (index) = Ltrim (Rtrim (lP (index)))
+			If lP (index) <> "" Then
 				index = index + 1
 			End If
 			If character <> " " Then 
-				listaPalabras (index) = character
+				lP (index) = character
 				index = index + 1
 			End If
-			listaPalabras (index) = ""
+			lP (index) = ""
 		End If
 	Next m
 
-	'' For m = 0 To index: Print m;"[";listaPalabras (m); "] ":Next m:Print
+	'' For m = 0 To index: Print m;"[";lP (m); "] ":Next m:Print
 End Sub
 
 Sub displayMe (clausula As String) 
@@ -144,15 +145,15 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 		
 		if estado <> 1 then
 			' Leyendo cláusulas
-			Select Case listaPalabras (0)
+			Select Case lP (0)
 				case "IF":
-					Select Case listaPalabras (1)
+					Select Case lP (1)
 						Case "PLAYER_HAS_ITEM":
-							clausula = clausula + chr (&H1) + chr (pval (listaPalabras (2)))
+							clausula = clausula + chr (&H1) + chr (pval (lP (2)))
 							numClausulas = numClausulas + 1
 							clausulasUsed (&H1) = -1
 						Case "PLAYER_HASN'T_ITEM":
-							clausula = clausula + chr (&H2) + chr (pval (listaPalabras (2)))
+							clausula = clausula + chr (&H2) + chr (pval (lP (2)))
 							numClausulas = numClausulas + 1
 							clausulasUsed (&H2) = -1
 						Case "FLAG":
@@ -161,89 +162,89 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 								' 0  1    2 3 4
 								' IF FLAG x = 1
 
-								If Val (listaPalabras (2)) < 16 And _
-									Val (listaPalabras (4)) < 2 And _
-									(listaPalabras (3) = "=" Or listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") Then
+								If Val (lP (2)) < 16 And _
+									Val (lP (4)) < 2 And _
+									(lP (3) = "=" Or lP (3) = "<>" Or lP (3) = "!=") Then
 
-									If (listaPalabras (3) = "=" And Val (listaPalabras (4)) = 0) Or _
-										((listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") And Val (listaPalabras (4)) = 1) Then
-										clausula = clausula + chr (&HA0 + Val (listaPalabras (2)))
+									If (lP (3) = "=" And Val (lP (4)) = 0) Or _
+										((lP (3) = "<>" Or lP (3) = "!=") And Val (lP (4)) = 1) Then
+										clausula = clausula + chr (&HA0 + Val (lP (2)))
 										numclausulas = numclausulas + 1
 										clausulasUsed (&HA0) = -1
-										Print "IF FLAG " & listaPalabras (2) & " = 0 -> 0x" & Hex (&HA0 + Val (listaPalabras (2)),2)
+										Print "IF FLAG " & lP (2) & " = 0 -> 0x" & Hex (&HA0 + Val (lP (2)),2)
 									End If
 
-									If (listaPalabras (3) = "=" And Val (listaPalabras (4)) = 1) Or _
-										((listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") And Val (listaPalabras (0)) = 1) Then
-										clausula = clausula + chr (&HB0 + Val (listaPalabras (2)))
+									If (lP (3) = "=" And Val (lP (4)) = 1) Or _
+										((lP (3) = "<>" Or lP (3) = "!=") And Val (lP (0)) = 1) Then
+										clausula = clausula + chr (&HB0 + Val (lP (2)))
 										numclausulas = numclausulas + 1
 										clausulasUsed (&HA0) = -1
-										Print "IF FLAG " & listaPalabras (2) & " = 0 -> 0x" & Hex (&HB0 + Val (listaPalabras (2)),2)
+										Print "IF FLAG " & lP (2) & " = 0 -> 0x" & Hex (&HB0 + Val (lP (2)),2)
 									End If
 
 									Exit Select
 								End If
 							End If
 
-							Select Case listaPalabras (3)
+							Select Case lP (3)
 								Case "=":
-									if listaPalabras (4) = "FLAG" Then
-										clausula = clausula + chr (&H14) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
+									if lP (4) = "FLAG" Then
+										clausula = clausula + chr (&H14) + chr (pval (lP (2))) + chr (pval(lP (5)))
 										clausulasUsed (&H14) = -1
 									Else
-										clausula = clausula + chr (&H10) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
+										clausula = clausula + chr (&H10) + chr (pval (lP (2))) + chr (pval(lP (4)))
 										clausulasUsed (&H10) = -1
 									End If
 								Case "<":
-									If listaPalabras (4) = "FLAG" Then
-										clausula = clausula + chr (&H15) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
+									If lP (4) = "FLAG" Then
+										clausula = clausula + chr (&H15) + chr (pval (lP (2))) + chr (pval(lP (5)))
 										clausulasUsed (&H15) = -1
 									Else
-										clausula = clausula + chr (&H11) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
+										clausula = clausula + chr (&H11) + chr (pval (lP (2))) + chr (pval(lP (4)))
 										clausulasUsed (&H11) = -1
 									End If
 								Case ">":
-									If listaPalabras (4) = "FLAG" Then
-										clausula = clausula + chr (&H16) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
+									If lP (4) = "FLAG" Then
+										clausula = clausula + chr (&H16) + chr (pval (lP (2))) + chr (pval(lP (5)))
 										clausulasUsed (&H16) = -1
 									Else
-										clausula = clausula + chr (&H12) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
+										clausula = clausula + chr (&H12) + chr (pval (lP (2))) + chr (pval(lP (4)))
 										clausulasUsed (&H12) = -1
 									End If
 								Case "<>", "!=":
-									If listaPalabras (4) = "FLAG" Then
-										clausula = clausula + chr (&H17) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (5)))
+									If lP (4) = "FLAG" Then
+										clausula = clausula + chr (&H17) + chr (pval (lP (2))) + chr (pval(lP (5)))
 										clausulasUsed (&H17) = -1
 									Else
-										clausula = clausula + chr (&H13) + chr (pval (listaPalabras (2))) + chr (pval(listaPalabras (4)))
+										clausula = clausula + chr (&H13) + chr (pval (lP (2))) + chr (pval(lP (4)))
 										clausulasUsed (&H13) = -1
 									End If
 							End Select
 							numClausulas = numClausulas + 1
 						Case "PLAYER_TOUCHES":
-							clausula = clausula + chr (&H20) + chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))
+							clausula = clausula + chr (&H20) + chr (pval (lP (2))) + chr (pval (lP (4)))
 							clausulasUsed (&H20) = -1
 							numClausulas = numClausulas + 1
 						Case "PLAYER_IN_X":
-							clausula = clausula + chr (&H21) + chr (val (listaPalabras (2))) + chr (val (listaPalabras (4)))
+							clausula = clausula + chr (&H21) + chr (val (lP (2))) + chr (val (lP (4)))
 							clausulasUsed (&H21) = -1
 							numClausulas = numClausulas + 1
 						Case "PLAYER_IN_X_TILES":
-							fzx1 = val (listaPalabras (2)) * 16 - 15
+							fzx1 = val (lP (2)) * 16 - 15
 							If fzx1 < 0 Then fzx1 = 0
-							fzx2 = val (listaPalabras (4)) * 16 + 15
+							fzx2 = val (lP (4)) * 16 + 15
 							If fzx2 > 255 Then fzx2 = 255
 							clausula = clausula + chr (&H21) + chr (fzx1) + chr (fzx2)
 							clausulasUsed (&H21) = -1
 							numClausulas = numClausulas + 1
 						Case "PLAYER_IN_Y":
-							clausula = clausula + chr (&H22) + chr (val (listaPalabras (2))) + chr (val (listaPalabras (4)))
+							clausula = clausula + chr (&H22) + chr (val (lP (2))) + chr (val (lP (4)))
 							clausulasUsed (&H22) = -1
 							numClausulas = numClausulas + 1
 						Case "PLAYER_IN_Y_TILES":
-							fzx1 = val (listaPalabras (2)) * 16 - 15
+							fzx1 = val (lP (2)) * 16 - 15
 							If fzx1 < 0 Then fzx1 = 0
-							fzx2 = val (listaPalabras (4)) * 16 + 15
+							fzx2 = val (lP (4)) * 16 + 15
 							If fzx2 > 191 Then fzx2 = 191
 							clausula = clausula + chr (&H22) + chr (fzx1) + chr (fzx2)
 							clausulasUsed (&H22) = -1
@@ -253,7 +254,7 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 							clausulasUsed (&H30) = -1
 							numClausulas = numClausulas + 1
 						Case "ENEMIES_KILLED_EQUALS"
-							clausula = clausula + chr (&H31) + chr (pval (listaPalabras (2)))
+							clausula = clausula + chr (&H31) + chr (pval (lP (2)))
 							clausulasUsed (&H31) = -1
 							numClausulas = numClausulas + 1
 						Case "PLAYER_HAS_OBJECTS"
@@ -261,15 +262,15 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 							clausulasUsed (&H40) = -1
 							numClausulas = numClausulas + 1
 						Case "OBJECT_COUNT"
-							clausula = clausula + chr (&H41) + chr (pval (listaPalabras (3)))
+							clausula = clausula + chr (&H41) + chr (pval (lP (3)))
 							clausulasUsed (&H41) = -1
 							numClausulas = numClausulas + 1
 						Case "NPANT"
-							clausula = clausula + chr (&H50) + chr (pval (listaPalabras (2)))
+							clausula = clausula + chr (&H50) + chr (pval (lP (2)))
 							clausulasUsed (&H50) = -1
 							numClausulas = numClausulas + 1
 						Case "NPANT_NOT"
-							clausula = clausula + chr (&H51) + chr (pval (listaPalabras (2)))
+							clausula = clausula + chr (&H51) + chr (pval (lP (2)))
 							clausulasUsed (&H51) = -1
 							numClausulas = numClausulas + 1
 						Case "TRUE"
@@ -288,11 +289,11 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 			end select
 		else
 			' Leyendo acciones
-			Select Case listaPalabras (0)
+			Select Case lP (0)
 				Case "SET":
-					Select Case listaPalabras (1)
+					Select Case lP (1)
 						Case "ITEM":
-							clausula = clausula + Chr (&H0) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))
+							clausula = clausula + Chr (&H0) + Chr (pval (lP (2))) + chr (pval (lP (4)))
 							actionsUsed (&H0) = -1
 						Case "FLAG":
 							' Autodetect flipflops
@@ -300,66 +301,70 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 								' 0   1    2 3 4
 								' SET FLAG x = 1
 
-								If Val (listaPalabras (2)) < 16 And _
-									Val (listaPalabras (4)) < 2 And _
-									(listaPalabras (3) = "=" Or listaPalabras (3) = "<>" Or listaPalabras (3) = "!=") Then
+								If Val (lP (2)) < 16 And _
+									Val (lP (4)) < 2 And _
+									(lP (3) = "=" Or lP (3) = "<>" Or lP (3) = "!=") Then
 
-									If Val (listaPalabras (4)) = 0 Then
-										clausula = clausula + chr (&HA0 + Val (listaPalabras (2)))
+									If Val (lP (4)) = 0 Then
+										clausula = clausula + chr (&HA0 + Val (lP (2)))
 										numclausulas = numclausulas + 1
 										actionsUsed (&HA0) = -1
-										Print "SET FLAG " & listaPalabras (2) & " = 0 -> 0x" & Hex (&HA0 + Val (listaPalabras (2)),2)
+										Print "SET FLAG " & lP (2) & " = 0 -> 0x" & Hex (&HA0 + Val (lP (2)),2)
 									Else
-										clausula = clausula + chr (&HB0 + Val (listaPalabras (2)))
+										clausula = clausula + chr (&HB0 + Val (lP (2)))
 										numclausulas = numclausulas + 1
 										actionsUsed (&HB0) = -1
-										Print "SET FLAG " & listaPalabras (2) & " = 1 -> 0x" & Hex (&HB0 + Val (listaPalabras (2)),2)
+										Print "SET FLAG " & lP (2) & " = 1 -> 0x" & Hex (&HB0 + Val (lP (2)),2)
 									End If
 
 									Exit Select
 								End If
 							End If
-							clausula = clausula + Chr (&H1) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))	
+							clausula = clausula + Chr (&H1) + Chr (pval (lP (2))) + chr (pval (lP (4)))	
 							actionsUsed (&H1) = -1
 						Case "TILE":
-							clausula = clausula + Chr (&H20) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5))) + Chr (pval (listaPalabras (8)))
+							If useShortSetTile then
+								clausula = clausula + Chr (&H20) + Chr (16*(Val (lP (3)) And 15) + (Val (lP (5)) And 15)) + Chr (pval (lP (8)))
+							Else
+								clausula = clausula + Chr (&H20) + Chr (pval (lP (3))) + Chr (pval (lP (5))) + Chr (pval (lP (8)))
+							End If
 							actionsUsed (&H20) = -1
 					End Select
 				Case "INC":
-					Select Case listaPalabras (1)
+					Select Case lP (1)
 						Case "FLAG":
-							clausula = clausula + Chr (&H10) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))	
+							clausula = clausula + Chr (&H10) + Chr (pval (lP (2))) + chr (pval (lP (4)))	
 							actionsUsed (&H10) = -1
 						Case "LIFE":
-							clausula = clausula + Chr (&H30) + Chr (pval (listaPalabras (2)))
+							clausula = clausula + Chr (&H30) + Chr (pval (lP (2)))
 							actionsUsed (&H30) = -1
 						Case "OBJECTS":
-							clausula = clausula + Chr (&H40) + Chr (pval (listaPalabras (2)))
+							clausula = clausula + Chr (&H40) + Chr (pval (lP (2)))
 							actionsUsed (&H40) = -1
 					End Select
 				Case "DEC":
-					Select Case listaPalabras (1)
+					Select Case lP (1)
 						Case "FLAG":
-							clausula = clausula + Chr (&H11) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))						
+							clausula = clausula + Chr (&H11) + Chr (pval (lP (2))) + chr (pval (lP (4)))						
 							actionsUsed (&H11) = -1
 						Case "LIFE":
-							clausula = clausula + Chr (&H31) + Chr (pval (listaPalabras (2)))
+							clausula = clausula + Chr (&H31) + Chr (pval (lP (2)))
 							actionsUsed (&H31) = -1
 						Case "OBJECTS":
-							clausula = clausula + Chr (&H41) + Chr (pval (listaPalabras (2)))
+							clausula = clausula + Chr (&H41) + Chr (pval (lP (2)))
 							actionsUsed (&H41) = -1
 					End Select
 				Case "ADD":
-					clausula = clausula + Chr (&H12) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))						
+					clausula = clausula + Chr (&H12) + Chr (pval (lP (2))) + chr (pval (lP (4)))						
 					actionsUsed (&H12) = -1
 				Case "SUB":
-					clausula = clausula + Chr (&H13) + Chr (pval (listaPalabras (2))) + chr (pval (listaPalabras (4)))						
+					clausula = clausula + Chr (&H13) + Chr (pval (lP (2))) + chr (pval (lP (4)))						
 					actionsUsed (&H13) = -1
 				Case "SWAP":
-					clausula = clausula + Chr (&H14) + Chr (pval (listaPalabras (1))) + chr (pval (listaPalabras (3)))
+					clausula = clausula + Chr (&H14) + Chr (pval (lP (1))) + chr (pval (lP (3)))
 					actionsUsed (&H14) = -1
 				Case "FLIPFLOP":
-					clausula = clausula + Chr (&H15) + Chr (pval (listaPalabras (1)))
+					clausula = clausula + Chr (&H15) + Chr (pval (lP (1)))
 					actionsUsed (&H15) = -1		
 				Case "FLICKER":
 					clausula = clausula + Chr (&H32)
@@ -368,19 +373,19 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					clausula = clausula + Chr (&H33)
 					actionsUsed (&H33) = -1
 				Case "PRINT_TILE_AT":
-					clausula = clausula + Chr (&H50) + Chr (pval (listaPalabras (2))) + Chr (pval (listaPalabras (4))) + Chr (pval (listaPalabras (7)))
+					clausula = clausula + Chr (&H50) + Chr (pval (lP (2))) + Chr (pval (lP (4))) + Chr (pval (lP (7)))
 					actionsUsed (&H50) = -1
 				Case "SET_FIRE_ZONE":
-					clausula = clausula + Chr (&H51) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5))) + Chr (pval (listaPalabras (7)))
+					clausula = clausula + Chr (&H51) + Chr (pval (lP (1))) + Chr (pval (lP (3))) + Chr (pval (lP (5))) + Chr (pval (lP (7)))
 					actionsUsed (&H51) = -1
 				Case "SET_FIRE_ZONE_TILES":
-					fzx1 = pval (listaPalabras (1)) * 16 - 15
+					fzx1 = pval (lP (1)) * 16 - 15
 					If fzx1 < 0 Then fzx1 = 0
-					fzy1 = pval (listaPalabras (3)) * 16 - 15
+					fzy1 = pval (lP (3)) * 16 - 15
 					If fzy1 < 0 Then fzy1 = 0
-					fzx2 = pval (listaPalabras (5)) * 16 + 15
+					fzx2 = pval (lP (5)) * 16 + 15
 					If fzx2 > 254 Then fzx2 = 254
-					fzy2 = pval (listaPalabras (7)) * 16 + 15
+					fzy2 = pval (lP (7)) * 16 + 15
 					If fzy2 > 175 Then fzy2 = 175
 					
 					clausula = clausula + Chr (&H51) + Chr (fzx1) + Chr (fzy1) + Chr (fzx2) + Chr (fzy2)
@@ -410,16 +415,16 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					clausula = clausula + Chr (&H67)
 					actionsUsed (&H67) = -1
 				Case "SETY"
-					clausula = clausula + Chr (&H6A) + Chr (pval (listaPalabras (1)))
+					clausula = clausula + Chr (&H6A) + Chr (pval (lP (1)))
 					actionsUsed (&H6A) = -1	
 				Case "SETX"
-					clausula = clausula + Chr (&H6B) + Chr (pval (listaPalabras (1)))
+					clausula = clausula + Chr (&H6B) + Chr (pval (lP (1)))
 					actionsUsed (&H6B) = -1
 				Case "REPOSTN"
-					clausula = clausula + Chr (&H6C) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3)))
+					clausula = clausula + Chr (&H6C) + Chr (pval (lP (1))) + Chr (pval (lP (3)))
 					actionsUsed (&H6C) = -1
 				Case "WARP_TO"
-					clausula = clausula + Chr (&H6D) + Chr (pval (listaPalabras (1))) + Chr (pval (listaPalabras (3))) + Chr (pval (listaPalabras (5)))
+					clausula = clausula + Chr (&H6D) + Chr (pval (lP (1))) + Chr (pval (lP (3))) + Chr (pval (lP (5)))
 					actionsUsed (&H6D) = -1
 				Case "REDRAW"
 					clausula = clausula + Chr (&H6E)
@@ -428,7 +433,7 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					clausula = clausula + Chr (&H6F)
 					actionsUsed (&H6F) = -1
 				Case "SOUND":
-					clausula = clausula + Chr (&HE0) + Chr (pval (listaPalabras (1)))
+					clausula = clausula + Chr (&HE0) + Chr (pval (lP (1)))
 					actionsUsed (&HE0) = -1
 				Case "SHOW":
 					clausula = clausula + Chr (&HE1)
@@ -437,19 +442,19 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 					clausula = clausula + Chr (&HE2)
 					actionsUsed (&HE2) = -1
 				Case "TEXT":
-					If Len (listaPalabras (1)) > 30 Then listaPalabras (1) = Left (listaPalabras (1), 30)
-					clausula = clausula + Chr (&HE3) + Chr (Len (listaPalabras (1)))
-					for ai = 1 To Len (listaPalabras (1))
-						If Mid (listaPalabras (1), ai, 1) = "_" Then
+					If Len (lP (1)) > 30 Then lP (1) = Left (lP (1), 30)
+					clausula = clausula + Chr (&HE3) + Chr (Len (lP (1)))
+					for ai = 1 To Len (lP (1))
+						If Mid (lP (1), ai, 1) = "_" Then
 							clausula = clausula + Chr (32)
 						Else
-							clausula = clausula + Chr (Asc(Mid (listaPalabras (1), ai, 1)))
+							clausula = clausula + Chr (Asc(Mid (lP (1), ai, 1)))
 						End If
 					Next ai
 					clausula = clausula + Chr (0)
 					actionsUsed (&HE3) = -1
 				Case "EXTERN":
-					clausula = clausula + Chr (&HE4) + Chr (pval (listaPalabras (1)))
+					clausula = clausula + Chr (&HE4) + Chr (pval (lP (1)))
 					actionsUsed (&HE4) = -1
 				Case "GAME":
 					clausula = clausula + Chr (240)
@@ -489,11 +494,12 @@ outFileName = command (2)
 maxpants = pval (command (3))
 
 useFlipFlops = inCommand ("flipflops")
+useShortSetTile = inCommand ("shortsettile")
 
 print "msc para MTE MK1 v4"
 
 if command (2) = "" or maxpants = 0 then
-	print "uso: msc input output maxpants [flipflops]"
+	print "uso: msc input output maxpants [flipflops] [shortsettile]"
 	system
 end if
 
@@ -519,19 +525,19 @@ While not eof (f)
 	stringToArray (linea)
 	
 	' ESTADO 1: Buscando ENTERING SCREEN x ó PRESS_FIRE AT SCREEN x
-	Select Case listaPalabras (0)
+	Select Case lP (0)
 		Case "ENTERING":
-			If listaPalabras (1) = "GAME" Then
+			If lP (1) = "GAME" Then
 				AddToIdx = 1
 				AddTo (0) = maxpants
-			ElseIf listaPalabras (1) = "ANY" Then
+			ElseIf lP (1) = "ANY" Then
 				AddToIdx = 1
 				AddTo (0) = maxpants + 1
 			Else
 				AddToIdx = 0
 				For i = 2 to LIST_WORDS_SIZE
-					If listaPalabras (i) <> "" And listaPalabras (i) <> "," Then
-						AddTo (AddToIdx) = val (listaPalabras (i))
+					If lP (i) <> "" And lP (i) <> "," Then
+						AddTo (AddToIdx) = val (lP (i))
 						AddToIdx = AddToIdx + 1
 					End If
 				Next i
@@ -545,14 +551,14 @@ While not eof (f)
 			
 			clausulasEnterIdx = clausulasEnterIdx + 1
 		Case "PRESS_FIRE":
-			If listaPalabras (2) = "ANY" Then
+			If lP (2) = "ANY" Then
 				AddToIdx = 1
 				AddTo (0) = maxpants
 			Else
 				AddToIdx = 0
 				For i = 3 to LIST_WORDS_SIZE
-					If listaPalabras (i) <> "" And listaPalabras (i) <> "," Then
-						AddTo (AddToIdx) = val (listaPalabras (i))
+					If lP (i) <> "" And lP (i) <> "," Then
+						AddTo (AddToIdx) = val (lP (i))
 						AddToIdx = AddToIdx + 1
 					End If
 				Next i
@@ -700,7 +706,7 @@ print #f, "            inc hl"
 print #f, "            ld  (_script), hl"
 print #f, "            ld  l, a"
 print #f, "            ld  h, 0"
-If useFlipFlops Then
+If useFlipFlops Or useShortSetTile Then
 	print #f, "            and 0xF0"
 	print #f, "            ld  (_sc_i), a"
 	print #f, "            ld  a, l"
@@ -1015,13 +1021,19 @@ End If
 if actionsUsed (&H20) Then
 	print #f, "                    case 0x20:"
 	print #f, "                        // SET TILE (x, y) = n"
-	print #f, "                        // Opcode: 20 x y n"
-	'print #f, "                        read_x_y ();"
-	'print #f, "                        sc_n = read_vbyte ();"
-	'print #f, "                        map_buff [sc_x + (sc_y << 4) - sc_y] = sc_n;"
-	'print #f, "                        map_attr [sc_x + (sc_y << 4) - sc_y] = comportamiento_tiles [sc_n];"
-	'print #f, "                        draw_coloured_tile (VIEWPORT_X + sc_x + sc_x, VIEWPORT_Y + sc_y + sc_y, sc_n);"
-	print #f, "                        set_map_tile (read_vbyte (), read_vbyte (), sc_n = read_vbyte (), comportamiento_tiles [sc_n]);"
+	If useShortSetTile Then
+		print #f, "                        // Opcode: 20 XY n"
+		print #f, "                        read_byte ();  // fills sc_i = X0, sc_m = Y"
+		print #f, "                        set_map_tile (sc_i >> 4, sc_m, sc_n = read_vbyte (), comportamiento_tiles [sc_n]);"
+	Else
+		print #f, "                        // Opcode: 20 x y n"
+		'print #f, "                        read_x_y ();"
+		'print #f, "                        sc_n = read_vbyte ();"
+		'print #f, "                        map_buff [sc_x + (sc_y << 4) - sc_y] = sc_n;"
+		'print #f, "                        map_attr [sc_x + (sc_y << 4) - sc_y] = comportamiento_tiles [sc_n];"
+		'print #f, "                        draw_coloured_tile (VIEWPORT_X + sc_x + sc_x, VIEWPORT_Y + sc_y + sc_y, sc_n);"
+		print #f, "                        set_map_tile (read_vbyte (), read_vbyte (), sc_n = read_vbyte (), comportamiento_tiles [sc_n]);"
+	End If
 	print #f, "                        break;"
 End If
 

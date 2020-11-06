@@ -127,7 +127,7 @@
 							 "Y ME HAGO MUCHA CACA.%";
 
 	unsigned char text10 [] = "SOY CLEMENTE, LA%"
-							  "SERPIENTE, Y NO PUEO%"
+							  "SERPIENTE, NO CONSIGO%"
 							  "DORMIR. TENGO MUCHO%"
 							  "INSOMNIO. QUE PUEDO%"
 							  "HACIR?";
