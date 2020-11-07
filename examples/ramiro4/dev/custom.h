@@ -447,11 +447,11 @@
 
 	void hook_init_game (void) {
 		pinv = 0;
-		//pinv = 3; pinv_next_frame = object_cells [pinv];
-		player.objs = 4;
-
-		pofrendas = 0; pofrendas_old = 0xff;
 		ofrendas_idx = 0;
+		pofrendas = 0;
+		water_level = 0; 
+		pofrendas_old = 0xff;
+		
 		#asm
 				ld b, 4
 				ld a, r 
@@ -489,8 +489,6 @@
 				
 				djnz shuffle_loop
 		#endasm
-
-		water_level = 0;
 	}
 
 	void hook_mainloop (void) {

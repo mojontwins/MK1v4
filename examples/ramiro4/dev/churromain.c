@@ -21,6 +21,9 @@
 61952 - 65535 Horizontal Rotation Tables
 */
 
+#include "config.h"
+
+#define MAX_ENEMS 		3
 #define STACK_SIZE 		64
 
 // This figure depends the amount of sprites.
@@ -29,19 +32,13 @@
 #define NUMBLOCKS 		50 // 40
 
 // Note how if you need a IM2 table you have less free space
-#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
+#if defined (MODE_128K_DUAL) || defined (MIN_FAPS_PER_FRAME)
 	#define STACK_ADDR 		61936
-	#define RAMTOP 			61440
-	#define AD_FREE			RAMTOP-(NUMBLOCKS*15)
+	#define AD_FREE			61440-(NUMBLOCKS*15)
 #else
 	#define STACK_ADDR		61952
-	#define RAMTOP 			61952
-	#define AD_FREE			RAMTOP-STACK_SIZE-(NUMBLOCKS*15)
+	#define AD_FREE			61952-STACK_SIZE-(NUMBLOCKS*15)
 #endif
-
-#define MAX_ENEMS 		3
-
-#include "config.h"
 
 // Program modules in strict order...
 
