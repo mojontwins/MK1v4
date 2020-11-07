@@ -166,6 +166,8 @@ unsigned char orig_tile;	// Original background tile
 	unsigned char is128k;
 #endif
 
+unsigned char isrc @ 23700;
+
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
 		unsigned char pant_final = SCR_FIN;

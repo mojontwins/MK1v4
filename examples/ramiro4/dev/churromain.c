@@ -46,6 +46,9 @@
 // Program modules in strict order...
 
 #include "definitions.h"
+#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
+	#include "isr.h"
+#endif
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h"
 #endif

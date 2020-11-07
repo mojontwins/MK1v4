@@ -13,7 +13,9 @@
 		
 		ld hl, soundEffectsData	;address of sound effects data
 
-		;di
+		#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
+			di
+		#endif
 		push iy
 
 		ld b,0
@@ -32,7 +34,9 @@
 		or a
 		jr nz,readData_sound
 		pop iy
-		;ei
+		#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
+			ei
+		#endif
 		ret
 		
 	.readData_sound

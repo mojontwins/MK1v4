@@ -180,3 +180,6 @@ He reorganizado un poco la memoria, pero si esto se ejecuta en modo 128K deberí
 ```
 
 Con este código pongo a 1 o a 0 una variable `is128k` y la pila se queda donde debe. So win/win. Este código luego lo inegraré en `peta_el_beeper` a la que voy a cambiar el nombre justo ahora por `play_sfx`.
+
+He creado un nuevo `isr.h` donde he metido la rutina `ISR`. Ahora pondré los enganches y el limitador de frames.
+
