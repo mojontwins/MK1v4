@@ -54,7 +54,7 @@ unsigned char *f_scripts [] = {
 ._mscce_10
     defb 0x03, 0xF0, 0xFF, 0xFF, 0xFF
 ._msccf_0
-    defb 0x0F, 0x20, 0x02, 0x06, 0xA0, 0xFF, 0xE4, 0x0E, 0x51, 0x61, 0x00, 0x7F, 0x9F, 0xB6, 0xB0, 0xFF, 0x0D, 0x21, 0x61, 0x7F, 0xB0, 0xFF, 0xE4, 0x0D, 0x51, 0xE1, 0xE1, 0xFE, 0xAF, 0xFF, 0xFF
+    defb 0x0A, 0x20, 0x02, 0x06, 0x41, 0x04, 0xFF, 0xE4, 0x40, 0xF1, 0xFF, 0x0F, 0x20, 0x02, 0x06, 0xA0, 0xFF, 0xE4, 0x0E, 0x51, 0x61, 0x00, 0x7F, 0x9F, 0xB6, 0xB0, 0xFF, 0x0D, 0x21, 0x61, 0x7F, 0xB0, 0xFF, 0xE4, 0x0D, 0x51, 0xE1, 0xE1, 0xFE, 0xAF, 0xFF, 0xFF
 ._msccf_1
     defb 0x07, 0x20, 0x09, 0x07, 0xFF, 0xE4, 0x44, 0xFF, 0xFF
 ._msccf_2
@@ -71,7 +71,7 @@ unsigned char *f_scripts [] = {
  
 unsigned char *script;
 unsigned char *next_script;
-unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar, sc_res;
+unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar;
  
 void msc_init_all (void) {
     #asm
@@ -127,15 +127,15 @@ void read_x_y (void) {
 }
  
 // Ejecutamos el script apuntado por *script:
-unsigned char run_script (void) {
-    sc_res = 0;
+void run_script (void) {
+    script_result = 0;
  
     if (script == 0)
         return; 
  
     script_something_done = 0;
  
-    while (1) {
+    while (0 == script_result) {
         sc_c = read_byte ();
         if (sc_c == 0xFF) break;
         next_script = script + sc_c;
@@ -165,6 +165,11 @@ unsigned char run_script (void) {
                     sc_y = read_byte ();
                     sc_terminado = (! ((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y));
                     break;
+                case 0x41:
+                     // IF OBJECT_COUNT = n
+                     // Opcode: 41 n
+                     sc_terminado = (player.objs != read_vbyte ());
+                     break;
                 case 0xF0:
                      // IF TRUE
                      // Opcode: F0
@@ -228,6 +233,13 @@ unsigned char run_script (void) {
                         // Opcode: E4 n
                         do_extern_action (read_byte ());
                         break;
+                    case 0xF1:
+                        #asm
+                            ld  a, 1
+                            ld  (_sc_terminado), a
+                            ld  (_script_result), a
+                    #endasm
+                        break;
                     case 0xFF:
                         sc_terminado = 1;
                         break;
@@ -236,6 +248,4 @@ unsigned char run_script (void) {
         }
         script = next_script;
     }
- 
-    return sc_res;
 }

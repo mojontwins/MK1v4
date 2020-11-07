@@ -554,23 +554,28 @@ unsigned char move (void) {
 				(pad0 & sp_FIRE) == 0
 			#endif	
 		) {
+			if (player.saltando == 0) {
+				if (
+				#ifdef RAMIRO_HOP
+					rdi
+				#else
+					player.possee 
+				#endif
+					|| player.gotten
+				) {
+					player.saltando = 1;
+					player.cont_salto = 0;
+					peta_el_beeper (1);
+				}
+			}
+
 			if (player.saltando) {
 				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
 				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
 				player.cont_salto ++;
 				if (player.cont_salto == 8)
 					player.saltando = 0;
-			} else if (
-			#ifdef RAMIRO_HOP
-				rdi
-		#else
-				player.possee 
-			#endif
-				|| player.gotten) {
-				player.saltando = 1;
-				player.cont_salto = 0;
-				peta_el_beeper (1);
-			}
+			} 
 		} else {
 					player.saltando = 0;
 			}

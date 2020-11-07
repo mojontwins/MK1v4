@@ -14,7 +14,14 @@ void do_extern_action (unsigned char n) {
 			show_text_box (pinv);
 			pofrendas --;
 		} else show_text_box (0);
-	} else if (n < 65) {
+	} else if (n == 64){
+		// Final sequence (call before win game)
+		for (rdi = 15; rdi < 18; rdi ++) {
+			sp_UpdateNow ();
+			clear_gamearea ();
+			redraw_after_text = 0; show_text_box (rdi);
+		}
+	} else if (n < 64) {
 		show_text_box (n);
 	} else {
 		// Work with characters n-64:

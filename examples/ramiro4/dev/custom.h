@@ -80,7 +80,7 @@
 
 	// Text
 
-		unsigned char temp_string [] = "                        ";
+	unsigned char temp_string [] = "                        ";
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "POR OSIRIS Y POR APIS%"
@@ -217,8 +217,21 @@
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
+	unsigned char redraw_after_text = 0;
 
 	// Aux. functions
+
+	void clear_gamearea (void) {
+		// Tints game area black
+		#asm
+				ld  hl, 22528 + 64
+				ld  de, 22528 + 65
+				ld  bc, 767 - 128
+				xor a
+				ld  (hl), a
+				ldir
+		#endasm
+	}
 
 	void paint_water_strip (void) {
 		// Paints a strip of character rda at rdy
@@ -387,7 +400,8 @@
 		}
 
 		while (any_key ()); while (!any_key ()); 
-		redraw_from_buffer ();
+		if (redraw_after_text) redraw_from_buffer ();
+		redraw_after_text = 1;
 	}
 
 	void trap_kill (void) {
@@ -434,6 +448,7 @@
 	void hook_init_game (void) {
 		pinv = 0;
 		//pinv = 3; pinv_next_frame = object_cells [pinv];
+		player.objs = 4;
 
 		pofrendas = 0; pofrendas_old = 0xff;
 		ofrendas_idx = 0;
