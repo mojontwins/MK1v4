@@ -156,3 +156,27 @@ Este es el proceso:
 ## Mejoras de pulido
 
 Tengo que integrar el `sp_UpdateNow` con parámetro para pasar de los sprites, porque si no lo de los cuadros de texto queda super cutre. Tengo que modificar msc para que los `SET TILE` ocupe 3 bytes en vez de 4.
+
+Al final no hizo falta modificar `sp_UpdateNow` porque he usado una técnica más legal: 1.- Sacas los sprites de la pantalla, 2.- VALIDAS todo el rectángulo. De esta forma, al invalidar tiles y actualizar no se pintarán los sprites, pero los trozos no invalidados seguirán en pantalla. Ideal para los textos.
+
+## 128K dual y faps
+
+Ahora voy a meter algo nuevo en el motor: el modo 128K dual detecta el modo para tocar por beeper o por AY, y el limitador de faps. Ambos van a introducir la necesidad de meter el vector IM2 y empezaré por ahí.
+
+He reorganizado un poco la memoria, pero si esto se ejecuta en modo 128K debería poner la pila en RAM baja. Para eso lo primero que tengo que hacer es una detección. Lo hago adaptando este trozo de código de McLeod/Ideafix
+
+```
+	di
+	ld  bc, 0x7ffd
+	xor a
+	out (c), a
+	ld  a, (0x1)
+	ld  h, a
+	ld  a, 0x10
+	out (c), a
+	ld  a, (0x1)
+	cp  h
+	jr  nz, esUn128K
+```
+
+Con este código pongo a 1 o a 0 una variable `is128k` y la pila se queda donde debe. So win/win. Este código luego lo inegraré en `peta_el_beeper` a la que voy a cambiar el nombre justo ahora por `play_sfx`.

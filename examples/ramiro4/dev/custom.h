@@ -393,7 +393,7 @@
 			draw_text (4, rdy ++, 40, temp_string);
 
 			sp_UpdateNow ();
-			peta_el_beeper (talk_sounds [rand () & 1]);
+			play_sfx (talk_sounds [rand () & 1]);
 		
 			if (*gp_gen == 0) break;
 			gp_gen ++;
@@ -406,7 +406,7 @@
 
 	void trap_kill (void) {
 		sp_UpdateNow ();
-		peta_el_beeper (10);
+		play_sfx (10);
 		player.life -= BLOCK_HIT; 
 		player.estado = EST_PARP;
 		player.ct_estado = 50;
@@ -531,7 +531,7 @@
 			if (trap_coins) {
 				set_map_tile (13, 5, 0, 0);
 				sp_UpdateNow ();
-				peta_el_beeper (10);
+				play_sfx (10);
 			}
 		}
 
@@ -635,7 +635,7 @@
 
 						if (rdx == _trap_bx && rdy == _trap_by && trap_coins) {
 							flags [COIN_FLAG] ++;
-							peta_el_beeper (5);
+							play_sfx (5);
 							player.life += COINS_REFILL;
 							_trap_by = 0xff;
 						} else if (map_attr [rda] == 1) {
@@ -672,7 +672,7 @@
 						if (flags [COIN_FLAG] == 30) {
 							// Deativate trap!
 							scenery_info.allow_type_6 = 0;
-							peta_el_beeper (8);
+							play_sfx (8);
 							trap_active = 0;
 							draw_scr_background ();
 						} 
@@ -694,7 +694,7 @@
 		// Offers
 		if (latest_hotspot == 2) {
 			pofrendas ++;
-			peta_el_beeper (5);
+			play_sfx (5);
 			
 			// Activate water trap
 			if (n_pant == 29) {
@@ -738,13 +738,13 @@
 				water_locks ++;
 				set_map_tile (rdx, rdy, 11, 8);
 				sp_UpdateNow ();
-				peta_el_beeper (5);
+				play_sfx (5);
 				if (water_locks == 2) {
 					// Open trap!
 					set_map_tile (water_top_door_x, 0, 0, 0);
 					set_map_tile (water_top_door_x + 1, 0, 0, 0);
 					sp_UpdateNow ();
-					peta_el_beeper (8);
+					play_sfx (8);
 				}
 			}
 		}

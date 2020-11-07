@@ -5,6 +5,9 @@
 // I. General configuration
 // ============================================================================
 
+#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
+#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
+
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W					6		//

@@ -13,19 +13,31 @@
 		LIB SPTileArray	
 #endasm
 
+/* splib2 memory map
+61440 - 61696 IM2 vector table
+61697 - 61936 FREEPOOL (240 bytes)
+61937 - 61948 ISR
+61949 - 61951 Free (3 bytes)
+61952 - 65535 Horizontal Rotation Tables
+*/
 
-#define STACK_ADDR		61952
-#define STACK_SIZE 		96
+#define STACK_SIZE 		64
 
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
 // Add 5 for each 8x8 sprite (such as bullets)
 #define NUMBLOCKS 		50 // 40
 
-// Tighten it even more... Gaining about 1.1 extra Kb 
-// You will probably have to tinker with this depending on your game.
-#pragma output STACKPTR=61952
-#define AD_FREE			STACK_ADDR-STACK_SIZE-(NUMBLOCKS*15)
+// Note how if you need a IM2 table you have less free space
+#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
+	#define STACK_ADDR 		61936
+	#define RAMTOP 			61440
+	#define AD_FREE			RAMTOP-(NUMBLOCKS*15)
+#else
+	#define STACK_ADDR		61952
+	#define RAMTOP 			61952
+	#define AD_FREE			RAMTOP-STACK_SIZE-(NUMBLOCKS*15)
+#endif
 
 #define MAX_ENEMS 		3
 

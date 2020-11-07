@@ -101,7 +101,7 @@ void title_screen (void) {
 void game_ending (void) {
 	sp_UpdateNow();
 	asm_int = (unsigned int) (s_ending); unpack ();
-	beepet (); peta_el_beeper (11);
+	beepet (); play_sfx (11);
 	espera_activa (500);
 }
 
@@ -109,6 +109,6 @@ void game_over (void) {
 	draw_rectangle (10, 11, 21, 13, GAME_OVER_ATTR);		
 	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
 	sp_UpdateNow ();
-	beepet (); peta_el_beeper (10);
+	beepet (); play_sfx (10);
 	espera_activa (500);
 }

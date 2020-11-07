@@ -216,7 +216,7 @@ void run_script (void) {
                     case 0xE0:
                         // SOUND n
                         // Opcode: E0 n
-                        peta_el_beeper (read_vbyte ());
+                        play_sfx (read_vbyte ());
                         break;
                     case 0xE1:
                         // SHOW

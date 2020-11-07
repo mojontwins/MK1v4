@@ -38,7 +38,7 @@ void do_extern_action (unsigned char n) {
 			on_pant = 0xff; 		// Force reenter
 			flags [which_character] = 1;
 			pinv = 0;
-			peta_el_beeper (6);
+			play_sfx (6);
 		}
 	}
 }

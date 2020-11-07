@@ -17,13 +17,6 @@ unsigned char *enem_cells [] = {
 
 void saca_a_todo_el_mundo_de_aqui (void) {
 	// ¡Saca a todo el mundo de aquí!
-	/*
-	sp_MoveSprAbs (sp_player, spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);				
-	for (gpit = 0; gpit < 3; gpit ++) {
-		if (malotes [enoffs + gpit].t != 0)
-			sp_MoveSprAbs (sp_moviles [gpit], spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);
-	}
-	*/
 	#asm
 			ld  ix, (_sp_player)
 			ld  iy, vpClipStruct
@@ -300,7 +293,7 @@ void cortina (void) {
 					bullets [gpit].mx = PLAYER_BULLET_SPEED;
 				}
 				bullets [gpit].y = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
-				peta_el_beeper (9);
+				play_sfx (9);
 				#ifdef FIRING_DRAINS_LIFE
 					player.life -= FIRING_DRAIN_AMOUNT;
 				#endif				
@@ -326,7 +319,7 @@ void cortina (void) {
 		flags [COIN_FLAG] ++;
 		
 		set_map_tile (xx, yy, 0, 0);
-		peta_el_beeper (5);
+		play_sfx (5);
 
 		#if defined ACTIVATE_SCRIPTING && defined COINS_SCRIPTING
 			// Run f_script #max_screens + 1
@@ -347,7 +340,7 @@ void cortina (void) {
 
 		// Sound
 		if (act) {
-			peta_el_beeper (8);
+			play_sfx (8);
 			#ifdef FALLING_BOXES
 				// Añadir al buffer de cajas cayentes.
 				fall_box (x1, y1);
@@ -362,7 +355,7 @@ void cortina (void) {
 		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
 		player.current_frame = player.next_frame;
 		sp_UpdateNow ();
-		peta_el_beeper (10);	
+		play_sfx (10);	
 	}
 #endif
 
@@ -565,7 +558,7 @@ unsigned char move (void) {
 				) {
 					player.saltando = 1;
 					player.cont_salto = 0;
-					peta_el_beeper (1);
+					play_sfx (1);
 				}
 			}
 
@@ -699,12 +692,12 @@ unsigned char move (void) {
 				set_map_tile (gpxx + 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx + 1, gpyy);
 				player.keys --;
-				peta_el_beeper (8);
+				play_sfx (8);
 			} else if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
 				set_map_tile (gpxx - 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx - 1, gpyy);
 				player.keys --;
-				peta_el_beeper (8);
+				play_sfx (8);
 			}
 		}
 	#endif
@@ -780,7 +773,7 @@ unsigned char move (void) {
 			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) 
 		#endif
 		{		
-			peta_el_beeper (2);
+			play_sfx (2);
 			player.life -= LINEAR_ENEMY_HIT;	
 			player.x = gpcx;
 			player.y = gpcy;
@@ -812,7 +805,7 @@ unsigned char move (void) {
 					#endif
 				) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
-					if (0 == player.killingzone_framecount) peta_el_beeper (3);
+					if (0 == player.killingzone_framecount) play_sfx (3);
 					player.life --;	
 				}
 			} else {
@@ -820,7 +813,7 @@ unsigned char move (void) {
 					player.killingzone_framecount = 0;
 					player.killingzone_beepcount ++;
 					sp_Border (2);
-					peta_el_beeper (4);
+					play_sfx (4);
 				} else {
 					player.killingzone_framecount ++;
 				}
@@ -1166,7 +1159,7 @@ void draw_scr (void) {
 			draw_2_digits (VIEWPORT_X + 17, VIEWPORT_Y + 10, (n_pant+1));
 		#endif
 		sp_UpdateNow ();
-		peta_el_beeper (6);
+		play_sfx (6);
 		espera_activa (1000);
 	#endif
 
@@ -1536,7 +1529,7 @@ void mueve_bicharracos (void) {
 						sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffs + enit].y >> 3), VIEWPORT_X + (malotes [enoffs + enit].x >> 3), malotes [enoffs + enit].x & 7, malotes [enoffs + enit].y & 7);
 						en_an_current_frame [enit] = en_an_next_frame [enit];
 						sp_UpdateNow ();
-						peta_el_beeper (10);
+						play_sfx (10);
 						en_an_next_frame [enit] = sprite_18_a;
 						_en_t |= 16;			// Marked as "dead"
 						// Count it
@@ -1549,7 +1542,7 @@ void mueve_bicharracos (void) {
 				#endif
 				{
 					en_tocado = 1;
-					peta_el_beeper (2);
+					play_sfx (2);
 					player.is_dead = 1;
 					
 					// We decide which kind of life drain we do:
@@ -1760,7 +1753,7 @@ void mueve_bicharracos (void) {
 									sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
 									en_an_current_frame [enit] = en_an_next_frame [enit];
 									sp_UpdateNow ();
-									peta_el_beeper (10);
+									play_sfx (10);
 									en_an_next_frame [enit] = sprite_18_a;
 									_en_t |= 16;			// dead
 									// Count

@@ -5,6 +5,37 @@
 // Cointains initialization stuff and the main game loop.
 
 void main (void) {
+	#asm
+			di 
+			ld  sp, STACK_ADDR
+
+		#ifdef MODE_128K_DUAL
+			ld  bc, 0x7ffd
+			xor a
+			out (c), a
+			ld  a, (0x1)
+			ld  h, a
+			ld  a, 0x10
+			out (c), a
+			ld  a, (0x1)
+			cp  h
+			jr  z, no128K
+
+			// 128K mode: set the stack in low RAM
+			ld  sp, 24199
+
+			ld  a, 1
+			jr  detectionDone
+
+		.no128K
+			xor a
+		
+		.detectionDone
+			ld  (_is128k), a
+
+		#endif
+	#endasm
+
 	// splib2 initialization
 	sp_Initialize (7, 0);
 	sp_Border (BLACK);
@@ -357,7 +388,7 @@ void main (void) {
 						if (player.life > PLAYER_LIFE)
 							player.life = PLAYER_LIFE;
 						hotspots [n_pant].act = 2;
-						peta_el_beeper (6);
+						play_sfx (6);
 					} else 
 				#endif
 
@@ -369,14 +400,14 @@ void main (void) {
 								#ifdef ONLY_ONE_OBJECT
 									if (player.objs == 0) {
 										player.objs ++;
-										peta_el_beeper (6);	
+										play_sfx (6);	
 									} else {
 										rdi = 0;
-										peta_el_beeper (1);	
+										play_sfx (1);	
 									}
 								#else
 									player.objs ++;
-									peta_el_beeper (6);
+									play_sfx (6);
 									#ifdef OBJECT_COUNT
 										flags [OBJECT_COUNT] ++;
 									#endif
@@ -387,7 +418,7 @@ void main (void) {
 						#ifndef DEACTIVATE_KEYS
 							case 2:
 								player.keys ++;
-								peta_el_beeper (6);
+								play_sfx (6);
 								break;
 						#endif
 					}
@@ -418,7 +449,7 @@ void main (void) {
 			#ifdef PLAYER_CAN_FIRE
 				for (rdi = 0; rdi < 3; rdi ++)
 					if (en_an_morido [rdi] == 1) {
-						peta_el_beeper (1);
+						play_sfx (1);
 						en_an_morido [rdi] = 0;
 					} 	
 			#endif
@@ -460,7 +491,7 @@ void main (void) {
 					// Any scripts to run in this screen?
 					script = f_scripts [n_pant];
 					run_script ();
-					//if (!script_something_done) peta_el_beeper (9);
+					//if (!script_something_done) play_sfx (9);
 				}
 			#endif
 

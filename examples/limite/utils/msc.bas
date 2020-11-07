@@ -1232,7 +1232,7 @@ if actionsUsed (&HE0) Then
 	print #f, "                    case 0xE0:"
 	print #f, "                        // SOUND n"
 	print #f, "                        // Opcode: E0 n"
-	print #f, "                        peta_el_beeper (read_vbyte ());"
+	print #f, "                        play_sfx (read_vbyte ());"
 	print #f, "                        break;"
 End If
 
