@@ -111,6 +111,13 @@ void title_screen (void) {
 void game_ending (void) {
 	sp_UpdateNow();
 	asm_int = (unsigned int) (s_ending); unpack ();
+
+	// CUSTOM { 
+	draw_text (7, 15, 7, "EL VAMPIRO RAMIRO");
+	draw_text (8, 17, 7, "NUNCA GANA . . .");
+	sp_UpdateNow ();
+	// } END OF CUSTOM
+
 	beepet (); play_sfx (11);
 	espera_activa (500);
 }
