@@ -84,6 +84,7 @@
 												script = f_scripts [max_screens + 2];
 												run_script ();
 											#endif
+											break;
 										}
 									}						
 								}
