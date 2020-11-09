@@ -532,11 +532,11 @@ void main (void) {
 					n_pant += MAP_W;
 					gpy = player.y = 0;
 				}
-
-				if (n_pant != on_pant) {
-					draw_scr (); on_pant = n_pant;
-				}
 			#endif
+
+			if (n_pant != on_pant) {
+				draw_scr (); on_pant = n_pant;
+			}
 			
 			// Win game condition
 			
