@@ -111,7 +111,7 @@ for yy = 0 To map_h - 1
 				end if
 				
 				if packed = 0 then
-					o = o + Hex (BigOrigMap (yy * scr_h + y, xx * scr_w + x), 2)
+					o = o + "0x" + Hex (BigOrigMap (yy * scr_h + y, xx * scr_w + x), 2)
 					if yy < map_h - 1 Or xx < map_w - 1 Or y < scr_h -1 Or x < scr_w -1 then
 						o = o + ", "
 					end if

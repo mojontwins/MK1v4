@@ -11,7 +11,7 @@
 			for (rdi = enoffs; rdi < rdd; rdi ++) {
 				if (malotes [rdi].x >= boxx - 12 && malotes [rdi].x <= boxx + 12 &&
 					malotes [rdi].y >= boyy - 12 && malotes [rdi].y <= boyy + 12) {
-					peta_el_beeper (9);
+					play_sfx (9);
 					return 0;
 				}
 			}
@@ -75,7 +75,7 @@
 											sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an_next_frame [rdi] - en_an_current_frame [rdi], VIEWPORT_Y + (malotes [enoffs + rdi].y >> 3), VIEWPORT_X + (malotes [enoffs + rdi].x >> 3), malotes [enoffs + rdi].x & 7, malotes [enoffs + rdi].y & 7);
 											en_an_current_frame [rdi] = en_an_next_frame [rdi];
 											sp_UpdateNow ();
-											peta_el_beeper (10);
+											play_sfx (10);
 											en_an_next_frame [rdi] = sprite_18_a;
 											malotes [enoffs + rdi].t |= 16;			// Marked as "dead"
 											// Count it

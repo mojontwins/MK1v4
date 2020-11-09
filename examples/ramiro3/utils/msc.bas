@@ -1,4 +1,4 @@
-' Parser y compilador para los scripts de de MTE MK1 v4.
+' Parser y compilador para los scripts de MTE MK1 v4.
 ' Copyleft 2010, 2011 The Mojon Twins, los masters del código guarro.
 ' Compilar con freeBasic (http://www.freebasic.net).
 
@@ -433,6 +433,9 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 				Case "REENTER"
 					clausula = clausula + Chr (&H6F)
 					actionsUsed (&H6F) = -1
+				Case "NEXT_LEVEL":
+					clausula = clausula + Chr (&HD0)
+					actionsUsed (&HD0) = -1
 				Case "SOUND":
 					clausula = clausula + Chr (&HE0) + Chr (pval (lP (1)))
 					actionsUsed (&HE0) = -1
@@ -1228,6 +1231,15 @@ if actionsUsed (&H6F) Then
 	print #f, "                        break;"
 End If
 
+if actionsUsed (&HD0)  Then
+	print #f, "                    case 0xD0:"
+	print #f, "                        // NEXT_LEVEL"
+	print #f, "                        // Opcode: D0"
+	print #f, "                        n_pant ++;"
+	print #f, "                        init_player_values ();"
+	print #f, "                        break;"
+End If
+
 if actionsUsed (&HE0) Then
 	print #f, "                    case 0xE0:"
 	print #f, "                        // SOUND n"
@@ -1287,7 +1299,7 @@ if actionsUsed (&HF1) Then
 	print #f, "                            ld  a, 1"
 	print #f, "                            ld  (_sc_terminado), a"
 	print #f, "                            ld  (_script_result), a"
-	print #f, "                    #endasm"
+	print #f, "                        #endasm"
 	print #f, "                        break;"
 End If
 

@@ -12,15 +12,15 @@
 	}
 
 	void hook_init_game (void) {
-	
+				
 	}
 
 	void hook_mainloop (void) {
-	
+
 	}
 
-	void hook_entering (void) {	
-	
+	void hook_entering (void) {		
+
 	}
-	
+
 #endif

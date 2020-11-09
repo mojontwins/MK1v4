@@ -1,10 +1,10 @@
 @echo off
 
-set game=lala4
+set game=ababol2d2
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 15 packed  > nul
-..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
+..\utils\mapcnv.exe ..\map\mapa.map mapa.h 1 20 15 10 15 > nul
+..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin -1 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul
 ..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul

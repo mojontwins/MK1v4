@@ -5,6 +5,7 @@
 unsigned char which_character;
 
 void do_extern_action (unsigned char n) {
+	redraw_after_text = 1;
 	if (n == 128) {
 		if (pinv) {
 			show_text_box (19);
@@ -14,7 +15,7 @@ void do_extern_action (unsigned char n) {
 			show_text_box (pinv);
 			pofrendas --;
 		} else show_text_box (0);
-	} else if (n == 64){
+	} else if (n == 64) {
 		// Final sequence (call before win game)
 		for (rdi = 15; rdi < 18; rdi ++) {
 			sp_UpdateNow ();

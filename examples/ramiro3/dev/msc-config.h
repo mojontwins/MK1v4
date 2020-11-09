@@ -1,5 +1,5 @@
 // msc.h
-// Generado por Mojon Script Compiler de la Churrera
+// Generado por Mojon Script Compiler de MTE MK1 v4
 // Copyleft 2011 The Mojon Twins
  
 unsigned char script_result = 0;

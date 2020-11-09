@@ -1,4 +1,4 @@
-' Parser y compilador para los scripts de de MTE MK1 v4.
+' Parser y compilador para los scripts de MTE MK1 v4.
 ' Copyleft 2010, 2011 The Mojon Twins, los masters del código guarro.
 ' Compilar con freeBasic (http://www.freebasic.net).
 
@@ -47,7 +47,7 @@ Sub stringToArray (in As String)
 	Dim m as Integer
 	Dim index as Integer
 	Dim character as String * 1
-	Dim comillas As Integer
+	Dim As Integer comillas, hadComillas
 	
 	for m = 1 to LIST_WORDS_SIZE: lP (m) = "": Next m
 	
@@ -55,17 +55,20 @@ Sub stringToArray (in As String)
 	lP (index) = ""
 	in = in + " "
 	comillas = 0
+	hadComillas = 0
 	
 	For m = 1 To Len (in)
 		character = Ucase (Mid (in, m, 1))
 		If character = Chr (34) Then
 			comillas = Not comillas
+			hadComillas = -1
 		ElseIf comillas Then 
 			lP (index) = lP (index) + character
 		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
 			lP (index) = lP (index) + character
 		Else
-			lP (index) = Ltrim (Rtrim (lP (index)))
+			If Not hadComillas Then lP (index) = Ltrim (Rtrim (lP (index)))
+			hadComillas = 0
 			If lP (index) <> "" Then
 				index = index + 1
 			End If
@@ -76,8 +79,6 @@ Sub stringToArray (in As String)
 			lP (index) = ""
 		End If
 	Next m
-
-	'' For m = 0 To index: Print m;"[";lP (m); "] ":Next m:Print
 End Sub
 
 Sub displayMe (clausula As String) 
@@ -432,6 +433,9 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 				Case "REENTER"
 					clausula = clausula + Chr (&H6F)
 					actionsUsed (&H6F) = -1
+				Case "NEXT_LEVEL":
+					clausula = clausula + Chr (&HD0)
+					actionsUsed (&HD0) = -1
 				Case "SOUND":
 					clausula = clausula + Chr (&HE0) + Chr (pval (lP (1)))
 					actionsUsed (&HE0) = -1
@@ -681,7 +685,7 @@ print #f, "#endasm"
 print #f, " "
 print #f, "unsigned char *script;"
 print #f, "unsigned char *next_script;"
-print #f, "unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar, sc_res;"
+print #f, "unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar;"
 print #f, " "
 print #f, "void msc_init_all (void) {"
 If clausulasUsed (&H1) Or clausulasUsed (&H2) Then
@@ -743,15 +747,15 @@ print #f, "    #endasm"
 print #f, "}"
 print #f, " "
 print #f, "// Ejecutamos el script apuntado por *script:"
-print #f, "unsigned char run_script (void) {"
-print #f, "    sc_res = 0;"
+print #f, "void run_script (void) {"
+print #f, "    script_result = 0;"
 print #f, " "
 print #f, "    if (script == 0)"
 print #f, "        return; "
 print #f, " "
 print #f, "    script_something_done = 0;"
 print #f, " "
-print #f, "    while (1) {"
+print #f, "    while (0 == script_result) {"
 print #f, "        sc_c = read_byte ();"
 print #f, "        if (sc_c == 0xFF) break;"
 print #f, "        next_script = script + sc_c;"
@@ -1227,11 +1231,20 @@ if actionsUsed (&H6F) Then
 	print #f, "                        break;"
 End If
 
+if actionsUsed (&HD0)  Then
+	print #f, "                    case 0xD0:"
+	print #f, "                        // NEXT_LEVEL"
+	print #f, "                        // Opcode: D0"
+	print #f, "                        n_pant ++;"
+	print #f, "                        init_player_values ();"
+	print #f, "                        break;"
+End If
+
 if actionsUsed (&HE0) Then
 	print #f, "                    case 0xE0:"
 	print #f, "                        // SOUND n"
 	print #f, "                        // Opcode: E0 n"
-	print #f, "                        peta_el_beeper (read_vbyte ());"
+	print #f, "                        play_sfx (read_vbyte ());"
 	print #f, "                        break;"
 End If
 
@@ -1286,7 +1299,7 @@ if actionsUsed (&HF1) Then
 	print #f, "                            ld  a, 1"
 	print #f, "                            ld  (_sc_terminado), a"
 	print #f, "                            ld  (_script_result), a"
-	print #f, "                    #endasm"
+	print #f, "                        #endasm"
 	print #f, "                        break;"
 End If
 
@@ -1298,8 +1311,6 @@ print #f, "            }"
 print #f, "        }"
 print #f, "        script = next_script;"
 print #f, "    }"
-print #f, " "
-print #f, "    return sc_res;"
 print #f, "}"
 
 ' Fin

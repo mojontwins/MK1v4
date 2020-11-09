@@ -79,6 +79,7 @@ void *joyfunc;
 #ifdef SCRIPTING_KEY_M
 	int key_m = 0x047f;
 #endif
+
 #ifdef USE_SUICIDE_KEY
 	int key_s = 0x02fd;
 #endif
@@ -118,17 +119,17 @@ signed int ptgmx, ptgmy;
 
 // Enemies
 
-unsigned char en_an_frame [MAX_ENEMS]				@ 23800;
-unsigned char en_an_count [MAX_ENEMS]				@ (23800 + MAX_ENEMS);
-unsigned char *en_an_current_frame [MAX_ENEMS]		@ (23800 + MAX_ENEMS*2);
-unsigned char *en_an_next_frame [MAX_ENEMS]			@ (23800 + MAX_ENEMS*4);
-unsigned char en_an_morido [MAX_ENEMS] 				@ (23800 + MAX_ENEMS*6);
-signed int en_an_x [MAX_ENEMS] 						@ (23800 + MAX_ENEMS*7);
-signed int en_an_y [MAX_ENEMS]						@ (23800 + MAX_ENEMS*9);
-signed int en_an_vx [MAX_ENEMS]						@ (23800 + MAX_ENEMS*11);
-signed int en_an_vy [MAX_ENEMS]	 					@ (23800 + MAX_ENEMS*13);
-unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (23800 + MAX_ENEMS*15);
-unsigned char en_an_state [MAX_ENEMS]				@ (23800 + MAX_ENEMS*16);
+unsigned char en_an_frame [MAX_ENEMS]				@ 23600;
+unsigned char en_an_count [MAX_ENEMS]				@ (23600 + MAX_ENEMS);
+unsigned char *en_an_current_frame [MAX_ENEMS]		@ (23600 + MAX_ENEMS*2);
+unsigned char *en_an_next_frame [MAX_ENEMS]			@ (23600 + MAX_ENEMS*4);
+unsigned char en_an_morido [MAX_ENEMS] 				@ (23600 + MAX_ENEMS*6);
+signed int en_an_x [MAX_ENEMS] 						@ (23600 + MAX_ENEMS*7);
+signed int en_an_y [MAX_ENEMS]						@ (23600 + MAX_ENEMS*9);
+signed int en_an_vx [MAX_ENEMS]						@ (23600 + MAX_ENEMS*11);
+signed int en_an_vy [MAX_ENEMS]	 					@ (23600 + MAX_ENEMS*13);
+unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (23600 + MAX_ENEMS*15);
+unsigned char en_an_state [MAX_ENEMS]				@ (23600 + MAX_ENEMS*16);
 
 unsigned char enoffs;
 unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
@@ -143,8 +144,8 @@ unsigned char *_baddies_pointer;
 
 // Tile behaviour array and tile array for the current screen
 
-unsigned char map_attr [150] @ 24050;
-unsigned char map_buff [150] @ 23900;
+unsigned char map_attr [150] @ 23300;
+unsigned char map_buff [150] @ 23450;
 
 // Hotspot related shortcut variables. hotspot_x and hotspot_y contain
 // the pixel coordinates of the current screen hotspot.
@@ -160,6 +161,12 @@ unsigned char orig_tile;	// Original background tile
 #endif
 
 // Game flow
+
+#ifdef MODE_128K_DUAL
+	unsigned char is128k;
+#endif
+
+unsigned char isrc @ 23700;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN

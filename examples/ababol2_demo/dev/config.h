@@ -5,18 +5,21 @@
 // I. General configuration
 // ============================================================================
 
+//#define MODE_128K_DUAL				// Uses AY Routines in RAM1 if on 128K mode.
+//#define MIN_FAPS_PER_FRAME	2		// Limits the max # of fps to 50/N
+
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W					6		//
-#define MAP_H					5		// Map dimmensions in screens
+#define MAP_W					1		//
+#define MAP_H					20		// Map dimmensions in screens
 #define TOTAL_SCREENS			30		// 
-#define SCR_INICIO				24		// Initial screen
-#define PLAYER_INI_X			2		//
-#define PLAYER_INI_Y			2		// Initial tile coordinates
+#define SCR_INICIO				19		// Initial screen
+#define PLAYER_INI_X			12		//
+#define PLAYER_INI_Y			7		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X			99		//
 //#define PLAYER_FIN_Y			99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS		25		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS		1		// Objects to get to finish game
 #define PLAYER_LIFE 			99		// Max and starting life gauge.
 #define PLAYER_REFILL			10		// Life recharge
 
@@ -37,7 +40,7 @@
 // General directives:
 // -------------------
 
-//#define DIRECT_TO_PLAY				// If defined, title screen is also the game frame.
+#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
 //#define DEACTIVATE_KEYS				// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT				// If defined, only one object can be carried at a time.
@@ -46,9 +49,10 @@
 #define DEACTIVATE_EVIL_ZONE			// Zones kill you after a while. Read docs or ask na_th_an
 //#define EVIL_ZONE_FRAME_COUNT	8		// For countdown in an evil zone.
 //#define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing
+//#define EVIL_ZONE_FREQ 		3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 //#define EVIL_ZONE_CONDITIONAL 		// Active if scenery_info.evil_zone_active
-#define PLAYER_BOUNCES					// If defined, collisions make player bounce
-//#define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
+//#define PLAYER_BOUNCES				// If defined, collisions make player bounce
+#define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
 //#define DEACTIVATE_REFILLS			// If defined, no refills.
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 					// The Hobbit
@@ -56,10 +60,10 @@
 // Coins engine
 // ------------
 
-//#define USE_COINS						// Coin engine activated
-//#define COIN_TILE				13		// Coin is tile #X
+#define USE_COINS						// Coin engine activated
+#define COIN_TILE				46		// Coin is tile #X
 //#define COIN_BEH 				16 		// Detect coin by behaviour rather than tile nº
-//#define COIN_FLAG				1		// Coins are counted in flag #N
+#define COIN_FLAG				1		// Coins are counted in flag #N
 //#define COINS_REFILL 			1		// If defined, add this to player.life
 //#define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
 //#define COINS_DEACTIVABLE				// Coins can be hidden.
@@ -131,7 +135,7 @@
 // ----------
 
 #define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
-#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
+//#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define RAMIRO_HOP 					// press jump when reaching a type 4 platform to jump again 
 //#define RAMIRO_HOVER 					// press down to hover
 //#define PLAYER_HAS_JETPAC 			// If defined, player can thrust a vertical jetpac
@@ -149,21 +153,21 @@
 // This sections defines how stuff is rendered, where to show counters, etcetera
 
 #define VIEWPORT_X				1		//
-#define VIEWPORT_Y				2		// Viewport character coordinates
+#define VIEWPORT_Y				1		// Viewport character coordinates
 
-#define LIFE_X					4		//
-#define LIFE_Y					0		// Life gauge counter character coordinates
+#define LIFE_X					8		//
+#define LIFE_Y					22		// Life gauge counter character coordinates
 //#define DRAW_HI_DIGIT	
 //#define LIFE_H_X 				1
 //#define LIFE_H_Y				8
 
-#define OBJECTS_X				11		//
-#define OBJECTS_Y				0		// Objects counter character coordinates
+//#define OBJECTS_X				11		//
+//#define OBJECTS_Y				0		// Objects counter character coordinates
 //#define OBJECTS_ICON_X		2		// 
 //#define OBJECTS_ICON_Y		21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 
-#define KEYS_X					18		//
-#define KEYS_Y					0		// Keys counter character coordinates
+#define KEYS_X					19		//
+#define KEYS_Y					22		// Keys counter character coordinates
 
 //#define SHOW_KILLED
 //#define SHOW_TOTAL
@@ -179,18 +183,18 @@
 //#define ITEM_SHOW_X			2		//
 //#define ITEM_SHOW_Y			21		// Position
 
-//#define COINS_X 				12 		// Coins coint character coordinates
-//#define COINS_Y				23
+#define COINS_X 				14 		// Coins coint character coordinates
+#define COINS_Y					22
 
 //#define EVIL_GAUGE_X			21		// For evil zone counters
 //#define EVIL_GAUGE_Y			23
 
 // Line of text
 
-#define LINE_OF_TEXT			23
-#define LINE_OF_TEXT_X			1
-#define LINE_OF_TEXT_SUBSTR		2
-#define LINE_OF_TEXT_ATTR 		7		
+//#define LINE_OF_TEXT			23
+//#define LINE_OF_TEXT_X		1
+//#define LINE_OF_TEXT_SUBSTR	2
+//#define LINE_OF_TEXT_ATTR 	7		
 
 #define GAME_OVER_ATTR			15
 
@@ -198,7 +202,7 @@
 
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
-//#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
+#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
 //#define NO_ALT_BG						// No alternative tile 19 for bg = 0
 #define NO_MAX_ENEMS					// Less than 3 enems in some screens
 //#define NO_MASKS						// Sprites are rendered using OR instead of masks.
@@ -219,23 +223,23 @@
 // IV.1. Vertical movement. Only for side-view.
 
 #define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
-#define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
+#define PLAYER_G				48		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
 
 #define PLAYER_MAX_VY_CAYENDO_H 256		// For RAMIRO_HOVER
 #define PLAYER_G_HOVER 			4
 
-#define PLAYER_VY_INICIAL_SALTO 64		// Initial junp velocity (64/64 = 1 píxel/frame)
+#define PLAYER_VY_INICIAL_SALTO 80		// Initial junp velocity (64/64 = 1 píxel/frame)
 #define PLAYER_MAX_VY_SALTANDO	320 	// Max jump velocity (320/64 = 5 píxels/frame)
-#define PLAYER_INCR_SALTO		48		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
+#define PLAYER_INCR_SALTO		80		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
 #define PLAYER_INCR_JETPAC		48		// Vertical jetpac gauge
 #define PLAYER_MAX_VY_JETPAC	384 	// Max vertical jetpac speed
 
 // IV.2. Horizontal (side view) or general (top view) movement.
 
-#define PLAYER_MAX_VX			192 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX				24		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX				32		// Friction (32/64 = 0,5 píxels/frame^2)
+#define PLAYER_MAX_VX			256 	// Max velocity (192/64 = 3 píxels/frame)
+#define PLAYER_AX				48		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX				64		// Friction (32/64 = 0,5 píxels/frame^2)
 
 // ============================================================================
 // V. Tile behaviour
@@ -271,8 +275,8 @@
 #else
 	// Fill this array if you are using unpacked maps.
 	unsigned char comportamiento_tiles [] = {
-		0, 8, 8, 0, 0, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8,
-		8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
-		8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0
+		 0, 8, 8, 8, 4,24, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+		56, 8, 0, 0, 0, 0, 4, 8, 8, 8,56,56,56, 0, 0, 0,
+		 4, 0, 0, 0, 8, 8, 8, 8, 8, 1, 8, 0, 8,56, 0,56
 	};
 #endif

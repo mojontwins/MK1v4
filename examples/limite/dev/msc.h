@@ -1,5 +1,5 @@
 // msc.h
-// Generado por Mojon Script Compiler de la Churrera
+// Generado por Mojon Script Compiler de MTE MK1 v4
 // Copyleft 2011 The Mojon Twins
  
 // Script data & pointers
@@ -15,12 +15,12 @@ unsigned char *f_scripts [] = {
  
 #asm
 ._msccf_0
-    defb 0x0A, 0x31, 0x82, 0x51, 0x1D, 0xFF, 0xE0, 0x0B, 0xE0, 0x02, 0xFF, 0x0B, 0x31, 0x82, 0x50, 0x1D, 0xFF, 0xE0, 0x0B, 0xE0, 0x02, 0xF1, 0xFF, 0xFF
+    defb 0x0B, 0x31, 0x82, 0x51, 0x1D, 0xFF, 0xE0, 0x0B, 0xE0, 0x02, 0xD0, 0xFF, 0x0B, 0x31, 0x82, 0x50, 0x1D, 0xFF, 0xE0, 0x0B, 0xE0, 0x02, 0xF1, 0xFF, 0xFF
 #endasm
  
 unsigned char *script;
 unsigned char *next_script;
-unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar, sc_res;
+unsigned char sc_i, sc_m, sc_x, sc_y, sc_c, sc_n, sc_terminado, sc_continuar;
  
 void msc_init_all (void) {
     #asm
@@ -71,15 +71,15 @@ void read_x_y (void) {
 }
  
 // Ejecutamos el script apuntado por *script:
-unsigned char run_script (void) {
-    sc_res = 0;
+void run_script (void) {
+    script_result = 0;
  
     if (script == 0)
         return; 
  
     script_something_done = 0;
  
-    while (1) {
+    while (0 == script_result) {
         sc_c = read_byte ();
         if (sc_c == 0xFF) break;
         next_script = script + sc_c;
@@ -119,17 +119,23 @@ unsigned char run_script (void) {
             while (0 == sc_terminado) {
                 sc_c = read_byte ();
                 switch (sc_c) {
+                    case 0xD0:
+                        // NEXT_LEVEL
+                        // Opcode: D0
+                        n_pant ++;
+                        init_player_values ();
+                        break;
                     case 0xE0:
                         // SOUND n
                         // Opcode: E0 n
-                        peta_el_beeper (read_vbyte ());
+                        play_sfx (read_vbyte ());
                         break;
                     case 0xF1:
                         #asm
                             ld  a, 1
                             ld  (_sc_terminado), a
                             ld  (_script_result), a
-                    #endasm
+                        #endasm
                         break;
                     case 0xFF:
                         sc_terminado = 1;
@@ -139,6 +145,4 @@ unsigned char run_script (void) {
         }
         script = next_script;
     }
- 
-    return sc_res;
 }

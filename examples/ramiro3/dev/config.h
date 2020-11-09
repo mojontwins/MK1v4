@@ -5,6 +5,9 @@
 // I. General configuration
 // ============================================================================
 
+//#define MODE_128K_DUAL				// Uses AY Routines in RAM1 if on 128K mode.
+//#define MIN_FAPS_PER_FRAME	2		// Limits the max # of fps to 50/N
+
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W					6		//
@@ -46,6 +49,7 @@
 //#define DEACTIVATE_EVIL_ZONES			// Zones kill you after a while. Read docs or ask na_th_an
 #define EVIL_ZONE_FRAME_COUNT	8		// For countdown in an evil zone.
 #define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing
+//#define EVIL_ZONE_FREQ 		3 		// if defined to N kill every M^2 frames; N=M^2-1, 
 //#define EVIL_ZONE_CONDITIONAL 		// Active if scenery_info.evil_zone_active
 //#define PLAYER_BOUNCES				// If defined, collisions make player bounce
 #define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
