@@ -71,6 +71,7 @@
 
 // Fixed screens engine
 // --------------------
+
 //#define FIXED_SCREENS					// If defined, you can't exit a screen running off an edge
 //#define SHOW_LEVEL_INFO				// If defined, show "LEVEL XX" before level start, XX=n_pant
 //#define SHOW_LEVEL_SUBLEVEL			// If defined, level # is XX/YY using y_map and x_map resp.
@@ -82,6 +83,7 @@
 
 // Boxes engine
 // ------------
+
 //#define PLAYER_PUSH_BOXES 			// If defined, tile #14 is pushable
 //#define FALLING_BOXES					// If defined, boxes can fall off ledges.
 //#define FALLING_BOXES_SPEED 	4		// Boxes fall every nth frame.
@@ -101,6 +103,14 @@
 
 //#define FIRING_DRAINS_LIFE			// If defined, firing drains life (oi!)
 //#define FIRING_DRAIN_AMOUNT	2		// what to substract when firing.
+
+// Sword
+// -----
+
+#define ENABLE_SWORD 					// Let the player swing a sword
+
+// Miscellaneous fanty stuff
+// -------------------------
 
 //#define PLAYER_CAN_HIDE				// If defined, tile type 2 hides player.
 //#define RANDOM_RESPAWN				// If defined, automatic flying enemies spawn on killed enemies
