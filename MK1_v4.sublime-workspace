@@ -524,14 +524,14 @@
 			"settings":
 			{
 				"buffer_size": 4087,
-				"line_ending": "Unix"
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "examples/limite/dev/mainloop.h",
 			"settings":
 			{
-				"buffer_size": 14956,
+				"buffer_size": 14953,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -760,7 +760,7 @@
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -902,6 +902,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"boxes",
 			"&HE1",
 			"pinv",
 			"frame_counter",
@@ -1028,8 +1029,7 @@
 			"decodebase64",
 			"juntadeand",
 			"correo.junta",
-			"14",
-			"log_sandetel"
+			"14"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1191,8 +1191,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								437,
+								437
 							]
 						],
 						"settings":
@@ -1220,15 +1220,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14956,
+						"buffer_size": 14953,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8146,
-								8146
+								12670,
+								12670
 							]
 						],
 						"settings":
@@ -1237,7 +1237,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4340.0,
+						"translation.y": 6760.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1266,7 +1266,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 60.0,
-						"translation.y": 630.0,
+						"translation.y": 504.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -1277,7 +1277,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -1333,7 +1333,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 48.0
+		"height": 42.0
 	},
 	"save_all_on_build": true,
 	"select_file":

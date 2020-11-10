@@ -238,7 +238,7 @@ void run_script (void) {
                             ld  a, 1
                             ld  (_sc_terminado), a
                             ld  (_script_result), a
-                    #endasm
+                        #endasm
                         break;
                     case 0xFF:
                         sc_terminado = 1;

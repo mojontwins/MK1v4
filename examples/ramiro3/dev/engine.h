@@ -541,7 +541,9 @@ unsigned char move (void) {
 		#endif
 
 		if (
-			#if defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
+			#if defined BOTH_KEYS_JUMP
+				(pad0 & sp_UP) == 0 || (pad0 & sp_FIRE) == 0
+			#elif defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
 				(pad0 & sp_UP) == 0 
 			#else
 				(pad0 & sp_FIRE) == 0
@@ -570,8 +572,8 @@ unsigned char move (void) {
 					player.saltando = 0;
 			} 
 		} else {
-					player.saltando = 0;
-			}
+			player.saltando = 0;
+		}
 	#endif
 
 	#ifdef PLAYER_HAS_JETPAC

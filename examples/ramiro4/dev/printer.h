@@ -261,7 +261,7 @@ void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned c
 			dec hl
 			ld  a, (hl)
 			ld  (__n), a
-			
+
 		.set_map_tile_do
 			ld  a, (__y)
 			ld  b, a
