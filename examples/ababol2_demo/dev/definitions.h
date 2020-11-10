@@ -17,6 +17,12 @@
 #define TYPE_6_PURSUING		1
 #define TYPE_6_RETREATING	2
 
+#define ENEM_PARALYZED 		32
+
+#define SWORD_TYPE_LEFT 	0
+#define SWORD_TYPE_RIGHT 	1
+#define SWORD_TYPE_UP 		2
+
 #define MAX_FALLING_BOXES 8
 
 typedef struct {
@@ -101,6 +107,10 @@ struct sp_SS *sp_moviles [MAX_ENEMS];
 #ifdef PLAYER_CAN_FIRE
 	struct sp_SS *sp_bullets [MAX_BULLETS];
 #endif
+#ifdef ENABLE_SWORD
+	struct sp_SS *sp_sword;
+#endif
+
 struct sp_Rect spritesClipValues = { VIEWPORT_Y, VIEWPORT_X, 20, 30 };
 struct sp_Rect *spritesClip;
 
@@ -194,6 +204,18 @@ unsigned char flags [MAX_FLAGS];
 #if defined(FALLING_BOXES) && defined(PLAYER_PUSH_BOXES)
 	FALLINGBOX fallingboxbuffer [MAX_FALLING_BOXES];
 	unsigned char fall_frame_counter;
+#endif
+
+// Sword
+
+#ifdef ENABLE_SWORD
+	unsigned char *s_current_frame, *s_next_frame;
+	unsigned char s_on, s_type;
+	unsigned char s_x, s_y, s_frame;
+	unsigned char s_hit_x, s_hit_y;
+
+	unsigned char swoffs_x [] = {8, 10, 12, 14, 15, 15, 14, 13, 10};
+	unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
 #endif
 
 // Aux

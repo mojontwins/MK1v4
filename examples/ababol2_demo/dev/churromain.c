@@ -28,8 +28,8 @@
 
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
-// Add 5 for each 8x8 sprite (such as bullets)
-#define NUMBLOCKS 		40
+// Add 5 for each 8x8 sprite (such as bullets or sword)
+#define NUMBLOCKS 		45 // 40
 
 // Note how if you need a IM2 table you have less free space
 #if defined (MODE_128K_DUAL) || defined (MIN_FAPS_PER_FRAME)
@@ -38,6 +38,11 @@
 #else
 	#define STACK_ADDR		61952
 	#define AD_FREE			61952-STACK_SIZE-(NUMBLOCKS*15)
+#endif
+
+// Shortcut
+#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE) || defined(BOXES_KILL_ENEMIES) || defined(ENABLE_SWORD)
+	#define ENEMIES_MAY_DIE
 #endif
 
 // Program modules in strict order...
@@ -53,9 +58,7 @@
 #include "mapa.h"
 #include "tileset.h"
 #include "sprites.h"
-#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE) || defined(NO_MAX_ENEMS) || defined(BOXES_KILL_ENEMIES)
-	#include "extrasprites.h"
-#endif
+#include "extrasprites.h"
 #include "enems.h"
 #include "beeper.h"
 #include "printer.h"

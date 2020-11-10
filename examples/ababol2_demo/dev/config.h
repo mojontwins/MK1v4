@@ -56,6 +56,7 @@
 //#define DEACTIVATE_REFILLS			// If defined, no refills.
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 					// The Hobbit
+#define ENEMIES_LIFE_GAUGE		3		// Amount of shots/hits needed to kill enemies.
 
 // Coins engine
 // ------------
@@ -99,7 +100,6 @@
 //#define PLAYER_BULLET_SPEED 	8		// Pixels/frame. 
 //#define MAX_BULLETS 			3		// Max number of bullets on screen. Be careful!.
 //#define PLAYER_BULLET_Y_OFFSET	4	// vertical offset from the player's top.
-//#define ENEMIES_LIFE_GAUGE	5		// Amount of shots needed to kill enemies.
 
 //#define FIRING_DRAINS_LIFE			// If defined, firing drains life (oi!)
 //#define FIRING_DRAIN_AMOUNT	2		// what to substract when firing.
@@ -108,6 +108,10 @@
 // -----
 
 #define ENABLE_SWORD 					// Let the player swing a sword
+#define SWORD_UP 						// Can hit upwards
+#define SWORD_LINEAL_DAMAGE 0 			// Damage to linear.
+#define SWORD_FLYING_DAMAGE 1			// Damage to flying.
+#define SWORD_PARALYZES		32 			// If defined, paralyze for N frames
 
 // Miscellaneous fanty stuff
 // -------------------------
@@ -214,9 +218,10 @@
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 #define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
+#define COLUMN_MAP 						// Do not check horizontal screen flicks
+//#define ROW_MAP 						// Do not check vertical screen flicks
 //#define NO_ALT_BG						// No alternative tile 19 for bg = 0
 #define NO_MAX_ENEMS					// Less than 3 enems in some screens
-//#define NO_MASKS						// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 //#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
 //#define TWO_SETS_REAL 				// Tiles have their real value in map_buff

@@ -115,6 +115,12 @@ void main (void) {
 		}
 	#endif
 
+	#ifdef ENABLE_SWORD
+		sp_sword = sp_CreateSpr (sp_MASK_SPRITE, 2, sprite_sword, 2);
+		sp_AddColSpr (sp_sword, sprite_sword + 32);
+		s_current_frame = sprite_sword;
+	#endif
+
 	#ifdef ENABLE_CODE_HOOKS
 		hook_system_inits ();
 	#endif
@@ -155,7 +161,7 @@ void main (void) {
 			init_cerrojos ();
 		#endif	
 
-		#if defined(PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE) || defined(BOXES_KILL_ENEMIES)
+		#ifdef ENEMIES_MAY_DIE
 			init_malotes ();
 		#endif
 			
@@ -298,6 +304,11 @@ void main (void) {
 			#ifdef PLAYER_CAN_FIRE
 				// Move bullets				
 				mueve_bullets ();
+			#endif
+
+			#ifdef ENABLE_SWORD
+				// Swing sword
+				swing_sword ();
 			#endif
 
 			#if defined(FALLING_BOXES) && defined(PLAYER_PUSH_BOXES)
@@ -517,21 +528,25 @@ void main (void) {
 			#endif
 
 			#ifndef FIXED_SCREENS
-				if (gpx == 0 && player.vx < 0) {
-					n_pant --;
-					gpx = 224; player.x = 224<<6; 
-				} else if (gpx == 224 && player.vx > 0) {
-					n_pant ++;
-					gpx = player.x = 0;
-				}
+				#ifndef COLUMN_MAP
+					if (gpx == 0 && player.vx < 0) {
+						n_pant --;
+						gpx = 224; player.x = 224<<6; 
+					} else if (gpx == 224 && player.vx > 0) {
+						n_pant ++;
+						gpx = player.x = 0;
+					}
+				#endif
 
-				if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
-					n_pant -= MAP_W;
-					gpy = 144; player.y = 144<<6;
-				} else if (gpy == 144 && player.vy > 0) {
-					n_pant += MAP_W;
-					gpy = player.y = 0;
-				}
+				#ifndef ROW_MAP
+					if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
+						n_pant -= MAP_W;
+						gpy = 144; player.y = 144<<6;
+					} else if (gpy == 144 && player.vy > 0) {
+						n_pant += MAP_W;
+						gpy = player.y = 0;
+					}
+				#endif
 			#endif
 
 			if (n_pant != on_pant) {
