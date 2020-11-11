@@ -331,7 +331,7 @@ void any_key (void) {
 	void draw_persistent_row (void) {
 		for (gpit = 0; gpit < 7; gpit ++) {
 			if (rda & bitmask [gpit])
-				set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR, PERSIST_CLEAR_BEH);
+				set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR_TILE, comportamiento_tiles [PERSIST_CLEAR_TILE]);
 		}
 	}
 
