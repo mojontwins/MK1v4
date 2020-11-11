@@ -23,7 +23,8 @@
 #define SWORD_TYPE_RIGHT 	1
 #define SWORD_TYPE_UP 		2
 
-#define MAX_FALLING_BOXES 8
+#define MAX_FALLING_BOXES 	8
+#define MAX_BREAKABLE 		4
 
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
@@ -216,6 +217,15 @@ unsigned char flags [MAX_FLAGS];
 
 	unsigned char swoffs_x [] = {8, 10, 12, 14, 15, 15, 14, 13, 10};
 	unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
+#endif
+
+// Breakable
+
+#ifdef ENABLE_BREAKABLE
+	unsigned char process_breakable;
+	unsigned char b_f [MAX_BREAKABLE];
+	unsigned char b_x [MAX_BREAKABLE];
+	unsigned char b_y [MAX_BREAKABLE];
 #endif
 
 // Aux

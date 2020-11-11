@@ -263,10 +263,26 @@ void cortina (void) {
 
 #ifdef PLAYER_CAN_FIRE
 	void init_bullets (void) {
-		
 		// Initialize bullets
 		
 		for (gpit = 0; gpit < MAX_BULLETS; gpit ++)	bullets [gpit].estado = 0;
+	}
+#endif
+
+#ifdef ENABLE_BREAKABLE
+	void init_breakable (void) {
+		// Initialize breakable
+
+		#asm
+				ld  hl, _b_f
+				ld  de, _b_f + 1
+				ld  bc, MAX_BREAKABLE - 1
+				xor a
+				ld  (hl), a
+				ldir
+		#endasm
+
+		process_breakable = 0;
 	}
 #endif
 
@@ -380,6 +396,40 @@ void player_flicker (void) {
 	player.ct_estado = 50;
 }
 
+#ifdef ENABLE_BREAKABLE
+	void actualiza_breakables (void) {
+		process_breakable = 0;
+		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
+			if (b_f [gpit]) {
+				b_f [gpit] --;
+				if (b_f [gpit] == 0) {
+					#ifdef BREAKABLE_SPAWN_CHANCE
+						rdi = ((rand () & BREAKABLE_SPAWN_CHANCE) == 1) ? BREAKABLE_SPAWN_TILE : BREAKABLE_ERASE_TILE;
+						set_map_tile (b_x [gpit], b_y [gpit], rdi, comportamiento_tiles [rdi]);
+					#else
+						set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_ERASE_TILE, comportamiento_tiles [BREAKABLE_ERASE_TILE]);
+					#endif
+				} else process_breakable = -1;
+			}
+		}
+	}
+
+	void add_to_breakables (void) {
+		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
+			if (b_f [gpit] == 0) {
+				b_x [gpit] = _x;
+				b_y [gpit] = _y;
+				b_f [gpit] = MAX_BREAKABLE_FRAMES;
+				set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_BREAKING_TILE, comportamiento_tiles [BREAKABLE_BREAKING_TILE]);
+				sp_UpdateNow ();
+				play_sfx (9);
+				process_breakable = 1;
+				break;
+			}
+		}
+	}
+#endif
+
 #ifdef ENABLE_SWORD
 	void swing_sword (void) {
 		if (s_on) {
@@ -401,7 +451,12 @@ void player_flicker (void) {
 				}
 			}
 
-			// Todo :: detect breakable
+			// Detect breakable
+			if (s_frame > 2 && s_frame < 6) {
+				_x = s_hit_x >> 4;
+				_y = s_hit_y >> 4;
+				if (attr (_x, _y) & 32) add_to_breakables ();
+			}
 
 			s_frame ++;
 			if (s_frame == 9) s_on = 0;
@@ -1365,6 +1420,10 @@ void draw_scr (void) {
 	#ifdef ENABLE_CODE_HOOKS
 		hook_entering ();
 	#endif
+
+	#ifdef ENABLE_BREAKABLE
+		init_breakable ();
+	#endif
 }
 
 #ifdef PLAYER_CAN_FIRE
@@ -1374,11 +1433,13 @@ void draw_scr (void) {
 		#else	
 			for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
 				bullets [gpit].x += bullets [gpit].mx;
-				if (attr (bullets [gpit].x >> 4, bullets [gpit].y >> 4) & 8) {
+				_x = bullets [gpit].x >> 4;
+				_y = bullets [gpit].y >> 4; 
+				rdi = attr (_x, _y);
+				if ((rdi & 8) || bullets [gpit].x > 240) {
 					bullets [gpit].estado = 0;
 				}
-				if (bullets [gpit].x < 8 || bullets [gpit].x > 240)
-					bullets [gpit].estado = 0;
+				if (rdi & 32) add_to_breakables ();
 			}	
 		#endif
 	}

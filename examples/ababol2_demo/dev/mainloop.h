@@ -168,7 +168,7 @@ void main (void) {
 		#ifdef PLAYER_CAN_FIRE
 			init_bullets ();
 		#endif	
-			
+
 		on_pant = n_pant = SCR_INICIO;
 		maincounter = 0;
 		
@@ -309,6 +309,13 @@ void main (void) {
 			#ifdef ENABLE_SWORD
 				// Swing sword
 				swing_sword ();
+			#endif
+
+			#ifdef ENABLE_BREAKABLE
+				// Update preakables
+				if (process_breakable) {
+					actualiza_breakables ();
+				}
 			#endif
 
 			#if defined(FALLING_BOXES) && defined(PLAYER_PUSH_BOXES)

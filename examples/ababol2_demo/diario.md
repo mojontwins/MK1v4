@@ -99,5 +99,27 @@ Y así es como lo voy a implementar. Voy a ver como ando de bollería para gener
 
 ## Tiles destructibles
 
+Se trata de tiles destructibles sin buffer, que se rompen a la primera. Habrá una variable `process_breakable` si hay algún tile destructible que destruir. Al detectar un tile destructible (`& 32`), se encolará en la lista compuesta por tres arrays:
 
+```c
+	unsigned char b_f [MAX_BREAKABLE];
+	unsigned char b_x [MAX_BREAKABLE];
+	unsigned char b_y [MAX_BREAKABLE];
+```
+
+`b_f` se inicializa con el valor `MAX_BREAKABLE_FRAMES`. 
+
+Si `process_breakable` vale cierto, se procesan los breakables. Se empieza poniendo `process_breakable` a 0, y si hay algún `b_f`  se procesa, para terminar decrementando `b_f`. Si sigue sin valer 0, se pone `process_breakable` a 1. Cuando se encola, se cambia el tile por `BREAKABLE_BREAKING_TILE`, que debe ser no traspasable pero **no rompiscible**. Cuando `b_f` llega a cero, se sustituye por `BREAKABLE_ERASE_TILE`.
+
+Tenemos las funciones `actualiza_breakables` y `add_to_breakables`. Esta última tendré que engancharla a la espada y también a los disparos (para futuras cacurcias).
+
+### Monedas en los rompiscibles
+
+Se puede hacer que un rompiscible tire una moneda (u otra cosa) muy fácilmente. `BREAKABLE_SPAWN_CHANCE`, si está definido, hará que si `rand () & BREAKABLE_SPAWN_CHANCE == 1` salga un `BREAKABLE_SPAWN_TILE`.
+
+## Monedas persistentes
+
+Hacer monedas persistentes (que se cojan y se queden cogidas) es trivial si tu mapa está comprimido en memoria. El problema es cuando no lo está. Tenemos que hacer un buffer. Puedo usar 20 bytes por pantalla y bits para las monedas recogidas. En total serían 400 bytes para esto. Los puedo ubicar fuera del binario en `AD_FREE - TOTAL_SCREENS * 20 `. Me sirve para cualquier tipo de persistencia, por cierto. Habrá que actualizar la estructura cuando se rome un tile, levantando el bit correcto: `n_pant * 20 + y * 2 + (x >> 3)`, bit `(x & 7)`.
+
+Por ejemplo, en la pantalla 0, y = 5, x = 4, levantaremos en `0 + 2*5 + (4>>3)` = 10 el bit 4. Para x = 12, levanteremos en `0 + 2*5 + (12>>3)`= 11 el bit 4.
 

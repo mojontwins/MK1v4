@@ -109,9 +109,19 @@
 
 #define ENABLE_SWORD 					// Let the player swing a sword
 #define SWORD_UP 						// Can hit upwards
-#define SWORD_LINEAL_DAMAGE 0 			// Damage to linear.
+#define SWORD_LINEAL_DAMAGE		0		// Damage to linear.
 #define SWORD_FLYING_DAMAGE 1			// Damage to flying.
-#define SWORD_PARALYZES		32 			// If defined, paralyze for N frames
+#define SWORD_PARALYZES			32		// If defined, paralyze for N frames
+
+// Breakable
+// ---------
+
+#define ENABLE_BREAKABLE 				// Enable breakable tiles (& 32)
+#define MAX_BREAKABLE_FRAMES 	8 		// N = frames to display this tile:
+#define BREAKABLE_BREAKING_TILE 45		// display this for N frames
+#define BREAKABLE_ERASE_TILE 	0		// The substitute by this tile.
+#define BREAKABLE_SPAWN_CHANCE  3 		// Must be a power of 2 - 1, ifdef there's a chance to spawn...
+#define BREAKABLE_SPAWN_TILE    46 		// Throw this tile if rand() & chance == 1.
 
 // Miscellaneous fanty stuff
 // -------------------------
@@ -245,8 +255,8 @@
 #define PLAYER_G_HOVER 			4
 
 #define PLAYER_VY_INICIAL_SALTO 80		// Initial junp velocity (64/64 = 1 píxel/frame)
-#define PLAYER_MAX_VY_SALTANDO	320 	// Max jump velocity (320/64 = 5 píxels/frame)
-#define PLAYER_INCR_SALTO		80		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
+#define PLAYER_MAX_VY_SALTANDO	360 	// Max jump velocity (320/64 = 5 píxels/frame)
+#define PLAYER_INCR_SALTO		88		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
 #define PLAYER_INCR_JETPAC		48		// Vertical jetpac gauge
 #define PLAYER_MAX_VY_JETPAC	384 	// Max vertical jetpac speed
@@ -293,6 +303,6 @@
 	unsigned char comportamiento_tiles [] = {
 		 0, 8, 8, 8, 4,24, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
 		56, 8, 0, 0, 0, 0, 4, 8, 8, 8,56,56,56, 0, 0, 0,
-		 4, 0, 0, 0, 8, 8, 8, 8, 8, 1, 8, 0, 8,56, 0,56
+		 4, 0, 0, 0, 8, 8, 8, 8, 8, 1, 8, 0, 8,24, 0,56
 	};
 #endif
