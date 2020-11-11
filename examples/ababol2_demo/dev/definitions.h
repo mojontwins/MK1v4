@@ -261,6 +261,10 @@ unsigned char *gp_gen, *gp_gen_alt;
 unsigned char t_alt;
 unsigned char prxx, pryy;
 
+unsigned char bitmask [] = {
+	1, 2, 4, 8, 16, 32, 64, 128
+};
+
 // Prototypes
 
 void fall_box (unsigned char x, unsigned char y);

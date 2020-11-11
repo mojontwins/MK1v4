@@ -123,3 +123,29 @@ Hacer monedas persistentes (que se cojan y se queden cogidas) es trivial si tu m
 
 Por ejemplo, en la pantalla 0, y = 5, x = 4, levantaremos en `0 + 2*5 + (4>>3)` = 10 el bit 4. Para x = 12, levanteremos en `0 + 2*5 + (12>>3)`= 11 el bit 4.
 
+Algo así:
+
+```c
+	#ifdef ENABLE_PERSISTENCE
+		void persist (void) {
+			// Marks tile _x, _y @ n_pant to be cleared next time we enter this screen		
+			*(PERSIST_BASE + (n_pant << 3) + (n_pant << 1) + (_y << 1) + (_x >> 3)) |= bitmask [_x & 7];	
+		}
+
+		void draw_persistent_row (void) {
+			for (gpit = 0; gpit < 7; gpit ++) {
+				if (rda & bitmask [gpit])
+					set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR_TILE, comportamiento_tiles [PERSIST_CLEAR_TILE]);
+			}
+		}
+
+		void draw_persistent (void) {
+			gp_gen = PERSIST_BASE + (n_pant << 3) + (n_pant << 1);
+			for (rdy = 0; rdy < 10; rdy ++) {
+				rdx = 0; rda = *gp_gen ++; draw_persistent_row ();
+				rdx = 8; rda = *gp_gen ++; draw_persistent_row ();
+			}
+		}
+	#endif
+```
+
