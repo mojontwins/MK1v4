@@ -519,7 +519,7 @@ unsigned char move (void) {
 				adjust_to_tile_y ();
 				player.ceiling = 1;
 			}
-		} else if ((gpy & 15) < 8) { 	// Going down
+		} else if ((gpy & 15) <= (player.vy >> 6) /*8*/) { 	// Going down
 			if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			{
 				// Stop and adjust.
@@ -726,7 +726,7 @@ unsigned char move (void) {
 							}
 						}
 					} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
-						if (can_move_box (gpxx, gpyy + 1, gpxx, gpyy + 2)) {
+						if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
 							move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
 						}
 						if ((gpx & 15) != 0) {
@@ -883,43 +883,22 @@ unsigned char move (void) {
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 L1 L2 U1 U2 D1 D2
 		
-		#ifdef LOOK_AT_THE_CAMERA
-			if (player.vx != 0 || player.vy != 0) {
-				player.subframe ++;
-				if (player.subframe == 4) {
-					player.subframe = 0;
-					player.frame = !player.frame;
-					step (); 
-				}
+		if (player.vx != 0 || player.vy != 0) {
+			player.subframe ++;
+			if (player.subframe == 4) {
+				player.subframe = 0;
+				player.frame = !player.frame;
+				step (); 
 			}
-			
-			rdd = player.frame;
-			if (player.vx == 0) {		
-				if (player.vy < 0) rdd += 4;
-				else rdd += 6; 
-			} else if (player.vx < 0) rdd += 2;
+		}
+		
+		rdd = player.frame;
+		if (player.vx == 0) {		
+			if (player.vy < 0) rdd += 4;
+			else rdd += 6; 
+		} else if (player.vx < 0) rdd += 2;
 
-			player.next_frame = player_cells [rdd];
-		#else
-			if (player.vx != 0 || player.vy != 0) {
-				player.subframe ++;
-				if (player.subframe == 4) {
-					player.subframe = 0;
-					player.frame = !player.frame;
-					step (); 
-				}
-
-				rdd = player.frame;
-			
-				if (player.vx == 0) {		
-					if (player.vy < 0) rdd += 4;
-					else rdd += 6; 
-				} else if (player.vx < 0) rdd += 2;
-
-				player.next_frame = player_cells [rdd];
-			}
-		#endif
-
+		player.next_frame = player_cells [rdd];
 	#endif
 }
 
@@ -943,10 +922,6 @@ void init_player_values (void) {
 	player.killingzone_beepcount = 0;
 	player.killingzone_framecount = 0;	
 	player.is_dead =    0;
-
-	#if defined PLAYER_MOGGY_STYLE && !defined LOOK_AT_THE_CAMERA
-		player.next_frame = player_cells [7];
-	#endif
 }
 
 void init_player (void) {

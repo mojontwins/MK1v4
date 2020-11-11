@@ -617,7 +617,7 @@ void move (void) {
 				adjust_to_tile_y ();
 				player.ceiling = 1;
 			}
-		} else if ((gpy & 15) < 8) { 	// Going down
+		} else if ((gpy & 15) <= (player.vy >> 6) /*8*/) { 	// Going down
 			if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			{
 				// Stop and adjust.
