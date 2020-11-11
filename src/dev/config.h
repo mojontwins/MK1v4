@@ -40,7 +40,7 @@
 // General directives:
 // -------------------
 
-//#define DIRECT_TO_PLAY				// If defined, title screen is also the game frame.
+#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
 //#define DEACTIVATE_KEYS				// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT				// If defined, only one object can be carried at a time.
