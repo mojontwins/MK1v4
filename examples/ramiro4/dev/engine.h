@@ -711,55 +711,55 @@ unsigned char move (void) {
 			if ((pad0 & sp_FIRE) == 0)
 		#endif
 		{
-				
-				// In side-view mode, you can't push boxes vertically.
-				#ifdef PLAYER_MOGGY_STYLE
-					// Vertically, only when player.y is tile-aligned.
-					if ((gpy & 15) == 0) {
-						if ((pad0 & sp_UP) == 0 && gpyy > 1) {
-							if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2))
-								move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
+			
+			// In side-view mode, you can't push boxes vertically.
+			#ifdef PLAYER_MOGGY_STYLE
+				// Vertically, only when player.y is tile-aligned.
+				if ((gpy & 15) == 0) {
+					if ((pad0 & sp_UP) == 0 && gpyy > 1) {
+						if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2)) {
+							move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
+						}						
+						if ((gpx & 15) != 0) {
+							if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
+								move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
 							}
-							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
-									move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
-								}
-							}
-						} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
-								move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
-							}
-							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
-									move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
-								}	
-							}
+						}
+					} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
+						if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
+							move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
+						}
+						if ((gpx & 15) != 0) {
+							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
+								move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
+							}	
 						}
 					}
-				#endif
+				}
+			#endif
 
-				// Horizontally, only when player.x is tile-aligned.
-				if ((gpx & 15) == 0) {
-					if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
-						if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
-							move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
+			// Horizontally, only when player.x is tile-aligned.
+			if ((gpx & 15) == 0) {
+				if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
+					if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
+						move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
+					}
+					if ((gpy & 15) != 0) {
+						if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
+							move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
 						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
-								move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
-							}
+					}
+				} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
+					if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
+						move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
+					}
+					if ((gpy & 15) != 0) {
+						if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
+							move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
 						}
-					} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
-						if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
-							move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
-						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
-								move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
-							}
-						}
-					}	
-				}			
+					}
+				}	
+			}			
 		}
 	#endif
 

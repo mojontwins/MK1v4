@@ -15,14 +15,6 @@ unsigned char *enem_cells [] = {
 	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
 };
 
-#ifdef ENABLE_SWORD
-	extern unsigned char *sword_cells [0];
-	#asm 
-		._sword_cells
-			defw _sprite_sword, _sprite_sword + 64, _sprite_sword + 128
-	#endasm
-#endif
-
 void saca_a_todo_el_mundo_de_aqui (void) {
 	// ¡Saca a todo el mundo de aquí!
 	#asm
@@ -270,12 +262,12 @@ void cortina (void) {
 	}
 #endif
 
-#ifdef ENEMIES_MAY_DIE
+#if defined(PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE) || defined(BOXES_KILL_ENEMIES)
 	void init_malotes (void) {
 		
 		for (gpit = 0; gpit < MAP_W * MAP_H * MAX_ENEMS; gpit ++) {
 			malotes [gpit].t = malotes [gpit].t & 15;	
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#ifdef PLAYER_CAN_FIRE
 				malotes [gpit].life = ENEMIES_LIFE_GAUGE;
 				#ifdef RANDOM_RESPAWN
 					if (malotes [gpit].t == 5) malotes [gpit].t |= 16;
@@ -380,42 +372,7 @@ void player_flicker (void) {
 	player.ct_estado = 50;
 }
 
-#ifdef ENABLE_SWORD
-	void swing_sword (void) {
-		if (s_on) {
-			if (s_type == SWORD_TYPE_UP) {
-				s_x = gpx + swoffs_y [s_frame];
-				s_y = gpy + 8 - swoffs_x [s_frame];
-				s_hit_x = s_x + 4;
-				s_hit_y = s_y;			
-			} else {
-				s_y = gpy + swoffs_y [s_frame]; 
-				s_hit_y = (s_y + 4);
-
-				if (s_type == SWORD_TYPE_LEFT) {
-					s_x = gpx + 8 - swoffs_x [s_frame];
-					s_hit_x = s_x;				
-				} else {
-					s_x = gpx + swoffs_x [s_frame];
-					s_hit_x = s_x + 7;				
-				}
-			}
-
-			// Todo :: detect breakable
-
-			s_frame ++;
-			if (s_frame == 9) s_on = 0;
-			rdx = s_x;
-		} else {
-			rdx = 240;
-		}
-
-		sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
-		s_current_frame = s_next_frame;
-	}
-#endif
-
-void move (void) {
+unsigned char move (void) {
 	gpcx = player.x;
 	gpcy = player.y;
 
@@ -728,19 +685,6 @@ void move (void) {
 				player.disparando = 0;
 		#endif
 	#endif
-
-	// Sword
-	#ifdef ENABLE_SWORD
-		if (s_on == 0 && (pad0 & sp_FIRE) == 0) {
-			if ((pad0 & sp_UP) == 0) {
-				s_type = SWORD_TYPE_UP;
-			} else s_type = player.facing;
-
-			s_on = 1;
-			s_frame = 0;
-			s_next_frame = sword_cells [s_type];
-		}
-	#endif
 	
 	// Keys / bolts engine:
 
@@ -767,55 +711,55 @@ void move (void) {
 			if ((pad0 & sp_FIRE) == 0)
 		#endif
 		{
-				
-				// In side-view mode, you can't push boxes vertically.
-				#ifdef PLAYER_MOGGY_STYLE
-					// Vertically, only when player.y is tile-aligned.
-					if ((gpy & 15) == 0) {
-						if ((pad0 & sp_UP) == 0 && gpyy > 1) {
-							if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2))
-								move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
+			
+			// In side-view mode, you can't push boxes vertically.
+			#ifdef PLAYER_MOGGY_STYLE
+				// Vertically, only when player.y is tile-aligned.
+				if ((gpy & 15) == 0) {
+					if ((pad0 & sp_UP) == 0 && gpyy > 1) {
+						if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2)) {
+							move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
+						}						
+						if ((gpx & 15) != 0) {
+							if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
+								move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
 							}
-							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
-									move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
-								}
-							}
-						} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
-								move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
-							}
-							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
-									move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
-								}	
-							}
+						}
+					} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
+						if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
+							move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
+						}
+						if ((gpx & 15) != 0) {
+							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
+								move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
+							}	
 						}
 					}
-				#endif
+				}
+			#endif
 
-				// Horizontally, only when player.x is tile-aligned.
-				if ((gpx & 15) == 0) {
-					if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
-						if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
-							move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
+			// Horizontally, only when player.x is tile-aligned.
+			if ((gpx & 15) == 0) {
+				if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
+					if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
+						move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
+					}
+					if ((gpy & 15) != 0) {
+						if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
+							move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
 						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
-								move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
-							}
+					}
+				} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
+					if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
+						move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
+					}
+					if ((gpy & 15) != 0) {
+						if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
+							move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
 						}
-					} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
-						if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
-							move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
-						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
-								move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
-							}
-						}
-					}	
-				}			
+					}
+				}	
+			}			
 		}
 	#endif
 
@@ -922,12 +866,7 @@ void move (void) {
 			ld  (_rdi), a
 		#endasm
 
-		if (
-			(0 == player.possee && 0 == player.gotten)
-			#ifdef ENABLE_SWORD
-				|| s_on
-			#endif
-		) {
+		if (0 == player.possee && 0 == player.gotten) {
 			rdd = 3;
 		} else {
 			if (player.vx == 0) {
@@ -1291,7 +1230,7 @@ void draw_scr (void) {
 					en_an_state [gpit] = TYPE_6_IDLE;
 					break;
 			#endif
-			#if defined (ENEMIES_MAY_DIE)
+			#if defined (PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE)			
 				default:
 					en_an_next_frame [gpit] = sprite_18_a;
 			#endif
@@ -1379,32 +1318,6 @@ void platform_get_player (void) {
 	ptgmy = (_en_my << 6);
 }
 
-#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
-	void enems_kill (void) {
-		// Kill enemy
-		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
-		en_an_current_frame [enit] = en_an_next_frame [enit];
-		sp_UpdateNow ();
-		play_sfx (10);
-		en_an_next_frame [enit] = sprite_18_a;
-
-		_en_t |= 16;			// dead
-
-		// Count
-		player.killed ++;
-
-		#ifdef ACTIVATE_SCRIPTING
-			script = f_scripts [max_screens + 2];
-			run_script ();
-		#endif								
-
-		#ifdef RANDOM_RESPAWN								
-			en_an_fanty_activo [enit] = 0;
-			_en_life = FANTIES_LIFE_GAUGE;
-		#endif
-	}
-#endif
-
 void mueve_bicharracos (void) {
 	// This function moves the active enemies.
 	en_tocado = 0;
@@ -1424,7 +1337,7 @@ void mueve_bicharracos (void) {
 				ld 	hl, (_enoffsmasi)
 				ld  h, 0
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#ifdef PLAYER_CAN_FIRE
 				add hl, hl 				// x2
 				ld  d, h
 				ld  e, l 				// DE = x2
@@ -1482,22 +1395,13 @@ void mueve_bicharracos (void) {
 				ld  a, (hl)
 				ld  (__en_t), a
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#ifdef PLAYER_CAN_FIRE
 				inc hl 
 
 				ld  a, (hl)
 				ld  (__en_life), a
 			#endif
 		#endasm
-
-		#if defined ENABLE_SWORD && defined SWORD_PARALYZES
-			if (en_an_state [enit] == ENEM_PARALYZED) {
-				en_an_count [enit] --;
-				if (en_an_count [enit] == 0)
-					en_an_state [enit] = 0;
-				else goto enems_loop_continue;
-			}
-		#endif
 
 		if (_en_t != 0
 			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
@@ -1847,77 +1751,27 @@ void mueve_bicharracos (void) {
 								if (_en_t != 4)
 									_en_life --;
 								if (_en_life == 0) {
-									enems_kill ();
+									// Kill enemy
+									sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
+									en_an_current_frame [enit] = en_an_next_frame [enit];
+									sp_UpdateNow ();
+									play_sfx (10);
+									en_an_next_frame [enit] = sprite_18_a;
+									_en_t |= 16;			// dead
+									// Count
+									player.killed ++;
+									#ifdef ACTIVATE_SCRIPTING
+										script = f_scripts [max_screens + 2];
+										run_script ();
+									#endif								
+									#ifdef RANDOM_RESPAWN								
+										en_an_fanty_activo [enit] = 0;
+										_en_life = FANTIES_LIFE_GAUGE;
+									#endif
 								}
 							}
 						}
 					}
-				}
-			#endif
-
-			#ifdef ENABLE_SWORD
-				if (s_on && s_frame > 2 && s_frame < 6) {
-					//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
-					#asm
-							// s_hit_x >= _en_x - 15 -> s_hit_x + 15 >= _en_x
-							ld  a, (__en_x)
-							ld  c, a
-							ld  a, (_s_hit_x) 
-							add 15
-							cp  c
-							jp  c, _enems_hit_sword_done
-
-							// s_hit_x <= _en_x + 15 -> _en_x + 15 >= s_hit_x
-							ld  a, (_s_hit_x)
-							ld  c, a
-							ld  a, (__en_x)
-							add 15
-							cp  c
-							jp  c, _enems_hit_sword_done
-
-							// s_hit_y >= _en_y - 15 -> s_hit_y + 15 >= _en_y
-							ld  a, (__en_y)
-							ld  c, a
-							ld  a, (_s_hit_y)
-							add 15
-							cp  c 
-							jp  c, _enems_hit_sword_done
-
-							// s_hit_y <= _en_y + 15 -> _en_y + 15 >= s_hit_y
-							ld  a, (_s_hit_y)
-							ld  c, a
-							ld  a, (__en_y)
-							add 15
-							cp  c
-							jp  c, _enems_hit_sword_done
-					#endasm
-					{	
-						// Hit!
-						play_sfx (2);
-
-						#ifdef SWORD_PARALYZES
-							en_an_state [enit] = ENEM_PARALYZED;
-							en_an_count [enit] = SWORD_PARALYZES;
-						#endif
-
-						// Kill?
-						#if SWORD_LINEAL_DAMAGE > 0
-							if (_en_t < 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
-						#endif
-
-						#if SWORD_FLYING_DAMAGE > 0
-							if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-						#endif
-
-						#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-							if (_en_life == 0) {
-								enems_kill ();
-							}
-						#endif
-					}
-					#asm
-						._enems_hit_sword_done
-					#endasm
 				}
 			#endif
 
@@ -1936,7 +1790,6 @@ void mueve_bicharracos (void) {
 			#endif
 		}
 
-		enems_loop_continue:
 		#asm		
 				// Those values are stored in this order:
 				// x, y, x1, y1, x2, y2, mx, my, t[, life]
@@ -1979,7 +1832,7 @@ void mueve_bicharracos (void) {
 				ld  (hl), a
 				inc hl
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#ifdef PLAYER_CAN_FIRE
 				ld  a, (__en_life)
 				ld  (hl), a
 			#endif

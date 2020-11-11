@@ -10,18 +10,18 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W					6		//
+#define MAP_W					5		//
 #define MAP_H					5		// Map dimmensions in screens
-#define TOTAL_SCREENS			30		// 
-#define SCR_INICIO				24		// Initial screen
-#define PLAYER_INI_X			2		//
-#define PLAYER_INI_Y			2		// Initial tile coordinates
+#define TOTAL_SCREENS			25		// 
+#define SCR_INICIO				12		// Initial screen
+#define PLAYER_INI_X			8		//
+#define PLAYER_INI_Y			5		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X			99		//
 //#define PLAYER_FIN_Y			99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS		25		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS		13		// Objects to get to finish game
 #define PLAYER_LIFE 			99		// Max and starting life gauge.
-#define PLAYER_REFILL			10		// Life recharge
+#define PLAYER_REFILL			25		// Life recharge
 
 #define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
@@ -45,7 +45,7 @@
 //#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT				// If defined, only one object can be carried at a time.
 //#define DEACTIVATE_EVIL_TILE			// If defined, no killing tiles (behaviour 1) are detected.
-#define EVIL_TILE_SIMPLE				// For side view, only hit from below.
+//#define EVIL_TILE_SIMPLE				// For side view, only hit from below.
 #define DEACTIVATE_EVIL_ZONE			// Zones kill you after a while. Read docs or ask na_th_an
 //#define EVIL_ZONE_FRAME_COUNT	8		// For countdown in an evil zone.
 //#define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing
@@ -82,7 +82,7 @@
 
 // Boxes engine
 // ------------
-//#define PLAYER_PUSH_BOXES 			// If defined, tile #14 is pushable
+#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 //#define FALLING_BOXES					// If defined, boxes can fall off ledges.
 //#define FALLING_BOXES_SPEED 	4		// Boxes fall every nth frame.
 //#define ENEMIES_BLOCK_BOXES			// If defined, you can't push a box if it collides an enemy
@@ -127,14 +127,14 @@
 // Top view:
 // ---------
 
-//#define PLAYER_MOGGY_STYLE			// Enable top view.
+#define PLAYER_MOGGY_STYLE				// Enable top view.
 //#define PLAYER_NO_INERTIA				// Disable inertia
 //#define PLAYER_CONST_V		256		// Constant speed
 
 // Side view:
 // ----------
 
-#define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
+//#define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
 //#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP				// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 //#define RAMIRO_HOP 					// press jump when reaching a type 4 platform to jump again 
@@ -153,22 +153,22 @@
 
 // This sections defines how stuff is rendered, where to show counters, etcetera
 
-#define VIEWPORT_X				1		//
+#define VIEWPORT_X				0		//
 #define VIEWPORT_Y				2		// Viewport character coordinates
 
-#define LIFE_X					4		//
-#define LIFE_Y					0		// Life gauge counter character coordinates
+#define LIFE_X					30		//
+#define LIFE_Y					8		// Life gauge counter character coordinates
 //#define DRAW_HI_DIGIT	
 //#define LIFE_H_X 				1
 //#define LIFE_H_Y				8
 
-#define OBJECTS_X				11		//
-#define OBJECTS_Y				0		// Objects counter character coordinates
+#define OBJECTS_X				30		//
+#define OBJECTS_Y				12		// Objects counter character coordinates
 //#define OBJECTS_ICON_X		2		// 
 //#define OBJECTS_ICON_Y		21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 
-#define KEYS_X					18		//
-#define KEYS_Y					0		// Keys counter character coordinates
+#define KEYS_X					30		//
+#define KEYS_Y					16		// Keys counter character coordinates
 
 //#define SHOW_KILLED
 //#define SHOW_TOTAL
@@ -238,9 +238,9 @@
 
 // IV.2. Horizontal (side view) or general (top view) movement.
 
-#define PLAYER_MAX_VX			192 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX				24		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX				32		// Friction (32/64 = 0,5 píxels/frame^2)
+#define PLAYER_MAX_VX			256 	// Max velocity (192/64 = 3 píxels/frame)
+#define PLAYER_AX				32		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX				24		// Friction (32/64 = 0,5 píxels/frame^2)
 
 // ============================================================================
 // V. Tile behaviour
@@ -269,8 +269,8 @@
 		// Remove it if you are not using extra tiles at all. And remember
 		// that tiles 16 to 19 MUST be 0.
 		unsigned char comportamiento_tiles [] = {
-			0, 8, 8, 0, 0, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8,
-			8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
+			0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 8, 0, 8, 8, 8,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		};
 	#endif
 #else
