@@ -97,5 +97,7 @@ El estado paralizado se activa con el bit 5 y puedo reaprovechar `en_an_count` s
 
 Y así es como lo voy a implementar. Voy a ver como ando de bollería para generar bien los tres cells de 8x8 para el sprite. Ando bien. Zaca er cushillo de hamón. Usamos `sprcnvbin8.exe` y enganchamos el binario en `extrasprites.h`.
 
+## Tiles destructibles
+
 
 

@@ -128,6 +128,7 @@
 // ---------
 
 #define PLAYER_MOGGY_STYLE				// Enable top view.
+//#define LOOK_AT_THE_CAMERA			// Use "walk down" cell if player is idle
 //#define PLAYER_NO_INERTIA				// Disable inertia
 //#define PLAYER_CONST_V		256		// Constant speed
 
