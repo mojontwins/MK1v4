@@ -520,29 +520,56 @@
 	"buffers":
 	[
 		{
-			"file": "examples/limite/dev/msc.h",
+			"file": "src/dev/config.h",
 			"settings":
 			{
-				"buffer_size": 4087,
+				"buffer_size": 13213,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/dev/comp.bat",
+			"settings":
+			{
+				"buffer_size": 1173,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/dev/engine.h",
+			"settings":
+			{
+				"buffer_size": 45739,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/cosas/sources/MK1/Cheril of the Bosque/dev/engine.h",
+			"settings":
+			{
+				"buffer_size": 28593,
+				"encoding": "Western (Windows 1252)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "examples/limite/dev/mainloop.h",
+			"file": "src/music/music.asm",
 			"settings":
 			{
-				"buffer_size": 14953,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"buffer_size": 10710,
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "examples/limite/dev/boxes.h",
+			"file": "/C/cosas/sources/MK1/Cheril of the Bosque/dev/config.h",
 			"settings":
 			{
-				"buffer_size": 3661,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"buffer_size": 4221,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -624,12 +651,24 @@
 	[
 		"/C/git/MK1",
 		"/C/git/MK1/examples",
-		"/C/git/MK1/examples/limite",
-		"/C/git/MK1/examples/limite/dev"
+		"/C/git/MK1/src",
+		"/C/git/MK1/src/dev"
 	],
 	"file_history":
 	[
+		"/C/cosas/sources/MK1/Cheril of the Bosque/dev/cheril.c",
+		"/C/cosas/sources/Sir Ababol 2/48K-A/dev/engine.h",
+		"/C/cosas/sources/Sir Ababol 2/48K-A/dev/sprites-sword.h",
+		"/C/git/MK1/examples/ababol2_demo/diario.md",
+		"/C/git/MK1/examples/ababol2_demo/dev/config.h",
+		"/C/cosas/sources/Sir Ababol 2/48K-A/dev/config.h",
+		"/C/cosas/sources/Sir Ababol 2/48K-A/dev/definitions.h",
 		"/C/git/mk1/examples/ramiro4/diario.md",
+		"/C/git/MK1/examples/limite/dev/mainloop.h",
+		"/C/git/MK1/examples/ramiro4/dev/engine.h",
+		"/C/git/MK1/examples/ramiro4/dev/config.h",
+		"/C/git/MK1/examples/limite/dev/boxes.h",
+		"/C/git/MK1/examples/limite/dev/msc.h",
 		"/C/git/mk1/examples/ramiro4/script/script.spt",
 		"/C/git/mk1/examples/ramiro4/dev/msc_extern.h",
 		"/C/git/mk1/examples/ramiro4/dev/config.h",
@@ -744,19 +783,7 @@
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/avelsieve/localization/es_ES.inc",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_driver_gnupg.php",
 		"/C/Users/jcastano/Desktop/LDAP Browser/_DESARROLLO ON - corporativo.cfg",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_engine.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/config/mime.types",
-		"/D/Proyectos/2020/20200720b - Cambiar ubicación de certificados PGP Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/README",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_error.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/enigma.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/config.inc.php.dist",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/composer.json",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/lib/enigma_driver.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/token/decrypt.php",
-		"/C/Users/jcastano/AppData/Local/Temp/7zOC2663D71/sandetel_login.php",
-		"/C/java/applications/webmovil/src/p3s.properties"
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/enigma/config.inc.php"
 	],
 	"find":
 	{
@@ -902,6 +929,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"en_an_count",
+			"s_x",
+			"sword",
+			"sp_SS",
 			"boxes",
 			"&HE1",
 			"pinv",
@@ -1025,11 +1056,7 @@
 			"algo no marcha bien",
 			"makesinglerule",
 			"actionradio",
-			"decodeBASE64",
-			"decodebase64",
-			"juntadeand",
-			"correo.junta",
-			"14"
+			"decodeBASE64"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1175,37 +1202,152 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "examples/limite/dev/msc.h",
+					"file": "src/dev/config.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4087,
+						"buffer_size": 13213,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								437,
-								437
+								2201,
+								2201
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/dev/comp.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1173,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								26,
+								26
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/dev/engine.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 45739,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15011,
+								15011
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 9914.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/cosas/sources/MK1/Cheril of the Bosque/dev/engine.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28593,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								22069,
+								22073
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 12878.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/music/music.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10710,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -1215,61 +1357,31 @@
 			"sheets":
 			[
 				{
-					"buffer": 1,
-					"file": "examples/limite/dev/mainloop.h",
+					"buffer": 5,
+					"file": "/C/cosas/sources/MK1/Cheril of the Bosque/dev/config.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14953,
+						"buffer_size": 4221,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12670,
-								12670
+								2769,
+								2769
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 6760.0,
+						"translation.y": 714.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "examples/limite/dev/boxes.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3661,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3238,
-								3238
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 60.0,
-						"translation.y": 504.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -1367,7 +1479,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},
