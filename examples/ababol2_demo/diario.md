@@ -128,24 +128,130 @@ Algo así:
 ```c
 	#ifdef ENABLE_PERSISTENCE
 		void persist (void) {
-			// Marks tile _x, _y @ n_pant to be cleared next time we enter this screen		
-			*(PERSIST_BASE + (n_pant << 3) + (n_pant << 1) + (_y << 1) + (_x >> 3)) |= bitmask [_x & 7];	
+			// Marks tile _x, _y @ n_pant to be cleared next time we enter this screen	
+			// n_pant*20 + y*2 + x/8	
+			gp_gen = (unsigned char *) (PERSIST_BASE + (n_pant << 4) + (n_pant << 2) + (_y << 1) + (_x >> 3));
+			*gp_gen |= bitmask [_x & 7];	
 		}
 
 		void draw_persistent_row (void) {
-			for (gpit = 0; gpit < 7; gpit ++) {
-				if (rda & bitmask [gpit])
+			for (gpit = 0; gpit < 8; gpit ++) {
+				if (rdi & (bitmask [gpit]))
 					set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR_TILE, comportamiento_tiles [PERSIST_CLEAR_TILE]);
 			}
 		}
 
 		void draw_persistent (void) {
-			gp_gen = PERSIST_BASE + (n_pant << 3) + (n_pant << 1);
+			gp_gen = (unsigned char *) (PERSIST_BASE + (n_pant << 4) + (n_pant << 2));
 			for (rdy = 0; rdy < 10; rdy ++) {
-				rdx = 0; rda = *gp_gen ++; draw_persistent_row ();
-				rdx = 8; rda = *gp_gen ++; draw_persistent_row ();
+				rdx = 0; rdi = *gp_gen ++; draw_persistent_row ();
+				rdx = 8; rdi = *gp_gen ++; draw_persistent_row ();
 			}
+		}
+
+		void clear_persistent (void) {
+			#asm
+					ld  hl, PERSIST_BASE
+					ld  de, PERSIST_BASE+1
+					ld  bc, MAP_W*MAP_H*20-1
+					xor a
+					ld  (hl), a
+					ldir
+			#endasm
 		}
 	#endif
 ```
+
+Los enganches son:
+
+* Antes de empezar el juego, `clear_persistent ()`.
+* Tras volver de `draw_scr_background ();`, `draw_persistent ()`.
+* Al coger una moneda o romper un bloque, `persist ()`.
+
+`ENABLE_PERSISTENCE` se activa solo si ponemos `COINS_PERSISTENT` o `BREAKABLE_PERSISTENT`, pero igualmente puede activarse a mano si queremos controlarlo desde `custom.h` o `msc_extern.h`.
+
+Funciona como los ángeles aunque es posible que me plantée pasarlo a ensamble.
+
+## Frigoababol
+
+Es un estado "frozen" para el personaje principal. En este estado estás N frames. El contador de frames puede avanzar automáticamente o tener que "avanzarlo" tú pulsando los controles. Mientras estás congelado, no te puedes mover, pero te afectan las físicas. El estado congelado necesita un frame especial que hay que modificar en `extra_sprites.h` because this is the old churrera y aquí hay que mamar.
+
+El tema se activa con `ENABLE_FRIGOABABOL` y se puede controlar con:
+
+* `FRIGO_MAX_FRAMES` tiempo de congelación.
+* `FRIGO_NO_FIRE` pulsar `fire` mientras estás congelado no hace nada.
+* `FRIGO_UNFREEZE_TIME` el contador del estado congelado se decrementa sólo (1 cada frame).
+* `FRIGO_UNFREEZE_FIRE` el contador del estado congelado se decrementa al pusar fire. (se pueden activar ambos).
+* `FRIGO_FIGHT` al pulsar espacio, se mueve un poquito como si estuviera luchando.
+* `FRIGO_ENEMIES_FREEZE` los enemigos te congelan al tocarte.
+* `FRIGO_FROZEN_NO_RX` no friction while frozen!.
+
+Con esto al principio de `move`, justo tras leer el teclado en `pad0`, está casi todo:
+
+```c
+	#ifdef ENABLE_FRIGOABABOL
+		if (player.estado == EST_FRIGOABABOL) {
+			pad0 |= (sp_LEFT | sp_RIGHT | sp_UP | sp_DOWN);
+
+			#ifdef FRIGO_UNFREEZE_TIME
+				player.ct_estado --;
+			#endif
+			#ifdef FRIGO_UNFREEZE_FIRE
+				if ((pad0 & sp_FIRE) == 0) {
+					player.ct_estado --;
+
+					#ifdef FRIGO_FIGHT
+						player.vx += ((rand () % 3) << 6) - 64;
+						player.vy += ((rand () % 3) << 6) - 64;
+					#endif
+				}
+			#endif
+
+			#ifdef FRIGO_NO_FIRE
+				pad0 |= sp_FIRE;
+			#endif
+
+			if (player.ct_estado == 0) player.estado = EST_NORMAL;
+		}
+	#endif
+```
+
+Además de esto, el enganche al tocarte el enemigo y el nuevo cell de animación.
+
+## Slippery
+
+Por suerte, (aunque no es lo más óptimo) **MTE MK1 v4** ya usa dos variables para AX y RX. Sólo tengo que modificarlas si veo que el tile bajo el jugador es `& 16`. Para eso voy a detectar el ATTR en dos puntos `(gpx, gpy + 16)` y `(gpx + 15, gpy + 16)`.
+
+```c
+	#define SLIPPERY_TILES
+```
+
+## Cosas del juego
+
+Habiendo transferido ya todo el motor, lo que queda es adecuar el juego. La partida se debe terminar cuando el malo de la pantalla 0 (que es tipo 6) se muera. La forma de detectar eso puede ser por ejemplo con un custom. Otra cosa es que en el config está puesto que `PLAYER_NUM_OBJETOS` vale 1. Puedo hacer aparecer un hotspot y terminar de forma guays. Pero problem is, necesito liberar un tile para esto y ponerlo en la posición 17. Mirando el mapa hay algunos tiles muy feos, así que haré esto y quedará chulo. Nunca he creado un hotspot al vuelo, a ver qué tal.
+
+Detectar simplemente que matamos al tipo 6 es más sencillo pero ¿dónde está el interés?
+
+```c
+	void hook_mainloop (void) {
+		if (enemy_died == 6) {
+			set_map_tile (7, 2, 17, 0);
+			sp_UpdateNow ();
+			play_sfx (6);
+			
+			hotspot_x = 7<<4;
+			hotspot_y = 2<<4;
+			hotspots [0].tipo = 1;
+			hotspots [0].act = 1;
+
+		}
+
+		enemy_died = 0;
+	}
+```
+
+Esto debería terminar el juego al coger el hotspot que creamos.
+
+Et fin.
+
 

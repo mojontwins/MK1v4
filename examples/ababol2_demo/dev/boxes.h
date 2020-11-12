@@ -72,18 +72,7 @@
 										if (malotes [enoffs + rdi].x >= boxx - 15 && malotes [enoffs + rdi].x <= boxx + 15 &&
 											malotes [enoffs + rdi].y >= boyy - 15 && malotes [enoffs + rdi].y <= boyy + 15) {
 											en_an_next_frame [rdi] = sprite_17_a;
-											sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an_next_frame [rdi] - en_an_current_frame [rdi], VIEWPORT_Y + (malotes [enoffs + rdi].y >> 3), VIEWPORT_X + (malotes [enoffs + rdi].x >> 3), malotes [enoffs + rdi].x & 7, malotes [enoffs + rdi].y & 7);
-											en_an_current_frame [rdi] = en_an_next_frame [rdi];
-											sp_UpdateNow ();
-											play_sfx (10);
-											en_an_next_frame [rdi] = sprite_18_a;
-											malotes [enoffs + rdi].t |= 16;			// Marked as "dead"
-											// Count it
-											player.killed ++;
-											#ifdef ACTIVATE_SCRIPTING
-												script = f_scripts [max_screens + 2];
-												run_script ();
-											#endif
+											enems_kill ();
 											break;
 										}
 									}						

@@ -8,6 +8,9 @@ unsigned char line_of_text_clear [] = "                                ";
 unsigned char *player_cells [] = {
 	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
 	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+	#ifdef ENABLE_FRIGOABABOL
+		sprite_frigo
+	#endif
 };
 
 unsigned char *enem_cells [] = {
@@ -59,6 +62,15 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 			inc a
 			cp  MAX_ENEMS
 			jr  nz, hide_sprites_enems_loop
+
+		#ifdef ENABLE_SWORD
+			ld  ix, (_sp_sword)
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+			call SPMoveSprAbs			
+		#endif
 	#endasm
 }
 
@@ -340,6 +352,11 @@ void cortina (void) {
 
 #ifdef USE_COINS
 	void get_coin(unsigned char xx, unsigned char yy) {
+		#ifdef ENABLE_PERSISTENCE
+			_x = xx; _y = yy;
+			persist ();
+		#endif
+
 		flags [COIN_FLAG] ++;
 		
 		set_map_tile (xx, yy, 0, 0);
@@ -417,6 +434,9 @@ void player_flicker (void) {
 	void add_to_breakables (void) {
 		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
 			if (b_f [gpit] == 0) {
+				#ifdef ENABLE_PERSISTENCE
+					persist ();
+				#endif					
 				b_x [gpit] = _x;
 				b_y [gpit] = _y;
 				b_f [gpit] = MAX_BREAKABLE_FRAMES;
@@ -476,6 +496,38 @@ void move (void) {
 
 	// Read device (keyboard, joystick ...)
 	pad0 = (joyfunc) (&keys); 
+
+	#ifdef ENABLE_FRIGOABABOL
+		if (player.estado == EST_FRIGOABABOL) {
+			pad0 |= (sp_LEFT | sp_RIGHT | sp_UP | sp_DOWN);
+
+			#ifdef FRIGO_UNFREEZE_TIME
+				player.ct_estado --;
+			#endif
+			#ifdef FRIGO_UNFREEZE_FIRE
+				if ((pad0 & sp_FIRE) == 0) {
+					player.ct_estado --;
+
+					#ifdef FRIGO_FIGHT
+						player.vx += ((rand () % 3) << 6) - 64;
+						player.vy += ((rand () % 3) << 6) - 64;
+					#endif
+				}
+			#endif
+
+			#ifdef FRIGO_NO_FIRE
+				pad0 |= sp_FIRE;
+			#endif
+
+			if (player.ct_estado == 0) {
+				#ifdef PLAYER_FLICKERS
+					player_flicker ();
+				#else
+					player.estado = EST_NORMAL;
+				#endif
+			}
+		}
+	#endif
 
 	/* Vertical movement. The ecuations used are:
 
@@ -556,7 +608,7 @@ void move (void) {
 		#else
 			// If top-down view, vertical movement = horizontal movement.
 			
-			if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0))
+			if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
 				if (player.vy > 0) {
 					player.vy -= player.rx;
 					if (player.vy < 0)
@@ -566,6 +618,7 @@ void move (void) {
 					if (player.vy > 0)
 						player.vy = 0;
 				}
+			}
 
 			if ((pad0 & sp_UP) == 0)
 				if (player.vy > -PLAYER_MAX_VX) {
@@ -627,6 +680,17 @@ void move (void) {
 			}
 			}
 	}
+
+	#ifdef SLIPPERY_TILES
+		player.ax = PLAYER_AX; player.rx = PLAYER_RX;
+
+		if (player.possee) {
+			rdy = (gpy + 16) >> 4;
+			if ((attr (gpx >> 4, rdy) & 16) || (attr ((gpx + 15) >> 4, rdy) & 16)) {
+				player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
+			}
+		}
+	#endif
 
 	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
 	   a somewhat more controllable jump, so we use the "mario bros" kind of controls:
@@ -709,7 +773,10 @@ void move (void) {
 		if ((pad0 & sp_RIGHT) == 0) player.vx = PLAYER_CONST_V;
 		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
 	#else
-		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0)
+		#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
+			if (player.estado != EST_FRIGOABABOL)
+		#endif
+		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
 			if (player.vx > 0) {
 				player.vx -= player.rx;
 				if (player.vx < 0)
@@ -719,6 +786,7 @@ void move (void) {
 				if (player.vx > 0)
 					player.vx = 0;
 			}
+		}
 
 		if ((pad0 & sp_LEFT) == 0)
 			if (player.vx > -PLAYER_MAX_VX) {
@@ -968,30 +1036,44 @@ void move (void) {
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 R3 RJ L1 L2 L3 LJ
 
-		#asm
-			ld  a, (_player+22)					// player.facing
-			dec a
-			jr  z, _player_cell_sel_set_rdi		// if A = 1, DEC A = 0, so set 0
-			ld  a, 4							// if A = 0, DEC A = FF, so set 4
-		._player_cell_sel_set_rdi
-			ld  (_rdi), a
-		#endasm
+		#ifdef ENABLE_FRIGOABABOL
+			if (player.estado == EST_FRIGOABABOL) {
+				rdd = 8; rdi = 0;
+			} else
+		#endif
 
-		if (
-			(0 == player.possee && 0 == player.gotten)
-			#ifdef ENABLE_SWORD
-				|| s_on
-			#endif
-		) {
-			rdd = 3;
-		} else {
-			if (player.vx == 0) {
-				rdd = 1;
+		{
+			#asm
+				ld  a, (_player+22)					// player.facing
+				dec a
+				jr  z, _player_cell_sel_set_rdi		// if A = 1, DEC A = 0, so set 0
+				ld  a, 4							// if A = 0, DEC A = FF, so set 4
+			._player_cell_sel_set_rdi
+				ld  (_rdi), a
+			#endasm
+
+			if (
+				(0 == player.possee && 0 == player.gotten)
+				#ifdef ENABLE_SWORD
+					|| s_on
+				#endif
+			) {
+				rdd = 3;
 			} else {
-				rdd = ((gpx + 4) >> 3) & 3;
-				if (rdd == 3) rdd = 1;
+				if (
+					#ifdef SLIPPERY_TILES
+						((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0)
+					#else
+						player.vx == 0
+					#endif
+				) {
+					rdd = 1;
+				} else {
+					rdd = ((gpx + 4) >> 3) & 3;
+					if (rdd == 3) rdd = 1;
 				}
-					}
+			}
+		}
 
 		player.next_frame = player_cells [rdi + rdd];
 	#else
@@ -1045,8 +1127,10 @@ void init_player_values (void) {
 	player.vy = 		0;
 	player.g = 			PLAYER_G; 
 	player.vx = 		0;
-	player.ax = 		PLAYER_AX;
-	player.rx = 		PLAYER_RX;
+	#ifndef SLIPPERY_TILES
+		player.ax = 		PLAYER_AX;
+		player.rx = 		PLAYER_RX;
+	#endif
 	player.salto = 		PLAYER_VY_INICIAL_SALTO;
 	player.cont_salto = 1;
 	player.saltando = 	0;
@@ -1319,6 +1403,10 @@ void draw_scr (void) {
 	seed = n_pant + 1;
 	
 	draw_scr_background ();
+
+	#ifdef ENABLE_PERSISTENCE		
+		draw_persistent ();
+	#endif
 			
 	f_zone_ac = 0;
 
@@ -1378,7 +1466,7 @@ void draw_scr (void) {
 		}
 		
 		#ifdef COUNT_KILLABLE_ON			
-			#if defined(BOXES_KILL_ENEMIES) || defined(PLAYER_KILLS_ENEMIES)
+			#if defined (ENEMIES_MAY_DIE)
 				#ifdef BOXES_ONLY_KILL_TYPE
 					if (malotes [enoffs + gpit].t == BOXES_ONLY_KILL_TYPE) {
 						flags [COUNT_KILLABLE_ON] ++;
@@ -1465,8 +1553,12 @@ void platform_get_player (void) {
 	ptgmy = (_en_my << 6);
 }
 
-#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+#ifdef ENEMIES_MAY_DIE
 	void enems_kill (void) {
+		#ifdef ENABLE_CODE_HOOKS
+			enemy_died = _en_t;
+		#endif
+
 		// Kill enemy
 		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
 		en_an_current_frame [enit] = en_an_next_frame [enit];
@@ -1488,6 +1580,7 @@ void platform_get_player (void) {
 			en_an_fanty_activo [enit] = 0;
 			_en_life = FANTIES_LIFE_GAUGE;
 		#endif
+
 	}
 #endif
 
@@ -1710,18 +1803,7 @@ void mueve_bicharracos (void) {
 					if (gpy < en_ccy - 8 && player.vy > 0 && _en_t >= PLAYER_MIN_KILLABLE) {
 						// Step on enemy and kill it.
 						en_an_next_frame [enit] = sprite_17_a;
-						sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffs + enit].y >> 3), VIEWPORT_X + (malotes [enoffs + enit].x >> 3), malotes [enoffs + enit].x & 7, malotes [enoffs + enit].y & 7);
-						en_an_current_frame [enit] = en_an_next_frame [enit];
-						sp_UpdateNow ();
-						play_sfx (10);
-						en_an_next_frame [enit] = sprite_18_a;
-						_en_t |= 16;			// Marked as "dead"
-						// Count it
-						player.killed ++;
-						#ifdef ACTIVATE_SCRIPTING
-							script = f_scripts [max_screens + 2];
-							run_script ();
-						#endif
+						enems_kill ();
 					} else	
 				#endif
 				{
@@ -1782,7 +1864,10 @@ void mueve_bicharracos (void) {
 						#endif
 					#endif
 
-					#ifdef PLAYER_FLICKERS
+					#ifdef ENABLE_FRIGOABABOL
+						player.estado = EST_FRIGOABABOL;
+						player.ct_estado = FRIGO_MAX_FRAMES;
+					#elif defined PLAYER_FLICKERS
 						// Flickers. People seem to like this more than the bouncing behaviour.
 						player_flicker ();
 					#endif
@@ -1945,34 +2030,32 @@ void mueve_bicharracos (void) {
 				if (s_on && s_frame > 2 && s_frame < 6) {
 					//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
 					#asm
-							// s_hit_x >= _en_x - 15 -> s_hit_x + 15 >= _en_x
-							ld  a, (__en_x)
+							// s_hit_x >= en_ccx
+							ld  a, (_en_ccx)
 							ld  c, a
 							ld  a, (_s_hit_x) 
-							add 15
 							cp  c
 							jp  c, _enems_hit_sword_done
 
-							// s_hit_x <= _en_x + 15 -> _en_x + 15 >= s_hit_x
+							// s_hit_x <= en_ccx + 15 -> en_ccx + 15 >= s_hit_x
 							ld  a, (_s_hit_x)
 							ld  c, a
-							ld  a, (__en_x)
+							ld  a, (_en_ccx)
 							add 15
 							cp  c
 							jp  c, _enems_hit_sword_done
 
-							// s_hit_y >= _en_y - 15 -> s_hit_y + 15 >= _en_y
-							ld  a, (__en_y)
+							// s_hit_y >= en_ccy 
+							ld  a, (_en_ccy)
 							ld  c, a
 							ld  a, (_s_hit_y)
-							add 15
 							cp  c 
 							jp  c, _enems_hit_sword_done
 
-							// s_hit_y <= _en_y + 15 -> _en_y + 15 >= s_hit_y
+							// s_hit_y <= en_ccy + 15 -> en_ccy + 15 >= s_hit_y
 							ld  a, (_s_hit_y)
 							ld  c, a
-							ld  a, (__en_y)
+							ld  a, (_en_ccy)
 							add 15
 							cp  c
 							jp  c, _enems_hit_sword_done

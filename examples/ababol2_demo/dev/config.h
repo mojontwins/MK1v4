@@ -13,20 +13,20 @@
 #define MAP_W					1		//
 #define MAP_H					20		// Map dimmensions in screens
 #define TOTAL_SCREENS			30		// 
-#define SCR_INICIO				19		// Initial screen
+#define SCR_INICIO				0		// Initial screen
 #define PLAYER_INI_X			12		//
 #define PLAYER_INI_Y			7		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X			99		//
 //#define PLAYER_FIN_Y			99		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS		1		// Objects to get to finish game
-#define PLAYER_LIFE 			99		// Max and starting life gauge.
-#define PLAYER_REFILL			10		// Life recharge
+#define PLAYER_LIFE 			5		// Max and starting life gauge.
+#define PLAYER_REFILL			1		// Life recharge
 
 #define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
-//#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
+#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS				// Hook at entering screen & each loop @ custom.h
+#define ENABLE_CODE_HOOKS				// Hook at entering screen & each loop @ custom.h
 
 // ============================================================================
 // II. Engine type
@@ -69,6 +69,7 @@
 //#define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
 //#define COINS_DEACTIVABLE				// Coins can be hidden.
 //#define COINS_SCRIPTING 				// Run script when player gets coin
+#define COINS_PERSISTENT	 			// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes
 
 // Fixed screens engine
 // --------------------
@@ -110,7 +111,7 @@
 #define ENABLE_SWORD 					// Let the player swing a sword
 #define SWORD_UP 						// Can hit upwards
 #define SWORD_LINEAL_DAMAGE		0		// Damage to linear.
-#define SWORD_FLYING_DAMAGE 1			// Damage to flying.
+#define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
 #define SWORD_PARALYZES			32		// If defined, paralyze for N frames
 
 // Breakable
@@ -122,18 +123,42 @@
 #define BREAKABLE_ERASE_TILE 	0		// The substitute by this tile.
 #define BREAKABLE_SPAWN_CHANCE  3 		// Must be a power of 2 - 1, ifdef there's a chance to spawn...
 #define BREAKABLE_SPAWN_TILE    46 		// Throw this tile if rand() & chance == 1.
+#define BREAKABLE_PERSISTENT 			// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
+
+// Persistence
+// -----------
+
+#define ENABLE_PERSISTENCE	 			// Turned on automaticly if needed, but you can do it manually
+#define PERSIST_CLEAR_TILE 		0 		// Clear persistent bit this tile
+
+// Frigoababol
+// -----------
+
+#define ENABLE_FRIGOABABOL 				// Player can be frozen
+#define FRIGO_MAX_FRAMES 		32		// # of frames to be frozen. Can be decreased via ...
+//#define FRIGO_UNFREEZE_TIME 			// state counter decreases automaticly.
+#define FRIGO_UNFREEZE_FIRE 			// state counter decreases pressing fire. You can activate both
+#define FRIGO_NO_FIRE 					// Can't fire nor swing your sword while frozen
+#define FRIGO_FIGHT 					// Modify vx, vy while frozen when pressing fire.
+#define FRIGO_ENEMIES_FREEZE 			// Enemies freeze the player on touch.
+#define FRIGO_FROZEN_NO_RX 				// No PLAYER_RX while frozen!
+
+// Slippery tiles (side view)
+// --------------------------
+
+#define SLIPPERY_TILES 					// Tiles with beh & 16 are slippery.
 
 // Miscellaneous fanty stuff
 // -------------------------
 
 //#define PLAYER_CAN_HIDE				// If defined, tile type 2 hides player.
 //#define RANDOM_RESPAWN				// If defined, automatic flying enemies spawn on killed enemies
-//#define USE_TYPE_6					// If defined, type 6 enemies are enabled.
+#define USE_TYPE_6						// If defined, type 6 enemies are enabled.
 //#define USE_SIGHT_DISTANCE			// If defined, type 6 only pursue you within sight distance
-//#define SIGHT_DISTANCE		120		
-//#define FANTY_MAX_V 			256 	// Flying enemies max speed.
-//#define FANTY_A 				16		// Flying enemies acceleration.
-//#define FANTIES_LIFE_GAUGE	10		// Amount of shots needed to kill flying enemies.
+//#define SIGHT_DISTANCE		96
+#define FANTY_MAX_V 			96	 	// Flying enemies max speed.
+#define FANTY_A 				4		// Flying enemies acceleration.
+//#define FANTIES_LIFE_GAUGE	3		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6					// Create fanties for missing enemies if scenery_info.make_type_6
 
 // Scripting
@@ -267,6 +292,9 @@
 #define PLAYER_AX				48		// Acceleration (24/64 = 0,375 píxels/frame^2)
 #define PLAYER_RX				64		// Friction (32/64 = 0,5 píxels/frame^2)
 
+#define PLAYER_AX_SLIPPERY 		8
+#define PLAYER_RX_SLIPPERY 		8
+
 // ============================================================================
 // V. Tile behaviour
 // ============================================================================
@@ -302,7 +330,7 @@
 	// Fill this array if you are using unpacked maps.
 	unsigned char comportamiento_tiles [] = {
 		 0, 8, 8, 8, 4,24, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-		56, 8, 0, 0, 0, 0, 4, 8, 8, 8,56,56,56, 0, 0, 0,
+		56, 0, 0, 0, 0, 0, 4, 8, 8, 8,56,56,56, 0, 0, 0,
 		 4, 0, 0, 0, 8, 8, 8, 8, 8, 1, 8, 0, 8,24, 0,56
 	};
 #endif

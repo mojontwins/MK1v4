@@ -25,6 +25,10 @@
 	extern unsigned char sprite_sword [];
 #endif
 
+#ifdef ENABLE_FRIGOABABOL
+	extern unsigned char sprite_frigo [];
+#endif
+
 #ifdef ENEMIES_MAY_DIE
 	#asm
 		._sprite_17_a
@@ -179,5 +183,12 @@
 	#asm
 		._sprite_sword
 			BINARY "sprite_sword.bin"
+	#endasm
+#endif
+
+#ifdef ENABLE_FRIGOABABOL
+	#asm
+		._sprite_frigo
+			BINARY "sprite_frigo.bin"
 	#endasm
 #endif

@@ -169,6 +169,10 @@ void main (void) {
 			init_bullets ();
 		#endif	
 
+		#ifdef ENABLE_PERSISTENCE
+			clear_persistent ();
+		#endif
+
 		on_pant = n_pant = SCR_INICIO;
 		maincounter = 0;
 		

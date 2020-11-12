@@ -14,9 +14,26 @@
 	}
 
 	void hook_mainloop (void) {
+		if (n_pant == 0 && gpy < 80) 
+			scenery_info.allow_type_6 = 1;
+
+		if (enemy_died == 6) {
+			set_map_tile (7, 2, 17, 0);
+			sp_UpdateNow ();
+			play_sfx (6);
+			
+			hotspot_x = 7<<4;
+			hotspot_y = 2<<4;
+			hotspots [0].tipo = 1;
+			hotspots [0].act = 1;
+
+		}
+
+		enemy_died = 0;
 	}
 
 	void hook_entering (void) {		
+		scenery_info.allow_type_6 = 0;
 	}
 
 #endif

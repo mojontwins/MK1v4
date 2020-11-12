@@ -7,7 +7,8 @@ echo Making %game%
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin -1 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul
-..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 3
+..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 3 > nul
+..\utils\sprcnvbin.exe ..\gfx\sprite_frigo.png sprite_frigo.bin 1 > nul
 ..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul

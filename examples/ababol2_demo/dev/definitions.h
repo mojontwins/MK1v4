@@ -8,6 +8,7 @@
 #define EST_PARP 		2
 #define EST_MUR 		4
 #define EST_DIZZY		8
+#define EST_FRIGOABABOL 16
 #define sgni(n)			((n) < 0 ? -1 : 1)
 #define min(a,b)		((a) < (b) ? (a) : (b))
 #define ctileoff(n) 	((n)>0) //(n > 0 ? 1 : 0)
@@ -64,7 +65,7 @@ typedef struct {
 	unsigned char evil_zone_active;
 	unsigned char allow_type_6;
 	#ifdef MAKE_TYPE_6
-	unsigned char make_type_6;
+		unsigned char make_type_6;
 	#endif
 } SCENERY_INFO;
 
@@ -153,6 +154,10 @@ signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
 unsigned char *_baddies_pointer;
 
+#if defined ENABLE_CODE_HOOKS && (defined PLAYER_CAN_FIRE || defined ENABLE_SWORD)
+	unsigned char enemy_died;
+#endif
+
 // Tile behaviour array and tile array for the current screen
 
 unsigned char map_attr [150] @ 23300;
@@ -168,7 +173,7 @@ unsigned char hotspot_y;
 unsigned char orig_tile;	// Original background tile
 
 #ifdef ENABLE_CODE_HOOKS
-	unsigned char latest_hotspot;
+	unsigned char latest_hotspot;	
 #endif
 
 // Game flow
