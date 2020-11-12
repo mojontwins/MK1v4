@@ -62,22 +62,30 @@
 							#ifdef BOXES_KILL_ENEMIES
 								// Check for enemy killed!
 
-								for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
+								for (enit = 0; enit < MAX_ENEMS; enit ++) {
+									enoffsmasi = enoffs + enit;
+									
 									#ifdef BOXES_ONLY_KILL_TYPE
-										if (malotes [enoffs + rdi].t == BOXES_ONLY_KILL_TYPE)
+										if (malotes [enoffsmasi].t == BOXES_ONLY_KILL_TYPE)
 									#else
-										if (malotes [enoffs + rdi].t > 0 && malotes [enoffs + rdi].t < 16)
+										if (malotes [enoffsmasi].t > 0 && malotes [enoffsmasi].t < 16)
 									#endif
 									{
-										if (malotes [enoffs + rdi].x >= boxx - 15 && malotes [enoffs + rdi].x <= boxx + 15 &&
-											malotes [enoffs + rdi].y >= boyy - 15 && malotes [enoffs + rdi].y <= boyy + 15) {
-											en_an_next_frame [rdi] = sprite_17_a;
-											sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an_next_frame [rdi] - en_an_current_frame [rdi], VIEWPORT_Y + (malotes [enoffs + rdi].y >> 3), VIEWPORT_X + (malotes [enoffs + rdi].x >> 3), malotes [enoffs + rdi].x & 7, malotes [enoffs + rdi].y & 7);
-											en_an_current_frame [rdi] = en_an_next_frame [rdi];
+										if (malotes [enoffsmasi].x >= boxx - 15 && malotes [enoffsmasi].x <= boxx + 15 &&
+											malotes [enoffsmasi].y >= boyy - 15 && malotes [enoffsmasi].y <= boyy + 15) {
+											
+											#ifdef ENABLE_CODE_HOOKS
+												enemy_died = malotes [enoffsmasi].t;
+											#endif
+
+											en_an_next_frame [enit] = sprite_17_a;											
+											sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffsmasi].y >> 3), VIEWPORT_X + (malotes [enoffsmasi].x >> 3), malotes [enoffsmasi].x & 7, malotes [enoffsmasi].y & 7);
+											en_an_current_frame [enit] = en_an_next_frame [enit];
 											sp_UpdateNow ();
 											play_sfx (10);
-											en_an_next_frame [rdi] = sprite_18_a;
-											malotes [enoffs + rdi].t |= 16;			// Marked as "dead"
+											en_an_next_frame [enit] = sprite_18_a;
+											malotes [enoffsmasi].t |= 16;			// Marked as "dead"
+
 											// Count it
 											player.killed ++;
 											#ifdef ACTIVATE_SCRIPTING

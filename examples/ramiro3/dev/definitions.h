@@ -8,6 +8,7 @@
 #define EST_PARP 		2
 #define EST_MUR 		4
 #define EST_DIZZY		8
+#define EST_FRIGOABABOL 16
 #define sgni(n)			((n) < 0 ? -1 : 1)
 #define min(a,b)		((a) < (b) ? (a) : (b))
 #define ctileoff(n) 	((n)>0) //(n > 0 ? 1 : 0)
@@ -17,7 +18,14 @@
 #define TYPE_6_PURSUING		1
 #define TYPE_6_RETREATING	2
 
-#define MAX_FALLING_BOXES 8
+#define ENEM_PARALYZED 		32
+
+#define SWORD_TYPE_LEFT 	0
+#define SWORD_TYPE_RIGHT 	1
+#define SWORD_TYPE_UP 		2
+
+#define MAX_FALLING_BOXES 	8
+#define MAX_BREAKABLE 		4
 
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
@@ -57,7 +65,7 @@ typedef struct {
 	unsigned char evil_zone_active;
 	unsigned char allow_type_6;
 	#ifdef MAKE_TYPE_6
-	unsigned char make_type_6;
+		unsigned char make_type_6;
 	#endif
 } SCENERY_INFO;
 
@@ -101,6 +109,10 @@ struct sp_SS *sp_moviles [MAX_ENEMS];
 #ifdef PLAYER_CAN_FIRE
 	struct sp_SS *sp_bullets [MAX_BULLETS];
 #endif
+#ifdef ENABLE_SWORD
+	struct sp_SS *sp_sword;
+#endif
+
 struct sp_Rect spritesClipValues = { VIEWPORT_Y, VIEWPORT_X, 20, 30 };
 struct sp_Rect *spritesClip;
 
@@ -142,6 +154,10 @@ signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
 unsigned char *_baddies_pointer;
 
+#if defined ENABLE_CODE_HOOKS && (defined PLAYER_CAN_FIRE || defined ENABLE_SWORD)
+	unsigned char enemy_died;
+#endif
+
 // Tile behaviour array and tile array for the current screen
 
 unsigned char map_attr [150] @ 23300;
@@ -157,7 +173,7 @@ unsigned char hotspot_y;
 unsigned char orig_tile;	// Original background tile
 
 #ifdef ENABLE_CODE_HOOKS
-	unsigned char latest_hotspot;
+	unsigned char latest_hotspot;	
 #endif
 
 // Game flow
@@ -196,6 +212,27 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char fall_frame_counter;
 #endif
 
+// Sword
+
+#ifdef ENABLE_SWORD
+	unsigned char *s_current_frame, *s_next_frame;
+	unsigned char s_on, s_type;
+	unsigned char s_x, s_y, s_frame;
+	unsigned char s_hit_x, s_hit_y;
+
+	unsigned char swoffs_x [] = {8, 10, 12, 14, 15, 15, 14, 13, 10};
+	unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
+#endif
+
+// Breakable
+
+#ifdef ENABLE_BREAKABLE
+	unsigned char process_breakable;
+	unsigned char b_f [MAX_BREAKABLE];
+	unsigned char b_x [MAX_BREAKABLE];
+	unsigned char b_y [MAX_BREAKABLE];
+#endif
+
 // Aux
 
 unsigned int asm_int;
@@ -228,6 +265,10 @@ unsigned char pti, ptj;
 unsigned char *gp_gen, *gp_gen_alt;
 unsigned char t_alt;
 unsigned char prxx, pryy;
+
+unsigned char bitmask [] = {
+	1, 2, 4, 8, 16, 32, 64, 128
+};
 
 // Prototypes
 

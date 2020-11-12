@@ -8,12 +8,23 @@ unsigned char line_of_text_clear [] = "                                ";
 unsigned char *player_cells [] = {
 	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
 	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+	#ifdef ENABLE_FRIGOABABOL
+		sprite_frigo
+	#endif
 };
 
 unsigned char *enem_cells [] = {
 	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
 	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
 };
+
+#ifdef ENABLE_SWORD
+	extern unsigned char *sword_cells [0];
+	#asm 
+		._sword_cells
+			defw _sprite_sword, _sprite_sword + 64, _sprite_sword + 128
+	#endasm
+#endif
 
 void saca_a_todo_el_mundo_de_aqui (void) {
 	// ¡Saca a todo el mundo de aquí!
@@ -51,6 +62,15 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 			inc a
 			cp  MAX_ENEMS
 			jr  nz, hide_sprites_enems_loop
+
+		#ifdef ENABLE_SWORD
+			ld  ix, (_sp_sword)
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+			call SPMoveSprAbs			
+		#endif
 	#endasm
 }
 
@@ -255,19 +275,35 @@ void cortina (void) {
 
 #ifdef PLAYER_CAN_FIRE
 	void init_bullets (void) {
-		
 		// Initialize bullets
 		
 		for (gpit = 0; gpit < MAX_BULLETS; gpit ++)	bullets [gpit].estado = 0;
 	}
 #endif
 
-#if defined(PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE) || defined(BOXES_KILL_ENEMIES)
+#ifdef ENABLE_BREAKABLE
+	void init_breakable (void) {
+		// Initialize breakable
+
+		#asm
+				ld  hl, _b_f
+				ld  de, _b_f + 1
+				ld  bc, MAX_BREAKABLE - 1
+				xor a
+				ld  (hl), a
+				ldir
+		#endasm
+
+		process_breakable = 0;
+	}
+#endif
+
+#ifdef ENEMIES_MAY_DIE
 	void init_malotes (void) {
 		
 		for (gpit = 0; gpit < MAP_W * MAP_H * MAX_ENEMS; gpit ++) {
 			malotes [gpit].t = malotes [gpit].t & 15;	
-			#ifdef PLAYER_CAN_FIRE
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 				malotes [gpit].life = ENEMIES_LIFE_GAUGE;
 				#ifdef RANDOM_RESPAWN
 					if (malotes [gpit].t == 5) malotes [gpit].t |= 16;
@@ -316,6 +352,11 @@ void cortina (void) {
 
 #ifdef USE_COINS
 	void get_coin(unsigned char xx, unsigned char yy) {
+		#ifdef ENABLE_PERSISTENCE
+			_x = xx; _y = yy;
+			persist ();
+		#endif
+
 		flags [COIN_FLAG] ++;
 		
 		set_map_tile (xx, yy, 0, 0);
@@ -372,12 +413,121 @@ void player_flicker (void) {
 	player.ct_estado = 50;
 }
 
-unsigned char move (void) {
+#ifdef ENABLE_BREAKABLE
+	void actualiza_breakables (void) {
+		process_breakable = 0;
+		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
+			if (b_f [gpit]) {
+				b_f [gpit] --;
+				if (b_f [gpit] == 0) {
+					#ifdef BREAKABLE_SPAWN_CHANCE
+						rdi = ((rand () & BREAKABLE_SPAWN_CHANCE) == 1) ? BREAKABLE_SPAWN_TILE : BREAKABLE_ERASE_TILE;
+						set_map_tile (b_x [gpit], b_y [gpit], rdi, comportamiento_tiles [rdi]);
+					#else
+						set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_ERASE_TILE, comportamiento_tiles [BREAKABLE_ERASE_TILE]);
+					#endif
+				} else process_breakable = -1;
+			}
+		}
+	}
+
+	void add_to_breakables (void) {
+		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
+			if (b_f [gpit] == 0) {
+				#ifdef ENABLE_PERSISTENCE
+					persist ();
+				#endif					
+				b_x [gpit] = _x;
+				b_y [gpit] = _y;
+				b_f [gpit] = MAX_BREAKABLE_FRAMES;
+				set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_BREAKING_TILE, comportamiento_tiles [BREAKABLE_BREAKING_TILE]);
+				sp_UpdateNow ();
+				play_sfx (9);
+				process_breakable = 1;
+				break;
+			}
+		}
+	}
+#endif
+
+#ifdef ENABLE_SWORD
+	void swing_sword (void) {
+		if (s_on) {
+			if (s_type == SWORD_TYPE_UP) {
+				s_x = gpx + swoffs_y [s_frame];
+				s_y = gpy + 8 - swoffs_x [s_frame];
+				s_hit_x = s_x + 4;
+				s_hit_y = s_y;			
+			} else {
+				s_y = gpy + swoffs_y [s_frame]; 
+				s_hit_y = (s_y + 4);
+
+				if (s_type == SWORD_TYPE_LEFT) {
+					s_x = gpx + 8 - swoffs_x [s_frame];
+					s_hit_x = s_x;				
+				} else {
+					s_x = gpx + swoffs_x [s_frame];
+					s_hit_x = s_x + 7;				
+				}
+			}
+
+			// Detect breakable
+			if (s_frame > 2 && s_frame < 6) {
+				_x = s_hit_x >> 4;
+				_y = s_hit_y >> 4;
+				if (attr (_x, _y) & 32) add_to_breakables ();
+			}
+
+			s_frame ++;
+			if (s_frame == 9) s_on = 0;
+			rdx = s_x;
+		} else {
+			rdx = 240;
+		}
+
+		sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
+		s_current_frame = s_next_frame;
+	}
+#endif
+
+void move (void) {
 	gpcx = player.x;
 	gpcy = player.y;
 
 	// Read device (keyboard, joystick ...)
 	pad0 = (joyfunc) (&keys); 
+
+	#ifdef ENABLE_FRIGOABABOL
+		if (player.estado == EST_FRIGOABABOL) {
+			pad0 |= (sp_LEFT | sp_RIGHT | sp_UP | sp_DOWN);
+
+			#ifdef FRIGO_UNFREEZE_TIME
+				player.ct_estado --;
+			#endif
+			#ifdef FRIGO_UNFREEZE_FIRE
+				if ((pad0 & sp_FIRE) == 0) {
+					player.ct_estado --;
+
+					#ifdef FRIGO_FIGHT
+						player.vx += ((rand () % 3) << 6) - 64;
+						player.vy += ((rand () % 3) << 6) - 64;
+					#endif
+				}
+			#endif
+
+			#ifdef FRIGO_NO_FIRE
+				pad0 |= sp_FIRE;
+			#endif
+
+			if (player.ct_estado == 0) {
+				#ifdef PLAYER_FLICKERS
+					player_flicker ();
+				#else
+					player.estado = EST_NORMAL;
+				#endif
+			}
+		}
+	#endif
 
 	/* Vertical movement. The ecuations used are:
 
@@ -458,7 +608,7 @@ unsigned char move (void) {
 		#else
 			// If top-down view, vertical movement = horizontal movement.
 			
-			if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0))
+			if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
 				if (player.vy > 0) {
 					player.vy -= player.rx;
 					if (player.vy < 0)
@@ -468,6 +618,7 @@ unsigned char move (void) {
 					if (player.vy > 0)
 						player.vy = 0;
 				}
+			}
 
 			if ((pad0 & sp_UP) == 0)
 				if (player.vy > -PLAYER_MAX_VX) {
@@ -529,6 +680,17 @@ unsigned char move (void) {
 			}
 			}
 	}
+
+	#ifdef SLIPPERY_TILES
+		player.ax = PLAYER_AX; player.rx = PLAYER_RX;
+
+		if (player.possee) {
+			rdy = (gpy + 16) >> 4;
+			if ((attr (gpx >> 4, rdy) & 16) || (attr ((gpx + 15) >> 4, rdy) & 16)) {
+				player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
+			}
+		}
+	#endif
 
 	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
 	   a somewhat more controllable jump, so we use the "mario bros" kind of controls:
@@ -611,7 +773,10 @@ unsigned char move (void) {
 		if ((pad0 & sp_RIGHT) == 0) player.vx = PLAYER_CONST_V;
 		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
 	#else
-		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0)
+		#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
+			if (player.estado != EST_FRIGOABABOL)
+		#endif
+		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
 			if (player.vx > 0) {
 				player.vx -= player.rx;
 				if (player.vx < 0)
@@ -621,6 +786,7 @@ unsigned char move (void) {
 				if (player.vx > 0)
 					player.vx = 0;
 			}
+		}
 
 		if ((pad0 & sp_LEFT) == 0)
 			if (player.vx > -PLAYER_MAX_VX) {
@@ -685,6 +851,19 @@ unsigned char move (void) {
 				player.disparando = 0;
 		#endif
 	#endif
+
+	// Sword
+	#ifdef ENABLE_SWORD
+		if (s_on == 0 && (pad0 & sp_FIRE) == 0) {
+			if ((pad0 & sp_UP) == 0) {
+				s_type = SWORD_TYPE_UP;
+			} else s_type = player.facing;
+
+			s_on = 1;
+			s_frame = 0;
+			s_next_frame = sword_cells [s_type];
+		}
+	#endif
 	
 	// Keys / bolts engine:
 
@@ -711,55 +890,55 @@ unsigned char move (void) {
 			if ((pad0 & sp_FIRE) == 0)
 		#endif
 		{
-			
-			// In side-view mode, you can't push boxes vertically.
-			#ifdef PLAYER_MOGGY_STYLE
-				// Vertically, only when player.y is tile-aligned.
-				if ((gpy & 15) == 0) {
-					if ((pad0 & sp_UP) == 0 && gpyy > 1) {
+				
+				// In side-view mode, you can't push boxes vertically.
+				#ifdef PLAYER_MOGGY_STYLE
+					// Vertically, only when player.y is tile-aligned.
+					if ((gpy & 15) == 0) {
+						if ((pad0 & sp_UP) == 0 && gpyy > 1) {
 						if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2)) {
-							move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
-						}						
-						if ((gpx & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
-								move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
+								move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
+							}
+							if ((gpx & 15) != 0) {
+								if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
+									move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
+								}
+							}
+						} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
+						if (can_move_box (gpxx, gpyy + 1, gpxx, gpyy + 2)) {
+								move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
+							}
+							if ((gpx & 15) != 0) {
+								if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
+									move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
+								}	
 							}
 						}
-					} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
-						if (can_move_box (gpxx + 1, gpyy + 1, gpxx, gpyy + 2)) {
-							move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
-						}
-						if ((gpx & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
-								move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
-							}	
-						}
 					}
-				}
-			#endif
+				#endif
 
-			// Horizontally, only when player.x is tile-aligned.
-			if ((gpx & 15) == 0) {
-				if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
-					if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
-						move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
-					}
-					if ((gpy & 15) != 0) {
-						if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
-							move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
+				// Horizontally, only when player.x is tile-aligned.
+				if ((gpx & 15) == 0) {
+					if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
+						if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
+							move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
 						}
-					}
-				} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
-					if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
-						move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
-					}
-					if ((gpy & 15) != 0) {
-						if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
-							move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
+						if ((gpy & 15) != 0) {
+							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
+								move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
+							}
 						}
-					}
-				}	
-			}			
+					} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
+						if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
+							move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
+						}
+						if ((gpy & 15) != 0) {
+							if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
+								move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
+							}
+						}
+					}	
+				}			
 		}
 	#endif
 
@@ -857,25 +1036,44 @@ unsigned char move (void) {
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 R3 RJ L1 L2 L3 LJ
 
-		#asm
-			ld  a, (_player+22)					// player.facing
-			dec a
-			jr  z, _player_cell_sel_set_rdi		// if A = 1, DEC A = 0, so set 0
-			ld  a, 4							// if A = 0, DEC A = FF, so set 4
-		._player_cell_sel_set_rdi
-			ld  (_rdi), a
-		#endasm
+		#ifdef ENABLE_FRIGOABABOL
+			if (player.estado == EST_FRIGOABABOL) {
+				rdd = 8; rdi = 0;
+			} else
+		#endif
 
-		if (0 == player.possee && 0 == player.gotten) {
-			rdd = 3;
-		} else {
-			if (player.vx == 0) {
-				rdd = 1;
+		{
+			#asm
+				ld  a, (_player+22)					// player.facing
+				dec a
+				jr  z, _player_cell_sel_set_rdi		// if A = 1, DEC A = 0, so set 0
+				ld  a, 4							// if A = 0, DEC A = FF, so set 4
+			._player_cell_sel_set_rdi
+				ld  (_rdi), a
+			#endasm
+
+			if (
+				(0 == player.possee && 0 == player.gotten)
+				#ifdef ENABLE_SWORD
+					|| s_on
+				#endif
+			) {
+				rdd = 3;
 			} else {
-				rdd = ((gpx + 4) >> 3) & 3;
-				if (rdd == 3) rdd = 1;
+				if (
+					#ifdef SLIPPERY_TILES
+						((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0)
+					#else
+						player.vx == 0
+					#endif
+				) {
+					rdd = 1;
+				} else {
+					rdd = ((gpx + 4) >> 3) & 3;
+					if (rdd == 3) rdd = 1;
 				}
-					}
+			}
+		}
 
 		player.next_frame = player_cells [rdi + rdd];
 	#else
@@ -883,6 +1081,7 @@ unsigned char move (void) {
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 L1 L2 U1 U2 D1 D2
 		
+		#ifdef LOOK_AT_THE_CAMERA
 		if (player.vx != 0 || player.vy != 0) {
 			player.subframe ++;
 			if (player.subframe == 4) {
@@ -899,6 +1098,26 @@ unsigned char move (void) {
 		} else if (player.vx < 0) rdd += 2;
 
 		player.next_frame = player_cells [rdd];
+		#else
+			if (player.vx != 0 || player.vy != 0) {
+				player.subframe ++;
+				if (player.subframe == 4) {
+					player.subframe = 0;
+					player.frame = !player.frame;
+					step (); 
+				}
+
+				rdd = player.frame;
+			
+				if (player.vx == 0) {		
+					if (player.vy < 0) rdd += 4;
+					else rdd += 6; 
+				} else if (player.vx < 0) rdd += 2;
+
+				player.next_frame = player_cells [rdd];
+			}
+		#endif
+
 	#endif
 }
 
@@ -908,8 +1127,10 @@ void init_player_values (void) {
 	player.vy = 		0;
 	player.g = 			PLAYER_G; 
 	player.vx = 		0;
-	player.ax = 		PLAYER_AX;
-	player.rx = 		PLAYER_RX;
+	#ifndef SLIPPERY_TILES
+		player.ax = 		PLAYER_AX;
+		player.rx = 		PLAYER_RX;
+	#endif
 	player.salto = 		PLAYER_VY_INICIAL_SALTO;
 	player.cont_salto = 1;
 	player.saltando = 	0;
@@ -922,6 +1143,10 @@ void init_player_values (void) {
 	player.killingzone_beepcount = 0;
 	player.killingzone_framecount = 0;	
 	player.is_dead =    0;
+
+	#if defined PLAYER_MOGGY_STYLE && !defined LOOK_AT_THE_CAMERA
+		player.next_frame = player_cells [7];
+	#endif
 }
 
 void init_player (void) {
@@ -1178,6 +1403,10 @@ void draw_scr (void) {
 	seed = n_pant + 1;
 	
 	draw_scr_background ();
+
+	#ifdef ENABLE_PERSISTENCE		
+		draw_persistent ();
+	#endif
 			
 	f_zone_ac = 0;
 
@@ -1230,14 +1459,18 @@ void draw_scr (void) {
 					en_an_state [gpit] = TYPE_6_IDLE;
 					break;
 			#endif
-			#if defined (PLAYER_KILLS_ENEMIES) || defined (PLAYER_CAN_FIRE)			
+			#if defined (ENEMIES_MAY_DIE)
 				default:
 					en_an_next_frame [gpit] = sprite_18_a;
 			#endif
 		}
 		
+		#ifdef ENABLE_CUSTOM_ENEMS
+			extra_enems_init ();
+		#endif
+
 		#ifdef COUNT_KILLABLE_ON			
-			#if defined(BOXES_KILL_ENEMIES) || defined(PLAYER_KILLS_ENEMIES)
+			#if defined (ENEMIES_MAY_DIE)
 				#ifdef BOXES_ONLY_KILL_TYPE
 					if (malotes [enoffs + gpit].t == BOXES_ONLY_KILL_TYPE) {
 						flags [COUNT_KILLABLE_ON] ++;
@@ -1279,6 +1512,10 @@ void draw_scr (void) {
 	#ifdef ENABLE_CODE_HOOKS
 		hook_entering ();
 	#endif
+
+	#ifdef ENABLE_BREAKABLE
+		init_breakable ();
+	#endif
 }
 
 #ifdef PLAYER_CAN_FIRE
@@ -1288,11 +1525,13 @@ void draw_scr (void) {
 		#else	
 			for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
 				bullets [gpit].x += bullets [gpit].mx;
-				if (attr (bullets [gpit].x >> 4, bullets [gpit].y >> 4) & 8) {
+				_x = bullets [gpit].x >> 4;
+				_y = bullets [gpit].y >> 4; 
+				rdi = attr (_x, _y);
+				if ((rdi & 8) || bullets [gpit].x > 240) {
 					bullets [gpit].estado = 0;
 				}
-				if (bullets [gpit].x < 8 || bullets [gpit].x > 240)
-					bullets [gpit].estado = 0;
+				if (rdi & 32) add_to_breakables ();
 			}	
 		#endif
 	}
@@ -1318,6 +1557,36 @@ void platform_get_player (void) {
 	ptgmy = (_en_my << 6);
 }
 
+#if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD
+	void enems_kill (void) {
+		#ifdef ENABLE_CODE_HOOKS
+			enemy_died = _en_t;
+		#endif
+
+		// Kill enemy
+		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
+		en_an_current_frame [enit] = en_an_next_frame [enit];
+		sp_UpdateNow ();
+		play_sfx (10);
+		en_an_next_frame [enit] = sprite_18_a;
+
+		_en_t |= 16;			// dead
+
+		// Count
+		player.killed ++;
+
+		#ifdef ACTIVATE_SCRIPTING
+			script = f_scripts [max_screens + 2];
+			run_script ();
+		#endif								
+
+		#ifdef RANDOM_RESPAWN								
+			en_an_fanty_activo [enit] = 0;
+			_en_life = FANTIES_LIFE_GAUGE;
+		#endif
+	}
+#endif
+
 void mueve_bicharracos (void) {
 	// This function moves the active enemies.
 	en_tocado = 0;
@@ -1337,7 +1606,7 @@ void mueve_bicharracos (void) {
 				ld 	hl, (_enoffsmasi)
 				ld  h, 0
 
-			#ifdef PLAYER_CAN_FIRE
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 				add hl, hl 				// x2
 				ld  d, h
 				ld  e, l 				// DE = x2
@@ -1395,13 +1664,22 @@ void mueve_bicharracos (void) {
 				ld  a, (hl)
 				ld  (__en_t), a
 
-			#ifdef PLAYER_CAN_FIRE
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 				inc hl 
 
 				ld  a, (hl)
 				ld  (__en_life), a
 			#endif
 		#endasm
+
+		#if defined ENABLE_SWORD && defined SWORD_PARALYZES
+			if (en_an_state [enit] == ENEM_PARALYZED) {
+				en_an_count [enit] --;
+				if (en_an_count [enit] == 0)
+					en_an_state [enit] = 0;
+				else goto enems_loop_continue;
+			}
+		#endif
 
 		if (_en_t != 0
 			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
@@ -1451,8 +1729,8 @@ void mueve_bicharracos (void) {
 					case 3:
 					case 4:
 						rdd = ((_en_t - 1) << 1);
-							break;
-						default:
+						break;
+					default:
 						rdd = 4;
 						break;
 				}	
@@ -1528,18 +1806,7 @@ void mueve_bicharracos (void) {
 					if (gpy < en_ccy - 8 && player.vy > 0 && _en_t >= PLAYER_MIN_KILLABLE) {
 						// Step on enemy and kill it.
 						en_an_next_frame [enit] = sprite_17_a;
-						sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffs + enit].y >> 3), VIEWPORT_X + (malotes [enoffs + enit].x >> 3), malotes [enoffs + enit].x & 7, malotes [enoffs + enit].y & 7);
-						en_an_current_frame [enit] = en_an_next_frame [enit];
-						sp_UpdateNow ();
-						play_sfx (10);
-						en_an_next_frame [enit] = sprite_18_a;
-						_en_t |= 16;			// Marked as "dead"
-						// Count it
-						player.killed ++;
-						#ifdef ACTIVATE_SCRIPTING
-							script = f_scripts [max_screens + 2];
-							run_script ();
-						#endif
+						enems_kill ();
 					} else	
 				#endif
 				{
@@ -1600,14 +1867,17 @@ void mueve_bicharracos (void) {
 						#endif
 					#endif
 
-					#ifdef PLAYER_FLICKERS
+					#ifdef ENABLE_FRIGOABABOL
+						player.estado = EST_FRIGOABABOL;
+						player.ct_estado = FRIGO_MAX_FRAMES;
+					#elif defined PLAYER_FLICKERS
 						// Flickers. People seem to like this more than the bouncing behaviour.
 						player_flicker ();
 					#endif
 				}
 			}
 			
-			// Trajectory limits for linear enemies
+			// Enemy update
 			
 			#ifdef RANDOM_RESPAWN
 				if (en_an_fanty_activo [enit]) { 
@@ -1719,13 +1989,20 @@ void mueve_bicharracos (void) {
 					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 				} else 
 			#endif
+			#ifdef ENABLE_CUSTOM_ENEMS
+				if (_en_t <= 4)
+			#endif
 			{
 				if (en_ccx == _en_x1 || en_ccx == _en_x2)
 					_en_mx = -_en_mx;
 				if (en_ccy == _en_y1 || en_ccy == _en_y2)
 					_en_my = -_en_my;
 			}
-									
+								
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_move ();
+			#endif
+
 			#ifdef PLAYER_CAN_FIRE
 				// Collision with bullets
 				#ifdef RANDOM_RESPAWN
@@ -1751,27 +2028,75 @@ void mueve_bicharracos (void) {
 								if (_en_t != 4)
 									_en_life --;
 								if (_en_life == 0) {
-									// Kill enemy
-									sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
-									en_an_current_frame [enit] = en_an_next_frame [enit];
-									sp_UpdateNow ();
-									play_sfx (10);
-									en_an_next_frame [enit] = sprite_18_a;
-									_en_t |= 16;			// dead
-									// Count
-									player.killed ++;
-									#ifdef ACTIVATE_SCRIPTING
-										script = f_scripts [max_screens + 2];
-										run_script ();
-									#endif								
-									#ifdef RANDOM_RESPAWN								
-										en_an_fanty_activo [enit] = 0;
-										_en_life = FANTIES_LIFE_GAUGE;
-									#endif
+									enems_kill ();
 								}
 							}
 						}
 					}
+				}
+			#endif
+
+			#ifdef ENABLE_SWORD
+				if (s_on && s_frame > 2 && s_frame < 6) {
+					//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
+					#asm
+							// s_hit_x >= en_ccx
+							ld  a, (_en_ccx)
+							ld  c, a
+							ld  a, (_s_hit_x) 
+							cp  c
+							jp  c, _enems_hit_sword_done
+
+							// s_hit_x <= en_ccx + 15 -> en_ccx + 15 >= s_hit_x
+							ld  a, (_s_hit_x)
+							ld  c, a
+							ld  a, (_en_ccx)
+							add 15
+							cp  c
+							jp  c, _enems_hit_sword_done
+
+							// s_hit_y >= en_ccy 
+							ld  a, (_en_ccy)
+							ld  c, a
+							ld  a, (_s_hit_y)
+							cp  c 
+							jp  c, _enems_hit_sword_done
+
+							// s_hit_y <= en_ccy + 15 -> en_ccy + 15 >= s_hit_y
+							ld  a, (_s_hit_y)
+							ld  c, a
+							ld  a, (_en_ccy)
+							add 15
+							cp  c
+							jp  c, _enems_hit_sword_done
+					#endasm
+					{	
+						// Hit!
+						play_sfx (2);
+
+						#ifdef SWORD_PARALYZES
+							en_an_state [enit] = ENEM_PARALYZED;
+							en_an_count [enit] = SWORD_PARALYZES;
+						#endif
+
+						// Kill?
+						#if SWORD_LINEAL_DAMAGE > 0
+							if (_en_t < 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+						#endif
+
+						#if SWORD_FLYING_DAMAGE > 0
+							if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
+						#endif
+
+						#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
+							if (_en_life == 0) {
+								enems_kill ();
+							}
+						#endif
+					}
+					#asm
+						._enems_hit_sword_done
+					#endasm
 				}
 			#endif
 
@@ -1788,8 +2113,13 @@ void mueve_bicharracos (void) {
 					en_an_vx [enit] = en_an_vy [enit] = 0;
 				}
 			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_checks ();
+			#endif
 		}
 
+		enems_loop_continue:
 		#asm		
 				// Those values are stored in this order:
 				// x, y, x1, y1, x2, y2, mx, my, t[, life]
@@ -1832,7 +2162,7 @@ void mueve_bicharracos (void) {
 				ld  (hl), a
 				inc hl
 
-			#ifdef PLAYER_CAN_FIRE
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 				ld  a, (__en_life)
 				ld  (hl), a
 			#endif

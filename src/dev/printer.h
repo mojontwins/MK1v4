@@ -321,3 +321,38 @@ void any_key (void) {
 			ld  l, 1
 	#endasm
 }
+
+#ifdef ENABLE_PERSISTENCE
+	void persist (void) {
+		// Marks tile _x, _y @ n_pant to be cleared next time we enter this screen	
+		// n_pant*20 + y*2 + x/8	
+		gp_gen = (unsigned char *) (PERSIST_BASE + (n_pant << 4) + (n_pant << 2) + (_y << 1) + (_x >> 3));
+		*gp_gen |= bitmask [_x & 7];	
+	}
+
+	void draw_persistent_row (void) {
+		for (gpit = 0; gpit < 8; gpit ++) {
+			if (rdi & (bitmask [gpit]))
+				set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR_TILE, comportamiento_tiles [PERSIST_CLEAR_TILE]);
+		}
+	}
+
+	void draw_persistent (void) {
+		gp_gen = (unsigned char *) (PERSIST_BASE + (n_pant << 4) + (n_pant << 2));
+		for (rdy = 0; rdy < 10; rdy ++) {
+			rdx = 0; rdi = *gp_gen ++; draw_persistent_row ();
+			rdx = 8; rdi = *gp_gen ++; draw_persistent_row ();
+		}
+	}
+
+	void clear_persistent (void) {
+		#asm
+				ld  hl, PERSIST_BASE
+				ld  de, PERSIST_BASE+1
+				ld  bc, MAP_W*MAP_H*20-1
+				xor a
+				ld  (hl), a
+				ldir
+		#endasm
+	}
+#endif

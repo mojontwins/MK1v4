@@ -26,7 +26,8 @@
 #define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS				// Hook at entering screen & each loop @ custom.h
+//#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
+//#define ENABLE_CUSTOM_ENEMS 			// Hooks for custom enemies @ custom.h
 
 // ============================================================================
 // II. Engine type
@@ -56,6 +57,7 @@
 //#define DEACTIVATE_REFILLS			// If defined, no refills.
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 					// The Hobbit
+#define ENEMIES_LIFE_GAUGE		3		// Amount of shots/hits needed to kill enemies.
 
 // Coins engine
 // ------------
@@ -68,6 +70,7 @@
 //#define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
 //#define COINS_DEACTIVABLE				// Coins can be hidden.
 //#define COINS_SCRIPTING 				// Run script when player gets coin
+//#define COINS_PERSISTENT	 			// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes
 
 // Fixed screens engine
 // --------------------
@@ -82,6 +85,7 @@
 
 // Boxes engine
 // ------------
+
 //#define PLAYER_PUSH_BOXES 			// If defined, tile #14 is pushable
 //#define FALLING_BOXES					// If defined, boxes can fall off ledges.
 //#define FALLING_BOXES_SPEED 	4		// Boxes fall every nth frame.
@@ -97,10 +101,55 @@
 //#define PLAYER_BULLET_SPEED 	8		// Pixels/frame. 
 //#define MAX_BULLETS 			3		// Max number of bullets on screen. Be careful!.
 //#define PLAYER_BULLET_Y_OFFSET	4	// vertical offset from the player's top.
-//#define ENEMIES_LIFE_GAUGE	5		// Amount of shots needed to kill enemies.
 
 //#define FIRING_DRAINS_LIFE			// If defined, firing drains life (oi!)
 //#define FIRING_DRAIN_AMOUNT	2		// what to substract when firing.
+
+// Sword
+// -----
+
+//#define ENABLE_SWORD 					// Let the player swing a sword
+//#define SWORD_UP 						// Can hit upwards
+//#define SWORD_LINEAL_DAMAGE	0		// Damage to linear.
+//#define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
+//#define SWORD_PARALYZES		32		// If defined, paralyze for N frames
+
+// Breakable
+// ---------
+
+//#define ENABLE_BREAKABLE 				// Enable breakable tiles (& 32)
+//#define MAX_BREAKABLE_FRAMES 	8 		// N = frames to display this tile:
+//#define BREAKABLE_BREAKING_TILE 45	// display this for N frames
+//#define BREAKABLE_ERASE_TILE 	0		// The substitute by this tile.
+//#define BREAKABLE_SPAWN_CHANCE  3 	// Must be a power of 2 - 1, ifdef there's a chance to spawn...
+//#define BREAKABLE_SPAWN_TILE    46 	// Throw this tile if rand() & chance == 1.
+//#define BREAKABLE_PERSISTENT 			// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
+
+// Persistence
+// -----------
+
+//#define ENABLE_PERSISTENCE			// Turned on automaticly if needed, but you can do it manually
+//#define PERSIST_CLEAR_TILE 	0 		// Clear persistent bit this tile
+
+// Frigoababol
+// -----------
+
+//#define ENABLE_FRIGOABABOL 			// Player can be frozen
+//#define FRIGO_MAX_FRAMES 		32		// # of frames to be frozen. Can be decreased via ...
+//#define FRIGO_UNFREEZE_TIME 			// state counter decreases automaticly.
+//#define FRIGO_UNFREEZE_FIRE 			// state counter decreases pressing fire. You can activate both
+//#define FRIGO_NO_FIRE 				// Can't fire nor swing your sword while frozen
+//#define FRIGO_FIGHT 					// Modify vx, vy while frozen when pressing fire.
+//#define FRIGO_ENEMIES_FREEZE 			// Enemies freeze the player on touch.
+//#define FRIGO_FROZEN_NO_RX 			// No PLAYER_RX while frozen!
+
+// Slippery tiles (side view)
+// --------------------------
+
+//#define SLIPPERY_TILES 				// Tiles with beh & 16 are slippery.
+
+// Miscellaneous fanty stuff
+// -------------------------
 
 //#define PLAYER_CAN_HIDE				// If defined, tile type 2 hides player.
 //#define RANDOM_RESPAWN				// If defined, automatic flying enemies spawn on killed enemies
@@ -128,6 +177,7 @@
 // ---------
 
 //#define PLAYER_MOGGY_STYLE			// Enable top view.
+//#define LOOK_AT_THE_CAMERA			// Use "walk down" cell if player is idle
 //#define PLAYER_NO_INERTIA				// Disable inertia
 //#define PLAYER_CONST_V		256		// Constant speed
 
@@ -204,9 +254,10 @@
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
+//#define COLUMN_MAP 					// Do not check horizontal screen flicks
+//#define ROW_MAP 						// Do not check vertical screen flicks
 //#define NO_ALT_BG						// No alternative tile 19 for bg = 0
 #define NO_MAX_ENEMS					// Less than 3 enems in some screens
-//#define NO_MASKS						// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 //#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
 //#define TWO_SETS_REAL 				// Tiles have their real value in map_buff
@@ -241,6 +292,9 @@
 #define PLAYER_MAX_VX			192 	// Max velocity (192/64 = 3 píxels/frame)
 #define PLAYER_AX				24		// Acceleration (24/64 = 0,375 píxels/frame^2)
 #define PLAYER_RX				32		// Friction (32/64 = 0,5 píxels/frame^2)
+
+#define PLAYER_AX_SLIPPERY 		8
+#define PLAYER_RX_SLIPPERY 		8
 
 // ============================================================================
 // V. Tile behaviour

@@ -20,3 +20,16 @@
 	}
 
 #endif
+
+#ifdef ENABLE_CUSTOM_ENEMS
+
+	void extra_enems_init (void) {
+	}
+
+	void extra_enems_move (void) {		
+	}
+
+	void extra_enems_checks (void) {
+	}
+
+#endif

@@ -1465,6 +1465,10 @@ void draw_scr (void) {
 			#endif
 		}
 		
+		#ifdef ENABLE_CUSTOM_ENEMS
+			extra_enems_init ();
+		#endif
+
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
 				#ifdef BOXES_ONLY_KILL_TYPE
@@ -1553,7 +1557,7 @@ void platform_get_player (void) {
 	ptgmy = (_en_my << 6);
 }
 
-#ifdef ENEMIES_MAY_DIE
+#if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD
 	void enems_kill (void) {
 		#ifdef ENABLE_CODE_HOOKS
 			enemy_died = _en_t;
@@ -1580,7 +1584,6 @@ void platform_get_player (void) {
 			en_an_fanty_activo [enit] = 0;
 			_en_life = FANTIES_LIFE_GAUGE;
 		#endif
-
 	}
 #endif
 
@@ -1726,8 +1729,8 @@ void mueve_bicharracos (void) {
 					case 3:
 					case 4:
 						rdd = ((_en_t - 1) << 1);
-							break;
-						default:
+						break;
+					default:
 						rdd = 4;
 						break;
 				}	
@@ -1874,7 +1877,7 @@ void mueve_bicharracos (void) {
 				}
 			}
 			
-			// Trajectory limits for linear enemies
+			// Enemy update
 			
 			#ifdef RANDOM_RESPAWN
 				if (en_an_fanty_activo [enit]) { 
@@ -1986,13 +1989,20 @@ void mueve_bicharracos (void) {
 					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 				} else 
 			#endif
+			#ifdef ENABLE_CUSTOM_ENEMS
+				if (_en_t <= 4)
+			#endif
 			{
 				if (en_ccx == _en_x1 || en_ccx == _en_x2)
 					_en_mx = -_en_mx;
 				if (en_ccy == _en_y1 || en_ccy == _en_y2)
 					_en_my = -_en_my;
 			}
-									
+								
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_move ();
+			#endif
+
 			#ifdef PLAYER_CAN_FIRE
 				// Collision with bullets
 				#ifdef RANDOM_RESPAWN
@@ -2102,6 +2112,10 @@ void mueve_bicharracos (void) {
 					en_an_x [enit] = (rand () % 240 - 8) << 6;
 					en_an_vx [enit] = en_an_vy [enit] = 0;
 				}
+			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_checks ();
 			#endif
 		}
 
