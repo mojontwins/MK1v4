@@ -39,6 +39,8 @@ En fin, que aquí está.
 
 Es un manual de la v4. Si ya sabes hacer cosas con la churrera puedes saltarte un montón de capítulos. Si no, igual a lo mejor es interesante hacerse antes con el tutorial de la versión actual. O leer este resumen raro.
 
+Por cierto, sabemos que se dice "vista cenital", pero "vista genital" tiene más gracia. De nada.
+
 ## Antes de empezar
 
 Los güegos de **MTE MK1** se compilan con **splib2**. La versión actual lleva unas modificaciones que no son compatibles con v4, y viceversa, por lo que hemos preparado un paquete que se puede instalar a la vez que el otro y que tiene todo lo que necesitas.
@@ -144,11 +146,11 @@ La forma de colocar cerrojos (para ser abiertos con llaves) es sencilla: símple
 
 ![Un cerrojo](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-004.png)
 
-# Exportando nuestro mapa
+## Exportando nuestro mapa
 
 Para exportar nuestro mapa, sólo hay que irse a `File->Save As...` y salvarlo como `mapa.map`, especificando el `.map` de forma explícita, en el subdireoctorio `map`. 
 
-# Importando nuestro mapa
+## Importando nuestro mapa
 
 El conversor para los mapas que viene por defecto en **MTE MK1** es `mapcnv.exe`. En `comp.bat` está la llamada al mismo, que probablemente deberemos modificar:
 
@@ -157,4 +159,70 @@ El conversor para los mapas que viene por defecto en **MTE MK1** es `mapcnv.exe`
 ```
 
 Los dos primeros parámetros indican las rutas de entrada y salida, en este caso `mapa.map` en el directorio `map` y `mapa.h` en el directorio actual (`dev`). Lo siguientes dos parámetros indican el **ancho** y el **alto** del mapa en pantallas; tendrás que poner los valores de tu mapa. Los dos siguientes indican las dimensiones de cada pantalla, que para **MTE MK1** siempre son 15 y 10. El siguiente dígito indica el tile que debe ser detectado como cerrojo, que debe ser siempre 15. El último parámetro `packed` indica que debe meter dos tiles en cada byte. Si tu mapa usa los 48 tiles, deberás omitirlo.
+
+# Capítulo 3 - Sprites
+
+Nuestro juego empleará 8 sprites para el personaje principal, 6 para definir 3 enemigos, y 2 más para definir una plataforma móvil u 8 para definir 4 enemigos en los juegos de vista cenital. Todos los sprites són de 16 x 16. El orden de estos sprites en nuestro *spriteset* dependerá si tenemos un juego de vista cenital o un juego de plataformas. Para las plataformas, será:
+
+|#|Qué tiene
+|---|---
+|0|Personaje principal, derecha, andando, frame 1
+|1|Personaje principal, derecha, andando, frame 2, o parado
+|2|Personaje principal, derecha, andando, frame 3
+|3|Personaje principal, derecha, en el aire
+|4|Personaje principal, izquierda, andando, frame 1
+|5|Personaje principal, izquierda, andando, frame 2, o parado
+|6|Personaje principal, izquierda, andando, frame 3
+|7|Personaje principal, izquierda, en el aire
+|8|Enemigo tipo 1, frame 1
+|9|Enemigo tipo 1, frame 2
+|10|Enemigo tipo 2, frame 1
+|11|Enemigo tipo 2, frame 2
+|12|Enemigo tipo 3, frame 1
+|13|Enemigo tipo 3, frame 2
+|14|Plataforma móvil, frame 1
+|15|Plataforma móvil, frame 2
+
+Para los juegos de vista genital será:
+
+|#|Qué tiene
+|---|---
+|0|Personaje principal, derecha, andando, frame 1
+|1|Personaje principal, derecha, andando, frame 2
+|2|Personaje principal, izquierda, andando, frame 1
+|3|Personaje principal, izquierda, andando, frame 2
+|4|Personaje principal, arriba, andando, frame 1
+|5|Personaje principal, arriba, andando, frame 2
+|6|Personaje principal, abajo, andando, frame 1
+|7|Personaje principal, abajo, andando, frame 2
+|8|Enemigo tipo 1, frame 1
+|9|Enemigo tipo 1, frame 2
+|10|Enemigo tipo 2, frame 1
+|11|Enemigo tipo 2, frame 2
+|12|Enemigo tipo 3, frame 1
+|13|Enemigo tipo 3, frame 2
+|14|Enemigo tipo 4, frame 1
+|15|Enemigo tipo 4, frame 2
+
+Además de esto habrá una serie de sprites extra de los que hablaremos más adelante.
+
+Para crear nuestro *spriteset*, partiremos de una imagen vacía de 256 x 32 píxels. Tendremos una hilera con los sprites del personaje principal y sus máscaras, y otra justo debajo con los demás sprites, con sus máscaras. Las máscaras irán intercaladas, es decir, tendremos un sprite seguido de su máscara, seguido del siguiente sprite seguido de su máscara, y así sucesivamente. Para pintarlas podemos usar cualquier color. Yo, por ejemplo, he pintado los sprites en gris clarito y las máscaras en rojo para guiarme. El otro color, que indica "vacío", debe ser NEGRO PURO (RGB = 0, 0, 0) para que el conversor lo detecte sin problemas.
+
+Aquí vemos dos *spritesets*, uno de vista genital y otro de vista lateral:
+
+![Spriteset de vista genital (cheril)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-001.png)
+
+![Spriteset de vista lateral (lala)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-001.png)
+
+Grabaremos nuestro *spriteset* en `gfx` con nombre `sprites.png`.
+
+## Importanto el *spriteset*
+
+La importación se hace (en el caso más general y básico) con `sprcnv.exe`. Si abrimos `comp.bat` en `dev` veremos que la llamada es algo así:
+
+```cmd
+	..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul
+```
+
+Si hemos seguido las instrucciones no necesitarás tocar nada.
 
