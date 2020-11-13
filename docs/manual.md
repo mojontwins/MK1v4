@@ -212,7 +212,7 @@ Aquí vemos dos *spritesets*, uno de vista genital y otro de vista lateral:
 
 ![Spriteset de vista genital (cheril)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-001.png)
 
-![Spriteset de vista lateral (lala)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-001.png)
+![Spriteset de vista lateral (lala)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-002.png)
 
 Grabaremos nuestro *spriteset* en `gfx` con nombre `sprites.png`.
 
@@ -225,4 +225,44 @@ La importación se hace (en el caso más general y básico) con `sprcnv.exe`. Si
 ```
 
 Si hemos seguido las instrucciones no necesitarás tocar nada.
+
+# Capítulo 4 - Pantallas fijas
+
+En un juego de **MTE MK1** hay cuatro pantallas fijas. Una se almacena tal cual, en formato Spectrum: la pantalla de carga. Las otras tres se comprimen y forman parte del binario: se trata de la pantalla de título, el marco y la pantalla con la escena final. Cuanto más compleja sea una pantalla, más ocupará comprimida, por lo que una forma de liberar memoria es simplificar las pantallas que van en el binario.
+
+Aunque sea obvio decirlo, las pantallas deben ocupar 256x192 pixels y respetar las restricciones del ZX Spectrum.
+
+## La pantalla de carga
+
+Si no modificas el paquete, la pantalla de carga se almacena como un archivo binario con formato Spectrum, esto es, 6912 bytes, por lo que no importa lo compleja o simple que sea. La pantalla de carga debe almacenarse en `gfx` como `loading.png`.
+
+## La pantalla de título
+
+La pantalla de título se presentará a modo de menú y sobre ella sonará la música de presentación. Deberían salir título, créditos y un menú con tres opciones 1: Keyboard, 2: Kempston, 3: Sinclair. Con algo sencillo nos vale, por ejemplo:
+
+![Pantalla de título](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-001.png)
+
+Esta pantalla debe guardarse en `gfx` como `title.png`.
+
+## El marco
+
+El marco se mostrará alrededor del área de juego mientras jugamos. Se utiliza para contener los marcadores. En el tendremos que hacer sitio para los diferentes valores del juego, dependiendo siempre de la configuración del motor. Los espacios donde van los marcadores numéricos deben estar alineados a carácter y dejar sitio para dos dígitos.
+
+También tiene que haber espacio para la ventana de juego, igualmente alineado a carácter. Esta ventana ocupa 240x160 píxels (o 15x10 tiles). 
+
+![Marco de juego](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-002.png)
+
+Esta pantalla deber guardarse en `gfx` como `marco.png`.
+
+## Título y marco
+
+Para ahorrar memoria, **MTE MK1** permite juntar título y marco en una sola pantalla. El título y el menú se dibujarán dentro del area de juego, como se muestra.
+
+![Título con marco](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-003.png)
+
+Si eliges esta configuración, graba la pantalla de combinada de título y marco en `gfx` como `title.png` y deja `marco.png` en negro.
+
+## La pantalla del final
+
+La pantalla del final se mostrará cuando el jugador haya conseguido su objetivo final en el juego. Debe guardarse en `gfx` como `ending.png`. 
 
