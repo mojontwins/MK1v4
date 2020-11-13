@@ -262,7 +262,7 @@ unsigned char _x, _y, _t, _n;
 #endif
 	
 unsigned char pti, ptj;
-unsigned char *gp_gen, *gp_gen_alt;
+unsigned char *gp_gen, *gp_gen_org, *gp_gen_alt;
 unsigned char t_alt;
 unsigned char prxx, pryy;
 

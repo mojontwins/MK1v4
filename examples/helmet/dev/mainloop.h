@@ -195,9 +195,6 @@ void main (void) {
 		draw_scr ();
 		
 		#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
-			#ifdef SHOW_KILLED
-				draw_killed ();
-			#endif
 			#ifdef SHOW_TOTAL
 				// Show total of enemies next to the killed amount.
 				sp_PrintAtInv (KILLED_Y, 2 + KILLED_X, 71, 15);

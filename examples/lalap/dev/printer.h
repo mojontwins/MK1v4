@@ -105,53 +105,53 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 		pryy = (_y - VIEWPORT_Y) >> 1;	
 		if (attr (prxx, pryy) < 8 && (_t < 16 || _t == 19)) {
 			_t = 64 + (_t << 2);
-			gp_gen = (unsigned char *) &tileset [2048 + _t];
-			sp_PrintAtInv (_y, _x, attr (prxx - 1, pryy - 1) == 8 ? (gp_gen[0] & 7)-1 : gp_gen [0], _t);
-			sp_PrintAtInv (_y, _x + 1, attr (prxx, pryy - 1) == 8 ? (gp_gen[1] & 7)-1 : gp_gen [1], _t + 1);
-			sp_PrintAtInv (_y + 1, _x, attr (prxx - 1, pryy) == 8 ? (gp_gen[2] & 7)-1 : gp_gen [2], _t + 2);
-			sp_PrintAtInv (_y + 1, _x + 1, gp_gen [3], _t + 3);
+			gp_gen_org = (unsigned char *) &tileset [2048 + _t];
+			sp_PrintAtInv (_y, _x, attr (prxx - 1, pryy - 1) == 8 ? (gp_gen_org[0] & 7)-1 : gp_gen_org [0], _t);
+			sp_PrintAtInv (_y, _x + 1, attr (prxx, pryy - 1) == 8 ? (gp_gen_org[1] & 7)-1 : gp_gen_org [1], _t + 1);
+			sp_PrintAtInv (_y + 1, _x, attr (prxx - 1, pryy) == 8 ? (gp_gen_org[2] & 7)-1 : gp_gen_org [2], _t + 2);
+			sp_PrintAtInv (_y + 1, _x + 1, gp_gen_org [3], _t + 3);
 		} else
 	#elif defined USE_AUTO_TILE_SHADOWS && !defined UNPACKED_MAP
 		prxx = (_x - VIEWPORT_X) >> 1;
 		pryy = (_y - VIEWPORT_Y) >> 1;	
 		if (attr (prxx, pryy) < 4 && (_t < 16 || _t == 19)) {
-			_t = 64 + (_t << 2);
-			if (_t == 140) {
-				gp_gen = (unsigned char *) &tileset [2188];
-				t_alt = 192;
-				gp_gen_alt = (unsigned char *) &tileset [2188];
+			if (_t == 19) {
+				_t = 140;
+				t_alt = 192;				
 			} else {
-				gp_gen = (unsigned char *) &tileset [2048 + _t];
+				_t = 64 + (_t << 2);
 				t_alt = 128 + _t;
-				gp_gen_alt = (unsigned char *) &tileset [2048 + _t + 128];
 			}
+
+			gp_gen_org = tileset + 2048 + _t;
+			gp_gen_alt = tileset + 2048 + t_alt;
 			
 			if (attr (prxx - 1, pryy - 1) >= 4) {
 				sp_PrintAtInv (_y, _x, gp_gen_alt [0], t_alt);
 			} else {
-				sp_PrintAtInv (_y, _x, gp_gen [0], _t);
+				sp_PrintAtInv (_y, _x, gp_gen_org [0], _t);
 			}
 			if (attr (prxx, pryy - 1) >= 4) {
 				sp_PrintAtInv (_y, _x + 1, gp_gen_alt [1], t_alt + 1);
 			} else {
-				sp_PrintAtInv (_y, _x + 1, gp_gen [1], _t + 1);
+				sp_PrintAtInv (_y, _x + 1, gp_gen_org [1], _t + 1);
 			}
 			if (attr (prxx - 1, pryy) >= 4) {
 				sp_PrintAtInv (_y + 1, _x, gp_gen_alt [2], t_alt + 2);
 			} else {
-				sp_PrintAtInv (_y + 1, _x, gp_gen [2], _t + 2);
+				sp_PrintAtInv (_y + 1, _x, gp_gen_org [2], _t + 2);
 			} 
-			sp_PrintAtInv (_y + 1, _x + 1, gp_gen [3], _t + 3);
+			sp_PrintAtInv (_y + 1, _x + 1, gp_gen_org [3], _t + 3);
 		} else
 	#endif
 	{
 		/*
 		_t = 64 + (_t << 2);
-		gp_gen = (unsigned char *) &tileset [2048 + _t];
-		sp_PrintAtInv (_y, _x, *gp_gen, _t); gp_gen ++; _t ++;
-		sp_PrintAtInv (_y, _x + 1, *gp_gen, _t); gp_gen ++; _t ++;
-		sp_PrintAtInv (_y + 1, _x, *gp_gen, _t); gp_gen ++; _t ++;
-		sp_PrintAtInv (_y + 1, _x + 1, *gp_gen, _t);
+		gp_gen_org = (unsigned char *) &tileset [2048 + _t];
+		sp_PrintAtInv (_y, _x, *gp_gen_org, _t); gp_gen_org ++; _t ++;
+		sp_PrintAtInv (_y, _x + 1, *gp_gen_org, _t); gp_gen_org ++; _t ++;
+		sp_PrintAtInv (_y + 1, _x, *gp_gen_org, _t); gp_gen_org ++; _t ++;
+		sp_PrintAtInv (_y + 1, _x + 1, *gp_gen_org, _t);
 		*/
 		#asm
 				ld  a, (__x)

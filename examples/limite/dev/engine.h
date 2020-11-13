@@ -1175,7 +1175,7 @@ void init_player (void) {
 	}
 #endif
 
-#ifdef TWO_SETS_REAL
+#if !defined TWO_SETS && !defined UNPACKED_MAP
 	void draw_and_advance (void) {
 		map_attr [rdi] = comportamiento_tiles [_n];
 		map_buff [rdi] = _n;
@@ -1286,32 +1286,14 @@ void draw_scr_background (void) {
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt2 == COIN_TILE && 0 == scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
-			map_attr [rdi] = comportamiento_tiles [rdt1];
 			#ifndef NO_ALT_BG
-				if ((rand () & 15) < 2 && rdt1 == 0 && map_buff [rdi - 16] == 0)
+				if ((rand () & 15) < 2 && rdt1 == 0 /*&& map_buff [rdi - 16] == 0*/)
 					rdt1 = 19;
-			#endif
-			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, rdt1);
-			map_buff [rdi] = rdt1;
-			rdx += 2;
-			if (rdx == 30) {
-				rdx = 0;
-				rdy += 2;
-			}
-			rdi ++;
-			map_attr [rdi] = comportamiento_tiles [rdt2];
-			#ifndef NO_ALT_BG
-				if ((rand () & 15) < 2 && rdt2 == 0 && map_buff [rdi - 16] == 0)
+				if ((rand () & 15) < 2 && rdt2 == 0 /*&& map_buff [rdi - 16] == 0*/)
 					rdt2 = 19;
 			#endif
-			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, rdt2);
-			map_buff [rdi] = rdt2;
-			rdx += 2;
-			if (rdx == 30) {
-				rdx = 0;
-				rdy += 2;
-			}
-			rdi ++;
+			_n = rdt1; draw_and_advance ();
+			_n = rdt2; draw_and_advance ();
 		}
 	#endif	
 
@@ -1683,6 +1665,10 @@ void mueve_bicharracos (void) {
 			}
 		#endif
 
+		#if defined ENEMIES_MAY_DIE
+			if (_en_t & 16) goto enems_loop_continue;
+		#endif
+
 		if (_en_t != 0
 			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 				|| scenery_info.make_type_6
@@ -1805,7 +1791,11 @@ void mueve_bicharracos (void) {
 			#endif			
 			{
 				#ifdef PLAYER_KILLS_ENEMIES
-					if (gpy < en_ccy - 8 && player.vy > 0 && _en_t >= PLAYER_MIN_KILLABLE) {
+					if (gpy <= en_ccy - 8 /*&& player.vy > 0 */
+						#ifdef PLAYER_MIN_KILLABLE
+							&& _en_t >= PLAYER_MIN_KILLABLE
+						#endif
+					) {
 						// Step on enemy and kill it.
 						en_an_next_frame [enit] = sprite_17_a;
 						enems_kill ();
