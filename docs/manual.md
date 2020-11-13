@@ -37,7 +37,7 @@ En fin, que aquí está.
 
 ## Qué es este documento
 
-Es un manual de la v4. Si ya sabes hacer cosas con la churrera puedes saltarte un montón de capítulos. Si no, igual a lo mejor es interesante hacerse antes con el tutorial de la versión actual. O leer este resumen raro.
+Es un manual de la v4. Si ya sabes hacer cosas con la churrera y quieres ver qué tiene esto de especial puedes saltarte un montón de capítulos e irte directamente al 6. Si no, igual a lo mejor es interesante hacerse antes con el tutorial de la versión actual. O leer este resumen raro.
 
 Por cierto, sabemos que se dice "vista cenital", pero "vista genital" tiene más gracia. De nada.
 
@@ -266,3 +266,645 @@ Si eliges esta configuración, graba la pantalla de combinada de título y marco
 
 La pantalla del final se mostrará cuando el jugador haya conseguido su objetivo final en el juego. Debe guardarse en `gfx` como `ending.png`. 
 
+## Convirtiendo a formato Spectrum
+
+Para ello, desde `comp.bat` se utiliza `png2scr.exe` y, en el caso de las tres imagenes que van en el binario, `apack.exe` para comprimirlas. Si utilizas otros nombres de archivo u otras ubicaciones tendrás que modificarlas las conversiones y compresiones en `comp.bat`.
+
+# Capítulo 5 - Enemigos y *hotspots*
+
+En este capítulo usaremos `ponedor.exe` para colocar en cada pantalla de nuestro juego hasta tres enemigos y un *hotspot*, que no es más que una casilla donde poner un objeto coleccionable o una llave, o donde aparecerán las recargas. Pero primero hablemos un poco sobre estos entes:
+
+## Enemigos 
+
+En **MTE_MK1** los enemigos también se refieren a las plataformas móviles. Los enemigos tienen asociados una serie de valores, entre ellos un **tipo**. Este tipo define el comportamiento y de forma indirecta el gráfico con el que se pinta:
+
+### Lineales
+
+Los enemigos con tipos 1, 2, 3 y 4 definen enemigos que describen trayectorias lineales. En los juegos con vista lateral, los de tipo 4 son las plataformas móviles. El tipo se corresponde con el orden del gráfico que se mostrará en el spriteset.
+
+Cuando hablamos de trayectorias lineales tenemos dos posibles casos:
+
+* **Horizontales y Verticales**: los enemigos van de un punto de inicio a un punto final describiendo una linea recta vertical u horizontal. El enemigo sigue esa línea imaginaria yendo y viniendo ad infinitum.
+
+![Horizontal y vertical](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-001.png)
+
+* **Diagonales**: los enemigos parecen rebotar en el rectángulo definido entre los puntos inicial y final si estos no están alineados vertical u horizontalmente:
+
+![Horizontal y vertical](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-002.png)
+
+### Voladores
+
+Los enemigos con tipos 5 y 6 definen enemigos voladores, o *Fantys*, como los llamamos en Mojonia. Este tipo de enemigos persigue al jugador por la pantalla, con diferentes comportamientos configurables. No se puede usar tipos 5 y 6 simultaneamente, y tanto uno como otro hay que activarlos explícitamente pues no forman parte del core básico, como veremos.
+
+* **Tipo 5**: Los enemigos de tipo 5 se crearon para **Zombie Calavera** y se conocen internamente como *Randown Respawn*. Su comportamiento es un tanto específico de este juego: aparecen si has matado alguno de los enemigos lineales de la pantalla. Se crean en un lugar aleatorio del borde de la pantalla y siguen al jugador si este no está *oculto* (colocado sobre un tile con comportamiento *oculta*).
+
+* **Tipo 6**: Son muy parecidos pero aparecerán en el lugar de la pantalla donde los ubiques. Además, pueden configurarse para que o bien persigan al jugador siempre, o bien solo lo hagan si el jugador se acerca, volviendo a su posición inicial cual el jugador se "pierde de vista".
+
+## Hotspots
+
+Son, como hemos dicho, los puntos donde aparecen los objetos coleccionables, las llaves, o las recargas de vida. Se colocan en una casilla cada pantalla del mapa y llevan asociado un "tipo", que puede ser 1 (objetos) o 2 (llaves), o cualquier otro número si te encargas tú de gestionarlo mediante código *custom*.
+
+## Preparando los materiales necesarios
+
+Tendremos que copiar los materiales necesarios al directorio `/enems`. Necesitamos dos cosas: el mapa del güego en formato `MAP`, y el tileset del juego `work.png`. Por tanto, copiamos `/map/mapa.map` y `/gfx/work.png` en `/enems`. 
+
+## Configuración de nuestro proyecto
+
+Ponedor era originalmente una aplicación que, aunque tiene su interfaz gráfica, estaba pensada para ser lanzada desde la ventana de línea de comandos. Sin embargo, por petición popular, le he añadido un diálogo de entrada para que se pueda usar tal y como se usaba el viejo Colocador. Si estáis interesados en usarlo desde la ventana de línea de comandos, ejecutad el programa con e parámetro -h:
+
+```
+    $ ..\utils\ponedor.exe -h
+    Edit an existing set:
+    $ ponedor.exe file.ene
+
+    Create new set:
+    $ ponedor.exe new out=file.ene map=file.map tiles=file.png|bmp [adjust=n] size=w,h
+                      [scrsize=w,h] [nenems=n] [x2]
+
+    out           output filename
+    map           map file (raw, headerless, 1 byte per tile, row order)
+    tiles         tileset in png or bmp format.
+    adjust        substract this number from every byte read from the map file. Def=0
+    size          map size in screens
+    scrsize       screen size in tiles. Def=16,12
+    nenems        number of enemies per screen. Def=3
+    x2            zoom x2 (hacky)
+```
+
+Cuando ejecutas el Ponedor sin parámetros (por ejemplo, haciendo doble click sobre `ponedor.bat` en `/enems`) aparecerá la pantalla principal en la que podemos cargar un proyecto existente o configurar uno nuevo. Como no tenemos un proyecto existente, crearemos uno nuevo rellenando las casillas del recuadro superior:
+
+![Nuevo proyecto del "Ponedor"](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-003.png)
+
+1. `Map W` y `Map H` son el **ancho** y el **alto** de nuestro mapa **en pantallas**, o sea, las **dimensiones del mapa**. 
+
+2. `Scr W` y `Scr H` son las **dimensiones de cada pantalla**, en **tiles**. Para todos los güegos de **MTE MK1** estos valores son 15 y 10.
+
+3. `Nenems` es el número de enemigos máximo por pantalla. En un principio, para **MTE MK1** debe ser 3.
+
+4. `Adjust` lo dejamos en 0 para esta versión de **MTE MK1**.
+
+5. Donde pone `TS` tenemos que poner la ruta del archivo con el tileset, que debería ser `work.png` a secas si lo has copiado en `enems`, aunque puedes usar el botón `Find` para ubicarlo desde un explorador si no te apetece escribir 8 caracteres.
+
+6. En `Map` hay que poner la ruta del archivo con el mapa, que debería ser `mapa.map` a secas si lo copiaste a `enems`. También puedes usar `Find`.
+
+7. No te olvides de poner **el nombre de archivo de salida** en la casilla `Output`. Si no quieres tocar `compile.bat`, este nombre debe ser `enems.ene`.
+
+En la parte inferior izquierda de la ventana hay un botón que pone `Size`. Puedes pulsarlo para que en vez de `Normal` salga `Double` y así el Ponedor se mostrará ampliado 2x y se verá mejor todo.
+
+## Manejo básico del programa
+
+En la vista principal aparece una rejilla con la pantalla actual. Puedes cambiar la pantalla que se muestra usando las teclas de los cursores. Es en esta vista donde pondremos los enemigos, dibujaremos sus trayectorias, y colocaremos los hotspots.
+
+Aparte de esto, en la pantalla tenemos otras dos zonas, arriba y abajo:
+
+### Indicadores
+
+En la parte superior de la pantalla hay una serie de indicadores. De izquierda a derecha:
+
+1. Coordenadas de la pantalla actual dentro del mapa (XP, YP).
+2. Número actual de la pantalla (que será `YP * MAP_W + XP`).
+3. `2b` o `3b` dependiendo si el archivo que estás editando es de formato antiguo o de formato nuevo, respectivamente. **Con la versión 4.0 de MTE MK1 necesitarás usar el modo `2b`**. Se puede convertir de formato pulsando `L`. Si ves `3b` **debes pusar `L` para que se muestre `2b`**.
+4. Las coordenadas de la casilla sobre la que pasa el ratón, cuando está en el área de edición.
+
+### Botonera
+
+En la parte inferior hay una serie de botones:
+
+1. `Save` (o la tecla `S`) guarda los cambios en el archivo de salida `enems.ene`. ¡Púlsalo a menudo!
+2. `Exit` (o la tecla `ESC`) sirve para salir. El programa pedirá confirmación.
+3. `Grid` (o la tecla `G`) activa o desactiva la rejilla.
+4. `Reload` recarga los recursos (mapa y gráficos) desde disco, por si los has cambiado.
+5. `H` exporta los enemigos como `enems.h` - *pero esto ya no se usa*, ya que la conversión se hace automáticamente en `comp.bat`.
+
+## Grabando y cargando
+
+Aunque no hayas puesto nada todavía, graba tu proyecto pulsando `Save`. Verás que en el directorio `/enems` aparecerá el archivo `enems.ene` que referenciaste en el diálogo inicial al crear el proyecto. Ahora cierra el Ponedor. Ahora vuelve a ejecutarlo pulsando sobre `ponedor.bat` en `/enems`.
+
+Esta vez, en lugar de rellenar los valores, escribe `enems.ene` en el cuadro `Input` situado en el recuadro inferior que está etiquetado `Open existing` y haz click sobre el botón que pone `Load Existing`. Si todo sale bien, te debería volver a salir la primera pantalla del mapa.
+
+![Cargando un proyecto existente](https://raw.githubusercontent.com/mojontwins/MK1/master/docs/wiki-img/c05-004.png)
+
+Como mencionamos antes, sólo tenemos que preocuparnos de poner las cosas en el Ponedor y grabar el archivo `enems.ene` a menudo. `comp.bat` se encargará de hacer las conversiones necesarias y de meter los numeritos en el juego.
+
+## Poniendo enemigos y plataformas
+
+Para empezar veremos como colocar **enemigos lineales**. Empezaremos haciendo click sobre la casilla donde debe aparecer el enemigo; además servirá como uno de los límites de su trayectoria. Cuando hagamos esto, aparecerá un cuadro de diálogo donde deberemos introducir el **tipo del enemigo**. Recuerda que en el caso de enemigos lineales será un valor de 1 a 4, 4 para las plataformas en los güegos de vista lateral. Ponemos el numerito y pulsamos OK.
+
+Ahora el programa espera que marquemos el final la trayectoria. Haremos click en la casilla correspondiente. Veremos como se nos muestra gráficamente la trayectoria y aparece un nuevo cuadro de diálogo algo más complejo:
+
+![El atributo sirve para la velocidad de los enemigos lineales](https://raw.githubusercontent.com/mojontwins/MK1/master/docs/wiki-img/c05-005.png)
+
+En **MTE MK1** sólo tendremos que rellenar el recuadro `Attr`. El valor introducido en `Attr` será el número de píxeles que avanzará el enemigo o plataforma por cada cuadro de juego. Estos valores, para que no haya problemas, deberían ser potencias de dos:  1, 2 o 4.
+
+Una vez que hayamos puesto el numerico, pulsamos OK.
+
+Para los enemigos **voladores** de tipo 6 sólo importa la casilla de inicio. La otra casilla da igual donde la pongas. Se suele poner en la casilla de al lado. Puedes dejar vacío el cuadro `Attr`, ya que no se usa tampoco.
+
+Puedes poner un máximo de tres por pantalla (el programa no te dejará meter más). No tiene por que haber tres en cada pantalla, puedes tener pantallas con uno, con dos, o con ninguno.
+
+Para **eliminar o editar** los valores de un enemigo que ya hayamos colocado, basta con hacer click sobre la casilla de inicio de la trayectoria (donde aparece el numerito que indica el tipo). Entonces nos aparecerá un cuadro de diálogo donde podremos cambiar su tipo o la velocidad o eliminarlo completamente.
+
+## Poniendo hotspots
+
+**Cada pantalla admite un único hotspot**. Eso significa que el número total de llaves y objetos necesarios para terminar el güego no puede exceder el número de pantallas. Para colocar el hotspot de la pantalla actual, simplemente **hacemos click con el botón derecho en la casilla donde queremos que aparezca** la llave o el objeto, con lo que haremos aparecer un pequeño cuadro de diálogo donde deberemos introducir el tipo.
+
+Para editar o borrar un hotspot, simplemente haz click *con el botón derecho* sobre él para mostrar el diálogo de edición desde el que también te lo puedes cargar.
+
+No todas las pantallas tienen por qué tener un hotspot. 
+
+## Conversión e importación
+
+La conversión se hace desde `comp.bat` empleando `ene2h.exe`:
+
+```cmd
+	..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
+```
+
+# Capítulo 6 - Configurando el güego
+
+El comportamiento básico del juego se define en el archivo `config.h` que hay situado en `dev`. Luego podremos tunear mediante el scripting o el código inyectable de `custom.h`, pero hay que empezar por el principio. 
+
+## Configuración general
+
+En la primera sección configuramos el comportamiento general del juego: las dimensiones del mapa, la pantalla de inicio, la pantalla de final (si aplica), la posición del muñeco al inicio, el número de objetos que hay que recoger, etcétera.
+
+```c
+	//#define MODE_128K_DUAL				// Uses AY Routines in RAM1 if on 128K mode.
+	//#define MIN_FAPS_PER_FRAME	2		// Limits the max # of fps to 50/N
+```
+
+* `MODE_128K_DUAL` permite detectar modelos de 128K y usar un player de música y efectos que use el chip AY ubicado en RAM1.
+
+* `MIN_FAPS_PER_FRAME` coloca un limitador de frames. El valor que le asignes será el máximo número de frames que dejará pasar por cuadro de juego. El ZX Spectrum funciona a 50 fps, por lo que, por ejemplo, un valor de 2 limitaría el juego a 25 fps, y uno de 3 a 16.6 fps. Obviamente si hay mucha carga en una escena el frame rate del juego bajará. Esta directiva sólo coloca un límite superior para que las pantallas con poca acción no vayan mucho más rápidas.
+
+Cualquiera de estas dos directivas hacen que se cree una tabla de 257 valores y que se añada una serie de estructuras de datos que pueden ocupar hasta 512 bytes.
+
+```c
+	#define MAP_W					5		//
+	#define MAP_H					5		// Map dimmensions in screens
+	#define TOTAL_SCREENS			25		// 
+```
+
+* `MAP_W` y `MAP_H` definen el tamaño del mapa en pantallas.  Deben ser los mismos valores que usas en `comp.bat` como parámetros de `mapcnv.exe` para convertir el mapa o los que introdujiste en `ponedor.exe` al crear el proyecto para `enems.ene`.
+
+* `TOTAL_SCREENS`, en principio, debe valer `MAP_W * MAP_H`. Los valores están separados debido a oscuros manejes que se perdieron en el tiempo, ya que **actualmente no se usa**.
+
+```c
+	#define SCR_INICIO				12		// Initial screen
+	#define PLAYER_INI_X			8		//
+	#define PLAYER_INI_Y			5		// Initial tile coordinates
+```
+
+Estas directivas definen donde se empieza a jugar: 
+
+* El número de pantalla `SCR_INICIO` se obtiene contando las pantallas en orden de lectura (de izquierda a derecha y de arriba a abajo) empezando por 0, que correspondería a la pantalla superior izquierda del mapa.
+
+* `PLAYER_INI_X` y `PLAYER_INI_Y` son las coordenadas de inicio a nivel de tiles.
+
+Todos estos valores los puedes obtener fácilmente navegando por `ponedor.exe` y moviendo el raton sobre las casillas del área de edición.
+
+```c
+	//#define SCR_FIN 				99		// Last screen. 99 = deactivated.
+	//#define PLAYER_FIN_X			99		//
+	//#define PLAYER_FIN_Y			99		// Player tile coordinates to finish game
+```
+
+Si activas `SCR_FIN` el juego terminará sólo si el jugador está en la pantalla indicada, en las coordenadas especificadas en `PLAYER_FIN_X` y `PLAYER_FIN_Y`, aunque no sabemos si esto funcionará bien porque, en 10 años, **no lo hemos usado NUNCA**.
+
+Si comentas `SCR_FIN` no se tomarán en cuenta (que es lo que hemos hecho en cada uno de los juegos que hemos lanzado desde **Lala Prologue**).
+
+```c
+	#define PLAYER_NUM_OBJETOS		13		// Objects to get to finish game
+	#define PLAYER_LIFE 			99		// Max and starting life gauge.
+	#define PLAYER_REFILL			25		// Life recharge
+```
+
+* `PLAYER_NUM_OBJETOS` especifica cuantos hotspots de tipo 1 tendremos que coleccionar. Si no activamos el motor de scripting y `WIN_ON_SCRIPTING` (ver más adelante), ganaremos el juego tras coleccionar este número de objetos.
+
+* `PLAYER_LIFE` es la cantidad de vida con la que empezamos a jugar, `PLAYER_REFILL` es cuánto se recarga la vida al coger una regarga. En esta versión de **MTE MK1** las recargas aparecen únicamente cuando hemos recogido una llave o un objeto coleccionable y volvemos a la misma pantalla.
+
+```c
+	#define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
+	//#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
+```
+
+Estas dos directivas especifican cuánta vida restan los enemigos al colisionar con el jugador. Puedes especificar valores diferentes para enemigos lineales o enemigos voladores. Obviamente, `FLYING_ENEMY_HIT` solo valdrá de algo si activas algún tipo de enemigo volador (ver más abajo).
+
+```c
+	//#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
+	//#define ENABLE_CUSTOM_ENEMS 			// Hooks for custom enemies @ custom.h
+```
+
+Estas dos directivas implican conocimientos más avanzados: sirven para activar los enganches generales y de enemigos custom en el archivo `custom.h`.
+
+### Enganches generales `ENABLE_CODE_HOOKS`
+
+Si activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas en puntos específicos de la ejecución del juego. Añadiendo código C a estas funciones podrás personalizar muchísimo el motor. Tienes un ejemplo genial de esto en el juego **Ramiro el Vampiro en el Misterio del Papiro**. Las funciones son:
+
+* `void hook_system_inits (void);` se ejecuta una sola vez al finalizar la carga. Fue concebido para poder añadir código para comprobar claves de acceso o para crear sprites extra.
+
+* `void hook_init_game (void);` se ejecuta cada vez que empezamos una nueva partida. Sirve para inicializar valores antes de empezar a jugar.
+
+* `void hook_mainloop (void);` se ejecuta una vez cada cuadro de juego, justo antes de dibujarlo en pantalla.
+
+* `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los hotspots, pero antes de que nada sea visible.
+
+### Enganches de enemigos custom `ENABLE_CUSTOM_ENEMS`
+
+Los enganches para enemigos custom permiten añadir tipos de enemigos o personalizar los que ya existen. Si activas `ENABLE_CUSTOM_ENEMS`, las siguientes funciones de `custom.h` serán llamadas en diferentes puntos de la gestión de enemigos:
+
+* `void extra_enems_init (void);` se ejecuta durante la inicialización de los enemigos al entrar en cada pantalla. Se llama cuando se está inicializando el enemigo número `gpit`. Sus valores estarán en `malotes [enoffs + gpit]`, una estructura con estos campos:
+
+```c
+	typedef struct {
+		unsigned char x, y; 				// Coordenadas
+		unsigned char x1, y1, x2, y2; 		// Límites de trayectoria
+		char mx, my; 						// Velocidad
+		char t; 							// Tipo
+	#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+		unsigned char life;					// Vida
+	#endif
+	} MALOTE;
+```
+
+Se debería identifica nuestro enemigo con `malotes [enoffs + gpit].t`, que contendrá el tipo, y realizar las inicializaciones necesarias.
+
+* `void extra_enems_move (void);` se ejecuta cada vez que se actualiza cada enemigo. Aquí las variables de `malotes` están copiadas a variables globales:
+
+```c
+	unsigned char _en_x;
+	unsigned char _en_y;
+	unsigned char _en_x1;
+	unsigned char _en_y1;
+	unsigned char _en_x2;
+	unsigned char _en_y2;
+	signed char _en_mx;
+	signed char _en_my;
+	unsigned char _en_t;
+	unsigned char _en_life;
+```
+
+Deberemos detectar nuestro tipo custom usando `_en_t`. Aquí podremos *mover* al enemigo modificando `_en_x` y `_en_y`. Asimismo, deberemos asignar el próximo cell de animación en `en_an_next_frame [enit]`.
+
+* `void extra_enems_checks (void);` se ejecuta al final del bucle que actualiza los enemigos. Podemos añadir código en este punto, por ejemplo para comprobar la colisión con algún elemento que hayamos introducido en nuestros *customs*.
+
+Aquí tenemos un ejemplo tonto de un enemigo que sólo "tirita" y cambia de frame cada cierto tiempo, sin moverse del sitio:
+
+```c
+	// (en custom.h)
+
+	void extra_enems_init (void) {
+		if (malotes [enoffs + gpit].t == 8) {
+			malotes [enoffs + gpit].x = malotes [enoffs + gpit].x1;
+			malotes [enoffs + gpit].y = malotes [enoffs + gpit].y1;
+		}
+	}
+
+	void extra_enems_move (void) {		
+		if (_en_t == 8) {
+			_en_x = _en_x1 + half_life;
+			en_an_next_frame [enit] = enem_cells [
+				((frame_counter & 7) < 4) ? 2 : 3
+			];
+		}
+	}
+
+	void extra_enems_checks (void) {
+		// Nada
+	}
+
+```
+
+## Tipo de motor
+
+### Directivas miscelaneas
+
+```c
+	#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
+	//#define DEACTIVATE_KEYS				// If defined, keys are not present.
+	//#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
+	//#define ONLY_ONE_OBJECT				// If defined, only one object can be carried at a time.
+	//#define DEACTIVATE_EVIL_TILE			// If defined, no killing tiles (behaviour 1) are detected.
+	//#define EVIL_TILE_SIMPLE				// For side view, only hit from below.
+	#define DEACTIVATE_EVIL_ZONE			// Zones kill you after a while. Read docs or ask na_th_an
+	//#define EVIL_ZONE_FRAME_COUNT	8		// For countdown in an evil zone.
+	//#define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing
+	//#define EVIL_ZONE_FREQ 		3 		// if defined to N kill every M^2 frames; N=M^2-1,  
+	//#define EVIL_ZONE_CONDITIONAL 		// Active if scenery_info.evil_zone_active
+	#define PLAYER_BOUNCES					// If defined, collisions make player bounce
+	//#define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
+	//#define DEACTIVATE_REFILLS			// If defined, no refills.
+	#define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
+	//#define PLAYER_DIZZY 					// The Hobbit
+	#define ENEMIES_LIFE_GAUGE		3		// Amount of shots/hits needed to kill enemies.
+```
+
+* `DIRECT_TO_PLAY`: La activamos cuando compartimos título y marco en la misma pantalla.
+
+* `DEACTIVATE_KEYS`: Si nuestro juego no usa llaves ni cerrojos, activamos esta directiva para ahorrar espacio.
+
+* `DEACTIVATE_OBJECTS`: Si nuestro juego no usa objetos coleccionables, activamos esta directiva para ahorrar espacio.
+
+* `ONLY_ONE_OBJECT`: Activa el modo en el que el jugador sólo puede llevar un objeto. Es el modo en el que funciona **Trabajo Basura**. Al recoger un objeto coleccionable, `player.objects` se pone a 1 y no podremos coger más. Cuando esto ocurra, `PLAYER_HAS_OBJECTS` en el script evaluará a "cierto". La única forma de liberar el objeto es desde código custom o en el script con `DEC OBJECTS 1`. Es tarea del jugador contabilizar los objetos en un flag. 
+
+* `DEACTIVATE_EVIL_TILE`: Si nuestro juego no emplea tiles que matan, puedes ahorrar espacio activándola.
+
+* `EVIL_TILE_SIMPLE`: Si estás en vista lateral y tus tiles que matan sólo lo harán si el jugador *cae* en ellos, activando esta directiva ahorrarás mucho espacio.
+
+* `DEACTIVATE_EVIL_ZONE`: Si nuestro juego no emplea tiles de tipo 3, activamos esta directiva para ahorrar espacio. Los tiles de tipo 3 se introdujeron en **Ramiro el Vampiro** y restan vida si el jugador los toca. Si la variable `scenery_info.evil_kills_slowly` vale 1, no restarán vida hasta que se agote un contador. Se configuran con los parámetros:
+
+    * `EVIL_ZONE_FRAME_COUNT`: Si `scenery_info.evil_kills_slowly` vale 1, cada cuantos cuadros de juego decrementamos el contador.
+    
+    * `EVIL_ZONE_BEEPS_COUNT`: Si `scenery_info.evil_kills_slowly` vale 1, valor inicial de este contador.
+
+    * Si `scenery_info.evil_kills_slowly` vale 0 o se ha agotado el contador, la vida empezará a disminuir a razón de una unidad por frame, a menos que activemos `EVIL_ZONE_FREQ`, que debe contener un valor N = M^2 - 1, en cuyo caso se decrementará cara M^2 frames (esto es, 1 para cada 2 frames, 3 para cada 4 frames, 7 para cada 8 frames, 15 para cada 16 frames...).
+
+    * Finalmente, si activamos `EVIL_ZONE_CONDITIONAL`, los tiles de tipo 3 sólo estarán activos si `scenery_info.evil_zone_active` vale 1.
+
+* `PLAYER_BOUNCES`: El jugador rebota si le da un enemigo.
+
+* `PLAYER_FLICKERS`: El jugador parpadea un par de segundos si le da un enemigo.
+
+* `DEACTIVATE_REFILLS`: Desactivar las recargas.
+
+* `MAX_FLAGS`: Debe definirse y valer al menos 1. Controla el número de flags para scripting y otros menesteres. Probablemente con 16 tendrás bastante para un juego de complejidad normal. Además, usar 16 o menos permite optimizar mucho el *bytecode* de los scripts, como describiremos más adelante.
+
+* `PLAYER_DIZZY`: Se introdujo para **El Hobbit** y sólo funciona con `PLAYER_NO_INERTIA` en perspectiva genital.
+
+* `ENEMIES_LIFE_GAUGE` especifica el número de veces que hay que darle con un disparo a un enemigo para matarlo.
+
+### Monedas
+
+Sirve para activar las monedas, que no son más que un tile específico del tileset que podemos recoger. Al hacerlo, se incrementará el valor de un flag. Se utilizan de manera muy diferente en los cuatro Ramiros y en la demo de Sir Ababol 2:
+
+```c
+	// Coins engine
+	// ------------
+
+	//#define USE_COINS						// Coin engine activated
+	//#define COIN_TILE				13		// Coin is tile #X
+	//#define COIN_BEH 				16 		// Detect coin by behaviour rather than tile nº
+	//#define COIN_FLAG				1		// Coins are counted in flag #N
+	//#define COINS_REFILL 			1		// If defined, add this to player.life
+	//#define COIN_TILE_DEACT_SUBS	0		// Substitute with this tile if coins are OFF.
+	//#define COINS_DEACTIVABLE				// Coins can be hidden.
+	//#define COINS_SCRIPTING 				// Run script when player gets coin
+	//#define COINS_PERSISTENT	 			// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes
+```
+
+* `USE_COINS` activa el módulo de monedas.
+
+* `COIN_TILE` indica qué tile de los 48 representa la moneda.
+
+* `COIN_BEH` (opcional): Si se define, la detección de la moneda no se hará por el número de tile en `COIN_TILE`, sino sobre cualquier tile que tenga beh = 16. Cuidado, porque esto hace que el código no sea compatible con los tiles resbalosos. No se usa en ninguno de nuestros juegos, pero puede servir para tener variso tipos de "monedas".
+
+* `COIN_FLAG`: Indica en qué flag se cuentan las monedas. Obviamente, este flag debe existir (el valor debe ser **menor** que el definido en `MAX_FLAGS`).
+
+* `COINS_REFILL` (opcional): Si se define, se incrementa la vida del jugador en este valor cada vez que se recoge una moneda.
+
+* `COIN_TILE_DEACT_SUBS`: Al recoger una moneda, se sustitiye por este tile.
+
+* `COINS_DEACTIVABLE` (opcional): Si se define, las monedas pueden estar "ocultas" dependiendo del valor de `scenery_info.show_coins`. Si se modifica el valor (desde `custom.h` o usando `SHOW_COINS` o `HIDE_COINS` en el script), los cambios no serán visibles hasta que se vuelva a entrar en la pantalla (puedes hacer `REENTER` en el script o `on_pant = 0xff;` en tu código custom, o hacerlo desde una pantalla diferente a la que contiene las monedas).
+
+* `COINS_SCRIPTING` (opcional): Si se define, se ejecuta la sección `PLAYER_GETS_COIN` del script cuando se recoge una moneda.
+
+* `COINS_PERSISTENT` (opcional): Activa la persistencia para las monedas. Puedes y debes leer sobre la persistencia más adelante
+
+### Juegos de pantallas fijas
+
+El motor de pantallas fijas se ideó para el juego de **Johnny Límite** (que jamás llegó a completarse) y sirve para hacer arcades de pantalla fija. El avance a la siguiente pantalla puede hacerse desde código custom o desde scripting mediante el comando `NEXT_LEVEL`.
+
+```c
+	// Fixed screens engine
+	// --------------------
+
+	//#define FIXED_SCREENS					// If defined, you can't exit a screen running off an edge
+	//#define SHOW_LEVEL_INFO				// If defined, show "LEVEL XX" before level start, XX=n_pant
+	//#define SHOW_LEVEL_SUBLEVEL			// If defined, level # is XX/YY using y_map and x_map resp.
+	//#define RESPAWN_REENTER 				// If you die, reenter screen. (redraw)
+	//#define RESPAWN_SHOW_LEVEL			// Besides, show level info.
+	//#define RESPAWN_FLICKER				// Start level flickering.
+	//#define RESET_BODY_COUNT_ON_ENTER		// Reset body count when entering new screen
+	//#define USE_SUICIDE_KEY
+```
+
+* `FIXED_SCREENS` activa el motor de pantallas fijas.
+
+* `SHOW_LEVEL_INFO` (opcional): Muestra una pantalla con el texto `LEVEL XX` con XX el número de pantalla más uno antes de empezar cada pantalla.
+
+* `SHOW_LEVEL_SUBLEVEL` (opcional): Debe utilizarse con `SHOW_LEVEL_INFP`. Utiliza la geometría del mapa (filas y columnas) para mostrar el número de nivel como `XX/YY`, con XX la columna e YY la fila de la pantalla actual.
+
+* `RESPAWN_REENTER` (opcional): Recargar la pantalla actual al morir.
+
+* `RESPAWN_SHOW_LEVEL` (opcional): Debe utilizarse con `RESPAWN_REENTER`. Vuelve a mostrar la pantalla de `LEVEL XX[/YY]`.
+
+* `RESPAWN_FLICKER` (opcional): Empezar el nivel parpadeando.
+
+* `RESET_BODY_COUNT_ON_ENTER` (opcional): Pone a 0 el contador de enemigos eliminados al entrar en cada pantalla. 
+
+* `USE_SUICIDE_KEY` (opcional): Habilita la tecla "S" para suicidarse.
+
+### Motor de cajas
+
+Permite que el tile 14 del tileset pueda empujarse. En modo lateral, además, podemos activar el motor de cajas con gravedad, diseñado para el juego inconcluso de **Johnny Límite**.
+
+```c
+	// Boxes engine
+	// ------------
+
+	#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
+	//#define FALLING_BOXES					// If defined, boxes can fall off ledges.
+	//#define FALLING_BOXES_SPEED 	4		// Boxes fall every nth frame.
+	//#define ENEMIES_BLOCK_BOXES			// If defined, you can't push a box if it collides an enemy
+	//#define BOXES_KILL_ENEMIES			// If defined, falling boxes can kill enemies.
+	//#define BOXES_ONLY_KILL_TYPE 	1		// If defined, only enemies type N can be killed with boxes.
+	//#define BOXES_KILL_PLAYER				// If defined, falling boxes can kill the player.
+```
+
+* `PLAYER_PUSH_BOXES` activa el motor de cajas empujables.
+
+* `FALLING_BOXES`: Debe utilizarse con `PLAYER_PUSH_BOXES` y activa el motor de cajas empujables con gravedad.
+
+* `FALLING_BOXES_SPEED`: Las cajas caen cada N frames.
+
+* `ENEMIES_BLOCK_BOXES` (opcional): Si se definen, no puedes empujar cajas si hay enemigos en la casilla de destino.
+
+* `BOXES_KILL_ENEMIES` (opcional): Debe utilizarse con `FALLING_BOXES`. Si se define, las cajas que caen sobre enemigos los matan.
+
+* `BOXES_ONLY_KILL_TYPE` (opcional): Debe utilizarse con `BOXES_KILL_ENEMIS`. Si se define, las cajas sólo matan al tipo de enemigos especificado. Si no, a todos.
+
+* `BOXES_KILL_PLAYER`  (opcional): Debe utilizarse con `FALLING_BOXES`. Si se define, las cajas que caen sobre el jugador lo matan.
+
+### Motor de disparos
+
+En esta versión de **MTE MK1** sólo funciona en vista lateral.
+
+```c
+	// Shooting behaviour (only side view!)
+	// ------------------------------------
+
+	//#define PLAYER_CAN_FIRE 				// If defined, shooting engine is enabled.
+	//#define PLAYER_BULLET_SPEED 	8		// Pixels/frame. 
+	//#define MAX_BULLETS 			3		// Max number of bullets on screen. Be careful!.
+	//#define PLAYER_BULLET_Y_OFFSET	4	// vertical offset from the player's top.
+
+	//#define FIRING_DRAINS_LIFE			// If defined, firing drains life (oi!)
+	//#define FIRING_DRAIN_AMOUNT	2		// what to substract when firing.
+```
+
+* `PLAYER_CAN_FIRE` activa el motor de disparos.
+
+* `PLAYER_BULLET_SPEED` define la velocidad de los proyectiles en pixels por frame.
+
+* `MAX_BULLETS` define el máximo número de balas en pantalla. Hay que tener cuidado porque a más balas, menos velocidad y más memoria dinámica tendremos que reservar (ver al final de esta sección).
+
+* `PLAYER_BULLET_Y_OFFSET`: número de píxels desde el borde superior del jugador desde el que se dispara la bala. Cuanto mayor sea, más abajo saldrá.
+
+* `FIRING_DRAINS_LIFE` (opcional): si se define, disparar resta vida (como en **Cheril the Goddess**).
+
+* `FIRING_DRAIN_AMOUNT`: Debe utilizarse con `FIRING_DRAINS_LIFE`, y define cuanta vida se resta con cada disparo.
+
+Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo que habrá que añadir `MAX_BULLETS * 5` bloques a `NUMBLOCKS` en `churromain.c`. Ver más adelante la sección sobre memoria dinámica.
+
+### La espada
+
+**Sir Ababol 2** empezó como prototipo en **MTE MK1 v4**, aunque luego se desarrolló sobre un motor específico. Parte de los trabajos para apañar la versión 4.8 de **MTE MK1** ha tenido que ver con reintegrar los añadidos de la demo técnica de **Sir Ababol**, entre ellos la espada:
+
+```c
+	// Sword
+	// -----
+
+	//#define ENABLE_SWORD 					// Let the player swing a sword
+	//#define SWORD_UP 						// Can hit upwards
+	//#define SWORD_LINEAL_DAMAGE	0		// Damage to linear.
+	//#define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
+	//#define SWORD_PARALYZES		32		// If defined, paralyze for N frames
+```
+
+* `ENABLE_SWORD` activa el motor de la espada.
+
+* `SWORD UP` (opcional): permite dar un espadazo hacia arriba pulsando "arriba" junto con "fuego".
+
+* `SWORD_LINEAL_DAMAGE`: Cantidad de vida que se resta a los enemigos lineales al golpearlos. Puede ser 0 para no causarles daño.
+
+* `SWORD_FLYING_DAMAGE`: Cantidad de vida que se resta a los enemigos voladores al golpearlos. Puede ser 0 para no causarles daño.
+
+* `SWORD_PARALYZES` (opcional): Si se define, la espada paralizará al enemigo que golpea durante N cuadros de juego.
+
+### Tiles que se rompen
+
+Si se activa este motor, los tiles de comportamiento `& 32` se podrán romper. Los tiles se rompen con un solo golpe de espada o un solo disparo, no hay posibilidad de configurar un número de golpes como en las versiones 3.99.x o 5.x+.
+
+```c
+	// Breakable
+	// ---------
+
+	//#define ENABLE_BREAKABLE 				// Enable breakable tiles (& 32)
+	//#define MAX_BREAKABLE_FRAMES 	8 		// N = frames to display this tile:
+	//#define BREAKABLE_BREAKING_TILE 45	// display this for N frames
+	//#define BREAKABLE_ERASE_TILE 	0		// The substitute by this tile.
+	//#define BREAKABLE_SPAWN_CHANCE  3 	// Must be a power of 2 - 1, ifdef there's a chance to spawn...
+	//#define BREAKABLE_SPAWN_TILE    46 	// Throw this tile if rand() & chance == 1.
+	//#define BREAKABLE_PERSISTENT 			// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
+```
+
+* `ENABLE_BREAKABLE` activa el motor de tiles que se rompen.
+
+* `MAX_BREAKABLE_FRAMES` cuantos cuadros de juego se muestra el tile "rompiéndose".
+
+* `BREAKABLE_BREAKING_TILE` que tile del tileset representa el estado "rompiéndose".
+
+* `BREAKABLE_ERASE_TILE` con qué tile borramos el tile una vez que han pasado `MAX_BREAKABLE_FRAMES` cuadros de juego.
+
+* `BREAKABLE_SPAWN_CHANCE` (opcional): Si se define, el valor que se le asigna debe ser una potencia de 2 menos 1 "N". Al romper un tile, si `rand () & N == 1`, aparece un tile específico tras `MAX_BREAKABLE_FRAMES` en lugar de `BREAKABLE_ERASE_TILE`. Se diseñó para que apareciera una moneda, pero puedes poner cualquier cosa:
+
+* `BREAKABLE_SPAWN_TILE`: Debe utilizarse con `BREAKABLE_SPAWN_CHANCE`: qué tile aparece si se cumple la condición de arriba.
+
+* `BREAKABLE_PERSISTENT` (opcional): Activa la persistencia para los tiles que se rompen. Puedes y debes leer sobre la persistencia en la siguiente sección.
+
+### Persistencia
+
+La persistencia sirve para que los cambios realizados en el mapa (monedas recogidas o tiles destruidos) sean persistentes de forma que sigan ahí al volver a la pantalla. La persistencia se implementa usando un array de bits que ocupa 20 bytes por pantalla que se reserva justo por debajo de `AD_FREE`. Esto limitará en `20 * MAP_W * MAP_H` el tamaño máximo en bytes que puede ocupar tu juego. Cada vez que se modifica el mapa se levanta el bit correspondiente. Al entrar en las pantallas se consultan los bits de la pantalla en curso, y se modifican los tiles de los que estén levantados. La persistencia se activa automáticamente si definimos `COINS_PERSISTENT` o `BREAKABLE_PERSISTENT`, pero puede activarse a mano si la necesitamos desde nuestro código *custom*.
+
+```c
+	// Persistence
+	// -----------
+
+	//#define ENABLE_PERSISTENCE			// Turned on automaticly if needed, but you can do it manually
+	//#define PERSIST_CLEAR_TILE 	0 		// Clear persistent bit this tile
+```
+
+* `ENABLE_PERSISTENCE` activa el motor de persistencia.
+
+* `PERSIST_CLEAR_TILE` sustituye por este tile los tiles marcados de la pantalla al entrar.
+
+Si queremos controlar la persistencia por nuestra cuenta, tenemos las siguientes funciones:
+
+* `void persist (void)` marca como eliminado el tile (`_x`, `_y`) de la pantalla `n_pant`.
+
+* `void draw_persistent (void)` dibuja el tile `PERSIST_CLEAR_TILE` sobre los tiles marcados como eliminados de la pantalla actual. Esta función se llama automáticamente al entrar en cada pantalla.
+
+* `void clear_persistent (void)` elimina toda la persistencia almacenada. Se llama automáticamente al iniciar la partida.
+
+### Frigoababol
+
+Esta fue otra característica que se introdujo en la demo técnica de **Sir Ababol 2**: cuando un enemigo te toca, te deja congelado y no te puedes mover.
+
+```c
+	//#define ENABLE_FRIGOABABOL 			// Player can be frozen
+	//#define FRIGO_MAX_FRAMES 		32		// # of frames to be frozen. Can be decreased via ...
+	//#define FRIGO_UNFREEZE_TIME 			// state counter decreases automaticly.
+	//#define FRIGO_UNFREEZE_FIRE 			// state counter decreases pressing fire. You can activate both
+	//#define FRIGO_NO_FIRE 				// Can't fire nor swing your sword while frozen
+	//#define FRIGO_FIGHT 					// Modify vx, vy while frozen when pressing fire.
+	//#define FRIGO_ENEMIES_FREEZE 			// Enemies freeze the player on touch.
+	//#define FRIGO_FROZEN_NO_RX 			// No PLAYER_RX while frozen!
+```
+
+* `ENABLE_FRIGOABABOL` activa el motor de Frigoababol.
+
+* `FRIGO_MAX_FRAMES` congela al jugador durante este número de unidades.
+
+* `FRIGO_UNFREEZE_TIME` (opcional): si se define, el contador de congelación disminuye automáticamente, una unidad por cuadro de juego.
+
+* `FRIGO_UNFREEZE_FIRE` (opcional): si se define, el contador de congelación disminuye al pulsar la tecla de disparo. Esta directiva y `FRIGO_UNFREEZE_TIME` pueden definirse a la vez si se desea.
+
+* `FRIGO_NO_FIRE` (opcional): si se define, el jugador no puede disparar ni dar espadazos mientras está congelado.
+
+* `FRIGO_FIGHT` (opcional): si se define, al pulsar el botón de disparo se modifican levemente `player.vx` y `player.vy`, como si el jugador luchase por liberarse.
+
+* `FRIGO_ENEMIES_FREEZE` (opcional): si se define, el jugador se congela cuando lo toca un enemigo.
+
+* `FRIGO_FROZEN_NO_RX` (opcional): si se define, no se aplica rozamiento al movimiento horizontal del jugador mientras está congelado.
+
+## Memoria dinámica para sprites
+
+Activar el motor de disparos o la espada precisa añadir más sprites. Los sprites necesitan un pool de memoria dinámica que se reserva a partir de la dirección `AD_FREE`. La cantidad de memoria para sprites que se reserva se controla con `NUMBLOCKS`, que define el número de bloques para sprites que se va a reservar.
+
+Dependiendo del tamaño de los sprites, necesitarán más o menos bloques. Los sprites de 16x16 necesitan 10 bloques cada uno, y los de 8x8 necesitan 5. La fórmula es:
+
+1 + ((alto / 8) + 1) * ((ancho / 8) + 1)
+
+Si no activas disparos ni espada, el motor sólo controlará sprites para el jugador y los tres enemigos, en total 4 sprites de 16x16, por eso al principio de `churromain.c` vemos esta linea:
+
+```c
+	#define NUMBLOCKS 		40
+```
+
+Por cada bala que haya en el juego (en total `MAX_BULLETS`) deberás añadir 5 más. Para tres balas, por tanto, el valor debería ser:
+
+```c
+	#define NUMBLOCKS 		55
+```
+
+Si en cambio activas la espada, sólo hará falta un sprite más de 8x8, por lo tanto:
+
+```c
+	#define NUMBLOCKS 		45
+```
+
+En algunos juegos se añade más sprites de forma *custom*, como en **Ramiro 4** (el objeto que lleva). En este caso tendríamos los 4 sprites base más uno más de 16x16, que serían 10 bloques más:
+
+```c
+	#define NUMBLOCKS 		50
+```

@@ -607,7 +607,9 @@ void move (void) {
 			if (player.gotten) player.vy = 0;		
 		#else
 			// If top-down view, vertical movement = horizontal movement.
-			
+			#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
+				if (player.estado != EST_FRIGOABABOL)
+			#endif
 			if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
 				if (player.vy > 0) {
 					player.vy -= player.rx;
