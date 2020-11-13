@@ -520,23 +520,19 @@
 	"buffers":
 	[
 		{
-			"contents": "# MTE MK1 v4\n\n## ¿Por qué?\n\nPorque sí. Y por otras cosas. \n\nHe contado esta historia un montón de veces. La Churrera empezó a principios de 2010, tras algunas charlas mojonas hablando de crear un motor *sencillo* para plasmar ideas pequeñas que íbamos teniendo. En aquella época hacer un güego era una tarea bastante costosa, tampoco nos podíamos lanzar a programar cualquier tontería, pero teníamos la necesidad de poder tener un güego *de cualquier tontería*. Así nació la Churrera.\n\nMTE MK1 evolucionó mucho durante todo 2010, a medida que íbamos haciendo los güegos de la *Colección Pretujao*. Para la v2 ya soportaba güegos de vista genital, y para la 3 estrenamos el sistema de scripting. Acabado el año empezamos a dedicarnos a otras cosas no churreras, y salvo algun uso puntual se quedó intacta hasta 2012.\n\nEn 2012 se nos ocurrieron varios güegos loquísimos y desde mediados de año hasta 2013 nos pusimos a meter a la churrera un montón de cosas que sólo iban a valer para un güego, que no funcionaban entre sí, que rompían cosas básicas... incluso llegamos a tener versiones paralelas o a perder toneladas de adiciones (véase la historia de Sir Ababol 2 en el directorio de ejemplos).\n\nA principios de 2013 sacamos Ramiro el Vampiro y luego pensamos en publicar el motor para el disfrute de la comunidad. Empezamos a redactar el tutorial y a hablar con EMS para publicarlo. Pero no podíamos hacerlo con la versión más reciente (la 4.7), sencillamente porque era un caos y la mitad no iba a funcionar bien. Así que hicimos borrón y cuenta nueva: volvimos en una nave del tiempo a principios de 2011, cogimos la versión 3.1, y reconstruimos desde ahí.\n\nLa primera versión que publicamos para el gran público fue, por tanto, la 3.99, construida sobre la 3.1, y que fuimos evolucionando poco a poco hasta que MK1 mutó en MK2, y que retomamos más tarde, a principios de 2020, para hacer la versión 5.\n\nLa maldita y frankenstéinica v4 se quedó en el limbo. ¡hasta ahora!\n\nEn esta rama tenéis la versión 4.8, que no es más que la rama v4 maqueada:\n\n- Se han corregido los bugs.\n- Se han eliminado las incompatibilidades intestinas.\n- Se ha remplazado un montón de rutinas auxiliares por versiones más mejores y/o en ensamble.\n- Se ha reorganizado el código.\n- Se ha añadido un rudimentario sistema para poder hacer hooks y personalizar el motor.\n- Se ha reintegrado la pila de mejoras que se introdujeron para Sir Ababol 2 pero que se perdieron cuando este güego se \"sacó de la churrera\".\n\n¿Por qué esto es interesante?\n\n- Tienes los motores de clásicos como Ramiro el Vampiro, Sir Ababol 2, o el güego jamás completado de Johnny Limite, solo que mejorados.\n- ¡Puedes combinar todas las mierdas específicas de estos güegos en un frankenstein misterioso!\n- Dat v4 vibes, man.\n\nEn realidad quería hacer el **Ramiro 4** que planenamos y empezamos pero que perdimos, y ya que estaba limpiar el código. Y luego me acordé de que **Sir Ababol 2** empezó como un prototipo en v4 a la que añadimos todas sus historias de gameplay, pero que luego terminamos quitando los `#defines` no utilizados y \"deschurrerizándolo\" para convertirlo en un güego de 128K, así que decidí reintegrar esas cosas de nuevo en v4... Y ya que estaba, haciéndolo bien, no solo cortapegando.\n\nEn fin, que aquí está.\n\n## Qué es este documento\n\nEs un manual de la v4. Si ya sabes hacer cosas con la churrera y quieres ver qué tiene esto de especial puedes saltarte un montón de capítulos e irte directamente al 6. Si no, igual a lo mejor es interesante hacerse antes con el tutorial de la versión actual. O leer este resumen raro.\n\nPor cierto, sabemos que se dice \"vista cenital\", pero \"vista genital\" tiene más gracia. De nada.\n\n## Antes de empezar\n\nLos güegos de **MTE MK1** se compilan con **splib2**. La versión actual lleva unas modificaciones que no son compatibles con v4, y viceversa, por lo que hemos preparado un paquete que se puede instalar a la vez que el otro y que tiene todo lo que necesitas.\n\nDescomprime el archivo `z88dk10-orig.zip` que viene en `env/` en `C:\\`. Abre una ventana de linea de comandos, ejecuta:\n\n```\n\t> C:\\z88dk10-orig\\setenv.bat\n```\n\nLuego descarga la rama `churrera_4` del repositorio, copia el directorio `src/` y todo su contenido a donde más coraje te de, y cambiale el nombre por el de tu güego. Si entras en el subdireoctorio `dev` y ejecutas `comp.bat` el güego de ejemplo **Cheril of the Bosque** se compilará. Si obtienes algún error es que algo has hecho mal.\n\nEl proceso de crear un güego se basa en sustituir los recursos del güego de ejemplo, cambiar la configuración, y quizá programar un poquito en C o en el lenguaje de scripting.\n\nYa estás listo para funcionar.\n\n## Qué hay en el paquete\n\nComo hemos dicho, en `src` está todo lo que se necesita para construir un güego. Dentro hay varios subdirectorios, a saber:\n\n* `dev` contiene el código del güego. Aquí configuras y quizá añades tu código c custom. Muy probablemente tendrás que modificar también `comp.bat`, que es el script que se encarga de ir convirtiendo todos los recursos y de llamar al compilador.\n* `enems` contiene el archivo de colocación de enemigos y *hotspots*.\n* `gfx` contiene los gráficos necesarios para tu güego en formato png.\n* `map` contiene el mapa de tu güego en formato de **Mappy** (fmp) o de exportación (map). **Mappy** se incluye en el directorio `env`.\n* `music` contiene un archivo en formato bbsong de **Beepola** (busca en google) y su export en ensamble.\n* `script` contiene el script de tu juego, si lo vas a usar.\n* `utils` contiene todas las utilidades del toolchain que se emplean en **MTE MK1 v4**.\n\n# Capítulo 1 - El tileset\n\nEl tileset es la colección de archivos de 16x16 que se emplea para dibujar las pantallas del güego. Cada tile puede tener un comportamiento diferente que se definirá en la configuración del proyecto (obstáculo, plataforma, etc). **MTE MK1** maneja *tilesets* de 48 tiles, de los cuales, y dependiendo del formato del mapa, los 16 primeros o todos ellos podrán ser empleados en dibujar la pantalla. Además, dependiendo también de la configuración, los tiles número 16 al 19 serán empleados para cosas especiales.\n\nLos tilesets se dibujan siguiendo las restricciones del ZX Spectrum en un archivo .png de 256x48 que, por orden, guardaremos en `gfx/` con el nombre `work.png` y que tendrá un aspecto parecido a:\n\n![Tileset](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-001.png)\n\nVayas a utilizar 16 o 48 tiles para el mapa, hay algunos tiles especiales, a saber, y contando los tiles de 0 a 47:\n\n* El tile 14 (el penúltimo de la primera fila) será la *caja empujable* si las activas. Si no puedes usarlo normalmente.\n* El tile 15 (el último de la primera fila) será el *tile cerrojo*, si activas las llaves. Se trata de un obstáculo que desaparecerá si lo tocamos lateralmente llevando una llave.\n* El tile 16 (el primero de la segunda fila) será la recarga de vida, que en esta versión de **MTE MK1** aparecerá si hemos recogido un objeto o una llave y volvemos a la pantalla.\n* El tile 17 (el segundo de la segunda fila) representará los *objetos coleccionables* si están activos. Si no, puedes usarlo normalmente.\n* El tile 18 (el tercero de la segunda fila) representará las *llaves* si están activas. Si no, puedes usarlo normalmente.\n* El tile 19 (el cuarto de la segunda fila) representará un tile alternativo por el que se sustituirá el tile 0 de forma aleatoria, para hacer bonito. Esto también se puede desactivar, en cuyo caso puedes usarlo normalmente.\n\nLos tilesets se convierten con la herramienta `ts2bin.exe`. **MTE MK1** espera que queden en `dev/tileset.bin`, por lo que, si abres `comp.bat` con tu editor de textos, verás que la llamada es:\n\n```cmd\n\t..\\utils\\ts2bin.exe ..\\gfx\\font.png ..\\gfx\\work.png tileset.bin 7 > nul\n```\n\n`ts2bin.exe` necesita también un archivo png de 256x16 con la fuente del juego. El cuarto parámetro (un número) es la tinta por defecto que se emplea si un cuadro de 8x8 tiene un solo color. Si se pasa \"-1\", el conversor elegirá blanco para los colores oscuros o negro para los claros.\n\n## El tileset para mappy\n\nMappy tiene su historia y necesita que el primer tile sea completamente negro. En esta versión de **MTE MK1** tendrás que generar un segundo tileset específico para Mappy con el primer tile negro si el primer tile no lo es. Puedes grabarlo como `mappy.png` en `gfx`.\n\n![Tileset para Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-002.png)\n\n## Sombras automáticas\n\nSi utilizas el modo de mapeado que sólo emplea los primeros 16 tiles, puedes activar un modo de \"autosombreado\", en el que el motor calcula sombras automáticamente.  Básicamente, el motor sombrea automáticamente los tiles de tipo “fondo” que haya al lado de los tiles de tipo “obstáculo”, creándose así más sensación de 3D, como en Cheril Perils:\n\n![Cheril Perils](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-003.png)\n\nPara esto, el motor necesita que la última fila de tiles contenga una réplica de los tiles “fondo” del tileset, pero sombreados, así:\n\n![Tileset de Cheril Perils](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-004.png)\n\nPor cierto, si activas esta opción el render será mucho más lento y el binario final mucho más pesado, ya que no está optimizado en ensamble en esta versión (aunque sí a partir de v5).\n\n# Capítulo 2 - Mapeando\n\nPara hacer el mapa puedes usar cualquier cosa siempre que te curres un conversor. De hecho, [había uno para Tiled que montó Antonio Villena, **TmxCnv**](https://github.com/DSkywalk/fase/blob/master/ComplementosChurrera/Conversores/TmxCnv.c). Si quieres ir por el método estándar, tendrás que hacer los mapas con **Mappy**. En el directorio `env` tienes la versión mojona tuneada. Descomprímela en un sitio bonito y ejecuta `mapwin.exe`. Es interesante que asocies el tipo de archivo fmp a `mapwin.exe` para más comodidad de vida.\n\n## Definiendo nuestro mapa\n\nLo primero es definir el tamaño de nuestro mapa para saber con qué nos enfrentamos. Hay que tener en cuenta que estamos en 48K y sería conveniente que nuestro mapa no emplease demasiado, ya que a lo que ocupe el mapa habrá que sumar lo que ocupen los enemigos.\n\n* Si vamos a usar sólo 16 tiles diferentes, un número de tile se codifica sólo con 4 bits, con lo que en cada byte podemos almacenar dos tiles. De ese modo las pantallas, que son de 15 x 10 = 150 tiles ocuparían 75 bytes.\n\n* Si vamos a usar los 48 tiles, ya no podemos meter dos tiles por byte, por lo que cada pantalla ocupará 150 bytes, el doble.\n\nLos enemigos, que ya veremos más adelante, ocupan 30 bytes por pantalla (27 si no pueden morir). Así que tenemos que cada pantalla ocupará 105 bytes si usamos 16 tiles, o 180 si usamos 48.\n\n¿Cómo de grande puede ser nuestro mapa? Pues todo dependerá de las opciones que activemos, el formato del mapa, si usamos un script, o hemos puesto mucho código custom. Es muy difícil dar una estimación, por lo que lo mejor es empezar con un mapa de tamaño medio (30 pantallas o así), ver si cuando todo esté añadido queda sitio, y si conviene ampliarlo (proceso que explicaremos en el capítulo TODO).\n\n## Creando un proyecto en Mappy\n\nVamos a `File->New Map`, y rellenaremos el cuadro de diálogo que aparece con los datos de nuestro mapa. En el ejemplo, el mapa es de 5 pantallas de ancho y 5 de alto. Como cada pantalla tiene 15x10 tiles, eso significa que mi mapa será de 5 * 15 = 75 tiles de ancho y 5 * 10 = 50 tiles de alto. Además, nuestros tiles serán de 16 x 16 píxels. Por tanto, rellenamos estos datos sobre nuestro mapa en el cuadro de diálogo, dejando todo lo demás como estaba.\n\n![Nuevo proyecto de Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-001.png)\n\nPulsamos OK y el programa nos dirá que deberíamos cargar un tileset. Aceptamos y vamos a hacerle caso. Vamos a `File->Import`, lo que nos abrirá un cuadro de diálogo de selección de archivo. Buscamos nuestro tileset preparado para Mappy (el `mappy.png` que preparamos en el primer paso) y lo cargamos. La ventana de Mappy debería mostrarse así:\n\n![Tileset cargado en Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-002.png)\n\nPor último, vamos a colocar unas guías que nos ayuden a saber dónde empieza y acaba cada pantalla. Para ello, nos vamos a `Maptools->Dividers`, marcamos la casilla Enable dividers y rellenamos en `Pixel gap X` y `Pixel gap Y` los valores 240 y 160, que son las dimensiones en pixels de cada pantalla. Pulsamos OK, y con esto estamos preparados para trabajar. Para empezar, grabamos el mapa en nuestro directorio `map` con el nombre `mapa.fmp`. Ahora sólo hay que ponerse a colocar tiles... Y acordarnos de grabar como `mapa.fmp` de cuando en cuando, por si las moscas.\n\n![Un mapa en Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-003.png)\n\nLa forma de colocar cerrojos (para ser abiertos con llaves) es sencilla: símplemente poned el tile del cerrojo en el mapa, y el conversor los detectará y los almacenará aparte. Hay que tener cuidado con una cosa: **en esta versión los cerrojos deberían ir a ras de suelo (sobre una plataforma sobre la que podamos caminar), ya que el motor puede no detectarlos si el muñeco no está posado y con una coordenada \"justa\"**. Incluso en los juegos de vista genital:\n\n![Un cerrojo](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-004.png)\n\n## Exportando nuestro mapa\n\nPara exportar nuestro mapa, sólo hay que irse a `File->Save As...` y salvarlo como `mapa.map`, especificando el `.map` de forma explícita, en el subdireoctorio `map`. \n\n## Importando nuestro mapa\n\nEl conversor para los mapas que viene por defecto en **MTE MK1** es `mapcnv.exe`. En `comp.bat` está la llamada al mismo, que probablemente deberemos modificar:\n\n```cmd\n\t..\\utils\\mapcnv.exe ..\\map\\mapa.map mapa.h 5 5 15 10 15 packed  > nul\n```\n\nLos dos primeros parámetros indican las rutas de entrada y salida, en este caso `mapa.map` en el directorio `map` y `mapa.h` en el directorio actual (`dev`). Lo siguientes dos parámetros indican el **ancho** y el **alto** del mapa en pantallas; tendrás que poner los valores de tu mapa. Los dos siguientes indican las dimensiones de cada pantalla, que para **MTE MK1** siempre son 15 y 10. El siguiente dígito indica el tile que debe ser detectado como cerrojo, que debe ser siempre 15. El último parámetro `packed` indica que debe meter dos tiles en cada byte. Si tu mapa usa los 48 tiles, deberás omitirlo.\n\n# Capítulo 3 - Sprites\n\nNuestro juego empleará 8 sprites para el personaje principal, 6 para definir 3 enemigos, y 2 más para definir una plataforma móvil u 8 para definir 4 enemigos en los juegos de vista cenital. Todos los sprites són de 16 x 16. El orden de estos sprites en nuestro *spriteset* dependerá si tenemos un juego de vista cenital o un juego de plataformas. Para las plataformas, será:\n\n|#|Qué tiene\n|---|---\n|0|Personaje principal, derecha, andando, frame 1\n|1|Personaje principal, derecha, andando, frame 2, o parado\n|2|Personaje principal, derecha, andando, frame 3\n|3|Personaje principal, derecha, en el aire\n|4|Personaje principal, izquierda, andando, frame 1\n|5|Personaje principal, izquierda, andando, frame 2, o parado\n|6|Personaje principal, izquierda, andando, frame 3\n|7|Personaje principal, izquierda, en el aire\n|8|Enemigo tipo 1, frame 1\n|9|Enemigo tipo 1, frame 2\n|10|Enemigo tipo 2, frame 1\n|11|Enemigo tipo 2, frame 2\n|12|Enemigo tipo 3, frame 1\n|13|Enemigo tipo 3, frame 2\n|14|Plataforma móvil, frame 1\n|15|Plataforma móvil, frame 2\n\nPara los juegos de vista genital será:\n\n|#|Qué tiene\n|---|---\n|0|Personaje principal, derecha, andando, frame 1\n|1|Personaje principal, derecha, andando, frame 2\n|2|Personaje principal, izquierda, andando, frame 1\n|3|Personaje principal, izquierda, andando, frame 2\n|4|Personaje principal, arriba, andando, frame 1\n|5|Personaje principal, arriba, andando, frame 2\n|6|Personaje principal, abajo, andando, frame 1\n|7|Personaje principal, abajo, andando, frame 2\n|8|Enemigo tipo 1, frame 1\n|9|Enemigo tipo 1, frame 2\n|10|Enemigo tipo 2, frame 1\n|11|Enemigo tipo 2, frame 2\n|12|Enemigo tipo 3, frame 1\n|13|Enemigo tipo 3, frame 2\n|14|Enemigo tipo 4, frame 1\n|15|Enemigo tipo 4, frame 2\n\nAdemás de esto habrá una serie de sprites extra de los que hablaremos más adelante.\n\nPara crear nuestro *spriteset*, partiremos de una imagen vacía de 256 x 32 píxels. Tendremos una hilera con los sprites del personaje principal y sus máscaras, y otra justo debajo con los demás sprites, con sus máscaras. Las máscaras irán intercaladas, es decir, tendremos un sprite seguido de su máscara, seguido del siguiente sprite seguido de su máscara, y así sucesivamente. Para pintarlas podemos usar cualquier color. Yo, por ejemplo, he pintado los sprites en gris clarito y las máscaras en rojo para guiarme. El otro color, que indica \"vacío\", debe ser NEGRO PURO (RGB = 0, 0, 0) para que el conversor lo detecte sin problemas.\n\nAquí vemos dos *spritesets*, uno de vista genital y otro de vista lateral:\n\n![Spriteset de vista genital (cheril)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-001.png)\n\n![Spriteset de vista lateral (lala)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-002.png)\n\nGrabaremos nuestro *spriteset* en `gfx` con nombre `sprites.png`.\n\n## Importanto el *spriteset*\n\nLa importación se hace (en el caso más general y básico) con `sprcnv.exe`. Si abrimos `comp.bat` en `dev` veremos que la llamada es algo así:\n\n```cmd\n\t..\\utils\\sprcnv.exe ..\\gfx\\sprites.png sprites.h  > nul\n```\n\nSi hemos seguido las instrucciones no necesitarás tocar nada.\n\n# Capítulo 4 - Pantallas fijas\n\nEn un juego de **MTE MK1** hay cuatro pantallas fijas. Una se almacena tal cual, en formato Spectrum: la pantalla de carga. Las otras tres se comprimen y forman parte del binario: se trata de la pantalla de título, el marco y la pantalla con la escena final. Cuanto más compleja sea una pantalla, más ocupará comprimida, por lo que una forma de liberar memoria es simplificar las pantallas que van en el binario.\n\nAunque sea obvio decirlo, las pantallas deben ocupar 256x192 pixels y respetar las restricciones del ZX Spectrum.\n\n## La pantalla de carga\n\nSi no modificas el paquete, la pantalla de carga se almacena como un archivo binario con formato Spectrum, esto es, 6912 bytes, por lo que no importa lo compleja o simple que sea. La pantalla de carga debe almacenarse en `gfx` como `loading.png`.\n\n## La pantalla de título\n\nLa pantalla de título se presentará a modo de menú y sobre ella sonará la música de presentación. Deberían salir título, créditos y un menú con tres opciones 1: Keyboard, 2: Kempston, 3: Sinclair. Con algo sencillo nos vale, por ejemplo:\n\n![Pantalla de título](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-001.png)\n\nEsta pantalla debe guardarse en `gfx` como `title.png`.\n\n## El marco\n\nEl marco se mostrará alrededor del área de juego mientras jugamos. Se utiliza para contener los marcadores. En el tendremos que hacer sitio para los diferentes valores del juego, dependiendo siempre de la configuración del motor. Los espacios donde van los marcadores numéricos deben estar alineados a carácter y dejar sitio para dos dígitos.\n\nTambién tiene que haber espacio para la ventana de juego, igualmente alineado a carácter. Esta ventana ocupa 240x160 píxels (o 15x10 tiles). \n\n![Marco de juego](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-002.png)\n\nEsta pantalla deber guardarse en `gfx` como `marco.png`.\n\n## Título y marco\n\nPara ahorrar memoria, **MTE MK1** permite juntar título y marco en una sola pantalla. El título y el menú se dibujarán dentro del area de juego, como se muestra.\n\n![Título con marco](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-003.png)\n\nSi eliges esta configuración, graba la pantalla de combinada de título y marco en `gfx` como `title.png` y deja `marco.png` en negro.\n\n## La pantalla del final\n\nLa pantalla del final se mostrará cuando el jugador haya conseguido su objetivo final en el juego. Debe guardarse en `gfx` como `ending.png`. \n\n## Convirtiendo a formato Spectrum\n\nPara ello, desde `comp.bat` se utiliza `png2scr.exe` y, en el caso de las tres imagenes que van en el binario, `apack.exe` para comprimirlas. Si utilizas otros nombres de archivo u otras ubicaciones tendrás que modificarlas las conversiones y compresiones en `comp.bat`.\n\n# Capítulo 5 - Enemigos y *hotspots*\n\nEn este capítulo usaremos `ponedor.exe` para colocar en cada pantalla de nuestro juego hasta tres enemigos y un *hotspot*, que no es más que una casilla donde poner un objeto coleccionable o una llave, o donde aparecerán las recargas. Pero primero hablemos un poco sobre estos entes:\n\n## Enemigos \n\nEn **MTE_MK1** los enemigos también se refieren a las plataformas móviles. Los enemigos tienen asociados una serie de valores, entre ellos un **tipo**. Este tipo define el comportamiento y de forma indirecta el gráfico con el que se pinta:\n\n### Lineales\n\nLos enemigos con tipos 1, 2, 3 y 4 definen enemigos que describen trayectorias lineales. En los juegos con vista lateral, los de tipo 4 son las plataformas móviles. El tipo se corresponde con el orden del gráfico que se mostrará en el spriteset.\n\nCuando hablamos de trayectorias lineales tenemos dos posibles casos:\n\n* **Horizontales y Verticales**: los enemigos van de un punto de inicio a un punto final describiendo una linea recta vertical u horizontal. El enemigo sigue esa línea imaginaria yendo y viniendo ad infinitum.\n\n![Horizontal y vertical](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-001.png)\n\n* **Diagonales**: los enemigos parecen rebotar en el rectángulo definido entre los puntos inicial y final si estos no están alineados vertical u horizontalmente:\n\n![Horizontal y vertical](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-002.png)\n\n### Voladores\n\nLos enemigos con tipos 5 y 6 definen enemigos voladores, o *Fantys*, como los llamamos en Mojonia. Este tipo de enemigos persigue al jugador por la pantalla, con diferentes comportamientos configurables. No se puede usar tipos 5 y 6 simultaneamente, y tanto uno como otro hay que activarlos explícitamente pues no forman parte del core básico, como veremos.\n\n* **Tipo 5**: Los enemigos de tipo 5 se crearon para **Zombie Calavera** y se conocen internamente como *Randown Respawn*. Su comportamiento es un tanto específico de este juego: aparecen si has matado alguno de los enemigos lineales de la pantalla. Se crean en un lugar aleatorio del borde de la pantalla y siguen al jugador si este no está *oculto* (colocado sobre un tile con comportamiento *oculta*).\n\n* **Tipo 6**: Son muy parecidos pero aparecerán en el lugar de la pantalla donde los ubiques. Además, pueden configurarse para que o bien persigan al jugador siempre, o bien solo lo hagan si el jugador se acerca, volviendo a su posición inicial cual el jugador se \"pierde de vista\".\n\n## Hotspots\n\nSon, como hemos dicho, los puntos donde aparecen los objetos coleccionables, las llaves, o las recargas de vida. Se colocan en una casilla cada pantalla del mapa y llevan asociado un \"tipo\", que puede ser 1 (objetos) o 2 (llaves), o cualquier otro número si te encargas tú de gestionarlo mediante código *custom*.\n\n## Preparando los materiales necesarios\n\nTendremos que copiar los materiales necesarios al directorio `/enems`. Necesitamos dos cosas: el mapa del güego en formato `MAP`, y el tileset del juego `work.png`. Por tanto, copiamos `/map/mapa.map` y `/gfx/work.png` en `/enems`. \n\n## Configuración de nuestro proyecto\n\nPonedor era originalmente una aplicación que, aunque tiene su interfaz gráfica, estaba pensada para ser lanzada desde la ventana de línea de comandos. Sin embargo, por petición popular, le he añadido un diálogo de entrada para que se pueda usar tal y como se usaba el viejo Colocador. Si estáis interesados en usarlo desde la ventana de línea de comandos, ejecutad el programa con e parámetro -h:\n\n```\n    $ ..\\utils\\ponedor.exe -h\n    Edit an existing set:\n    $ ponedor.exe file.ene\n\n    Create new set:\n    $ ponedor.exe new out=file.ene map=file.map tiles=file.png|bmp [adjust=n] size=w,h\n                      [scrsize=w,h] [nenems=n] [x2]\n\n    out           output filename\n    map           map file (raw, headerless, 1 byte per tile, row order)\n    tiles         tileset in png or bmp format.\n    adjust        substract this number from every byte read from the map file. Def=0\n    size          map size in screens\n    scrsize       screen size in tiles. Def=16,12\n    nenems        number of enemies per screen. Def=3\n    x2            zoom x2 (hacky)\n```\n\nCuando ejecutas el Ponedor sin parámetros (por ejemplo, haciendo doble click sobre `ponedor.bat` en `/enems`) aparecerá la pantalla principal en la que podemos cargar un proyecto existente o configurar uno nuevo. Como no tenemos un proyecto existente, crearemos uno nuevo rellenando las casillas del recuadro superior:\n\n![Nuevo proyecto del \"Ponedor\"](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-003.png)\n\n1. `Map W` y `Map H` son el **ancho** y el **alto** de nuestro mapa **en pantallas**, o sea, las **dimensiones del mapa**. \n\n2. `Scr W` y `Scr H` son las **dimensiones de cada pantalla**, en **tiles**. Para todos los güegos de **MTE MK1** estos valores son 15 y 10.\n\n3. `Nenems` es el número de enemigos máximo por pantalla. En un principio, para **MTE MK1** debe ser 3.\n\n4. `Adjust` lo dejamos en 0 para esta versión de **MTE MK1**.\n\n5. Donde pone `TS` tenemos que poner la ruta del archivo con el tileset, que debería ser `work.png` a secas si lo has copiado en `enems`, aunque puedes usar el botón `Find` para ubicarlo desde un explorador si no te apetece escribir 8 caracteres.\n\n6. En `Map` hay que poner la ruta del archivo con el mapa, que debería ser `mapa.map` a secas si lo copiaste a `enems`. También puedes usar `Find`.\n\n7. No te olvides de poner **el nombre de archivo de salida** en la casilla `Output`. Si no quieres tocar `compile.bat`, este nombre debe ser `enems.ene`.\n\nEn la parte inferior izquierda de la ventana hay un botón que pone `Size`. Puedes pulsarlo para que en vez de `Normal` salga `Double` y así el Ponedor se mostrará ampliado 2x y se verá mejor todo.\n\n## Manejo básico del programa\n\nEn la vista principal aparece una rejilla con la pantalla actual. Puedes cambiar la pantalla que se muestra usando las teclas de los cursores. Es en esta vista donde pondremos los enemigos, dibujaremos sus trayectorias, y colocaremos los hotspots.\n\nAparte de esto, en la pantalla tenemos otras dos zonas, arriba y abajo:\n\n### Indicadores\n\nEn la parte superior de la pantalla hay una serie de indicadores. De izquierda a derecha:\n\n1. Coordenadas de la pantalla actual dentro del mapa (XP, YP).\n2. Número actual de la pantalla (que será `YP * MAP_W + XP`).\n3. `2b` o `3b` dependiendo si el archivo que estás editando es de formato antiguo o de formato nuevo, respectivamente. **Con la versión 4.0 de MTE MK1 necesitarás usar el modo `2b`**. Se puede convertir de formato pulsando `L`. Si ves `3b` **debes pusar `L` para que se muestre `2b`**.\n4. Las coordenadas de la casilla sobre la que pasa el ratón, cuando está en el área de edición.\n\n### Botonera\n\nEn la parte inferior hay una serie de botones:\n\n1. `Save` (o la tecla `S`) guarda los cambios en el archivo de salida `enems.ene`. ¡Púlsalo a menudo!\n2. `Exit` (o la tecla `ESC`) sirve para salir. El programa pedirá confirmación.\n3. `Grid` (o la tecla `G`) activa o desactiva la rejilla.\n4. `Reload` recarga los recursos (mapa y gráficos) desde disco, por si los has cambiado.\n5. `H` exporta los enemigos como `enems.h` - *pero esto ya no se usa*, ya que la conversión se hace automáticamente en `comp.bat`.\n\n## Grabando y cargando\n\nAunque no hayas puesto nada todavía, graba tu proyecto pulsando `Save`. Verás que en el directorio `/enems` aparecerá el archivo `enems.ene` que referenciaste en el diálogo inicial al crear el proyecto. Ahora cierra el Ponedor. Ahora vuelve a ejecutarlo pulsando sobre `ponedor.bat` en `/enems`.\n\nEsta vez, en lugar de rellenar los valores, escribe `enems.ene` en el cuadro `Input` situado en el recuadro inferior que está etiquetado `Open existing` y haz click sobre el botón que pone `Load Existing`. Si todo sale bien, te debería volver a salir la primera pantalla del mapa.\n\n![Cargando un proyecto existente](https://raw.githubusercontent.com/mojontwins/MK1/master/docs/wiki-img/c05-004.png)\n\nComo mencionamos antes, sólo tenemos que preocuparnos de poner las cosas en el Ponedor y grabar el archivo `enems.ene` a menudo. `comp.bat` se encargará de hacer las conversiones necesarias y de meter los numeritos en el juego.\n\n## Poniendo enemigos y plataformas\n\nPara empezar veremos como colocar **enemigos lineales**. Empezaremos haciendo click sobre la casilla donde debe aparecer el enemigo; además servirá como uno de los límites de su trayectoria. Cuando hagamos esto, aparecerá un cuadro de diálogo donde deberemos introducir el **tipo del enemigo**. Recuerda que en el caso de enemigos lineales será un valor de 1 a 4, 4 para las plataformas en los güegos de vista lateral. Ponemos el numerito y pulsamos OK.\n\nAhora el programa espera que marquemos el final la trayectoria. Haremos click en la casilla correspondiente. Veremos como se nos muestra gráficamente la trayectoria y aparece un nuevo cuadro de diálogo algo más complejo:\n\n![El atributo sirve para la velocidad de los enemigos lineales](https://raw.githubusercontent.com/mojontwins/MK1/master/docs/wiki-img/c05-005.png)\n\nEn **MTE MK1** sólo tendremos que rellenar el recuadro `Attr`. El valor introducido en `Attr` será el número de píxeles que avanzará el enemigo o plataforma por cada cuadro de juego. Estos valores, para que no haya problemas, deberían ser potencias de dos:  1, 2 o 4.\n\nUna vez que hayamos puesto el numerico, pulsamos OK.\n\nPara los enemigos **voladores** de tipo 6 sólo importa la casilla de inicio. La otra casilla da igual donde la pongas. Se suele poner en la casilla de al lado. Puedes dejar vacío el cuadro `Attr`, ya que no se usa tampoco.\n\nPuedes poner un máximo de tres por pantalla (el programa no te dejará meter más). No tiene por que haber tres en cada pantalla, puedes tener pantallas con uno, con dos, o con ninguno.\n\nPara **eliminar o editar** los valores de un enemigo que ya hayamos colocado, basta con hacer click sobre la casilla de inicio de la trayectoria (donde aparece el numerito que indica el tipo). Entonces nos aparecerá un cuadro de diálogo donde podremos cambiar su tipo o la velocidad o eliminarlo completamente.\n\n## Poniendo hotspots\n\n**Cada pantalla admite un único hotspot**. Eso significa que el número total de llaves y objetos necesarios para terminar el güego no puede exceder el número de pantallas. Para colocar el hotspot de la pantalla actual, simplemente **hacemos click con el botón derecho en la casilla donde queremos que aparezca** la llave o el objeto, con lo que haremos aparecer un pequeño cuadro de diálogo donde deberemos introducir el tipo.\n\nPara editar o borrar un hotspot, simplemente haz click *con el botón derecho* sobre él para mostrar el diálogo de edición desde el que también te lo puedes cargar.\n\nNo todas las pantallas tienen por qué tener un hotspot. \n\n## Conversión e importación\n\nLa conversión se hace desde `comp.bat` empleando `ene2h.exe`:\n\n```cmd\n\t..\\utils\\ene2h.exe ..\\enems\\enems.ene enems.h 2bytes  > nul\n```\n\n# Capítulo 6 - Configurando el güego\n\nEl comportamiento básico del juego se define en el archivo `config.h` que hay situado en `dev`. Luego podremos tunear mediante el scripting o el código inyectable de `custom.h`, pero hay que empezar por el principio. \n\n## Configuración general\n\nEn la primera sección configuramos el comportamiento general del juego: las dimensiones del mapa, la pantalla de inicio, la pantalla de final (si aplica), la posición del muñeco al inicio, el número de objetos que hay que recoger, etcétera.\n\n```c\n\t//#define MODE_128K_DUAL\t\t\t\t// Uses AY Routines in RAM1 if on 128K mode.\n\t//#define MIN_FAPS_PER_FRAME\t2\t\t// Limits the max # of fps to 50/N\n```\n\n* `MODE_128K_DUAL` permite detectar modelos de 128K y usar un player de música y efectos que use el chip AY ubicado en RAM1.\n\n* `MIN_FAPS_PER_FRAME` coloca un limitador de frames. El valor que le asignes será el máximo número de frames que dejará pasar por cuadro de juego. El ZX Spectrum funciona a 50 fps, por lo que, por ejemplo, un valor de 2 limitaría el juego a 25 fps, y uno de 3 a 16.6 fps. Obviamente si hay mucha carga en una escena el frame rate del juego bajará. Esta directiva sólo coloca un límite superior para que las pantallas con poca acción no vayan mucho más rápidas.\n\nCualquiera de estas dos directivas hacen que se cree una tabla de 257 valores y que se añada una serie de estructuras de datos que pueden ocupar hasta 512 bytes.\n\n```c\n\t#define MAP_W\t\t\t\t\t5\t\t//\n\t#define MAP_H\t\t\t\t\t5\t\t// Map dimmensions in screens\n\t#define TOTAL_SCREENS\t\t\t25\t\t// \n```\n\n* `MAP_W` y `MAP_H` definen el tamaño del mapa en pantallas.  Deben ser los mismos valores que usas en `comp.bat` como parámetros de `mapcnv.exe` para convertir el mapa o los que introdujiste en `ponedor.exe` al crear el proyecto para `enems.ene`.\n\n* `TOTAL_SCREENS`, en principio, debe valer `MAP_W * MAP_H`. Los valores están separados debido a oscuros manejes que se perdieron en el tiempo, ya que **actualmente no se usa**.\n\n```c\n\t#define SCR_INICIO\t\t\t\t12\t\t// Initial screen\n\t#define PLAYER_INI_X\t\t\t8\t\t//\n\t#define PLAYER_INI_Y\t\t\t5\t\t// Initial tile coordinates\n```\n\nEstas directivas definen donde se empieza a jugar: \n\n* El número de pantalla `SCR_INICIO` se obtiene contando las pantallas en orden de lectura (de izquierda a derecha y de arriba a abajo) empezando por 0, que correspondería a la pantalla superior izquierda del mapa.\n\n* `PLAYER_INI_X` y `PLAYER_INI_Y` son las coordenadas de inicio a nivel de tiles.\n\nTodos estos valores los puedes obtener fácilmente navegando por `ponedor.exe` y moviendo el raton sobre las casillas del área de edición.\n\n```c\n\t//#define SCR_FIN \t\t\t\t99\t\t// Last screen. 99 = deactivated.\n\t//#define PLAYER_FIN_X\t\t\t99\t\t//\n\t//#define PLAYER_FIN_Y\t\t\t99\t\t// Player tile coordinates to finish game\n```\n\nSi activas `SCR_FIN` el juego terminará sólo si el jugador está en la pantalla indicada, en las coordenadas especificadas en `PLAYER_FIN_X` y `PLAYER_FIN_Y`, aunque no sabemos si esto funcionará bien porque, en 10 años, **no lo hemos usado NUNCA**.\n\nSi comentas `SCR_FIN` no se tomarán en cuenta (que es lo que hemos hecho en cada uno de los juegos que hemos lanzado desde **Lala Prologue**).\n\n```c\n\t#define PLAYER_NUM_OBJETOS\t\t13\t\t// Objects to get to finish game\n\t#define PLAYER_LIFE \t\t\t99\t\t// Max and starting life gauge.\n\t#define PLAYER_REFILL\t\t\t25\t\t// Life recharge\n```\n\n* `PLAYER_NUM_OBJETOS` especifica cuantos hotspots de tipo 1 tendremos que coleccionar. Si no activamos el motor de scripting y `WIN_ON_SCRIPTING` (ver más adelante), ganaremos el juego tras coleccionar este número de objetos.\n\n* `PLAYER_LIFE` es la cantidad de vida con la que empezamos a jugar, `PLAYER_REFILL` es cuánto se recarga la vida al coger una regarga. En esta versión de **MTE MK1** las recargas aparecen únicamente cuando hemos recogido una llave o un objeto coleccionable y volvemos a la misma pantalla.\n\n```c\n\t#define LINEAR_ENEMY_HIT\t\t1\t\t// Amount of life to substract when normal enemy hits\n\t//#define FLYING_ENEMY_HIT\t\t1\t\t// Amount of life to substract when flying enemy hits\n```\n\nEstas dos directivas especifican cuánta vida restan los enemigos al colisionar con el jugador. Puedes especificar valores diferentes para enemigos lineales o enemigos voladores. Obviamente, `FLYING_ENEMY_HIT` solo valdrá de algo si activas algún tipo de enemigo volador (ver más abajo).\n\n```c\n\t//#define ENABLE_CODE_HOOKS\t\t\t\t// Hooks @ init, entering game, screen & loop @ custom.h\n\t//#define ENABLE_CUSTOM_ENEMS \t\t\t// Hooks for custom enemies @ custom.h\n```\n\nEstas dos directivas implican conocimientos más avanzados: sirven para activar los enganches generales y de enemigos custom en el archivo `custom.h`.\n\n### Enganches generales `ENABLE_CODE_HOOKS`\n\nSi activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas en puntos específicos de la ejecución del juego. Añadiendo código C a estas funciones podrás personalizar muchísimo el motor. Tienes un ejemplo genial de esto en el juego **Ramiro el Vampiro en el Misterio del Papiro**. Las funciones son:\n\n* `void hook_system_inits (void);` se ejecuta una sola vez al finalizar la carga. Fue concebido para poder añadir código para comprobar claves de acceso o para crear sprites extra.\n\n* `void hook_init_game (void);` se ejecuta cada vez que empezamos una nueva partida. Sirve para inicializar valores antes de empezar a jugar.\n\n* `void hook_mainloop (void);` se ejecuta una vez cada cuadro de juego, justo antes de dibujarlo en pantalla.\n\n* `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los hotspots, pero antes de que nada sea visible.\n\n### Enganches de enemigos custom `ENABLE_CUSTOM_ENEMS`\n\nLos enganches para enemigos custom permiten añadir tipos de enemigos o personalizar los que ya existen. Si activas `ENABLE_CUSTOM_ENEMS`, las siguientes funciones de `custom.h` serán llamadas en diferentes puntos de la gestión de enemigos:\n\n* `void extra_enems_init (void);` se ejecuta durante la inicialización de los enemigos al entrar en cada pantalla. Se llama cuando se está inicializando el enemigo número `gpit`. Sus valores estarán en `malotes [enoffs + gpit]`, una estructura con estos campos:\n\n```c\n\ttypedef struct {\n\t\tunsigned char x, y; \t\t\t\t// Coordenadas\n\t\tunsigned char x1, y1, x2, y2; \t\t// Límites de trayectoria\n\t\tchar mx, my; \t\t\t\t\t\t// Velocidad\n\t\tchar t; \t\t\t\t\t\t\t// Tipo\n\t#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD\n\t\tunsigned char life;\t\t\t\t\t// Vida\n\t#endif\n\t} MALOTE;\n```\n\nSe debería identifica nuestro enemigo con `malotes [enoffs + gpit].t`, que contendrá el tipo, y realizar las inicializaciones necesarias.\n\n* `void extra_enems_move (void);` se ejecuta cada vez que se actualiza cada enemigo. Aquí las variables de `malotes` están copiadas a variables globales:\n\n```c\n\tunsigned char _en_x;\n\tunsigned char _en_y;\n\tunsigned char _en_x1;\n\tunsigned char _en_y1;\n\tunsigned char _en_x2;\n\tunsigned char _en_y2;\n\tsigned char _en_mx;\n\tsigned char _en_my;\n\tunsigned char _en_t;\n\tunsigned char _en_life;\n```\n\nDeberemos detectar nuestro tipo custom usando `_en_t`. Aquí podremos *mover* al enemigo modificando `_en_x` y `_en_y`. Asimismo, deberemos asignar el próximo cell de animación en `en_an_next_frame [enit]`.\n\n* `void extra_enems_checks (void);` se ejecuta al final del bucle que actualiza los enemigos. Podemos añadir código en este punto, por ejemplo para comprobar la colisión con algún elemento que hayamos introducido en nuestros *customs*.\n\nAquí tenemos un ejemplo tonto de un enemigo que sólo \"tirita\" y cambia de frame cada cierto tiempo, sin moverse del sitio:\n\n```c\n\t// (en custom.h)\n\n\tvoid extra_enems_init (void) {\n\t\tif (malotes [enoffs + gpit].t == 8) {\n\t\t\tmalotes [enoffs + gpit].x = malotes [enoffs + gpit].x1;\n\t\t\tmalotes [enoffs + gpit].y = malotes [enoffs + gpit].y1;\n\t\t}\n\t}\n\n\tvoid extra_enems_move (void) {\t\t\n\t\tif (_en_t == 8) {\n\t\t\t_en_x = _en_x1 + half_life;\n\t\t\ten_an_next_frame [enit] = enem_cells [\n\t\t\t\t((frame_counter & 7) < 4) ? 2 : 3\n\t\t\t];\n\t\t}\n\t}\n\n\tvoid extra_enems_checks (void) {\n\t\t// Nada\n\t}\n\n```\n\n## Tipo de motor\n\n### Directivas miscelaneas\n\n```c\n\t#define DIRECT_TO_PLAY\t\t\t\t\t// If defined, title screen is also the game frame.\n\t//#define DEACTIVATE_KEYS\t\t\t\t// If defined, keys are not present.\n\t//#define DEACTIVATE_OBJECTS\t\t\t// If defined, objects are not present.\n\t//#define ONLY_ONE_OBJECT\t\t\t\t// If defined, only one object can be carried at a time.\n\t//#define DEACTIVATE_EVIL_TILE\t\t\t// If defined, no killing tiles (behaviour 1) are detected.\n\t//#define EVIL_TILE_SIMPLE\t\t\t\t// For side view, only hit from below.\n\t#define DEACTIVATE_EVIL_ZONE\t\t\t// Zones kill you after a while. Read docs or ask na_th_an\n\t//#define EVIL_ZONE_FRAME_COUNT\t8\t\t// For countdown in an evil zone.\n\t//#define EVIL_ZONE_BEEPS_COUNT\t32\t\t// # of counts before killing\n\t//#define EVIL_ZONE_FREQ \t\t3 \t\t// if defined to N kill every M^2 frames; N=M^2-1,  \n\t//#define EVIL_ZONE_CONDITIONAL \t\t// Active if scenery_info.evil_zone_active\n\t#define PLAYER_BOUNCES\t\t\t\t\t// If defined, collisions make player bounce\n\t//#define PLAYER_FLICKERS \t\t\t \t// If defined, collisions make player flicker instead.\n\t//#define DEACTIVATE_REFILLS\t\t\t// If defined, no refills.\n\t#define MAX_FLAGS\t\t\t\t1\t\t// Number of flags. For scripting and stuff.\n\t//#define PLAYER_DIZZY \t\t\t\t\t// The Hobbit\n\t#define ENEMIES_LIFE_GAUGE\t\t3\t\t// Amount of shots/hits needed to kill enemies.\n```\n\n* `DIRECT_TO_PLAY`: La activamos cuando compartimos título y marco en la misma pantalla.\n\n* `DEACTIVATE_KEYS`: Si nuestro juego no usa llaves ni cerrojos, activamos esta directiva para ahorrar espacio.\n\n* `DEACTIVATE_OBJECTS`: Si nuestro juego no usa objetos coleccionables, activamos esta directiva para ahorrar espacio.\n\n* `ONLY_ONE_OBJECT`: Activa el modo en el que el jugador sólo puede llevar un objeto. Es el modo en el que funciona **Trabajo Basura**. Al recoger un objeto coleccionable, `player.objects` se pone a 1 y no podremos coger más. Cuando esto ocurra, `PLAYER_HAS_OBJECTS` en el script evaluará a \"cierto\". La única forma de liberar el objeto es desde código custom o en el script con `DEC OBJECTS 1`. Es tarea del jugador contabilizar los objetos en un flag. \n\n* `DEACTIVATE_EVIL_TILE`: Si nuestro juego no emplea tiles que matan, puedes ahorrar espacio activándola.\n\n* `EVIL_TILE_SIMPLE`: Si estás en vista lateral y tus tiles que matan sólo lo harán si el jugador *cae* en ellos, activando esta directiva ahorrarás mucho espacio.\n\n* `DEACTIVATE_EVIL_ZONE`: Si nuestro juego no emplea tiles de tipo 3, activamos esta directiva para ahorrar espacio. Los tiles de tipo 3 se introdujeron en **Ramiro el Vampiro** y restan vida si el jugador los toca. Si la variable `scenery_info.evil_kills_slowly` vale 1, no restarán vida hasta que se agote un contador. Se configuran con los parámetros:\n\n    * `EVIL_ZONE_FRAME_COUNT`: Si `scenery_info.evil_kills_slowly` vale 1, cada cuantos cuadros de juego decrementamos el contador.\n    \n    * `EVIL_ZONE_BEEPS_COUNT`: Si `scenery_info.evil_kills_slowly` vale 1, valor inicial de este contador.\n\n    * Si `scenery_info.evil_kills_slowly` vale 0 o se ha agotado el contador, la vida empezará a disminuir a razón de una unidad por frame, a menos que activemos `EVIL_ZONE_FREQ`, que debe contener un valor N = M^2 - 1, en cuyo caso se decrementará cara M^2 frames (esto es, 1 para cada 2 frames, 3 para cada 4 frames, 7 para cada 8 frames, 15 para cada 16 frames...).\n\n    * Finalmente, si activamos `EVIL_ZONE_CONDITIONAL`, los tiles de tipo 3 sólo estarán activos si `scenery_info.evil_zone_active` vale 1.\n\n* `PLAYER_BOUNCES`: El jugador rebota si le da un enemigo.\n\n* `PLAYER_FLICKERS`: El jugador parpadea un par de segundos si le da un enemigo.\n\n* `DEACTIVATE_REFILLS`: Desactivar las recargas.\n\n* `MAX_FLAGS`: Debe definirse y valer al menos 1. Controla el número de flags para scripting y otros menesteres. Probablemente con 16 tendrás bastante para un juego de complejidad normal. Además, usar 16 o menos permite optimizar mucho el *bytecode* de los scripts, como describiremos más adelante.\n\n* `PLAYER_DIZZY`: Se introdujo para **El Hobbit** y sólo funciona con `PLAYER_NO_INERTIA` en perspectiva genital.\n\n* `ENEMIES_LIFE_GAUGE` especifica el número de veces que hay que darle con un disparo a un enemigo para matarlo.\n\n## Monedas\n\nSirve para activar las monedas, que no son más que un tile específico del tileset que podemos recoger. Al hacerlo, se incrementará el valor de un flag. Se utilizan de manera muy diferente en los cuatro Ramiros y en la demo de Sir Ababol 2:\n\n```c\n\t// Coins engine\n\t// ------------\n\n\t//#define USE_COINS\t\t\t\t\t\t// Coin engine activated\n\t//#define COIN_TILE\t\t\t\t13\t\t// Coin is tile #X\n\t//#define COIN_BEH \t\t\t\t16 \t\t// Detect coin by behaviour rather than tile nº\n\t//#define COIN_FLAG\t\t\t\t1\t\t// Coins are counted in flag #N\n\t//#define COINS_REFILL \t\t\t1\t\t// If defined, add this to player.life\n\t//#define COIN_TILE_DEACT_SUBS\t0\t\t// Substitute with this tile if coins are OFF.\n\t//#define COINS_DEACTIVABLE\t\t\t\t// Coins can be hidden.\n\t//#define COINS_SCRIPTING \t\t\t\t// Run script when player gets coin\n\t//#define COINS_PERSISTENT\t \t\t\t// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes\n```\n\n* `USE_COINS` activa el módulo de monedas.\n\n* `COIN_TILE` indica qué tile de los 48 representa la moneda.\n\n* `COIN_BEH` (opcional): Si se define, la detección de la moneda no se hará por el número de tile en `COIN_TILE`, sino sobre cualquier tile que tenga beh = 16. Cuidado, porque esto hace que el código no sea compatible con los tiles resbalosos. No se usa en ninguno de nuestros juegos, pero puede servir para tener variso tipos de \"monedas\".\n\n* `COIN_FLAG`: Indica en qué flag se cuentan las monedas. Obviamente, este flag debe existir (el valor debe ser **menor** que el definido en `MAX_FLAGS`).\n\n* `COINS_REFILL` (opcional): Si se define, se incrementa la vida del jugador en este valor cada vez que se recoge una moneda.\n\n* `COIN_TILE_DEACT_SUBS`: Al recoger una moneda, se sustitiye por este tile.\n\n* `COINS_DEACTIVABLE` (opcional): Si se define, las monedas pueden estar \"ocultas\" dependiendo del valor de `scenery_info.show_coins`. Si se modifica el valor (desde `custom.h` o usando `SHOW_COINS` o `HIDE_COINS` en el script), los cambios no serán visibles hasta que se vuelva a entrar en la pantalla (puedes hacer `REENTER` en el script o `on_pant = 0xff;` en tu código custom, o hacerlo desde una pantalla diferente a la que contiene las monedas).\n\n* `COINS_SCRIPTING` (opcional): Si se define, se ejecuta la sección `PLAYER_GETS_COIN` del script cuando se recoge una moneda.\n\n* `COINS_PERSISTENT` (opcional): Activa la persistencia para las monedas. Puedes y debes leer sobre la persistencia más adelante\n\n## Persistencia\n\nLa persistencia sirve para que los cambios realizados en el mapa (monedas recogidas o tiles destruidos) sean persistentes de forma que sigan ahí al volver a la pantalla. La persistencia se implementa usando un array de bits que ocupa 20 bytes por pantalla que se reserva justo por debajo de `AD_FREE`. Esto limitará en `20 * MAP_W * MAP_H` el tamaño máximo en bytes que puede ocupar tu juego. ",
 			"file": "docs/manual.md",
-			"file_size": 44838,
-			"file_write_time": 132497365476878509,
 			"settings":
 			{
-				"buffer_size": 46621,
+				"buffer_size": 77750,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "examples/ramiro3/script/script.spt",
+			"file": "src/dev/churromain.c",
 			"settings":
 			{
-				"buffer_size": 7584,
-				"encoding": "Western (Windows 1252)",
+				"buffer_size": 1962,
 				"line_ending": "Windows"
 			}
 		},
@@ -566,6 +562,14 @@
 			}
 		},
 		{
+			"file": "examples/limite/script/script.spt",
+			"settings":
+			{
+				"buffer_size": 309,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "/D/Google Drive/Maritrini/dev/Speccy/MK1/Trabajo Basura/script/tb.spt",
 			"settings":
 			{
@@ -591,10 +595,18 @@
 			}
 		},
 		{
+			"file": "src/dev/mainloop.h",
+			"settings":
+			{
+				"buffer_size": 15395,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "src/dev/engine.h",
 			"settings":
 			{
-				"buffer_size": 52442,
+				"buffer_size": 52554,
 				"encoding": "Western (Windows 1252)",
 				"line_ending": "Windows"
 			}
@@ -680,11 +692,8 @@
 		"/D/git/MK1/docs",
 		"/D/git/MK1/env",
 		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/ababol2_demo",
-		"/D/git/MK1/examples/ababol2_demo/dev",
-		"/D/git/MK1/examples/ramiro3",
-		"/D/git/MK1/examples/ramiro3/dev",
-		"/D/git/MK1/examples/ramiro3/script",
+		"/D/git/MK1/examples/limite",
+		"/D/git/MK1/examples/limite/script",
 		"/D/git/MK1/src",
 		"/D/git/MK1/src/dev",
 		"/D/git/MK1/src/utils"
@@ -964,6 +973,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"OBJECT_COUNT",
+			"OBJECTS_ON_VAR",
+			"NP_RX",
 			"1.20171003",
 			"TOTAL_SCREENS",
 			"spriteset",
@@ -1088,10 +1100,7 @@
 			"organismo",
 			"facturacion",
 			"admin",
-			"facturacion",
-			"gc_handlers",
-			"gc_db",
-			"delete from"
+			"facturacion"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1246,44 +1255,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 46621,
+						"buffer_size": 77750,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								46621,
-								46621
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 11223.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "examples/ramiro3/script/script.spt",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 7584,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								642,
-								658
+								75665,
+								75665
 							]
 						],
 						"settings":
@@ -1291,14 +1271,45 @@
 							"incomplete_sync": null,
 							"remote_loading": false,
 							"synced": false,
-							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 19634.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/dev/churromain.c",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1962,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								653,
+								631
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C Improved/C Improved.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1321,19 +1332,21 @@
 						"settings":
 						{
 							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
 							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 9,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 4,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1356,13 +1369,15 @@
 						{
 							"default_dir": "D:\\git\\MK1",
 							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1378,8 +1393,8 @@
 						"selection":
 						[
 							[
-								3759,
-								3139
+								13964,
+								12942
 							]
 						],
 						"settings":
@@ -1391,14 +1406,46 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 695.0,
+						"translation.y": 2291.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
+					"file": "examples/limite/script/script.spt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 309,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								201,
+								211
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
 					"file": "/D/Google Drive/Maritrini/dev/Speccy/MK1/Trabajo Basura/script/tb.spt",
 					"semi_transient": false,
 					"settings":
@@ -1426,11 +1473,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "src/dev/custom.h",
 					"semi_transient": false,
 					"settings":
@@ -1458,11 +1505,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "src/dev/definitions.h",
 					"semi_transient": false,
 					"settings":
@@ -1474,8 +1521,8 @@
 						"selection":
 						[
 							[
-								1626,
-								1636
+								1434,
+								1434
 							]
 						],
 						"settings":
@@ -1487,27 +1534,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 461.0,
+						"translation.y": 266.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "src/dev/engine.h",
-					"semi_transient": false,
+					"buffer": 9,
+					"file": "src/dev/mainloop.h",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 52442,
+						"buffer_size": 15395,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								32873,
-								32898
+								3953,
+								3964
 							]
 						],
 						"settings":
@@ -1519,10 +1566,42 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 18385.0,
+						"translation.y": 2135.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/dev/engine.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 52554,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15286,
+								15292
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 9220.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]

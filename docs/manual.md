@@ -877,6 +877,311 @@ Esta fue otra característica que se introdujo en la demo técnica de **Sir Abab
 
 * `FRIGO_FROZEN_NO_RX` (opcional): si se define, no se aplica rozamiento al movimiento horizontal del jugador mientras está congelado.
 
+### Tiles resbalosos
+
+```c
+	//#define SLIPPERY_TILES 				// Tiles with beh & 16 are slippery.
+```
+
+* `SLIPPERY_TILES` activa el motor de tiles resbalosos en la vista lateral.
+
+Si el jugador está sobre un tile con comportamiento `& 16`, se aplicarán los valores de `PLAYER_AX_SLIPPERY` o `PLAYER_RX_SLIPPERY` en lugar de `PLAYER_AX` y `PLAYER_RX`, por lo que se puede emplear también para suelos sobre los que se camine más lento.
+
+### Enemigos voladores
+
+Permite activar y configurar *fantys*.
+
+```c
+	//#define PLAYER_CAN_HIDE				// If defined, tile type 2 hides player.
+	//#define RANDOM_RESPAWN				// If defined, automatic flying enemies spawn on killed enemies
+	//#define USE_TYPE_6					// If defined, type 6 enemies are enabled.
+	//#define USE_SIGHT_DISTANCE			// If defined, type 6 only pursue you within sight distance
+	//#define SIGHT_DISTANCE		120		
+	//#define FANTY_MAX_V 			256 	// Flying enemies max speed.
+	//#define FANTY_A 				16		// Flying enemies acceleration.
+	//#define FANTIES_LIFE_GAUGE	10		// Amount of shots needed to kill flying enemies.
+	//#define MAKE_TYPE_6					// Create fanties for missing enemies if scenery_info.make_type_6
+```
+
+* `PLAYER_CAN_HIDE`: si se activa, los tiles de tipo 2 "ocultan" al jugador.
+
+* `RANDOM_RESPAWN`: activa los *fantys* de tipo 5 que aparecen al eliminar enemigos lineales (no se colocan con `ponedor.exe`).
+
+* `USE_TYPE_6`: activa los *fantys* de tipo 6 que se colocan con el ponedor (los *fantys* normales). **No es compatible con `RANDOM_RESPAWN`**.
+
+* `USE_SIGHT_DISTANCE` (opcional), se usa con `USE_TYPE_6`, hace que los *fantys* sólo te persigan si estás a cierta distancia, y que si te alejas vuelvan a su posición inicial.
+
+* `SIGHT_DISTANCE`, se usa con `USE_SIGHT_DISTANCE`, es a la distancia a la que ven los *fantys*.
+
+* `FANTY_MAX_V` y `FANTY_A` definen la velocidad máxima y la aceleración de los *fantys*.
+
+* `FANTIES_LIFE_GAUGE` dice cuánta vida tienen los *fantys*.
+
+* `MAKE_TYPE_6` es un custom de **Ramiro 2**. Si se activa y `scenery_info.make_type_6` vale 1, se creará un *fanty* en lugar de cada enemigo *que no esté colocado* en cada pantalla. O sea, si en una pantalla hay por ejemplo 2 enemigos, aparecerá un tercero que será un *fanty*.
+
+### Scripting
+
+La forma original de *complicar* los juegos de **MTE MK1** era mediante un sencillo pero efectivo sistema de scripting. Activar este sistema nos permite programar comportamiento extra en un lenguaje muy sencillo que describiremos en el capítulo siguiente.
+
+```c
+	//#define ACTIVATE_SCRIPTING			// Activates msc scripting and flag related stuff.
+	//#define WIN_ON_SCRIPTING				// Game can only be won using WIN GAME in the script
+	//#define SCRIPTING_DOWN				// Use DOWN as the action key.
+	//#define COUNT_KILLABLE_ON		2		// Count killable enemies on flag #N (per screen basis)
+	//#define SCRIPTING_KEY_M				// Use M as the action key instead.
+	//#define OBJECTS_ON_VAR		2		// If defined, only show objects if var # is set.
+	//#define OBJECT_COUNT			3		// Defines which FLAG will be used to store the object count.
+	//#define REENTER_ON_ALL_OBJECTS		// If set, re-enter screen when all objects are got, instead of ending
+```
+
+* `ACTIVATE_SCRIPTING` activa el motor de scripting.
+
+* `WIN_ON_SCRIPTING` (opcional): la única forma de "ganar" el juego es ejecutar el comando `WIN GAME` desde el script.
+
+* `SCRIPTING_DOWN` y `SCRIPTING_KEY_M` configuran qué tecla lanza las secciones `PRESS_FIRE` del script, "abajo" o `M`. 
+
+* `COUNT_KILLABLE_ON` (opcional): duplica el valor de `player.killed` en un flag, para poder controlar el número de enemigos eliminados desde el script.
+
+* `OBJECTS_ON_VAR` (opcional): si se define, sólo se pintarán los hotspot de tipo 1 (objetos coleccionables) si el flag correspondiente vale 1.
+
+* `OBJECT_COUNT` (opcional): si se define, indica al motor qué flag utilizaremos para llevar el conteo manual de objetos en modo `ONLY_ONE_OBJECT`. El marcador de objetos se actualizará con el valor de este flag.
+
+* `REENTER_ON_ALL_OBJECTS` (opcional): si se activa, y `WIN_ON_SCRIPTING` no está activada, cuando el jugador reune `PLAYER_NUM_OBJECTS` objetos, en lugar de finalizar la partida, se vuelve a entrar en la pantalla. De esta forma podemos poner una condición en `ENTERING SCREEN n` o en `ENTERING ANY` que a su vez llame a `WIN GAME` o haga cualquier otra cosa.
+
+## Vista lateral o vista genital
+
+Seleccionaremos vista lateral o vista genital si definimos o no esta directiva:
+
+```c
+	#define PLAYER_MOGGY_STYLE				// Enable top view.
+```
+
+### Vista genital
+
+La vista genital está muy poco trabajada en **MTE MK1 v4**. Sólo podemos configurar unos cuantos parámetros y emplear unos cuantos motores.
+
+```c
+	//#define LOOK_AT_THE_CAMERA			// Use "walk down" cell if player is idle
+	//#define PLAYER_NO_INERTIA				// Disable inertia
+	//#define PLAYER_CONST_V		256		// Constant speed
+```
+
+* `LOOK_AT_THE_CAMERA`: si se define, el jugador mirará a la cámara si no se está pulsando ninguna dirección.
+
+* `PLAYER_NO_INERTIA`: si se define, el jugador se mueve sin inercia, sino con una velocidad fija.
+
+* `PLAYER_CONST_V`: se usa con `PLAYER_NO_INERTIA`, define la velocidad en 1/64 de pixels.
+
+### Vista lateral
+
+Además de todos los motores que hemos visto más arriba, podemos configurar el comportamiento básico de la vista lateral con esta colección de macros:
+
+```c
+	//#define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
+	//#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
+	//#define BOTH_KEYS_JUMP				// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+	//#define RAMIRO_HOP 					// press jump when reaching a type 4 platform to jump again 
+	//#define RAMIRO_HOVER 					// press down to hover
+	//#define PLAYER_HAS_JETPAC 			// If defined, player can thrust a vertical jetpac
+	//#define JETPAC_DRAINS_LIFE			// If defined, flying drains life.
+	//#define JETPAC_DRAIN_RATIO	3		// Drain 1 each X frames.
+	//#define JETPAC_DRAIN_OFFSET	8		// Drain after X frames.
+	//#define PLAYER_KILLS_ENEMIES		  	// If defined, stepping on enemies kills them
+	//#define PLAYER_MIN_KILLABLE 	3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
+```
+
+* `PLAYER_HAS_JUMP`: el jugador puede saltar pulsando "arriba".
+
+* `FIRE_TO_JUMP`: se usa con `PLAYER_HAS_JUMP` para saltar pulsando el botón de disparo en vez de "arriba".
+
+* `BOTH_KEYS_JUMP`: se usa con `PLAYER_HAS_JUMP` para saltar con el botón de disparo o pulsando "arriba". **Si activas esta, desactiva la anterior**.
+
+* `RAMIRO_HOP`: se usa con `PLAYER_HAS_JUMP`. Si mientras estás saltando alcanzas una plataforma (tile con comportamiento `& 4`) el jugador podrá saltar de nuevo si estás pulsando el botón de salto aunque no estés completamente sobre la plataforma.
+
+* `RAMIRO_HOVER`: Si se pulsa "abajo" mientras se cae, el jugador revolotea. En lugar de `PLAYER_MAX_VY_CAYENDO` y `PLAYER_G` se emplean `PLAYER_MAX_VY_CAYENDO_H` y `PLAYER_G_HOVER`. Si se emplean valores mayores en las variantes "hover" que en las normales, se puede conseguir el efecto contrario: caer "con más peso".
+
+* `PLAYER_HAS_JETPAC`: Pulsar "arriba" para volar. Puede combinarse con el salto, pero debe configurarse otro botón. El jetpac se configura con las siguientes directivas:
+
+    * `JETPAC_DRAINS_LIFE`: Volar quita vida.
+    * `JETPAC_DRAIN_RATIO`: Se drena cada N cuadros de juego. 
+    * `JETPAC_DRAIN_OFFSET`: Se empieza a drenar tras N cuadros de juego.
+
+* `PLAYER_KILLS_ENEMIES`: Se puede saltar sobre los enemigos para matarlos.
+
+* `PLAYER_MIN_KILLABLE`: se usa con `PLAYER_KILLS_ENEMIES`: Solo matar a los enemigos con id >= a este valor.
+
+## Configuración de la pantalla
+
+Estas directivas controlan la ubicación del area de juego y de los marcadores. En el caso de los marcadores, si se comentan las directivas que definen la ubicación no se pintará el marcador correspondiente.
+
+```c
+	#define VIEWPORT_X				0		//
+	#define VIEWPORT_Y				2		// Viewport character coordinates
+```
+
+* `VIEWPORT_X`, `VIEWPORT_Y` controla la ubicación del área de juego.
+
+```c
+	#define LIFE_X					30		//
+	#define LIFE_Y					8		// Life gauge counter character coordinates
+	//#define DRAW_HI_DIGIT	
+	//#define LIFE_H_X 				1
+	//#define LIFE_H_Y				8
+
+	#define OBJECTS_X				30		//
+	#define OBJECTS_Y				12		// Objects counter character coordinates
+	//#define OBJECTS_ICON_X		2		// 
+	//#define OBJECTS_ICON_Y		21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
+
+	#define KEYS_X					30		//
+	#define KEYS_Y					16		// Keys counter character coordinates
+
+	//#define SHOW_KILLED
+	//#define SHOW_TOTAL
+	//#define KILLED_X				20		//
+	//#define KILLED_Y				21		// Kills counter character coordinates
+
+	// Use this to show tile = ITEM_FIRST_TILE + flags [ITEM_IN_FLAG] - 1 at coordinates
+	// ITEM_SHOW_X, ITEM_SHOW_Y.
+
+	//#define PLAYER_SHOW_ITEM				// If defined, current item is shown (scripting needed)
+	//#define ITEM_IN_FLAG			4		// Which flag is used to store current item.
+	//#define ITEM_FIRST_TILE		17		// First tile in tileset representing an object
+	//#define ITEM_SHOW_X			2		//
+	//#define ITEM_SHOW_Y			21		// Position
+
+	//#define COINS_X 				12 		// Coins coint character coordinates
+	//#define COINS_Y				23
+
+	//#define EVIL_GAUGE_X			21		// For evil zone counters
+	//#define EVIL_GAUGE_Y			23
+```
+
+* `LIFE_X`, `LIFE_Y` controlan la posición del marcador de vida. Si se define `DRAW_HI_DIGIT` se puede pintar el dígito de las centenas en la coordenada `LIFE_H_X`, `LIFE_H_Y`.
+
+* `OBJECTS_X` y `OBJECTS_Y` controlan la posición del marcador de objetos recogidos. En modo `ONLY_ONE_OBJECT`, `OBJECTS_ICON_X`, `OBJECTS_ICON_Y` controlan la posición donde se pinta el icono del objeto para marcar que lo llevamos.
+
+* `KEYS_X`, `KEYS_Y` controlan la posición del marcador de llaves.
+
+* Si se define `SHOW_KILLED` se muestra el número total de enemigos eliminados en `KILLED_X`, `KILLED_Y`. Si además se muestra `SHOW_TOTAL` se muestra además el total.
+
+* `PLAYER_SHOW_ITEM`: Al activarla, si usamos scripting, podemos definir una flag para representar que llevamos un objeto:
+    * `ITEM_IN_FLAG`: qué flag contiene el objeto que llevamos.
+    * `ITEM_FIRST_TILE`: el tile que se pintará será `ITEM_FIRST_TILE + flags [ITEM_IN_FLAG] - 1`.
+    * `ITEM_SHOW_X`, `ITEM_SHOW_Y` controla la posición donde se dibuja el tile.
+
+* `COINS_X`, `COINS_Y` controla donde se muestran las monedas.
+
+* `EVIL_GAUGE_X`, `EVIL_GAUGE_Y` controlan donde se muestra el contador decreciente antes de que los tiles "evil zone" empiecen a quitar vida.
+
+### Linea de texto
+
+El comando `TEXT` del script puede mostrar un texto corto en el marcador. La posición y el color del texto se configuran con estas directivas:
+
+```c
+	//#define LINE_OF_TEXT			23
+	//#define LINE_OF_TEXT_X		1
+	//#define LINE_OF_TEXT_SUBSTR	2
+	//#define LINE_OF_TEXT_ATTR 	7	
+```
+
+El texto tendrá `32 - LINE_OF_TEXT_SUBSTR` caracteres de ancho y se imprimirá con el atributo de color `LINE_OF_TEXT_ATTR` en las coordenadas (`LINE_OF_TEXT_X`, `LINE_OF_TEXT`).
+
+Si no se va a usar `TEXT` desde scripting es mejor dejar toda esta sección comentada.
+
+## Efectos miscelaneos y formato de mapa
+
+Las siguientes directivas controlan aspectos relacionados con cómo se interpretan los datos del mapa, qué forma tiene, y cómo se dibuja. 
+
+```
+	//#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
+	//#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
+	//#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
+	//#define COLUMN_MAP 					// Do not check horizontal screen flicks
+	//#define ROW_MAP 						// Do not check vertical screen flicks
+	//#define NO_ALT_BG						// No alternative tile 19 for bg = 0
+	#define NO_MAX_ENEMS					// Less than 3 enems in some screens
+	//#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
+	//#define TWO_SETS_REAL 				// Tiles have their real value in map_buff
+	//#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
+```
+
+* `USE_AUTO_SHADOWS` utiliza atributos para dibujar sombras que los tiles obstáculo (`& 8`) proyectan sobre los tiles traspasables. Para usar con juegos que usen mapas de 16 tiles.
+
+* `USE_AUTO_TILE_SHADOWS` utiliza la última fila de tiles del tileset para componer las sombras, como se vio en el capítulo 1. Esta opción y la anterior son excluyentes y hacen que el render sea más lento y ocupe bastante más.
+
+* `UNPACKED_MAP` actívala si usas 48 tiles en el mapa. Además, tendrás que modificar `comp.bat` para que no se incluya el parámetro `packed` en la llamada a `mapcnv.exe`.
+
+* `COLUMN_MAP` actívala y no se comprobarán las conexiones laterales entre pantallas aunque intentes salir por la izquierda o por la derecha.
+
+* `ROW_MAP` idem, pero con las conexiones verticales.
+
+* `NO_ALT_BG`: si se define, en modo de mapas de 16 tiles, hace que el tile 0 no se sustituya al azar por el 19 como decoración.
+
+* `NO_MAX_ENEMS`: si todas las pantallas de tu juego tienen los 3 enemigos, comenta esta directiva para ahorrar bastante espacio.
+
+* `TWO_SETS` y `TWO_SETS_REAL` permiten usar dos tilesets de 16 tiles. El mapa sigue codificando sólo 16 tiles, pero puedes elegir si se dibuja usando la primera o la última fila del tileset según la condición definida en `TWO_SETS_CONDITION`. Esta condición puede ser cualquier expresión o incluso llamar a una función *custom*. 
+
+La diferencia entre `TWO_SETS` y `TWO_SETS_REAL` es que la primera sólo introduce valores de 1 a 16 en `map_buff` (el buffer de pantalla) y la segunda introduce los valores *reales* de los tiles que se pintan (1 a 16 o 32 a 47 dependiendo de la pantalla).
+
+## Configuración del movimiento
+
+El movimiento del personaje se puede descomponer en su componente vertical, y su componente horizontal. Ambas componentes se comportan como Movimientos Rectilíneos Uniformemente Acelerados, es decir, que en ambos se maneja su posición, su velocidad, y su aceleración. El motor tiene una resolucioón de 64avos de píxel, por lo que, para calcular el valor en píxels, habrá que dividir los valores que aparecen en el motor por 64. Los valores funcionan por separado (vertical/horizontal) en los juegos de plataformas. En los juegos de vista cenital, los valores de la sección horizontal funcionan en ambos ejes. 
+
+```c
+	// IV.1. Vertical movement. Only for side-view.
+
+	#define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
+	#define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
+
+	#define PLAYER_MAX_VY_CAYENDO_H 256		// For RAMIRO_HOVER
+	#define PLAYER_G_HOVER 			4
+
+	#define PLAYER_VY_INICIAL_SALTO 64		// Initial junp velocity (64/64 = 1 píxel/frame)
+	#define PLAYER_MAX_VY_SALTANDO	320 	// Max jump velocity (320/64 = 5 píxels/frame)
+	#define PLAYER_INCR_SALTO		48		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
+
+	#define PLAYER_INCR_JETPAC		48		// Vertical jetpac gauge
+	#define PLAYER_MAX_VY_JETPAC	384 	// Max vertical jetpac speed
+
+	// IV.2. Horizontal (side view) or general (top view) movement.
+
+	#define PLAYER_MAX_VX			256 	// Max velocity (192/64 = 3 píxels/frame)
+	#define PLAYER_AX				32		// Acceleration (24/64 = 0,375 píxels/frame^2)
+	#define PLAYER_RX				24		// Friction (32/64 = 0,5 píxels/frame^2)
+
+	#define PLAYER_AX_SLIPPERY 		8
+	#define PLAYER_RX_SLIPPERY 		8
+```
+
+### Caída
+
+Empecemos configurando la componente vertical. En todo momento, si no hay nada que detenga nuestra caída, el jugador caerá. Esto significa que a su velocidad vertical (vy) se le añade una aceleración constante: la gravedad (g). Para que esto no se vaya de madre, esta velocidad tiene un límite superior. Es lo que definimos en las dos primeras constantes `PLAYER_MAX_VY_CAYENDO` y `PLAYER_G`.
+
+El el caso de activar `RAMIRO_HOVER`, si pulsamos "abajo" se apicarán las constantes `PLAYER_MAX_VY_CAYENDO_H` y `PLAYER_G_HOVER` en su lugar.
+
+Según está definido, en cada frame se añadirá 32 a la velocidad vertical hasta alcanzar un máximo de 512. Esto significa que, cada frame, el muñeco caerá 0.5 píxeles por frame más rápido hasta llegar a una velocidad máxima de 8 píxels por frame. Cuanto menores sean estos valores, menor parecerá la gravedad. Por ejemplo, para simular la gravedad de la luna, en la que se cae despacito, podemos usar valores 128 y 8, respectivamente.
+
+## Salto
+
+Las siguientes constantes también modifican el comportamiento de la componente vertical del movimiento, pero esta vez al saltar. Al pulsar el botón de salto, en primer lugar la velocidad vertical se establece a un valor inicial negativo (para que el muñeco suba), y mientras lo tengamos pulsado, durante un máximo de 8 frames, la magnitud de este valor irá aumentando otro valor fijo, hasta que se alcance una magnitud máxima o bien se agoten esos 8 frames (lo que ocurra primero). Estos valores se definen en las siguientes constantes, `PLAYER_VY_INICIAL_SALTO`, `PLAYER_MAX_VY_SALTANDO` y `PLAYER_INCR_SALTO`.
+
+Según estos valores, cuando el jugador pulse el botón de salto, el muñeco tomará una velocidad vertical de -64. Mientras se siga pulsando el botón, esta velocidad irá decrementando a razón de 48 píxels/frame cada frame, hasta que se deje de pulsar la tecla, pasen 8 frames, o la velocidad llegue a -320. En píxels, la velocidad inicial del salto será de -1 píxel por frame, decrementará 0.75 píxels por frame cada frame, hasta que se despulse SALTO, pasen 8 frames, o la velocidad sea igual a -5 píxels por frame.
+
+Hay que probar y configurar los valores de gravedad y de salto conjuntamente, pues unos afectan a los otros. Una gravedad baja, que haga caer al personaje lentamente, no se llevará demasiado bien con unos valores altos en el salto, que prácticamente harán volar a nuestro personaje.
+
+## Componente horizontal
+
+Lo siguiente es configurar la componente horizontal del movimiento. Funciona del siguiente modo: si pulsamos "izquierda" o "derecha", la velocidad horizontal se incrementa con una aceleración ax hasta llegar a una velocidad máxima. Si dejamos de pulsar, nos iremos frenando con una fricción fx hasta pararnos. 
+
+Lo configuramos en las siguientes tres constantes, `PLAYER_MAX_VX`, `PLAYER_AX` y `PLAYER_RX`.
+
+Según el ejemplo, la velocidad horizontal máxima será de 192, o lo que es lo mismo, 3 píxels por frame. Mientras pulsemos una tecla, aceleraremos a razón de 0,375 píxels por frame cada frame (valor 24), y al dejar de pulsarla, deceleraremos a razón de 0,5 píxels por frame cada frame (valor 32). Esto se hace para que el muñeco se pare más rápido. Usando valores menores de AX y RX (sobre todo de RX), podemos simular que el personaje resbala sobre el hielo o se mueve en entornos de poca fricción. Combinando valores bajos de gravedad y valores bajos de aceleración y fricción podríamos simular, por ejemplo, el movimiento bajo el agua.
+
+En los juegos de vista cenital, como hemos dicho, se aplican estos últimos valores para ambos ejes.
+
+## Comportamiento de los tiles
+
 ## Memoria dinámica para sprites
 
 Activar el motor de disparos o la espada precisa añadir más sprites. Los sprites necesitan un pool de memoria dinámica que se reserva a partir de la dirección `AD_FREE`. La cantidad de memoria para sprites que se reserva se controla con `NUMBLOCKS`, que define el número de bloques para sprites que se va a reservar.
