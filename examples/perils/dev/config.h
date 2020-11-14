@@ -254,7 +254,7 @@
 // Graphic FX, uncomment which applies...
 
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
-#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
+//#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
 //#define COLUMN_MAP 					// Do not check horizontal screen flicks
 //#define ROW_MAP 						// Do not check vertical screen flicks
@@ -325,7 +325,7 @@
 		// Remove it if you are not using extra tiles at all. And remember
 		// that tiles 16 to 19 MUST be 0.
 		unsigned char comportamiento_tiles [] = {
-			0, 0, 0, 0, 8, 8, 8, 8, 0, 8, 0, 0, 1, 8, 8, 8,
+			0, 0, 0, 0, 8, 8, 8, 4, 0, 8, 0, 0, 1, 8, 8, 8,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		};
 	#endif
