@@ -26,7 +26,7 @@
 #define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
+#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
 //#define ENABLE_CUSTOM_ENEMS 			// Hooks for custom enemies @ custom.h
 
 // ============================================================================
@@ -58,6 +58,7 @@
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 					// The Hobbit
 #define ENEMIES_LIFE_GAUGE		1		// Amount of shots/hits needed to kill enemies.
+#define ENEMIES_MAY_BE_PARALIZED 		// Custom paralyze enemies.
 
 // Coins engine
 // ------------
@@ -194,7 +195,7 @@
 //#define JETPAC_DRAIN_RATIO	3		// Drain 1 each X frames.
 //#define JETPAC_DRAIN_OFFSET	8		// Drain after X frames.
 #define PLAYER_KILLS_ENEMIES		  	// If defined, stepping on enemies kills them
-//#define PLAYER_MIN_KILLABLE 	3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
+#define PLAYER_MIN_KILLABLE 	player_min_killable		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 
 
 // ============================================================================

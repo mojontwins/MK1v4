@@ -3,6 +3,27 @@
 
 // Add here your custom routines & vars
 
+unsigned char resonators_on;
+unsigned char player_min_killable;
+
+// Custom functions
+
+void paralyze_everyone (void) {
+	player_min_killable = 0;
+	for (enit = 0; enit < 3; enit ++) {
+		en_an_count [enit] = 0xff;
+		en_an_state [enit] = ENEM_PARALYZED;
+	}
+}
+
+void restore_everyone (void) {
+	player_min_killable = 4;
+	for (enit = 0; enit < 3; enit ++) {
+		en_an_count [enit] = 0;
+		en_an_state [enit] = 0;
+	}
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -11,12 +32,43 @@
 	}
 
 	void hook_init_game (void) {
+		resonators_on = 0;
+		player_min_killable = 4;
 	}
 
 	void hook_mainloop (void) {
+		if (latest_hotspot >= 4) {
+			// Check 
+			if (latest_hotspot == 4) {
+				resonators_on = 250;
+				latest_hotspot = 5;
+				paralyze_everyone ();
+			}
+
+			// Hotspot has to be restored ALWAYS
+			hotspots [n_pant].act = 1;
+			rdx = (hotspots [n_pant].xy >> 4);
+			rdy = (hotspots [n_pant].xy & 15);
+			hotspot_x = rdx << 4;
+			hotspot_y = rdy << 4;
+			set_map_tile (rdx, rdy, 16 + latest_hotspot, 0);
+		}
+
+
 	}
 
-	void hook_entering (void) {		
+	void hook_entering (void) {
+		// Modify hotspots upon resonators_on
+		if (hotspots [n_pant].tipo >= 4) {
+			hotspots [n_pant].tipo = 4 + (resonators_on != 0);
+			rdx = (hotspots [n_pant].xy >> 4);
+			rdy = (hotspots [n_pant].xy & 15);
+			hotspot_x = rdx << 4;
+			hotspot_y = rdy << 4;
+			set_map_tile (rdx, rdy, 16 + hotspots [n_pant].tipo, 0);
+		}
+				
+		if (resonators_on) paralyze_everyone ();
 	}
 
 #endif

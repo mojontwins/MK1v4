@@ -174,17 +174,17 @@ HOTSPOT hotspots [] = {
 	{0, 0, 0}, 
 	{0, 0, 0}, 
 	{0, 0, 0}, 
-	{0, 0, 0}, 
+	{148, 4, 0}, 
 	{0, 0, 0}, 
 	{0, 0, 0}, 
 	{0, 0, 0}
 };
 
-#define N_HOTSPOTS_TYPE_0 22
+#define N_HOTSPOTS_TYPE_0 21
 #define N_HOTSPOTS_TYPE_1 0
 #define N_HOTSPOTS_TYPE_2 2
 #define N_HOTSPOTS_TYPE_3 0
-#define N_HOTSPOTS_TYPE_4 0
+#define N_HOTSPOTS_TYPE_4 1
 #define N_HOTSPOTS_TYPE_5 0
 #define N_HOTSPOTS_TYPE_6 0
 #define N_HOTSPOTS_TYPE_7 0
