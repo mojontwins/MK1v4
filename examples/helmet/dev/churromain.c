@@ -63,7 +63,7 @@
 #include "mapa.h"
 #include "tileset.h"
 #include "sprites.h"
-	#include "extrasprites.h"
+#include "extrasprites.h"
 #include "enems.h"
 #include "beeper.h"
 #include "printer.h"

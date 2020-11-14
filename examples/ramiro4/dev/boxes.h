@@ -45,7 +45,7 @@
 			fall_frame_counter ++;
 			if (fall_frame_counter >= FALLING_BOXES_SPEED) {
 				fall_frame_counter = 0;
-				for (rdi = 0; rdi < MAX_FALLING_BOXES; rdi ++) {
+				for (rdi = 0; rdi < MAX_FALLING_BOXES; rdi ++) {					
 					if (fallingboxbuffer [rdi].act) {
 						// Fall this box?
 						if (attr (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y + 1) < 4) {
@@ -88,10 +88,12 @@
 
 											// Count it
 											player.killed ++;
+
 											#ifdef ACTIVATE_SCRIPTING
 												script = f_scripts [max_screens + 2];
 												run_script ();
 											#endif
+
 											break;
 										}
 									}						

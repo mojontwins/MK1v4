@@ -1404,7 +1404,7 @@ void draw_scr (void) {
 
 	for (gpit = 0; gpit < MAX_ENEMS; gpit ++) {
 		en_an_frame [gpit] = 0;
-		en_an_count [gpit] = 0;
+		
 		#ifdef RANDOM_RESPAWN
 			en_an_fanty_activo [gpit] = 0;
 		#endif
@@ -1656,12 +1656,11 @@ void mueve_bicharracos (void) {
 			#endif
 		#endasm
 
-		#if defined ENABLE_SWORD && defined SWORD_PARALYZES
+		#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
 			if (en_an_state [enit] == ENEM_PARALYZED) {
 				en_an_count [enit] --;
 				if (en_an_count [enit] == 0)
 					en_an_state [enit] = 0;
-				else goto enems_loop_continue;
 			}
 		#endif
 
@@ -1676,81 +1675,198 @@ void mueve_bicharracos (void) {
 		) {
 			en_cx = _en_x;
 			en_cy = _en_y;
-			#ifdef RANDOM_RESPAWN
-				if (0 == en_an_fanty_activo [enit])
+			
+			#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
+				if (en_an_state [enit] != ENEM_PARALYZED)
 			#endif
 			{
-				_en_x += _en_mx;
-				_en_y += _en_my;
-				}
+				if (
+					_en_t <= 4
+				#ifdef RANDOM_RESPAWN
+					|| 0 == en_an_fanty_activo [enit]
+				#endif
+				) {
+					_en_x += _en_mx;
+					_en_y += _en_my;
 
-			#ifdef PLAYER_PUSH_BOXES			
-				// Check for collisions.
-				en_xx = _en_x >> 4;
-				en_yy = _en_y >> 4;
-
-				if (_en_mx != 0) {
-					if (attr (en_xx + ctileoff (_en_mx), en_yy) & 8 || 
-					((_en_y & 15) != 0 && attr (en_xx + ctileoff (_en_mx), en_yy + 1) & 8)) {
+					if (_en_x == _en_x1 || _en_x == _en_x2)
 						_en_mx = -_en_mx;
-						_en_x = en_cx;
-					}
-				}
-				if (_en_my != 0) {
-					if (attr (en_xx, en_yy + ctileoff (_en_my)) & 8 || 
-					((_en_x & 15) != 0 && attr (en_xx + 1, en_yy + ctileoff (_en_mx)) & 8)) {
+					if (_en_y == _en_y1 || _en_y == _en_y2)
 						_en_my = -_en_my;
-						_en_y = en_cy;
-					}
+
+					#ifdef PLAYER_PUSH_BOXES			
+						// Check for collisions.
+						en_xx = _en_x >> 4;
+						en_yy = _en_y >> 4;
+
+						if (_en_mx != 0) {
+							if (attr (en_xx + ctileoff (_en_mx), en_yy) & 8 || 
+							((_en_y & 15) != 0 && attr (en_xx + ctileoff (_en_mx), en_yy + 1) & 8)) {
+								_en_mx = -_en_mx;
+								_en_x = en_cx;
+							}
+						}
+						if (_en_my != 0) {
+							if (attr (en_xx, en_yy + ctileoff (_en_my)) & 8 || 
+							((_en_x & 15) != 0 && attr (en_xx + 1, en_yy + ctileoff (_en_mx)) & 8)) {
+								_en_my = -_en_my;
+								_en_y = en_cy;
+							}
+						}
+					#endif
+
+					rdd = (_en_t - 1) << 1;
 				}
-			#endif
 
-			en_an_count [enit] ++; 
-			if (en_an_count [enit] == 4) {
-				en_an_count [enit] = 0;
-				en_an_frame [enit] = !en_an_frame [enit];
+				#ifdef RANDOM_RESPAWN
+					if (en_an_fanty_activo [enit]) { 
+						#ifdef PLAYER_CAN_HIDE			
+							if (player_hidden ()) {
+								if (player.x < en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+									en_an_vx [enit] += FANTY_A >> 1;
+								else if (player.x > en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+									en_an_vx [enit] -= FANTY_A >> 1;
+								if (player.y < en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+									en_an_vy [enit] += FANTY_A >> 1;
+								else if (player.y > en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+									en_an_vy [enit] -= FANTY_A >> 1;
+							} else
+						#endif 
+						if ((rand () & 7) > 1) {
+							if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+								en_an_vx [enit] += FANTY_A;
+							else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+								en_an_vx [enit] -= FANTY_A;
+							if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+								en_an_vy [enit] += FANTY_A;
+							else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+								en_an_vy [enit] -= FANTY_A;
+						}
+										
+						en_an_x [enit] += en_an_vx [enit];
+						en_an_y [enit] += en_an_vy [enit];
+						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
+						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 
-
-				switch (_en_t) {
-					case 1:
-					case 2:
-					case 3:
-					case 4:
-						rdd = ((_en_t - 1) << 1);
-						break;
-					default:
 						rdd = 4;
-						break;
-				}	
+					} 
+				#endif
+
+				#ifdef USE_TYPE_6
+					if (_en_t == 6 || _en_t == 0) {
+						#if defined (USE_SIGHT_DISTANCE) || defined (PLAYER_CAN_HIDE)
+							// Idle, retreat or pursue depending on player status (distance or hidden)
+
+							switch (en_an_state [enit]) {
+								case TYPE_6_IDLE:
+									#ifdef PLAYER_CAN_HIDE
+										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
+									#else
+										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
+									#endif
+										en_an_state [enit] = TYPE_6_PURSUING;
+									break;
+								case TYPE_6_PURSUING:
+									if ((rand () & 7) > 1) {
+										if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+											en_an_vx [enit] += FANTY_A;
+										else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+											en_an_vx [enit] -= FANTY_A;
+										if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+											en_an_vy [enit] += FANTY_A;
+										else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+											en_an_vy [enit] -= FANTY_A;
+									}
+									
+									#ifdef PLAYER_CAN_HIDE
+										if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE || player_hidden ()) 
+									#else
+										if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE)
+									#endif
+										en_an_state [enit] = TYPE_6_RETREATING;
+									break;
+								case TYPE_6_RETREATING:
+									if ((_en_x << 6) > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+										en_an_vx [enit] += FANTY_A;
+									else if ((_en_x << 6) < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+										en_an_vx [enit] -= FANTY_A;
+									if ((_en_y << 6) > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+										en_an_vy [enit] += FANTY_A;
+									else if ((_en_y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+										en_an_vy [enit] -= FANTY_A;
+									
+									#ifdef PLAYER_CAN_HIDE
+										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
+									#else
+										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
+									#endif
+										en_an_state [enit] = TYPE_6_PURSUING;
+									break;	
+							}
+						#else
+							// Always pursue
+
+							if ((rand () & 7) > 1) {
+								if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+									en_an_vx [enit] += FANTY_A;
+								else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+									en_an_vx [enit] -= FANTY_A;
+								if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+									en_an_vy [enit] += FANTY_A;
+								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+									en_an_vy [enit] -= FANTY_A;
+							}
+						#endif
+
+						if (scenery_info.allow_type_6) {
+							en_an_x [enit] += en_an_vx [enit];
+							en_an_y [enit] += en_an_vy [enit];
+						}
+						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
+						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+
+						rdd = 4;
+					} 
+				#endif
+
+				en_an_count [enit] ++; 
+				if (en_an_count [enit] >= 4) {
+					en_an_count [enit] = 0;
+					en_an_frame [enit] = !en_an_frame [enit];					
+				}
+				
 				en_an_next_frame [enit] = enem_cells [rdd + en_an_frame [enit]];
+
+				#ifdef ENABLE_CUSTOM_ENEMS
+					extra_enems_move ();
+				#endif
 			}
 
-			#ifdef RANDOM_RESPAWN
-				if (en_an_fanty_activo [enit]) {
-					en_ccx = en_an_x [enit] >> 6;
-					en_ccy = en_an_y [enit] >> 6;
-				} else {
-					en_ccx = _en_x;
-					en_ccy = _en_y;
-				}
-			#else
-				#ifdef USE_TYPE_6
-					if (_en_t == 6 
+			// Select coordinates for collision
+
+			#if defined RANDOM_RESPAWN || defined USE_TYPE_6				
+				if (
+					#ifdef RANDOM_RESPAWN
+						en_an_fanty_activo [enit]
+					#else
+						_en_t == 6 
 						#ifdef MAKE_TYPE_6
 						|| _en_t == 0
 						#endif
-					) {
-						en_ccx = en_an_x [enit] >> 6;
-						en_ccy = en_an_y [enit] >> 6;
-					} else {
-						en_ccx = _en_x;
-						en_ccy = _en_y;
-					}
-					#else
-					en_ccx = _en_x;
-					en_ccy = _en_y;
-				#endif
+					#endif
+				) {
+					en_ccx = en_an_x [enit] >> 6;
+					en_ccy = en_an_y [enit] >> 6;
+				} else 
 			#endif
+			{
+				en_ccx = _en_x;
+				en_ccy = _en_y;
+			}
 				
 			// Moving platforms engine:
 
@@ -1775,23 +1891,22 @@ void mueve_bicharracos (void) {
 						ptgmx = (_en_mx << 6);
 					}
 					
-				// Collision with enemy
 				
-				#ifdef RANDOM_RESPAWN
-					} else if (0 == en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
-				#else
-					} else if (0 == en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
-				#endif
-			#else
-				#ifdef RANDOM_RESPAWN
-					if (0 == en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
-				#else
-					if (0 == en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
-				#endif
+				} else
 			#endif			
-			{
+			
+			// Collision with enemy
+
+			if (
+				0 == en_tocado && collide_enem () && 
+				(_en_t < 16 
+					#ifdef RANDOM_RESPAWN
+						|| en_an_fanty_activo [enit] == 1
+					#endif
+				) && player.estado == EST_NORMAL
+			) {
 				#ifdef PLAYER_KILLS_ENEMIES
-					if (gpy <= en_ccy - 8 /*&& player.vy > 0 */
+					if (gpy <= en_ccy - 8 && player.vy >= 0 
 						#ifdef PLAYER_MIN_KILLABLE
 							&& _en_t >= PLAYER_MIN_KILLABLE
 						#endif
@@ -1801,10 +1916,9 @@ void mueve_bicharracos (void) {
 						enems_kill ();
 					} else	
 				#endif
+
 				{
-					en_tocado = 1;
-					play_sfx (2);
-					player.is_dead = 1;
+					en_tocado = 1; player.is_dead = 1; play_sfx (2);
 					
 					// We decide which kind of life drain we do:
 					#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
@@ -1841,20 +1955,14 @@ void mueve_bicharracos (void) {
 							
 							// x
 							if (_en_mx) {
-								if (gpx < en_ccx) {
-									player.vx = - (abs (_en_mx + _en_mx) << 7);
-								} else {
-									player.vx = abs (_en_mx + _en_mx) << 7;
-								}
+								if (gpx < en_ccx) player.vx = - (abs (_en_mx + _en_mx) << 7);
+								else player.vx = abs (_en_mx + _en_mx) << 7;
 							}
 							
 							// y
 							if (_en_my) {
-								if (gpy < en_ccy) {
-									player.vy = - (abs (_en_my + _en_my) << 7);
-								} else {
-									player.vy = abs (_en_my + _en_my) << 7;
-								}
+								if (gpy < en_ccy) player.vy = - (abs (_en_my + _en_my) << 7);
+								else player.vy = abs (_en_my + _en_my) << 7;
 							}
 						#endif
 					#endif
@@ -1865,136 +1973,12 @@ void mueve_bicharracos (void) {
 					#elif defined PLAYER_FLICKERS
 						// Flickers. People seem to like this more than the bouncing behaviour.
 						player_flicker ();
-					#endif
+					#endif				
 				}
 			}
 			
 			// Enemy update
-			
-			#ifdef RANDOM_RESPAWN
-				if (en_an_fanty_activo [enit]) { 
-					#ifdef PLAYER_CAN_HIDE			
-						if (player_hidden ()) {
-							if (player.x < en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-								en_an_vx [enit] += FANTY_A >> 1;
-							else if (player.x > en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-								en_an_vx [enit] -= FANTY_A >> 1;
-							if (player.y < en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-								en_an_vy [enit] += FANTY_A >> 1;
-							else if (player.y > en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-								en_an_vy [enit] -= FANTY_A >> 1;
-						} else
-					#endif 
-					if ((rand () & 7) > 1) {
-						if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-							en_an_vx [enit] += FANTY_A;
-						else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-							en_an_vx [enit] -= FANTY_A;
-						if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-							en_an_vy [enit] += FANTY_A;
-						else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-							en_an_vy [enit] -= FANTY_A;
-					}
-									
-					en_an_x [enit] += en_an_vx [enit];
-					en_an_y [enit] += en_an_vy [enit];
-					if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
-					if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-					if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-				} else
-			#endif
-
-			#ifdef USE_TYPE_6
-				if (_en_t == 6 || _en_t == 0) {
-					#if defined (USE_SIGHT_DISTANCE) || defined (PLAYER_CAN_HIDE)
-						// Idle, retreat or pursue depending on player status (distance or hidden)
-
-						switch (en_an_state [enit]) {
-							case TYPE_6_IDLE:
-								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
-								#else
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
-								#endif
-									en_an_state [enit] = TYPE_6_PURSUING;
-								break;
-							case TYPE_6_PURSUING:
-								if ((rand () & 7) > 1) {
-									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-										en_an_vx [enit] += FANTY_A;
-									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-										en_an_vx [enit] -= FANTY_A;
-									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-										en_an_vy [enit] += FANTY_A;
-									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-										en_an_vy [enit] -= FANTY_A;
-								}
-								
-								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE || player_hidden ()) 
-								#else
-									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE)
-								#endif
-									en_an_state [enit] = TYPE_6_RETREATING;
-								break;
-							case TYPE_6_RETREATING:
-								if ((_en_x << 6) > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-									en_an_vx [enit] += FANTY_A;
-								else if ((_en_x << 6) < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-									en_an_vx [enit] -= FANTY_A;
-								if ((_en_y << 6) > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-									en_an_vy [enit] += FANTY_A;
-								else if ((_en_y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-									en_an_vy [enit] -= FANTY_A;
-								
-								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
-								#else
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
-								#endif
-									en_an_state [enit] = TYPE_6_PURSUING;
-								break;	
-						}
-					#else
-						// Always pursue
-
-						if ((rand () & 7) > 1) {
-							if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-								en_an_vx [enit] += FANTY_A;
-							else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-								en_an_vx [enit] -= FANTY_A;
-							if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-								en_an_vy [enit] += FANTY_A;
-							else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-								en_an_vy [enit] -= FANTY_A;
-						}
-					#endif
-
-					if (scenery_info.allow_type_6) {
-						en_an_x [enit] += en_an_vx [enit];
-						en_an_y [enit] += en_an_vy [enit];
-					}
-					if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
-					if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-					if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-					if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-				} else 
-			#endif
-			#ifdef ENABLE_CUSTOM_ENEMS
-				if (_en_t <= 4)
-			#endif
-			{
-				if (en_ccx == _en_x1 || en_ccx == _en_x2)
-					_en_mx = -_en_mx;
-				if (en_ccy == _en_y1 || en_ccy == _en_y2)
-					_en_my = -_en_my;
-			}
-								
-			#ifdef ENABLE_CUSTOM_ENEMS
-				extra_enems_move ();
-			#endif
-
+				
 			#ifdef PLAYER_CAN_FIRE
 				// Collision with bullets
 				#ifdef RANDOM_RESPAWN

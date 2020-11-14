@@ -154,7 +154,7 @@ signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
 unsigned char *_baddies_pointer;
 
-#if defined ENABLE_CODE_HOOKS && (defined PLAYER_CAN_FIRE || defined ENABLE_SWORD)
+#if defined ENABLE_CODE_HOOKS && (defined ENEMIES_MAY_DIE)
 	unsigned char enemy_died;
 #endif
 

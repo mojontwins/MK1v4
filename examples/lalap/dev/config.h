@@ -57,7 +57,8 @@
 //#define DEACTIVATE_REFILLS			// If defined, no refills.
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 					// The Hobbit
-#define ENEMIES_LIFE_GAUGE		3		// Amount of shots/hits needed to kill enemies.
+#define ENEMIES_LIFE_GAUGE		1		// Amount of shots/hits needed to kill enemies.
+//#define ENEMIES_MAY_BE_PARALIZED 		// Custom paralyze enemies.
 
 // Coins engine
 // ------------
@@ -74,6 +75,7 @@
 
 // Fixed screens engine
 // --------------------
+
 //#define FIXED_SCREENS					// If defined, you can't exit a screen running off an edge
 //#define SHOW_LEVEL_INFO				// If defined, show "LEVEL XX" before level start, XX=n_pant
 //#define SHOW_LEVEL_SUBLEVEL			// If defined, level # is XX/YY using y_map and x_map resp.
