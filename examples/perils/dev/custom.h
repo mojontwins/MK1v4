@@ -50,6 +50,7 @@ void set_hotspot (unsigned char hn) {
 		if (latest_hotspot >= 4) {
 			// Check 
 			if (latest_hotspot == 4) {
+				play_sfx (6);
 				resonators_on = 250;
 				latest_hotspot = 5;
 				paralyze_everyone ();
@@ -60,9 +61,18 @@ void set_hotspot (unsigned char hn) {
 		}
 
 		if (resonators_on) {
+			rdi = resonators_on / 25;
 			resonators_on --;
-			if (resonators_on = 0) {
-				set_hotspot (4);				
+			rdd = resonators_on / 25;
+			if (rdi != rdd) {
+				play_sfx (4);
+				draw_2_digits (25, 1, rdd);
+			}
+
+			if (resonators_on == 0) {
+				play_sfx (3);
+				restore_everyone ();				
+				if (hotspot_y != 240) set_hotspot (4);
 			}
 		}
 	}

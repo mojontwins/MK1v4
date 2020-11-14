@@ -1784,21 +1784,18 @@ void mueve_bicharracos (void) {
 					
 				// Collision with enemy
 				
-				#ifdef RANDOM_RESPAWN
-					} else if (0 == en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
-				#else
-					} else if (0 == en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
-				#endif
-			#else
-				#ifdef RANDOM_RESPAWN
-					if (0 == en_tocado && collide_enem () && (_en_t < 16 || en_an_fanty_activo [enit] == 1) && player.estado == EST_NORMAL)
-				#else
-					if (0 == en_tocado && collide_enem () && _en_t < 16 && player.estado == EST_NORMAL)
-				#endif
+				} else
 			#endif			
-			{
+			if (
+				0 == en_tocado && collide_enem () && 
+				(_en_t < 16 
+					#ifdef RANDOM_RESPAWN
+						|| en_an_fanty_activo [enit] == 1
+					#endif
+				) && player.estado == EST_NORMAL
+			) {
 				#ifdef PLAYER_KILLS_ENEMIES
-					if (gpy <= en_ccy - 8 /*&& player.vy > 0 */
+					if (gpy <= en_ccy - 8 && player.vy >= 0 
 						#ifdef PLAYER_MIN_KILLABLE
 							&& _en_t >= PLAYER_MIN_KILLABLE
 						#endif
@@ -1809,67 +1806,63 @@ void mueve_bicharracos (void) {
 					} else	
 				#endif
 				{
-					#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
-						if (en_an_state [enit] != ENEM_PARALYZED)
+					en_tocado = 1; player.is_dead = 1; play_sfx (2);
+					
+					// We decide which kind of life drain we do:
+					#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
+						if (_en_t > 4) {
+							player.life -= FLYING_ENEMY_HIT;
+						} else
 					#endif
 					{
-						en_tocado = 1; player.is_dead = 1; play_sfx (2);
-						
-						// We decide which kind of life drain we do:
-						#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-							if (_en_t > 4) {
-								player.life -= FLYING_ENEMY_HIT;
-							} else
-						#endif
-						{
-							player.life -= LINEAR_ENEMY_HIT;
-						}
-						
-						#ifdef PLAYER_BOUNCES
-							#ifndef PLAYER_MOGGY_STYLE	
-								#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-									if (0 == en_an_fanty_activo [enit]) {
-										// Bouncing!
-										if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
-										if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
-										if (_en_my > 0) player.vy = PLAYER_MAX_VX;
-										if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
-									} else {
-										player.vx = en_an_vx [enit] + en_an_vx [enit];
-										player.vy = en_an_vy [enit] + en_an_vy [enit];
-									}
-								#else
-									// Bouncing!
-									if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-								#endif
-							#else
-								// Bouncing:
-								
-								// x
-								if (_en_mx) {
-									if (gpx < en_ccx) player.vx = - (abs (_en_mx + _en_mx) << 7);
-									else player.vx = abs (_en_mx + _en_mx) << 7;
-								}
-								
-								// y
-								if (_en_my) {
-									if (gpy < en_ccy) player.vy = - (abs (_en_my + _en_my) << 7);
-									else player.vy = abs (_en_my + _en_my) << 7;
-								}
-							#endif
-						#endif
-
-						#ifdef ENABLE_FRIGOABABOL
-							player.estado = EST_FRIGOABABOL;
-							player.ct_estado = FRIGO_MAX_FRAMES;
-						#elif defined PLAYER_FLICKERS
-							// Flickers. People seem to like this more than the bouncing behaviour.
-							player_flicker ();
-						#endif
+						player.life -= LINEAR_ENEMY_HIT;
 					}
+					
+					#ifdef PLAYER_BOUNCES
+						#ifndef PLAYER_MOGGY_STYLE	
+							#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
+								if (0 == en_an_fanty_activo [enit]) {
+									// Bouncing!
+									if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
+									if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
+									if (_en_my > 0) player.vy = PLAYER_MAX_VX;
+									if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
+								} else {
+									player.vx = en_an_vx [enit] + en_an_vx [enit];
+									player.vy = en_an_vy [enit] + en_an_vy [enit];
+								}
+							#else
+								// Bouncing!
+								if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+								if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+								if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+								if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+							#endif
+						#else
+							// Bouncing:
+							
+							// x
+							if (_en_mx) {
+								if (gpx < en_ccx) player.vx = - (abs (_en_mx + _en_mx) << 7);
+								else player.vx = abs (_en_mx + _en_mx) << 7;
+							}
+							
+							// y
+							if (_en_my) {
+								if (gpy < en_ccy) player.vy = - (abs (_en_my + _en_my) << 7);
+								else player.vy = abs (_en_my + _en_my) << 7;
+							}
+						#endif
+					#endif
+
+					#ifdef ENABLE_FRIGOABABOL
+						player.estado = EST_FRIGOABABOL;
+						player.ct_estado = FRIGO_MAX_FRAMES;
+					#elif defined PLAYER_FLICKERS
+						// Flickers. People seem to like this more than the bouncing behaviour.
+						player_flicker ();
+					#endif
+				
 				}
 			}
 			
