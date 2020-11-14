@@ -1680,10 +1680,12 @@ void mueve_bicharracos (void) {
 				if (en_an_state [enit] != ENEM_PARALYZED)
 			#endif
 			{
+				if (
+					_en_t <= 4
 				#ifdef RANDOM_RESPAWN
-					if (0 == en_an_fanty_activo [enit])
+					|| 0 == en_an_fanty_activo [enit]
 				#endif
-				{
+				) {
 					_en_x += _en_mx;
 					_en_y += _en_my;
 				}

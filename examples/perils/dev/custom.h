@@ -24,6 +24,16 @@ void restore_everyone (void) {
 	}
 }
 
+void set_hotspot (unsigned char hn) {
+	hotspots [n_pant].act = 1;
+	hotspots [n_pant].tipo = hn;
+	rdx = (hotspots [n_pant].xy >> 4);
+	rdy = (hotspots [n_pant].xy & 15);
+	hotspot_x = rdx << 4;
+	hotspot_y = rdy << 4;
+	set_map_tile (rdx, rdy, 16 + hn, 0);
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -46,26 +56,21 @@ void restore_everyone (void) {
 			}
 
 			// Hotspot has to be restored ALWAYS
-			hotspots [n_pant].act = 1;
-			rdx = (hotspots [n_pant].xy >> 4);
-			rdy = (hotspots [n_pant].xy & 15);
-			hotspot_x = rdx << 4;
-			hotspot_y = rdy << 4;
-			set_map_tile (rdx, rdy, 16 + latest_hotspot, 0);
+			set_hotspot (latest_hotspot);			
 		}
 
-
+		if (resonators_on) {
+			resonators_on --;
+			if (resonators_on = 0) {
+				set_hotspot (4);				
+			}
+		}
 	}
 
 	void hook_entering (void) {
 		// Modify hotspots upon resonators_on
 		if (hotspots [n_pant].tipo >= 4) {
-			hotspots [n_pant].tipo = 4 + (resonators_on != 0);
-			rdx = (hotspots [n_pant].xy >> 4);
-			rdy = (hotspots [n_pant].xy & 15);
-			hotspot_x = rdx << 4;
-			hotspot_y = rdy << 4;
-			set_map_tile (rdx, rdy, 16 + hotspots [n_pant].tipo, 0);
+			set_hotspot (resonators_on ? 5 : 4);			
 		}
 				
 		if (resonators_on) paralyze_everyone ();
