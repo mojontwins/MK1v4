@@ -685,7 +685,7 @@ void move (void) {
 				}
 			#else
 				if ((gpy & 15) < 12)
-					if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
+					if (((gpx & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 						// Stop and adjust.
 						player.vy = 0;
 						gpy = (gpyy << 4) + 12; player.y = gpy << 6;
@@ -890,32 +890,27 @@ void move (void) {
 	gpx = player.x >> 6;
 	gpxx = gpx >> 4;
 	
-	if (player.vx + ptgmx < 0) {
-		if (
-			#if !defined PLAYER_MOGGY_STYLE && defined SHORT_PLAYER
-				(gpy & 15) < 8 &&
-			#endif
-			attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)
-		) {
-			// Stop and adjust
-			player.vx = 0;
-			gpxx ++; 
-			// gpx = gpxx << 4; player.x = gpx << 6;
-			adjust_to_tile_x ();
+	#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+		if (player.vx + ptgmx < 0) {
+			if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
+				player.vx = 0; gpxx ++; adjust_to_tile_x ();
+			}
+		} else {
+			if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
+				player.vx = 0; adjust_to_tile_x ();
+			}
 		}
-	} else {
-		if (
-			#if !defined PLAYER_MOGGY_STYLE && defined SHORT_PLAYER
-				(gpy & 15) < 8 &&
-			#endif
-			attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)
-		) {
-			// Stop and adjust
-			player.vx = 0;
-			// gpx = gpxx << 4; player.x = gpx << 6;
-			adjust_to_tile_x ();
+	#else
+		if (player.vx + ptgmx < 0 && (gpx & 15) < 12) {
+			if ( ((gpy & 15) < 8 && attr (gpxx, gpyy) & 8) || ((gpy & 15) && attr (gpxx, gpyy + 1) & 8)) {
+				player.vx = 0; gpxx ++; gpx = (gpxx << 4) - 4; player.x = gpx << 6;
+			}
+		} else if ((gpx & 15) >= 4)	{
+			if ( ((gpy & 15) < 8 && attr (gpxx + 1, gpyy) & 8) || ((gpy & 15) && attr (gpxx + 1, gpyy + 1) & 8)) {
+				player.vx = 0; gpx = (gpxx << 4) + 4; player.x = gpx << 6;
+			}
 		}
-	}
+	#endif
 	
 	// Shooting engine:
 	
