@@ -472,11 +472,13 @@ void player_flicker (void) {
 			}
 
 			// Detect breakable
-			if (s_frame > 2 && s_frame < 6) {
-				_x = s_hit_x >> 4;
-				_y = s_hit_y >> 4;
-				if (attr (_x, _y) & 32) add_to_breakables ();
-			}
+			#ifdef ENABLE_BREAKABLE
+				if (s_frame > 2 && s_frame < 6) {
+					_x = s_hit_x >> 4;
+					_y = s_hit_y >> 4;
+					if (attr (_x, _y) & 32) add_to_breakables ();
+				}
+			#endif
 
 			s_frame ++;
 			if (s_frame == 9) s_on = 0;
@@ -857,9 +859,12 @@ void move (void) {
 	// Sword
 	#ifdef ENABLE_SWORD
 		if (s_on == 0 && (pad0 & sp_FIRE) == 0) {
-			if ((pad0 & sp_UP) == 0) {
-				s_type = SWORD_TYPE_UP;
-			} else s_type = player.facing;
+			#ifdef SWORD_UP
+				if ((pad0 & sp_UP) == 0) {
+					s_type = SWORD_TYPE_UP;
+				} else 
+			#endif
+			s_type = player.facing;
 
 			s_on = 1;
 			s_frame = 0;
@@ -2047,28 +2052,33 @@ void mueve_bicharracos (void) {
 							jp  c, _enems_hit_sword_done
 					#endasm
 					{	
-						// Hit!
-						play_sfx (2);
-
-						#ifdef SWORD_PARALYZES
-							en_an_state [enit] = ENEM_PARALYZED;
-							en_an_count [enit] = SWORD_PARALYZES;
+						#ifdef PLAYER_MIN_KILLABLE
+							if (_en_t >= PLAYER_MIN_KILLABLE)
 						#endif
+						{
+							// Hit!
+							play_sfx (2);
 
-						// Kill?
-						#if SWORD_LINEAL_DAMAGE > 0
-							if (_en_t < 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
-						#endif
+							#ifdef SWORD_PARALYZES
+								en_an_state [enit] = ENEM_PARALYZED;
+								en_an_count [enit] = SWORD_PARALYZES;
+							#endif
 
-						#if SWORD_FLYING_DAMAGE > 0
-							if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-						#endif
+							// Kill?
+							#if SWORD_LINEAL_DAMAGE > 0
+								if (_en_t < 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+							#endif
 
-						#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-							if (_en_life == 0) {
-								enems_kill ();
-							}
-						#endif
+							#if SWORD_FLYING_DAMAGE > 0
+								if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
+							#endif
+
+							#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
+								if (_en_life == 0) {
+									enems_kill ();
+								}
+							#endif
+						}
 					}
 					#asm
 						._enems_hit_sword_done

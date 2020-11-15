@@ -110,10 +110,10 @@
 // Sword
 // -----
 
-//#define ENABLE_SWORD 					// Let the player swing a sword
+#define ENABLE_SWORD 					// Let the player swing a sword
 //#define SWORD_UP 						// Can hit upwards
-//#define SWORD_LINEAL_DAMAGE	0		// Damage to linear.
-//#define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
+#define SWORD_LINEAL_DAMAGE	1			// Damage to linear.
+#define SWORD_FLYING_DAMAGE 	0		// Damage to flying.
 //#define SWORD_PARALYZES		32		// If defined, paralyze for N frames
 
 // Breakable
@@ -196,7 +196,7 @@
 //#define JETPAC_DRAIN_RATIO	3		// Drain 1 each X frames.
 //#define JETPAC_DRAIN_OFFSET	8		// Drain after X frames.
 //#define PLAYER_KILLS_ENEMIES		  	// If defined, stepping on enemies kills them
-//#define PLAYER_MIN_KILLABLE 	3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
+#define PLAYER_MIN_KILLABLE 	3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 
 
 // ============================================================================

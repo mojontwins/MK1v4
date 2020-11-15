@@ -4,44 +4,108 @@
 		"selected_items":
 		[
 			[
-				"extra_enem",
-				"extra_enems_init\t(custom.h)"
+				"hotspot",
+				"hotspot_x\tabc"
 			],
 			[
-				"scene",
-				"scenery_info.make_type_6\t(config.h)"
+				"play",
+				"play_sfx\t(engine.h)"
 			],
 			[
-				"sp_u",
-				"sp_UpdateNow\t(engine.h)"
+				"resona",
+				"resonators_on\tabc"
 			],
 			[
-				"ENABLE",
-				"ENABLE_FRIGOABABOL\tabc"
+				"res",
+				"restore_everyone\tabc"
 			],
 			[
-				"ENAB",
-				"ENABLE_FRIGOABABOL\tabc"
+				"restore",
+				"restore_everyone\tabc"
 			],
 			[
-				"ct",
-				"ct_estado\tabc"
+				"paray",
+				"paralyze_everyone\tabc"
 			],
 			[
-				"EST_",
-				"EST_FRIGOABABOL\t(definitions.h)"
+				"reson",
+				"resonators_on\tabc"
 			],
 			[
-				"FRIGO_ENE",
-				"FRIGO_ENEMIES_FREEZE\t(diario.md)"
+				"ENE",
+				"ENEMIES_MAY_DIE\tabc"
 			],
 			[
-				"ENABL",
-				"ENABLE_PERSISTENCE\tabc"
+				"BREA",
+				"BREAKABLE_ERASE_TILE\tabc"
 			],
 			[
-				"PERSIS",
-				"PERSIST_BASE\tabc"
+				"BREAKABLE_S",
+				"BREAKABLE_SPAWN_TILE\t(diario.md)"
+			],
+			[
+				"BREAKABLE_",
+				"BREAKABLE_SPAWN_CHANCE\t(diario.md)"
+			],
+			[
+				"proce",
+				"process_breakable\tabc"
+			],
+			[
+				"MAX_BREA",
+				"MAX_BREAKABLE_FRAMES\t(diario.md)"
+			],
+			[
+				"BREAKA",
+				"BREAKABLE_ERASE_TILE\tabc"
+			],
+			[
+				"MAX_",
+				"MAX_BREAKABLE\tabc"
+			],
+			[
+				"MAX_BRE",
+				"MAX_BREAKABLE_FRAMES\t(diario.md)"
+			],
+			[
+				"nex",
+				"next_frame\tabc"
+			],
+			[
+				"ENEM",
+				"ENEM_PARALYZED\tabc"
+			],
+			[
+				"ENEMIES_",
+				"ENEMIES_MAY_DIE\tabc"
+			],
+			[
+				"SWORD_TYP",
+				"SWORD_TYPE_UP\tabc"
+			],
+			[
+				"VIR",
+				"VIEWPORT_X\tabc"
+			],
+			[
+				"sprite",
+				"sprite_sword\tabc"
+			],
+			[
+				"swor",
+				"sprite_sword\tabc"
+			],
+			[
+				"STA",
+				"STACK_ADDR\t(churromain.c)"
+			],
+			[
+				"STACK",
+				"STACK_ADDR\tabc"
+			],
+			[
+				"redraw",
+				"redraw_after_text\tabc"
 			],
 			[
 				"VIEW",
@@ -450,164 +514,61 @@
 			[
 				"usuariosEncontradosReser",
 				"usuariosEncontradosReservadosGUIA"
-			],
-			[
-				"marcaUid",
-				"marcarUidGUIA"
-			],
-			[
-				"fadeout",
-				"fade_out_bucle"
-			],
-			[
-				"in",
-				"in_KeyPressed"
-			],
-			[
-				"use_pla",
-				"use_placement_x"
-			],
-			[
-				"music",
-				"music_play"
-			],
-			[
-				"PLA",
-				"PLAYER_VX_MIN"
-			],
-			[
-				"pobjs",
-				"pobjs_starter"
-			],
-			[
-				"ppu",
-				"ppu_wait_nmi"
-			],
-			[
-				"gp",
-				"gp_addr"
-			],
-			[
-				"PLAYER",
-				"PLAYER_VY_JUMP_MAX"
-			],
-			[
-				"PLAY",
-				"PLAYER_VY_FALLING_MAX"
-			],
-			[
-				"sp_",
-				"sp_PrintAtInv"
-			],
-			[
-				"TWO_SETS",
-				"TWO_SETS_MAPPED"
-			],
-			[
-				"TWO_SET",
-				"TWO_SETS_SEL"
-			],
-			[
-				"PSGSFX",
-				"PSGSFXPlay"
-			],
-			[
-				"PSG",
-				"PSGSFXPlay"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "docs/manual.md",
+			"file": "examples/helmet/dev/comp.bat",
 			"settings":
 			{
-				"buffer_size": 77750,
+				"buffer_size": 1183,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/dev/churromain.c",
+			"file": "examples/helmet/dev/config.h",
 			"settings":
 			{
-				"buffer_size": 1962,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "docs/README.md",
-			"settings":
-			{
-				"buffer_size": 32,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/dev/config.h",
-			"settings":
-			{
-				"buffer_size": 15463,
+				"buffer_size": 15598,
 				"encoding": "Western (Windows 1252)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "examples/limite/script/script.spt",
+			"file": "examples/helmet/dev/engine.h",
 			"settings":
 			{
-				"buffer_size": 309,
+				"buffer_size": 51960,
+				"encoding": "Western (Windows 1252)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/D/Google Drive/Maritrini/dev/Speccy/MK1/Trabajo Basura/script/tb.spt",
+			"file": "examples/helmet/dev/enems.h",
 			"settings":
 			{
-				"buffer_size": 647,
+				"buffer_size": 9031,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/dev/custom.h",
+			"file": "examples/helmet/dev/custom.h",
 			"settings":
 			{
-				"buffer_size": 437,
+				"buffer_size": 678,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/dev/definitions.h",
+			"file": "examples/helmet/dev/mainloop.h",
 			"settings":
 			{
-				"buffer_size": 7158,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/dev/mainloop.h",
-			"settings":
-			{
-				"buffer_size": 15395,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/dev/engine.h",
-			"settings":
-			{
-				"buffer_size": 52554,
-				"encoding": "Western (Windows 1252)",
+				"buffer_size": 15357,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
@@ -688,59 +649,68 @@
 	},
 	"expanded_folders":
 	[
-		"/D/git/MK1",
-		"/D/git/MK1/docs",
-		"/D/git/MK1/env",
-		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/limite",
-		"/D/git/MK1/examples/limite/script",
-		"/D/git/MK1/src",
-		"/D/git/MK1/src/dev",
-		"/D/git/MK1/src/utils"
+		"/C/git/mk1",
+		"/C/git/mk1/examples",
+		"/C/git/mk1/examples/helmet",
+		"/C/git/mk1/examples/helmet/dev",
+		"/C/git/mk1/examples/helmet/gfx"
 	],
 	"file_history":
 	[
-		"/D/Proyectos/2020/20201110a - Entrega Ficheros Junta 1.5.0.0/instrucciones.txt",
-		"/D/git/MK1/src/utils/ene2h.bas",
-		"/D/git/MK1/examples/limite/dev/engine.h",
-		"/D/git/MK1/examples/limite/dev/boxes.h",
-		"/D/git/MK1/examples/ramiro3/dev/pantallas.h",
-		"/D/git/MK1/examples/ramiro3/dev/boxes.h",
-		"/D/git/MK1/src/dev/config.h",
-		"/D/git/MK1/src/dev/engine.h",
-		"/D/git/MK1/src/dev/custom.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/engine.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/custom.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/config.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/definitions.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/mainloop.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/extrasprites.h",
-		"/D/git/MK1/examples/ababol2_demo/diario.md",
-		"/D/git/MK1/examples/ababol2_demo/dev/boxes.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/comp.bat",
-		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Sir Ababol 2/128K/dev/engine.h",
-		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Sir Ababol 2/128K/dev/config.h",
-		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Sir Ababol 2/128K/dev/menu.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/churromain.c",
-		"/D/git/MK1/examples/ababol2_demo/dev/printer.h",
-		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Sir Ababol 2/128K/dev/sprites-extra.h",
-		"/D/git/MK1/examples/limite/dev/mainloop.h",
-		"/D/git/MK1/examples/limite/dev/msc.h",
+		"/C/cosas/speccy_vault/MK1/Dist/Churrera3.99.1/dev/engine.h",
+		"/C/git/mk1/examples/helmet/dev/boxes.h",
+		"/C/git/mk1/examples/perils/music/music.asm",
+		"/C/git/mk1/examples/perils/dev/music.h",
+		"/C/git/mk1/examples/perils/README.md",
+		"/C/git/mk1/examples/perils/dev/engine.h",
+		"/C/git/mk1/examples/perils/dev/config.h",
+		"/C/git/mk1/examples/perils/dev/custom.h",
+		"/C/git/mk1/examples/perils/dev/beeper.h",
+		"/C/git/mk1/examples/perils/dev/definitions.h",
+		"/C/git/mk1/wip/helmet.md",
+		"/C/git/mk1/examples/ababol2_demo/diario.md",
+		"/C/git/mk1/examples/ababol2_demo/dev/mainloop.h",
+		"/C/git/mk1/examples/ababol2_demo/dev/engine.h",
+		"/C/git/mk1/examples/ababol2_demo/dev/config.h",
+		"/C/git/mk1/examples/ababol2_demo/dev/definitions.h",
+		"/C/git/mk1/src/dev/config.h",
+		"/C/git/mk1/src/dev/engine.h",
+		"/C/git/mk1/examples/ababol2_demo/dev/extrasprites.h",
+		"/C/git/mk1/examples/ababol2_demo/dev/enems.h",
+		"/C/git/mk1/examples/ababol2_demo/utils/ene2h.bas",
+		"/C/git/mk1/examples/ababol2_demo/dev/churromain.c",
+		"/C/git/MK1_Pestecera/src/dev/assets/spriteset_mappings.h",
+		"/C/git/mk1/examples/ababol2_demo/dev/comp.bat",
+		"/C/git/MK1_Pestecera/src/dev/assets/sprites.h",
+		"/C/git/mk1/examples/limite/script/script.spt",
+		"/C/git/mk1/examples/limite/dev/boxes.h",
+		"/C/git/mk1/examples/limite/dev/msc.h",
+		"/C/git/mk1/examples/ababol2_demo/utils/sprcnvbin8.bas",
+		"/C/git/mk1/examples/ramiro4/utils/msc.bas",
+		"/C/git/mk1/examples/ababol2_demo/dev/diario.md",
+		"/C/cosas/speccy_vault/MK1/Dist/Churrera3.99.99/script/msc.bas",
+		"/C/git/mk1/examples/limite/dev/config.h",
+		"/C/cosas/speccy_vault/MK1/Sir Ababol 2/128K/dev/config.h",
+		"/C/git/mk1/examples/ababol2_demo/utils/mapcnv.bas",
+		"/C/git/mk1/examples/ababol2_demo/README.md",
+		"/C/git/mk1/examples/ababol2_demo/dev/mapa.h",
 		"/C/git/mk1/examples/ramiro4/diario.md",
-		"/C/git/mk1/examples/ramiro4/script/script.spt",
-		"/C/git/mk1/examples/ramiro4/dev/msc_extern.h",
-		"/C/git/mk1/examples/ramiro4/dev/config.h",
 		"/C/git/mk1/examples/ramiro4/dev/mainloop.h",
-		"/C/git/mk1/examples/ramiro4/dev/custom.h",
-		"/C/git/mk1/examples/ramiro4/dev/msc.h",
-		"/C/git/mk1/examples/ramiro4/dev/engine.h",
 		"/C/git/mk1/examples/ramiro4/dev/definitions.h",
+		"/C/git/mk1/examples/ramiro4/dev/pantallas.h",
+		"/C/git/mk1/examples/ramiro4/dev/churromain.c",
+		"/C/git/mk1/examples/ramiro4/dev/custom.h",
+		"/C/git/mk1/examples/ramiro4/dev/msc_extern.h",
+		"/C/git/mk1/examples/ramiro4/dev/isr.h",
+		"/C/git/mk1/examples/ramiro4/dev/ramiro4.map",
+		"/C/git/mk1/examples/ramiro4/dev/beeper.h",
+		"/C/git/mk1/examples/ramiro4/dev/boxes.h",
+		"/C/git/mk1/examples/ramiro4/dev/engine.h",
+		"/C/git/mk1/examples/ramiro4/dev/msc.h",
+		"/C/git/mk1/examples/ramiro4/dev/config.h",
+		"/C/git/mk1/examples/ramiro4/script/script.spt",
 		"/C/z88dk10-orig/include/spritepack.h",
 		"/C/git/mk1/examples/ramiro4/dev/printer.h",
-		"/C/git/mk1/examples/ramiro4/dev/ramiro4.map",
-		"/C/git/mk1/examples/ramiro4/dev/churromain.c",
-		"/C/git/mk1/examples/ramiro4/dev/pantallas.h",
-		"/C/git/mk1/examples/ramiro4/utils/msc.bas",
 		"/C/git/mk1/examples/limite/dev/printer.h",
 		"/C/git/mk1/examples/ramiro3/dev/engine.h",
 		"/C/git/mk1/examples/ramiro3/dev/config.h",
@@ -772,6 +742,9 @@
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/engine.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/config.h",
 		"/D/git/MK1/examples/ramiro3/dev/config.h",
+		"/D/git/MK1/examples/limite/dev/mainloop.h",
+		"/D/git/MK1/examples/limite/dev/engine.h",
+		"/D/git/MK1/examples/limite/dev/boxes.h",
 		"/D/git/MK1/examples/limite/dev/comp.bat",
 		"/D/git/MK1/src/dev/comp.bat",
 		"/D/git/MK1/examples/limite/dev/config.h",
@@ -779,7 +752,9 @@
 		"/D/git/MK1/examples/limite/README.md",
 		"/D/git/MK1/examples/limite/dev/msc_extern.h",
 		"/D/git/MK1/examples/limite/dev/msc-config.h",
+		"/D/git/MK1/src/dev/config.h",
 		"/D/git/MK1/src/dev/mainloop.h",
+		"/D/git/MK1/src/dev/engine.h",
 		"/D/git/MK1/src/dev/definitions.h",
 		"/C/Users/jcastano/AppData/Local/Temp/7zO007686FB/config.h",
 		"/C/Users/jcastano/AppData/Local/Temp/7zO0072EE77/tileset.h",
@@ -809,36 +784,18 @@
 		"/D/Proyectos/2020/20200917g - Banner 'MiCuenta' en Webmail/instrucciones.txt",
 		"/D/Proyectos/CIs.txt",
 		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/skins/larry_sandetel/includes/appbar.html",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/sandetel/sandetel.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/config/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/sts-php-client-lib/autoloader.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/proxy.php",
-		"/C/Users/jcastano/AppData/Local/Temp/7zO49E6BE8A/log_20200924.log",
-		"/D/Proyectos/remote/desccobuz05/sftp-config.json",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/lib/Roundcube/rcube_user.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/sandetel_login/sandetel_login.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/new_user_identity/new_user_identity.php",
-		"/D/Proyectos/remote/desccobuz05/diario.md",
-		"/D/Proyectos/2020/20200813a - Redirecciones a multidominio en filtros Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/lib/Roundcube/rcube_sandetel.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/rc_smime/rc_smime.js",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/rc_smime/README.md",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/rc_smime/rc_smime.php",
-		"/D/Proyectos/2020/20200715a- Webmail - configuración plugin Enigma/instrucciones_desactivar.txt",
-		"/D/Proyectos/2020/20200807 - Agendas de .edu con errores/agendas.sql",
-		"/D/Proyectos/2020/20200715a- Webmail - configuración plugin Enigma/instrucciones.txt",
-		"/C/Users/jcastano/AppData/Local/Temp/7zO8C6D382B/printer.h"
+		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/sandetel/sandetel.php"
 	],
 	"find":
 	{
-		"height": 48.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
 		"height": 128.0,
 		"where_history":
 		[
-			"D:\\git\\MK1\\src",
+			"C:\\git\\mk1\\examples\\limite\\dev",
 			"C:\\git\\mk1\\examples\\ramiro4\\dev",
 			"C:\\git\\mk1\\examples\\ramiro3\\dev",
 			"D:\\git\\MK1\\examples\\ramiro3\\dev",
@@ -973,40 +930,75 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"OBJECT_COUNT",
-			"OBJECTS_ON_VAR",
-			"NP_RX",
-			"1.20171003",
-			"TOTAL_SCREENS",
-			"spriteset",
-			"juego",
-			"la carpeta",
-			"juego",
-			"enems_kill",
-			"enoffs + enit",
+			"push_boxes",
+			"hotspot",
+			"hotspots",
 			"rdi",
-			"persiste",
-			"draw_scr",
-			"collide_enem",
-			"flags",
-			"allow_type_6",
-			"sight_dis",
-			"player_flicker",
-			"est_frigo",
-			"p_life",
-			"player_kills_enemies",
-			"enems_kill",
-			"slipper",
-			"player.rx",
-			"frame",
-			"ct_estado",
-			"EST_NORMAL",
-			"rdi",
-			"rda",
-			"get_coin",
-			"breakable",
-			"draw_scr",
-			"boxes",
+			"hotspots",
+			".type",
+			"en_an_count",
+			"af,af'",
+			"EI",
+			"di",
+			"border",
+			" defb",
+			"([A-Za-z0-9_]+):",
+			"^             ",
+			"EI",
+			"border",
+			"([A-Za-z0-9_]+):",
+			"^             ",
+			"add_to_breakables",
+			"bullets",
+			"sword",
+			"init_breakab",
+			"init",
+			"sword",
+			"player.next_frame = ",
+			"PLAYER_CAN_FIRE",
+			"en_life",
+			"sword",
+			"en_an_state",
+			"enems_hit_sword_hit_done",
+			"s_",
+			"gp",
+			"hotspot_",
+			"_hotspots_done",
+			"enable_sword",
+			"player.current_",
+			"can_fire",
+			"s_on",
+			"flick",
+			"sword_cells",
+			"swing_sword",
+			"fire",
+			"return",
+			"sp_",
+			"sword",
+			"swording",
+			"d0",
+			"max_screens",
+			"COUNT_KILLABLE_ON",
+			"script",
+			"coins",
+			"obje",
+			"packed",
+			"ending",
+			"play_sfx",
+			"da48",
+			"updatenow",
+			"ei",
+			"peta_el_",
+			"peta_el_beeper",
+			"@",
+			"show_text_box",
+			"sc_res",
+			"run_script",
+			"sc_res",
+			"script_result",
+			"241",
+			"win",
+			"trim",
 			"&HE1",
 			"pinv",
 			"frame_counter",
@@ -1065,56 +1057,26 @@
 			"msie",
 			"upload_file_consigna",
 			"sts-php-client",
-			"error",
-			"insert_identity",
-			"get_signature",
-			"    ",
-			"La",
-			"localdomain",
-			"juntadeandalucia",
-			"juntadeandal",
-			"Crupt_gpg",
-			"mcrypt_create_iv",
-			"import",
-			"importing GPG file",
-			"Unknown error importing GPG ke",
-			"new crypt_gpg",
-			"cryptgpg",
-			"this->homedir",
-			"$homedir",
-			"enigma_pgp_homedir",
-			"vol31",
-			"redirectema",
-			"redirect",
-			"userinfo",
-			":",
-			"-",
-			"[",
-			"%20",
-			"passCaducado",
-			"passcaducado",
-			"ldap_search",
-			"getimagesize",
-			"list_",
-			"refina sus",
-			"organismo",
-			"facturacion",
-			"admin",
-			"facturacion"
+			"error"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
-			"2.20201113-v4",
-			"güego",
-			"el directorio",
-			"güego",
-			"enoffsmasi",
-			"enit",
-			"rdi",
+			"af,af",
+			"defb",
+			".\\1",
+			"        ",
+			".\\1",
+			"        ",
+			"enems_hit_sword_done",
+			"s_hit_",
+			"s_",
+			"_en_",
+			"_enems_sword_hit_done",
+			"play_sfx",
 			"ptg",
 			" ptg",
 			" ",
@@ -1230,12 +1192,7 @@
 			"DB",
 			"$patata",
 			"bookmarks",
-			"empty",
-			"is_empty",
-			"bookmarks",
-			"BOOKMARK",
-			"bookmark",
-			"BOOKMARK"
+			"empty"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1246,196 +1203,29 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "docs/manual.md",
+					"file": "examples/helmet/dev/comp.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 77750,
+						"buffer_size": 1183,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								75665,
-								75665
+								26,
+								26
 							]
 						],
 						"settings":
 						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 19634.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/dev/churromain.c",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1962,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								653,
-								631
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/C Improved/C Improved.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "docs/README.md",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 32,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								32,
-								32
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 1,
-			"sheets":
-			[
-				{
-					"buffer": 3,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"default_dir": "D:\\git\\MK1",
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/dev/config.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15463,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								13964,
-								12942
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2291.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "examples/limite/script/script.spt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 309,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								201,
-								211
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1445,171 +1235,168 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "/D/Google Drive/Maritrini/dev/Speccy/MK1/Trabajo Basura/script/tb.spt",
+					"buffer": 1,
+					"file": "examples/helmet/dev/config.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 647,
+						"buffer_size": 15598,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								4543,
+								4558
 							]
 						],
 						"settings":
 						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/dev/custom.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 437,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								428,
-								318
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": 26.0,
+						"translation.y": 938.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "src/dev/definitions.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7158,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1434,
-								1434
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 266.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/dev/mainloop.h",
+					"buffer": 2,
+					"file": "examples/helmet/dev/engine.h",
 					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 15395,
+						"buffer_size": 51960,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3953,
-								3964
+								18631,
+								18641
 							]
 						],
 						"settings":
 						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 40.0,
+						"translation.y": 10602.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "examples/helmet/dev/enems.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9031,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7942,
+								7942
+							]
+						],
+						"settings":
+						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2135.0,
+						"translation.y": 4602.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "src/dev/engine.h",
+					"buffer": 4,
+					"file": "examples/helmet/dev/custom.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 52554,
+						"buffer_size": 678,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15286,
-								15292
+								450,
+								450
 							]
 						],
 						"settings":
 						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 9220.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
 					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "examples/helmet/dev/mainloop.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15357,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4519,
+								4519
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2628.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"file": "examples/helmet/gfx/work.png",
+					"semi_transient": true,
+					"stack_index": 5,
+					"type": "image"
 				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -1635,7 +1422,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.628019323671,
 			1.0
 		],
 		"rows":
@@ -1665,7 +1452,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 88.0
+		"height": 74.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1707,7 +1494,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 235.0,
+	"side_bar_width": 134.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

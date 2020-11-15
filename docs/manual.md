@@ -791,6 +791,8 @@ Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo qu
 
 * `SWORD_PARALYZES` (opcional): Si se define, la espada paralizará al enemigo que golpea durante N cuadros de juego.
 
+Si queremos controlar a qué enemigos afectará la espada, podemos usar `PLAYER_MIN_KILLABLE` (ver más adelante).
+
 ### Tiles que se rompen
 
 Si se activa este motor, los tiles de comportamiento `& 32` se podrán romper. Los tiles se rompen con un solo golpe de espada o un solo disparo, no hay posibilidad de configurar un número de golpes como en las versiones 3.99.x o 5.x+.
@@ -1008,7 +1010,7 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 * `PLAYER_KILLS_ENEMIES`: Se puede saltar sobre los enemigos para matarlos.
 
-* `PLAYER_MIN_KILLABLE`: se usa con `PLAYER_KILLS_ENEMIES`: Solo matar a los enemigos con id >= a este valor.
+* `PLAYER_MIN_KILLABLE`: se usa con `PLAYER_KILLS_ENEMIES` o con `ENABLE_SWORD`: Solo matar a los enemigos con id >= a este valor.
 
 ## Configuración de la pantalla
 
