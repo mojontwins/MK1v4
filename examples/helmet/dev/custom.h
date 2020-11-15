@@ -1,6 +1,17 @@
 // MTE MK1 v4.8
 // Copyleft 2010, 2011, 2020 by The Mojon Twins
 
+unsigned char map_behaviours [] = {
+	1, 1, 0, 0, 0, 0, 0, 0, 
+	1, 1, 0, 0, 0, 0, 0, 0,
+	1, 1, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0	
+};
+
 // Add here your custom routines & vars
 
 #ifdef ENABLE_CODE_HOOKS

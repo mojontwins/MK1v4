@@ -10,12 +10,12 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W					6		//
-#define MAP_H					5		// Map dimmensions in screens
-#define TOTAL_SCREENS			30		// 
-#define SCR_INICIO				24		// Initial screen
+#define MAP_W					8		//
+#define MAP_H					8		// Map dimmensions in screens
+#define TOTAL_SCREENS			64		// 
+#define SCR_INICIO				16		// Initial screen
 #define PLAYER_INI_X			2		//
-#define PLAYER_INI_Y			2		// Initial tile coordinates
+#define PLAYER_INI_Y			8		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X			99		//
 //#define PLAYER_FIN_Y			99		// Player tile coordinates to finish game
@@ -41,7 +41,7 @@
 // General directives:
 // -------------------
 
-//#define DIRECT_TO_PLAY				// If defined, title screen is also the game frame.
+#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
 //#define DEACTIVATE_KEYS				// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS			// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT				// If defined, only one object can be carried at a time.
@@ -87,7 +87,8 @@
 // Boxes engine
 // ------------
 
-//#define PLAYER_PUSH_BOXES 			// If defined, tile #14 is pushable
+#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
+#define PUSH_OVER_FLOOR 				// Must be on floor to push
 //#define FALLING_BOXES					// If defined, boxes can fall off ledges.
 //#define FALLING_BOXES_SPEED 	4		// Boxes fall every nth frame.
 //#define ENEMIES_BLOCK_BOXES			// If defined, you can't push a box if it collides an enemy
@@ -261,8 +262,8 @@
 #define NO_MAX_ENEMS					// Less than 3 enems in some screens
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 //#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
-//#define TWO_SETS_REAL 				// Tiles have their real value in map_buff
-//#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
+#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
+#define TWO_SETS_CONDITION	((map_behaviours [n_pant] & 1) ? 32 : 0)	// Must return 32 if second tileset is active, 0 otherwise.
 
 // ============================================================================
 // IV. Player movement configuration
@@ -314,9 +315,9 @@
 	#if defined TWO_SETS || defined TWO_SETS_REAL
 		// Fill this array for dual tileset maps.
 		unsigned char comportamiento_tiles [] = {
-			0, 3, 3, 3, 3, 3, 8, 8, 8, 8, 4, 3, 3, 0, 3, 4,
-			8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
-			0, 0, 8, 8, 1, 0, 0, 8, 8, 8, 4, 0, 0, 0, 0, 4	
+			0, 8, 8, 8, 8, 0, 0, 0, 4, 4, 0, 0, 0, 8, 8, 8,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
+			0, 0, 0, 0, 4, 4, 4, 4, 0, 4, 0, 0, 0, 8, 8, 8,
 		};
 	#else
 		// Fill this array for normal, packed maps. The second row

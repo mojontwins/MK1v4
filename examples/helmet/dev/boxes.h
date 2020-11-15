@@ -19,6 +19,10 @@
 
 		if (qtile (x0, y0) != 14 || attr (x1, y1) >= 4)
 			return 0;
+
+		#ifdef PUSH_OVER_FLOOR
+			if (attr (x1, y1+1) == 0) return 0;
+		#endif
 			
 		return 1;
 	}
