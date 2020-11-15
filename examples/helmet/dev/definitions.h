@@ -27,6 +27,9 @@
 #define MAX_FALLING_BOXES 	8
 #define MAX_BREAKABLE 		4
 
+#define WALL_LEFT 			1
+#define WALL_RIGHT 			2
+
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
 	int vx, vy; 										// 6, 8
@@ -265,6 +268,7 @@ int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
 unsigned char _x, _y, _t, _n;
+unsigned char wall;
 
 #if defined TWO_SETS || defined TWO_SETS_REAL
 	unsigned char tileoffset;
