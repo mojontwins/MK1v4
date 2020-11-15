@@ -13,7 +13,7 @@
 #define MAP_W					8		//
 #define MAP_H					8		// Map dimmensions in screens
 #define TOTAL_SCREENS			64		// 
-#define SCR_INICIO				16		// Initial screen
+#define SCR_INICIO				10//16		// Initial screen
 #define PLAYER_INI_X			2		//
 #define PLAYER_INI_Y			8		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -89,6 +89,8 @@
 
 #define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 #define PUSH_OVER_FLOOR 				// Must be on floor to push
+#define PUSH_AND_PULL 					// Use fire+LEFT/RIGHT to push/pull in side view
+#define PLAYER_GRAB_FRAME 		2		// Use with PUSH_AND_PULL, which frame 0-3.
 //#define FALLING_BOXES					// If defined, boxes can fall off ledges.
 //#define FALLING_BOXES_SPEED 	4		// Boxes fall every nth frame.
 //#define ENEMIES_BLOCK_BOXES			// If defined, you can't push a box if it collides an enemy
@@ -112,9 +114,11 @@
 
 #define ENABLE_SWORD 					// Let the player swing a sword
 //#define SWORD_UP 						// Can hit upwards
-#define SWORD_LINEAL_DAMAGE	1			// Damage to linear.
+#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
 #define SWORD_FLYING_DAMAGE 	0		// Damage to flying.
 //#define SWORD_PARALYZES		32		// If defined, paralyze for N frames
+#define SWORD_HIT_FRAME 		2		// Frame to render 0-3
+#define SWORD_STAB 				5		// Rather than swing, stab at height N
 
 // Breakable
 // ---------
@@ -187,6 +191,7 @@
 // ----------
 
 #define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
+#define SHORT_PLAYER 					// Bounding box 12x16
 //#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP				// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 //#define RAMIRO_HOP 					// press jump when reaching a type 4 platform to jump again 

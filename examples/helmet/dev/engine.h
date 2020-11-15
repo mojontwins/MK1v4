@@ -375,7 +375,7 @@ void cortina (void) {
 #endif
 
 #ifdef PLAYER_PUSH_BOXES
-	void move_tile (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char act) {
+	void move_tile (unsigned char act) {
 		set_map_tile (x0, y0, 0, 0);
 		set_map_tile (x1, y1, 14, 8);
 
@@ -454,12 +454,20 @@ void player_flicker (void) {
 	void swing_sword (void) {
 		if (s_on) {
 			if (s_type == SWORD_TYPE_UP) {
-				s_x = gpx + swoffs_y [s_frame];
+				#ifdef SWORD_STAB
+					s_x = gpx + SWORD_STAB;
+				#else
+					s_x = gpx + swoffs_y [s_frame];
+				#endif
 				s_y = gpy + 8 - swoffs_x [s_frame];
 				s_hit_x = s_x + 4;
 				s_hit_y = s_y;			
 			} else {
-				s_y = gpy + swoffs_y [s_frame]; 
+				#ifdef SWORD_STAB
+					s_y = gpy + SWORD_STAB;
+				#else
+					s_y = gpy + swoffs_y [s_frame]; 
+				#endif
 				s_hit_y = (s_y + 4);
 
 				if (s_type == SWORD_TYPE_LEFT) {
@@ -667,13 +675,23 @@ void move (void) {
 	rdj = (player.vy + ptgmy);
 	if (rdj) {
 		if (rdj < 0) { 			// Going up
-			if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
-				// Stop and adjust.
-				player.vy = 0;
-				gpyy ++;
-				adjust_to_tile_y ();
-				player.ceiling = 1;
-			}
+			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+				if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
+					// Stop and adjust.
+					player.vy = 0;
+					gpyy ++;
+					adjust_to_tile_y ();
+					player.ceiling = 1;
+				}
+			#else
+				if ((gpy & 15) < 12)
+					if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
+						// Stop and adjust.
+						player.vy = 0;
+						gpy = (gpyy << 4) + 12; player.y = gpy << 6;
+						player.ceiling = 1;
+					}
+			#endif
 		} else if ((gpy & 15) <= (player.vy >> 6) /*8*/) { 	// Going down
 			if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			{
@@ -772,6 +790,55 @@ void move (void) {
 	   x = x + vx
 	   vx = vx - rx
 	*/
+
+	// Push / pull boxes
+
+	#if defined PLAYER_PUSH_BOXES && defined PUSH_AND_PULL && !defined PLAYER_MOGGY_STYLE
+		player.grab_block = 0;
+
+		if ((pad0 & sp_FIRE) == 0 && player.possee) {
+			rdx = gpxx;
+			x0 = x1 = gpxx;
+			y0 = y1 = gpyy;
+			if (player.facing == 0) {				// Looking left
+				if ( 	
+					(gpx & 15) == 0 && 
+					qtile (gpxx - 1, gpyy) == 14
+				) {
+					player.grab_block = 1;
+					if ((pad0 & sp_LEFT) == 0) {
+						x0 = gpxx - 1; x1 = gpxx - 2;
+					} else if ((pad0 & sp_RIGHT) == 0 && attr (gpxx + 1, gpyy) == 0) {
+						x0 = gpxx - 1; x1 = gpxx; 
+						gpxx ++; gpx += 16; player.x += (16<<6); 
+					}
+					pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+				}
+			} else {								// Looking right
+				if ( 	
+					(gpx & 15) == 0 && 
+					qtile (gpxx + 1, gpyy) == 14
+				) {
+					player.grab_block = 1;
+					if ((pad0 & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) == 0) {
+						x0 = gpxx + 1; x1 = gpxx;
+						gpxx --; gpx -= 16; player.x -= (16<<6); 
+					} else if ((pad0 & sp_RIGHT) == 0) {
+						x0 = gpxx + 1; x1 = gpxx + 2; 
+					}
+					pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+				}
+			}
+
+			if (x0 != x1) {
+				if (can_move_box ()) move_tile (1);
+				else {
+					gpx = rdx << 4; player.x = gpx << 6;
+				}
+			}
+		}
+	#endif
+
 	#ifdef PLAYER_NO_INERTIA
 		if ((pad0 & sp_LEFT) == 0) player.vx = -PLAYER_CONST_V;
 		if ((pad0 & sp_RIGHT) == 0) player.vx = PLAYER_CONST_V;
@@ -824,7 +891,12 @@ void move (void) {
 	gpxx = gpx >> 4;
 	
 	if (player.vx + ptgmx < 0) {
-		if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
+		if (
+			#if !defined PLAYER_MOGGY_STYLE && defined SHORT_PLAYER
+				(gpy & 15) < 8 &&
+			#endif
+			attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)
+		) {
 			// Stop and adjust
 			player.vx = 0;
 			gpxx ++; 
@@ -832,7 +904,12 @@ void move (void) {
 			adjust_to_tile_x ();
 		}
 	} else {
-		if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
+		if (
+			#if !defined PLAYER_MOGGY_STYLE && defined SHORT_PLAYER
+				(gpy & 15) < 8 &&
+			#endif
+			attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)
+		) {
 			// Stop and adjust
 			player.vx = 0;
 			// gpx = gpxx << 4; player.x = gpx << 6;
@@ -892,7 +969,7 @@ void move (void) {
 	
 	// Pushing boxes (tile #14) engine
 
-	#ifdef PLAYER_PUSH_BOXES
+	#if defined PLAYER_PUSH_BOXES && !defined PUSH_AND_PULL
 		#ifdef PLAYER_MOGGY_STYLE
 			if ((pad0 & sp_FIRE) == 0)
 		#endif
@@ -902,23 +979,22 @@ void move (void) {
 				#ifdef PLAYER_MOGGY_STYLE
 					// Vertically, only when player.y is tile-aligned.
 					if ((gpy & 15) == 0) {
+						x0 = x1 = gpxx; 
 						if ((pad0 & sp_UP) == 0 && gpyy > 1) {
-						if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2)) {
-								move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
-							}
+							y0 = gpyy - 1; y1 = gpyy - 2;
+							if (can_move_box ()) move_tile (1);
+							
 							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
-									move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
-								}
+								x0 = x1 = gpxx + 1;
+								if (can_move_box ()) move_tile (1);
 							}
 						} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
-						if (can_move_box (gpxx, gpyy + 1, gpxx, gpyy + 2)) {
-								move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
-							}
+							y0 = gpyy + 1; y1 = gpyy + 2;
+							if (can_move_box ()) move_tile (1);
+							
 							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
-									move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
-								}	
+								x0 = x1 = gpxx + 1;
+								if (can_move_box ()) move_tile (1);
 							}
 						}
 					}
@@ -926,23 +1002,22 @@ void move (void) {
 
 				// Horizontally, only when player.x is tile-aligned.
 				if ((gpx & 15) == 0) {
+					y0 = y1 = gpyy; 
 					if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
-						if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
-							move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
-						}
+						x0 = gpxx + 1; x1 = gpxx + 2;
+						if (can_move_box ()) move_tile (1);
+						
 						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
-								move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
-							}
+							y0 = y1 = gpyy + 1;
+							if (can_move_box ()) move_tile (1);
 						}
 					} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
-						if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
-							move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
-						}
+						x0 = gpxx - 1; x1 = gpxx - 2;
+						if (can_move_box ()) move_tile (1);
+						
 						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
-								move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
-							}
+							y0 = y1 = gpyy + 1;
+							if (can_move_box ()) move_tile (1);
 						}
 					}	
 				}			
@@ -1059,12 +1134,13 @@ void move (void) {
 				ld  (_rdi), a
 			#endasm
 
-			if (
-				(0 == player.possee && 0 == player.gotten)
-				#ifdef ENABLE_SWORD
-					|| s_on
-				#endif
-			) {
+			#ifdef PUSH_AND_PULL
+				if (player.grab_block) rdd = PLAYER_GRAB_FRAME; else
+			#endif
+			#ifdef ENABLE_SWORD
+				if (s_on) rdd = SWORD_HIT_FRAME; else
+			#endif
+			if (0 == player.possee && 0 == player.gotten) {
 				rdd = 3;
 			} else {
 				if (

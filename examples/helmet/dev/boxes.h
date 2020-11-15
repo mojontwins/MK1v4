@@ -4,7 +4,7 @@
 #ifdef PLAYER_PUSH_BOXES
 	unsigned char boxx, boyy;
 
-	unsigned char can_move_box (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1) {
+	unsigned char can_move_box (void) {
 		#ifdef ENEMIES_BLOCK_BOXES	
 			boxx = x1 << 4; boyy = y1 << 4;
 			rdd = enoffs + MAX_ENEMS;
@@ -21,7 +21,8 @@
 			return 0;
 
 		#ifdef PUSH_OVER_FLOOR
-			if (attr (x1, y1+1) == 0) return 0;
+			if (attr (x1, y1 + 1) == 0) return 0;
+			if (qtile (x0, y0 - 1) == 14) return 0;
 		#endif
 			
 		return 1;
@@ -53,7 +54,7 @@
 					if (fallingboxbuffer [rdi].act) {
 						// Fall this box?
 						if (attr (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y + 1) < 4) {
-							move_tile (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y, fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y + 1, 0);
+							move_tile (0);
 							// Check for cascades! (box beneath?)
 							if (qtile (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1) == 14)
 								fall_box (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1);

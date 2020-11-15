@@ -779,6 +779,9 @@ Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo qu
 	//#define SWORD_LINEAL_DAMAGE	0		// Damage to linear.
 	//#define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
 	//#define SWORD_PARALYZES		32		// If defined, paralyze for N frames
+	//#define SWORD_HIT_FRAME 		2		// Frame to render 0-3
+	//#define SWORD_STAB 			3		// Rather than swing, stab at height N
+	
 ```
 
 * `ENABLE_SWORD` activa el motor de la espada.
@@ -790,6 +793,10 @@ Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo qu
 * `SWORD_FLYING_DAMAGE`: Cantidad de vida que se resta a los enemigos voladores al golpearlos. Puede ser 0 para no causarles daño.
 
 * `SWORD_PARALYZES` (opcional): Si se define, la espada paralizará al enemigo que golpea durante N cuadros de juego.
+
+* `SWORD_HIT_FRAME` usar este frame del jugador para la animación de golpear 0-3.
+
+* `SWORD_STAB` apuñalar en lugar de balancear la espada. La espada sale recta a una altura de N pixels desde la parte superior del sprite del jugador.
 
 Si queremos controlar a qué enemigos afectará la espada, podemos usar `PLAYER_MIN_KILLABLE` (ver más adelante).
 
