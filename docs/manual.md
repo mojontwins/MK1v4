@@ -505,7 +505,9 @@ Si activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas 
 
 * `void hook_init_game (void);` se ejecuta cada vez que empezamos una nueva partida. Sirve para inicializar valores antes de empezar a jugar.
 
-* `void hook_mainloop (void);` se ejecuta una vez cada cuadro de juego, justo antes de dibujarlo en pantalla.
+* `void hook_init_mainloop (void);` se ejecuta al principio del loop principal. Puede usarse (se diseñó) para añadir lógica que permita dividir un mapa en submapas (pantallas de interim, etc).
+
+* `void hook_mainloop (void);` se ejecuta en el loop principal, una vez cada cuadro de juego, justo antes de dibujarlo en pantalla.
 
 * `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los hotspots, pero antes de que nada sea visible.
 

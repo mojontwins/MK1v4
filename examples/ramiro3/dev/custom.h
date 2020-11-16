@@ -13,6 +13,9 @@
 	void hook_init_game (void) {
 	}
 
+	void hook_init_mainloop (void) {
+	}
+
 	void hook_mainloop (void) {
 	}
 

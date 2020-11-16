@@ -13,6 +13,9 @@
 	void hook_init_game (void) {
 	}
 
+	void hook_init_mainloop (void) {
+	}
+
 	void hook_mainloop (void) {
 		if (n_pant == 0 && gpy < 80) 
 			scenery_info.allow_type_6 = 1;

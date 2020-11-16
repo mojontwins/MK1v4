@@ -46,6 +46,9 @@ void set_hotspot (unsigned char hn) {
 		player_min_killable = 4;
 	}
 
+	void hook_init_mainloop (void) {
+	}
+
 	void hook_mainloop (void) {
 		if (latest_hotspot >= 4) {
 			// Check 

@@ -26,8 +26,8 @@
 #define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
-//#define ENABLE_CUSTOM_ENEMS 			// Hooks for custom enemies @ custom.h
+#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
+#define ENABLE_CUSTOM_ENEMS 			// Hooks for custom enemies @ custom.h
 
 // ============================================================================
 // II. Engine type
@@ -157,7 +157,7 @@
 // Miscellaneous fanty stuff
 // -------------------------
 
-//#define PLAYER_CAN_HIDE				// If defined, tile type 2 hides player.
+#define PLAYER_CAN_HIDE					// If defined, tile type 2 hides player.
 //#define RANDOM_RESPAWN				// If defined, automatic flying enemies spawn on killed enemies
 //#define USE_TYPE_6					// If defined, type 6 enemies are enabled.
 //#define USE_SIGHT_DISTANCE			// If defined, type 6 only pursue you within sight distance
@@ -320,7 +320,7 @@
 	#if defined TWO_SETS || defined TWO_SETS_REAL
 		// Fill this array for dual tileset maps.
 		unsigned char comportamiento_tiles [] = {
-			0, 8, 8, 8, 8, 0, 0, 0, 4, 4, 0, 0, 0, 8, 8, 8,
+			2, 8, 8, 8, 8, 0, 0, 0, 4, 6, 2, 0, 0, 8, 8, 8,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
 			0, 0, 0, 0, 4, 4, 4, 4, 0, 4, 0, 0, 0, 8, 8, 8,
 		};

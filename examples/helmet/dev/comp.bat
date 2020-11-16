@@ -8,6 +8,7 @@ echo Making %game%
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra  > nul
 ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 2 > nul
+..\utils\sprcnvbin8.exe ..\gfx\sprite_alarm.png sprite_alarm.bin 1 > nul
 ..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul

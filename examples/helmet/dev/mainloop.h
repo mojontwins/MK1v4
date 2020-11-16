@@ -173,7 +173,8 @@ void main (void) {
 			clear_persistent ();
 		#endif
 
-		on_pant = n_pant = SCR_INICIO;
+		n_pant = SCR_INICIO;
+		on_pant = 0xff;
 		maincounter = 0;
 		
 		#ifdef ACTIVATE_SCRIPTING		
@@ -191,8 +192,6 @@ void main (void) {
 		#ifdef ENABLE_CODE_HOOKS
 			hook_init_game ();
 		#endif
-		
-		draw_scr ();
 		
 		#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 			#ifdef SHOW_TOTAL
@@ -216,6 +215,15 @@ void main (void) {
 		objs_old = life_old = keys_old = killed_old = item_old = ezg_old = coins_old = 0xff;
 player.keys=1;
 		while (playing) {
+			#ifdef ENABLE_CODE_HOOKS
+				hook_init_mainloop ();
+			#endif
+
+			// Update SCR
+
+			if (n_pant != on_pant) {
+				draw_scr (); on_pant = n_pant;
+			}
 
 			// Update  HUD
 
@@ -556,10 +564,6 @@ player.keys=1;
 					}
 				#endif
 			#endif
-
-			if (n_pant != on_pant) {
-				draw_scr (); on_pant = n_pant;
-			}
 			
 			// Win game condition
 			

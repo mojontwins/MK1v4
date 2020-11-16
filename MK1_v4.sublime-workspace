@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"pad",
+				"pad_this_frame\tabc"
+			],
+			[
 				"extra_enem",
 				"extra_enems_init\t(custom.h)"
 			],
@@ -510,15 +514,39 @@
 			[
 				"PSGSFX",
 				"PSGSFXPlay"
-			],
-			[
-				"PSG",
-				"PSGSFXPlay"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "examples/helmet/dev/engine.h",
+			"settings":
+			{
+				"buffer_size": 56504,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "examples/helmet/dev/helmet.asm",
+			"settings":
+			{
+				"buffer_size": 211561,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "examples/helmet/trash/wipasm.asm",
+			"settings":
+			{
+				"buffer_size": 1475,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": ".vert_collision"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -597,24 +625,45 @@
 	"expanded_folders":
 	[
 		"/D/git/MK1",
-		"/D/git/MK1/docs",
-		"/D/git/MK1/env",
 		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/limite",
-		"/D/git/MK1/examples/limite/script",
-		"/D/git/MK1/src",
-		"/D/git/MK1/src/dev",
-		"/D/git/MK1/src/utils"
+		"/D/git/MK1/examples/helmet",
+		"/D/git/MK1/examples/helmet/dev",
+		"/D/git/MK1/examples/helmet/gfx",
+		"/D/git/MK1/examples/ramiro4",
+		"/D/git/MK1/examples/ramiro4/dev"
 	],
 	"file_history":
 	[
+		"/D/git/MK1/examples/helmet/dev/definitions.h",
+		"/D/git/MK1/examples/ramiro4/dev/custom.h",
+		"/D/git/MK1/examples/helmet/dev/engine.h",
+		"/D/git/MK1/examples/helmet/diario.md",
+		"/D/git/MK1/examples/helmet/dev/comp.bat",
+		"/D/git/MK1/examples/helmet/dev/churromain.c",
+		"/D/git/MK1/examples/helmet/dev/custom.h",
+		"/D/git/MK1/examples/helmet/dev/mainloop.h",
+		"/D/git/MK1/examples/helmet/dev/config.h",
+		"/D/git/MK1/examples/helmet/dev/sprites.h",
+		"/D/Proyectos/2020/20201029b - Actualización ldapUtil en Webservice Corporativo/instrucciones.txt",
+		"/D/Proyectos/2020/20201103a - Actualización Mi Cuenta 1.2.0.0/instrucciones.txt",
+		"/D/Proyectos/2020/20201103b - Actualización admdir 1.31.0.0/instrucciones.txt",
+		"/D/Proyectos/2020/20200917b - Anexo 3 - Mi Cuenta 1.1.0/instrucciones.txt",
+		"/C/Users/jcastano/Downloads/2020119122356473 instrucciones.txt",
+		"/C/Users/jcastano/AppData/Local/Temp/7zO0A8BA51D/login_inicial.jsp",
+		"/D/git/MK1/docs/manual.md",
+		"/D/git/MK1/examples/ramiro3/dev/custom.h",
+		"/D/git/MK1/examples/perils/dev/custom.h",
+		"/D/git/MK1/examples/limite/dev/custom.h",
+		"/D/git/MK1/examples/lalap/dev/custom.h",
+		"/D/git/MK1/examples/ababol2_demo/dev/custom.h",
+		"/D/git/MK1/src/dev/custom.h",
+		"/D/git/MK1/examples/helmet/dev/extrasprites.h",
+		"/D/git/MK1/examples/helmet/dev/printer.h",
 		"/D/git/MK1/src/dev/config.h",
 		"/D/git/MK1/examples/limite/script/script.spt",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/Trabajo Basura/script/tb.spt",
-		"/D/git/MK1/src/dev/custom.h",
 		"/D/git/MK1/src/dev/definitions.h",
 		"/D/git/MK1/src/dev/engine.h",
-		"/D/git/MK1/docs/manual.md",
 		"/D/git/MK1/docs/README.md",
 		"/D/Proyectos/remote/preccobuz01.sublime-project",
 		"/D/Proyectos/2020/20201110a - Entrega Ficheros Junta 1.5.0.0/instrucciones.txt",
@@ -624,7 +673,6 @@
 		"/D/git/MK1/examples/ramiro3/dev/pantallas.h",
 		"/D/git/MK1/examples/ramiro3/dev/boxes.h",
 		"/D/git/MK1/examples/ababol2_demo/dev/engine.h",
-		"/D/git/MK1/examples/ababol2_demo/dev/custom.h",
 		"/D/git/MK1/examples/ababol2_demo/dev/config.h",
 		"/D/git/MK1/examples/ababol2_demo/dev/definitions.h",
 		"/D/git/MK1/examples/ababol2_demo/dev/mainloop.h",
@@ -713,29 +761,7 @@
 		"/D/git/MK1/churrera_4.txt",
 		"/D/git/MK1/src/enems/readme.md",
 		"/D/git/MK1/src/enems/ponedor.bat",
-		"/C/Users/jcastano/Desktop/mangel.vicente.ext.ldif",
-		"/C/Users/jcastano/Desktop/manuel.gonzalez.marquez.ext.ldif",
-		"/C/Users/jcastano/Desktop/carlos.fuentes.ext.ldif",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/js/app.js",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/js/common.js",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/calendar/program/js/calendar.gui.js",
-		"/D/Proyectos/2020/20200917g - Banner 'MiCuenta' en Webmail/instrucciones.txt",
-		"/D/Proyectos/CIs.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/skins/larry_sandetel/includes/appbar.html",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/sandetel/sandetel.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/config/config.inc.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/sts-php-client-lib/autoloader.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/proxy.php",
-		"/C/Users/jcastano/AppData/Local/Temp/7zO49E6BE8A/log_20200924.log",
-		"/D/Proyectos/remote/desccobuz05/sftp-config.json",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/lib/Roundcube/rcube_user.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/sandetel_login/sandetel_login.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/new_user_identity/new_user_identity.php",
-		"/D/Proyectos/remote/desccobuz05/diario.md",
-		"/D/Proyectos/2020/20200813a - Redirecciones a multidominio en filtros Webmail V3/instrucciones.txt",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/program/lib/Roundcube/rcube_sandetel.php",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/rc_smime/rc_smime.js",
-		"/D/Proyectos/remote/desccobuz05/correo.juntadeandalucia.es/plugins/rc_smime/README.md"
+		"/C/Users/jcastano/Desktop/mangel.vicente.ext.ldif"
 	],
 	"find":
 	{
@@ -746,6 +772,7 @@
 		"height": 128.0,
 		"where_history":
 		[
+			"D:\\git\\MK1\\examples\\helmet\\dev",
 			"D:\\git\\MK1\\src",
 			"C:\\git\\mk1\\examples\\ramiro4\\dev",
 			"C:\\git\\mk1\\examples\\ramiro3\\dev",
@@ -872,8 +899,7 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail\\plugins\\password",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\agata_addressbook"
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program"
 		]
 	},
 	"find_state":
@@ -881,6 +907,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"player_hidden",
+			"PLAYER_CAN_HIDE",
+			"en_xx",
+			"enems_move",
+			"hooks",
+			"drw_scr",
+			"pull",
 			"OBJECT_COUNT",
 			"OBJECTS_ON_VAR",
 			"NP_RX",
@@ -1001,14 +1034,7 @@
 			"%20",
 			"passCaducado",
 			"passcaducado",
-			"ldap_search",
-			"getimagesize",
-			"list_",
-			"refina sus",
-			"organismo",
-			"facturacion",
-			"admin",
-			"facturacion"
+			"ldap_search"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1154,13 +1180,109 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "examples/helmet/dev/engine.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 56504,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13844,
+								13942
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 59.0,
+						"translation.y": 8414.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "examples/helmet/dev/helmet.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 211561,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								154510,
+								154568
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 265234.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		},
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 2,
+					"file": "examples/helmet/trash/wipasm.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1475,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1303,
+								1303
+							]
+						],
+						"settings":
+						{
+							"auto_name": ".vert_collision",
+							"incomplete_sync": null,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 212.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],

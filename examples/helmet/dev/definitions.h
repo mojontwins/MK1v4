@@ -294,3 +294,4 @@ void draw_scr_background (void);
 void draw_scr (void);
 void init_player_values (void); 
 unsigned char rand (void);
+unsigned char player_hidden (void);

@@ -339,15 +339,14 @@ void cortina (void) {
 	}
 #endif
 
-#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-	#if defined PLAYER_CAN_HIDE
-		char player_hidden (void) {
-			if ( (gpy & 15) == 0 && player.vx == 0 )
-				if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-					return 1;
-			return 0;
-		}
-	#endif
+#if defined PLAYER_CAN_HIDE
+	unsigned char player_hidden (void) {
+		if ( (gpy & 15) == 0 && player.vx == 0 )
+			//if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
+			if (attr ((gpx + 8) >> 4, gpyy) & 2)
+				return 1;
+		return 0;
+	}
 #endif
 
 #ifdef USE_COINS
