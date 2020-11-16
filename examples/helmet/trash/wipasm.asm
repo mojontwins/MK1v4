@@ -57,7 +57,7 @@
 			.vert_collision_up
 				// player.vy = 0; gpyy ++; adjust_to_tile_y (); player.ceiling = 1;
 				ld  hl, 0
-				ld  (_player + 8), hl
+				ld  (_player + 8), hl	// player.vy
 
 				ld  hl, _gpyy
 				inc (hl)
@@ -65,7 +65,7 @@
 				call _adjust_to_tile_y
 
 				ld  a, 1
-				ld  (_player + 37), a
+				ld  (_player + 37), a 	// player.ceiling
 				jr  vert_collision_done
 		#else
 			// if ((gpy & 15) < 12)
@@ -75,11 +75,78 @@
 				jr  nc, vert_collision_done
 
 			// if (((gpx & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy) & 8)) {
+
+			.vert_collision_if1
+				ld  a, (_gpx)
+				and 15
+				cp  12
+				jr  nc, vert_collision_if2
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+
+				jr  nz, .vert_collision_up
+
+				// (gpx & 15) > 4 => (gpx & 15) >= 5
+				ld  a, (_gpx)
+				and 15
+				cp  5
+				jr  c, vert_collision_done
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				inc hl
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+				jr  z, vert_collision_done
+
+			.vert_collision_up
+				// player.vy = 0; gpy = (gpyy << 4) + 12; player.y = gpy << 6;
+				// player.ceiling = 1;
+				ld  hl, 0
+				ld  (_player + 8), hl	// player.vy
+
+				ld  a, (_gpyy)
+				sla a
+				sla a
+				sla a
+				sla a
+				add 12
+				ld  (_gpyy), a
+
+				ld  a, (_gpy)
+				ld  e, a
+				ld  d, 0
+				ld  l, 6
+				call l_asl
+				ld  (_player + 2), hl
+
+				ld  a, 1
+				ld  (_player + 26), a 	// player.possee
+				jr  vert_collision_done
 		#endif
-
-
 
 	.vert_collision_positive
 		// rdj > 0
+		// else if ((gpy & 15) <= (player.vy >> 6)
+
+
+	.vert_collision_down
 
 	.vert_collision_done

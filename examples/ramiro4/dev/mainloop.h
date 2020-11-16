@@ -623,7 +623,7 @@ void main (void) {
 			// Dead player
 			if (player.is_dead) {
 				player.is_dead = 0;
-				if (player.life > 0) {
+				if (player.life >= 0) {
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				

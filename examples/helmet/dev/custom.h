@@ -42,6 +42,7 @@ unsigned char alarm_x, alarm_y;
 struct sp_SS *sp_alarm;
 extern unsigned char sprite_alarm [];
 #asm
+		defb 0, 255 	// Nifty splib2 shortcuts
 	._sprite_alarm
 		BINARY "sprite_alarm.bin"
 #endasm
@@ -79,7 +80,7 @@ extern unsigned char sprite_alarm [];
 	}
 
 	void hook_mainloop (void) {
-		sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, alarm_y & 7);
+		sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, half_life + (alarm_y & 7));
 		alarm_x = 240;
 
 		if (noticed) {
@@ -88,13 +89,28 @@ extern unsigned char sprite_alarm [];
 		}
 
 		if (alarm == 50) {
-			alarm = 0;
+			alarm = 0;			
+			play_sfx (3);
+			saca_a_todo_el_mundo_de_aqui ();
+			sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + 20, VIEWPORT_X + 30, 0, 0);
+			// Validate whole screen so sprites stay on next update
+			#asm
+					LIB SPValidate
+					ld  c, VIEWPORT_X
+					ld  b, VIEWPORT_Y
+					ld  d, VIEWPORT_X+29
+					ld  e, VIEWPORT_Y+19
+					ld  iy, fsClipStruct
+					call SPValidate
+			#endasm
+
 			draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);		
 			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
 			sp_UpdateNow ();
 			play_sfx (10); play_sfx (8);
 			espera_activa (100);
-			player.life = player.life --;
+			player.is_dead = 1;
+			player.life --;
 			new_level = 1;
 		}
 	}
