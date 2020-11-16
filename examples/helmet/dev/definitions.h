@@ -262,7 +262,7 @@ unsigned char success;
 unsigned char rdi;
 signed int rdj;
 unsigned char rdx, rdy;
-unsigned char gpit, enit, pad0;
+unsigned char gpit, enit, pad0, pad1, pad_this_frame;
 unsigned char gpx, gpy, gpxx, gpyy;
 int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;

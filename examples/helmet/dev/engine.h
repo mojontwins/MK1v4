@@ -505,7 +505,11 @@ void move (void) {
 	gpcy = player.y;
 
 	// Read device (keyboard, joystick ...)
-	pad0 = (joyfunc) (&keys); 
+	pad_this_frame = pad1;
+	pad1 = pad0 = (joyfunc) (&keys); 
+	pad_this_frame = (~pad_this_frame) | pad1;
+
+	// Keys held this frame
 
 	#ifdef ENABLE_FRIGOABABOL
 		if (player.estado == EST_FRIGOABABOL) {
@@ -799,24 +803,24 @@ void move (void) {
 				if (player.facing == 0) {				// Looking left
 					if ((gpx & 15) == 0 && qtile (gpxx - 1, gpyy) == 14) {
 						player.grab_block = 1;
-						if ((pad0 & sp_LEFT) == 0) {
+						if ((pad_this_frame & sp_LEFT) == 0) {
 							x0 = gpxx - 1; x1 = gpxx - 2;
-						} else if ((pad0 & sp_RIGHT) == 0 && attr (gpxx + 1, gpyy) == 0) {
+						} else if ((pad_this_frame & sp_RIGHT) == 0 && attr (gpxx + 1, gpyy) == 0) {
 							x0 = gpxx - 1; x1 = gpxx; 
 							gpxx ++; gpx += 16; player.x += (16<<6); 
 						}
-						pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				} else {								// Looking right
 					if ((gpx & 15) == 0 && qtile (gpxx + 1, gpyy) == 14) {
 						player.grab_block = 1;
-						if ((pad0 & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) == 0) {
+						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) == 0) {
 							x0 = gpxx + 1; x1 = gpxx;
 							gpxx --; gpx -= 16; player.x -= (16<<6); 
-						} else if ((pad0 & sp_RIGHT) == 0) {
+						} else if ((pad_this_frame & sp_RIGHT) == 0) {
 							x0 = gpxx + 1; x1 = gpxx + 2; 
 						}
-						pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				}
 
@@ -831,24 +835,24 @@ void move (void) {
 				if (player.facing == 0) {				// Looking left
 					if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
 						player.grab_block = 1;
-						if ((pad0 & sp_LEFT) == 0) {
+						if ((pad_this_frame & sp_LEFT) == 0) {
 							x0 = gpxx; x1 = gpxx - 1;
-						} else if ((pad0 & sp_RIGHT) == 0 && attr (gpxx + 2, gpyy) == 0) {
+						} else if ((pad_this_frame & sp_RIGHT) == 0 && attr (gpxx + 2, gpyy) == 0) {
 							x0 = gpxx; x1 = gpxx + 1; 
 							gpxx ++; gpx += 16; player.x += (16<<6); 
 						}
-						pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				} else {								// Looking right
 					if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14) {
 						player.grab_block = 1;
-						if ((pad0 & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) == 0) {
+						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) == 0) {
 							x0 = gpxx + 1; x1 = gpxx;
 							gpxx --; gpx -= 16; player.x -= (16<<6); 
-						} else if ((pad0 & sp_RIGHT) == 0) {
+						} else if ((pad_this_frame & sp_RIGHT) == 0) {
 							x0 = gpxx + 1; x1 = gpxx + 2; 
 						}						
-						pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				}
 
@@ -957,7 +961,7 @@ void move (void) {
 
 	// Sword
 	#ifdef ENABLE_SWORD
-		if (s_on == 0 && (pad0 & sp_FIRE) == 0) {
+		if (s_on == 0 && (pad_this_frame & sp_FIRE) == 0) {
 			#ifdef SWORD_UP
 				if ((pad0 & sp_UP) == 0) {
 					s_type = SWORD_TYPE_UP;

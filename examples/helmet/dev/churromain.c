@@ -3,7 +3,7 @@
 
 // churromain.c
 // Program skeleton. Rename to your game title.c
-
+#define DEBUG
 #include <spritepack.h>
 
 #asm
