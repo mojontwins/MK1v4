@@ -27,16 +27,20 @@ extern unsigned char s_ending [];
 
 void unpack (void) {
 	#asm
-		ld hl, 22528
-		ld de, 22529
-		ld bc, 767
-		xor a
-		ld (hl), a
-		ldir
+			call blackout
 
-		ld hl, (_asm_int)
-		ld de, 16384
-		jp depack
+			ld hl, (_asm_int)
+			ld de, 16384
+			jp depack
+
+		.blackout
+			ld hl, 22528
+			ld de, 22529
+			ld bc, 767
+			xor a
+			ld (hl), a
+			ldir
+			ret
 	#endasm
 }
 

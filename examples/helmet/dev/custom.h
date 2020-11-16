@@ -12,6 +12,16 @@ unsigned char map_behaviours [] = {
 	0, 0, 0, 0, 0, 0, 0, 0	
 };
 
+// Level set
+
+unsigned char scr_ini [] = { 16 };
+unsigned char ini_x [] = { 2 };
+unsigned char ini_y [] = { 8 };
+unsigned char new_level;
+unsigned char level;
+
+unsigned char new_level_string [] = "LEVEL 00";
+
 // The patrullero
 
 signed char en_directions [] = {-1, 0, 1, -1, 0, 1, -1, 1};
@@ -22,6 +32,8 @@ unsigned char *patrullero_cells [] = {
 };
 
 // Alarm counter & state
+
+unsigned char noticed;
 unsigned char alarm;
 unsigned char alarm_x, alarm_y;
 
@@ -46,14 +58,45 @@ extern unsigned char sprite_alarm [];
 	}
 
 	void hook_init_game (void) {
+		new_level = 1;
+		level = 0;
 	}
 
 	void hook_init_mainloop (void) {
+		if (new_level) {
+			new_level = 0;
+			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
+			sp_Invalidate (spritesClip, spritesClip);
+			new_level_string [7] = level + 17;
+			draw_text (12, 11, 71, new_level_string);
+			draw_text (11, 13, 71, "GET READY!");
+			sp_UpdateNow ();
+			play_sfx (10);
+			espera_activa (150);
+			n_pant = scr_ini [level];
+			init_player_values ();
+		}
 	}
 
 	void hook_mainloop (void) {
 		sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, alarm_y & 7);
 		alarm_x = 240;
+
+		if (noticed) {
+			alarm ++;
+			noticed = 0;
+		}
+
+		if (alarm == 50) {
+			alarm = 0;
+			draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);		
+			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
+			sp_UpdateNow ();
+			play_sfx (10); play_sfx (8);
+			espera_activa (100);
+			player.life = player.life --;
+			new_level = 1;
+		}
 	}
 
 	void hook_entering (void) {		
@@ -71,23 +114,27 @@ extern unsigned char sprite_alarm [];
 	void extra_enems_move (void) {
 		if (_en_t == 5) {
 			// Patrullero marrullero
-			if (en_an_walk_ct [enit] == 0) {
+			if (alarm) {
+				en_an_facing [enit] = (gpx < _en_x) ? 2 : 0;
+			} else {
+				if (en_an_walk_ct [enit] == 0) {
 
-				// Select direction / count
-				_en_mx = en_directions [rand () & 7];
-				en_an_walk_ct [enit] = (1 + (rand () & 3)) << 4;
+					// Select direction / count
+					_en_mx = en_directions [rand () & 7];
+					en_an_walk_ct [enit] = (1 + (rand () & 3)) << 4;
 
-				if (_en_mx == -1) en_an_facing [enit] = 2;
-				else if (_en_mx == 1) en_an_facing [enit] = 0;
-			} 
+					if (_en_mx == -1) en_an_facing [enit] = 2;
+					else if (_en_mx == 1) en_an_facing [enit] = 0;
+				} 
 
-			// Move
-			en_an_walk_ct [enit] --;
-			rdx = _en_x;
-			
-			if (_en_mx) {
-				en_xx = (_en_x >> 4) + _en_mx; en_yy = _en_y >> 4;
-				if ((_en_x & 15) || ((attr (en_xx, en_yy + 1) & 12) && (attr (en_xx, en_yy) & 8) == 0)) _en_x += _en_mx;
+				// Move
+				en_an_walk_ct [enit] --;
+				rdx = _en_x;
+				
+				if (_en_mx) {
+					en_xx = (_en_x >> 4) + _en_mx; en_yy = _en_y >> 4;
+					if ((_en_x & 15) || ((attr (en_xx, en_yy + 1) & 12) && (attr (en_xx, en_yy) & 8) == 0)) _en_x += _en_mx;
+				}
 			}
 			
 			rdd = (rdx == _en_x) ? 0 : ((_en_x >> 3) & 1);
@@ -105,10 +152,8 @@ extern unsigned char sprite_alarm [];
 			// Alarm
 			if (rdi) {
 				alarm_x = _en_x + 4; alarm_y = _en_y - 8;
-				alarm ++; 			
-			} else {
-				alarm = 0;			
-			}			
+				noticed = 1; 			
+			} 			
 		}
 	}
 

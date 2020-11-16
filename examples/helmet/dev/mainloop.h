@@ -213,7 +213,7 @@ void main (void) {
 		#endif
 
 		objs_old = life_old = keys_old = killed_old = item_old = ezg_old = coins_old = 0xff;
-player.keys=1;
+
 		while (playing) {
 			#ifdef ENABLE_CODE_HOOKS
 				hook_init_mainloop ();

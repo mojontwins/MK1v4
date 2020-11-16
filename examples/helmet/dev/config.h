@@ -14,14 +14,14 @@
 #define MAP_H					8		// Map dimmensions in screens
 #define TOTAL_SCREENS			64		// 
 #define SCR_INICIO				10//16		// Initial screen
-#define PLAYER_INI_X			2		//
-#define PLAYER_INI_Y			8		// Initial tile coordinates
+#define PLAYER_INI_X			(ini_x [level])		//
+#define PLAYER_INI_Y			(ini_y [level])		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X			99		//
 //#define PLAYER_FIN_Y			99		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS		25		// Objects to get to finish game
-#define PLAYER_LIFE 			99		// Max and starting life gauge.
-#define PLAYER_REFILL			10		// Life recharge
+#define PLAYER_LIFE 			10		// Max and starting life gauge.
+#define PLAYER_REFILL			1		// Life recharge
 
 #define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
@@ -52,12 +52,12 @@
 //#define EVIL_ZONE_BEEPS_COUNT	32		// # of counts before killing
 //#define EVIL_ZONE_FREQ 		3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 //#define EVIL_ZONE_CONDITIONAL 		// Active if scenery_info.evil_zone_active
-#define PLAYER_BOUNCES					// If defined, collisions make player bounce
-//#define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
+//#define PLAYER_BOUNCES				// If defined, collisions make player bounce
+#define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
 //#define DEACTIVATE_REFILLS			// If defined, no refills.
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 					// The Hobbit
-#define ENEMIES_LIFE_GAUGE		3		// Amount of shots/hits needed to kill enemies.
+#define ENEMIES_LIFE_GAUGE		1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED 		// Custom paralyze enemies.
 
 // Coins engine
@@ -211,21 +211,21 @@
 // This sections defines how stuff is rendered, where to show counters, etcetera
 
 #define VIEWPORT_X				1		//
-#define VIEWPORT_Y				2		// Viewport character coordinates
+#define VIEWPORT_Y				1		// Viewport character coordinates
 
-#define LIFE_X					4		//
-#define LIFE_Y					0		// Life gauge counter character coordinates
+#define LIFE_X					3		//
+#define LIFE_Y					23		// Life gauge counter character coordinates
 //#define DRAW_HI_DIGIT	
 //#define LIFE_H_X 				1
 //#define LIFE_H_Y				8
 
-#define OBJECTS_X				11		//
-#define OBJECTS_Y				0		// Objects counter character coordinates
+#define OBJECTS_X				27		//
+#define OBJECTS_Y				23		// Objects counter character coordinates
 //#define OBJECTS_ICON_X		2		// 
 //#define OBJECTS_ICON_Y		21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 
-#define KEYS_X					18		//
-#define KEYS_Y					0		// Keys counter character coordinates
+#define KEYS_X					22		//
+#define KEYS_Y					23		// Keys counter character coordinates
 
 //#define SHOW_KILLED
 //#define SHOW_TOTAL

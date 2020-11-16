@@ -74,6 +74,12 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	#endasm
 }
 
+#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+	#define BOUNDING_WIDTH 12
+#else
+	#define BOUNDING_WIDTH 8
+#endif
+
 unsigned char collide_enem (void) {
 	#asm
 			ld  hl, 0
@@ -84,7 +90,7 @@ unsigned char collide_enem (void) {
 			ld  c, a
 			ld  a, (_en_ccx)
 			
-			add 12
+			add BOUNDING_WIDTH
 			
 			cp  c
 			ret c
@@ -94,7 +100,7 @@ unsigned char collide_enem (void) {
 			ld  c, a
 			ld  a, (_gpx)
 			
-			add 12
+			add BOUNDING_WIDTH
 			
 			cp  c
 			ret c
@@ -375,8 +381,8 @@ void cortina (void) {
 
 #ifdef PLAYER_PUSH_BOXES
 	void move_tile (unsigned char act) {
-		set_map_tile (x0, y0, 0, 0);
-		set_map_tile (x1, y1, 14, 8);
+		set_map_tile (x0, y0, 0, comportamiento_tiles [0]);
+		set_map_tile (x1, y1, 14, comportamiento_tiles [14]);
 
 		// Sound
 		if (act) {
@@ -836,7 +842,7 @@ void move (void) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0) {
 							x0 = gpxx; x1 = gpxx - 1;
-						} else if ((pad_this_frame & sp_RIGHT) == 0 && attr (gpxx + 2, gpyy) == 0) {
+						} else if ((pad_this_frame & sp_RIGHT) == 0 && attr (gpxx + 2, gpyy) < 4) {
 							x0 = gpxx; x1 = gpxx + 1; 
 							gpxx ++; gpx += 16; player.x += (16<<6); 
 						}
@@ -845,7 +851,7 @@ void move (void) {
 				} else {								// Looking right
 					if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14) {
 						player.grab_block = 1;
-						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) == 0) {
+						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) < 4) {
 							x0 = gpxx + 1; x1 = gpxx;
 							gpxx --; gpx -= 16; player.x -= (16<<6); 
 						} else if ((pad_this_frame & sp_RIGHT) == 0) {
@@ -1066,7 +1072,7 @@ void move (void) {
 					}
 				#else
 					y0 = y1 = gpyy;
-					draw_2_digits (0,0,qtile(gpxx,gpyy));
+
 					if (wall == WALL_RIGHT && (pad0 & sp_RIGHT) == 0 && gpxx < 14) {
 						x0 = gpxx + 1; x1 = gpxx + 2;
 						if (can_move_box ()) move_tile (1);
@@ -2199,6 +2205,7 @@ void mueve_bicharracos (void) {
 						{
 							// Hit!
 							play_sfx (2);
+							en_an_next_frame [enit] = sprite_17_a;
 
 							#ifdef SWORD_PARALYZES
 								en_an_state [enit] = ENEM_PARALYZED;

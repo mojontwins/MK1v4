@@ -40,4 +40,20 @@ Voy a introducir un sprite extra con una admiración (!), aunque tendré que cre
 
 Lo haré así, más sencillo. Si veo que luego es un problema siempre estoy a tiempo de cambiarlo.
 
-Todo va muy bien, pero me acerco a los 32K y a lo mejor es el momento de revisar las adiciones y pasar a ensamble algunas cosas.
+## La lógica del juego
+
+Para que te pillen y se reinicie la fase tengo que pensar ya en cómo voy a implementar el tema de las subfases. Necesitaría arrays para pantalla y posición iniciales. Voy a empezar por ahí, y así puedo hacer el reset y la pantalla de bienvenida.
+
+Parte de la magia viene de esto:
+
+```c
+	#define PLAYER_INI_X			(ini_x [level])		//
+	#define PLAYER_INI_Y			(ini_y [level])		// 
+```
+
+Así el `init_player_values` que llamo desde mi custom tras mostrar la pantalla de `LEVEL XX` me para recolocar al jugador.
+
+## Reiniciar
+
+Cuando el malo te vea un rato se coscará del todo y dará la alarma. hay que presentar un texto, hacer un sonido feo, y reiniciar.
+
