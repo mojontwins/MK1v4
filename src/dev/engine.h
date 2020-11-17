@@ -977,7 +977,11 @@ void move (void) {
 
 	#ifdef PLAYER_HAS_JUMP
 		#ifdef RAMIRO_HOP
-			rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
+			#ifdef SHORT_PLAYER
+				rdi = ((attr ((gpx + 4) >> 4, gpyy + 1) & 12) || (attr ((gpx + 11) >> 4, gpyy + 1) & 12));
+			#else
+				rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
+			#endif
 		#endif
 
 		if (

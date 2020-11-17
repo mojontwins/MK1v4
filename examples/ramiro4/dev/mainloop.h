@@ -173,7 +173,8 @@ void main (void) {
 			clear_persistent ();
 		#endif
 
-		on_pant = n_pant = SCR_INICIO;
+		n_pant = SCR_INICIO;
+		on_pant = 0xff;
 		maincounter = 0;
 		
 		#ifdef ACTIVATE_SCRIPTING		
@@ -191,8 +192,6 @@ void main (void) {
 		#ifdef ENABLE_CODE_HOOKS
 			hook_init_game ();
 		#endif
-		
-		draw_scr ();
 		
 		#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 			#ifdef SHOW_TOTAL
@@ -216,6 +215,15 @@ void main (void) {
 		objs_old = life_old = keys_old = killed_old = item_old = ezg_old = coins_old = 0xff;
 
 		while (playing) {
+			#ifdef ENABLE_CODE_HOOKS
+				hook_init_mainloop ();
+			#endif
+
+			// Update SCR
+
+			if (n_pant != on_pant) {
+				draw_scr (); on_pant = n_pant;
+			}
 
 			// Update  HUD
 
@@ -346,7 +354,12 @@ void main (void) {
 			}
 
 			rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
-			sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+			#ifdef BETTER_VERTICAL_CONNECTIONS
+				if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
+				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, rdi, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+			#else
+				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+			#endif
 			player.current_frame = player.next_frame;
 			
 			#ifdef PLAYER_CAN_FIRE
@@ -547,19 +560,25 @@ void main (void) {
 				#endif
 
 				#ifndef ROW_MAP
-					if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
-						n_pant -= MAP_W;
-						gpy = 144; player.y = 144<<6;
-					} else if (gpy == 144 && player.vy > 0) {
+					#ifdef BETTER_VERTICAL_CONNECTIONS
+						if (player.y == -512 && player.vy < 0 && n_pant >= MAP_W) {
+							n_pant -= MAP_W;
+							gpy = 144; player.y = 144<<6;
+							player.vy = -PLAYER_MAX_VY_SALTANDO;
+							player.cont_salto = 0;
+						}
+					#else
+						if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
+							n_pant -= MAP_W;
+							gpy = 144; player.y = 144<<6;
+						} 
+					#endif
+					else if (gpy == 144 && player.vy > 0) {
 						n_pant += MAP_W;
 						gpy = player.y = 0;
 					}
 				#endif
 			#endif
-
-			if (n_pant != on_pant) {
-				draw_scr (); on_pant = n_pant;
-			}
 			
 			// Win game condition
 			
@@ -623,7 +642,7 @@ void main (void) {
 			// Dead player
 			if (player.is_dead) {
 				player.is_dead = 0;
-				if (player.life >= 0) {
+				if (player.life > 0) {
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				

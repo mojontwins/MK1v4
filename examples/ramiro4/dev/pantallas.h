@@ -27,43 +27,21 @@ extern unsigned char s_ending [];
 
 void unpack (void) {
 	#asm
+			call blackout
+
+			ld hl, (_asm_int)
+			ld de, 16384
+			jp depack
+
+		.blackout
 		ld hl, 22528
 		ld de, 22529
 		ld bc, 767
 		xor a
 		ld (hl), a
 		ldir
-
-		ld hl, (_asm_int)
-		ld de, 16384
-		jp depack
-	#endasm
-}
-
-void espera_activa (int espera) {
-	// Waits until "espera" halts have passed 
-	// or a key has been pressed.
-
-	#if !(defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME)
-		#asm 
-			ei
+			ret
 		#endasm
-	#endif
-
-	while (espera--)  {
-		#asm
-			halt
-		#endasm
-		if (any_key ()) {
-			break;
-		}
-	}
-
-	#if !(defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME)
-		#asm
-			di
-		#endasm
-	#endif
 }
 
 void title_screen (void) {

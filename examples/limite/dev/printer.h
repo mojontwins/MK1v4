@@ -27,8 +27,19 @@ void attr (char x, char y) {
 			ld  a, (hl) 	// y
 			cp  10
 			jr  c, _attr_2
-			ld  hl, 0
-			ret
+
+			#ifdef BETTER_VERTICAL_CONNECTIONS
+				cp  11
+				jr  nc, _attr3
+				ld  hl, 0
+				ret
+				
+			._attr3
+				ld  a, 0 	// Negative values replicate first row
+			#else
+				ld  hl, 0
+				ret
+			#endif
 
 		._attr_2
 			ld  b, a
