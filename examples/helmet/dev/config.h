@@ -75,6 +75,7 @@
 
 // Fixed screens engine
 // --------------------
+
 //#define FIXED_SCREENS					// If defined, you can't exit a screen running off an edge
 //#define SHOW_LEVEL_INFO				// If defined, show "LEVEL XX" before level start, XX=n_pant
 //#define SHOW_LEVEL_SUBLEVEL			// If defined, level # is XX/YY using y_map and x_map resp.

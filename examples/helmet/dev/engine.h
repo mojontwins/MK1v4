@@ -1271,7 +1271,7 @@ void move (void) {
 				ld  hl, 0
 				ld  (_player + 6), hl 	// player.vx
 
-				ld  hl, (_gpxx)
+				ld  hl, _gpxx
 				inc (hl)
 
 				call _adjust_to_tile_x
