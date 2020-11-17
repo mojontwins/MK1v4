@@ -535,7 +535,13 @@ void move (void) {
 			#endif
 
 			#ifdef FRIGO_NO_FIRE
-				pad0 |= sp_FIRE;
+				#ifdef PLAYER_CAN_FIRE
+					pad0 |= sp_FIRE;
+				#endif
+
+				#ifdef ENABLE_SWORD
+					pad_this_frame |= sp_FIRE;
+				#endif
 			#endif
 
 			if (player.ct_estado == 0) {
@@ -2740,7 +2746,7 @@ void mueve_bicharracos (void) {
 						{
 							// Hit!
 							play_sfx (2);
-							en_an_next_frame [enit] = sprite_17_a;
+							s_on = 0;
 
 							#ifdef SWORD_PARALYZES
 								en_an_state [enit] = ENEM_PARALYZED;
@@ -2758,6 +2764,7 @@ void mueve_bicharracos (void) {
 
 							#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
 								if (_en_life == 0) {
+									en_an_next_frame [enit] = sprite_17_a;
 									enems_kill ();
 								}
 							#endif
