@@ -789,7 +789,21 @@ Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo qu
 
 ### La espada
 
-**Sir Ababol 2** empezó como prototipo en **MTE MK1 v4**, aunque luego se desarrolló sobre un motor específico. Parte de los trabajos para apañar la versión 4.8 de **MTE MK1** ha tenido que ver con reintegrar los añadidos de la demo técnica de **Sir Ababol**, entre ellos la espada:
+**Sir Ababol 2** empezó como prototipo en **MTE MK1 v4**, aunque luego se desarrolló sobre un motor específico. Parte de los trabajos para apañar la versión 4.8 de **MTE MK1** ha tenido que ver con reintegrar los añadidos de la demo técnica de **Sir Ababol**, entre ellos la espada.
+
+Para poder usar la espada necesitaremos añadir los gráficos para pintarla. Para ello tendremos que poner en `gfx` un nuevo spriteset de 8x8 con los cells necesarios, que serán 3 (izquierda, derecha, arriba) en el caso de que la espada pueda lanzarse hacia arriba (`SWORD UP`) o 2 en el caso de que no (izquierda, derecha). Algo así:
+
+![Un spriteset de 8x8](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c06-001.png)
+
+Además, habrá que llamar a `sprcnv8bin.exe` desde `comp.bat` para que lo convierta y genere un archivo llamado `sprite_sword.bin` con una linea parecida a :
+
+```cmd
+	..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 3 > nul
+```
+
+Donde pondremos 3 o 2 dependiendo del número de gráficos que haya en el set (3 si vamos a definir `SWORD_UP`, 2 en caso contrario).
+
+Hecho esto, la espada se configura con estas macros:
 
 ```c
 	// Sword
@@ -1839,6 +1853,36 @@ Puedes usar estas funciones:
 |9|shoot
 |10|explosion
 |11|talk 2	
+
+### Añadiendo sprites
+
+Si queremos añadir sprites, además de tener listo un binario que los contenga y que podamos importar, habrá que añadir bloques a `NUMBLOCKS` en `churromain.c` teniendo en cuenta el tamaño del sprite que queramos añadir según la fórmula 
+
+1 + ((alto / 8) + 1) * ((ancho / 8) + 1)
+
+o sea, 5 por cada sprite nuevo de 8x8, 10 si es de 16x16. Ojo, por cada *ente* *sprite* que va a aparecer en pantalla, nada que ver con el número de gráficos distintos que se empléen para animarlos.
+
+Para importar los gráficos podemos seguir varias vías:
+
+#### Más gráficos para sprites de 16x16
+
+Si son de 16x16, podemos añadirlos al final de nuestro spriteset básico de `sprites.png`, sencillamente poniéndolos a continuación en nuevas filas:
+
+Luego, modificaremos `comp.bat` para que, en lugar de convertir con `sprcnv.exe`, utilice `sprcnv2.exe` (nótese el 2), al que pasaremos además el número total de gráficos y el parámetro `extra` (esto último es obligatorio para que sean compatibles con **MTE MK1 v4**):
+
+```cmd
+	..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra  > nul
+```
+
+Esto importará los 16 gráficos estándar normalmente, y los gráficos extra a partir del 17 en tres columnas como `extra_sprite_N_a`, `extra_sprite_N_b` y `extra_sprite_N_c`, con N el número de gráfico. Serán estos punteros los que necesitaremos posteriormente para definir los sprites.
+
+#### Más gráficos para sprites de 8x8
+
+Para añadir gráficos de 8x8 tendremos que tomar una via alternativa, añadiendo a `comp.bat` una llamada a `sprcnv8bin.exe`, que convierte spritesets de 8x8 y genera binarios. Por ejemplo, esta linea es la que importa 1 nuevo gráfico de 8x8 para usar en un sprite en **Helmet**:
+
+``..\utils\sprcnvbin8.exe ..\gfx\sprite_alarm.png sprite_alarm.bin 1 > nul`` 
+
+Los spritesets de 8x8 son muy parecidos a los normales: gráficos png de hasta 256 píxels de ancho y todo lo que necesitemos de alto, con todos los gráficos y sus máscaras uno al lado de otro.
 
 ### La estructura `scenery_info`
 
