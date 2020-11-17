@@ -63,8 +63,6 @@ typedef struct {
 
 typedef struct {
 	unsigned char show_coins;	
-	unsigned char fixed_screens;
-	unsigned char show_level_info;
 	unsigned char evil_kills_slowly;
 	unsigned char evil_zone_active;
 	unsigned char allow_type_6;

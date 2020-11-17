@@ -300,7 +300,7 @@ Los enemigos con tipos 5 y 6 definen enemigos voladores, o *Fantys*, como los ll
 
 * **Tipo 6**: Son muy parecidos pero aparecerán en el lugar de la pantalla donde los ubiques. Además, pueden configurarse para que o bien persigan al jugador siempre, o bien solo lo hagan si el jugador se acerca, volviendo a su posición inicial cual el jugador se "pierde de vista".
 
-## Hotspots
+## *hotspots*
 
 Son, como hemos dicho, los puntos donde aparecen los objetos coleccionables, las llaves, o las recargas de vida. Se colocan en una casilla cada pantalla del mapa y llevan asociado un "tipo", que puede ser 1 (objetos) o 2 (llaves), o cualquier otro número si te encargas tú de gestionarlo mediante código *custom*.
 
@@ -353,7 +353,7 @@ En la parte inferior izquierda de la ventana hay un botón que pone `Size`. Pued
 
 ## Manejo básico del programa
 
-En la vista principal aparece una rejilla con la pantalla actual. Puedes cambiar la pantalla que se muestra usando las teclas de los cursores. Es en esta vista donde pondremos los enemigos, dibujaremos sus trayectorias, y colocaremos los hotspots.
+En la vista principal aparece una rejilla con la pantalla actual. Puedes cambiar la pantalla que se muestra usando las teclas de los cursores. Es en esta vista donde pondremos los enemigos, dibujaremos sus trayectorias, y colocaremos los *hotspots*.
 
 Aparte de esto, en la pantalla tenemos otras dos zonas, arriba y abajo:
 
@@ -404,7 +404,7 @@ Puedes poner un máximo de tres por pantalla (el programa no te dejará meter m�
 
 Para **eliminar o editar** los valores de un enemigo que ya hayamos colocado, basta con hacer click sobre la casilla de inicio de la trayectoria (donde aparece el numerito que indica el tipo). Entonces nos aparecerá un cuadro de diálogo donde podremos cambiar su tipo o la velocidad o eliminarlo completamente.
 
-## Poniendo hotspots
+## Poniendo *hotspots*
 
 **Cada pantalla admite un único hotspot**. Eso significa que el número total de llaves y objetos necesarios para terminar el güego no puede exceder el número de pantallas. Para colocar el hotspot de la pantalla actual, simplemente **hacemos click con el botón derecho en la casilla donde queremos que aparezca** la llave o el objeto, con lo que haremos aparecer un pequeño cuadro de diálogo donde deberemos introducir el tipo.
 
@@ -479,7 +479,7 @@ Si comentas `SCR_FIN` no se tomarán en cuenta (que es lo que hemos hecho en cad
 	#define PLAYER_REFILL			25		// Life recharge
 ```
 
-* `PLAYER_NUM_OBJETOS` especifica cuantos hotspots de tipo 1 tendremos que coleccionar. Si no activamos el motor de scripting y `WIN_ON_SCRIPTING` (ver más adelante), ganaremos el juego tras coleccionar este número de objetos.
+* `PLAYER_NUM_OBJETOS` especifica cuantos *hotspots* de tipo 1 tendremos que coleccionar. Si no activamos el motor de scripting y `WIN_ON_SCRIPTING` (ver más adelante), ganaremos el juego tras coleccionar este número de objetos.
 
 * `PLAYER_LIFE` es la cantidad de vida con la que empezamos a jugar, `PLAYER_REFILL` es cuánto se recarga la vida al coger una regarga. En esta versión de **MTE MK1** las recargas aparecen únicamente cuando hemos recogido una llave o un objeto coleccionable y volvemos a la misma pantalla.
 
@@ -509,7 +509,7 @@ Si activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas 
 
 * `void hook_mainloop (void);` se ejecuta en el loop principal, una vez cada cuadro de juego, justo antes de dibujarlo en pantalla.
 
-* `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los hotspots, pero antes de que nada sea visible.
+* `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los *hotspots*, pero antes de que nada sea visible.
 
 ### Enganches de enemigos custom `ENABLE_CUSTOM_ENEMS`
 
@@ -1269,3 +1269,635 @@ En algunos juegos se añade más sprites de forma *custom*, como en **Ramiro 4**
 ```c
 	#define NUMBLOCKS 		50
 ```
+
+# Capítulo 7 - Scripting
+
+Los juegos de **MTE MK1** se pueden personalizar usando código C en `custom.h`, el sistema **msc** de scripting, o una combinación de ambos. 
+
+## msc
+
+**msc** significa "Mojon Script Compiler". Es un compilador de *scripts* basados en cláusulas a un *bytecode* fácilmente interpretable por el motor. El compilador genera dos archivos, `msc-config.h` y `msc.h`, que serán incluidos en tu juego si defines la macro `ACTIVATE_SCRIPTING`. `msc.h` utilizará la función `do_extern_action` del archivo `msc_extern.h` si empleas el comando `EXTERN`.
+
+**msc** se ejecuta desde linea de comandos y su sintaxis es:
+
+```cmd
+	$ msc.exe script.spt msc.h N [flipflops] [shortsettile]
+```
+
+`script.spt` es el archivo de entrada, `msc.h` el archivo con el intérprete y el *bytecode* (que debe llamarse `msc.h` para **MTE MK1**), y `N` es el número de pantallas `MAP_W * MAP_H`.
+
+Si especificas `flipflops`, las comprobaciones `IF FLAG n = 1|0` o `SET FLAG n = 1|0` (esto es, comprobar si un flag vale 1 o 0, o asignar el valor 1 o 0 a un flag) sólo ocupan un byte, si n < 16. Si usas muchas de estas comprobaciones o comandos, esto reducirá el tamaño de tu script.
+
+`shortsettile` utiliza sólo dos bytes para los comandos `SET TILE (x, y) = n` en lugar de tres, pero no perimte que `x` o `y` sean referencias a contenidos de flags. Si todos tus `SET TILE` tienen valores directamente en `x` e `y`, utilizar `shortsettile` reducirá el tamaño de tu script.
+
+## motor de cláusulas
+
+Los *scripts* de MK1 se organizan en secciones. Cada sección se ejecutará en un momento preciso y en una pantalla precisa.
+
+Principalmente tenemos secciones tipo ENTERING, que se ejecutarán al entrar en una pantalla, secciones PRESS_FIRE, que se ejecutarán al pulsar la tecla de acción, y secciones especiales que responderán a diversos eventos. Estos son los tipos de secciones:
+
+```
+    ENTERING SCREEN x
+```
+
+Se ejecuta cada vez que el jugador entra en la pantalla x
+
+```
+    ENTERING GAME
+```
+
+Se ejecuta al empezar cada partida, y sólo esta vez.
+
+```
+    ENTERING ANY
+```
+
+Se ejecuta al entrar en cada pantalla, justo antes que `ENTERING SCREEN x`
+
+```
+    PRESS_FIRE AT SCREEN x
+```
+
+Se ejecuta cuando el jugador pulsa la tecla de acción en la pantalla x.
+
+```
+    PRESS_FIRE AT ANY
+```
+
+Se ejecuta cuando el jugador pulsa la tecla de acción en cualquier pantalla, justo antes que `PRESS_FIRE AT SCREEN x`
+
+```
+    PLAYER_GETS_COIN
+```
+
+Se ejecuta cuando el jugador toca un tile `TILE_GET`. Necesita tener activada y configurada la funcionalidad `TILE_GET` en config.h así como la directiva `TILE_GET_SCRIPT`. **No disponible en MK1**
+
+```
+    PLAYER_KILLS_ENEMY
+```
+
+Se ejecuta cuando el jugador mata a un enemigo, siempre que hayamos definido la directiva `RUN*script*ON_KILL` en config.h
+
+-
+
+Los *scripts* `PRESS_FIRE` se ejecutarán en más supuestos además de cuando el jugador pulse acción: Si hemos definido una zona de acción con `SET_FIRE_ZONE` en nuestro *script*, y el jugador entra en dicha zona.
+
+## Cláusulas
+
+Todas las secciones descritas arriba contendrán una lista de cláusulas. Cada cláusula se compone de una lista de comprobaciones y de una lista de comandos. El intérprete recorrerá la lista de comprobaciones en orden, realizando cada comprobación. Si alguna falla, dejará de procesar la cláusula. Si todas las comprobaciones han resultado ser ciertas, se ejecutará la lista de comandos asociada en orden.
+
+La sintaxis es:
+
+```
+    IF COMPROBACION
+    ...
+    THEN
+        COMANDO
+        ...
+    END
+```
+
+Todas las cláusulas de una sección se ejecutan en orden, sin parar (a menos que así lo indiques con un comando `BREAK` o tras algunos comandos como `REPOSTN` o `REENTER`).
+
+Muchas veces puedes ahorrar *script* y evitar usar BREAK. La mayoría de las veces el tiempo de ejecución de un *script* no es crítico y puedes permitírtelo.
+
+En vez de:
+
+```
+    IF FLAG 1 = 0
+    THEN
+        SET TILE (2, 4) = 2
+        SET FLAG 1 = 1
+
+        # Si no ponemos este break se ejecutará la siguiente
+        # cláusula sí o sí, ya que FLAG 1 = 1.
+        BREAK
+    END
+
+    IF FLAG 1 = 1
+    THEN
+        SET TILE (2, 4) = 3
+    END
+```
+
+Puedes hacer:
+
+```
+    IF FLAG 1 = 1
+    THEN
+        SET TILE (2, 4) = 3
+    END
+
+    IF FLAG 1 = 0
+    THEN
+        SET TILE (2, 4) = 2
+        SET FLAG 1 = 1
+    END
+```
+
+Y te ahorras un BREAK.
+
+## Flags
+
+El motor de _scripting_ maneja un conjunto de banderas o flags que pueden contener un valor de 0 a 127 y que se utilizan como variables. Las flags suelen referenciarse como FLAG N con N de 0 a 127 en el *script*.
+
+En casi todas las comprobaciones y comandos que admiten valores inmediatos se puede utilizar la construcción #N donde N es un número de flag, que significa "el valor de la flag N".
+
+Por ejemplo:
+
+```
+    IF FLAG 5 = #3
+```
+
+Será cierta si el valor de la flag 5 es igual al valor de la flag 3.
+
+Como hemos dicho, el número de flags puede configurarse en `config.h`:
+
+```c
+    #define MAX_FLAGS 16
+```
+
+Si usas 16 flags o menos y las empleas mayoritariamente para almacenar valores "0" o "1" puedes ahorrar mucho espacio e incrementar la velocidad de proceso del *script* compilando tu script con la opción `flipflops`.
+
+## El intérprete dinámico
+
+**msc** genera un intérprete que sólo será capaz de entender las comprobaciones y comandos que hayas introducido en tu *script*. Esto se hace para ahorrar memoria no generando código que jamás se ejecutará.
+
+A veces hay varias formas de conseguir una cosa en tu *script*. Si tienes que elegir, no elijas la que produzca un *script* más sencillo, sino la que haga que tengas que utilizar menos variedad de comprobaciones o de comandos, ya que un poco más de *script* ocupa muchísimo menos que el código C necesario para ejecutar una comprobación o comando.
+
+## Siempre cierto
+
+Hay una comprobación que siempre vale cierto y que se utiliza para ejecutar comandos en cualquier caso:
+
+```
+    IF TRUE
+```
+
+## Comprobaciones y comandos relacionados con las flags
+
+Gran parte de tu *script* estará comprobando valores de las flags y modificando dichos valores. Para ello hay todo un set de comprobaciones y comandos.
+
+### Comprobaciones con flags
+
+```
+IF FLAG x = n           Evaluará a CIERTO si la flag "x" vale "n"
+
+IF FLAG x < n           Evaluará a CIERTO si la flag "x" < n
+
+IF FLAG x > n           Evaluará a CIERTO si la flag "x" > n
+
+IF FLAG x <> n          Evaluará a CIERTO si la flag "x" <> n
+```
+
+### Comandos con flags
+
+```
+SET FLAG x = n          Da el valor N a la flag X.
+                        Huelga decir que SET FLAG x = #y dará el valor del
+                        flag y a la flag x. Pero ya lo he dicho.
+
+INC FLAG x, n           Incrementa el valor de la flag X en N.
+
+DEC FLAG x, n           Decrementa el valor de la flag X en N
+
+FLIPFLOP x              Si x vale 0, valdrá 1. Si vale 1, valdrá 0.
+                        Lo que viene a ser un flip-flop, vaya.
+
+SWAP x, y               Intercambia el valor de las flags x e y
+```
+
+## Comprobaciones y comandos relacionados con la posición
+
+También tenemos varias formas de comprobar y modificar la posición -- incluso cambiando de pantalla ¡y de nivel!
+
+### Comprobaciones sobre la posición
+
+```
+    IF PLAYER_TOUCHES x, y  Evaluará a CIERTO si el jugador está tocando
+                            el tile (x, y). x e y pueden llevar #.
+
+    IF PLAYER_IN_X x1, x2   Evaluará a CIERTO si el jugador está horizontalmente
+                            entre las coordeadas en píxeles x1 y x2.
+
+    IF PLAYER_IN_Y y1, y2   Evaluará a CIERTO si el jugador está verticalmente
+                            entre las coordeandas en pixles y1 e y2.
+
+    IF PLAYER_IN_X_TILES x1, x2
+                            Evaluará a CIERTO si el jugador está horizontalmente
+                            entre los tiles x1 y x2, ambos inclusive.
+
+    IF PLAYER_IN_Y_TILES y1, y2
+                            Evaluará a CIERTO si el jugador está verticalmente
+                            entre los tiles y1 e y2, ambos inclusive.
+```
+
+### Cambiando de posición
+
+Estos comandos sirven para modificar la posición del personaje. Todas se expresan a nivel de tiles (x de 0 a 14, y de 0 a 9).
+
+```
+    SETX x                  Colocará al personaje en la coordenada de tile x
+                            (modifica solo la posición horizontal)
+
+    SETY y                  Colocará al personaje en la coordenada de tile y
+                            (modifica solo la posición vertical)
+```
+
+### Comprobaciones sobre la pantalla
+
+Aunque poder definir *scripts* en ENTERING n y PRESS_FIRE AT n donde n es la pantalla actual y que sólo se ejecuten cuando estamos en dicha pantalla, hay veces en las que es necesario saber en qué pantalla estamos en una de las secciones "generales". Para esos casos tenemos:
+
+```
+    IF NPANT n              Evaluará a CIERTO si el jugador está en la pantalla n
+
+    IF NPANT_NOT n          Evaluará a CIERTO si el jugador NO está en la pantalla n
+```
+
+### Cambiando de pantalla
+
+```
+    WARP_TO n, x, y         Mueve al jugador a la posición (x, y) de la pantalla n.
+                            x e y a nivel de tiles.
+```
+
+## Redibujar la pantalla y reentrar
+
+Es útil si haces algo que se cargue la pantalla, como sacar un cuadro de texto con un `EXTERN` (ver más adelante) . Así vuelves a pintarlo todo. Sólo hay que ejecutar:
+
+```
+    REDRAW
+```
+
+Ojete: existe un buffer de tamaño pantalla donde cada cosa que se imprime  (bien por la rutina que se ejecuta al entrar en una pantalla nueva y que compone el escenario, bien por un `SET TILE (X, Y) = T` del _scripting_, etc.) se copia ahí. `REDRAW` simplemente vuelca ese buffer a la pantalla. ¡Si has modificado la pantalla con cosas desde el _script_, `REDRAW` no la va a volver a su estado original!
+
+Si queremos redibujar con las modificaciones ya hechas, tendremos que tirar de código custom. Puedes usar una función como esta (directamente desde **Ramiro 4**) y colocarla por ejemplo al final de `custom.h`:
+
+```c
+
+	void redraw_from_buffer (void) {
+		#asm
+				ld  a, VIEWPORT_X
+				ld  (__x), a
+				ld  a, VIEWPORT_Y
+				ld  (__y), a
+				
+				xor a
+			.redraw_from_buffer_loop
+				ld  (_gpit), a
+
+				ld  bc, (_gpit)
+				ld  b, 0
+				ld  hl, _map_buff
+				add hl, bc
+				ld  a, (hl)
+				ld  (__t), a
+
+				call _draw_coloured_tile_do
+
+				ld  a, (__x)
+				add a, 2
+				cp  VIEWPORT_X + 30
+				jr  nz, redraw_from_buffer_set_x
+				ld  a, (__y)
+				add a, 2
+				ld  (__y), a
+				ld  a, VIEWPORT_X
+			.redraw_from_buffer_set_x
+				ld  (__x), a
+
+				ld  a, (_gpit)
+				inc a
+				cp  150
+				jr  nz, redraw_from_buffer_loop
+		#endasm
+	}
+```
+
+Luego puedes enganchar a esa función desde el código `EXTERN` (más info más adelante) en `msc_extern.h`:
+
+```c
+	void do_extern_action (unsigned char n) {
+		if (n == 127) redraw_from_buffer ();
+	}
+```
+
+Y en vez de usar `REDRAW` en tu *script*, usas `EXTERN 127`.
+
+A veces necesitas volver a ejecutar todo el *script* de `ENTERING ANY` y/o de `ENTERING SCREEN n`, o necesitas reinicializar los enemigos. Para ello tendrás que **reentrar**:
+
+```
+    REENTER                 Vuelve a entrar en la pantalla, exactamente igual
+                            que si viniésemos de otra. Lo hace todo: redibuja,
+                            inicializa todo, ejecuta los scripts...
+```
+
+## Modificar la pantalla
+
+Hay varias formas de modificar la pantalla:
+
+### Cambiar tiles del área de juego
+
+Cambiar tiles del área de juego modifica efectivamente el área de juego: además los tiles modificados son interactuables. O sea, si modificas la pantalla eliminando una pared con un tile transparente, el jugador podrá pasar por ahí.
+
+```
+    SET TILE (x, y) = t     Pone el tile t en la coordenada (x, y).
+                            Las coordenadas (x, y) están a nivel de tiles.
+```
+
+Por supuesto, y esto es muy útil, tanto x como y como t pueden llevar `#` para indicar el contenido de una flag. Para imprimir en 4, 5 el tile que diga la flag 2, hacemos
+
+```
+    SET TILE (4, 5) = #2.
+```
+
+Para imprimir un tile 7 en las coordenadas almacenadas en las flags 2 (x) y 3 (y), hacemos:
+
+```
+    SET TILE (#2, #3) = 7
+```
+
+Recordamos que si no usas flags en las coordenadas X, Y, puedes especificar el parámero `shortsettile` en la llamada a `msc.exe` para ahorrar espacio.
+
+### Cambiar sólo el comportamiento
+
+Funciona igual que SET TILE pero sólo sustituye el comportamiento original por el que especifiques:
+
+```
+    SET BEH (x, y) = b
+```
+
+### Imprimir tiles en cualquier sitio
+
+Podemos imprimir un tile en cualquier sitio de la pantalla, sea en el área de juego o bien fuera (por ejemplo, en una zona del marcador). Para ello usamos:
+
+```
+    PRINT_TILE_AT (x, y) = n
+                            Imprime el time n e (x, y), con (x, y) ¡ojo! en
+                            coordenadas DE CARACTER (x = 0-30, y = 0-22).
+```
+
+Esta función sólo imprime. Aunque el tile que pintemos esté sobre el área de juego no la afectará en absoluto para nada.
+
+Una cosa muy chula para lo que puede servir esto es para hacer pasajes secretos: en tu mapa haces un pasillo, pero luego en el ENTERING SCREEN lo cubres de tiles con `PRINT_TILE_AT`... Como estos tiles no afectan al área de juego, parecerá que no se puede pasar por ahí... pero ¡sí que se puede!
+
+### Mostrar cambios
+
+Todas las impresiones de tiles en el motor se hacen a un _buffer_. En cada cuadro de juego, este _buffer_ se dibuja en la pantalla siguiendo un divertido y mágico proceso. Sin embargo, durante la ejecución del _script_, no se vuelca el _buffer_ a la pantalla.
+
+Si cambiamos algo y queremos que se vea inmediatamente sin tener que esperar a volver al juego (por ejemplo, si estamos haciendo una animación), necesitamos decirle al intérprete de forma explícita que pinte el _buffer_ en la pantalla. Esto se hace con el comando:
+
+```
+    SHOW
+```
+
+## Comprobaciones y comandos relacionados con los valores del personaje
+
+Existe todo un set de comprobaciones y comandos que tienen que ver con los valores del personaje (por ejemplo, la vida).
+
+### Comprobaciones
+
+Comprobaciones sobre el número de objetos.
+
+```
+    IF PLAYER_HAS_OBJECTS   Evaluará a CIERTO si el jugador tiene objetos.
+
+    IF OBJECT_COUNT = n     Evaluará a CIERTO si el jugador tiene N objetos.
+```
+
+Comprobaciones sobre los enemigos matados:
+
+```
+    IF ALL_ENEMIES_DEAD     Evaluará a CIERTO si el número de enemigos matados vale 
+                            BADDIES_COUNT (según aparece en `enems.h`).
+
+    IF ENEMIES_KILLED_EQUALS n
+                            Evaluará a CIERTO si el número de enemigos matados es n.
+```
+
+### Comandos
+
+Vida y estado del jugador:
+
+```
+    INC LIFE n              Incrementa el valor de la vida en n
+
+    DEC LIFE n              Decrementa el valor de la vida en n
+
+    RECHARGE                Recarga toda la vida (la pone al máximo)
+
+    FLICKER                 Hace que el jugador empiece a parpadear durante
+                            un segundo y pico, como cuando te quitan una vida.
+```
+
+Objetos coleccionables:
+
+```
+    INC OBJECTS n           Añade n objetos más.
+
+    DEC OBJECTS n           Resta n objetos (si objects >= n; si no objects = 0).
+```
+
+Si estamos usando la macro `ONLY_ONE_OBJECT`, el contador de objetos del jugador `player.objs` se pondrá a 1 al coger un objeto, y no podrá coger otro hasta que vuelva a valer 0. Para liberarlo utilizamos `DEC OBJECTS 1` si se cumple que `IF PLAYER_HAS_OBJECTS`.
+
+## Comandos relacionados con el nivel
+
+Estos comandos son propios de **MTE MK1 v4** y tienen que ver con las características propias de esta versión que no se mantuvieron en la rama 3.99 ni en las versiones actuales 5+.
+
+Si has activado la macro `COINS_DEACTIVABLE` en `config.h`, puedes ocultar o mostrar las monedas desde el script. Para que se vean los cambios, habrá que reentrar en la pantalla, o habrá que realizar el cambio en otra pantalla diferente a la que tiene las monedas para que éstas se muestren al entrar.
+
+```
+    SHOW_COINS              Hace que la próxima vez que se entre en una nueva
+                            pantalla (o la misma con REENTER) se muestren las 
+                            monedas.
+
+    HIDE_COINS              Hace que la próxima vez que se entre en una nueva
+                            pantalla (o la misma con REENTER) se oculten las 
+                            monedas.
+```
+
+Si tienes activadas las *evil zones* (comentando la macro `DEACTIVATE_EVIL_ZONE` en el script), puedes hacer que maten tras un contador (según `EVIL_ZONE_FRAME_COUNT` y `EVIL_ZONE_BEEPS_COUNT`) o normalmente (en cada frame o según `EVIL_ZONE_FREQ`) desde el script. Es la implementación del *hechizo postizo* de los juegos de **Ramiro**.
+
+```
+    ENABLE_KILL_SLOWLY      Hace que las evil zones maten lentamente.
+
+    DISABLE_KILL_SLOWLY     Las evil zones matan normalmente.
+```
+
+Si estás usando *fantys* los puedes "paralizar" o "despertar" desde el script con:
+
+```
+    ENABLE_TYPE_6           'Despierta' a los fantys.
+
+    DISABLE_TYPE_6          Los fantys no se mueven
+```
+
+Si, además, has activado la macro `MAKE_TYPE_6` en `config.h` puedes usar estas dos, que se introdujeron para **Ramiro el Vampiro devuelve el Zafiro**:
+
+```
+    ENABLE_MAKE_TILE_6      Al entrar en las pantallas, los enemigos no defi-
+                            nidos se convierten en fantys.
+
+    DISABLE_MAKE_TYPE_6     Lo desactiva.
+```
+
+## Terminar el juego
+
+Comandos para terminar el juego desde el _scripting_ (es necesario activar, en config.h, `#define WIN_ON_SCRIPTING`, en el caso de que queramos GANAR desde el _script_ - para GAME OVER No es necesario).
+
+```
+    GAME OVER               Termina el juego con un GAME OVER.
+
+    WIN GAME                Termina el juego si no hay varios niveles. En juegos
+                            con varios niveles termina el nivel actual (y pasa
+                            al siguiente, si tu manejador de niveles funciona de
+                            esta manera)
+```
+
+## Fire Zone
+
+La "fire zone" de una pantalla es una zona rectangular definida a nivel de píxeles que lanzará la sección `PRESS_FIRE` de la pantalla (y `PRESS_FIRE AT ANY`) si el jugador la toca. Nos sirve para lanzar trozos de _script_ cuando el jugador toque algo o entre en algún sitio.
+
+Para definir el `FIRE_ZONE` activo de una pantalla usamos este comando desde cualquier sección de comandos:
+
+```
+    SET_FIRE_ZONE x1, y1, x2, y2
+```
+
+Que definirá un rectángulo desde (x1, y1) a (x2, y2), en píxeles.
+
+Si quieres desactivar la "fire zone" sólo tienes que poner un rectángulo fuera de rango o vacío:
+
+```
+    SET_FIRE_ZONE 0, 0, 0, 0
+```
+
+La mayoría de las veces las fire zones hay que calcularlas basándonose en un rango de tiles, así que puedes usar este comando en su lugar:
+
+```
+    SET_FIRE_ZONE_TILES tx1, ty1, tx2, ty2
+```
+
+donde los parámetros definen un rango en coordenadas de tile (ambos límites inclusive) que msc traducirá internamente a un `SET_FIRE_ZONE` normal.
+
+## Código externo
+
+Hay muchas cosas que no podemos hacer directamente desde el _script_ y por ello el sistema permite ejecutar código externo, que no es más que una función `do_extern_action` definida en `msc_extern.h`:
+
+```c
+    void do_extern_action (unsigned char n);
+```
+
+En nuestro _script_ disponemos del comando EXTERN:
+
+```
+    EXTERN n                Hace una llamada a do_extern_action pasándole "n",
+                            donde n es un número de 0 a 255. No se puede usar
+                            construcciones #.
+```
+
+Cuando haces `EXTERN n` con n un valor de 0 a 255, se ejecutará `do_extern_action` pasándole este valor como parámetro. Así puedes implementar hasta 256 funciones externas que lanzar desde el script. Más arriba vimos un ejemplo que redibujaba la pantalla desde el buffer.
+
+## Otros comandos
+
+```
+    SOUND n                 Toca el sonido n. Dependerá de qué sonido sea n.
+
+    TEXT "texto"            Imprime un texto en la linea de textos que hemos
+                            definido en config.h con los #define LINE_OF_TEXT,
+                            LINE_OF_TEXT_X, y LINE_OF_TEXT_ATTR. El texto debe
+                            ir entre comillas.
+
+	NEXT_LEVEL 				Pasa a la siguiente pantalla en juegos de pantallas
+							fijas (incrementa n_pant y llama a la función de
+							inicialización init_player_values).
+```
+
+# Capítulo 8 - Código custom
+
+En esta sección vamos a explicar cómo hacer cosas chulas con código custom. Todo ha sido sacado de diversos *postmortems* de juegos hechos con **MTE MK1 v4**. Atención, porque por cosas como estas a lo mejor vas a preferir usar *v4* que una versión actual. Pero antes hay que ver un poco de la API:
+
+## Un poco de la API
+
+Puedes usar estas funciones:
+
+* `void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned char n);` coloca el tile T con comportamiento N en la posición (X, Y) (coordenadas de tile) de la pantalla. Para modificar la pantalla actual.
+
+* `void sp_UpdateNow ()` [splib2]: Actualiza la pantalla con los últimos cambios.
+
+* `void play_sfx (unsigned char s)` reproduce el efecto de sonido `s`, según esta tabla:
+
+|S|Efecto
+|---|---
+|1|Salto
+|2|enemy hit
+|3|killzone hit
+|4|countdown
+|5|coin
+|6|object
+|7|talk 1
+|8|key in lock
+|9|shoot
+|10|explosion
+|11|talk 2	
+
+### La estructura `scenery_info`
+
+Esta estructura contiene una serie de flags que modifican el comportamiento del motor:
+
+```c
+	typedef struct {
+		unsigned char show_coins;	
+		unsigned char evil_kills_slowly;
+		unsigned char evil_zone_active;
+		unsigned char allow_type_6;
+		#ifdef MAKE_TYPE_6
+			unsigned char make_type_6;
+		#endif
+	} SCENERY_INFO;
+```
+
+* `scenery_info.show_coins`: Si se activa la macro `COINS_DEACTIVABLE`, y vale 1, se dibujan las monedas; si vale 0, se dibuja el tile `COIN_TILE_DEACT_SUBS` en su lugar.
+
+* `scenery_info.evil_kills_slowly`: Si las *evil zones* están activas, el valor de esta flag hará que maten directamente (0) o que maten tras agotarse el contador controlado con `EVIL_ZONE_FRAME_COUNT` y `EVIL_ZONE_BEEPS_COUNT` (1).
+
+* `scenery_info.evil_zone_active`: Si las *evil zones* están activas y se define la macro `EVIL_ZONE_CONDITIONAL`, podemos desactivar completamente las *evil zones* poniendo un 0 en este flag (1 para activarlas).
+
+* `scenery_info.allow_type_6`: Si vale 1 (por defecto), los *fantys* se mueven. Si vale 0, se quedan paralizados.
+
+* `scenery_info.make_type_6`: Si activamos la macro `MAKE_TYPE_6` y esta flag vale 1, los enemigos que falten de cada pantalla (los no definidos) serán sustituidos por *fantys*.
+
+## Añadir tipos de *hotspots*
+
+Añadir tipos de *hotspots* además de los que soporta el motor es muy sencillo, ya que el motor dibujará cualquier hotspot de tipo `N` con el tile `16+N`, y además detectará que el jugador lo toca y pondrá su número en `latest_hotspot` durante el frame actual. De este modo, puedes poner un `if` en `hook_mainloop` que compruebe que `latest_hotspot` valga el número de tu hotspot custom, y actuar en consecuencia.
+
+Por defecto, los *hotspots* que el jugador toca se marcan como "recogidos" y se eliminan de la pantalla. Hay veces en las que no queremos que esto ocurra, como es el caso de los *resonadores* de **Cheril Perils**, que están implementados mediante *hotspots*. Por suerte, `hook_mainloop` se ejecuta antes de actualizar la pantalla, por lo que podemos revertir esto sin que se note. Puedes tomar prestada esta función del código *custom* de **Cheril Perils** y copiarla al principio de tu `custom.h`:
+
+```c
+	void set_hotspot (unsigned char hn) {
+		hotspots [n_pant].act = 1;
+		hotspots [n_pant].tipo = hn;
+		rdx = (hotspots [n_pant].xy >> 4);
+		rdy = (hotspots [n_pant].xy & 15);
+		hotspot_x = rdx << 4;
+		hotspot_y = rdy << 4;
+		set_map_tile (rdx, rdy, 16 + hn, 0);
+	}
+```
+
+Este código mínimo en `hook_mainloop` hará que un hotspot de tipo 6 pueda "tocarse", pero no desaparezca:
+
+```c
+	if (latest_hotspot == 6) {
+		// el jugador tocó el hotspot de tipo 6
+
+		// (actuar en consecuencia aquí)
+
+		// no queremos que desaparezca:
+		set_hotspot (6);
+	}
+```
+
+## Paralizar a los enemigos
+
+Si activas `ENEMIES_MAY_BE_PARALIZED` puedes paralizar a cualquiera de los enemigos que hay en pantalla colocando su `en_an_state` a `ENEM_PARALYZED` y estableciendo un número de cuadros en `en_an_count`. Los enemigos paralizados recuperarán su estado normal cuando se agote el contador. Una forma de evitar esto y que se desparalicen cuando tú quieras es restaurar continuamente el valor de `en_an_count`. 
+

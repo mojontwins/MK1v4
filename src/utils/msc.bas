@@ -330,6 +330,9 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 								clausula = clausula + Chr (&H20) + Chr (pval (lP (3))) + Chr (pval (lP (5))) + Chr (pval (lP (8)))
 							End If
 							actionsUsed (&H20) = -1
+						Case "BEH":
+							clausula = clausula + Chr (&H21) + Chr (pval (lP (3))) + Chr (pval (lP (5))) + Chr (pval (lP (8)))
+							actionsUsed (&H21) = -1
 					End Select
 				Case "INC":
 					Select Case lP (1)
@@ -1038,6 +1041,15 @@ if actionsUsed (&H20) Then
 		'print #f, "                        draw_coloured_tile (VIEWPORT_X + sc_x + sc_x, VIEWPORT_Y + sc_y + sc_y, sc_n);"
 		print #f, "                        set_map_tile (read_vbyte (), read_vbyte (), sc_n = read_vbyte (), comportamiento_tiles [sc_n]);"
 	End If
+	print #f, "                        break;"
+End If
+
+if actionsUsed (&H21) Then
+	print #f, "                    case 0x21:"
+	print #f, "                        // SET BEH (x, y) = n"
+	print #f, "                        // Opcode: 21 x y n"
+	print #f, "                        read_x_y ();"
+	print #f, "                        map_attr [sc_x + (sc_y << 4) - sc_y] = read_vbyte ();"
 	print #f, "                        break;"
 End If
 
