@@ -74,6 +74,12 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	#endasm
 }
 
+#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+	#define BOUNDING_WIDTH 12
+#else
+	#define BOUNDING_WIDTH 8
+#endif
+
 unsigned char collide_enem (void) {
 	#asm
 			ld  hl, 0
@@ -84,7 +90,7 @@ unsigned char collide_enem (void) {
 			ld  c, a
 			ld  a, (_en_ccx)
 			
-			add 12
+			add BOUNDING_WIDTH
 			
 			cp  c
 			ret c
@@ -94,7 +100,7 @@ unsigned char collide_enem (void) {
 			ld  c, a
 			ld  a, (_gpx)
 			
-			add 12
+			add BOUNDING_WIDTH
 			
 			cp  c
 			ret c
@@ -339,15 +345,14 @@ void cortina (void) {
 	}
 #endif
 
-#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-	#if defined PLAYER_CAN_HIDE
-		char player_hidden (void) {
-			if ( (gpy & 15) == 0 && player.vx == 0 )
-				if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-					return 1;
-			return 0;
-		}
-	#endif
+#if defined PLAYER_CAN_HIDE
+	unsigned char player_hidden (void) {
+		if ( (gpy & 15) == 0 && player.vx == 0 )
+			//if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
+			if (attr ((gpx + 8) >> 4, gpyy) & 2)
+				return 1;
+		return 0;
+	}
 #endif
 
 #ifdef USE_COINS
@@ -375,16 +380,16 @@ void cortina (void) {
 #endif
 
 #ifdef PLAYER_PUSH_BOXES
-	void move_tile (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char act) {
-		set_map_tile (x0, y0, 0, 0);
-		set_map_tile (x1, y1, 14, 8);
+	void move_tile (unsigned char act) {
+		set_map_tile (x0, y0, 0, comportamiento_tiles [0]);
+		set_map_tile (x1, y1, 14, comportamiento_tiles [14]);
 
 		// Sound
 		if (act) {
 			play_sfx (8);
 			#ifdef FALLING_BOXES
 				// Añadir al buffer de cajas cayentes.
-				fall_box (x1, y1);
+				fall_box ();
 			#endif
 		}
 	}
@@ -454,12 +459,20 @@ void player_flicker (void) {
 	void swing_sword (void) {
 		if (s_on) {
 			if (s_type == SWORD_TYPE_UP) {
-				s_x = gpx + swoffs_y [s_frame];
+				#ifdef SWORD_STAB
+					s_x = gpx + SWORD_STAB;
+				#else
+					s_x = gpx + swoffs_y [s_frame];
+				#endif
 				s_y = gpy + 8 - swoffs_x [s_frame];
 				s_hit_x = s_x + 4;
 				s_hit_y = s_y;			
 			} else {
-				s_y = gpy + swoffs_y [s_frame]; 
+				#ifdef SWORD_STAB
+					s_y = gpy + SWORD_STAB;
+				#else
+					s_y = gpy + swoffs_y [s_frame]; 
+				#endif
 				s_hit_y = (s_y + 4);
 
 				if (s_type == SWORD_TYPE_LEFT) {
@@ -472,11 +485,13 @@ void player_flicker (void) {
 			}
 
 			// Detect breakable
-			if (s_frame > 2 && s_frame < 6) {
-				_x = s_hit_x >> 4;
-				_y = s_hit_y >> 4;
-				if (attr (_x, _y) & 32) add_to_breakables ();
-			}
+			#ifdef ENABLE_BREAKABLE
+				if (s_frame > 2 && s_frame < 6) {
+					_x = s_hit_x >> 4;
+					_y = s_hit_y >> 4;
+					if (attr (_x, _y) & 32) add_to_breakables ();
+				}
+			#endif
 
 			s_frame ++;
 			if (s_frame == 9) s_on = 0;
@@ -495,7 +510,11 @@ void move (void) {
 	gpcy = player.y;
 
 	// Read device (keyboard, joystick ...)
-	pad0 = (joyfunc) (&keys); 
+	pad_this_frame = pad1;
+	pad1 = pad0 = (joyfunc) (&keys); 
+	pad_this_frame = (~pad_this_frame) | pad1;
+
+	// Keys held this frame
 
 	#ifdef ENABLE_FRIGOABABOL
 		if (player.estado == EST_FRIGOABABOL) {
@@ -516,7 +535,13 @@ void move (void) {
 			#endif
 
 			#ifdef FRIGO_NO_FIRE
-				pad0 |= sp_FIRE;
+				#ifdef PLAYER_CAN_FIRE
+					pad0 |= sp_FIRE;
+				#endif
+
+				#ifdef ENABLE_SWORD
+					pad_this_frame |= sp_FIRE;
+				#endif
 			#endif
 
 			if (player.ct_estado == 0) {
@@ -641,10 +666,14 @@ void move (void) {
 	player.y += player.vy;
 
 	// Safe
-		
-	if (player.y < 0)
-		player.y = 0;
-		
+	#ifdef BETTER_VERTICAL_CONNECTIONS
+		if (player.y < -512)
+			player.y = -512;
+	#else	
+		if (player.y < 0)
+			player.y = 0;
+	#endif
+			
 	if (player.y > 9216)
 		player.y = 9216;
 
@@ -660,28 +689,291 @@ void move (void) {
 	
 	// Cool
 
+	/*
 	player.possee = 0;
 	player.ceiling = 0;
 	rdj = (player.vy + ptgmy);
 	if (rdj) {
 		if (rdj < 0) { 			// Going up
-			if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
-				// Stop and adjust.
-				player.vy = 0;
-				gpyy ++;
-				adjust_to_tile_y ();
-				player.ceiling = 1;
-			}
-		} else if ((gpy & 15) <= (player.vy >> 6) /*8*/) { 	// Going down
-			if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
+			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+				if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
+					player.vy = 0; gpyy ++;	adjust_to_tile_y ();
+					player.ceiling = 1;
+				}
+			#else
+				if ((gpy & 15) < 12)
+					if (((gpx & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy) & 8)) {
+						player.vy = 0; gpy = (gpyy << 4) + 12; player.y = gpy << 6;
+						player.ceiling = 1;
+					}
+			#endif
+		} else if ((gpy & 15) <= (player.vy >> 6)) { 	// Going down
+			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+				if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
+			#else
+				if (((gpx & 15) < 12 && (attr (gpxx, gpyy + 1) & 12)) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy + 1) & 12))
+			#endif
 			{
-				// Stop and adjust.
-				player.vy = 0;
-				adjust_to_tile_y ();
+				player.vy = 0; adjust_to_tile_y ();
 				player.possee = 1;
 			}
-			}
+		}
 	}
+	*/
+
+	#asm
+			.vert_collision
+			xor a
+			ld  (_player + 26), a
+			ld  (_player + 37), a
+
+			ld  de, (_player + 8)
+			ld  hl, (_ptgmy)
+			add hl, de
+			ld  (_rdj), hl
+
+			// if (rdj)
+			ld  a, h
+			or  l
+			jp  z, vert_collision_done
+
+			// check sign of rdj. If bit 7 of h is 1, negative.
+			bit 7, h
+			jr  z, vert_collision_positive
+
+		.vert_collision_negative
+			// rdj < 0
+
+			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+				// if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
+					ld  hl, (_gpxx)
+					ld  h, 0
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 8
+
+					jr  nz, vert_collision_up
+
+					ld  a, (_gpx)
+					and 15
+					jp  z, vert_collision_done
+
+					ld  hl, (_gpxx)
+					ld  h, 0
+					inc hl
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 8
+					jp  z, vert_collision_done
+
+				.vert_collision_up
+					// player.vy = 0; gpyy ++; adjust_to_tile_y (); player.ceiling = 1;
+					ld  hl, 0
+					ld  (_player + 8), hl	// player.vy
+
+					ld  hl, _gpyy
+					inc (hl)
+
+					call _adjust_to_tile_y
+
+					ld  a, 1
+					ld  (_player + 37), a 	// player.ceiling
+					jp  vert_collision_done
+			#else
+				// if ((gpy & 15) < 12)
+					ld  a, (_gpy)
+					and 15
+					cp  12
+					jp  nc, vert_collision_done
+
+				// if (((gpx & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy) & 8)) {
+
+				.vert_collision_if1
+					ld  a, (_gpx)
+					and 15
+					cp  12
+					jr  nc, vert_collision_if2
+
+					ld  hl, (_gpxx)
+					ld  h, 0
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 8
+
+					jr  nz, vert_collision_up
+
+				.vert_collision_if2
+					// (gpx & 15) > 4 => (gpx & 15) >= 5
+					ld  a, (_gpx)
+					and 15
+					cp  5
+					jp  c, vert_collision_done
+
+					ld  hl, (_gpxx)
+					ld  h, 0
+					inc hl
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 8
+					jp  z, vert_collision_done
+
+				.vert_collision_up
+					// player.vy = 0; gpy = (gpyy << 4) + 12; player.y = gpy << 6;
+					// player.ceiling = 1;
+					ld  hl, 0
+					ld  (_player + 8), hl	// player.vy
+
+					ld  a, (_gpyy)
+					sla a
+					sla a
+					sla a
+					sla a
+					add 12
+					ld  (_gpy), a
+
+					ld  a, (_gpy)
+					ld  e, a
+					ld  d, 0
+					ld  l, 6
+					call l_asl
+					ld  (_player + 2), hl 	// player.y
+
+					ld  a, 1
+					ld  (_player + 37), a 	// player.ceiling
+					jr  vert_collision_done
+			#endif
+
+		.vert_collision_positive
+			// rdj > 0
+			// else if ((gpy & 15) <= (player.vy >> 6) -> (player.vy >> 6) >= (gpy & 16)
+			ld  a, (_gpy)
+			and 15
+			ld  c, a
+
+			ld  de, (_player + 8) 	// player.vy
+			ld  l, 6
+			call l_asr
+			ld  a, l
+
+			cp  c
+			jr  c, vert_collision_done
+
+			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+				// if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
+					ld  hl, (_gpxx)
+					ld  h, 0
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					inc hl
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 12
+
+					jr  nz, vert_collision_down
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, vert_collision_done
+
+					ld  hl, (_gpxx)
+					ld  h, 0
+					inc hl
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					inc hl
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 12
+					jr  z, vert_collision_done
+			#else
+				// if (((gpx & 15) < 12 && (attr (gpxx, gpyy + 1) & 12)) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy + 1) & 12))
+				.vert_collision_if3
+					ld  a, (_gpx)
+					and 15
+					cp  12
+					jr  nc, vert_collision_if4
+
+					ld  hl, (_gpxx)
+					ld  h, 0
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					inc hl
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 12
+
+					jr  nz, vert_collision_down
+
+				.vert_collision_if4
+					// (gpx & 15) > 4 => (gpx & 15) >= 5
+					ld  a, (_gpx)
+					and 15
+					cp  5
+					jr  c, vert_collision_done
+
+					ld  hl, (_gpxx)
+					ld  h, 0
+					inc hl
+					push hl
+					ld  hl, (_gpyy)
+					ld  h, 0
+					inc hl
+					push hl
+					call _attr
+					pop bc
+					pop bc
+					ld  a, l
+					and 12
+					jr  z, vert_collision_done
+			#endif
+
+		.vert_collision_down
+			ld  hl, 0
+			ld  (_player + 8), hl	// player.vy
+			
+			call _adjust_to_tile_y
+
+			ld  a, 1
+			ld  (_player + 26), a 	// player.possee
+
+		.vert_collision_done
+	#endasm
 
 	#ifdef SLIPPERY_TILES
 		player.ax = PLAYER_AX; player.rx = PLAYER_RX;
@@ -770,6 +1062,79 @@ void move (void) {
 	   x = x + vx
 	   vx = vx - rx
 	*/
+
+	// Push / pull boxes
+
+	#if defined PLAYER_PUSH_BOXES && defined PUSH_AND_PULL && !defined PLAYER_MOGGY_STYLE
+		player.grab_block = 0;
+
+		#if !defined SHORT_PLAYER
+			if ((pad0 & sp_FIRE) == 0 && player.possee) {
+				rdx = gpxx;	x0 = x1 = gpxx;	y0 = y1 = gpyy;
+				if (player.facing == 0) {				// Looking left
+					if ((gpx & 15) == 0 && qtile (gpxx - 1, gpyy) == 14) {
+						player.grab_block = 1;
+						if ((pad_this_frame & sp_LEFT) == 0) {
+							x0 = gpxx - 1; x1 = gpxx - 2;
+						} else if ((pad_this_frame & sp_RIGHT) == 0 && attr (gpxx + 1, gpyy) == 0) {
+							x0 = gpxx - 1; x1 = gpxx; 
+							gpxx ++; gpx += 16; player.x += (16<<6); 
+						}
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+					}
+				} else {								// Looking right
+					if ((gpx & 15) == 0 && qtile (gpxx + 1, gpyy) == 14) {
+						player.grab_block = 1;
+						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) == 0) {
+							x0 = gpxx + 1; x1 = gpxx;
+							gpxx --; gpx -= 16; player.x -= (16<<6); 
+						} else if ((pad_this_frame & sp_RIGHT) == 0) {
+							x0 = gpxx + 1; x1 = gpxx + 2; 
+						}
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+					}
+				}
+
+				if (x0 != x1) {
+					if (can_move_box ()) move_tile (1);
+					else { gpx = rdx << 4; player.x = gpx << 6;	}
+				}
+			}
+		#else
+			if ((pad0 & sp_FIRE) == 0 && player.possee) {				
+				rdx = gpx;	x0 = 0xff;	y0 = y1 = gpyy;
+				if (player.facing == 0) {				// Looking left
+					if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
+						player.grab_block = 1;
+						if ((pad_this_frame & sp_LEFT) == 0) {
+							x0 = gpxx; x1 = gpxx - 1;
+						} else if ((pad_this_frame & sp_RIGHT) == 0 && attr (gpxx + 2, gpyy) < 4) {
+							x0 = gpxx; x1 = gpxx + 1; 
+							gpxx ++; gpx += 16; player.x += (16<<6); 
+						}
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+					}
+				} else {								// Looking right
+					if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14) {
+						player.grab_block = 1;
+						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) < 4) {
+							x0 = gpxx + 1; x1 = gpxx;
+							gpxx --; gpx -= 16; player.x -= (16<<6); 
+						} else if ((pad_this_frame & sp_RIGHT) == 0) {
+							x0 = gpxx + 1; x1 = gpxx + 2; 
+						}						
+						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
+					}
+				}
+
+				if (x0 != 0xff) {
+					if (can_move_box ()) move_tile (1);
+					else { gpxx = rdx >> 4; gpx = rdx; player.x = gpx << 6; }
+				}
+			}
+		#endif
+	#endif
+
 	#ifdef PLAYER_NO_INERTIA
 		if ((pad0 & sp_LEFT) == 0) player.vx = -PLAYER_CONST_V;
 		if ((pad0 & sp_RIGHT) == 0) player.vx = PLAYER_CONST_V;
@@ -820,23 +1185,306 @@ void move (void) {
 
 	gpx = player.x >> 6;
 	gpxx = gpx >> 4;
-	
-	if (player.vx + ptgmx < 0) {
-		if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
-			// Stop and adjust
-			player.vx = 0;
-			gpxx ++; 
-			// gpx = gpxx << 4; player.x = gpx << 6;
-			adjust_to_tile_x ();
-		}
-	} else {
-		if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
-			// Stop and adjust
-			player.vx = 0;
-			// gpx = gpxx << 4; player.x = gpx << 6;
-			adjust_to_tile_x ();
-		}
+
+	/*
+	wall = 0;	
+	rdj = player.vx + ptgmx;
+	if (rdj) {
+		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			if (rdj < 0) {
+				if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
+					player.vx = 0; gpxx ++; adjust_to_tile_x ();
+				}
+			} else {
+				if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8)) {
+					player.vx = 0; adjust_to_tile_x ();
+				}
+			}
+		#else
+			if (rdj < 0 && (gpx & 15) < 12) {
+				if ( ((gpy & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpy & 15) && attr (gpxx, gpyy + 1) & 8)) {
+					player.vx = 0; gpx = (gpxx << 4) + 12; player.x = gpx << 6;
+					wall = WALL_LEFT;
+				}
+			} else if ((gpx & 15) >= 4)	{
+				if ( ((gpy & 15) < 12 && attr (gpxx + 1, gpyy) & 8) || ((gpy & 15) && attr (gpxx + 1, gpyy + 1) & 8)) {
+					player.vx = 0; gpx = (gpxx << 4) + 4; player.x = gpx << 6;
+					wall = WALL_RIGHT;
+				}
+			}
+		#endif
 	}
+	*/
+
+	#asm
+		
+			xor a 
+			ld  (_wall), a
+
+			ld  hl, (_player + 6)		// player.vx
+			ld  de, (_ptgmx)
+			add hl, de
+			ld  (_rdj), hl
+
+			// if (rdj)
+			ld  a, h
+			or  l
+			jp  z, horz_collision_done
+			
+			// if (rdj < 0)
+			bit 7, h
+			jp  z, horz_collision_positive
+
+		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+
+			.horz_collision_negative
+				// rdj < 0
+
+				// if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8))
+				ld  hl, (_gpxx)
+				ld  h, 0
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+
+				jr  nz, horz_collision_left
+
+				ld  a, (_gpy)
+				and 15
+				jr  z, horz_collision_done
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				inc hl
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+				jp  z, horz_collision_done
+
+			.horz_collision_left
+				ld  hl, 0
+				ld  (_player + 6), hl 	// player.vx
+
+				ld  hl, _gpxx
+				inc (hl)
+
+				call _adjust_to_tile_x
+				jr  horz_collision_done
+
+			.horz_collision_positive
+				// rdj > 0
+
+				// if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8))
+				ld  hl, (_gpxx)
+				ld  h, 0
+				inc hl
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+
+				jr  nz, horz_collision_right
+
+				ld  a, (_gpy)
+				and 15
+				jr  z, horz_collision_done
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				inc hl
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				inc hl
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+				jp  z, horz_collision_done
+
+			.horz_collision_right
+				ld  hl, 0
+				ld  (_player + 6), hl 	// player.vx
+
+				call _adjust_to_tile_x
+		#else
+
+			.horz_collision_negative
+				// rdj < 0
+
+				// if (gpx & 15) < 12
+				ld  a, (_gpx)
+				and 15
+				cp  12
+				jp  nc, horz_collision_done
+
+				// ((gpy & 15) < 12 && attr (gpxx, gpyy) & 8) ||
+				// ((gpy & 15) && attr (gpxx, gpyy + 1) & 8))
+
+			.horz_collision_if1
+				ld  a, (_gpy)
+				and 15
+				cp  12
+				jp  nc, horz_collision_if2
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+
+				jp  nz, horz_collision_left
+
+			.horz_collision_if2
+				ld  a, (_gpy)
+				and 15
+				jp  z, horz_collision_done
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				inc hl
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+
+				jp  z, horz_collision_done
+
+			.horz_collision_left
+
+				// player.vx = 0; gpx = (gpxx << 4) + 12; player.x = gpx << 6; wall = WALL_LEFT;
+				ld  hl, 0
+				ld  (_player + 6), hl 	// player.vx
+
+				ld  a, (_gpxx)
+				sla a
+				sla a 
+				sla a 
+				sla a 
+				add 12
+				ld  (_gpx), a
+
+				ld  a, (_gpx)
+				ld  e, a
+				ld  d, 0
+				ld  l, 6
+				call l_asl
+				ld  (_player), hl 		// player.x
+
+				ld  a, WALL_LEFT
+				ld  (_wall), a
+
+				jr  horz_collision_done
+
+			.horz_collision_positive
+				// if ((gpx & 15) >= 4)
+				ld  a, (_gpx)
+				and 15
+				cp  4
+				jp  c, horz_collision_done
+
+				// ((gpy & 15) < 12 && attr (gpxx + 1, gpyy) & 8) ||
+				// ((gpy & 15) && attr (gpxx + 1, gpyy + 1) & 8))
+
+			.horz_collision_if3
+				ld  a, (_gpy)
+				and 15
+				cp  12
+				jp  nc, horz_collision_if4
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				inc hl
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+
+				jp  nz, horz_collision_right				
+
+			.horz_collision_if4
+				ld  a, (_gpy)
+				and 15
+				jp  z, horz_collision_done
+
+				ld  hl, (_gpxx)
+				ld  h, 0
+				inc hl
+				push hl
+				ld  hl, (_gpyy)
+				ld  h, 0
+				inc hl
+				push hl
+				call _attr
+				pop bc
+				pop bc
+				ld  a, l
+				and 8
+
+				jp  z, horz_collision_done
+
+			.horz_collision_right
+
+				// player.vx = 0; gpx = (gpxx << 4) + 4; player.x = gpx << 6; wall = WALL_RIGHT;
+				ld  hl, 0
+				ld  (_player + 6), hl 	// player.vx
+
+				ld  a, (_gpxx)
+				sla a
+				sla a 
+				sla a 
+				sla a 
+				add 4
+				ld  (_gpx), a
+
+				ld  a, (_gpx)
+				ld  e, a
+				ld  d, 0
+				ld  l, 6
+				call l_asl
+				ld  (_player), hl 		// player.x
+
+				ld  a, WALL_RIGHT
+				ld  (_wall), a
+		#endif
+
+		.horz_collision_done
+	#endasm	
 	
 	// Shooting engine:
 	
@@ -856,10 +1504,13 @@ void move (void) {
 
 	// Sword
 	#ifdef ENABLE_SWORD
-		if (s_on == 0 && (pad0 & sp_FIRE) == 0) {
-			if ((pad0 & sp_UP) == 0) {
-				s_type = SWORD_TYPE_UP;
-			} else s_type = player.facing;
+		if (s_on == 0 && (pad_this_frame & sp_FIRE) == 0) {
+			#ifdef SWORD_UP
+				if ((pad0 & sp_UP) == 0) {
+					s_type = SWORD_TYPE_UP;
+				} else 
+			#endif
+			s_type = player.facing;
 
 			s_on = 1;
 			s_frame = 0;
@@ -870,24 +1521,41 @@ void move (void) {
 	// Keys / bolts engine:
 
 	#ifndef DEACTIVATE_KEYS
-		if ((gpx & 15) == 0 && (gpy & 15) == 0) {
+		if (
+			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+				(gpx & 15) == 0 
+			#else
+				wall
+			#endif
+			&& (gpy & 15) == 0
+		) {
 			if (qtile (gpxx + 1, gpyy) == 15 && player.keys > 0) {
 				set_map_tile (gpxx + 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx + 1, gpyy);
 				player.keys --;
 				play_sfx (8);
-			} else if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
-				set_map_tile (gpxx - 1, gpyy, 0, 0);
-				clear_cerrojo (gpxx - 1, gpyy);
-				player.keys --;
-				play_sfx (8);
-			}
+			} else 
+			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+				if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
+					set_map_tile (gpxx - 1, gpyy, 0, 0);
+					clear_cerrojo (gpxx - 1, gpyy);
+					player.keys --;
+					play_sfx (8);
+				}
+			#else
+				if (qtile (gpxx, gpyy) == 15 && player.keys > 0) {
+					set_map_tile (gpxx, gpyy, 0, 0);
+					clear_cerrojo (gpxx, gpyy);
+					player.keys --;
+					play_sfx (8);
+				}
+			#endif
 		}
 	#endif
 	
 	// Pushing boxes (tile #14) engine
 
-	#ifdef PLAYER_PUSH_BOXES
+	#if defined PLAYER_PUSH_BOXES && !defined PUSH_AND_PULL
 		#ifdef PLAYER_MOGGY_STYLE
 			if ((pad0 & sp_FIRE) == 0)
 		#endif
@@ -897,50 +1565,71 @@ void move (void) {
 				#ifdef PLAYER_MOGGY_STYLE
 					// Vertically, only when player.y is tile-aligned.
 					if ((gpy & 15) == 0) {
+						x0 = x1 = gpxx; 
 						if ((pad0 & sp_UP) == 0 && gpyy > 1) {
-						if (can_move_box (gpxx, gpyy - 1, gpxx, gpyy - 2)) {
-								move_tile (gpxx, gpyy - 1, gpxx, gpyy - 2, 1);
-							}
+							y0 = gpyy - 1; y1 = gpyy - 2;
+							if (can_move_box ()) move_tile (1);
+							
 							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2)) {		
-									move_tile (gpxx + 1, gpyy - 1, gpxx + 1, gpyy - 2, 1);
-								}
+								x0 = x1 = gpxx + 1;
+								if (can_move_box ()) move_tile (1);
 							}
 						} else if ((pad0 & sp_DOWN) == 0 && gpyy < 8) {
-						if (can_move_box (gpxx, gpyy + 1, gpxx, gpyy + 2)) {
-								move_tile (gpxx, gpyy + 1, gpxx, gpyy + 2, 1);
-							}
+							y0 = gpyy + 1; y1 = gpyy + 2;
+							if (can_move_box ()) move_tile (1);
+							
 							if ((gpx & 15) != 0) {
-								if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2)) {
-									move_tile (gpxx + 1, gpyy + 1, gpxx + 1, gpyy + 2, 1);
-								}	
+								x0 = x1 = gpxx + 1;
+								if (can_move_box ()) move_tile (1);
 							}
 						}
 					}
 				#endif
 
-				// Horizontally, only when player.x is tile-aligned.
-				if ((gpx & 15) == 0) {
-					if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
-						if (can_move_box (gpxx + 1, gpyy, gpxx + 2, gpyy)) {
-							move_tile (gpxx + 1, gpyy, gpxx + 2, gpyy, 1);
-						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1)) {
-								move_tile (gpxx + 1, gpyy + 1, gpxx + 2, gpyy + 1, 1);
+				#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+					// Horizontally, only when player.x is tile-aligned.
+					if ((gpx & 15) == 0) {
+						y0 = y1 = gpyy; 
+						if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
+							x0 = gpxx + 1; x1 = gpxx + 2;
+							if (can_move_box ()) move_tile (1);
+					
+							if ((gpy & 15) != 0) {
+								y0 = y1 = gpyy + 1;
+								if (can_move_box ()) move_tile (1);
 							}
-						}
-					} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
-						if (can_move_box (gpxx - 1, gpyy, gpxx - 2, gpyy)) {
-							move_tile (gpxx - 1, gpyy, gpxx - 2, gpyy, 1);
-						}
-						if ((gpy & 15) != 0) {
-							if (can_move_box (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1)) {
-								move_tile (gpxx - 1, gpyy + 1, gpxx - 2, gpyy + 1, 1);
+						} else if ((pad0 & sp_LEFT) == 0 && gpxx > 1) {
+							x0 = gpxx - 1; x1 = gpxx - 2;
+							if (can_move_box ()) move_tile (1);
+							
+							if ((gpy & 15) != 0) {
+								y0 = y1 = gpyy + 1;
+								if (can_move_box ()) move_tile (1);
 							}
+						}	
+					}
+				#else
+					y0 = y1 = gpyy;
+
+					if (wall == WALL_RIGHT && (pad0 & sp_RIGHT) == 0 && gpxx < 14) {
+						x0 = gpxx + 1; x1 = gpxx + 2;
+						if (can_move_box ()) move_tile (1);
+				
+						if ((gpy & 15) != 0) {
+							y0 = y1 = gpyy + 1;
+							if (can_move_box ()) move_tile (1);
 						}
-					}	
-				}			
+					} else if (wall == WALL_LEFT && (pad0 & sp_LEFT) == 0 && gpxx > 0) {
+						x0 = gpxx; x1 = gpxx - 1;
+
+						if (can_move_box ()) move_tile (1);
+				
+						if ((gpy & 15) != 0) {
+							y0 = y1 = gpyy + 1;
+							if (can_move_box ()) move_tile (1);
+						}
+					}
+				#endif
 		}
 	#endif
 
@@ -1054,12 +1743,13 @@ void move (void) {
 				ld  (_rdi), a
 			#endasm
 
-			if (
-				(0 == player.possee && 0 == player.gotten)
-				#ifdef ENABLE_SWORD
-					|| s_on
-				#endif
-			) {
+			#ifdef PUSH_AND_PULL
+				if (player.grab_block) rdd = PLAYER_GRAB_FRAME; else
+			#endif
+			#ifdef ENABLE_SWORD
+				if (s_on) rdd = SWORD_HIT_FRAME; else
+			#endif
+			if (0 == player.possee && 0 == player.gotten) {
 				rdd = 3;
 			} else {
 				if (
@@ -1919,6 +2609,9 @@ void mueve_bicharracos (void) {
 
 				{
 					en_tocado = 1; player.is_dead = 1; play_sfx (2);
+					#ifdef ENABLE_CODE_HOOKS
+						enemy_killer = enit;
+					#endif
 					
 					// We decide which kind of life drain we do:
 					#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
@@ -2047,28 +2740,35 @@ void mueve_bicharracos (void) {
 							jp  c, _enems_hit_sword_done
 					#endasm
 					{	
-						// Hit!
-						play_sfx (2);
-
-						#ifdef SWORD_PARALYZES
-							en_an_state [enit] = ENEM_PARALYZED;
-							en_an_count [enit] = SWORD_PARALYZES;
+						#ifdef PLAYER_MIN_KILLABLE
+							if (_en_t >= PLAYER_MIN_KILLABLE)
 						#endif
+						{
+							// Hit!
+							play_sfx (2);
+							s_on = 0;
 
-						// Kill?
-						#if SWORD_LINEAL_DAMAGE > 0
-							if (_en_t < 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
-						#endif
+							#ifdef SWORD_PARALYZES
+								en_an_state [enit] = ENEM_PARALYZED;
+								en_an_count [enit] = SWORD_PARALYZES;
+							#endif
 
-						#if SWORD_FLYING_DAMAGE > 0
-							if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-						#endif
+							// Kill?
+							#if SWORD_LINEAL_DAMAGE > 0
+								if (_en_t < 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+							#endif
 
-						#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-							if (_en_life == 0) {
-								enems_kill ();
-							}
-						#endif
+							#if SWORD_FLYING_DAMAGE > 0
+								if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
+							#endif
+
+							#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
+								if (_en_life == 0) {
+									en_an_next_frame [enit] = sprite_17_a;
+									enems_kill ();
+								}
+							#endif
+						}
 					}
 					#asm
 						._enems_hit_sword_done

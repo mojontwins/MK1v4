@@ -34,12 +34,12 @@
 				fallingboxbuffer [rdi].act = 0;
 		}
 
-		void fall_box (unsigned char x, unsigned char y) {
+		void fall_box () {
 			for (rdi = 0; rdi < MAX_FALLING_BOXES; rdi ++) {
 				if (!fallingboxbuffer [rdi].act) {
 					fallingboxbuffer [rdi].act = 1;
-					fallingboxbuffer [rdi].x = x;
-					fallingboxbuffer [rdi].y = y;
+					fallingboxbuffer [rdi].x = x1;
+					fallingboxbuffer [rdi].y = y1;
 					break;
 				}
 			}

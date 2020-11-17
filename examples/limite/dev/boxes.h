@@ -4,7 +4,7 @@
 #ifdef PLAYER_PUSH_BOXES
 	unsigned char boxx, boyy;
 
-	unsigned char can_move_box (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1) {
+	unsigned char can_move_box (void) {
 		#ifdef ENEMIES_BLOCK_BOXES	
 			boxx = x1 << 4; boyy = y1 << 4;
 			rdd = enoffs + MAX_ENEMS;
@@ -19,6 +19,11 @@
 
 		if (qtile (x0, y0) != 14 || attr (x1, y1) >= 4)
 			return 0;
+
+		#ifdef PUSH_OVER_FLOOR
+			if (attr (x1, y1 + 1) < 4) return 0;
+			if (qtile (x0, y0 - 1) == 14) return 0;
+		#endif
 			
 		return 1;
 	}
@@ -29,12 +34,12 @@
 				fallingboxbuffer [rdi].act = 0;
 		}
 
-		void fall_box (unsigned char x, unsigned char y) {
+		void fall_box () {
 			for (rdi = 0; rdi < MAX_FALLING_BOXES; rdi ++) {
 				if (!fallingboxbuffer [rdi].act) {
 					fallingboxbuffer [rdi].act = 1;
-					fallingboxbuffer [rdi].x = x;
-					fallingboxbuffer [rdi].y = y;
+					fallingboxbuffer [rdi].x = x1;
+					fallingboxbuffer [rdi].y = y1;
 					break;
 				}
 			}
@@ -49,11 +54,13 @@
 					if (fallingboxbuffer [rdi].act) {
 						// Fall this box?
 						if (attr (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y + 1) < 4) {
-							move_tile (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y, fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y + 1, 0);
+							x0 = fallingboxbuffer [rdi].x; y0 = fallingboxbuffer [rdi].y;
+							x1 = x0; y1 = y0 + 1;
+							move_tile (0);
 							// Check for cascades! (box beneath?)
 							if (qtile (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1) == 14)
-								fall_box (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1);
-							fallingboxbuffer [rdi].y ++;
+								x1 = fallingboxbuffer [rdi].x; y1 = fallingboxbuffer [rdi].y - 1; fall_box ();
+								fallingboxbuffer [rdi].y ++;
 							#if defined (BOXES_KILL_ENEMIES) || defined (BOXES_KILL_PLAYER)
 								boxx = fallingboxbuffer [rdi].x << 4;
 								boyy = fallingboxbuffer [rdi].y << 4;
