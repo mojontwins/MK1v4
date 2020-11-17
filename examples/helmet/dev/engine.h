@@ -2071,6 +2071,9 @@ void mueve_bicharracos (void) {
 
 				{
 					en_tocado = 1; player.is_dead = 1; play_sfx (2);
+					#ifdef ENABLE_CODE_HOOKS
+						enemy_killer = enit;
+					#endif
 					
 					// We decide which kind of life drain we do:
 					#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)

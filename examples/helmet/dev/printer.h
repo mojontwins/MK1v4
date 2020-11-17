@@ -322,6 +322,26 @@ void any_key (void) {
 	#endasm
 }
 
+
+void espera_activa (int espera) {
+	// Waits until "espera" halts have passed 
+	// or a key has been pressed.
+
+	while (espera--)  {
+		#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
+			#asm
+				halt
+			#endasm
+		#else
+			rdd = 250; do { rdi = 1; } while (rdd --);
+		#endif
+
+		if (any_key ()) {
+			break;
+		}
+	}
+}
+
 #ifdef ENABLE_PERSISTENCE
 	void persist (void) {
 		// Marks tile _x, _y @ n_pant to be cleared next time we enter this screen	

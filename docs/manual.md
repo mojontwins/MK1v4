@@ -577,6 +577,16 @@ Aquí tenemos un ejemplo tonto de un enemigo que sólo "tirita" y cambia de fram
 
 ```
 
+### Datos disponibles
+
+Si estás usando enganches, el motor deja valores interesantes en algunas variables, que tú puedes gestionar:
+
+* `latest_hotspot` valdrá distinto de cero si el jugador acaba de tocar un hotspot y contendrá el valor de dicho hotspot.
+
+* `enemy_died` contiene el número del último enemigo que el jugador ha eliminado (0-2). Es tarea del programador ponerlo a 0. Este índice se puede usar para obtener o modificar cualquier valor del enemigo, que ocupará el espacio `enoffs + enemy_died` del array `malotes`.
+
+* `enemy_killer` contiene el número del último enemigo que mató al jugador (0-2). Es tarea del programador ponerlo a 0. Este índice se puede usar para obtener o modificar cualquier valor del enemigo, que ocupará el espacio `enoffs + enemy_died` del array `malotes`.
+
 ## Tipo de motor
 
 ### Directivas miscelaneas
@@ -715,6 +725,9 @@ Permite que el tile 14 del tileset pueda empujarse. En modo lateral, además, po
 	// ------------
 
 	#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
+	#define PUSH_OVER_FLOOR 				// Must be on floor to push
+	#define PUSH_AND_PULL 					// Use fire+LEFT/RIGHT to push/pull in side view
+	#define PLAYER_GRAB_FRAME 		2		// Use with PUSH_AND_PULL, which frame 0-3.
 	//#define FALLING_BOXES					// If defined, boxes can fall off ledges.
 	//#define FALLING_BOXES_SPEED 	4		// Boxes fall every nth frame.
 	//#define ENEMIES_BLOCK_BOXES			// If defined, you can't push a box if it collides an enemy
@@ -724,6 +737,12 @@ Permite que el tile 14 del tileset pueda empujarse. En modo lateral, además, po
 ```
 
 * `PLAYER_PUSH_BOXES` activa el motor de cajas empujables.
+
+* `PUSH_OVER_FLOOR`: En **vista lateral**, las cajas sólo se mueven si tienen suelo debajo y no tienen otra caja arriba.
+
+* `PUSH_AND_PULL`: En **vista lateral**, se puede tirar y empujar de cajas. Si el jugador se coloca mirando a una caja pegado a ella y deja pulado el botón de disparo, *agarrará* la caja, que podrá mover a izquierda o derecha con los controles. Está pensado para ser usado con `PUSH_OVER_FLOOR`,  y además necesita que definamos la siguiente macro:
+
+* `PLAYER_GRAB_FRAME`: Se usa con `PUSH_AND_PULL`, indica qué gráfico del jugador (0-3) se usará para representar que ha agarrado la caja.
 
 * `FALLING_BOXES`: Debe utilizarse con `PLAYER_PUSH_BOXES` y activa el motor de cajas empujables con gravedad.
 
@@ -989,6 +1008,7 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 ```c
 	//#define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
+	//#define SHORT_PLAYER 					// Bounding box 12x16
 	//#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
 	//#define BOTH_KEYS_JUMP				// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 	//#define RAMIRO_HOP 					// press jump when reaching a type 4 platform to jump again 
@@ -1002,6 +1022,8 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 ```
 
 * `PLAYER_HAS_JUMP`: el jugador puede saltar pulsando "arriba".
+
+* `SHORT_PLAYER`: El jugador colisiona con el escenario con una caja más pequeña, de 8x12 pixels. Esto permite tener un control más agradable en motores de vista lateral cuando el sprite no suele ocupar todo el ancho de la caja de 16x16. Además, permite entrar por huecos de un sólo tile más fácilmente.
 
 * `FIRE_TO_JUMP`: se usa con `PLAYER_HAS_JUMP` para saltar pulsando el botón de disparo en vez de "arriba".
 
@@ -1192,6 +1214,29 @@ Según el ejemplo, la velocidad horizontal máxima será de 192, o lo que es lo 
 En los juegos de vista cenital, como hemos dicho, se aplican estos últimos valores para ambos ejes.
 
 ## Comportamiento de los tiles
+
+Cada uno de nuestros 16 tiles tendrá un comportamiento definido. Para esta versión de la **MTE MK1**  hay ocho comportamientos base posibles: 
+
+|#|Comportamiento
+|---|---
+|0|traspasable
+|1|mata (pinchos, lava)
+|2|traspasable y esconde
+|3|traspasable, evil zone (ver `DEACTIVATE_EVIL_ZONE`)
+|4|plataforma. En vista lateral, sólo detiene desde arriba.
+|8|obstáculo
+|16|resbaloso (sólo vista lateral)
+|32|destructible
+
+Los comportamientos base son por lo general acumulables: puedes obtener estados combinados sumando los valores de los estados base. En esta versión de **MTE MK1** el comportamiento 1 (mata) y el comportamiento 3 (evil zone) no pueden combinarse con otros.
+
+Por ejemplo, 
+
+* 8 (obstáculo) + 32 (destructible) = 40 (obstáculo destructible).
+* 4 (plataforma) + 16 (resbaloso) = 20 (plataforma resbalosa).
+...
+
+El comportamiento 3 NO es una combinación de 1+2, ya que 1 no se puede combinar en esta versión del motor. El comportamiento 7 NO funcionará como cominación de 3+4, ya que el 3 no se puede combinar en esta versión del motor.
 
 ## Memoria dinámica para sprites
 

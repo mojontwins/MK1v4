@@ -20,7 +20,7 @@
 		if (n_pant == 0 && gpy < 80) 
 			scenery_info.allow_type_6 = 1;
 
-		if (enemy_died == 6) {
+		if (malotes [enoffs + enemy_died].t == 6) {
 			set_map_tile (7, 2, 17, 0);
 			sp_UpdateNow ();
 			play_sfx (6);

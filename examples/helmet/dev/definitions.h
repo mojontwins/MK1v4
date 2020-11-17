@@ -160,6 +160,7 @@ unsigned char *_baddies_pointer;
 
 #if defined ENABLE_CODE_HOOKS && (defined ENEMIES_MAY_DIE)
 	unsigned char enemy_died;
+	unsigned char enemy_killer;
 #endif
 
 // Tile behaviour array and tile array for the current screen

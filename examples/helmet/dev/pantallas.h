@@ -44,32 +44,6 @@ void unpack (void) {
 	#endasm
 }
 
-void espera_activa (int espera) {
-	// Waits until "espera" halts have passed 
-	// or a key has been pressed.
-
-	#if !(defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME)
-		#asm 
-			ei
-		#endasm
-	#endif
-
-	while (espera--)  {
-		#asm
-			halt
-		#endasm
-		if (any_key ()) {
-			break;
-		}
-	}
-
-	#if !(defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME)
-		#asm
-			di
-		#endasm
-	#endif
-}
-
 void title_screen (void) {
 	sp_UpdateNow();
 	asm_int = (unsigned int) (s_title); unpack ();
