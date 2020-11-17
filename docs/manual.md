@@ -1834,11 +1834,25 @@ En esta sección vamos a explicar cómo hacer cosas chulas con código custom. T
 
 Puedes usar estas funciones:
 
-* `void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned char n);` coloca el tile T con comportamiento N en la posición (X, Y) (coordenadas de tile) de la pantalla. Para modificar la pantalla actual.
+* `void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned char n);` coloca el tile `t`con comportamiento `n` en la posición `(x, y)` (coordenadas de tile) de la pantalla. Para modificar la pantalla actual.
 
-* `void sp_UpdateNow ()` [splib2]: Actualiza la pantalla con los últimos cambios.
+* `void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t);` dibuja (y sólo dibuja) el tile `t` en las coordenadas de carácter `(x, y)`. Puedes dibujar en cualquier parte de la pantalla, no sólo en el área de juego. Aunque dibujes en el área de juego, no afectará la información de la pantalla actual.
 
-* `void play_sfx (unsigned char s)` reproduce el efecto de sonido `s`, según esta tabla:
+* `void draw_rectangle (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char c);` dibuja un rectángulo desde las coordenadas de carácter `(x0, y0)` a `(x1, y1)` usando el atributo `c`.
+
+* `void draw_scr_background ();` vuelve a dibujar el fondo de la pantalla actual. También actualiza los posibles cerrojos y *hotspots*.
+
+* `void draw_text (unsigned char x, unsigned char y, unsigned char c, unsigned char *s);` escribe el texto `s` en las coordenadas de carácter `(x, y)` usando el atributo `c`.
+
+* `void draw_2_digits (x, y, n);` dibuja el número de dos cifras `n` en `(x, y)`.
+
+* `void espera_activa (n);`: Espera a que pase un rato (definido por `n`) o que pulsemos una tecla. Si estamos usando una ISR (en modo 128 o con el limitador de fps), `n` equivale al número de cuadros de TV (50 = 1segundo). Si no, `n` equivale a un misterioso intervalo, desconocido pero bien definido (expermienta).
+
+* `void saca_a_todo_el_mundo_de_aqui ();`: Saca los sprites estándar (jugador, enemigos, espada, disparos) del área de juego.
+
+* `void init_player_values ();`: Inicializa los valores del player: posición inicial, velocidad 0, salto desactivado, etc.
+
+* `void play_sfx (unsigned char s);` reproduce el efecto de sonido `s`, según esta tabla:
 
 |S|Efecto
 |---|---
@@ -1854,7 +1868,13 @@ Puedes usar estas funciones:
 |10|explosion
 |11|talk 2	
 
+* `void sp_Border (unsigned char b);` [**splib2**]: Pone el borde de color `b`.
+
+* `void sp_UpdateNow ();` [**splib2**]: Actualiza la pantalla con los últimos cambios.
+
 ### Añadiendo sprites
+
+Aunque no sea 100% necesario, el saber no ocupa lugar y te vendrá muy bien comprender cómo funcionan los sprites en **splib2**. Puedes leer sobre ellos [la documentación de **splib2**](https://github.com/mojontwins/MK1/blob/churrera_4/docs/splib2-tutorial.pdf) a partir de la página 12.
 
 Si queremos añadir sprites, además de tener listo un binario que los contenga y que podamos importar, habrá que añadir bloques a `NUMBLOCKS` en `churromain.c` teniendo en cuenta el tamaño del sprite que queramos añadir según la fórmula 
 
@@ -1862,9 +1882,9 @@ Si queremos añadir sprites, además de tener listo un binario que los contenga 
 
 o sea, 5 por cada sprite nuevo de 8x8, 10 si es de 16x16. Ojo, por cada *ente* *sprite* que va a aparecer en pantalla, nada que ver con el número de gráficos distintos que se empléen para animarlos.
 
-Para importar los gráficos podemos seguir varias vías:
+Las tareas de convertir, importar y definir sprites varían levemente dependiendo de si son de 8x8 o 16x16:
 
-#### Más gráficos para sprites de 16x16
+#### Sprites de 16x16
 
 Si son de 16x16, podemos añadirlos al final de nuestro spriteset básico de `sprites.png`, sencillamente poniéndolos a continuación en nuevas filas:
 
@@ -1876,13 +1896,94 @@ Luego, modificaremos `comp.bat` para que, en lugar de convertir con `sprcnv.exe`
 
 Esto importará los 16 gráficos estándar normalmente, y los gráficos extra a partir del 17 en tres columnas como `extra_sprite_N_a`, `extra_sprite_N_b` y `extra_sprite_N_c`, con N el número de gráfico. Serán estos punteros los que necesitaremos posteriormente para definir los sprites.
 
-#### Más gráficos para sprites de 8x8
+Con esto los nuevos gráficos ya estarán convertidos e importados, y sólo tendremos que definir nuestro nuevo ente sprite. 
 
-Para añadir gráficos de 8x8 tendremos que tomar una via alternativa, añadiendo a `comp.bat` una llamada a `sprcnv8bin.exe`, que convierte spritesets de 8x8 y genera binarios. Por ejemplo, esta linea es la que importa 1 nuevo gráfico de 8x8 para usar en un sprite en **Helmet**:
+Empezaremos creando tres nuevas variables: una que apuntará a la estructura de datos del ente sprite, y otras dos que utilizaremos para cambiar su gráfico en el caso de ser necesario (obviamente puedes llamarlas como mejor te venga, esto es un ejemplo):
 
-``..\utils\sprcnvbin8.exe ..\gfx\sprite_alarm.png sprite_alarm.bin 1 > nul`` 
+```c
+	struct sp_SS *sp_extra;
+	unsigned char *extra_next_frame, *extra_current_frame;
+```
 
-Los spritesets de 8x8 son muy parecidos a los normales: gráficos png de hasta 256 píxels de ancho y todo lo que necesitemos de alto, con todos los gráficos y sus máscaras uno al lado de otro.
+Para este tipo de tareas tenemos el *hook* `hook_system_inits`. La definición de sprites en **splib2** para un sprite de 16x16 consiste en una llamada inicial a `sp_CreateSpr` y dos llamadas extra `sp_AddColSpr` para añadir las dos columnas extra. Podemos definir el sprite utilizando las tres columnas de cualquiera de sus gráficos. Por ejemplo, aquí definimos un sprite extra utilizando `extra_sprite_17_*`:
+
+```c
+	void hook_system_inits (void) {
+		sp_extra = sp_CreateSpr (sp_MASK_SPRITE, 3, extra_sprite_17_a, 3);
+		sp_AddColSpr (sp_extra, extra_sprite_17_b);
+		sp_AddColSpr (sp_extra, extra_sprite_17_c);
+		extra_current_frame = extra_next_frame = extra_sprite_17_a;
+	}
+```
+
+Una vez definido podemos moverlo adonde queramos con `sp_MoveSprAbs`. 
+
+El tercer parámetro de `sp_MoveSprAbs` es un *offset*, un valor que se *sumará* al puntero que la estructura del ente sprite mantiene apuntando al las columnas gráfico del sprite. Si tu sprite siempre va a tener el gráfico con el que se definió y nunca va a cambiar, puedes pasar un "0" en este campo y pasar completamente de las variables `extra_current_frame` y `extra_next_frame`.
+
+Si, en cambio, lo vas a animar, usaremos estas dos variables para mantener el offset en orden, así (`x` e `y` son las coordendas donde se pintará dentro del área de juego, deberemos sustituirlas por las variables que vayamos a usar):
+
+```c
+	sp_MoveSprAbs (sp_extra, spritesClip, extra_next_frame - extra_current_frame, VIEWPORT_X + (x >> 3), VIEWPORT_Y + (y >> 3), x & 7, y & 7);
+	extra_current_frame = extra_next_frame;
+```
+
+De este modo, cuando queramos cambiar el gráfico mostrado, sólo tendremos que asignar el puntero correcto a `extra_current_frame`; por ejemplo, para cambiar al gráfico 20:
+
+```c
+	extra_next_frame = extra_sprite_20_a;
+```
+
+Si queremos sacar el sprite de la pantalla haremos literalmente eso:
+
+```c
+	sp_MoveSprAbs (sp_extra, spritesClip, 0, VIEWPORT_X + 30, VIEWPORT_Y + 20, 0, 0);
+```
+
+### Sprites de 8x8
+
+En el caso de los sprites de 8x8 la conversión e importación es más enrevesada, la definición muy parecida, y la utilización idéntica a la de los sprites de 16x16.
+
+Para convertir sprites de 8x8 deberemos definir un spriteset extra de 8x8. Los spritesets de 8x8 son muy parecidos a los normales: gráficos png de hasta 256 píxels de ancho y todo lo que necesitemos de alto, con todos los gráficos y sus máscaras uno al lado de otro. Ya has leído sobre spritesets de 8x8 en este manual: el spriteset de la espada es un claro ejemplo de spriteset de 8x8.
+
+Una vez tenemos el spriteset de 8x8 disponible como archivo png en `gfx/`, añadiremos a `comp.bat` una llamada a `sprcnv8bin.exe`, que convierte estos spritesets y genera binarios. Por ejemplo, esta linea es la que convierte 2 nuevos gráficos de 8x8:
+
+``..\utils\sprcnvbin8.exe ..\gfx\sprite_extra_8x8.png sprite_extra.bin 2 > nul`` 
+
+Los gráficos de 8x8 par sprites ocupan 64 bytes cada uno, y se componen de dos columnas de 32 bytes cada una. Una vez convertidos, tendremos que importarlos en nuestro binario. Podemos hacerlo al principio de `custom.h`, definiendo un array tipo `extern` y luego importando desde un bloque `#asm / #endasm` empleando la directiva `BINARY`:
+
+```c
+	extern unsigned char sprite_extra [];
+	#asm
+		._sprite_extra
+			BINARY "sprite_extra.bin"
+	#endasm
+```
+
+Con esto los nuevos gráficos ya estarán convertidos e importados, y sólo tendremos que definir nuestro nuevo ente sprite. 
+
+Empezaremos creando tres nuevas variables: una que apuntará a la estructura de datos del ente sprite, y otras dos que utilizaremos para cambiar su gráfico en el caso de ser necesario (obviamente puedes llamarlas como mejor te venga, esto es un ejemplo):
+
+```c
+	struct sp_SS *sp_extra;
+	unsigned char *extra_next_frame, *extra_current_frame;
+```
+
+Como en el caso de 16x16, utilizaremos el *hook* `hook_system_inits` para crear nuestro sprite de 8x8. En este caso sólo tenemos una columna que añadir (porque los sprites de 8x8 tienen dos columnas en total):
+
+```c
+	void hook_system_inits (void) {
+		sp_extra = sp_CreateSpr (sp_MASK_SPRITE, 2, sprite_extra, 3);
+		sp_AddColSpr (sp_extra, sprite_extra + 32);
+	}
+```
+
+Como aquí no tenemos punteros a cada columna, calculamos la dirección de la columna sumando 32 al puntero que apunta al primer sprite.
+
+El manejo es igual que en los sprites de 16x16 que hemos visto antes, con el detalle de que para cambiar de gráfico no tendremos un puntero definido a cada uno, sino que tendremos que calcularlos mediante la fórmula:
+
+`sprite_extra` + N * 64
+
+Donde N es el número de gráfico, empezando por 0.
 
 ### La estructura `scenery_info`
 
@@ -1945,3 +2046,6 @@ Este código mínimo en `hook_mainloop` hará que un hotspot de tipo 6 pueda "to
 
 Si activas `ENEMIES_MAY_BE_PARALIZED` puedes paralizar a cualquiera de los enemigos que hay en pantalla colocando su `en_an_state` a `ENEM_PARALYZED` y estableciendo un número de cuadros en `en_an_count`. Los enemigos paralizados recuperarán su estado normal cuando se agote el contador. Una forma de evitar esto y que se desparalicen cuando tú quieras es restaurar continuamente el valor de `en_an_count`. 
 
+## Más
+
+Pronto más. ¿Echas en falta algo? Dímelo.
