@@ -379,22 +379,6 @@ void cortina (void) {
 	}
 #endif
 
-#ifdef PLAYER_PUSH_BOXES
-	void move_tile (unsigned char act) {
-		set_map_tile (x0, y0, 0, comportamiento_tiles [0]);
-		set_map_tile (x1, y1, 14, comportamiento_tiles [14]);
-
-		// Sound
-		if (act) {
-			play_sfx (8);
-			#ifdef FALLING_BOXES
-				// Añadir al buffer de cajas cayentes.
-				fall_box (x1, y1);
-			#endif
-		}
-	}
-#endif
-
 #if defined RESPAWN_REENTER || defined BOXES_KILL_PLAYER
 	void explode_player (void) {
 		player.next_frame = sprite_17_a;

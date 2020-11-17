@@ -2,7 +2,19 @@
 // Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 #ifdef PLAYER_PUSH_BOXES
-	unsigned char boxx, boyy;
+	void move_tile (unsigned char act) {
+		set_map_tile (x0, y0, 0, comportamiento_tiles [0]);
+		set_map_tile (x1, y1, 14, comportamiento_tiles [14]);
+
+		// Sound
+		if (act) {
+			play_sfx (8);
+			#ifdef FALLING_BOXES
+				// Añadir al buffer de cajas cayentes.
+				fall_box ();
+			#endif
+		}
+	}
 
 	unsigned char can_move_box (void) {
 		#ifdef ENEMIES_BLOCK_BOXES	
@@ -34,12 +46,12 @@
 				fallingboxbuffer [rdi].act = 0;
 		}
 
-		void fall_box (unsigned char x, unsigned char y) {
+		void fall_box () {
 			for (rdi = 0; rdi < MAX_FALLING_BOXES; rdi ++) {
 				if (!fallingboxbuffer [rdi].act) {
 					fallingboxbuffer [rdi].act = 1;
-					fallingboxbuffer [rdi].x = x;
-					fallingboxbuffer [rdi].y = y;
+					fallingboxbuffer [rdi].x = x1;
+					fallingboxbuffer [rdi].y = y1;
 					break;
 				}
 			}
@@ -54,11 +66,18 @@
 					if (fallingboxbuffer [rdi].act) {
 						// Fall this box?
 						if (attr (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y + 1) < 4) {
+							x0 = fallingboxbuffer [rdi].x; y0 = fallingboxbuffer [rdi].y;
+							x1 = x0; y1 = y0 + 1;
 							move_tile (0);
-							// Check for cascades! (box beneath?)
-							if (qtile (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1) == 14)
-								fall_box (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1);
+
+							// Check for cascades! (box above?)
+							if (qtile (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1) == 14) {
+								x1 = fallingboxbuffer [rdi].x; y1 = fallingboxbuffer [rdi].y - 1; 
+								fall_box ();
+							}
+							
 							fallingboxbuffer [rdi].y ++;
+							
 							#if defined (BOXES_KILL_ENEMIES) || defined (BOXES_KILL_PLAYER)
 								boxx = fallingboxbuffer [rdi].x << 4;
 								boyy = fallingboxbuffer [rdi].y << 4;

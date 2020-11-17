@@ -27,6 +27,9 @@
 #define MAX_FALLING_BOXES 	8
 #define MAX_BREAKABLE 		4
 
+#define WALL_LEFT 			1
+#define WALL_RIGHT 			2
+
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
 	int vx, vy; 										// 6, 8
@@ -48,6 +51,7 @@ typedef struct {
 	unsigned char killingzone_beepcount; 				// 35
 	unsigned char is_dead; 								// 36
 	unsigned char ceiling; 								// 37
+	unsigned char grab_block; 							// 38
 } INERCIA;
 
 typedef struct {
@@ -59,8 +63,6 @@ typedef struct {
 
 typedef struct {
 	unsigned char show_coins;	
-	unsigned char fixed_screens;
-	unsigned char show_level_info;
 	unsigned char evil_kills_slowly;
 	unsigned char evil_zone_active;
 	unsigned char allow_type_6;
@@ -156,6 +158,7 @@ unsigned char *_baddies_pointer;
 
 #if defined ENABLE_CODE_HOOKS && (defined ENEMIES_MAY_DIE)
 	unsigned char enemy_died;
+	unsigned char enemy_killer;
 #endif
 
 // Tile behaviour array and tile array for the current screen
@@ -205,6 +208,13 @@ unsigned char max_screens = MAP_W * MAP_H;
 
 unsigned char flags [MAX_FLAGS];
 
+// Boxes
+
+#ifdef PLAYER_PUSH_BOXES
+	unsigned char x0, y0, x1, y1;
+	unsigned char boxx, boyy;
+#endif
+
 // Falling boxes
 
 #if defined(FALLING_BOXES) && defined(PLAYER_PUSH_BOXES)
@@ -221,7 +231,9 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_hit_x, s_hit_y;
 
 	unsigned char swoffs_x [] = {8, 10, 12, 14, 15, 15, 14, 13, 10};
-	unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
+	#ifndef SWORD_STAB
+		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
+	#endif
 #endif
 
 // Breakable
@@ -250,12 +262,13 @@ unsigned char success;
 unsigned char rdi;
 signed int rdj;
 unsigned char rdx, rdy;
-unsigned char gpit, enit, pad0;
+unsigned char gpit, enit, pad0, pad1, pad_this_frame;
 unsigned char gpx, gpy, gpxx, gpyy;
 int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
 unsigned char _x, _y, _t, _n;
+unsigned char wall;
 
 #if defined TWO_SETS || defined TWO_SETS_REAL
 	unsigned char tileoffset;
@@ -272,12 +285,15 @@ unsigned char bitmask [] = {
 
 // Prototypes
 
-void fall_box (unsigned char x, unsigned char y);
-void init_falling_box_buffer ();
-unsigned char can_move_box (unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1);
+void fall_box (void);
+void move_tile (unsigned char act);
+void init_falling_box_buffer (void);
+unsigned char can_move_box (void);
 void do_extern_action (unsigned char n);
-void saca_a_todo_el_mundo_de_aqui ();
-void draw_scr_background ();
-void draw_scr ();
-void init_player_values (); 
+void saca_a_todo_el_mundo_de_aqui (void);
+void draw_scr_background (void);
+void draw_scr (void);
+void init_player_values (void); 
 unsigned char rand (void);
+unsigned char player_hidden (void);
+void espera_activa (int espera);

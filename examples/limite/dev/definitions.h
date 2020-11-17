@@ -212,6 +212,7 @@ unsigned char flags [MAX_FLAGS];
 
 #ifdef PLAYER_PUSH_BOXES
 	unsigned char x0, y0, x1, y1;
+	unsigned char boxx, boyy;
 #endif
 
 // Falling boxes
@@ -285,6 +286,7 @@ unsigned char bitmask [] = {
 // Prototypes
 
 void fall_box (void);
+void move_tile (unsigned char act);
 void init_falling_box_buffer (void);
 unsigned char can_move_box (void);
 void do_extern_action (unsigned char n);

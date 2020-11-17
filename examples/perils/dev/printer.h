@@ -322,6 +322,26 @@ void any_key (void) {
 	#endasm
 }
 
+
+void espera_activa (int espera) {
+	// Waits until "espera" halts have passed 
+	// or a key has been pressed.
+
+	while (espera--)  {
+		#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
+			#asm
+				halt
+			#endasm
+		#else
+			rdd = 250; do { rdi = 1; } while (rdd --);
+		#endif
+
+		if (any_key ()) {
+			break;
+		}
+	}
+}
+
 #ifdef ENABLE_PERSISTENCE
 	void persist (void) {
 		// Marks tile _x, _y @ n_pant to be cleared next time we enter this screen	
@@ -354,5 +374,19 @@ void any_key (void) {
 				ld  (hl), a
 				ldir
 		#endasm
+	}
+#endif
+
+#ifdef DEBUG
+	unsigned char drda, drdb;
+	unsigned char hex_code (unsigned char n) {
+		if (n < 10) return (n + 16);
+		else return n + 23;
+	}
+
+	void print_hex (unsigned char x, unsigned char y, unsigned char h) {
+		drda = hex_code (h >> 4); drdb = hex_code (h & 15);
+		sp_PrintAtInv (y, x, 71, drda);
+		sp_PrintAtInv (y, 1 + x, 71, drdb);
 	}
 #endif
