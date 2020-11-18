@@ -14,7 +14,7 @@ unsigned char map_behaviours [] = {
 
 // Level set
 
-unsigned char scr_ini [] = { 10/*16*/, 2 };
+unsigned char scr_ini [] = { 10, 16, 2 };
 unsigned char ini_x [] = { 2, 7 };
 unsigned char ini_y [] = { 8, 4 };
 unsigned char hostages [] = { 1, 1 };
@@ -118,7 +118,7 @@ void todos_rescatados_check (void) {
 		if (noticed) {
 			alarm ++;
 			noticed = 0;
-		}
+		} else if (alarm) alarm = 0;
 
 		// Gotcha!
 
@@ -208,7 +208,7 @@ void todos_rescatados_check (void) {
 			// Saw you!
 			rdi = 0;
 			if (0 == player_hidden ()) {
-				if (gpy + 31 >= _en_y && gpy <= _en_y + 31) {
+				if (gpy + 31 >= _en_y && gpy <= _en_y + 27) {
 					rdi = ((en_an_facing [enit] == 0 && gpx >= _en_x + 15) ||
 						(en_an_facing [enit] && gpx <= _en_x - 15));
 				}

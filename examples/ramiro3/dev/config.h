@@ -159,6 +159,7 @@
 // -------------------------
 
 //#define PLAYER_CAN_HIDE				// If defined, tile type 2 hides player.
+//#define HIDDEN_CAN_MOVE 				// Originally, if you are moving you are not hidden. Override.
 //#define RANDOM_RESPAWN				// If defined, automatic flying enemies spawn on killed enemies
 #define USE_TYPE_6						// If defined, type 6 enemies are enabled.
 //#define USE_SIGHT_DISTANCE			// If defined, type 6 only pursue you within sight distance

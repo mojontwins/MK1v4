@@ -937,6 +937,7 @@ Permite activar y configurar *fantys*.
 
 ```c
     //#define PLAYER_CAN_HIDE               // If defined, tile type 2 hides player.
+	//#define HIDDEN_CAN_MOVE 				// Originally, if you are moving you are not hidden. Override.
     //#define RANDOM_RESPAWN                // If defined, automatic flying enemies spawn on killed enemies
     //#define USE_TYPE_6                    // If defined, type 6 enemies are enabled.
     //#define USE_SIGHT_DISTANCE            // If defined, type 6 only pursue you within sight distance
@@ -948,6 +949,8 @@ Permite activar y configurar *fantys*.
 ```
 
 * `PLAYER_CAN_HIDE`: si se activa, los tiles de tipo 2 "ocultan" al jugador.
+
+* `HIDDEN_CAN_MOVE`: Se usa con `PLAYER_CAN_HIDE`. Si activas esta macro, podrás moverte en los tiles que esconden y seguir escondido. Si no, además de tocar un tile que esconde deberás estar *quieto*.
 
 * `RANDOM_RESPAWN`: activa los *fantys* de tipo 5 que aparecen al eliminar enemigos lineales (no se colocan con `ponedor.exe`).
 
