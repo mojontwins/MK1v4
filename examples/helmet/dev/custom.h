@@ -14,9 +14,10 @@ unsigned char map_behaviours [] = {
 
 // Level set
 
-unsigned char scr_ini [] = { 16 };
-unsigned char ini_x [] = { 2 };
-unsigned char ini_y [] = { 8 };
+unsigned char scr_ini [] = { 10/*16*/, 2 };
+unsigned char ini_x [] = { 2, 7 };
+unsigned char ini_y [] = { 8, 4 };
+unsigned char hostages [] = { 1, 1 };
 unsigned char new_level;
 unsigned char level;
 
@@ -33,9 +34,13 @@ unsigned char *patrullero_cells [] = {
 
 // Alarm counter & state
 
+#define MAX_ALARM_TIME_COSCAO 2
+#define MAX_ALARM_TIME_NORMAL 30
+
 unsigned char noticed;
 unsigned char alarm;
 unsigned char alarm_x, alarm_y;
+unsigned char alarm_max_time;
 
 // Sprite "alarm"
 
@@ -49,6 +54,12 @@ extern unsigned char sprite_alarm [];
 
 // Add here your custom routines & vars
 
+void todos_rescatados_check (void) {
+	if (player.objs == hostages [level]) {
+		draw_text (3, 0, 7, "TODOS RESCATADOS! REGRESA!");
+	}
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -60,10 +71,25 @@ extern unsigned char sprite_alarm [];
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 0;
+		level = 0;		
 	}
 
 	void hook_init_mainloop (void) {
+
+		// Extraction point
+
+		if (n_pant == scr_ini [level] && player.objs == hostages [level]) {
+			if (((gpx + 8) >> 4) == ini_x [level] &&
+				((gpy + 8) >> 4) == ini_y [level]) {
+				draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);	
+				draw_text (8, 12, GAME_OVER_ATTR, "MISION CUMPLIDA!");
+				level ++;
+				new_level = 1;
+			}
+		}
+
+		// New level screen 
+
 		if (new_level) {
 			new_level = 0;
 			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
@@ -76,6 +102,10 @@ extern unsigned char sprite_alarm [];
 			espera_activa (150);
 			n_pant = scr_ini [level];
 			init_player_values ();
+			for (gpit = 0; gpit < MAP_W*MAP_H; gpit ++) {
+				if (hotspots [n_pant].tipo == 1) hotspots [n_pant].act = 1;
+			}
+			player.objs = 0;
 		}
 	}
 
@@ -83,12 +113,16 @@ extern unsigned char sprite_alarm [];
 		sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, half_life + (alarm_y & 7));
 		alarm_x = 240;
 
+		// Alarm counter
+
 		if (noticed) {
 			alarm ++;
 			noticed = 0;
 		}
 
-		if (alarm == 50) {
+		// Gotcha!
+
+		if (alarm >= (player.objs == hostages [level] ? MAX_ALARM_TIME_COSCAO : MAX_ALARM_TIME_NORMAL)) {
 			alarm = 0;			
 			play_sfx (3);
 			saca_a_todo_el_mundo_de_aqui ();
@@ -113,9 +147,24 @@ extern unsigned char sprite_alarm [];
 			player.life --;
 			new_level = 1;
 		}
+
+		// Got hostage
+
+		if (latest_hotspot == 1) {
+			todos_rescatados_check ();
+		}
 	}
 
-	void hook_entering (void) {		
+	void hook_entering (void) {	
+		// Draw extraction point
+		if (n_pant == scr_ini [level]) {
+			set_map_tile (ini_x [level], ini_y [level], 30, 0);
+			set_map_tile (ini_x [level], ini_y [level] + 1, 31, 8);
+			gp_gen = "RESCATALOS Y REGRESA AQUI!";
+		} else gp_gen = "                          ";
+		draw_text (3, 0, 7, gp_gen);
+
+		todos_rescatados_check ();
 	}
 
 #endif

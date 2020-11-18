@@ -53,6 +53,12 @@ Parte de la magia viene de esto:
 
 Así el `init_player_values` que llamo desde mi custom tras mostrar la pantalla de `LEVEL XX` me para recolocar al jugador.
 
+### Recatando
+
+Al principio de cada nivel el número de objetos del jugador se pone a 0. Si el número de objetos (que son los rehenes) vale `hostages [level]`, entonces se activa un estado de alarma en la que los enemigos patrulleros te ven muy deprisa (5 frames?).
+
+Siempre que te maten, esté como esté la cosa, volverás al punto de inicio, se descontarán los rehenes, y todos los hotspots de tipo 1 se reactivarán. (todos, total, qué más dan las fases anteriores).
+
 ## Reiniciar
 
 Cuando el malo te vea un rato se coscará del todo y dará la alarma. hay que presentar un texto, hacer un sonido feo, y reiniciar.

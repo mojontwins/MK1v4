@@ -274,8 +274,23 @@ void cortina (void) {
 	void init_cerrojos (void) {
 		// Activate all bolts.
 		
+		/*
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++)
 			cerrojos [gpit].st = 1;	
+		*/
+		#asm
+				// Iterate MAX_CERROJOS time
+				// Start with _cerrojos + 3
+				// Set to 1 and add 4
+				ld  b, MAX_CERROJOS
+				ld  hl, _cerrojos + 3
+				ld  de, 4
+				ld  a, 1
+			.init_cerrojos_loop
+				ld  (hl), a
+				add hl, de
+				djnz init_cerrojos_loop
+		#endasm	
 	}
 #endif
 
@@ -1848,8 +1863,23 @@ void init_player (void) {
 #if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
 #else
 	void init_hotspots (void) {
+		/*
 		for (gpit = 0; gpit < MAP_W * MAP_H; gpit ++)
 			hotspots [gpit].act = 1;
+		*/
+		#asm
+				// iterate MAP_W*MAP_H times
+				// start with _hotspots + 2
+				// set to 1, increment pointer by 3
+				ld  b, MAP_W * MAP_H
+				ld  hl, _hotspots + 2
+				ld  de, 3
+				ld  a, 1
+			.init_hotspots_loop
+				ld  (hl), a
+				add hl, de
+				djnz init_hotspots_loop
+		#endasm
 	}
 #endif
 

@@ -13,7 +13,7 @@
 #define MAP_W					8		//
 #define MAP_H					8		// Map dimmensions in screens
 #define TOTAL_SCREENS			64		// 
-#define SCR_INICIO				10//16		// Initial screen
+#define SCR_INICIO				16		// Initial screen
 #define PLAYER_INI_X			(ini_x [level])		//
 #define PLAYER_INI_Y			(ini_y [level])		// Initial tile coordinates
 //#define SCR_FIN 				99		// Last screen. 99 = deactivated.
@@ -323,7 +323,7 @@
 		// Fill this array for dual tileset maps.
 		unsigned char comportamiento_tiles [] = {
 			2, 8, 8, 8, 8, 0, 0, 0, 4, 6, 2, 0, 0, 8, 8, 8,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 8,
 			0, 0, 0, 0, 4, 4, 4, 4, 0, 4, 0, 0, 0, 8, 8, 8,
 		};
 	#else
