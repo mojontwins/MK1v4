@@ -59,6 +59,7 @@
 //#define PLAYER_DIZZY 					// The Hobbit
 #define ENEMIES_LIFE_GAUGE		1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED 		// Custom paralyze enemies.
+//#define PARALYZED_DONT_KILL 			// Enemies don't kill while paralyzed
 
 // Coins engine
 // ------------

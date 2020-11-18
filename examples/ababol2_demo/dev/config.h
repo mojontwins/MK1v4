@@ -59,6 +59,7 @@
 //#define PLAYER_DIZZY 					// The Hobbit
 #define ENEMIES_LIFE_GAUGE		1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED 		// Custom paralyze enemies.
+#define PARALYZED_DONT_KILL 			// Enemies don't kill while paralyzed
 
 // Coins engine
 // ------------
@@ -117,7 +118,7 @@
 #define SWORD_UP 						// Can hit upwards
 #define SWORD_LINEAL_DAMAGE		0		// Damage to linear.
 #define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
-#define SWORD_PARALYZES			32		// If defined, paralyze for N frames
+#define SWORD_PARALYZES			60		// If defined, paralyze for N frames
 #define SWORD_HIT_FRAME 		2		// Frame to render 0-3
 //#define SWORD_STAB 			5		// Rather than swing, stab at height N
 

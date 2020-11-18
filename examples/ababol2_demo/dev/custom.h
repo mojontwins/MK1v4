@@ -33,6 +33,12 @@
 		}
 
 		enemy_died = 0xff;
+
+		if (flags [COIN_FLAG] == 25) {
+			play_sfx (6);
+			player.life ++;
+			flags [COIN_FLAG] = 0;
+		}
 	}
 
 	void hook_entering (void) {		

@@ -2595,6 +2595,7 @@ void draw_scr (void) {
 
 	for (gpit = 0; gpit < MAX_ENEMS; gpit ++) {
 		en_an_frame [gpit] = 0;
+		en_an_state [gpit] = 0;
 		
 		#ifdef RANDOM_RESPAWN
 			en_an_fanty_activo [gpit] = 0;
@@ -2608,8 +2609,7 @@ void draw_scr (void) {
 							en_an_next_frame [gpit] = sprite_13_a;
 							en_an_x [gpit] = (rand () % 224) << 6;
 							en_an_y [gpit] = (rand () % 144) << 6;
-							en_an_vx [gpit] = en_an_vy [gpit] = 0;
-							en_an_state [gpit] = TYPE_6_IDLE;
+							en_an_vx [gpit] = en_an_vy [gpit] = 0;							
 						} else {
 							en_an_next_frame [gpit] = sprite_18_a;
 						}
@@ -2630,8 +2630,7 @@ void draw_scr (void) {
 					en_an_next_frame [gpit] = sprite_13_a;
 					en_an_x [gpit] = malotes [enoffs + gpit].x << 6;
 					en_an_y [gpit] = malotes [enoffs + gpit].y << 6;
-					en_an_vx [gpit] = en_an_vy [gpit] = 0;
-					en_an_state [gpit] = TYPE_6_IDLE;
+					en_an_vx [gpit] = en_an_vy [gpit] = 0;					
 					break;
 			#endif
 			#if defined (ENEMIES_MAY_DIE)
@@ -3094,7 +3093,7 @@ void mueve_bicharracos (void) {
 					#ifdef RANDOM_RESPAWN
 						|| en_an_fanty_activo [enit] == 1
 					#endif
-				) && player.estado == EST_NORMAL
+				) 
 			) {
 				#ifdef PLAYER_KILLS_ENEMIES
 					if (gpy <= en_ccy - 8 && player.vy >= 0 
@@ -3107,8 +3106,12 @@ void mueve_bicharracos (void) {
 						enems_kill ();
 					} else	
 				#endif
-
-				{
+				if (
+					player.estado == EST_NORMAL
+					#ifdef PARALYZED_DONT_KILL
+						&& en_an_state [enit] != ENEM_PARALYZED
+					#endif
+				) {
 					en_tocado = 1; player.is_dead = 1; play_sfx (2);
 					#ifdef ENABLE_CODE_HOOKS
 						enemy_killer = enit;

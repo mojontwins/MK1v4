@@ -14,7 +14,7 @@ unsigned char map_behaviours [] = {
 
 // Level set
 
-unsigned char scr_ini [] = { 10, 16, 2 };
+unsigned char scr_ini [] = { 16, 2 };
 unsigned char ini_x [] = { 2, 7 };
 unsigned char ini_y [] = { 8, 4 };
 unsigned char hostages [] = { 1, 1 };
