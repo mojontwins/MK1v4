@@ -2876,6 +2876,7 @@ void mueve_bicharracos (void) {
 					|| 0 == en_an_fanty_activo [enit]
 				#endif
 				) {
+					/*
 					_en_x += _en_mx;
 					_en_y += _en_my;
 
@@ -2883,6 +2884,64 @@ void mueve_bicharracos (void) {
 						_en_mx = -_en_mx;
 					if (_en_y == _en_y1 || _en_y == _en_y2)
 						_en_my = -_en_my;
+					*/
+					#asm
+						// _en_x += _en_mx;
+							ld  a, (__en_mx)
+							ld  c, a
+							ld  a, (__en_x)
+							add c 
+							ld  (__en_x), a
+
+						// _en_y += _en_my;
+							ld  a, (__en_my)
+							ld  c, a
+							ld  a, (__en_y)
+							add c 
+							ld  (__en_y), a
+
+						// if (_en_x == _en_x1 || _en_x == _en_x2) _en_mx = -_en_mx;
+						.en_linear_horz_bounds
+							ld  a, (__en_x)
+							ld  c, a
+							ld  a, (__en_x1)
+							cp  c 
+							jr  z, en_linear_horz_bounds_do
+
+							ld  a, (__en_x2)
+							cp  c 
+							jr  nz, en_linear_horz_bounds_done
+
+						.en_linear_horz_bounds_do
+							ld  a, (__en_mx)
+							ld  c, a
+							xor a 
+							sub c
+							ld  (__en_mx), a
+
+						.en_linear_horz_bounds_done
+
+						// if (_en_y == _en_y1 || _en_y == _en_y2) _en_my = -_en_my;
+						.en_linear_vert_bounds
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (__en_y1)
+							cp  c 
+							jr  z, en_linear_vert_bounds_do
+
+							ld  a, (__en_y2)
+							cp  c 
+							jr  nz, en_linear_vert_bounds_done
+
+						.en_linear_vert_bounds_do
+							ld  a, (__en_my)
+							ld  c, a
+							xor a 
+							sub c
+							ld  (__en_my), a
+
+						.en_linear_vert_bounds_done
+					#endasm
 
 					#ifdef PLAYER_PUSH_BOXES			
 						// Check for collisions.
@@ -3023,11 +3082,37 @@ void mueve_bicharracos (void) {
 					} 
 				#endif
 
+				/*
 				en_an_count [enit] ++; 
 				if (en_an_count [enit] >= 4) {
 					en_an_count [enit] = 0;
 					en_an_frame [enit] = !en_an_frame [enit];					
 				}
+				*/
+				#asm
+						ld  bc, (_enit)
+						ld  b, 0
+
+						ld  hl, _en_an_count
+						add hl, bc
+						ld  a, (hl)
+						inc a
+						cp  4
+						jr  c, enemy_animate_update_count
+
+						push hl
+
+						ld  hl, _en_an_frame
+						add hl, bc
+						ld  a, (hl)
+						xor 1
+						ld  (hl), a
+
+						pop hl
+						xor a
+					.enemy_animate_update_count
+						ld  (hl), a
+				#endasm
 				
 				en_an_next_frame [enit] = enem_cells [rdd + en_an_frame [enit]];
 
