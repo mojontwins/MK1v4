@@ -83,6 +83,9 @@ void todos_rescatados_check (void) {
 				((gpy + 8) >> 4) == ini_y [level]) {
 				draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);	
 				draw_text (8, 12, GAME_OVER_ATTR, "MISION CUMPLIDA!");
+				sp_UpdateNow ();
+				beepet ();
+				espera_activa (100);
 				level ++;
 				new_level = 1;
 			}
@@ -94,7 +97,7 @@ void todos_rescatados_check (void) {
 			new_level = 0;
 			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
 			sp_Invalidate (spritesClip, spritesClip);
-			new_level_string [7] = level + 17;
+			new_level_string [7] = level + '1';
 			draw_text (12, 11, 71, new_level_string);
 			draw_text (11, 13, 71, "GET READY!");
 			sp_UpdateNow ();
@@ -105,7 +108,7 @@ void todos_rescatados_check (void) {
 			for (gpit = 0; gpit < MAP_W*MAP_H; gpit ++) {
 				if (hotspots [n_pant].tipo == 1) hotspots [n_pant].act = 1;
 			}
-			player.objs = 0;
+			player.objs = 0; 
 		}
 	}
 
@@ -123,8 +126,10 @@ void todos_rescatados_check (void) {
 		// Gotcha!
 
 		if (alarm >= (player.objs == hostages [level] ? MAX_ALARM_TIME_COSCAO : MAX_ALARM_TIME_NORMAL)) {
-			alarm = 0;			
+			alarm = 0;	
+			sp_UpdateNow ();		
 			play_sfx (3);
+			play_sfx (10);
 			saca_a_todo_el_mundo_de_aqui ();
 			sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + 20, VIEWPORT_X + 30, 0, 0);
 			// Validate whole screen so sprites stay on next update
@@ -206,13 +211,20 @@ void todos_rescatados_check (void) {
 			en_an_next_frame [enit] = patrullero_cells [en_an_facing [enit] + rdd];
 
 			// Saw you!
-			rdi = 0;
-			if (0 == player_hidden ()) {
-				if (gpy + 31 >= _en_y && gpy <= _en_y + 27) {
-					rdi = ((en_an_facing [enit] == 0 && gpx >= _en_x + 15) ||
-						(en_an_facing [enit] && gpx <= _en_x - 15));
+			rdi = 0; gpit = player_hidden ();
+			
+			if (gpy + 31 >= _en_y && gpy <= _en_y + 27) {
+				if (en_an_facing [enit] == 0 && gpx >= _en_x + 15) {
+					// Enemy facing right, player to the right
+					// If not hidden or too close: gotcha!
+					rdi = ((gpit == 0) || (gpx < _en_x + 32));
+				} else if (en_an_facing [enit] && gpx <= _en_x - 15) {
+					// Enemy facing left, player to the left
+					// If not hidden or too close: gotcha!
+					rdi = ((gpit == 0) || (gpx > _en_x - 16));
 				}
-			}			
+			}
+
 
 			// Alarm
 			if (rdi) {
