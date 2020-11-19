@@ -31,6 +31,7 @@ unsigned char en_an_walk_ct [3];
 unsigned char *patrullero_cells [] = {
 	extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a
 };
+unsigned char patrullero_touch;
 
 // Alarm counter & state
 
@@ -109,6 +110,7 @@ void todos_rescatados_check (void) {
 				if (hotspots [n_pant].tipo == 1) hotspots [n_pant].act = 1;
 			}
 			player.objs = 0; 
+			enemy_killer = 0xff;
 		}
 	}
 
@@ -125,7 +127,15 @@ void todos_rescatados_check (void) {
 
 		// Gotcha!
 
-		if (alarm >= (player.objs == hostages [level] ? MAX_ALARM_TIME_COSCAO : MAX_ALARM_TIME_NORMAL)) {
+		if (enemy_killer != 0xff) {
+			patrullero_touch = (malotes [enoffs + enemy_killer].t == 5);
+			enemy_killer = 0xff;
+		}
+
+		if (
+			alarm >= (player.objs == hostages [level] ? MAX_ALARM_TIME_COSCAO : MAX_ALARM_TIME_NORMAL)
+			|| patrullero_touch
+		) {
 			alarm = 0;	
 			sp_UpdateNow ();		
 			play_sfx (3);
@@ -149,9 +159,10 @@ void todos_rescatados_check (void) {
 			play_sfx (10); play_sfx (8);
 			espera_activa (100);
 			player.is_dead = 1;
-			player.life --;
+			if (patrullero_touch == 0) player.life --;
 			new_level = 1;
 		}
+		enemy_killer = 0xff;
 
 		// Got hostage
 
