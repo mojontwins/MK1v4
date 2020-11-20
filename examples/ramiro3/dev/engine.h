@@ -265,10 +265,46 @@ void cortina (void) {
 #ifndef DEACTIVATE_KEYS
 	void clear_cerrojo (unsigned char x, unsigned char y) {
 		// search & toggle
-			
+		
+		_x = x; _y = y;
+
+		/*	
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) 
 			if (cerrojos [gpit].x == x && cerrojos [gpit].y == y && cerrojos [gpit].np == n_pant)
 				cerrojos [gpit].st = 0;
+		*/
+		#asm
+				// The cerrojos struct is db np, x, y st
+				ld  b, MAX_CERROJOS
+				ld  hl, _cerrojos
+			.clear_cerrojo_loop
+				ld  c, (hl) 		// np
+				inc hl
+				ld  d, (hl) 		// x
+				inc hl 
+				ld  e, (hl) 		// y
+				inc hl
+
+				ld  a, (_n_pant)
+				cp  c
+				jr  nz, clear_cerrojo_loop_continue
+
+				ld  a, (__x)
+				cp  d 
+				jr  nz, clear_cerrojo_loop_continue
+
+				ld  a, (__y)
+				cp  e 
+				jr  nz, clear_cerrojo_loop_continue
+
+				xor a 
+				ld  (hl), a
+				ret
+
+			.clear_cerrojo_loop_continue
+				inc hl
+				djnz clear_cerrojo_loop
+		#endasm
 	}
 
 	void init_cerrojos (void) {
@@ -459,18 +495,22 @@ void player_flicker (void) {
 #endif
 
 #ifdef ENABLE_SWORD
+	/*
 	void swing_sword (void) {
 		if (s_on) {
-			if (s_type == SWORD_TYPE_UP) {
-				#ifdef SWORD_STAB
-					s_x = gpx + SWORD_STAB;
-				#else
-					s_x = gpx + swoffs_y [s_frame];
-				#endif
-				s_y = gpy + 8 - swoffs_x [s_frame];
-				s_hit_x = s_x + 4;
-				s_hit_y = s_y;			
-			} else {
+			#ifdef SWORD_UP
+				if (s_type == SWORD_TYPE_UP) {
+					#ifdef SWORD_STAB
+						s_x = gpx + SWORD_STAB;
+					#else
+						s_x = gpx + swoffs_y [s_frame];
+					#endif
+					s_y = gpy + 8 - swoffs_x [s_frame];
+					s_hit_x = s_x + 4;
+					s_hit_y = s_y;			
+				} else 
+			#endif
+			{
 				#ifdef SWORD_STAB
 					s_y = gpy + SWORD_STAB;
 				#else
@@ -505,6 +545,165 @@ void player_flicker (void) {
 
 		sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
 		s_current_frame = s_next_frame;
+	}
+	*/
+
+	void swing_sword (void) {
+		#asm
+				ld  a, (_s_on)
+				or  a
+				jp  z, swing_sword_off
+
+			.sword_check
+
+			#ifdef SWORD_UP
+				.sword_check_up
+					ld  a, (_s_type)
+					cp  SWORD_TYPE_UP
+					jr  nz, sword_up_done
+
+					ld  a, (_gpx)
+					#ifdef SWORD_STAB
+						add SWORD_STAB
+					#else
+						ld  bc, (_s_frame)
+						ld  b, 0
+						ld  hl, _swoffs_y
+						add hl, bc
+						ld  c, (hl)
+						add c
+					#endif
+					ld  (_s_x), a
+
+					add 4
+					ld  (_s_hit_x), a
+
+					ld  bc, (_s_frame)
+					ld  b, 0
+					ld  hl, _swoffs_x
+					add hl, bc 
+					ld  c, (hl)
+
+					ld  a, (_gpy)
+					add 8
+					sub c 
+					ld  (_s_y), a
+
+					ld  (_s_hit_y), a
+					jp  sword_check_done
+
+				.sword_up_done
+			#endif
+
+				ld  a, (_gpy)
+				#ifdef SWORD_STAB 
+					add SWORD_STAB
+				#else
+					ld  bc, (_s_frame)
+					ld  b, 0
+					ld  hl, _swoffs_y
+					add hl, bc
+					ld  c, (hl)
+					add c 
+				#endif
+				ld  (_s_y), a
+				add 4
+				ld  (_s_hit_y), a
+
+				ld  bc, (_s_frame)
+				ld  b, 0
+				ld  hl, _swoffs_x
+				add hl, bc
+				ld  c, (hl) 
+
+				ld  a, (_s_type)
+				cp  SWORD_TYPE_LEFT
+				jr  nz, sword_right
+
+			.sword_left 
+				ld  a, (_gpx)
+				add 8
+				sub c 
+				ld  (_s_x), a
+				ld  (_s_hit_x), a
+				jr  sword_check_done
+
+			.sword_right
+				ld  a, (_gpx)
+				add c
+				ld  (_s_x), a
+				add 7
+				ld  (_s_hit_x), a
+
+			.sword_check_done
+
+			// Detect breakable
+			#ifdef ENABLE_BREAKABLE
+				// if (s_frame > 2 -> >= 3
+					ld  a, (_s_frame)
+					cp  3
+					jr  c, sword_breakable_done
+
+				// && s_frame < 6)
+					cp  6
+					jr  nc, sword_breakable_done
+
+					ld  h, 0
+
+					ld  a, (_s_hit_x)
+					srl a
+					srl a
+					srl a
+					srl a
+					ld  (__x), a
+					ld  l, a
+					push hl
+
+					ld  a, (_s_hit_y)
+					srl a
+					srl a
+					srl a
+					srl a
+					ld  (__y), a
+					ld  l, a
+					push hl
+
+					call _attr
+
+					pop bc
+					pop bc
+
+					ld  a, l
+					and 32
+					jr  z, sword_breakable_done
+
+					call _add_to_breakables
+
+				.sword_breakable_done				
+			#endif
+
+				ld  a, (_s_frame)
+				inc a
+				ld  (_s_frame), a
+				cp  9
+				jr  nz, swing_sword_goon
+
+				xor a
+				ld  (_s_on), a
+
+			.swing_sword_goon
+				ld  a, (_s_x)
+				jr swing_sword_done
+
+			.swing_sword_off
+				ld  a, 240
+				
+			.swing_sword_done
+				ld  (_rdx), a
+		#endasm
+
+		sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
+		s_current_frame = s_next_frame;		
 	}
 #endif
 
@@ -2876,6 +3075,7 @@ void mueve_bicharracos (void) {
 					|| 0 == en_an_fanty_activo [enit]
 				#endif
 				) {
+					/*
 					_en_x += _en_mx;
 					_en_y += _en_my;
 
@@ -2883,6 +3083,64 @@ void mueve_bicharracos (void) {
 						_en_mx = -_en_mx;
 					if (_en_y == _en_y1 || _en_y == _en_y2)
 						_en_my = -_en_my;
+					*/
+					#asm
+						// _en_x += _en_mx;
+							ld  a, (__en_mx)
+							ld  c, a
+							ld  a, (__en_x)
+							add c 
+							ld  (__en_x), a
+
+						// _en_y += _en_my;
+							ld  a, (__en_my)
+							ld  c, a
+							ld  a, (__en_y)
+							add c 
+							ld  (__en_y), a
+
+						// if (_en_x == _en_x1 || _en_x == _en_x2) _en_mx = -_en_mx;
+						.en_linear_horz_bounds
+							ld  a, (__en_x)
+							ld  c, a
+							ld  a, (__en_x1)
+							cp  c 
+							jr  z, en_linear_horz_bounds_do
+
+							ld  a, (__en_x2)
+							cp  c 
+							jr  nz, en_linear_horz_bounds_done
+
+						.en_linear_horz_bounds_do
+							ld  a, (__en_mx)
+							ld  c, a
+							xor a 
+							sub c
+							ld  (__en_mx), a
+
+						.en_linear_horz_bounds_done
+
+						// if (_en_y == _en_y1 || _en_y == _en_y2) _en_my = -_en_my;
+						.en_linear_vert_bounds
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (__en_y1)
+							cp  c 
+							jr  z, en_linear_vert_bounds_do
+
+							ld  a, (__en_y2)
+							cp  c 
+							jr  nz, en_linear_vert_bounds_done
+
+						.en_linear_vert_bounds_do
+							ld  a, (__en_my)
+							ld  c, a
+							xor a 
+							sub c
+							ld  (__en_my), a
+
+						.en_linear_vert_bounds_done
+					#endasm
 
 					#ifdef PLAYER_PUSH_BOXES			
 						// Check for collisions.
@@ -3023,11 +3281,37 @@ void mueve_bicharracos (void) {
 					} 
 				#endif
 
+				/*
 				en_an_count [enit] ++; 
 				if (en_an_count [enit] >= 4) {
 					en_an_count [enit] = 0;
 					en_an_frame [enit] = !en_an_frame [enit];					
 				}
+				*/
+				#asm
+						ld  bc, (_enit)
+						ld  b, 0
+
+						ld  hl, _en_an_count
+						add hl, bc
+						ld  a, (hl)
+						inc a
+						cp  4
+						jr  c, enemy_animate_update_count
+
+						push hl
+
+						ld  hl, _en_an_frame
+						add hl, bc
+						ld  a, (hl)
+						xor 1
+						ld  (hl), a
+
+						pop hl
+						xor a
+					.enemy_animate_update_count
+						ld  (hl), a
+				#endasm
 				
 				en_an_next_frame [enit] = enem_cells [rdd + en_an_frame [enit]];
 
@@ -3152,13 +3436,13 @@ void mueve_bicharracos (void) {
 							
 							// x
 							if (_en_mx) {
-								if (gpx < en_ccx) player.vx = - (abs (_en_mx + _en_mx) << 7);
+								if (gpx < en_ccx) player.vx = - (abs (_en_mx << 1) << 7);
 								else player.vx = abs (_en_mx + _en_mx) << 7;
 							}
 							
 							// y
 							if (_en_my) {
-								if (gpy < en_ccy) player.vy = - (abs (_en_my + _en_my) << 7);
+								if (gpy < en_ccy) player.vy = - (abs (_en_my << 1) << 7);
 								else player.vy = abs (_en_my + _en_my) << 7;
 							}
 						#endif
