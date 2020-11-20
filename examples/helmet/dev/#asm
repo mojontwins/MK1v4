@@ -1,0 +1,23 @@
+		#asm
+				ld  bc, (__n)
+				ld  b, 0
+				ld  hl, _comportamiento_tiles
+				add hl, bc
+				ld  a, (hl)
+
+				ld  bc, (_rdi)
+				ld  b, 0
+
+				ld  hl, _map_attr
+				add hl, bc
+				ld  (hl), a
+
+				ld  hl, _map_buff
+				add hl, bc
+				ld  a, (__n)
+				ld  (hl), a
+
+				ld  a, (_rdx)
+				add VIEWPORT_X
+				ld  h, 0
+				ld  l, a

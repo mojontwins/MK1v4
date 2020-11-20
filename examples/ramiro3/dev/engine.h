@@ -2567,6 +2567,7 @@ void init_player (void) {
 
 #if !defined TWO_SETS && !defined UNPACKED_MAP
 	void draw_and_advance (void) {
+		/*
 		map_attr [rdi] = comportamiento_tiles [_n];
 		map_buff [rdi] = _n;
 		draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, _n);
@@ -2576,6 +2577,66 @@ void init_player (void) {
 			rdy += 2;
 		}
 		rdi ++;
+		*/
+
+		#asm
+				ld  bc, (__n)
+				ld  b, 0
+				ld  hl, _comportamiento_tiles
+				add hl, bc
+				ld  a, (hl)
+
+				ld  bc, (_rdi)
+				ld  b, 0
+
+				ld  hl, _map_attr
+				add hl, bc
+				ld  (hl), a
+
+				ld  hl, _map_buff
+				add hl, bc
+				ld  a, (__n)
+				ld  (hl), a
+
+				ld  a, (_rdx)
+				add VIEWPORT_X
+				ld  h, 0
+				ld  l, a
+				push hl
+
+				ld  a, (_rdy)
+				add VIEWPORT_Y
+				ld  h, 0
+				ld  l, a
+				push hl
+
+				ld  hl, (__n)
+				ld  h, 0
+				push hl
+
+				call _draw_coloured_tile
+
+				pop bc
+				pop bc
+				pop bc
+
+				ld  a, (_rdx)
+				add 2
+				cp  30
+				jr  nz, draw_and_advance_x_set
+
+				ld  a, (_rdy)
+				add 2
+				ld  (_rdy), a
+
+				xor a
+			
+			.draw_and_advance_x_set
+				ld  (_rdx), a
+
+				ld  hl, _rdi
+				inc (hl)
+		#endasm
 	}
 #endif
 
