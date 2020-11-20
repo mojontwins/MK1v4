@@ -265,10 +265,46 @@ void cortina (void) {
 #ifndef DEACTIVATE_KEYS
 	void clear_cerrojo (unsigned char x, unsigned char y) {
 		// search & toggle
-			
+		
+		_x = x; _y = y;
+
+		/*	
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) 
 			if (cerrojos [gpit].x == x && cerrojos [gpit].y == y && cerrojos [gpit].np == n_pant)
 				cerrojos [gpit].st = 0;
+		*/
+		#asm
+				// The cerrojos struct is db np, x, y st
+				ld  b, MAX_CERROJOS
+				ld  hl, _cerrojos
+			.clear_cerrojo_loop
+				ld  c, (hl) 		// np
+				inc hl
+				ld  d, (hl) 		// x
+				inc hl 
+				ld  e, (hl) 		// y
+				inc hl
+
+				ld  a, (_n_pant)
+				cp  c
+				jr  nz, clear_cerrojo_loop_continue
+
+				ld  a, (__x)
+				cp  d 
+				jr  nz, clear_cerrojo_loop_continue
+
+				ld  a, (__y)
+				cp  e 
+				jr  nz, clear_cerrojo_loop_continue
+
+				xor a 
+				ld  (hl), a
+				ret
+
+			.clear_cerrojo_loop_continue
+				inc hl
+				djnz clear_cerrojo_loop
+		#endasm
 	}
 
 	void init_cerrojos (void) {
@@ -461,16 +497,19 @@ void player_flicker (void) {
 #ifdef ENABLE_SWORD
 	void swing_sword (void) {
 		if (s_on) {
-			if (s_type == SWORD_TYPE_UP) {
-				#ifdef SWORD_STAB
-					s_x = gpx + SWORD_STAB;
-				#else
-					s_x = gpx + swoffs_y [s_frame];
-				#endif
-				s_y = gpy + 8 - swoffs_x [s_frame];
-				s_hit_x = s_x + 4;
-				s_hit_y = s_y;			
-			} else {
+			#ifdef SWORD_UP
+				if (s_type == SWORD_TYPE_UP) {
+					#ifdef SWORD_STAB
+						s_x = gpx + SWORD_STAB;
+					#else
+						s_x = gpx + swoffs_y [s_frame];
+					#endif
+					s_y = gpy + 8 - swoffs_x [s_frame];
+					s_hit_x = s_x + 4;
+					s_hit_y = s_y;			
+				} else 
+			#endif
+			{
 				#ifdef SWORD_STAB
 					s_y = gpy + SWORD_STAB;
 				#else
@@ -3237,13 +3276,13 @@ void mueve_bicharracos (void) {
 							
 							// x
 							if (_en_mx) {
-								if (gpx < en_ccx) player.vx = - (abs (_en_mx + _en_mx) << 7);
+								if (gpx < en_ccx) player.vx = - (abs (_en_mx << 1) << 7);
 								else player.vx = abs (_en_mx + _en_mx) << 7;
 							}
 							
 							// y
 							if (_en_my) {
-								if (gpy < en_ccy) player.vy = - (abs (_en_my + _en_my) << 7);
+								if (gpy < en_ccy) player.vy = - (abs (_en_my << 1) << 7);
 								else player.vy = abs (_en_my + _en_my) << 7;
 							}
 						#endif

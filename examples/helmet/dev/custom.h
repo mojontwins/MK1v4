@@ -127,6 +127,7 @@ void todos_rescatados_check (void) {
 
 		// Gotcha!
 
+		patrullero_touch = 0;
 		if (enemy_killer != 0xff) {
 			patrullero_touch = (malotes [enoffs + enemy_killer].t == 5);
 			enemy_killer = 0xff;
