@@ -725,6 +725,7 @@ void move (void) {
 			#ifdef FRIGO_UNFREEZE_TIME
 				player.ct_estado --;
 			#endif
+
 			#ifdef FRIGO_UNFREEZE_FIRE
 				if ((pad0 & sp_FIRE) == 0) {
 					player.ct_estado --;
@@ -948,15 +949,10 @@ void move (void) {
 
 			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
 				// if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
-					ld  hl, (_gpxx)
-					ld  h, 0
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
 					ld  a, l
 					and 8
 
@@ -966,16 +962,11 @@ void move (void) {
 					and 15
 					jp  z, vert_collision_done
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					inc hl
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					inc a
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
 					ld  a, l
 					and 8
 					jp  z, vert_collision_done
@@ -1008,15 +999,10 @@ void move (void) {
 					cp  12
 					jr  nc, vert_collision_if2
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
 					ld  a, l
 					and 8
 
@@ -1029,16 +1015,11 @@ void move (void) {
 					cp  5
 					jp  c, vert_collision_done
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					inc hl
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					inc a
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
 					ld  a, l
 					and 8
 					jp  z, vert_collision_done
@@ -1086,16 +1067,11 @@ void move (void) {
 
 			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
 				// if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
-					ld  hl, (_gpxx)
-					ld  h, 0
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					inc hl
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a 
+					call _attr_2
 					ld  a, l
 					and 12
 
@@ -1105,17 +1081,12 @@ void move (void) {
 					and 15
 					jr  z, vert_collision_done
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					inc hl
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					inc hl
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					inc a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a 
+					call _attr_2
 					ld  a, l
 					and 12
 					jr  z, vert_collision_done
@@ -1127,16 +1098,11 @@ void move (void) {
 					cp  12
 					jr  nc, vert_collision_if4
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					inc hl
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a 
+					call _attr_2
 					ld  a, l
 					and 12
 
@@ -1149,17 +1115,12 @@ void move (void) {
 					cp  5
 					jr  c, vert_collision_done
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					inc hl
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					inc hl
-					push hl
-					call _attr
-					pop bc
-					pop bc
+					ld  a, (_gpxx)
+					inc a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a 
+					call _attr_2
 					ld  a, l
 					and 12
 					jr  z, vert_collision_done
@@ -1383,17 +1344,12 @@ void move (void) {
 					jp  nz, push_pull_invalidate_keys
 
 					// attr (gpxx + 1, gpyy) < 8
-					ld  hl, (_gpxx)
-					ld  h, 0
-					inc hl
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr
-					pop bc 
-					pop bc
-
+					ld  a, (_gpxx)
+					inc a
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
+					
 					ld  a, l
 					cp  8
 					jp  nc, push_pull_invalidate_keys
@@ -1451,16 +1407,11 @@ void move (void) {
 					and sp_LEFT
 					jr  nz, push_pull_facing_right_do_not_left
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					dec hl
-					push hl 
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr 
-					pop bc 
-					pop bc 
+					ld  a, (_gpxx)
+					dec a
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
 					ld  a, l
 					cp  8
 					jr  nc, push_pull_facing_right_do_not_left
@@ -1656,17 +1607,11 @@ void move (void) {
 					jp  nz, push_pull_invalidate_keys
 
 					// attr (gpxx + 2, gpyy) < 8
-					ld  hl, (_gpxx)
-					ld  h, 0
-					inc hl
-					inc hl
-					push hl
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr
-					pop bc 
-					pop bc
+					ld  a, (_gpxx)
+					add 2
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
 
 					ld  a, l
 					cp  8
@@ -1723,16 +1668,11 @@ void move (void) {
 					and sp_LEFT
 					jr  nz, push_pull_facing_right_do_not_left
 
-					ld  hl, (_gpxx)
-					ld  h, 0
-					dec hl
-					push hl 
-					ld  hl, (_gpyy)
-					ld  h, 0
-					push hl
-					call _attr 
-					pop bc 
-					pop bc 
+					ld  a, (_gpxx)
+					dec a
+					ld  c, a
+					ld  a, (_gpyy)
+					call _attr_2
 					ld  a, l
 					cp  8
 					jr  nc, push_pull_facing_right_do_not_left
@@ -1926,15 +1866,10 @@ void move (void) {
 				// rdj < 0
 
 				// if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8))
-				ld  hl, (_gpxx)
-				ld  h, 0
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				ld  c, a
+				ld  a, (_gpyy)
+				call _attr_2
 				ld  a, l
 				and 8
 
@@ -1944,16 +1879,11 @@ void move (void) {
 				and 15
 				jr  z, horz_collision_done
 
-				ld  hl, (_gpxx)
-				ld  h, 0
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				inc hl
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				ld  c, a
+				ld  a, (_gpyy)
+				inc a
+				call _attr_2
 				ld  a, l
 				and 8
 				jp  z, horz_collision_done
@@ -1972,16 +1902,11 @@ void move (void) {
 				// rdj > 0
 
 				// if (attr (gpxx + 1, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 8))
-				ld  hl, (_gpxx)
-				ld  h, 0
-				inc hl
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				inc a
+				ld  c, a
+				ld  a, (_gpyy)
+				call _attr_2
 				ld  a, l
 				and 8
 
@@ -1991,17 +1916,12 @@ void move (void) {
 				and 15
 				jr  z, horz_collision_done
 
-				ld  hl, (_gpxx)
-				ld  h, 0
-				inc hl
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				inc hl
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				inc a
+				ld  c, a
+				ld  a, (_gpyy)
+				inc a
+				call _attr_2
 				ld  a, l
 				and 8
 				jp  z, horz_collision_done
@@ -2031,15 +1951,10 @@ void move (void) {
 				cp  12
 				jp  nc, horz_collision_if2
 
-				ld  hl, (_gpxx)
-				ld  h, 0
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				ld  c, a
+				ld  a, (_gpyy)
+				call _attr_2
 				ld  a, l
 				and 8
 
@@ -2050,16 +1965,11 @@ void move (void) {
 				and 15
 				jp  z, horz_collision_done
 
-				ld  hl, (_gpxx)
-				ld  h, 0
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				inc hl
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				ld  c, a
+				ld  a, (_gpyy)
+				inc a
+				call _attr_2
 				ld  a, l
 				and 8
 
@@ -2107,16 +2017,11 @@ void move (void) {
 				cp  12
 				jp  nc, horz_collision_if4
 
-				ld  hl, (_gpxx)
-				ld  h, 0
-				inc hl
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				inc a
+				ld  c, a
+				ld  a, (_gpyy)
+				call _attr_2
 				ld  a, l
 				and 8
 
@@ -2127,17 +2032,12 @@ void move (void) {
 				and 15
 				jp  z, horz_collision_done
 
-				ld  hl, (_gpxx)
-				ld  h, 0
-				inc hl
-				push hl
-				ld  hl, (_gpyy)
-				ld  h, 0
-				inc hl
-				push hl
-				call _attr
-				pop bc
-				pop bc
+				ld  a, (_gpxx)
+				inc a
+				ld  c, a
+				ld  a, (_gpyy)
+				inc a
+				call _attr_2
 				ld  a, l
 				and 8
 
