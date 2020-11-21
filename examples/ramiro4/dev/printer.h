@@ -14,35 +14,42 @@ void attr (char x, char y) {
 	#asm
 			ld  hl, 4
 			add hl, sp
-			ld  a, (hl) 	// x
-			cp  15
-			jr  c, _attr_1
-			ld  hl, 0
-			ret
+			ld  c, (hl) 	// x
 
-		._attr_1
-			ld  c, a
 			dec hl
 			dec hl
 			ld  a, (hl) 	// y
+			
+			// If you put x in C and y in A you can call here
+			
+		._attr_2
+			// A = y, C = x
 			cp  10
-			jr  c, _attr_2
+			jr  c, _attr_1
 
-			#ifdef BETTER_VERTICAL_CONNECTIONS
+		#ifdef BETTER_VERTICAL_CONNECTIONS
 				cp  11
 				jr  nc, _attr3
 				ld  hl, 0
 				ret
 				
 			._attr3
-				ld  a, 0 	// Negative values replicate first row
-			#else
+				xor a 	 	// Negative values replicate first row
+		#else
 				ld  hl, 0
 				ret
-			#endif
+		#endif
 
-		._attr_2
-			ld  b, a
+		._attr_1
+			ld  b, a 		// save y
+			ld  a, c 		// x
+			cp  15
+			jr  c, _attr_1b
+			ld  hl, 0
+			ret
+
+		._attr_1b
+			ld  a, b 		// restore y
 			sla a
 			sla a
 			sla a
