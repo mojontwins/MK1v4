@@ -2709,6 +2709,7 @@ void draw_scr_background (void) {
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
 		// But *REAL* tile values are written to the buffers
+		/*
 		rdi = 0;
 		for (gpit = 0; gpit < 75; gpit ++) {			
 			rdd = *gp_gen ++;
@@ -2723,6 +2724,77 @@ void draw_scr_background (void) {
 			_n = rdt1; draw_and_advance ();
 			_n = rdt2; draw_and_advance ();
 		}
+		*/
+
+		#asm
+				xor a
+				ld  (_rdi), a
+				ld  (_gpit), a
+
+			.draw_scr_bg_loop
+				ld  a, (_tileoffset)
+				ld  c, a
+				
+				ld  hl, (_gp_gen)
+				ld  a, (hl)
+				inc hl
+				ld  (_gp_gen), hl
+				ld  b, a
+
+				srl a
+				srl a
+				srl a
+				srl a
+				add c
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt1), a
+
+				ld  a, b
+				and 15
+				add c
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt2), a
+
+				ld  a, (_rdt1)
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  a, (_rdt2)
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  a, (_gpit)
+				inc a
+				ld  (_gpit), a
+				cp  75
+				jr  nz, draw_scr_bg_loop
+
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						jr  draw_scr_bg_loop_end
+					.coins_check
+						cp  COIN_TILE
+						jr  nz, coins_replace_skip1
+
+						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
+						or  a
+						jr  nz, coins_replace_skip1
+
+						ld  a, COIN_TILE_DEACT_SUBS
+					.coins_replace_skip1
+						ret
+
+					.draw_scr_bg_loop_end
+				#endif
+		#endasm
 	#else	
 		// PACKED map, every byte contains two tiles, plus admits
 		// some special effects (autoshadows, see below).
