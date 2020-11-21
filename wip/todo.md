@@ -49,3 +49,4 @@ Pseudocódigo:
 [ ] Para los que andan a su bola, retroceder N pixels en direccion contraria al golpe.
 
 
+[ ] Hacer que la colisión por todos los lados con tiles que te matan sea por 4 puntos más "dentro" del player para que sea todo más manejable y menos peor.

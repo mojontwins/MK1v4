@@ -318,7 +318,7 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 	while (*s) {
 		sp_PrintAtInv (y, x ++, c, (*s) - 32); s ++;
-	}
+	}		
 }
 
 void any_key (void) {

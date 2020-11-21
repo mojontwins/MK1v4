@@ -41,6 +41,8 @@ void attr (char x, char y) {
 				ret
 			#endif
 
+			// If you put x in C and y in A you can call here
+
 		._attr_2
 			ld  b, a
 			sla a

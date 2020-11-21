@@ -2321,14 +2321,106 @@ void move (void) {
 	#ifndef DEACTIVATE_EVIL_TILE	
 		// Evil tile engine
 
-		#ifdef EVIL_TILE_SIMPLE
-			if (attr ((gpx + 8) >> 4, (gpy + 14) >> 4) == 1)
-		#else
-		if (attr (gpxx, gpyy) == 1 || 
-			((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 1) ||
-			((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 1) ||
-			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) 
-		#endif
+		#asm
+			#ifdef EVIL_TILE_SIMPLE
+				//if (attr ((gpx + 8) >> 4, (gpy + 14) >> 4) == 1)
+					ld  a, (_gpx)
+					add 8
+					srl a
+					srl a
+					srl a
+					srl a
+					
+					ld  c, a
+
+					ld  a, (_gpy)
+					add 14
+					srl a
+					srl a 
+					srl a
+					srl a
+
+					call _attr_2
+
+					ld a, l
+					dec a
+
+					jr nz, evil_tile_collision_done
+			#else
+				/*
+				if (attr (gpxx, gpyy) == 1 || 
+					((gpx & 15) != 0 && attr (gpxx + 1, gpyy) == 1) ||
+					((gpy & 15) != 0 && attr (gpxx, gpyy + 1) == 1) ||
+					((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) == 1)) 
+				*/				
+				// Rewrite: use 4 points from a smaller bounding box.
+					ld  a, (_gpx)
+					ld  b, a
+					add 4
+					srl a
+					srl a
+					srl a
+					srl a
+					ld  (_ptx1), a
+					ld  a, b
+					add 11
+					srl a
+					srl a
+					srl a
+					srl a
+					ld  (_ptx2), a
+					ld  a, (_gpy)
+					ld  b, a
+					add 4
+					srl a
+					srl a
+					srl a
+					srl a
+					ld  (_pty1), a
+					ld  a, b
+					add 11
+					srl a
+					srl a
+					srl a
+					srl a
+					ld  (_pty2), a
+
+					//
+					ld  a, (_ptx1)
+					ld  c, a
+					ld  a, (_pty1)
+					call _attr_2
+					ld  a, l
+					dec a 		// CP 1
+					jr  z, evil_tile_collision
+
+					ld  a, (_ptx2)
+					ld  c, a
+					ld  a, (_pty1)
+					call _attr_2
+					ld  a, l
+					dec a 		// CP 1
+					jr  z, evil_tile_collision
+
+					ld  a, (_ptx2)
+					ld  c, a
+					ld  a, (_pty1)
+					call _attr_2
+					ld  a, l
+					dec a 		// CP 1
+					jr  z, evil_tile_collision
+
+					ld  a, (_ptx2)
+					ld  c, a
+					ld  a, (_pty2)
+					call _attr_2
+					ld  a, l
+					dec a 		// CP 1
+					jr  nz, evil_tile_collision_done
+			#endif
+
+			.evil_tile_collision				
+		#endasm
 		{		
 			play_sfx (2);
 			player.life -= LINEAR_ENEMY_HIT;	
@@ -2345,6 +2437,9 @@ void move (void) {
 				player_flicker ();
 			#endif			
 		}
+		#asm
+			.evil_tile_collision_done
+		#endasm
 	#endif
 
 	#ifndef DEACTIVATE_EVIL_ZONE
@@ -2782,14 +2877,13 @@ void draw_scr_background (void) {
 						jr  draw_scr_bg_loop_end
 					.coins_check
 						cp  COIN_TILE
-						jr  nz, coins_replace_skip1
+						ret nz
 
 						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
 						or  a
-						jr  nz, coins_replace_skip1
+						ret nz
 
-						ld  a, COIN_TILE_DEACT_SUBS
-					.coins_replace_skip1
+						ld  a, COIN_TILE_DEACT_SUBS				
 						ret
 
 					.draw_scr_bg_loop_end
@@ -2798,6 +2892,7 @@ void draw_scr_background (void) {
 	#else	
 		// PACKED map, every byte contains two tiles, plus admits
 		// some special effects (autoshadows, see below).
+		/*
 		rdi = 0;
 		for (gpit = 0; gpit < 75; gpit ++) {
 			rdd = *gp_gen ++;
@@ -2810,14 +2905,108 @@ void draw_scr_background (void) {
 				if (rdt2 == COIN_TILE && 0 == scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
 			#ifndef NO_ALT_BG
-				if ((rand () & 15) < 2 && rdt1 == 0 /*&& map_buff [rdi - 16] == 0*/)
+				if ((rand () & 15) < 2 && rdt1 == 0)
 					rdt1 = 19;
-				if ((rand () & 15) < 2 && rdt2 == 0 /*&& map_buff [rdi - 16] == 0*/)
+				if ((rand () & 15) < 2 && rdt2 == 0)
 					rdt2 = 19;
 			#endif
 			_n = rdt1; draw_and_advance ();
 			_n = rdt2; draw_and_advance ();
 		}
+		*/
+
+		#asm
+				xor a
+				ld  (_rdi), a
+				ld  (_gpit), a
+
+			.draw_scr_bg_loop
+				
+				ld  hl, (_gp_gen)
+				ld  a, (hl)
+				inc hl
+				ld  (_gp_gen), hl
+				ld  b, a
+
+				srl a
+				srl a
+				srl a
+				srl a
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt1), a
+
+				ld  a, b
+				and 15
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt2), a
+
+
+				ld  a, (_rdt1)
+				#ifndef NO_ALT_BG
+						call no_alt_bg_subst
+				#endif
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  a, (_rdt2)
+				#ifndef NO_ALT_BG
+						call no_alt_bg_subst
+				#endif
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  a, (_gpit)
+				inc a
+				ld  (_gpit), a
+				cp  75
+				jr  nz, draw_scr_bg_loop
+
+				jr  draw_scr_bg_loop_end
+
+				#ifndef NO_ALT_BG
+					.no_alt_bg_subst
+						ld  c, a
+						call _rand
+						ld  a, l
+						cp  2
+						jr  nc, draw_scr_alt_no
+
+						ld  a, c
+						or  a
+						jr  nz, draw_scr_alt_no
+
+						ld  a, 19
+						ret
+
+					.draw_scr_alt_no
+						ld  a, c
+						ret
+				#endif
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+					.coins_check
+						cp  COIN_TILE
+						ret  nz
+
+						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
+						or  a
+						ret  nz
+
+						ld  a, COIN_TILE_DEACT_SUBS					
+						ret
+
+				#endif
+
+				.draw_scr_bg_loop_end
+		#endasm
 	#endif	
 
 	#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
