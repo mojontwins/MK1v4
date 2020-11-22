@@ -3,11 +3,12 @@
 # MTE MK1 4.8
 
 # flags:
-#  0 - Al pullpose no repeat
+#  0 - All purpose no repeat
 #  1 - Trap Sonia
 #  2 - Trap Clemente
 #  3 - Trap Marisa
 #  4 - Trap Gustavo
+#  5 - All purpose no repeat 2
 #  6 - Open pyramid
 #  9 - Lower floor door
 # 10 - COIN_FLAG
@@ -23,6 +24,7 @@ ENTERING SCREEN 0
 		     #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		TEXT "       RAMON EL FARAON"
 		SET FLAG 0 = 0
+		SET FLAG 5 = 0
 		SET TILE (2, 6) = 27
 	END
 END
@@ -46,9 +48,11 @@ PRESS_FIRE AT SCREEN 0
 
 	IF PLAYER_IN_X_TILES 7, 7
 	IF FLAG 0 = 1
+	IF FLAG 5 = 0
 	THEN
 		EXTERN 13
 		SET_FIRE_ZONE_TILES 15, 15, 15, 15
+		SET FLAG 5 = 1
 	END
 END
 

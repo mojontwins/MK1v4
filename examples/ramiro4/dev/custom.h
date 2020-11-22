@@ -721,7 +721,7 @@
 			}
 
 			// Detect collision
-			if ((water_level << 3) <= gpy) {
+			if (gpy <= 144 && (water_level << 3) <= gpy) {
 				trap_kill ();
 
 				// Reset trap!
