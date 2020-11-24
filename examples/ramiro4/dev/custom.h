@@ -124,7 +124,7 @@
 	unsigned char text9 [] = "SOY SONIA LA MOMIA%"
 							 "ME DUELE LA PETACA.%"
 							 "COMI MUCHAS CHUCHES%"
-							 "Y ME HAGO MUCHA CACA.%";
+							 "Y ME HAGO MUCHA CACA.";
 
 	unsigned char text10 [] = "SOY CLEMENTE, LA%"
 							  "SERPIENTE, NO CONSIGO%"

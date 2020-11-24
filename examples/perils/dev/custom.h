@@ -52,7 +52,10 @@ void set_hotspot (unsigned char hn) {
 	void hook_mainloop (void) {
 		if (latest_hotspot >= 4) {
 			// Check 
-			if (latest_hotspot == 4) {
+			if (latest_hotspot == 4
+				&& player.vy > 0
+				&& gpy + 8 <= hotspot_y
+			) {
 				play_sfx (6);
 				resonators_on = 250;
 				latest_hotspot = 5;

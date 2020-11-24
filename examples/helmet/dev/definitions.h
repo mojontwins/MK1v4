@@ -273,6 +273,8 @@ unsigned char wall;
 #if defined TWO_SETS || defined TWO_SETS_REAL
 	unsigned char tileoffset;
 #endif
+
+unsigned char ptx1, ptx2, pty1, pty2;
 	
 unsigned char pti, ptj;
 unsigned char *gp_gen, *gp_gen_org, *gp_gen_alt;

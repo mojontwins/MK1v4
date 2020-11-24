@@ -2322,8 +2322,14 @@ void move (void) {
 			.evil_tile_collision				
 		#endasm
 		{		
-			play_sfx (2);
-			player.life -= LINEAR_ENEMY_HIT;	
+			if (player.estado == EST_NORMAL) {
+				play_sfx (2);
+				player.life -= LINEAR_ENEMY_HIT;	
+				#ifdef PLAYER_FLICKERS
+					// Flickers. People seem to like this more than the bouncing behaviour.
+					player_flicker ();
+				#endif
+			}			
 			player.x = gpcx;
 			player.y = gpcy;
 			#ifdef PLAYER_MOGGY_STYLE
@@ -2332,10 +2338,6 @@ void move (void) {
 			#else
 			player.vy = -player.vy;
 			#endif
-			#ifdef PLAYER_FLICKERS
-				// Flickers. People seem to like this more than the bouncing behaviour.
-				player_flicker ();
-			#endif			
 		}
 		#asm
 			.evil_tile_collision_done
@@ -2876,12 +2878,13 @@ void draw_scr_background (void) {
 						ld  c, a
 						call _rand
 						ld  a, l
+						and 15
 						cp  2
 						jr  nc, draw_scr_alt_no
 
 						ld  a, c
 						or  a
-						jr  nz, draw_scr_alt_no
+						ret  nz
 
 						ld  a, 19
 						ret
@@ -3602,7 +3605,13 @@ void mueve_bicharracos (void) {
 				) 
 			) {
 				#ifdef PLAYER_KILLS_ENEMIES
-					if (gpy <= en_ccy - 8 && player.vy >= 0 
+					if (
+						#ifdef SHORT_PLAYER
+							gpy < en_ccy
+						#else
+							gpy <= en_ccy - 8 
+						#endif
+						&& player.vy >= 0 
 						#ifdef PLAYER_MIN_KILLABLE
 							&& _en_t >= PLAYER_MIN_KILLABLE
 						#endif
