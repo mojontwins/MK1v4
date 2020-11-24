@@ -1165,6 +1165,7 @@ Las siguientes directivas controlan aspectos relacionados con cómo se interpret
     //#define TWO_SETS                      // If defined, two sets of tiles. Second set is activated if
     //#define TWO_SETS_REAL                 // Tiles have their real value in map_buff
     //#define TWO_SETS_CONDITION    (n_pant>14?32:0)    // Must return 32 if second tileset is active, 0 otherwise.
+    //#define MAPPED_TILESETS 				// Like packed but tiles are mapped with array tileset_mappings
 ```
 
 * `USE_AUTO_SHADOWS` utiliza atributos para dibujar sombras que los tiles obstáculo (`& 8`) proyectan sobre los tiles traspasables. Para usar con juegos que usen mapas de 16 tiles.
@@ -1181,9 +1182,11 @@ Las siguientes directivas controlan aspectos relacionados con cómo se interpret
 
 * `NO_MAX_ENEMS`: si todas las pantallas de tu juego tienen los 3 enemigos, comenta esta directiva para ahorrar bastante espacio.
 
-* `TWO_SETS` y `TWO_SETS_REAL` permiten usar dos tilesets de 16 tiles. El mapa sigue codificando sólo 16 tiles, pero puedes elegir si se dibuja usando la primera o la última fila del tileset según la condición definida en `TWO_SETS_CONDITION`. Esta condición puede ser cualquier expresión o incluso llamar a una función *custom*. 
+* `TWO_SETS` y `TWO_SETS_REAL` permiten usar dos tilesets de 16 tiles. El mapa sigue codificando sólo 16 tiles (*packed*), pero puedes elegir si se dibuja usando la primera o la última fila del tileset según la condición definida en `TWO_SETS_CONDITION`. Esta condición puede ser cualquier expresión o incluso llamar a una función *custom*. 
 
 La diferencia entre `TWO_SETS` y `TWO_SETS_REAL` es que la primera sólo introduce valores de 1 a 16 en `map_buff` (el buffer de pantalla) y la segunda introduce los valores *reales* de los tiles que se pintan (1 a 16 o 32 a 47 dependiendo de la pantalla).
+
+* `MAPPED_TILESETS`: el mapa sigue usando 16 tiles (tipo *packed*), pero puedes decidir qué 16 tiles de los 48 se usan para dibujar el mapa. Para ello debes apuntar el puntero `tileset_mappings` a un array con 16 valores.
 
 ## Configuración del movimiento
 
