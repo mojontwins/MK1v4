@@ -382,7 +382,7 @@ Aunque no hayas puesto nada todavía, graba tu proyecto pulsando `Save`. Verás 
 
 Esta vez, en lugar de rellenar los valores, escribe `enems.ene` en el cuadro `Input` situado en el recuadro inferior que está etiquetado `Open existing` y haz click sobre el botón que pone `Load Existing`. Si todo sale bien, te debería volver a salir la primera pantalla del mapa.
 
-![Cargando un proyecto existente](https://raw.githubusercontent.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-004.png)
+![Cargando un proyecto existente](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-004.png)
 
 Como mencionamos antes, sólo tenemos que preocuparnos de poner las cosas en el Ponedor y grabar el archivo `enems.ene` a menudo. `comp.bat` se encargará de hacer las conversiones necesarias y de meter los numeritos en el juego.
 
@@ -392,7 +392,7 @@ Para empezar veremos como colocar **enemigos lineales**. Empezaremos haciendo cl
 
 Ahora el programa espera que marquemos el final la trayectoria. Haremos click en la casilla correspondiente. Veremos como se nos muestra gráficamente la trayectoria y aparece un nuevo cuadro de diálogo algo más complejo:
 
-![El atributo sirve para la velocidad de los enemigos lineales](https://raw.githubusercontent.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-005.png)
+![El atributo sirve para la velocidad de los enemigos lineales](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-005.png)
 
 En **MTE MK1** sólo tendremos que rellenar el recuadro `Attr`. El valor introducido en `Attr` será el número de píxeles que avanzará el enemigo o plataforma por cada cuadro de juego. Estos valores, para que no haya problemas, deberían ser potencias de dos:  1, 2 o 4.
 
