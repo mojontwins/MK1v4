@@ -2789,7 +2789,86 @@ void draw_scr_background (void) {
 					.draw_scr_bg_loop_end
 				#endif
 		#endasm
-	#else	
+					
+	#elif MAPPED_TILESETS
+		// PACKED map, but tile N is in fact tileset_mappings [N].
+		// tileset_mappings is a pointer!
+
+		#asm
+				xor a
+				ld  (_rdi), a
+				ld  (_gpit), a
+
+			.draw_scr_bg_loop
+				
+				ld  hl, (_gp_gen)
+				ld  a, (hl)
+				inc hl
+				ld  (_gp_gen), hl
+				ld  b, a
+
+				srl a
+				srl a
+				srl a
+				srl a
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt1), a
+
+				ld  a, b
+				and 15
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt2), a
+
+				ld  bc, (_rdt1)
+				call tile_lookup
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  bc, (_rdt2)
+				call tile_lookup
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  a, (_gpit)
+				inc a
+				ld  (_gpit), a
+				cp  75
+				jr  nz, draw_scr_bg_loop
+
+				jr  draw_scr_bg_loop_end
+
+			.tile_lookup
+				ld  b, 0
+				ld  hl, (_tileset_mappings)
+				add hl, bc
+				ld  a, (hl)
+				ret
+
+				ret
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+					.coins_check
+						cp  COIN_TILE
+						ret  nz
+
+						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
+						or  a
+						ret  nz
+
+						ld  a, COIN_TILE_DEACT_SUBS					
+						ret
+				#endif
+
+			.draw_scr_bg_loop_end		
+	#else
 		// PACKED map, every byte contains two tiles, plus admits
 		// some special effects (autoshadows, see below).
 		/*
@@ -2905,7 +2984,7 @@ void draw_scr_background (void) {
 
 				#endif
 
-				.draw_scr_bg_loop_end
+			.draw_scr_bg_loop_end
 		#endasm
 	#endif	
 

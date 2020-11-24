@@ -273,6 +273,7 @@
 //#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
 //#define TWO_SETS_REAL 				// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
+//#define MAPPED_TILESETS 				// Like packed but tiles are mapped with array tileset_mappings
 
 // ============================================================================
 // IV. Player movement configuration
