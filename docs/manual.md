@@ -648,8 +648,8 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
 ### Paralizar
 
 ```c
-	//#define ENEMIES_MAY_BE_PARALIZED 		// Custom paralyze enemies.
-	//#define PARALYZED_DONT_KILL 			// Enemies don't kill while paralyzed
+    //#define ENEMIES_MAY_BE_PARALIZED      // Custom paralyze enemies.
+    //#define PARALYZED_DONT_KILL           // Enemies don't kill while paralyzed
 ```
 
 * `ENEMIES_MAY_BE_PARALYZED`: Si activas `ENABLE_SWORD` y `SWORD_PARALYZES`, los enemigos se paralizarán de un golpe de espada (ver más adelante). Si quieres poder paralizar a los enemigos desde tus hooks de `custom.h` o desde `msc_extern.h` puedes definir esta macro.
@@ -948,7 +948,7 @@ Permite activar y configurar *fantys*.
 
 ```c
     //#define PLAYER_CAN_HIDE               // If defined, tile type 2 hides player.
-	//#define HIDDEN_CAN_MOVE 				// Originally, if you are moving you are not hidden. Override.
+    //#define HIDDEN_CAN_MOVE               // Originally, if you are moving you are not hidden. Override.
     //#define RANDOM_RESPAWN                // If defined, automatic flying enemies spawn on killed enemies
     //#define USE_TYPE_6                    // If defined, type 6 enemies are enabled.
     //#define USE_SIGHT_DISTANCE            // If defined, type 6 only pursue you within sight distance
@@ -2065,11 +2065,11 @@ Si activas `ENEMIES_MAY_BE_PARALIZED` puedes paralizar a cualquiera de los enemi
 Para juegos con energía en vez de vidas como Ramiro tenemos `COIN_REFILL` que te da un poco de vida cada vez que coges una moneda, pero para juegos con vidas puede ser interesante hacer que tras N monedas tengamos una recarga. Podemos añadir este código en `hook_mainloop`:
 
 ```c
-	if (flags [COIN_FLAG] == 25) {
-		play_sfx (6);
-		player.life ++;
-		flags [COIN_FLAG] = 0;
-	}
+    if (flags [COIN_FLAG] == 25) {
+        play_sfx (6);
+        player.life ++;
+        flags [COIN_FLAG] = 0;
+    }
 ```
 
 ## Más
