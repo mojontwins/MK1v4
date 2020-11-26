@@ -3,7 +3,7 @@
 set game=perils
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 4 6 15 10 15 packed  > nul
+..\utils\mapcnv.exe ..\map\mapa.map mapa.h 12 6 15 10 15 packed  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul

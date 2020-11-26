@@ -18,3 +18,51 @@ Para conseguirlo voy a usar el modo "mapped tilesets", en el que un mapa packed 
 
 Tendré que trabajar también en la forma de reducir los mapas. Puedo usar Photoshop como ya he hecho en alguna ocasión, usando el modo "raw" y luego retocando a mano.
 
+## Multifase
+
+Haremos el multifase fingido de la misma manera que en **Helmet**: un mapa grande con todas las secciones. Sin embargo, en este juego usamos mapped tilesets y habrá que, además, asignar el tileset correcto en cada fase:
+
+```c
+	[...]
+
+	unsigned char level, new_level;
+	unsigned char new_level_string [] = "LEVEL 00";
+
+	unsigned char scr_ini [] = { 60, 64, 68 };
+	unsigned char ini_x [] = { 1, 1, 1 };
+	unsigned char ini_y [] = { 4, 4, 4 };
+	unsigned char max_enems [] = { 1, 1 };
+
+	unsigned char tilemaps [] = {
+		 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+		32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,
+		 0, 17, 46, 47, 43, 44, 35,  6,  8,  7, 19, 22, 12, 39,  4, 15
+	};
+
+	[...]
+
+	void hook_init_game (void) {
+		[...]
+		level = 0;
+		new_level = 1;
+	}
+
+	void hook_init_mainloop (void) {
+		if (new_level) {
+			new_level = 0;
+			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
+			sp_Invalidate (spritesClip, spritesClip);
+			new_level_string [7] = level + '1';
+			draw_text (12, 11, 71, new_level_string);
+			draw_text (11, 13, 71, "KICK ASSES");
+			sp_UpdateNow ();
+			play_sfx (10);
+			espera_activa (150);
+			n_pant = scr_ini [level];
+			init_player_values ();
+			player.killed = 0; 
+			tileset_mappings = (unsigned char *) (tilemaps + (level << 4));
+		}
+	}
+```
+

@@ -2792,7 +2792,7 @@ void draw_scr_background (void) {
 				#endif
 		#endasm
 					
-	#elif MAPPED_TILESETS
+	#elif defined MAPPED_TILESETS
 		// PACKED map, but tile N is in fact tileset_mappings [N].
 		// tileset_mappings is a pointer!
 
@@ -2869,7 +2869,8 @@ void draw_scr_background (void) {
 						ret
 				#endif
 
-			.draw_scr_bg_loop_end		
+			.draw_scr_bg_loop_end	
+		#endasm	
 	#else
 		// PACKED map, every byte contains two tiles, plus admits
 		// some special effects (autoshadows, see below).

@@ -277,6 +277,7 @@ unsigned char wall;
 #ifdef MAPPED_TILESETS
 	unsigned char *tileset_mappings;
 #endif
+
 unsigned char ptx1, ptx2, pty1, pty2;
 	
 unsigned char pti, ptj;

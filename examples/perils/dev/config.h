@@ -10,12 +10,12 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W					4		//
+#define MAP_W					12		//
 #define MAP_H					6		// Map dimmensions in screens
 #define TOTAL_SCREENS			24		// 
 #define SCR_INICIO				20		// Initial screen
-#define PLAYER_INI_X			1		//
-#define PLAYER_INI_Y			4		// Initial tile coordinates
+#define PLAYER_INI_X			(ini_x [level])		//
+#define PLAYER_INI_Y			(ini_y [level])		// Initial tile coordinates
 #define SCR_FIN 				20		// Last screen. 99 = deactivated.
 #define PLAYER_FIN_X			0		//
 #define PLAYER_FIN_Y			8		// Player tile coordinates to finish game
@@ -273,7 +273,7 @@
 //#define TWO_SETS						// If defined, two sets of tiles. Second set is activated if
 //#define TWO_SETS_REAL 				// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
-//#define MAPPED_TILESETS 				// Like packed but tiles are mapped with array tileset_mappings
+#define MAPPED_TILESETS 				// Like packed but tiles are mapped with array tileset_mappings
 
 // ============================================================================
 // IV. Player movement configuration

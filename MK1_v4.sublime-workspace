@@ -604,10 +604,8 @@
 	},
 	"expanded_folders":
 	[
-		"/C/git/mk1",
-		"/C/git/mk1/docs",
-		"/C/git/mk1/src",
-		"/C/git/mk1/src/dev"
+		"/D/git/MK1",
+		"/D/git/MK1/examples"
 	],
 	"file_history":
 	[
@@ -1179,6 +1177,9 @@
 						],
 						"settings":
 						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},

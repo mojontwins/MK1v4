@@ -274,13 +274,10 @@ unsigned char wall;
 	unsigned char tileoffset;
 #endif
 
-<<<<<<< HEAD
-=======
 #ifdef MAPPED_TILESETS
 	unsigned char *tileset_mappings;
 #endif
 
->>>>>>> 09586ffbbcb7b5d66c9d4cc04f88c05bc28bb0a3
 unsigned char ptx1, ptx2, pty1, pty2;
 	
 unsigned char pti, ptj;
