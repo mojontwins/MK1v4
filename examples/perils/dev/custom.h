@@ -68,9 +68,7 @@ void set_hotspot (unsigned char hn) {
 			if (level < 3) {
 				new_level = 1;
 			} else {
-				cortina ();
-				game_ending ();
-				playing = 0;
+				game_loop_flag = 1;
 			}
 		}
 
