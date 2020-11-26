@@ -320,30 +320,11 @@
 // 2 = Walkable and hides.
 // 4 = Platform (only stops player if falling on it)
 // 8 = Full obstacle (blocks player from all directions)
+// 16 = Slippery
+// 32 = Breakable
 
-#ifndef UNPACKED_MAP
-	#if defined TWO_SETS || defined TWO_SETS_REAL
-	// Fill this array for dual tileset maps.
-	unsigned char comportamiento_tiles [] = {
-		0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 4, 0,
-		0, 0,16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 0, 3, 4, 1,
-	};
-	#else
-	// Fill this array for normal, packed maps. The second row
-	// is defined if you want to use tiles 20-31 in your scripts.
-	// Remove it if you are not using extra tiles at all. And remember
-	// that tiles 16 to 19 MUST be 0.
-	unsigned char comportamiento_tiles [] = {
-		0, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8,
-		0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0
-	};
-	#endif
-#else
-// Fill this array if you are using unpacked maps.
 unsigned char comportamiento_tiles [] = {
-	0, 0, 0, 0, 0, 0, 8, 8, 8, 4, 8, 8, 4, 2, 2, 0,
-	0, 0, 4, 8, 8, 4, 8, 8, 4, 4, 8, 0, 0, 2, 0, 0,
-	0, 0, 4, 4, 0, 8, 2, 2, 2, 2, 8, 0, 2, 2, 2, 8	
+	0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 4, 0,
+	0, 0,16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 0, 3, 4, 1,
 };
-#endif

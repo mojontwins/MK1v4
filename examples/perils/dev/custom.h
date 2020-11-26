@@ -12,7 +12,7 @@ unsigned char new_level_string [] = "LEVEL 00";
 unsigned char scr_ini [] = { 60, 64, 68 };
 unsigned char ini_x [] = { 1, 1, 1 };
 unsigned char ini_y [] = { 4, 4, 4 };
-unsigned char max_enems [] = { 1, 1 };
+unsigned char max_enems [] = { 60, 60, 60 };
 
 unsigned char tilemaps [] = {
 	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
