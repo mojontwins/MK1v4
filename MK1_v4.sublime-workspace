@@ -519,14 +519,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "src/dev/definitions.h",
-			"settings":
-			{
-				"buffer_size": 7480,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -605,10 +597,28 @@
 	"expanded_folders":
 	[
 		"/D/git/MK1",
-		"/D/git/MK1/examples"
+		"/D/git/MK1/docs",
+		"/D/git/MK1/examples",
+		"/D/git/MK1/examples/perils",
+		"/D/git/MK1/examples/perils/dev",
+		"/D/git/MK1/examples/perils/gfx",
+		"/D/git/MK1/src",
+		"/D/git/MK1/src/dev",
+		"/D/git/MK1/src/utils"
 	],
 	"file_history":
 	[
+		"/D/git/MK1/src/dev/mainloop.h",
+		"/D/git/MK1/src/dev/definitions.h",
+		"/D/git/MK1/docs/manual.md",
+		"/D/git/MK1/examples/perils/dev/custom.h",
+		"/D/git/MK1/examples/perils/README.md",
+		"/D/Proyectos/remote/destom01/sftp-config.json",
+		"/D/git/MK1/examples/perils/dev/config.h",
+		"/D/git/MK1/examples/helmet/dev/custom.h",
+		"/D/git/MK1/src/dev/engine.h",
+		"/D/git/MK1/examples/perils/dev/perils.asm",
+		"/D/git/MK1/examples/perils/dev/comp.bat",
 		"/C/git/mk1/examples/ababol2_demo/dev/definitions.h",
 		"/C/git/mk1/examples/helmet/dev/engine.h",
 		"/C/git/mk1/examples/ramiro4/script/script.spt",
@@ -725,28 +735,18 @@
 		"/D/git/MK1/examples/limite/dev/msc_extern.h",
 		"/D/git/MK1/examples/limite/dev/msc-config.h",
 		"/D/git/MK1/src/dev/config.h",
-		"/D/git/MK1/src/dev/mainloop.h",
-		"/D/git/MK1/src/dev/engine.h",
-		"/D/git/MK1/src/dev/definitions.h",
-		"/C/Users/jcastano/AppData/Local/Temp/7zO007686FB/config.h",
-		"/C/Users/jcastano/AppData/Local/Temp/7zO0072EE77/tileset.h",
-		"/D/git/MK1/src/dev/tileset.h",
-		"/D/git/MK1/src/dev/churromain.c",
-		"/D/git/MK1/src/dev/extrasprites.h",
-		"/D/git/MK1/src/dev/music.h",
-		"/D/git/MK1/src/dev/pantallas.h",
-		"/D/git/MK1/src/dev/printer.h",
-		"/D/git/MK1/src/dev/aplib.h"
+		"/C/Users/jcastano/AppData/Local/Temp/7zO007686FB/config.h"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 48.0
 	},
 	"find_in_files":
 	{
 		"height": 128.0,
 		"where_history":
 		[
+			"D:\\git\\MK1\\src\\dev",
 			"C:\\git\\mk1\\examples\\helmet\\dev",
 			"C:\\git\\mk1\\examples\\limite\\dev",
 			"C:\\git\\mk1\\examples\\ramiro4\\dev",
@@ -873,8 +873,7 @@
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\plugins\\bedework_addressbook",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail\\plugins\\password",
 			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old\\webmail",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old",
-			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es\\program"
+			"D:\\Proyectos\\remote\\desccobuz05\\correo.juntadeandalucia.es-old"
 		]
 	},
 	"find_state":
@@ -882,6 +881,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"script_result",
+			"script_result = ",
+			"enemy_killer",
+			"killed",
+			"start_new_level",
 			"head",
 			"kills_ene",
 			"no_alt_",
@@ -1004,12 +1008,7 @@
 			"player.vx",
 			"platform_get_player",
 			"adjust_to_tile_x@",
-			"adjust_to_tile_x",
-			"water_level",
-			"pvy",
-			"peta_el_beeper (10)",
-			"paint",
-			"extern"
+			"adjust_to_tile_x"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1017,6 +1016,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"new_level",
 			"play_sfx",
 			"level",
 			"af,af",
@@ -1143,8 +1143,7 @@
 			"85b582",
 			"config",
 			"F8",
-			"DB",
-			"$patata"
+			"DB"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1155,41 +1154,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "src/dev/definitions.h",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 7480,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7066,
-								7066
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3489.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		},
 		{
@@ -1256,7 +1222,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 74.0
+		"height": 88.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1290,7 +1256,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 	},
@@ -1298,7 +1264,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 134.0,
+	"side_bar_width": 225.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
