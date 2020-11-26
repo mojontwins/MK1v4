@@ -190,6 +190,7 @@ void main (void) {
 		#endif
 
 		#ifdef ENABLE_CODE_HOOKS
+			game_loop_flag = 0;
 			hook_init_game ();
 		#endif
 		
@@ -582,8 +583,23 @@ void main (void) {
 			
 			// Win game condition
 			
-			#ifndef WIN_ON_SCRIPTING
-			
+			#ifdef WIN_ON_SCRIPTING
+				if (script_result == 1) {
+					saca_a_todo_el_mundo_de_aqui ();
+					cortina ();
+					game_ending ();
+					playing = 0;
+					cortina ();
+				}
+			#elif defined ENABLE_CODE_HOOKS
+				if (game_loop_flag == 1) {
+					saca_a_todo_el_mundo_de_aqui ();
+					cortina ();
+					game_ending ();
+					playing = 0;
+					cortina ();
+				}
+			#else			
 				#ifdef ACTIVATE_SCRIPTING
 					#ifndef REENTER_ON_ALL_OBJECTS
 						if (player.objs == PLAYER_NUM_OBJETOS || script_result == 1 
@@ -629,14 +645,7 @@ void main (void) {
 						playing = 0;
 						cortina ();
 					}
-				}
-			#else
-				if (script_result) {
-					cortina ();
-					game_ending ();
-					playing = 0;
-					cortina ();
-				}
+				}				
 			#endif
 
 			// Dead player
@@ -670,6 +679,9 @@ void main (void) {
 			if (player.life < 0
 				#ifdef ACTIVATE_SCRIPTING
 					|| script_result == 2
+				#endif
+				#ifdef ENABLE_CODE_HOOKS
+					|| game_loop_flag == 2
 				#endif
 			) {
 				saca_a_todo_el_mundo_de_aqui ();				

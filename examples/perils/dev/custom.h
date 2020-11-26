@@ -63,6 +63,17 @@ void set_hotspot (unsigned char hn) {
 	}
 
 	void hook_init_mainloop (void) {
+		if (player.killed == max_enems [level]) {
+			level ++;
+			if (level < 3) {
+				new_level = 1;
+			} else {
+				cortina ();
+				game_ending ();
+				playing = 0;
+			}
+		}
+
 		if (new_level) {
 			new_level = 0;
 			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);

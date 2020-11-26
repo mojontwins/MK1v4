@@ -511,6 +511,8 @@ Si activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas 
 
 * `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los *hotspots*, pero antes de que nada sea visible.
 
+¡Ojo! Si activas `ENABLE_CODE_HOOKS`, puedes forzar *Game Over* poniendo `game_loop_flag` a 1, pero **el juego sólo terminará (pantalla de final) si pones `game_loop_flag` a 1**. La comprobación de "juego terminado" tendrás que ponerla tú, a menos que definas `WIN_ON_SCRIPTING`, en cuyo caso sólo se podrá "ganar" desde el script o haciendo `script_result = 1`. 
+
 ### Enganches de enemigos custom `ENABLE_CUSTOM_ENEMS`
 
 Los enganches para enemigos custom permiten añadir tipos de enemigos o personalizar los que ya existen. Si activas `ENABLE_CUSTOM_ENEMS`, las siguientes funciones de `custom.h` serán llamadas en diferentes puntos de la gestión de enemigos:
@@ -2132,6 +2134,10 @@ Lo siguiente será mostrar la pantalla de nuevo nivel y hacer las inicializacion
 ```
 
 Cuando queramos "pasar de fase", que según el juego será cumpliendo la condición que sea, sólo tendremos que incrementar `level` (o cambiarlo a placer) y poner a 1 `new_level`.
+
+## Ganar o perder
+
+Si quieres ganar o perder dede tus customs, sólo tienes que asignar un valor a `game_loop_flag`. Normalmente vale 0, pero si vale 1 ganarás el juego (se mostrará `game_ending`) y si vale 2 perderás (el mensaje de *Game Over*).
 
 ## Más
 
