@@ -520,19 +520,10 @@
 	"buffers":
 	[
 		{
-			"file": "src/dev/config.h",
+			"file": "wip/todo.md",
 			"settings":
 			{
-				"buffer_size": 15653,
-				"encoding": "Western (Windows 1252)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/dev/comp.bat",
-			"settings":
-			{
-				"buffer_size": 1245,
+				"buffer_size": 2070,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -615,21 +606,19 @@
 	"expanded_folders":
 	[
 		"/D/git/MK1",
-		"/D/git/MK1/docs",
-		"/D/git/MK1/docs/images",
-		"/D/git/MK1/examples",
 		"/D/git/MK1/src",
 		"/D/git/MK1/src/dev",
+		"/D/git/MK1/src/gfx",
 		"/D/git/MK1/wip"
 	],
 	"file_history":
 	[
-		"/D/git/MK1/docs/manual.md",
 		"/D/git/MK1/src/dev/engine.h",
-		"/D/git/MK1/src/dev/definitions.h",
-		"/D/git/MK1/src/dev/churromain.c",
 		"/D/git/MK1/src/dev/config.h",
 		"/D/git/MK1/src/dev/comp.bat",
+		"/D/git/MK1/docs/manual.md",
+		"/D/git/MK1/src/dev/definitions.h",
+		"/D/git/MK1/src/dev/churromain.c",
 		"/D/git/MK1/examples/ramiro4/dev/config.h",
 		"/D/git/MK1/wip/todo.md",
 		"/C/Users/jcastano/Downloads/Telegram Desktop/comoloharia.c",
@@ -755,7 +744,7 @@
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 48.0
 	},
 	"find_in_files":
 	{
@@ -897,6 +886,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"move ",
+			"slippery",
 			"sword_hit",
 			"sword",
 			"player.facing",
@@ -1022,9 +1013,7 @@
 			"pinv",
 			"frame_counter",
 			"mueve ",
-			"!",
-			"msc_init_all",
-			"water_locks"
+			"!"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1170,24 +1159,24 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/dev/config.h",
+					"file": "wip/todo.md",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15653,
+						"buffer_size": 2070,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6048,
-								6048
+								1579,
+								1579
 							]
 						],
 						"settings":
@@ -1195,40 +1184,10 @@
 							"incomplete_sync": null,
 							"remote_loading": false,
 							"synced": false,
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/Markdown Extended/Syntaxes/Markdown Extended.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1136.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/dev/comp.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1245,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								298,
-								298
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 64.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},

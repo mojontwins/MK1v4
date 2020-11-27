@@ -608,7 +608,7 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
     #define PLAYER_BOUNCES                  // If defined, collisions make player bounce
     //#define PLAYER_FLICKERS               // If defined, collisions make player flicker instead.
     //#define DEACTIVATE_REFILLS            // If defined, no refills.
-	//#define LEGACY_REFILLS 				// Legacy mode: refills appear in place of collected items/keys
+    //#define LEGACY_REFILLS                // Legacy mode: refills appear in place of collected items/keys
     #define MAX_FLAGS               1       // Number of flags. For scripting and stuff.
     //#define PLAYER_DIZZY                  // The Hobbit
     #define ENEMIES_LIFE_GAUGE      3       // Amount of shots/hits needed to kill enemies.
@@ -856,7 +856,7 @@ Hecho esto, la espada se configura con estas macros:
 * `GENITAL_HIT_FRAMES`: Si defines esta macro, **en modo genital**, tendrás que añadir 4 frames al spriteset como sprites 17 a 20 con nuevos cells de animación para que el muñeco golpée con la espada a la derecha, izquierda, arriba y abajo, respectivamente. Si haces esto tendrás que modificar `comp.bat` para convertir el spriteset (que ahora tendrá 20 cells más los que añadas por tu cuenta) con `sprcnv2.exe`:
 
 ```cmd
-	..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra > nul
+    ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra > nul
 ```
 
 * `SWORD_STAB` apuñalar en lugar de balancear la espada. La espada sale recta a una altura de N pixels desde la parte superior del sprite del jugador.
@@ -1182,7 +1182,7 @@ Las siguientes directivas controlan aspectos relacionados con cómo se interpret
     //#define TWO_SETS                      // If defined, two sets of tiles. Second set is activated if
     //#define TWO_SETS_REAL                 // Tiles have their real value in map_buff
     //#define TWO_SETS_CONDITION    (n_pant>14?32:0)    // Must return 32 if second tileset is active, 0 otherwise.
-    //#define MAPPED_TILESETS 				// Like packed but tiles are mapped with array tileset_mappings
+    //#define MAPPED_TILESETS               // Like packed but tiles are mapped with array tileset_mappings
 ```
 
 * `USE_AUTO_SHADOWS` utiliza atributos para dibujar sombras que los tiles obstáculo (`& 8`) proyectan sobre los tiles traspasables. Para usar con juegos que usen mapas de 16 tiles.
@@ -2099,8 +2099,8 @@ Puedes engañar al chamán y tener varios niveles de forma muy sencilla haciendo
 Se puede hacer de muchas formas. Esto es sólo un ejemplo sencillo (todo en `custom.h`). Empezamos creando estas variables:
 
 ```c
-	unsigned char level, new_level;
-	unsigned char new_level_string [] = "LEVEL 00";
+    unsigned char level, new_level;
+    unsigned char new_level_string [] = "LEVEL 00";
 ```
 
 * `level` indicará en qué fase estamos (0 la primera).
@@ -2110,42 +2110,42 @@ Se puede hacer de muchas formas. Esto es sólo un ejemplo sencillo (todo en `cus
 Hecho esto, vamos a crear tres arrays (mínimo; si vamos a tener cosas como número máximo de objetos o cosas así por cada nivel necesitaremos más) para saber dónde empezamos cada fase. Por ejemplo, para tres fases, defino tres pantallas de inicio y tres posiciones X, Y:
 
 ```c
-	unsigned char scr_ini [] = { 60, 64, 68 };
-	unsigned char ini_x [] = { 1, 1, 1 };
-	unsigned char ini_y [] = { 4, 4, 4 };
+    unsigned char scr_ini [] = { 60, 64, 68 };
+    unsigned char ini_x [] = { 1, 1, 1 };
+    unsigned char ini_y [] = { 4, 4, 4 };
 ```
 
 Lo siguiente es inicializar el sistema en `hook_init_game`. Ponemos `level` a 0 y `new_level` a 1, para indicar que nada más empezar queremos la pantalla de nuevo nivel:
 
 ```c
-	void hook_init_game (void) {
-		level = 0;
-		new_level = 1;
+    void hook_init_game (void) {
+        level = 0;
+        new_level = 1;
 
-		// Mas inicializaciones por aquí . . .
-	}
+        // Mas inicializaciones por aquí . . .
+    }
 ```
 
 Lo siguiente será mostrar la pantalla de nuevo nivel y hacer las inicializaciones precisas si `new_level` vale 1. Queremos hacer esto al principio de cada loop de juego, donde se entra sin que la pantalla esté pintada:
 
 ```c
-	void hook_init_mainloop (void) {
-		if (new_level) {
-			new_level = 0;
-			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
-			sp_Invalidate (spritesClip, spritesClip);
-			new_level_string [7] = level + '1';
-			draw_text (12, 11, 71, new_level_string);
-			draw_text (11, 13, 71, "GET READY!");
-			sp_UpdateNow ();
-			play_sfx (10);
-			espera_activa (150);
-			n_pant = scr_ini [level];
-			init_player_values ();
-			
-			// Añadir más inicializaciones aquí
-		}
-	}
+    void hook_init_mainloop (void) {
+        if (new_level) {
+            new_level = 0;
+            sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
+            sp_Invalidate (spritesClip, spritesClip);
+            new_level_string [7] = level + '1';
+            draw_text (12, 11, 71, new_level_string);
+            draw_text (11, 13, 71, "GET READY!");
+            sp_UpdateNow ();
+            play_sfx (10);
+            espera_activa (150);
+            n_pant = scr_ini [level];
+            init_player_values ();
+            
+            // Añadir más inicializaciones aquí
+        }
+    }
 ```
 
 Cuando queramos "pasar de fase", que según el juego será cumpliendo la condición que sea, sólo tendremos que incrementar `level` (o cambiarlo a placer) y poner a 1 `new_level`.

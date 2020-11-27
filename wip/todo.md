@@ -17,9 +17,9 @@ Mari Amelia puede esconderse entre los arbustos para evitar a los espectros.
 Tenemos dos casos:
 
 ```
-	(x1,y1) -> .          . <- (x2, y2)
-	 ^         v          v          ^
-	 . <- (x2, y2)       (x1, y1) -> .
+    (x1,y1) -> .          . <- (x2, y2)
+     ^         v          v          ^
+     . <- (x2, y2)       (x1, y1) -> .
 ```
 
 * Desde (x1, y1) siempre se va a la derecha, y desde (x2, y2) siempre se va a la izquierda.
@@ -29,19 +29,19 @@ Tenemos dos casos:
 Pseudocódigo:
 
 ```
-	INIT:
-	x = x1; y = y1; mx = S; my = 0;	
+    INIT:
+    x = x1; y = y1; mx = S; my = 0; 
 
-	UPDATE
-	x += mx; y += my;
-	if (x == x1) {
-		if (y == y1) mx = S; my = 0;
-		else if (y == y2) mx = 0; my = add_sign (y2 - y1, S);
-	}
-	if (x == x2) {
-		if (y = y1) mx = 0; my = add_sign (y1 - y2, S);
-		else if (y == y1) mx = S; my = 0;
-	}
+    UPDATE
+    x += mx; y += my;
+    if (x == x1) {
+        if (y == y1) mx = S; my = 0;
+        else if (y == y2) mx = 0; my = add_sign (y2 - y1, S);
+    }
+    if (x == x2) {
+        if (y = y1) mx = 0; my = add_sign (y1 - y2, S);
+        else if (y == y1) mx = S; my = 0;
+    }
 ```
 
 [ ] Enemigos custom que se mueven al azar como los patrulleros marrulleros pero en 4 direcciones (genital), o su variación en la que cambian de direción cuando chocan con un obstáculo

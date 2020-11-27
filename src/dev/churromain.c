@@ -29,7 +29,7 @@
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
 // Add 5 for each 8x8 sprite (such as bullets or sword)
-#define NUMBLOCKS 		45//40
+#define NUMBLOCKS 		40
 
 // Note how if you need a IM2 table you have less free space
 #if defined (MODE_128K_DUAL) || defined (MIN_FAPS_PER_FRAME)
