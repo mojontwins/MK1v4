@@ -6,7 +6,7 @@ Cosas que planeo
 
 [X] Espada en 4 direcciones en vista genital para Mari Amelia. Será necesario un modo opcional para "extra frames" `GENITAL_HIT_FRAMES`, en cuyo caso habrá que definir 4 frames extra como extra_sprites 17, 18, 19 y 20
 
-[ ] Slippery en genital - Lo puedo detectar en dos puntos, `gpx + 4` y `gpx + 11`, `gpy + 15`.
+[X] Slippery en genital - Lo puedo detectar en dos puntos, `gpx + 4` y `gpx + 11`, `gpy + 15`.
 
 [ ] Ocultarse en genital (ya está)
 
@@ -46,7 +46,7 @@ Pseudocódigo:
 
 [ ] Enemigos custom que se mueven al azar como los patrulleros marrulleros pero en 4 direcciones (genital), o su variación en la que cambian de direción cuando chocan con un obstáculo
 
-[ ] Estado "enemigo parpadenado" (e inmune).
+[ ] Estado "enemigo parpadeando" (e inmune).
 
 [ ] Para los que andan a su bola, retroceder N pixels en direccion contraria al golpe.
 
