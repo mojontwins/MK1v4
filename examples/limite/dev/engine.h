@@ -1277,12 +1277,19 @@ void move (void) {
 	#ifdef SLIPPERY_TILES
 		player.ax = PLAYER_AX; player.rx = PLAYER_RX;
 
-		if (player.possee) {
-			rdy = (gpy + 16) >> 4;
-			if ((attr (gpx >> 4, rdy) & 16) || (attr ((gpx + 15) >> 4, rdy) & 16)) {
+		#ifdef PLAYER_MOGGY_STYLE
+			rdy = (gpy + 15) >> 4;
+			if ((attr ((gpx + 4) >> 4, rdy) & 16) || (attr ((gpx + 11) >> 4, rdy) & 16)) {
 				player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
 			}
-		}
+		#else
+			if (player.possee) {
+				rdy = (gpy + 16) >> 4;
+				if ((attr (gpx >> 4, rdy) & 16) || (attr ((gpx + 15) >> 4, rdy) & 16)) {
+					player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
+				}
+			}
+		#endif
 	#endif
 
 	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
@@ -2614,37 +2621,26 @@ void move (void) {
 					rdd = 9 + player.facing;
 				} else
 			#endif
-			#ifdef LOOK_AT_THE_CAMERA				
-				{
-					if (player.vx != 0 || player.vy != 0) {
-						player.subframe ++;
-						if (player.subframe == 4) {
-							player.subframe = 0;
-							player.frame = !player.frame;
-							step (); 
-						}
+			{
+				if ((pad0 ^ (sp_LEFT|sp_RIGHT|sp_UP|sp_DOWN)) & (sp_LEFT|sp_RIGHT|sp_UP|sp_DOWN)) {
+					player.subframe ++;
+					if (player.subframe == 4) {
+						player.subframe = 0;
+						player.frame = !player.frame;
+						step (); 
 					}
-					
+				}
+				
+				#ifdef LOOK_AT_THE_CAMERA				
 					rdd = player.frame;
 					if (player.vx == 0) {		
 						if (player.vy < 0) rdd += 4;
 						else rdd += 6; 
 					} else if (player.vx < 0) rdd += 2;
-				}			
-			#else
-				{
-					if (player.vx != 0 || player.vy != 0) {
-						player.subframe ++;
-						if (player.subframe == 4) {
-							player.subframe = 0;
-							player.frame = !player.frame;
-							step (); 
-						}
-
-					}
+				#else
 					rdd = player.frame + (player.facing << 1);
-				}	
-			#endif
+				#endif
+			}
 			player.next_frame = player_cells [rdd];
 		}
 

@@ -4,9 +4,10 @@
 
 Cosas que planeo
 
-[ ] Espada en 4 direcciones en vista genital para Mari Amelia. Será necesario un modo opcional para "extra frames" `GENITAL_HIT_FRAMES`, en cuyo caso habrá que definir 4 frames extra como extra_sprites 17, 18, 19 y 20
+[X] Espada en 4 direcciones en vista genital para Mari Amelia. Será necesario un modo opcional para "extra frames" `GENITAL_HIT_FRAMES`, en cuyo caso habrá que definir 4 frames extra como extra_sprites 17, 18, 19 y 20
 
-[ ] Slippery en genital
+[ ] Slippery en genital - Lo puedo detectar en dos puntos, `gpx + 4` y `gpx + 11`, `gpy + 15`.
+
 [ ] Ocultarse en genital (ya está)
 
 Mari Amelia puede esconderse entre los arbustos para evitar a los espectros.
