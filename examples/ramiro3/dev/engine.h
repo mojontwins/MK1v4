@@ -9,7 +9,12 @@ unsigned char *player_cells [] = {
 	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
 	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
 	#ifdef ENABLE_FRIGOABABOL
-		sprite_frigo
+		sprite_frigo,
+	#else 
+		0,
+	#endif
+	#if defined ENABLE_SWORD && defined PLAYER_MOGGY_STYLE && defined GENITAL_HIT_FRAMES
+		extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a,
 	#endif
 };
 
@@ -378,7 +383,7 @@ void cortina (void) {
 		for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
 			if (bullets [gpit].estado == 0) {
 				bullets [gpit].estado = 1;
-				if (player.facing == 0) {
+				if (player.facing) {
 					bullets [gpit].x = (player.x >> 6) - 4;
 					bullets [gpit].mx = -PLAYER_BULLET_SPEED;
 				} else {
@@ -556,14 +561,158 @@ void player_flicker (void) {
 
 			.sword_check
 
-			#ifdef SWORD_UP
-				.sword_check_up
-					ld  a, (_s_type)
-					cp  SWORD_TYPE_UP
-					jr  nz, sword_up_done
+			#ifdef PLAYER_MOGGY_STYLE
 
+					ld  bc, (_s_frame)
+					ld  b, 0
+
+					// In genital mode, every swing direction is different, so 
+					ld  a, (_s_type)
+					cp  SWORD_TYPE_LEFT
+					jr  z, .sword_left
+					cp  SWORD_TYPE_RIGHT
+					jr  z, .sword_right
+					cp  SWORD_TYPE_UP
+					jr  z, .sword_up				
+					;cp  SWORD_TYPE_DOWN
+					;jr  z, .sword_down
+
+				.sword_down
+					// s_y = gpy + swoffs_x [s_frame]; s_x = gpx + 7 - swoffs_y [s_frame];
+					// s_hit_y = s_y + 7; s_hit_x = s_x + 3;
+					ld  hl, _swoffs_x
+					add hl, bc
+					ld  c, (hl)
+					ld  a, (_gpy)
+					add c
+					ld  (_s_y), a
+					add 7
+					ld  (_s_hit_y), a
+
+					ld  hl, _swoffs_y
+					add hl, bc 
+					ld  c, (hl)
 					ld  a, (_gpx)
-					#ifdef SWORD_STAB
+					add 7
+					sub c 
+					ld  (_s_x), a
+					add 3
+					ld  (_s_hit_x), a
+
+					jr  sword_check_done
+
+				.sword_up
+					// s_y = gpy + 8 - swoffs_x [s_frame]; s_x = gpx + swoffs_y [s_frame];
+					// s_hit_y = s_y; s_hit_x = s_x + 4;
+					ld  hl, _swoffs_x
+					add hl, bc
+					ld  c, (hl)
+					ld  a, (_gpy)
+					add 8
+					sub c
+					ld  (_s_y), a
+					ld  (_s_hit_y), a
+
+					ld  hl, _swoffs_y
+					add hl, bc 
+					ld  c, (hl)
+					ld  a, (_gpx)
+					add c 
+					ld  (_s_x), a
+					add 4
+					ld  (_s_hit_x), a
+
+					jr  sword_check_done
+
+				.sword_left
+					// s_y = gpy + 8 - swoffs_y [s_frame]; s_x = gpx + 8 - swoffs_x [s_frame];
+					// s_hit_y = s_y + 3; s_hit_x = s_x;
+					ld  hl, _swoffs_y
+					add hl, bc
+					ld  c, (hl)
+					ld  a, (_gpy)
+					add 8
+					sub c
+					ld  (_s_y), a
+					add 3
+					ld  (_s_hit_y), a
+
+					ld  hl, _swoffs_x
+					add hl, bc 
+					ld  c, (hl)
+					ld  a, (_gpx)
+					add 8
+					sub c 
+					ld  (_s_x), a
+					ld  (_s_hit_x), a
+
+					jr  sword_check_done
+
+				.sword_right
+					// s_y = gpy + swoffs_y [s_frame]; s_x = gpx + swoffs_x [s_frame];
+					// s_hit_y = s_y + 4; s_hit_x = s_x + 7;
+					ld  hl, _swoffs_y
+					add hl, bc
+					ld  c, (hl)
+					ld  a, (_gpy)
+					add c
+					ld  (_s_y), a
+					add 4
+					ld  (_s_hit_y), a
+
+					ld  hl, _swoffs_x
+					add hl, bc 
+					ld  c, (hl)
+					ld  a, (_gpx)
+					add c 
+					ld  (_s_x), a
+					add 7
+					ld  (_s_hit_x), a
+
+					;jr  sword_check_done
+
+			#else
+				#ifdef SWORD_UP
+					.sword_check_up
+						ld  a, (_s_type)
+						cp  SWORD_TYPE_UP
+						jr  nz, sword_up_done
+
+						ld  a, (_gpx)
+						#ifdef SWORD_STAB
+							add SWORD_STAB
+						#else
+							ld  bc, (_s_frame)
+							ld  b, 0
+							ld  hl, _swoffs_y
+							add hl, bc
+							ld  c, (hl)
+							add c
+						#endif
+						ld  (_s_x), a
+
+						add 4
+						ld  (_s_hit_x), a
+
+						ld  bc, (_s_frame)
+						ld  b, 0
+						ld  hl, _swoffs_x
+						add hl, bc 
+						ld  c, (hl)
+
+						ld  a, (_gpy)
+						add 8
+						sub c 
+						ld  (_s_y), a
+
+						ld  (_s_hit_y), a
+						jp  sword_check_done
+
+					.sword_up_done
+				#endif
+
+					ld  a, (_gpy)
+					#ifdef SWORD_STAB 
 						add SWORD_STAB
 					#else
 						ld  bc, (_s_frame)
@@ -571,69 +720,37 @@ void player_flicker (void) {
 						ld  hl, _swoffs_y
 						add hl, bc
 						ld  c, (hl)
-						add c
+						add c 
 					#endif
-					ld  (_s_x), a
-
+					ld  (_s_y), a
 					add 4
-					ld  (_s_hit_x), a
+					ld  (_s_hit_y), a
 
 					ld  bc, (_s_frame)
 					ld  b, 0
 					ld  hl, _swoffs_x
-					add hl, bc 
-					ld  c, (hl)
+					add hl, bc
+					ld  c, (hl) 
 
-					ld  a, (_gpy)
+					ld  a, (_s_type)
+					cp  SWORD_TYPE_LEFT
+					jr  nz, sword_right
+
+				.sword_left 
+					ld  a, (_gpx)
 					add 8
 					sub c 
-					ld  (_s_y), a
+					ld  (_s_x), a
+					ld  (_s_hit_x), a
+					jr  sword_check_done
 
-					ld  (_s_hit_y), a
-					jp  sword_check_done
-
-				.sword_up_done
+				.sword_right
+					ld  a, (_gpx)
+					add c
+					ld  (_s_x), a
+					add 7
+					ld  (_s_hit_x), a
 			#endif
-
-				ld  a, (_gpy)
-				#ifdef SWORD_STAB 
-					add SWORD_STAB
-				#else
-					ld  bc, (_s_frame)
-					ld  b, 0
-					ld  hl, _swoffs_y
-					add hl, bc
-					ld  c, (hl)
-					add c 
-				#endif
-				ld  (_s_y), a
-				add 4
-				ld  (_s_hit_y), a
-
-				ld  bc, (_s_frame)
-				ld  b, 0
-				ld  hl, _swoffs_x
-				add hl, bc
-				ld  c, (hl) 
-
-				ld  a, (_s_type)
-				cp  SWORD_TYPE_LEFT
-				jr  nz, sword_right
-
-			.sword_left 
-				ld  a, (_gpx)
-				add 8
-				sub c 
-				ld  (_s_x), a
-				ld  (_s_hit_x), a
-				jr  sword_check_done
-
-			.sword_right
-				ld  a, (_gpx)
-				add c
-				ld  (_s_x), a
-				add 7
-				ld  (_s_hit_x), a
 
 			.sword_check_done
 
@@ -765,8 +882,8 @@ void move (void) {
 	*/
 
 	#ifdef PLAYER_NO_INERTIA
-		if ((pad0 & sp_UP) == 0) player.vy = -PLAYER_CONST_V;
-		if ((pad0 & sp_DOWN) == 0) player.vy = PLAYER_CONST_V;
+		if ((pad0 & sp_UP) == 0) { player.vy = -PLAYER_CONST_V; player.facing = GENITAL_FACING_UP; }
+		if ((pad0 & sp_DOWN) == 0) { player.vy = PLAYER_CONST_V; player.facing = GENITAL_FACING_DOWN; }
 		if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0)) player.vy = 0;
 	#else	
 		#ifndef PLAYER_MOGGY_STYLE
@@ -850,15 +967,19 @@ void move (void) {
 				}
 			}
 
-			if ((pad0 & sp_UP) == 0)
+			if ((pad0 & sp_UP) == 0) {
 				if (player.vy > -PLAYER_MAX_VX) {
-					player.vy -= player.ax;
+					player.vy -= player.ax;					
 				}
+				player.facing = GENITAL_FACING_UP;
+			}
 
-			if ((pad0 & sp_DOWN) == 0)
+			if ((pad0 & sp_DOWN) == 0) {
 				if (player.vy < PLAYER_MAX_VX) {
 					player.vy += player.ax;
 				}
+				player.facing = GENITAL_FACING_DOWN;
+			}
 		#endif
 	#endif	
 
@@ -1239,7 +1360,7 @@ void move (void) {
 			/*
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {
 				rdx = gpxx;	x0 = x1 = gpxx;	y0 = y1 = gpyy;
-				if (player.facing == 0) {				// Looking left
+				if (player.facing) {				// Looking left
 					if ((gpx & 15) == 0 && qtile (gpxx - 1, gpyy) == 14) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0) {
@@ -1292,10 +1413,10 @@ void move (void) {
 					ld  (_y0), a
 					ld  (_y1), a
 
-					// if (player.facing == 0) {
+					// if (player.facing) {
 					ld  a, (_player + 22) 	// player.facing
 					or  a
-					jr  nz, push_pull_facing_right
+					jr  z, push_pull_facing_right
 
 				.push_pull_facing_left
 					// Facing left
@@ -1502,7 +1623,7 @@ void move (void) {
 			/*
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {				
 				rdx = gpx;	x0 = 0xff;	y0 = y1 = gpyy;
-				if (player.facing == 0) {				// Looking left
+				if (player.facing) {				// Looking left
 					if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0) {
@@ -1556,10 +1677,10 @@ void move (void) {
 					ld  (_y0), a
 					ld  (_y1), a
 
-					// if (player.facing == 0) {
+					// if (player.facing) {
 					ld  a, (_player + 22) 	// player.facing
 					or  a
-					jr  nz, push_pull_facing_right
+					jr  z, push_pull_facing_right
 
 				.push_pull_facing_left
 					// Facing left
@@ -1761,8 +1882,8 @@ void move (void) {
 	#endif
 
 	#ifdef PLAYER_NO_INERTIA
-		if ((pad0 & sp_LEFT) == 0) player.vx = -PLAYER_CONST_V;
-		if ((pad0 & sp_RIGHT) == 0) player.vx = PLAYER_CONST_V;
+		if ((pad0 & sp_LEFT) == 0) { player.vx = -PLAYER_CONST_V; player.facing = GENITAL_FACING_LEFT; }
+		if ((pad0 & sp_RIGHT) == 0) { player.vx = PLAYER_CONST_V; player.facing = GENITAL_FACING_RIGHT; }
 		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
 	#else
 		#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
@@ -1780,17 +1901,29 @@ void move (void) {
 			}
 		}
 
-		if ((pad0 & sp_LEFT) == 0)
+		if ((pad0 & sp_LEFT) == 0) {
 			if (player.vx > -PLAYER_MAX_VX) {
-				player.facing = 0;
+				#ifndef PLAYER_MOGGY_STYLE
+					player.facing = 1;
+				#endif
 				player.vx -= player.ax;
 			}
+			#ifdef PLAYER_MOGGY_STYLE
+				player.facing = GENITAL_FACING_LEFT;
+			#endif
+		}
 
-		if ((pad0 & sp_RIGHT) == 0)
+		if ((pad0 & sp_RIGHT) == 0) {
 			if (player.vx < PLAYER_MAX_VX) {
 				player.vx += player.ax;
-				player.facing = 1;
+				#ifndef PLAYER_MOGGY_STYLE
+					player.facing = 0;
+				#endif
 			}
+			#ifdef PLAYER_MOGGY_STYLE
+				player.facing = GENITAL_FACING_RIGHT;
+			#endif
+		}
 	#endif
 
 	#ifdef PLAYER_DIZZY
@@ -2418,9 +2551,9 @@ void move (void) {
 		{
 			#asm
 				ld  a, (_player+22)					// player.facing
-				dec a
-				jr  z, _player_cell_sel_set_rdi		// if A = 1, DEC A = 0, so set 0
-				ld  a, 4							// if A = 0, DEC A = FF, so set 4
+				or  a
+				jr  z, _player_cell_sel_set_rdi		// if A = 0 set 0
+				ld  a, 4							// ELSE     set 4
 			._player_cell_sel_set_rdi
 				ld  (_rdi), a
 			#endasm
@@ -2455,42 +2588,42 @@ void move (void) {
 		// 1  2  3  4  5  6  7  8
 		// R1 R2 L1 L2 U1 U2 D1 D2
 		
-		#ifdef LOOK_AT_THE_CAMERA
-		if (player.vx != 0 || player.vy != 0) {
-			player.subframe ++;
-			if (player.subframe == 4) {
-				player.subframe = 0;
-				player.frame = !player.frame;
-				step (); 
-			}
-		}
-		
-		rdd = player.frame;
-		if (player.vx == 0) {		
-			if (player.vy < 0) rdd += 4;
-			else rdd += 6; 
-		} else if (player.vx < 0) rdd += 2;
-
-		player.next_frame = player_cells [rdd];
-		#else
-			if (player.vx != 0 || player.vy != 0) {
-				player.subframe ++;
-				if (player.subframe == 4) {
-					player.subframe = 0;
-					player.frame = !player.frame;
-					step (); 
+		#ifdef ENABLE_FRIGOABABOL
+			if (player.estado == EST_FRIGOABABOL) {
+				player.next_frame = sprite_frigo;
+			} else
+		#endif
+		{
+			#ifdef LOOK_AT_THE_CAMERA
+				if (player.vx != 0 || player.vy != 0) {
+					player.subframe ++;
+					if (player.subframe == 4) {
+						player.subframe = 0;
+						player.frame = !player.frame;
+						step (); 
+					}
 				}
-
+				
 				rdd = player.frame;
-			
 				if (player.vx == 0) {		
 					if (player.vy < 0) rdd += 4;
 					else rdd += 6; 
 				} else if (player.vx < 0) rdd += 2;
 
 				player.next_frame = player_cells [rdd];
-			}
-		#endif
+			#else
+				if (player.vx != 0 || player.vy != 0) {
+					player.subframe ++;
+					if (player.subframe == 4) {
+						player.subframe = 0;
+						player.frame = !player.frame;
+						step (); 
+					}
+
+					player.next_frame = player_cells [player.frame + (player.facing << 1)];
+				}
+			#endif
+		}
 
 	#endif
 }
@@ -2510,17 +2643,17 @@ void init_player_values (void) {
 	player.saltando = 	0;
 	player.frame = 		0;
 	player.subframe = 	0;
-	player.facing = 	1;
+	#ifdef PLAYER_MOGGY_STYLE
+		player.facing = 	GENITAL_FACING_DOWN;
+	#else
+		player.facing = 	0;
+	#endif
 	player.estado = 	EST_NORMAL;
 	player.ct_estado = 	0;
 	player.disparando = 0;
 	player.killingzone_beepcount = 0;
 	player.killingzone_framecount = 0;	
 	player.is_dead =    0;
-
-	#if defined PLAYER_MOGGY_STYLE && !defined LOOK_AT_THE_CAMERA
-		player.next_frame = player_cells [7];
-	#endif
 }
 
 void init_player (void) {

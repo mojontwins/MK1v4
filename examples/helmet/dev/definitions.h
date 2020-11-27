@@ -4,31 +4,37 @@
 // definitions.h
 // Contains type definitions and global variables
 
-#define EST_NORMAL 		0
-#define EST_PARP 		2
-#define EST_MUR 		4
-#define EST_DIZZY		8
-#define EST_FRIGOABABOL 16
-#define sgni(n)			((n) < 0 ? -1 : 1)
-#define min(a,b)		((a) < (b) ? (a) : (b))
-#define ctileoff(n) 	((n)>0) //(n > 0 ? 1 : 0)
-#define saturate(n)		((n) < 0 ? 0 : (n))
+#define EST_NORMAL 				0
+#define EST_PARP 				2
+#define EST_MUR 				4
+#define EST_DIZZY				8
+#define EST_FRIGOABABOL 		16
+#define sgni(n)					((n) < 0 ? -1 : 1)
+#define min(a,b)				((a) < (b) ? (a) : (b))
+#define ctileoff(n) 			((n)>0) //(n > 0 ? 1 : 0)
+#define saturate(n)				((n) < 0 ? 0 : (n))
 
-#define TYPE_6_IDLE 		0
-#define TYPE_6_PURSUING		1
-#define TYPE_6_RETREATING	2
+#define TYPE_6_IDLE 			0
+#define TYPE_6_PURSUING			1
+#define TYPE_6_RETREATING		2
 
-#define ENEM_PARALYZED 		32
+#define ENEM_PARALYZED 			32
 
-#define SWORD_TYPE_LEFT 	0
-#define SWORD_TYPE_RIGHT 	1
-#define SWORD_TYPE_UP 		2
+#define SWORD_TYPE_RIGHT 		0
+#define SWORD_TYPE_LEFT 		1
+#define SWORD_TYPE_UP 			2
+#define SWORD_TYPE_DOWN 		3
 
-#define MAX_FALLING_BOXES 	8
-#define MAX_BREAKABLE 		4
+#define MAX_FALLING_BOXES 		8
+#define MAX_BREAKABLE 			4
 
-#define WALL_LEFT 			1
-#define WALL_RIGHT 			2
+#define WALL_LEFT 				1
+#define WALL_RIGHT 				2
+
+#define GENITAL_FACING_RIGHT 	0
+#define GENITAL_FACING_LEFT		1
+#define GENITAL_FACING_UP 		2
+#define GENITAL_FACING_DOWN 	3
 
 typedef struct {
 	int x, y, cx;										// 0, 2, 4

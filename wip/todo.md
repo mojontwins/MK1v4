@@ -4,7 +4,8 @@
 
 Cosas que planeo
 
-[ ] Espada en 4 direcciones en vista genital para Mari Amelia
+[ ] Espada en 4 direcciones en vista genital para Mari Amelia. Será necesario un modo opcional para "extra frames" `GENITAL_HIT_FRAMES`, en cuyo caso habrá que definir 4 frames extra como extra_sprites 17, 18, 19 y 20
+
 [ ] Slippery en genital
 [ ] Ocultarse en genital (ya está)
 
@@ -50,4 +51,4 @@ Pseudocódigo:
 
 [x] Hacer que la colisión por todos los lados con tiles que te matan sea por 4 puntos más "dentro" del player para que sea todo más manejable y menos peor.
 
-[ ] Mapped tilesets como en MK1_NES v0.1r, donde el tileset tipo "packed" se compone de 16 tiles del tileset global segun un array apuntado por `*tileset_mappings` (que el programador debe ocuparse de mantener en sus *customs*).
+[x] Mapped tilesets como en MK1_NES v0.1r, donde el tileset tipo "packed" se compone de 16 tiles del tileset global segun un array apuntado por `*tileset_mappings` (que el programador debe ocuparse de mantener en sus *customs*).
