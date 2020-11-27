@@ -120,7 +120,8 @@
 //#define SWORD_LINEAL_DAMAGE	0		// Damage to linear.
 //#define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
 //#define SWORD_PARALYZES		32		// If defined, paralyze for N frames
-//#define SWORD_HIT_FRAME 		2		// Frame to render 0-3
+//#define SWORD_HIT_FRAME 		2		// Frame to render 0-3 (for side view)
+//#define GENITAL_HIT_FRAMES 			// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 			5		// Rather than swing, stab at height N
 
 // Breakable
@@ -152,10 +153,14 @@
 //#define FRIGO_ENEMIES_FREEZE 			// Enemies freeze the player on touch.
 //#define FRIGO_FROZEN_NO_RX 			// No PLAYER_RX while frozen!
 
-// Slippery tiles (side view)
-// --------------------------
+// Slippery tiles
+// --------------
 
 //#define SLIPPERY_TILES 				// Tiles with beh & 16 are slippery.
+
+// Conveyor tiles
+// --------------
+//#define CONVEYOR_TILES 					// Tiles with beh & 2 are conveyors.
 
 // Miscellaneous fanty stuff
 // -------------------------
@@ -308,6 +313,8 @@
 
 #define PLAYER_AX_SLIPPERY 		8
 #define PLAYER_RX_SLIPPERY 		8
+
+#define PLAYER_VX_CONVEYORS 	128
 
 // ============================================================================
 // V. Tile behaviour

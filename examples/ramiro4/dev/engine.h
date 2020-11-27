@@ -1274,21 +1274,38 @@ void move (void) {
 		.vert_collision_done
 	#endasm
 
+	#if defined SLIPPERY_TILES || defined CONVEYOR_TILES
+		#ifdef PLAYER_MOGGY_STYLE
+			pty1 = (gpy + 15) >> 4;
+		#else
+			pty1 = (gpy + 16) >> 4;
+		#endif
+		rdt1 = attr ((gpx + 4) >> 4, pty1);
+		rdt2 = attr ((gpx + 11) >> 4, pty1);
+	#endif
+
 	#ifdef SLIPPERY_TILES
 		player.ax = PLAYER_AX; player.rx = PLAYER_RX;
 
-		#ifdef PLAYER_MOGGY_STYLE
-			rdy = (gpy + 15) >> 4;
-			if ((attr ((gpx + 4) >> 4, rdy) & 16) || (attr ((gpx + 11) >> 4, rdy) & 16)) {
+		#ifndef PLAYER_MOGGY_STYLE
+			if (player.possee) 
+		#endif
+		{
+			if ((rdt1 & 16) || (rdt2 & 16)) {
 				player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
 			}
+		}
+	#endif
+
+	#ifdef CONVEYOR_TILES
+		#ifdef PLAYER_MOGGY_STYLE
+
 		#else
-			if (player.possee) {
-				rdy = (gpy + 16) >> 4;
-				if ((attr (gpx >> 4, rdy) & 16) || (attr ((gpx + 15) >> 4, rdy) & 16)) {
-					player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
-				}
-			}
+			rdj = 0;
+			if (rdt1 & 2) { rdj = (rdt1 & 1) ? 1 : -1; }
+			if (rdt2 & 2) { rdj += (rdt2 & 1) ? 1 : -1; }
+			if (rdj < 0) ptgmx = -PLAYER_VX_CONVEYORS;
+			else if (rdj > 0) ptgmx = PLAYER_VX_CONVEYORS;
 		#endif
 	#endif
 

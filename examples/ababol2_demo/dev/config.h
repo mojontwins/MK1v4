@@ -121,6 +121,7 @@
 #define SWORD_FLYING_DAMAGE 	1		// Damage to flying.
 #define SWORD_PARALYZES			60		// If defined, paralyze for N frames
 #define SWORD_HIT_FRAME 		2		// Frame to render 0-3
+//#define GENITAL_HIT_FRAMES 			// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 			5		// Rather than swing, stab at height N
 
 // Breakable
@@ -156,6 +157,10 @@
 // --------------------------
 
 #define SLIPPERY_TILES 					// Tiles with beh & 16 are slippery.
+
+// Conveyor tiles
+// --------------
+//#define CONVEYOR_TILES 					// Tiles with beh & 2 are conveyors.
 
 // Miscellaneous fanty stuff
 // -------------------------
@@ -309,6 +314,8 @@
 #define PLAYER_AX_SLIPPERY 		8
 #define PLAYER_RX_SLIPPERY 		8
 
+#define PLAYER_VX_CONVEYORS 	128
+
 // ============================================================================
 // V. Tile behaviour
 // ============================================================================
@@ -318,11 +325,12 @@
 
 // 0 = Walkable (no action)
 // 1 = Walkable and kills.
-// 2 = Walkable and hides.
+// 2 = Walkable and hides/conveyor
 // 4 = Platform (only stops player if falling on it)
 // 8 = Full obstacle (blocks player from all directions)
 // 16 = Slippery
 // 32 = Breakable
+// 64 = Quicksands
 
 unsigned char comportamiento_tiles [] = {
 	 0, 8, 8, 8, 4,24, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,

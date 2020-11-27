@@ -2054,7 +2054,8 @@ Por defecto, los *hotspots* que el jugador toca se marcan como "recogidos" y se 
 ```c
     void set_hotspot (unsigned char hn) {
         hotspots [n_pant].act = 1;
-        hotspots [n_pant].tipo = hn;
+        hotspot_t = hn;
+        hotspots [n_pant].tipo = hotspot_t;
         rdx = (hotspots [n_pant].xy >> 4);
         rdy = (hotspots [n_pant].xy & 15);
         hotspot_x = rdx << 4;

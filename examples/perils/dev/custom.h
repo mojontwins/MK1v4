@@ -40,7 +40,8 @@ void restore_everyone (void) {
 
 void set_hotspot (unsigned char hn) {
 	hotspots [n_pant].act = 1;
-	hotspots [n_pant].tipo = hn;
+	hotspot_t = hn;
+	hotspots [n_pant].tipo = hotspot_t;
 	rdx = (hotspots [n_pant].xy >> 4);
 	rdy = (hotspots [n_pant].xy & 15);
 	hotspot_x = rdx << 4;
@@ -58,7 +59,7 @@ void set_hotspot (unsigned char hn) {
 	void hook_init_game (void) {
 		resonators_on = 0;
 		player_min_killable = 4;
-		level = 0;
+		level = 1;
 		new_level = 1;
 	}
 
