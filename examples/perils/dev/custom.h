@@ -59,7 +59,7 @@ void set_hotspot (unsigned char hn) {
 	void hook_init_game (void) {
 		resonators_on = 0;
 		player_min_killable = 4;
-		level = 1;
+		level = 0;
 		new_level = 1;
 	}
 
@@ -101,6 +101,7 @@ void set_hotspot (unsigned char hn) {
 				resonators_on = 250;
 				latest_hotspot = 5;
 				paralyze_everyone ();
+				player.vy = -PLAYER_MAX_VY_SALTANDO;
 			}
 
 			// Hotspot has to be restored ALWAYS
@@ -121,7 +122,7 @@ void set_hotspot (unsigned char hn) {
 				restore_everyone ();				
 				if (hotspot_y != 240) set_hotspot (4);
 			}
-		}
+		} 
 	}
 
 	void hook_entering (void) {

@@ -3867,6 +3867,7 @@ void mueve_bicharracos (void) {
 					) {
 						// Step on enemy and kill it.
 						en_an_next_frame [enit] = sprite_17_a;
+						player.vy = -PLAYER_MAX_VY_SALTANDO;
 						enems_kill ();
 					} else	
 				#endif
