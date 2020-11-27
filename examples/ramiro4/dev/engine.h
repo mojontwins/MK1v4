@@ -27,7 +27,7 @@ unsigned char *enem_cells [] = {
 	extern unsigned char *sword_cells [0];
 	#asm 
 		._sword_cells
-			defw _sprite_sword, _sprite_sword + 64, _sprite_sword + 128
+			defw _sprite_sword, _sprite_sword + 64, _sprite_sword + 128, _sprite_sword + 192
 	#endasm
 #endif
 
@@ -569,32 +569,36 @@ void player_flicker (void) {
 					// In genital mode, every swing direction is different, so 
 					ld  a, (_s_type)
 					cp  SWORD_TYPE_LEFT
-					jr  z, .sword_left
+					jr  z, sword_left
 					cp  SWORD_TYPE_RIGHT
-					jr  z, .sword_right
+					jr  z, sword_right
 					cp  SWORD_TYPE_UP
-					jr  z, .sword_up				
+					jr  z, sword_up				
 					;cp  SWORD_TYPE_DOWN
-					;jr  z, .sword_down
+					;jr  z, sword_down
 
 				.sword_down
-					// s_y = gpy + swoffs_x [s_frame]; s_x = gpx + 7 - swoffs_y [s_frame];
-					// s_hit_y = s_y + 7; s_hit_x = s_x + 3;
-					ld  hl, _swoffs_x
-					add hl, bc
-					ld  c, (hl)
+					// s_y = gpy + swoffs_x [s_frame]; s_x = gpx + 8 - swoffs_y [s_frame]|SWORD_STAB;
+					// s_hit_y = s_y + 8; s_hit_x = s_x + 3;
+					#ifdef SWORD_STAB
+						ld  d, SWORD_STAB
+					#else
+						ld  hl, _swoffs_x
+						add hl, bc
+						ld  d, (hl)
+					#endif
 					ld  a, (_gpy)
-					add c
+					add d
 					ld  (_s_y), a
 					add 7
 					ld  (_s_hit_y), a
 
 					ld  hl, _swoffs_y
 					add hl, bc 
-					ld  c, (hl)
+					ld  d, (hl)
 					ld  a, (_gpx)
-					add 7
-					sub c 
+					add 8
+					sub d 
 					ld  (_s_x), a
 					add 3
 					ld  (_s_hit_x), a
@@ -602,22 +606,26 @@ void player_flicker (void) {
 					jr  sword_check_done
 
 				.sword_up
-					// s_y = gpy + 8 - swoffs_x [s_frame]; s_x = gpx + swoffs_y [s_frame];
+					// s_y = gpy + 8 - swoffs_x [s_frame]; s_x = gpx + swoffs_y [s_frame]|SWORD_STAB;
 					// s_hit_y = s_y; s_hit_x = s_x + 4;
-					ld  hl, _swoffs_x
-					add hl, bc
-					ld  c, (hl)
+					#ifdef SWORD_STAB
+						ld  d, SWORD_STAB
+					#else
+						ld  hl, _swoffs_x
+						add hl, bc
+						ld  d, (hl)
+					#endif
 					ld  a, (_gpy)
 					add 8
-					sub c
+					sub d
 					ld  (_s_y), a
 					ld  (_s_hit_y), a
 
 					ld  hl, _swoffs_y
 					add hl, bc 
-					ld  c, (hl)
+					ld  d, (hl)
 					ld  a, (_gpx)
-					add c 
+					add d 
 					ld  (_s_x), a
 					add 4
 					ld  (_s_hit_x), a
@@ -625,52 +633,59 @@ void player_flicker (void) {
 					jr  sword_check_done
 
 				.sword_left
-					// s_y = gpy + 8 - swoffs_y [s_frame]; s_x = gpx + 8 - swoffs_x [s_frame];
+					// s_y = gpy + 12 - swoffs_y [s_frame]|SWORD_STAB; s_x = gpx + 8 - swoffs_x [s_frame];
 					// s_hit_y = s_y + 3; s_hit_x = s_x;
-					ld  hl, _swoffs_y
-					add hl, bc
-					ld  c, (hl)
+					#ifdef SWORD_STAB
+						ld  d, SWORD_STAB
+					#else
+						ld  hl, _swoffs_y
+						add hl, bc
+						ld  d, (hl)
+					#endif
 					ld  a, (_gpy)
-					add 8
-					sub c
+					add 12
+					sub d
 					ld  (_s_y), a
 					add 3
 					ld  (_s_hit_y), a
 
 					ld  hl, _swoffs_x
 					add hl, bc 
-					ld  c, (hl)
+					ld  d, (hl)
 					ld  a, (_gpx)
 					add 8
-					sub c 
+					sub d 
 					ld  (_s_x), a
 					ld  (_s_hit_x), a
 
 					jr  sword_check_done
 
 				.sword_right
-					// s_y = gpy + swoffs_y [s_frame]; s_x = gpx + swoffs_x [s_frame];
+					// s_y = gpy + swoffs_y [s_frame]|SWORD_STAB; s_x = gpx + swoffs_x [s_frame];
 					// s_hit_y = s_y + 4; s_hit_x = s_x + 7;
-					ld  hl, _swoffs_y
-					add hl, bc
-					ld  c, (hl)
+					#ifdef SWORD_STAB
+						ld  d, SWORD_STAB
+					#else
+						ld  hl, _swoffs_y
+						add hl, bc
+						ld  d, (hl)
+					#endif
 					ld  a, (_gpy)
-					add c
+					add d
 					ld  (_s_y), a
 					add 4
 					ld  (_s_hit_y), a
 
 					ld  hl, _swoffs_x
 					add hl, bc 
-					ld  c, (hl)
+					ld  d, (hl)
 					ld  a, (_gpx)
-					add c 
+					add d 
 					ld  (_s_x), a
 					add 7
 					ld  (_s_hit_x), a
 
 					;jr  sword_check_done
-
 			#else
 				#ifdef SWORD_UP
 					.sword_check_up
@@ -2223,7 +2238,7 @@ void move (void) {
 	// Sword
 	#ifdef ENABLE_SWORD
 		if (s_on == 0 && (pad_this_frame & sp_FIRE) == 0) {
-			#ifdef SWORD_UP
+			#if !defined PLAYER_MOGGY_STYLE && !defined SWORD_UP
 				if ((pad0 & sp_UP) == 0) {
 					s_type = SWORD_TYPE_UP;
 				} else 
@@ -2594,35 +2609,43 @@ void move (void) {
 			} else
 		#endif
 		{
-			#ifdef LOOK_AT_THE_CAMERA
-				if (player.vx != 0 || player.vy != 0) {
-					player.subframe ++;
-					if (player.subframe == 4) {
-						player.subframe = 0;
-						player.frame = !player.frame;
-						step (); 
-					}
-				}
-				
-				rdd = player.frame;
-				if (player.vx == 0) {		
-					if (player.vy < 0) rdd += 4;
-					else rdd += 6; 
-				} else if (player.vx < 0) rdd += 2;
-
-				player.next_frame = player_cells [rdd];
-			#else
-				if (player.vx != 0 || player.vy != 0) {
-					player.subframe ++;
-					if (player.subframe == 4) {
-						player.subframe = 0;
-						player.frame = !player.frame;
-						step (); 
-					}
-
-					player.next_frame = player_cells [player.frame + (player.facing << 1)];
-				}
+			#if defined ENABLE_SWORD && defined GENITAL_HIT_FRAMES
+				if (s_on) {
+					rdd = 9 + player.facing;
+				} else
 			#endif
+			#ifdef LOOK_AT_THE_CAMERA				
+				{
+					if (player.vx != 0 || player.vy != 0) {
+						player.subframe ++;
+						if (player.subframe == 4) {
+							player.subframe = 0;
+							player.frame = !player.frame;
+							step (); 
+						}
+					}
+					
+					rdd = player.frame;
+					if (player.vx == 0) {		
+						if (player.vy < 0) rdd += 4;
+						else rdd += 6; 
+					} else if (player.vx < 0) rdd += 2;
+				}			
+			#else
+				{
+					if (player.vx != 0 || player.vy != 0) {
+						player.subframe ++;
+						if (player.subframe == 4) {
+							player.subframe = 0;
+							player.frame = !player.frame;
+							step (); 
+						}
+
+					}
+					rdd = player.frame + (player.facing << 1);
+				}	
+			#endif
+			player.next_frame = player_cells [rdd];
 		}
 
 	#endif

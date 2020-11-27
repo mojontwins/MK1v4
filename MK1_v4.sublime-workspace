@@ -523,8 +523,17 @@
 			"file": "src/dev/config.h",
 			"settings":
 			{
-				"buffer_size": 15648,
+				"buffer_size": 15653,
 				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/dev/comp.bat",
+			"settings":
+			{
+				"buffer_size": 1245,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
@@ -746,7 +755,7 @@
 	],
 	"find":
 	{
-		"height": 48.0
+		"height": 22.0
 	},
 	"find_in_files":
 	{
@@ -1161,7 +1170,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1170,15 +1179,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15648,
+						"buffer_size": 15653,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6334,
-								6260
+								6048,
+								6048
 							]
 						],
 						"settings":
@@ -1190,6 +1199,37 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 1136.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/dev/comp.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1245,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								298,
+								298
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 64.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1205,7 +1245,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -1261,7 +1301,7 @@
 	"project": "MK1_v4.sublime-project",
 	"replace":
 	{
-		"height": 88.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":
