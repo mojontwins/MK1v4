@@ -805,11 +805,17 @@ Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo qu
 
 ### La espada
 
-**Sir Ababol 2** empezó como prototipo en **MTE MK1 v4**, aunque luego se desarrolló sobre un motor específico. Parte de los trabajos para apañar la versión 4.8 de **MTE MK1** ha tenido que ver con reintegrar los añadidos de la demo técnica de **Sir Ababol**, entre ellos la espada.
+**Sir Ababol 2** empezó como prototipo en **MTE MK1 v4**, aunque luego se desarrolló sobre un motor específico. Parte de los trabajos para apañar la versión 4.8 de **MTE MK1** ha tenido que ver con reintegrar los añadidos de la demo técnica de **Sir Ababol**, entre ellos la espada. Además, se ha añadido lo necesario para que puedas usarla también en modo genital, algo que planeamos ya en 2011 para un juego tipo Zelda.
 
-Para poder usar la espada necesitaremos añadir los gráficos para pintarla. Para ello tendremos que poner en `gfx` un nuevo spriteset de 8x8 con los cells necesarios, que serán 3 (izquierda, derecha, arriba) en el caso de que la espada pueda lanzarse hacia arriba (`SWORD UP`) o 2 en el caso de que no (izquierda, derecha). Algo así:
+Para poder usar la espada necesitaremos añadir los gráficos para pintarla. Para ello tendremos que poner en `gfx` un nuevo spriteset de 8x8 con los cells necesarios, que serán, dependiendo del modo (lateral o genital):
 
-![Un spriteset de 8x8](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c06-001.png)
+* **Vista lateral**: 3 (izquierda, derecha, arriba) en el caso de que la espada pueda lanzarse hacia arriba (`SWORD UP`) o 2 en el caso de que no (izquierda, derecha). El punto que "golpea" de la espada es (0, 4) a la izquierda, (7, 4) a la derecha, y (4, 0) arriba. Algo así:
+
+![La espada lateral](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c06-001.png)
+
+* **Vista genital**: 4 (derecha, izquierda, arriba, abajo). El punto que "golpea" de la espada es, respectivamente, (7, 4), (0, 3), (4, 0), (7, 3), así:
+
+![La espada genital](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c06-002.png)
 
 Además, habrá que llamar a `sprcnv8bin.exe` desde `comp.bat` para que lo convierta y genere un archivo llamado `sprite_sword.bin` con una linea parecida a :
 
@@ -817,7 +823,7 @@ Además, habrá que llamar a `sprcnv8bin.exe` desde `comp.bat` para que lo convi
     ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 3 > nul
 ```
 
-Donde pondremos 3 o 2 dependiendo del número de gráficos que haya en el set (3 si vamos a definir `SWORD_UP`, 2 en caso contrario).
+Donde pondremos 2, 3, o 4 dependiendo del número de gráficos que haya en el set (en vista genital, 4; en vista lateral, 3 si vamos a definir `SWORD_UP`, 2 en caso contrario).
 
 Hecho esto, la espada se configura con estas macros:
 
@@ -845,7 +851,13 @@ Hecho esto, la espada se configura con estas macros:
 
 * `SWORD_PARALYZES` (opcional): Si se define, la espada paralizará al enemigo que golpea durante N cuadros de juego.
 
-* `SWORD_HIT_FRAME` usar este frame del jugador para la animación de golpear 0-3.
+* `SWORD_HIT_FRAME` usar este frame del jugador para la animación de golpear 0-3, **en modo de vista lateral**.
+
+* `GENITAL_HIT_FRAMES`: Si defines esta macro, **en modo genital**, tendrás que añadir 4 frames al spriteset como sprites 17 a 20 con nuevos cells de animación para que el muñeco golpée con la espada a la derecha, izquierda, arriba y abajo, respectivamente. Si haces esto tendrás que modificar `comp.bat` para convertir el spriteset (que ahora tendrá 20 cells más los que añadas por tu cuenta) con `sprcnv2.exe`:
+
+```cmd
+	..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra > nul
+```
 
 * `SWORD_STAB` apuñalar en lugar de balancear la espada. La espada sale recta a una altura de N pixels desde la parte superior del sprite del jugador.
 

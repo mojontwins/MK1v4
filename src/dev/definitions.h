@@ -238,7 +238,7 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_x, s_y, s_frame;
 	unsigned char s_hit_x, s_hit_y;
 
-	unsigned char swoffs_x [] = {8, 10, 12, 14, 15, 15, 14, 13, 10};
+	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
 	#ifndef SWORD_STAB
 		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
 	#endif

@@ -4,6 +4,50 @@
 		"selected_items":
 		[
 			[
+				"frigo",
+				"sprite_frigo"
+			],
+			[
+				"next",
+				"next_frame\tabc"
+			],
+			[
+				"GENITAL",
+				"GENITAL_FACING_RIGHT\tabc"
+			],
+			[
+				"GENITAL_FAC",
+				"GENITAL_FACING_LEFT\tabc"
+			],
+			[
+				"GENT",
+				"GENITAL_FACING_LEFT\t(definitions.h)"
+			],
+			[
+				"GENTI",
+				"GENITAL_FACING_DOWN\tabc"
+			],
+			[
+				"GENITAL_",
+				"GENITAL_FACING_UP\tabc"
+			],
+			[
+				"GENITAL_FA",
+				"GENITAL_FACING_UP\t(definitions.h)"
+			],
+			[
+				"swof",
+				"swoffs_y\tabc"
+			],
+			[
+				"_sw",
+				"_swoffs_x\tabc"
+			],
+			[
+				"hotspo",
+				"hotspot_t\tabc"
+			],
+			[
 				"SWORD_T",
 				"SWORD_TYPE_LEFT\t(engine.h)"
 			],
@@ -470,55 +514,20 @@
 			[
 				"inline",
 				"inline-block"
-			],
-			[
-				"num",
-				"numGroups"
-			],
-			[
-				"Hash",
-				"HashMap"
-			],
-			[
-				"dir",
-				"dirEscritura"
-			],
-			[
-				"modificaAtribu",
-				"modificaAtributoGUIA"
-			],
-			[
-				"modificaAtri",
-				"modificaAtributoGUIA"
-			],
-			[
-				"ExcepcionConex",
-				"ExcepcionConexionYaAbierta"
-			],
-			[
-				"codi",
-				"codides"
-			],
-			[
-				"marcaGUIa",
-				"marcaGUIAformateaSalida"
-			],
-			[
-				"ape",
-				"apellido2"
-			],
-			[
-				"usuariosEncontradosReservad",
-				"usuariosEncontradosReservadosDeMiTipo"
-			],
-			[
-				"usuariosEnco",
-				"usuariosEncontradosReservadosGUIA"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "src/dev/config.h",
+			"settings":
+			{
+				"buffer_size": 15648,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -598,25 +607,34 @@
 	[
 		"/D/git/MK1",
 		"/D/git/MK1/docs",
+		"/D/git/MK1/docs/images",
 		"/D/git/MK1/examples",
-		"/D/git/MK1/examples/perils",
-		"/D/git/MK1/examples/perils/dev",
-		"/D/git/MK1/examples/perils/gfx",
 		"/D/git/MK1/src",
 		"/D/git/MK1/src/dev",
-		"/D/git/MK1/src/utils"
+		"/D/git/MK1/wip"
 	],
 	"file_history":
 	[
-		"/D/git/MK1/src/dev/mainloop.h",
-		"/D/git/MK1/src/dev/definitions.h",
 		"/D/git/MK1/docs/manual.md",
+		"/D/git/MK1/src/dev/engine.h",
+		"/D/git/MK1/src/dev/definitions.h",
+		"/D/git/MK1/src/dev/churromain.c",
+		"/D/git/MK1/src/dev/config.h",
+		"/D/git/MK1/src/dev/comp.bat",
+		"/D/git/MK1/examples/ramiro4/dev/config.h",
+		"/D/git/MK1/wip/todo.md",
+		"/C/Users/jcastano/Downloads/Telegram Desktop/comoloharia.c",
+		"/D/git/MK1/examples/ramiro3/dev/config.h",
+		"/D/git/MK1/examples/perils/dev/config.h",
+		"/D/git/MK1/examples/limite/dev/config.h",
+		"/D/git/MK1/examples/lalap/dev/config.h",
+		"/D/git/MK1/examples/helmet/dev/config.h",
+		"/D/git/MK1/examples/ababol2_demo/dev/config.h",
+		"/D/git/MK1/src/dev/mainloop.h",
 		"/D/git/MK1/examples/perils/dev/custom.h",
 		"/D/git/MK1/examples/perils/README.md",
 		"/D/Proyectos/remote/destom01/sftp-config.json",
-		"/D/git/MK1/examples/perils/dev/config.h",
 		"/D/git/MK1/examples/helmet/dev/custom.h",
-		"/D/git/MK1/src/dev/engine.h",
 		"/D/git/MK1/examples/perils/dev/perils.asm",
 		"/D/git/MK1/examples/perils/dev/comp.bat",
 		"/C/git/mk1/examples/ababol2_demo/dev/definitions.h",
@@ -723,19 +741,8 @@
 		"/D/git/MK1/examples/ramiro3/dev/mainloop.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/engine.h",
 		"/D/Google Drive/Maritrini/dev/Speccy/MK1/El vampiro Ramiro en el bosque del Suspiro/dev/config.h",
-		"/D/git/MK1/examples/ramiro3/dev/config.h",
 		"/D/git/MK1/examples/limite/dev/mainloop.h",
-		"/D/git/MK1/examples/limite/dev/engine.h",
-		"/D/git/MK1/examples/limite/dev/boxes.h",
-		"/D/git/MK1/examples/limite/dev/comp.bat",
-		"/D/git/MK1/src/dev/comp.bat",
-		"/D/git/MK1/examples/limite/dev/config.h",
-		"/D/git/MK1/src/dev/msc_extern.h",
-		"/D/git/MK1/examples/limite/README.md",
-		"/D/git/MK1/examples/limite/dev/msc_extern.h",
-		"/D/git/MK1/examples/limite/dev/msc-config.h",
-		"/D/git/MK1/src/dev/config.h",
-		"/C/Users/jcastano/AppData/Local/Temp/7zO007686FB/config.h"
+		"/D/git/MK1/examples/limite/dev/engine.h"
 	],
 	"find":
 	{
@@ -881,6 +888,20 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"sword_hit",
+			"sword",
+			"player.facing",
+			"pad0 & sp_LEFT",
+			"move ",
+			"player.facing",
+			"move ",
+			"SWORD",
+			"swoff",
+			"swor",
+			"hotspot",
+			"rdi",
+			".tipo",
+			"hotspots",
 			"script_result",
 			"script_result = ",
 			"enemy_killer",
@@ -994,21 +1015,7 @@
 			"mueve ",
 			"!",
 			"msc_init_all",
-			"water_locks",
-			"reset",
-			"rdi",
-			"paint_water_strip",
-			"++;\n",
-			"water_strip",
-			"water_level",
-			"pushp",
-			"rdj",
-			"ptgmx",
-			"pgt",
-			"player.vx",
-			"platform_get_player",
-			"adjust_to_tile_x@",
-			"adjust_to_tile_x"
+			"water_locks"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1154,8 +1161,40 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/dev/config.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15648,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6334,
+								6260
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1136.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		},
 		{
@@ -1256,7 +1295,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},
