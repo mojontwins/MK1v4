@@ -424,22 +424,12 @@ void main (void) {
 			#endasm
 			{	
 				#ifdef ENABLE_CODE_HOOKS
-					latest_hotspot = hotspots [n_pant].tipo;
+					latest_hotspot = hotspot_t;
 				#endif
 					
-				#ifndef DEACTIVATE_REFILLS
-					if (hotspots [n_pant].act == 0) {
-						player.life += PLAYER_REFILL;
-						if (player.life > PLAYER_LIFE)
-							player.life = PLAYER_LIFE;
-						hotspots [n_pant].act = 2;
-						play_sfx (6);
-					} else 
-				#endif
-
-				rdi = 1;
+				rdi = 0;
 				#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
-					switch (hotspots [n_pant].tipo) {
+					switch (hotspot_t) {
 						#ifndef DEACTIVATE_OBJECTS
 							case 1:
 								#ifdef ONLY_ONE_OBJECT
@@ -447,7 +437,7 @@ void main (void) {
 										player.objs ++;
 										play_sfx (6);	
 									} else {
-										rdi = 0;
+										rdi = 1;
 										play_sfx (1);	
 									}
 								#else
@@ -466,13 +456,23 @@ void main (void) {
 								play_sfx (6);
 								break;
 						#endif
+
+						#ifndef DEACTIVATE_REFILLS
+							case 3:
+								player.life += PLAYER_REFILL;
+								if (player.life > PLAYER_LIFE)
+									player.life = PLAYER_LIFE;
+								rdi = 2;
+								play_sfx (6);
+								break;
+						#endif								
 					}
 				#endif
 				
-				if (rdi)  {
+				if (rdi != 1)  {
 					draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
 					hotspot_x = hotspot_y = 240;
-					hotspots [n_pant].act = 0;
+					hotspots [n_pant].act = rdi;
 				}
 			}
 			#asm

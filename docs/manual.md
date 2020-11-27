@@ -302,7 +302,7 @@ Los enemigos con tipos 5 y 6 definen enemigos voladores, o *Fantys*, como los ll
 
 ## *hotspots*
 
-Son, como hemos dicho, los puntos donde aparecen los objetos coleccionables, las llaves, o las recargas de vida. Se colocan en una casilla cada pantalla del mapa y llevan asociado un "tipo", que puede ser 1 (objetos) o 2 (llaves), o cualquier otro número si te encargas tú de gestionarlo mediante código *custom*.
+Son, como hemos dicho, los puntos donde aparecen los objetos coleccionables, las llaves, o las recargas de vida. Se colocan en una casilla cada pantalla del mapa y llevan asociado un "tipo", que puede ser 1 (objetos), 2 (llaves) o 3 (recargas, si no activas la macro `LEGACY_REFILLS`), o cualquier otro número si te encargas tú de gestionarlo mediante código *custom*.
 
 ## Preparando los materiales necesarios
 
@@ -608,6 +608,7 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
     #define PLAYER_BOUNCES                  // If defined, collisions make player bounce
     //#define PLAYER_FLICKERS               // If defined, collisions make player flicker instead.
     //#define DEACTIVATE_REFILLS            // If defined, no refills.
+	//#define LEGACY_REFILLS 				// Legacy mode: refills appear in place of collected items/keys
     #define MAX_FLAGS               1       // Number of flags. For scripting and stuff.
     //#define PLAYER_DIZZY                  // The Hobbit
     #define ENEMIES_LIFE_GAUGE      3       // Amount of shots/hits needed to kill enemies.
@@ -640,6 +641,8 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
 * `PLAYER_FLICKERS`: El jugador parpadea un par de segundos si le da un enemigo.
 
 * `DEACTIVATE_REFILLS`: Desactivar las recargas.
+
+* `LEGACY_REFILLS`: Si está activa esta macro, las recargas se comportan como en los juegos clásicos de **MK1**: no se colocan explícitamente, sino que aparecerán en lugar de llaves u objetos ya recogidos, al azar.
 
 * `MAX_FLAGS`: Debe definirse y valer al menos 1. Controla el número de flags para scripting y otros menesteres. Probablemente con 16 tendrás bastante para un juego de complejidad normal. Además, usar 16 o menos permite optimizar mucho el *bytecode* de los scripts, como describiremos más adelante.
 
