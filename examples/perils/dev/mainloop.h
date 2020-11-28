@@ -460,8 +460,8 @@ void main (void) {
 						#ifndef DEACTIVATE_REFILLS
 							case 3:
 								player.life += PLAYER_REFILL;
-								if (player.life > PLAYER_LIFE)
-									player.life = PLAYER_LIFE;
+								if (player.life > 99)
+									player.life = 99;
 								rdi = 2;
 								play_sfx (6);
 								break;
