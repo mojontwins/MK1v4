@@ -3836,6 +3836,9 @@ void mueve_bicharracos (void) {
 					// Horizontal
 					if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
 						platform_get_player ();
+						#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
+							if (en_an_state [enit] != ENEM_PARALYZED)
+						#endif
 						ptgmx = (_en_mx << 6);
 					}
 					
@@ -3867,6 +3870,7 @@ void mueve_bicharracos (void) {
 					) {
 						// Step on enemy and kill it.
 						en_an_next_frame [enit] = sprite_17_a;
+						player.vy = -PLAYER_MAX_VY_SALTANDO;
 						enems_kill ();
 					} else	
 				#endif
