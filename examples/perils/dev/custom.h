@@ -120,14 +120,14 @@ void set_hotspot (unsigned char hn) {
 			if (resonators_on == 0) {
 				play_sfx (3);
 				restore_everyone ();				
-				if (hotspot_y != 240) set_hotspot (4);
+				if (hotspot_t >= 4) set_hotspot (4);
 			}
 		} 
 	}
 
 	void hook_entering (void) {
 		// Modify hotspots upon resonators_on
-		if (hotspots [n_pant].tipo >= 4) {
+		if (hotspot_t >= 4) {
 			set_hotspot (resonators_on ? 5 : 4);			
 		}
 				
