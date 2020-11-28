@@ -53,7 +53,7 @@
 //#define EVIL_ZONE_FREQ 		3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 //#define EVIL_ZONE_CONDITIONAL 		// Active if scenery_info.evil_zone_active
 #define PLAYER_BOUNCES					// If defined, collisions make player bounce
-//#define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
+#define PLAYER_FLICKERS 		50	 	// If defined, collisions make player flicker for N frames.
 //#define DEACTIVATE_REFILLS			// If defined, no refills.
 #define LEGACY_REFILLS 					// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.

@@ -457,10 +457,12 @@ void adjust_to_tile_y (void) {
 	gpy = gpyy << 4; player.y = gpy << 6;
 }
 
-void player_flicker (void) {
-	player.estado = EST_PARP;
-	player.ct_estado = 50;
-}
+#ifdef PLAYER_FLICKERS
+	void player_flicker (void) {
+		player.estado = EST_PARP;
+		player.ct_estado = PLAYER_FLICKERS;
+	}
+#endif
 
 #ifdef ENABLE_BREAKABLE
 	void actualiza_breakables (void) {

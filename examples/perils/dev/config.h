@@ -21,7 +21,7 @@
 #define PLAYER_FIN_Y			8		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS		0		// Objects to get to finish game
 #define PLAYER_LIFE 			10		// Max and starting life gauge.
-#define PLAYER_REFILL			1		// Life recharge
+#define PLAYER_REFILL			3		// Life recharge
 
 #define LINEAR_ENEMY_HIT		1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT		1		// Amount of life to substract when flying enemy hits
@@ -53,7 +53,7 @@
 //#define EVIL_ZONE_FREQ 		3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 //#define EVIL_ZONE_CONDITIONAL 		// Active if scenery_info.evil_zone_active
 //#define PLAYER_BOUNCES				// If defined, collisions make player bounce
-#define PLAYER_FLICKERS 			 	// If defined, collisions make player flicker instead.
+#define PLAYER_FLICKERS 		70	 	// If defined, collisions make player flicker for N frames.
 //#define DEACTIVATE_REFILLS			// If defined, no refills.
 //#define LEGACY_REFILLS 				// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS				1		// Number of flags. For scripting and stuff.
