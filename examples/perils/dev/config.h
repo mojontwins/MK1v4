@@ -203,7 +203,7 @@
 #define SHORT_PLAYER 					// Bounding box 12x16
 #define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 					// Jump using the fire button, only if no PLAYER_CAN_FIRE
-//#define BOTH_KEYS_JUMP				// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 //#define RAMIRO_HOP 					// press jump when reaching a type 4 platform to jump again 
 //#define RAMIRO_HOVER 					// press down to hover
 //#define PLAYER_HAS_JETPAC 			// If defined, player can thrust a vertical jetpac
@@ -238,7 +238,7 @@
 #define KEYS_Y					1		// Keys counter character coordinates
 
 #define SHOW_KILLED
-#define SHOW_TOTAL
+//#define SHOW_TOTAL
 #define KILLED_X				16		//
 #define KILLED_Y				1		// Kills counter character coordinates
 
