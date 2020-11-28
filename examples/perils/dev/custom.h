@@ -59,7 +59,7 @@ void set_hotspot (unsigned char hn) {
 	void hook_init_game (void) {
 		resonators_on = 0;
 		player_min_killable = 4;
-		level = 0;
+		level = 1;
 		new_level = 1;
 	}
 
