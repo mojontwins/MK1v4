@@ -841,6 +841,36 @@ void adjust_to_tile_y (void) {
 	}
 #endif
 
+#if defined QUICKSAND_TILES || defined SLIPPERY_TILES || defined CONVEYOR_TILES
+	void two_points_attr (void) {
+		#asm
+				ld  a, (_gpx)
+				add 4
+				srl a
+				srl a
+				srl a
+				srl a
+				ld  c, a
+				ld  a, (_pty1)
+				call _attr_2
+				ld  a, l
+				ld  (_rdt1), a
+
+				ld  a, (_gpx)
+				add 11
+				srl a
+				srl a
+				srl a
+				srl a
+				ld  c, a
+				ld  a, (_pty1)
+				call _attr_2
+				ld  a, l
+				ld  (_rdt2), a
+		#endasm
+	}
+#endif
+
 void move (void) {
 	gpcx = player.x;
 	gpcy = player.y;
@@ -1282,10 +1312,26 @@ void move (void) {
 
 	#if defined QUICKSAND_TILES
 		player.max_vx = PLAYER_MAX_VX;
+		/*
 		pty1 = (gpy + 15) >> 4;
-		rdt1 = attr ((gpx + 4) >> 4, pty1);
-		rdt2 = attr ((gpx + 11) >> 4, pty1);
-		if ((rdt1 & 64) | (rdt2 & 63)) {
+		two_points_attr ();
+		*/
+		#asm
+				ld  a, (_gpy)
+				#ifdef PLAYER_MOGGY_STYLE
+					add 15
+				#else
+					add 16
+				#endif
+				srl a
+				srl a
+				srl a
+				srl a
+				ld  (_pty1), a
+				call _two_points_attr
+		#endasm
+
+		if ((rdt1 & 64) || (rdt2 & 64)) {
 			if (rdj < 0) player.saltando = 0;
 			else {
 				player.vy = PLAYER_VY_SINKING;
@@ -1298,37 +1344,53 @@ void move (void) {
 	#endif
 
 	#if defined SLIPPERY_TILES || defined CONVEYOR_TILES
+		/*
 		#ifdef PLAYER_MOGGY_STYLE
 			pty1 = (gpy + 15) >> 4;
 		#else
 			pty1 = (gpy + 16) >> 4;
 		#endif
-		rdt1 = attr ((gpx + 4) >> 4, pty1);
-		rdt2 = attr ((gpx + 11) >> 4, pty1);
+		two_points_attr ();
+		*/
+
+		#asm
+				ld  a, (_gpy)
+				#ifdef PLAYER_MOGGY_STYLE
+					add 15
+				#else
+					add 16
+				#endif
+				srl a
+				srl a
+				srl a
+				srl a
+				ld  (_pty1), a
+				call _two_points_attr				
+		#endasm
 	#endif
 
-	#ifdef SLIPPERY_TILES
-		#ifndef PLAYER_MOGGY_STYLE
-			if (player.possee) 
-		#endif
-		{
+	#if defined SLIPPERY_TILES || defined CONVEYOR_TILES
+		if (player.possee) 
+	#endif
+	{
+		#ifdef SLIPPERY_TILES
 			if ((rdt1 & 16) || (rdt2 & 16)) {
 				player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
 			}
-		}
-	#endif
-
-	#ifdef CONVEYOR_TILES
-		#ifdef PLAYER_MOGGY_STYLE
-
-		#else
-			rdj = 0;
-			if (rdt1 & 2) { rdj = (rdt1 & 1) ? 1 : -1; }
-			if (rdt2 & 2) { rdj += (rdt2 & 1) ? 1 : -1; }
-			if (rdj < 0) ptgmx = -PLAYER_VX_CONVEYORS;
-			else if (rdj > 0) ptgmx = PLAYER_VX_CONVEYORS;
 		#endif
-	#endif
+
+		#ifdef CONVEYOR_TILES
+			#ifdef PLAYER_MOGGY_STYLE
+
+			#else
+				rdj = 0;
+				if (rdt1 & 2) { rdj = (rdt1 & 1) ? 1 : -1; }
+				if (rdt2 & 2) { rdj += (rdt2 & 1) ? 1 : -1; }
+				if (rdj < 0) ptgmx = -PLAYER_VX_CONVEYORS;
+				else if (rdj > 0) ptgmx = PLAYER_VX_CONVEYORS;
+			#endif
+		#endif
+	}
 
 	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
 	   a somewhat more controllable jump, so we use the "mario bros" kind of controls:
