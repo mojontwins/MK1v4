@@ -58,6 +58,7 @@ typedef struct {
 	unsigned char is_dead; 								// 36
 	unsigned char ceiling; 								// 37
 	unsigned char grab_block; 							// 38
+	signed int max_vx; 									// 39
 } INERCIA;
 
 typedef struct {

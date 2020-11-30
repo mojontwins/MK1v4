@@ -985,14 +985,14 @@ void move (void) {
 			}
 
 			if ((pad0 & sp_UP) == 0) {
-				if (player.vy > -PLAYER_MAX_VX) {
+				if (player.vy > -player.max_vx) {
 					player.vy -= player.ax;					
 				}
 				player.facing = GENITAL_FACING_UP;
 			}
 
 			if ((pad0 & sp_DOWN) == 0) {
-				if (player.vy < PLAYER_MAX_VX) {
+				if (player.vy < player.max_vx) {
 					player.vy += player.ax;
 				}
 				player.facing = GENITAL_FACING_DOWN;
@@ -1065,9 +1065,9 @@ void move (void) {
 	#asm
 			.vert_collision
 			xor a
-			ld  (_player + 26), a
-			ld  (_player + 37), a
-
+			ld  (_player + 26), a 			// possee
+			ld  (_player + 37), a 			// ceiling
+			
 			ld  de, (_player + 8)
 			ld  hl, (_ptgmy)
 			add hl, de
@@ -1276,6 +1276,27 @@ void move (void) {
 		.vert_collision_done
 	#endasm
 
+	#if defined QUICKSAND_TILES || defined SLIPPERY_TILES
+		player.ax = PLAYER_AX; player.rx = PLAYER_RX;
+	#endif
+
+	#if defined QUICKSAND_TILES
+		player.max_vx = PLAYER_MAX_VX;
+		pty1 = (gpy + 15) >> 4;
+		rdt1 = attr ((gpx + 4) >> 4, pty1);
+		rdt2 = attr ((gpx + 11) >> 4, pty1);
+		if ((rdt1 & 64) | (rdt2 & 63)) {
+			if (rdj < 0) player.saltando = 0;
+			else {
+				player.vy = PLAYER_VY_SINKING;
+				player.possee = 1;
+				player.ax = PLAYER_AX_QUICKSANDS;
+				player.rx = PLAYER_RX_QUICKSANDS;
+				player.max_vx = PLAYER_MAX_VX_QUICKSANDS;	
+			}
+		}
+	#endif
+
 	#if defined SLIPPERY_TILES || defined CONVEYOR_TILES
 		#ifdef PLAYER_MOGGY_STYLE
 			pty1 = (gpy + 15) >> 4;
@@ -1287,8 +1308,6 @@ void move (void) {
 	#endif
 
 	#ifdef SLIPPERY_TILES
-		player.ax = PLAYER_AX; player.rx = PLAYER_RX;
-
 		#ifndef PLAYER_MOGGY_STYLE
 			if (player.possee) 
 		#endif
@@ -1943,7 +1962,7 @@ void move (void) {
 		}
 
 		if ((pad0 & sp_LEFT) == 0) {
-			if (player.vx > -PLAYER_MAX_VX) {
+			if (player.vx > -player.max_vx) {
 				#ifndef PLAYER_MOGGY_STYLE
 					player.facing = 1;
 				#endif
@@ -1955,7 +1974,7 @@ void move (void) {
 		}
 
 		if ((pad0 & sp_RIGHT) == 0) {
-			if (player.vx < PLAYER_MAX_VX) {
+			if (player.vx < player.max_vx) {
 				player.vx += player.ax;
 				#ifndef PLAYER_MOGGY_STYLE
 					player.facing = 0;
@@ -2675,6 +2694,9 @@ void init_player_values (void) {
 	#ifndef SLIPPERY_TILES
 		player.ax = 		PLAYER_AX;
 		player.rx = 		PLAYER_RX;
+	#endif
+	#ifndef QUICKSAND_TILES
+		player.max_vx = 	PLAYER_MAX_VX;
 	#endif
 	player.salto = 		PLAYER_VY_INICIAL_SALTO;
 	player.cont_salto = 1;
