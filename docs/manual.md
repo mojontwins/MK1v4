@@ -661,6 +661,14 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
 
 * `PARALYZED_DONT_KILL`: Se usa con `ENEMIES_MAY_BE_PARALYZED` o con la combinación `ENABLE_SWORD`/`SWORD_PARALYZES`: normalmente los enemigos siguen matando mientras están paralizados. Define esta macro para que sean inofensivos en este estado.
 
+### Colisión
+
+```c
+	//#define ENEMIES_COLLIDE 				// Check collisions for linear enemies
+```
+
+Si se define, se añade código que comprueba que los enemigos no colisionen con el escenario. El comportamiento en los enemigos lineales es que cambian de dirección en el eje en el que colisionan. Los enemigos voladores no se ven afectados. Esta macro se define automáticamente si está definida `PLAYER_PUSH_BOXES`.
+
 ### Monedas
 
 Sirve para activar las monedas, que no son más que un tile específico del tileset que podemos recoger. Al hacerlo, se incrementará el valor de un flag. Se utilizan de manera muy diferente en los cuatro Ramiros y en la demo de Sir Ababol 2:
@@ -958,6 +966,24 @@ Esta fue otra característica que se introdujo en la demo técnica de **Sir Abab
 * `SLIPPERY_TILES` activa el motor de tiles resbalosos en la vista lateral.
 
 Si el jugador está sobre un tile con comportamiento `& 16`, se aplicarán los valores de `PLAYER_AX_SLIPPERY` o `PLAYER_RX_SLIPPERY` en lugar de `PLAYER_AX` y `PLAYER_RX`, por lo que se puede emplear también para suelos sobre los que se camine más lento.
+
+### Tiles que arrastran
+
+(Por ahora sólo funcionan en vista lateral)
+
+```c
+	//#define CONVEYOR_TILES 					// Tiles with beh & 2 are conveyors.
+```
+
+### Tiles quicksands
+
+(Sólo vista lateral)
+
+```c
+	//#define QUICKSAND_TILES 					// Tiles with beh & 64 are quicksands.
+
+```
+
 
 ### Enemigos voladores
 
