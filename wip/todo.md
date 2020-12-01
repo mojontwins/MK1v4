@@ -173,3 +173,9 @@ Lo tendré más fácil:
 [x] Hacer que la colisión por todos los lados con tiles que te matan sea por 4 puntos más "dentro" del player para que sea todo más manejable y menos peor.
 
 [x] Mapped tilesets como en MK1_NES v0.1r, donde el tileset tipo "packed" se compone de 16 tiles del tileset global segun un array apuntado por `*tileset_mappings` (que el programador debe ocuparse de mantener en sus *customs*).
+
+[ ] Validar Zombie Calavera Prologue ¿y expandir con el full map de NES?
+
+[ ] Validar el Hobbit
+
+[ ] Validar Trabajo Basura
