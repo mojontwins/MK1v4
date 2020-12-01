@@ -1,0 +1,152 @@
+#asm
+	._en_bg_collision
+
+		ld  a, (__en_x)
+		srl a
+		srl a
+		srl a
+		srl a
+		ld  (_en_xx), a
+
+		ld  a, (__en_y)
+		srl a
+		srl a
+		srl a
+		srl a
+		ld  (_en_yy), a
+
+		ld  a, (_en_mx)
+		or  a
+		jr  z, _en_bg_collision_horz_done
+
+	._en_bg_collision_horz
+		ld  a, (__en_mx)
+		call __ctileoff
+		ld  (_rdi), a
+
+		ld  c, a
+		ld  a, (_en_xx)
+		add c
+		ld  (_ptx1), a
+		ld  (_ptx2), a
+
+		ld  a, (_en_yy)
+		ld  (_pty1), a
+
+		ld  a, (__en_y)
+		add 15
+		srl a
+		srl a
+		srl a
+		srl a
+		ld  (_pty2), a
+
+		call _en_bg_collision_check
+		or  a
+		jr  z, _en_bg_collision_horz_done
+
+		ld  a, (__en_mx)
+		ld  c, a
+		xor a
+		sub c
+		ld  (__en_mx), a
+
+		ld  a, (_en_xx)
+		ld  c, a
+		ld  a, (_rdi)
+		xor 1
+		add c
+		sla a
+		sla a
+		sla a
+		sla a
+		ld  (__en_x), a
+
+		jr  _en_bg_collision_end
+
+	._en_bg_collision_horz_done
+
+		ld  a, (_en_mu)
+		or  a
+		jr  z, _en_bg_collision_vert_done
+
+	._en_bg_collision_vert
+		ld  a, (__en_my)
+		call __ctileoff
+		ld  (_rdi), a
+
+		ld  c, a
+		ld  a, (_en_yy)
+		add c
+		ld  (_pty1), a
+		ld  (_pty2), a
+
+		ld  a, (_en_xx)
+		ld  (_ptx1), a
+
+		ld  a, (__en_x)
+		add 15
+		srl a
+		srl a
+		srl a
+		srl a
+		ld  (_ptx2), a
+
+		call _en_bg_collision_check
+		or  a
+		jr  z, _en_bg_collision_vert_done
+
+		ld  a, (__en_my)
+		ld  c, a
+		xor a
+		sub c
+		ld  (__en_my), a
+
+		ld  a, (_en_yy)
+		ld  c, a
+		ld  a, (_rdi)
+		xor 1
+		add c
+		sla a
+		sla a
+		sla a
+		sla a
+		ld  (__en_y), a
+
+		jr  _en_bg_collision_end
+
+	._en_bg_collision_vert_done
+
+		jr _en_bg_collision_end
+
+	._en_bg_collision_check
+		ld  a, (_ptx1)
+		ld  c, a
+		ld  a, (_pty1)
+		call _attr_2
+		ld  a, l
+		and 8
+		ret  nz 			// Non zero, A = TRUE
+
+		ld  a, (_ptx2)
+		ld  c, a
+		ld  a, (_pty2)
+		call _attr_2
+		ld  a, l
+		and 8
+		ret 				// A = result
+
+	.__ctileoff
+		// A signed; A >= 0 -> 1, else 0.
+		bit 7, a
+		jr  z, __ctileoff_1
+
+		xor a
+		ret
+
+	.__ctileoff_1
+		ld  a, 1
+		ret
+
+	._en_bg_collision_end
+#endasm

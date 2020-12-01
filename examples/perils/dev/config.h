@@ -61,6 +61,7 @@
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
 #define ENEMIES_MAY_BE_PARALIZED	 		// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
+//#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 
 // Coins engine
 // ------------
@@ -90,7 +91,7 @@
 // Boxes engine
 // ------------
 
-#define PLAYER_PUSH_BOXES 					// If defined, tile #14 is pushable
+//#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 //#define PUSH_OVER_FLOOR 					// Must be on floor to push
 //#define PUSH_AND_PULL 					// Use fire+LEFT/RIGHT to push/pull in side view
 //#define PLAYER_GRAB_FRAME 		2		// Use with PUSH_AND_PULL, which frame 0-3.

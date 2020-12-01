@@ -3702,27 +3702,6 @@ void mueve_bicharracos (void) {
 						.en_linear_vert_bounds_done
 					#endasm
 
-					#ifdef PLAYER_PUSH_BOXES			
-						// Check for collisions.
-						en_xx = _en_x >> 4;
-						en_yy = _en_y >> 4;
-
-						if (_en_mx != 0) {
-							if (attr (en_xx + ctileoff (_en_mx), en_yy) & 8 || 
-							((_en_y & 15) != 0 && attr (en_xx + ctileoff (_en_mx), en_yy + 1) & 8)) {
-								_en_mx = -_en_mx;
-								_en_x = en_cx;
-							}
-						}
-						if (_en_my != 0) {
-							if (attr (en_xx, en_yy + ctileoff (_en_my)) & 8 || 
-							((_en_x & 15) != 0 && attr (en_xx + 1, en_yy + ctileoff (_en_mx)) & 8)) {
-								_en_my = -_en_my;
-								_en_y = en_cy;
-							}
-						}
-					#endif
-
 					rdd = (_en_t - 1) << 1;
 				}
 
@@ -3839,6 +3818,183 @@ void mueve_bicharracos (void) {
 
 						rdd = 4;
 					} 
+				#endif
+
+				#ifdef ENEMIES_COLLIDE			
+					// Check for collisions.
+					/*
+					en_xx = _en_x >> 4;
+					en_yy = _en_y >> 4;
+					
+					if (_en_mx) {
+						rdi = ctileoff (_en_mx);
+						ptx1 = ptx2 = en_xx + rdi;
+						pty1 = en_yy; 
+						pty2 = (_en_y + 15) >> 4;
+						if ((attr (ptx1, pty1) & 8) || (attr (ptx2, pty2) & 8)) {
+							_en_mx = -_en_mx;
+							_en_x = (en_xx + (rdi ^ 1)) << 4;
+						}
+					}
+					if (_en_my) {
+						rdi = ctileoff (_en_my);
+						ptx1 = en_xx; 
+						ptx2 = (_en_x + 15) >> 4;
+						pty1 = pty2 = en_yy + rdi;
+						if ((attr (ptx1, pty1) & 8) || (attr (ptx2, pty2) & 8)) {
+							_en_my = -_en_my;
+							_en_y = (en_yy + (rdi ^ 1)) << 4;
+						}
+					}
+					*/
+					#asm
+						._en_bg_collision
+
+							ld  a, (__en_x)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_xx), a
+
+							ld  a, (__en_y)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_yy), a
+
+							ld  a, (__en_mx)
+							or  a
+							jr  z, _en_bg_collision_horz_done
+
+						._en_bg_collision_horz
+							ld  a, (__en_mx)
+							call __ctileoff
+							ld  (_rdi), a
+
+							ld  c, a
+							ld  a, (_en_xx)
+							add c
+							ld  (_ptx1), a
+							ld  (_ptx2), a
+
+							ld  a, (_en_yy)
+							ld  (_pty1), a
+
+							ld  a, (__en_y)
+							add 15
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_pty2), a
+
+							call _en_bg_collision_check
+							or  a
+							jr  z, _en_bg_collision_horz_done
+
+							ld  a, (__en_mx)
+							ld  c, a
+							xor a
+							sub c
+							ld  (__en_mx), a
+
+							ld  a, (_en_xx)
+							ld  c, a
+							ld  a, (_rdi)
+							xor 1
+							add c
+							sla a
+							sla a
+							sla a
+							sla a
+							ld  (__en_x), a
+
+						._en_bg_collision_horz_done
+
+							ld  a, (__en_my)
+							or  a
+							jr  z, _en_bg_collision_vert_done
+
+						._en_bg_collision_vert
+							ld  a, (__en_my)
+							call __ctileoff
+							ld  (_rdi), a
+
+							ld  c, a
+							ld  a, (_en_yy)
+							add c
+							ld  (_pty1), a
+							ld  (_pty2), a
+
+							ld  a, (_en_xx)
+							ld  (_ptx1), a
+
+							ld  a, (__en_x)
+							add 15
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_ptx2), a
+
+							call _en_bg_collision_check
+							or  a
+							jr  z, _en_bg_collision_vert_done
+
+							ld  a, (__en_my)
+							ld  c, a
+							xor a
+							sub c
+							ld  (__en_my), a
+
+							ld  a, (_en_yy)
+							ld  c, a
+							ld  a, (_rdi)
+							xor 1
+							add c
+							sla a
+							sla a
+							sla a
+							sla a
+							ld  (__en_y), a
+
+						._en_bg_collision_vert_done
+
+							jr _en_bg_collision_end
+
+						._en_bg_collision_check
+							ld  a, (_ptx1)
+							ld  c, a
+							ld  a, (_pty1)
+							call _attr_2
+							ld  a, l
+							and 8
+							ret  nz 			// Non zero, A = TRUE
+
+							ld  a, (_ptx2)
+							ld  c, a
+							ld  a, (_pty2)
+							call _attr_2
+							ld  a, l
+							and 8
+							ret 				// A = result
+
+						.__ctileoff
+							// A signed; A >= 0 -> 1, else 0.
+							bit 7, a
+							jr  z, __ctileoff_1
+
+							xor a
+							ret
+
+						.__ctileoff_1
+							ld  a, 1
+							ret
+
+						._en_bg_collision_end
+					#endasm
 				#endif
 
 				/*

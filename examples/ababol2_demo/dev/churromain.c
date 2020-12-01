@@ -50,6 +50,10 @@
 	#define PERSIST_BASE 	AD_FREE-(MAP_W*MAP_H*20)
 #endif
 
+#if defined PLAYER_PUSH_BOXES && !defined ENEMIES_COLLIDE
+	#define ENEMIES_COLLIDE
+#endif
+		
 // Program modules in strict order...
 
 #include "definitions.h"

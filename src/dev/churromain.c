@@ -41,13 +41,17 @@
 #endif
 
 // Shortcuts
-#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE) || defined(BOXES_KILL_ENEMIES) || defined(ENABLE_SWORD)
+#if defined PLAYER_KILLS_ENEMIES || defined PLAYER_CAN_FIRE || defined BOXES_KILL_ENEMIES || defined ENABLE_SWORD
 	#define ENEMIES_MAY_DIE
 #endif
 
-#if defined (COINS_PERSISTENT) || defined (BREAKABLE_PERSISTENT)
+#if defined COINS_PERSISTENT || defined BREAKABLE_PERSISTENT
 	#define ENABLE_PERSISTENCE
 	#define PERSIST_BASE 	AD_FREE-(MAP_W*MAP_H*20)
+#endif
+
+#if defined PLAYER_PUSH_BOXES && !defined ENEMIES_COLLIDE
+	#define ENEMIES_COLLIDE
 #endif
 
 // Program modules in strict order...
