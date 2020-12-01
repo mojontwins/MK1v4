@@ -1,6 +1,7 @@
-' ene2h.bas v0.2.20201113-v4
+' ene2h.bas v0.3.20201201-v4
 
 Sub usage
+	Print
 	Print "$ ene2h.exe enems.ene enems.h [2bytes]"
 	Print
 	Print "The 2bytes parameter is for really old .ene files which"
@@ -17,6 +18,9 @@ Dim As uByte t, a, b, xx, yy, mn, x, y, s1, s2, xy
 Dim As Integer typeCounters (255)
 Dim As Integer enTypeCounters (255)
 Dim As String Dummy
+Dim As Integer sx, sy
+
+Print "ene2h.bas v0.3.20201201-v4 ";
 
 If Command (2) = "" Then usage: End
 
@@ -77,10 +81,18 @@ For i = 1 To mapPants
 
 		Print #fOut, " 	{";
 		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x y
+
+		' New logic to ensure x1 < x2, y1 < y2
+		sx = Sgn (xx - x)
+		sy = Sgn (yy - y)
+
+		If x > xx Then Swap x, xx 
+		If y > yy Then Swap y, yy
+
 		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x1 y1
 		Print #fOut, "" & (16*xx) & ", " & (16*yy) & ", ";		' x2 y2
-		Print #fOut, "" & (mn * Sgn (xx - x)) &  ", "; 		' mx
-		Print #fOut, "" & (mn * Sgn (yy - y)) & ", "; 		' my
+		Print #fOut, "" & (mn * sx) &  ", "; 		' mx
+		Print #fOut, "" & (mn * sy) & ", "; 		' my
 		Print #fOut, "" & t; 								' t
 		Print #fOut, "}";
 
@@ -142,3 +154,6 @@ Next i
 Print #fOut, ""
 
 Close
+
+
+Print " ~ DONE"

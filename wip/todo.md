@@ -115,6 +115,61 @@ It WORKS! Put this into assembly:
                 }
 ```
 
+[X] Para poder desplazar a los lineales normales es importante modificar levemente cómo se detectan los límites de la trayectoria. Creo que es el momento en el que el exportador **asegure** que, valga lo que valga la x, y iniciales (inicializados en el x1,y1 original), se reordene posteriormente (x1,y1) y (x2,y2) para que x1 < x2 e y1 < y2.
+
+[ ] Hecho esto, el cálculo de los límites las trayectorias cambia levemente usando <=, >= y quizá sea el momento de pasarlo a ensamble.
+
+Quizá la nueva versión debería ser
+
+```c
+    if (_en_x <= _en_x1) _en_mx = ABS (_en_mx);
+    if (_en_x >= _en_x2) _en_mx = -ABS (_en_mx);
+```
+
+Esto es MUCHO más costoso :-/
+
+Si hago un `_abs_a`  así:
+
+```c
+    ._abs_a
+        bit 7, a
+        ret z
+        neg
+        ret
+```
+
+Lo tendré más fácil:
+
+```c
+    #asm
+            // _en_x <= _en_x1 -> _en_x1 >= _en_x
+            ld  a, (__en_x)
+            ld  c, a
+            ld  a, (__en_x1)
+            cp  c
+            jr  c, horz_limit_skip_1
+
+            ld  a, (__en_mx)
+            call _abs_a
+            ld  (__en_mx), a
+        .horz_limit_skip_1
+
+            // _en_x >= _en_x2
+            ld  a, (__en_x2)
+            ld  c, a
+            ld  a, (__en_x)
+            cp  c
+            jr  c, horz_limit_skip_2
+
+            ld  a, (__en_mx)
+            call _abs_a
+            neg
+            ld  (__en_mx), a
+
+        .horz_limit_skip_2
+    #endasm
+```
+
 [x] Hacer que la colisión por todos los lados con tiles que te matan sea por 4 puntos más "dentro" del player para que sea todo más manejable y menos peor.
 
 [x] Mapped tilesets como en MK1_NES v0.1r, donde el tileset tipo "packed" se compone de 16 tiles del tileset global segun un array apuntado por `*tileset_mappings` (que el programador debe ocuparse de mantener en sus *customs*).
