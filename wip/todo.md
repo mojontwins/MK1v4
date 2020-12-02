@@ -57,11 +57,11 @@ El problema de estos tipos de enemigos es que tengo que encontrar la forma de a√
 6 - Fantis
 7 \
 8 |
-9 +-- Cuadradores
+9 +-- Cuadradores `ENABLE_CUADRATORS`
 10/
 11\
 12|
-13+-- Patrulleros
+13+-- Patrulleros `ENABLE_MARRULLERS`
 14/
 
 [ ] Estado "enemigo parpadeando" (e inmune).

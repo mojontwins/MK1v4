@@ -3524,6 +3524,10 @@ void draw_scr_background (void) {
 	#endif	
 }
 
+void general_enemy_en_an_calc (unsigned char n) {
+	en_an_next_frame [gpit] = sprite_9_a + 288 * n;
+}
+
 void draw_scr (void) {
 	#ifdef SHOW_LEVEL_INFO
 		char *cad_level = "LEVEL";
@@ -3567,6 +3571,10 @@ void draw_scr (void) {
 	f_zone_ac = 0;
 
 	// Set up enemies.
+
+	#asm
+		._enems_init
+	#endasm
 	
 	enoffs = n_pant * MAX_ENEMS;
 
@@ -3577,35 +3585,40 @@ void draw_scr (void) {
 	for (gpit = 0; gpit < MAX_ENEMS; gpit ++) {
 		en_an_frame [gpit] = 0;
 		en_an_state [gpit] = 0;
+
+		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) 
+			en_an_next_frame [gpit] = sprite_18_a;
+		#endif
 		
 		#ifdef RANDOM_RESPAWN
 			en_an_fanty_activo [gpit] = 0;
 		#endif
 
-		switch (malotes [enoffs + gpit].t) {
-			#ifdef NO_MAX_ENEMS
+		_en_t = malotes [enoffs + gpit].t;
+		switch (_en_t) {
+
+			// Empty
+
+			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 				case 0:
-					#if defined USE_TYPE_6 && defined MAKE_TYPE_6
-						if (scenery_info.make_type_6) {
-							en_an_next_frame [gpit] = sprite_13_a;
-							en_an_x [gpit] = (rand () % 224) << 6;
-							en_an_y [gpit] = (rand () % 144) << 6;
-							en_an_vx [gpit] = en_an_vy [gpit] = 0;							
-						} else {
-							en_an_next_frame [gpit] = sprite_18_a;
-						}
-					#else
-						en_an_next_frame [gpit] = sprite_18_a;
-					#endif
+					if (scenery_info.make_type_6) {
+						en_an_next_frame [gpit] = sprite_13_a;
+						en_an_x [gpit] = (rand () % 224) << 6;
+						en_an_y [gpit] = (rand () % 144) << 6;
+						en_an_vx [gpit] = en_an_vy [gpit] = 0;							
+					} 
 					break;
-			#endif
+			#endif	
+
+			// Linear enemies
 
 			case 1:
 			case 2:
 			case 3:
 			case 4:
-				en_an_next_frame [gpit] = sprite_9_a + 288 * (malotes [enoffs + gpit].t - 1);
+				general_enemy_en_an_calc (_en_t - 1);
 				break;
+
 			#ifdef USE_TYPE_6
 				case 6:
 					en_an_next_frame [gpit] = sprite_13_a;
@@ -3614,6 +3627,25 @@ void draw_scr (void) {
 					en_an_vx [gpit] = en_an_vy [gpit] = 0;					
 					break;
 			#endif
+
+			#ifdef ENABLE_CUADRATORS
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+					general_enemy_en_an_calc (_en_t - 7);
+					break;
+			#endif
+
+			#ifdef ENABLE_MARRULLERS
+				case 11:
+				case 12
+				case 13:
+				case 14:
+					general_enemy_en_an_calc (_en_t - 11);
+					break;
+			#endif
+					
 			#if defined (ENEMIES_MAY_DIE)
 				default:
 					en_an_next_frame [gpit] = sprite_18_a;
@@ -3627,13 +3659,13 @@ void draw_scr (void) {
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
 				#ifdef BOXES_ONLY_KILL_TYPE
-					if (malotes [enoffs + gpit].t == BOXES_ONLY_KILL_TYPE) {
+					if (_en_t == BOXES_ONLY_KILL_TYPE) {
 						flags [COUNT_KILLABLE_ON] ++;
 						continue;
 					}
 				#endif
 				#ifdef PLAYER_MIN_KILLABLE
-					if (malotes [enoffs + gpit].t >= PLAYER_MIN_KILLABLE) {
+					if (_en_t >= PLAYER_MIN_KILLABLE) {
 						flags [COUNT_KILLABLE_ON] ++;
 					}
 				#endif
