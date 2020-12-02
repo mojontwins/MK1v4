@@ -3522,8 +3522,12 @@ void draw_scr_background (void) {
 	#endif	
 }
 
-void general_enemy_en_an_calc (unsigned char n) {
+void enems_en_an_calc (unsigned char n) {
 	en_an_base_frame [enit] = n << 1;	
+}
+
+void enems_calc_frame (void) {
+	en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
 }
 
 #ifdef ENABLE_MARRULLERS
@@ -3618,7 +3622,7 @@ void draw_scr (void) {
 			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 				case 0:
 					if (scenery_info.make_type_6) {
-						general_enemy_en_an_calc (2);
+						enems_en_an_calc (2);
 						en_an_x [enit] = (rand () % 224) << 6;
 						en_an_y [enit] = (rand () % 144) << 6;
 						en_an_vx [enit] = en_an_vy [enit] = 0;							
@@ -3632,12 +3636,12 @@ void draw_scr (void) {
 			case 2:
 			case 3:
 			case 4:
-				general_enemy_en_an_calc (_en_t - 1);
+				enems_en_an_calc (_en_t - 1);
 				break;
 
 			#ifdef USE_TYPE_6
 				case 6:
-					general_enemy_en_an_calc (2);
+					enems_en_an_calc (2);
 					en_an_x [enit] = malotes [enoffsmasi].x << 6;
 					en_an_y [enit] = malotes [enoffsmasi].y << 6;
 					en_an_vx [enit] = en_an_vy [enit] = 0;					
@@ -3650,7 +3654,7 @@ void draw_scr (void) {
 				case 9:
 				case 10:
 					en_an_ff [enit] = 0;
-					general_enemy_en_an_calc (_en_t - 7);
+					enems_en_an_calc (_en_t - 7);
 
 					break;
 			#endif
@@ -3660,7 +3664,7 @@ void draw_scr (void) {
 				case 12:
 				case 13:
 				case 14:
-					general_enemy_en_an_calc (_en_t - 11);
+					enems_en_an_calc (_en_t - 11);
 					malotes [enoffsmasi].x &= 0xf0;
 					malotes [enoffsmasi].y &= 0xf0;
 					en_an_ff [enit] = abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].my);
@@ -3695,6 +3699,8 @@ void draw_scr (void) {
 				#endif
 			#endif
 		#endif
+
+		enems_calc_frame ();
 	}
 		
 	#ifdef ACTIVATE_SCRIPTING
@@ -4451,7 +4457,7 @@ void mueve_bicharracos (void) {
 						ld  (hl), a
 				#endasm
 				
-				en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
+				enems_calc_frame ();				
 
 				#ifdef ENABLE_CUSTOM_ENEMS
 					extra_enems_move ();
