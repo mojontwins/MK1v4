@@ -117,7 +117,7 @@ It WORKS! Put this into assembly:
 
 [X] Para poder desplazar a los lineales normales es importante modificar levemente cómo se detectan los límites de la trayectoria. Creo que es el momento en el que el exportador **asegure** que, valga lo que valga la x, y iniciales (inicializados en el x1,y1 original), se reordene posteriormente (x1,y1) y (x2,y2) para que x1 < x2 e y1 < y2.
 
-[ ] Hecho esto, el cálculo de los límites las trayectorias cambia levemente usando <=, >= y quizá sea el momento de pasarlo a ensamble.
+[X] Hecho esto, el cálculo de los límites las trayectorias cambia levemente usando <=, >= y quizá sea el momento de pasarlo a ensamble.
 
 Quizá la nueva versión debería ser
 
@@ -169,6 +169,83 @@ Lo tendré más fácil:
         .horz_limit_skip_2
     #endasm
 ```
+
+El problema es que con esto básicamente me he cargado el diseño de los cuadradores, porque (x1,y1) siempre quedará arriba a la izquierda y no sé cómo hacer para que el giro sea en el sentido contrario.
+
+A lo mejor si me lo tomo de otra forma... Veamos, divaguemos...
+
+* Desde x1 siempre se va a y1, desde x2 siempre se va a y2.
+* Sólo se puede mover en un eje, de forma alternativa.
+
+Lo primero se consigue con el cambio que hice para los lineales, tal cual. El problema es lo segundo. Si lo introduzco en plan *add-on* para que se ejecute tras el cambio de sentido, podría llevar una especie de flip-flop:
+
+```c
+    if (en_an_ff [enit]) _en_mx = 0; else _en_my = 0;
+    en_an_ff [enit] ^= 1;
+```
+
+Así, sobre el papel, todo parece indicar que esto funcionaría y, sinceramente, sería la adición más sencilla de un tipo nuevo de enemigo de la historia (!). ¿Funcionará? ¡Próximo episodio en tu casa! (vamos, que voy a probarlo, parchenado rápidamente en el cheril original para que todos los enemigos sean así y probar).
+
+Soy tontis. Esto no vale, por muchas razones XD. ´Lo primero, no puedo cargarme mx o my porque esto es persistente. Lo segundo, sólo debería cambiar el flip flop tras el cambio de dirección.
+
+Pensando . . . 
+
+Volvamos a pensarlo que por una de esas debería sacarlo:
+
+- He separado el update de x, y para que se haga en x o en y dependiendo del flipflop
+- He añadido una llamada a "flipa el flip flop" cada vez que se cambia una componente
+
+No está del todo bien, porque hay veces que llega a los dos limites de trayectoria A LA VEZ y el flip flop se flipa dos veces. Tengo que levantar una bandera y flipar luego.
+
+No me termina de funcionar. ¿Por qué tanta esperura? Quizá necesito parar un rato.
+
+Ya sé por qué no me funciona: Cuando por ejemplo empieza desplazando en horizontal y llega al limite, cambia el flip flop, pero es que sigue en el limite, por lo que vuelve a cambiar el flip flop y bla bla bla.
+
+Ahora lo que me falla es como resolver esto de forma sencilla, porque creo que la estoy liando. Voy a restaurar los lineales normales a como estaban y me guardo este snippet:
+
+```c
+    #ifdef ENABLE_CUADRATORS
+        if (_en_t >= 7 && _en_t <=10) {
+            #asm
+            // Flipflop tells which axis to update
+                ld  bc, (_enit)
+                ld  b, 0
+                ld  hl, _en_an_ff
+                add hl, bc
+                ld  a, (hl)
+                or  a
+                jr  z, _cuadrators_update_y
+
+            ._cuadrators_update_x
+            // _en_x += _en_mx;
+                ld  a, (__en_mx)
+                ld  c, a
+                ld  a, (__en_x)
+                add c 
+                ld  (__en_x), a
+                jr  _cuadrators_update_done
+
+            ._cuadrators_update_y
+            // _en_y += _en_my;
+                ld  a, (__en_my)
+                ld  c, a
+                ld  a, (__en_y)
+                add c 
+                ld  (__en_y), a                         
+
+            ._cuadrators_update_done
+        #endasm
+        }
+    #endif
+```
+
+para luego. Creo que no voy a poder reaprovechar tantó código como yo quisiera.
+
+Si el flip flop vale 1, estoy moviendo en X, con lo que comprobaría X. Si vale 0, estoy en Y, con lo que comprobaría Y. Esto implica meter más código que antes pero ç'est la vie.
+
+OK, ya los tengo. Pero no se llevan nada bien con la colisión con el escenario XD Pero ahí quedan. Probablemente también se vayan a tomar por culo cuando meta lo de empujarlos con el arma.
+
+Los cuadrators ocupan unos 206 bytes,
 
 [x] Hacer que la colisión por todos los lados con tiles que te matan sea por 4 puntos más "dentro" del player para que sea todo más manejable y menos peor.
 

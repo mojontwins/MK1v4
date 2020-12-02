@@ -3525,7 +3525,7 @@ void draw_scr_background (void) {
 }
 
 void general_enemy_en_an_calc (unsigned char n) {
-	en_an_next_frame [gpit] = sprite_9_a + 288 * n;
+	en_an_base_frame [gpit] = n << 1;	
 }
 
 void draw_scr (void) {
@@ -3602,7 +3602,7 @@ void draw_scr (void) {
 			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
 				case 0:
 					if (scenery_info.make_type_6) {
-						en_an_next_frame [gpit] = sprite_13_a;
+						general_enemy_en_an_calc (2);
 						en_an_x [gpit] = (rand () % 224) << 6;
 						en_an_y [gpit] = (rand () % 144) << 6;
 						en_an_vx [gpit] = en_an_vy [gpit] = 0;							
@@ -3621,7 +3621,7 @@ void draw_scr (void) {
 
 			#ifdef USE_TYPE_6
 				case 6:
-					en_an_next_frame [gpit] = sprite_13_a;
+					general_enemy_en_an_calc (2);
 					en_an_x [gpit] = malotes [enoffs + gpit].x << 6;
 					en_an_y [gpit] = malotes [enoffs + gpit].y << 6;
 					en_an_vx [gpit] = en_an_vy [gpit] = 0;					
@@ -3633,19 +3633,20 @@ void draw_scr (void) {
 				case 8:
 				case 9:
 				case 10:
+					en_an_ff [gpit] = 0;
 					general_enemy_en_an_calc (_en_t - 7);
 					break;
 			#endif
 
 			#ifdef ENABLE_MARRULLERS
 				case 11:
-				case 12
+				case 12:
 				case 13:
 				case 14:
 					general_enemy_en_an_calc (_en_t - 11);
 					break;
 			#endif
-					
+
 			#if defined (ENEMIES_MAY_DIE)
 				default:
 					en_an_next_frame [gpit] = sprite_18_a;
@@ -3878,16 +3879,17 @@ void mueve_bicharracos (void) {
 		) {
 			en_cx = _en_x;
 			en_cy = _en_y;
-			
+		
 			#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
 				if (en_an_state [enit] != ENEM_PARALYZED)
 			#endif
 			{
+
 				if (
 					_en_t <= 4
-				#ifdef RANDOM_RESPAWN
-					|| 0 == en_an_fanty_activo [enit]
-				#endif
+					#ifdef RANDOM_RESPAWN
+						|| 0 == en_an_fanty_activo [enit]
+					#endif
 				) {
 					/*
 					_en_x += _en_mx;
@@ -3900,6 +3902,7 @@ void mueve_bicharracos (void) {
 					if (_en_y >= _en_y2) _en_my = -ABS (_en_my);
 					*/
 					#asm
+						
 						// _en_x += _en_mx;
 							ld  a, (__en_mx)
 							ld  c, a
@@ -3913,7 +3916,7 @@ void mueve_bicharracos (void) {
 							ld  a, (__en_y)
 							add c 
 							ld  (__en_y), a
-
+						
 						.en_linear_horz_bounds
 							// _en_x <= _en_x1 -> _en_x1 >= _en_x
 							ld  a, (__en_x)
@@ -3925,6 +3928,7 @@ void mueve_bicharracos (void) {
 							ld  a, (__en_mx)
 							call _abs_a
 							ld  (__en_mx), a
+
 						.horz_limit_skip_1
 
 							// _en_x >= _en_x2
@@ -3952,6 +3956,7 @@ void mueve_bicharracos (void) {
 							ld  a, (__en_my)
 							call _abs_a
 							ld  (__en_my), a
+
 						.vert_limit_skip_1
 
 							// _en_y >= _en_y2
@@ -3967,10 +3972,107 @@ void mueve_bicharracos (void) {
 							ld  (__en_my), a
 
 						.vert_limit_skip_2
-					#endasm
 
-					rdd = (_en_t - 1) << 1;
+					#endasm
 				}
+
+				#ifdef ENABLE_CUADRATORS
+					if (_en_t >= 7 && _en_t <= 10) {
+
+						#asm
+						// Flipflop tells which axis to update
+							ld  bc, (_enit)
+							ld  b, 0
+							ld  hl, _en_an_ff
+							add hl, bc
+							ld  a, (hl)
+							or  a
+							jr  z, _cuadrators_update_y							
+
+						._cuadrators_update_x
+						// _en_x += _en_mx;
+							ld  a, (__en_mx)
+							ld  c, a
+							ld  a, (__en_x)
+							add c 
+							ld  (__en_x), a
+
+						.cuadrators_horz_bounds
+							// _en_x <= _en_x1 -> _en_x1 >= _en_x
+							ld  a, (__en_x)
+							ld  c, a
+							ld  a, (__en_x1)
+							cp  c
+							jr  c, cuadrators_limit_skip_1
+
+							ld  a, (__en_mx)
+							call _abs_a
+							ld  (__en_mx), a
+							jr  _cuadrators_flipflop
+
+						.cuadrators_limit_skip_1
+
+							// _en_x >= _en_x2
+							ld  a, (__en_x2)
+							ld  c, a
+							ld  a, (__en_x)
+							cp  c
+							jr  c, _cuadrators_update_done
+
+							ld  a, (__en_mx)
+							call _abs_a
+							neg
+							ld  (__en_mx), a
+							jr  _cuadrators_flipflop
+
+						._cuadrators_update_y
+						// _en_y += _en_my;
+							ld  a, (__en_my)
+							ld  c, a
+							ld  a, (__en_y)
+							add c 
+							ld  (__en_y), a     
+
+						.cuadrators_vert_bounds
+							// _en_y <= _en_y1 -> _en_y1 >= _en_y
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (__en_y1)
+							cp  c
+							jr  c, cuadrators_limit_skip_2
+
+							ld  a, (__en_my)
+							call _abs_a
+							ld  (__en_my), a
+							jr  _cuadrators_flipflop
+
+						.cuadrators_limit_skip_2
+
+							// _en_y >= _en_y2
+							ld  a, (__en_y2)
+							ld  c, a
+							ld  a, (__en_y)
+							cp  c
+							jr  c, _cuadrators_update_done
+
+							ld  a, (__en_my)
+							call _abs_a
+							neg
+							ld  (__en_my), a      
+
+						._cuadrators_flipflop
+							ld  bc, (_enit)
+							ld  b, 0
+							ld  hl, _en_an_ff
+							add hl, bc 
+							ld  a, (hl)
+							xor 1 
+							ld  (hl), a
+
+						._cuadrators_update_done
+					#endasm						
+					}
+				#endif
 
 				#ifdef RANDOM_RESPAWN
 					if (en_an_fanty_activo [enit]) { 
@@ -4082,8 +4184,6 @@ void mueve_bicharracos (void) {
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
 						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-
-						rdd = 4;
 					} 
 				#endif
 
@@ -4237,7 +4337,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty1)
 							call _attr_2
 							ld  a, l
-							and 8
+							and 9
 							ret  nz 			// Non zero, A = TRUE
 
 							ld  a, (_ptx2)
@@ -4245,7 +4345,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty2)
 							call _attr_2
 							ld  a, l
-							and 8
+							and 9
 							ret 				// A = result
 
 						.__ctileoff
@@ -4296,7 +4396,7 @@ void mueve_bicharracos (void) {
 						ld  (hl), a
 				#endasm
 				
-				en_an_next_frame [enit] = enem_cells [rdd + en_an_frame [enit]];
+				en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
 
 				#ifdef ENABLE_CUSTOM_ENEMS
 					extra_enems_move ();
@@ -4328,7 +4428,12 @@ void mueve_bicharracos (void) {
 			// Moving platforms engine:
 
 			#ifndef PLAYER_MOGGY_STYLE	
-				if (_en_t == 4 && gpx >= en_ccx - 15 && gpx <= en_ccx + 15) {
+				if ( (_en_t == 4 
+					#ifdef ENABLE_CUADRATORS
+						|| _en_t == 10
+					#endif
+					) && gpx >= en_ccx - 15 && gpx <= en_ccx + 15
+				) {
 					// Vertical
 					if (_en_my < 0) {
 						// Go up.

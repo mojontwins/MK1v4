@@ -151,6 +151,8 @@ signed int en_an_vx [MAX_ENEMS]						@ (23600 + MAX_ENEMS*11);
 signed int en_an_vy [MAX_ENEMS]	 					@ (23600 + MAX_ENEMS*13);
 unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (23600 + MAX_ENEMS*15);
 unsigned char en_an_state [MAX_ENEMS]				@ (23600 + MAX_ENEMS*16);
+unsigned char en_an_ff [MAX_ENEMS] 					@ (23600 + MAX_ENEMS*17);
+unsigned char en_an_base_frame [MAX_ENEMS] 			@ (23600 + MAX_ENEMS*18);
 
 unsigned char enoffs;
 unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;

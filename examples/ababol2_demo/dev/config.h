@@ -183,6 +183,10 @@
 //#define FANTIES_LIFE_GAUGE		3		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 
+// Quadrators
+// ----------
+//#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
+
 // Scripting
 // ---------
 
