@@ -48,6 +48,21 @@ void attr (char x, char y) {
 			ld  hl, 0
 			ret
 
+			// If you put x in C and y in A you can use this entry point for enemies
+
+		._attr_enems
+			cp  10
+			jr  c, _attr_enems_skip_1
+			ld  hl, 8
+			ret
+		._attr_enems_skip_1
+			ld  b, a
+			ld  a, c
+			cp  15
+			jr  c, _attr_1b
+			ld  hl, 8
+			ret
+
 		._attr_1b
 			ld  a, b 		// restore y
 			sla a

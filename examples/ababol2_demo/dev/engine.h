@@ -289,6 +289,7 @@ void cortina (void) {
 	void clear_cerrojo (unsigned char x, unsigned char y) {
 		// search & toggle
 		
+		set_map_tile (x, y, 0, comportamiento_tiles [0]);
 		_x = x; _y = y;
 
 		/*	
@@ -2384,21 +2385,18 @@ void move (void) {
 			&& (gpy & 15) == 0
 		) {
 			if (qtile (gpxx + 1, gpyy) == 15 && player.keys > 0) {
-				set_map_tile (gpxx + 1, gpyy, 0, 0);
 				clear_cerrojo (gpxx + 1, gpyy);
 				player.keys --;
 				play_sfx (8);
 			} else 
 			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
 				if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
-					set_map_tile (gpxx - 1, gpyy, 0, 0);
 					clear_cerrojo (gpxx - 1, gpyy);
 					player.keys --;
 					play_sfx (8);
 				}
 			#else
 				if (qtile (gpxx, gpyy) == 15 && player.keys > 0) {
-					set_map_tile (gpxx, gpyy, 0, 0);
 					clear_cerrojo (gpxx, gpyy);
 					player.keys --;
 					play_sfx (8);

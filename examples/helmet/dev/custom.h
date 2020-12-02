@@ -73,6 +73,7 @@ void todos_rescatados_check (void) {
 	void hook_init_game (void) {
 		new_level = 1;
 		level = 0;		
+		player.keys = 1;
 	}
 
 	void hook_init_mainloop (void) {
@@ -111,6 +112,7 @@ void todos_rescatados_check (void) {
 			}
 			player.objs = 0; 
 			enemy_killer = 0xff;
+			alarm = 0;
 		}
 	}
 
@@ -123,7 +125,7 @@ void todos_rescatados_check (void) {
 		if (noticed) {
 			alarm ++;
 			noticed = 0;
-		} else if (alarm) alarm = 0;
+		} else alarm = 0;
 
 		// Gotcha!
 
@@ -199,14 +201,14 @@ void todos_rescatados_check (void) {
 			if (alarm) {
 				en_an_facing [enit] = (gpx < _en_x) ? 2 : 0;
 			} else {
+				if (_en_mx == -1) en_an_facing [enit] = 2;
+				else if (_en_mx == 1) en_an_facing [enit] = 0;
+	
 				if (en_an_walk_ct [enit] == 0) {
 
 					// Select direction / count
 					_en_mx = en_directions [rand () & 7];
 					en_an_walk_ct [enit] = (1 + (rand () & 3)) << 4;
-
-					if (_en_mx == -1) en_an_facing [enit] = 2;
-					else if (_en_mx == 1) en_an_facing [enit] = 0;
 				} 
 
 				// Move
@@ -233,10 +235,9 @@ void todos_rescatados_check (void) {
 				} else if (en_an_facing [enit] && gpx <= _en_x - 15) {
 					// Enemy facing left, player to the left
 					// If not hidden or too close: gotcha!
-					rdi = ((gpit == 0) || (gpx > _en_x - 16));
+					rdi = ((gpit == 0) || (gpx + 16 > _en_x));
 				}
 			}
-
 
 			// Alarm
 			if (rdi) {
