@@ -1020,6 +1020,19 @@ Permite activar y configurar *fantys*.
 
 * `MAKE_TYPE_6` es un custom de **Ramiro 2**. Si se activa y `scenery_info.make_type_6` vale 1, se creará un *fanty* en lugar de cada enemigo *que no esté colocado* en cada pantalla. O sea, si en una pantalla hay por ejemplo 2 enemigos, aparecerá un tercero que será un *fanty*.
 
+### Los cuadrators
+
+```c
+
+// Quadrators
+// ----------
+//#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
+```
+
+Los cuadrators son parecidos a los lineales pero hacen una trayectoria rectangular si has colocado una diagonal en el ponedor. Ocupan unos 206 bytes y no se llevan bien con algunas cosas del motor, como `ENEMIES_COLLIDE`. Pero bueno, ahí están.
+
+Se ponen con los tipos 7 a 10 y pintan el sprite 1 a 4 dependiendo de cuál pongas.
+
 ### Scripting
 
 La forma original de *complicar* los juegos de **MTE MK1** era mediante un sencillo pero efectivo sistema de scripting. Activar este sistema nos permite programar comportamiento extra en un lenguaje muy sencillo que describiremos en el capítulo siguiente.
