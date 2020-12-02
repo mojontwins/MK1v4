@@ -1732,9 +1732,7 @@ void move (void) {
 					jr  z, push_pull_undo
 
 					ld  hl, 1
-					push hl
 					call _move_tile
-					pop hl 
 					jp  push_pull_done 
 
 				.push_pull_undo
@@ -1993,9 +1991,7 @@ void move (void) {
 					jr  z, push_pull_undo
 
 					ld  hl, 1
-					push hl
 					call _move_tile
-					pop hl 
 					jp  push_pull_done 
 
 				.push_pull_undo
@@ -2421,7 +2417,7 @@ void move (void) {
 				
 				// In side-view mode, you can't push boxes vertically.
 				#ifdef PLAYER_MOGGY_STYLE
-					// Vertically, only when player.y is tile-aligned.
+					/*
 					if ((gpy & 15) == 0) {
 						x0 = x1 = gpxx; 
 						if ((pad0 & sp_UP) == 0 && gpyy > 1) {
@@ -2442,10 +2438,113 @@ void move (void) {
 							}
 						}
 					}
+					*/
+
+					#asm	
+						.push_box_vert				
+		
+						// Vertically, only when player.y is tile-aligned.
+
+							ld  a, (_gpy)
+							and 15
+							jp  nz, push_box_vert_done
+
+						.push_box_vert_do
+
+							ld  a, (_gpxx)
+							ld  (_x0), a
+							ld  (_x1), a 
+
+							ld  a, (_pad0) 
+							and sp_UP 
+							jr  nz, push_box_vert_up_done
+
+							ld  a, (_gpyy)
+							cp  2
+							jr  c, push_box_vert_up_done
+
+							ld  a, (_gpyy)
+							dec a
+							ld  (_y0), a
+							dec a 
+							ld  (_y1), a
+
+							call _can_move_box
+							xor a
+							or  l 
+							jr  z, push_box_vert_s1
+
+							ld  hl, 1
+							call _move_tile
+
+						.push_box_vert_s1
+							ld  a, (_gpx) 
+							and 15 
+							jr  z, push_box_vert_done 
+
+							ld  a, (_gpxx)
+							inc a 
+							ld  (_x0), a
+							ld  (_x1), a
+
+							call _can_move_box 
+							xor a 
+							or  l
+							jr  z, push_box_vert_done
+
+							ld  hl, 1
+							call _move_tile
+
+							jr  push_box_vert_done
+
+						.push_box_vert_up_done
+
+							ld  a, (_pad0) 
+							and sp_DOWN
+							jr  nz, push_box_vert_done
+
+							ld  a, (_gpyy)
+							cp  8
+							jr  nc, push_box_vert_done
+
+							ld  a, (_gpyy)
+							inc a
+							ld  (_y0), a
+							inc a 
+							ld  (_y1), a
+
+							call _can_move_box
+							xor a
+							or  l 
+							jr  z, push_box_vert_s2
+
+							ld  hl, 1
+							call _move_tile
+
+						.push_box_vert_s2
+							ld  a, (_gpx) 
+							and 15 
+							jr  z, push_box_vert_done 
+
+							ld  a, (_gpxx)
+							inc a 
+							ld  (_x0), a
+							ld  (_x1), a
+
+							call _can_move_box 
+							xor a 
+							or  l
+							jr  z, push_box_vert_done
+
+							ld  hl, 1
+							call _move_tile
+
+						.push_box_vert_done
+					#endasm					
 				#endif
 
-				#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
-					// Horizontally, only when player.x is tile-aligned.
+				#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER	
+					/*		
 					if ((gpx & 15) == 0) {
 						y0 = y1 = gpyy; 
 						if ((pad0 & sp_RIGHT) == 0 && gpxx < 14) {
@@ -2466,7 +2565,112 @@ void move (void) {
 							}
 						}	
 					}
+					*/
+
+					#asm	
+						.push_box_horz				
+		
+						// Horizontally, only when player.x is tile-aligned.
+
+							ld  a, (_gpx)
+							and 15
+							jp  nz, push_box_horz_done
+
+						.push_box_horz_do
+
+							ld  a, (_gpyy)
+							ld  (_y0), a
+							ld  (_y1), a 
+
+							ld  a, (_pad0) 
+							and sp_LEFT 
+							jr  nz, push_box_horz_left_done
+
+							ld  a, (_gpxx)
+							cp  2
+							jr  c, push_box_horz_left_done
+
+							ld  a, (_gpxx)
+							dec a
+							ld  (_x0), a
+							dec a 
+							ld  (_x1), a
+
+							call _can_move_box
+							xor a
+							or  l 
+							jr  z, push_box_horz_s1
+
+							ld  hl, 1
+							call _move_tile
+
+						.push_box_horz_s1
+							ld  a, (_gpy) 
+							and 15 
+							jr  z, push_box_horz_done 
+
+							ld  a, (_gpyy)
+							inc a 
+							ld  (_y0), a
+							ld  (_y1), a
+
+							call _can_move_box 
+							xor a 
+							or  l
+							jr  z, push_box_horz_done
+
+							ld  hl, 1
+							call _move_tile
+
+							jr  push_box_horz_done
+
+						.push_box_horz_left_done
+
+							ld  a, (_pad0) 
+							and sp_RIGHT
+							jr  nz, push_box_horz_done
+
+							ld  a, (_gpxx)
+							cp  14
+							jr  nc, push_box_horz_done
+
+							ld  a, (_gpxx)
+							inc a
+							ld  (_x0), a
+							inc a 
+							ld  (_x1), a
+
+							call _can_move_box
+							xor a
+							or  l 
+							jr  z, push_box_horz_s2
+
+							ld  hl, 1
+							call _move_tile
+
+						.push_box_horz_s2
+							ld  a, (_gpy) 
+							and 15 
+							jr  z, push_box_horz_done 
+
+							ld  a, (_gpyy)
+							inc a 
+							ld  (_y0), a
+							ld  (_y1), a
+
+							call _can_move_box 
+							xor a 
+							or  l
+							jr  z, push_box_horz_done
+
+							ld  hl, 1
+							call _move_tile
+
+						.push_box_horz_done
+					#endasm							
 				#else
+					// TODO: This into assembly (probably won't)
+
 					y0 = y1 = gpyy;
 
 					if (wall == WALL_RIGHT && (pad0 & sp_RIGHT) == 0 && gpxx < 14) {

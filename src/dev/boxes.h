@@ -2,7 +2,8 @@
 // Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 #ifdef PLAYER_PUSH_BOXES
-	void move_tile (unsigned char act) {
+	void __FASTCALL__ move_tile (unsigned char act) {
+		/*
 		set_map_tile (x0, y0, 0, comportamiento_tiles [0]);
 		set_map_tile (x1, y1, 14, comportamiento_tiles [14]);
 
@@ -14,6 +15,58 @@
 				fall_box ();
 			#endif
 		}
+		*/
+		
+		// act is in L
+		#asm
+				xor a
+				or l 
+				jr z, move_tile_do
+
+				ld  hl, 8
+				push hl
+				call _play_sfx
+				pop bc 
+
+				#ifdef FALLING_BOXES
+					call _fall_box
+				#endif
+
+			.move_tile_do
+				ld  hl, (_x0)
+				ld  h, 0
+				push hl
+				ld  hl, (_y0)
+				ld  h, 0
+				push hl
+				ld  l, 0
+				push hl
+				ld  hl, (_comportamiento_tiles)
+				ld  h, 0
+				push hl
+				call _set_map_tile
+				pop bc
+				pop bc
+				pop bc
+				pop bc
+
+				ld  hl, (_x1)
+				ld  h, 0
+				push hl
+				ld  hl, (_y1)
+				ld  h, 0
+				push hl
+				ld  hl, 14
+				push hl
+				ld  hl, (_comportamiento_tiles+14)
+				ld  h, 0
+				push hl
+				call _set_map_tile
+				pop bc
+				pop bc
+				pop bc
+				pop bc
+		#endasm
 	}
 
 	unsigned char can_move_box (void) {
@@ -29,7 +82,7 @@
 			}
 		#endif
 
-		if (qtile (x0, y0) != 14 || attr (x1, y1) >= 4)
+		if (qtile (x0, y0) != 14 || (attr (x1, y1) & 0xd))
 			return 0;
 
 		#ifdef PUSH_OVER_FLOOR
