@@ -3525,8 +3525,24 @@ void draw_scr_background (void) {
 }
 
 void general_enemy_en_an_calc (unsigned char n) {
-	en_an_base_frame [gpit] = n << 1;	
+	en_an_base_frame [enit] = n << 1;	
 }
+
+#ifdef ENABLE_MARRULLERS
+	void marrullers_select_direction (void) {
+		rdd = en_an_ff [enit];
+		switch (rand () & 3) {
+			case 0:
+				_en_mx = 0; _en_my = rdd; break;
+			case 1:
+				_en_mx = 0; _en_my = -rdd; break;
+			case 2:
+				_en_mx = rdd; _en_my = 0; break;
+			case 3:
+				_en_mx = -rdd; _en_my = 0; break;
+		}
+	}
+#endif
 
 void draw_scr (void) {
 	#ifdef SHOW_LEVEL_INFO
@@ -3582,19 +3598,21 @@ void draw_scr (void) {
 		flags [COUNT_KILLABLE_ON] = 0;
 	#endif
 
-	for (gpit = 0; gpit < MAX_ENEMS; gpit ++) {
-		en_an_frame [gpit] = 0;
-		en_an_state [gpit] = 0;
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+		en_an_frame [enit] = 0;
+		en_an_state [enit] = 0;
+		enoffsmasi = enit + enoffs;
 
 		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) 
-			en_an_next_frame [gpit] = sprite_18_a;
+			en_an_next_frame [enit] = sprite_18_a;
 		#endif
 		
 		#ifdef RANDOM_RESPAWN
-			en_an_fanty_activo [gpit] = 0;
+			en_an_fanty_activo [enit] = 0;
 		#endif
 
-		_en_t = malotes [enoffs + gpit].t;
+		_en_t = malotes [enoffsmasi].t;
+
 		switch (_en_t) {
 
 			// Empty
@@ -3603,9 +3621,9 @@ void draw_scr (void) {
 				case 0:
 					if (scenery_info.make_type_6) {
 						general_enemy_en_an_calc (2);
-						en_an_x [gpit] = (rand () % 224) << 6;
-						en_an_y [gpit] = (rand () % 144) << 6;
-						en_an_vx [gpit] = en_an_vy [gpit] = 0;							
+						en_an_x [enit] = (rand () % 224) << 6;
+						en_an_y [enit] = (rand () % 144) << 6;
+						en_an_vx [enit] = en_an_vy [enit] = 0;							
 					} 
 					break;
 			#endif	
@@ -3622,9 +3640,9 @@ void draw_scr (void) {
 			#ifdef USE_TYPE_6
 				case 6:
 					general_enemy_en_an_calc (2);
-					en_an_x [gpit] = malotes [enoffs + gpit].x << 6;
-					en_an_y [gpit] = malotes [enoffs + gpit].y << 6;
-					en_an_vx [gpit] = en_an_vy [gpit] = 0;					
+					en_an_x [enit] = malotes [enoffsmasi].x << 6;
+					en_an_y [enit] = malotes [enoffsmasi].y << 6;
+					en_an_vx [enit] = en_an_vy [enit] = 0;					
 					break;
 			#endif
 
@@ -3633,8 +3651,9 @@ void draw_scr (void) {
 				case 8:
 				case 9:
 				case 10:
-					en_an_ff [gpit] = 0;
+					en_an_ff [enit] = 0;
 					general_enemy_en_an_calc (_en_t - 7);
+
 					break;
 			#endif
 
@@ -3644,12 +3663,15 @@ void draw_scr (void) {
 				case 13:
 				case 14:
 					general_enemy_en_an_calc (_en_t - 11);
+					malotes [enoffsmasi].x &= 0xf0;
+					malotes [enoffsmasi].y &= 0xf0;
+					en_an_ff [enit] = abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].my);
 					break;
 			#endif
 
 			#if defined (ENEMIES_MAY_DIE)
 				default:
-					en_an_next_frame [gpit] = sprite_18_a;
+					en_an_next_frame [enit] = sprite_18_a;
 			#endif
 		}
 		
@@ -3890,6 +3912,9 @@ void mueve_bicharracos (void) {
 					#ifdef RANDOM_RESPAWN
 						|| 0 == en_an_fanty_activo [enit]
 					#endif
+					#ifdef ENABLE_MARRULLERS
+						|| (_en_t >= 11 && _en_t <= 14)
+					#endif
 				) {
 					/*
 					_en_x += _en_mx;
@@ -3916,6 +3941,12 @@ void mueve_bicharracos (void) {
 							ld  a, (__en_y)
 							add c 
 							ld  (__en_y), a
+
+						#ifdef ENABLE_MARRULLERS
+							ld  a, (__en_t)
+							cp  11
+							jr  nc, vert_limit_skip_2
+						#endif
 						
 						.en_linear_horz_bounds
 							// _en_x <= _en_x1 -> _en_x1 >= _en_x
@@ -4261,12 +4292,6 @@ void mueve_bicharracos (void) {
 							or  a
 							jr  z, _en_bg_collision_horz_done
 
-							ld  a, (__en_mx)
-							ld  c, a
-							xor a
-							sub c
-							ld  (__en_mx), a
-
 							ld  a, (_en_xx)
 							ld  c, a
 							ld  a, (_rdi)
@@ -4278,6 +4303,25 @@ void mueve_bicharracos (void) {
 							sla a
 							ld  (__en_x), a
 
+							#ifdef ENABLE_MARRULLERS
+								ld  a, (__en_t)
+								cp  11
+								jr  c, _en_bg_col_marrh_done
+								cp  15
+								jr  nc, _en_bg_col_marrh_done
+
+								call _marrullers_select_direction
+								jp  _en_bg_collision_end
+
+							._en_bg_col_marrh_done
+							#endif
+
+							ld  a, (__en_mx)
+							ld  c, a
+							xor a
+							sub c
+							ld  (__en_mx), a
+						
 						._en_bg_collision_horz_done
 
 							ld  a, (__en_my)
@@ -4310,12 +4354,6 @@ void mueve_bicharracos (void) {
 							or  a
 							jr  z, _en_bg_collision_vert_done
 
-							ld  a, (__en_my)
-							ld  c, a
-							xor a
-							sub c
-							ld  (__en_my), a
-
 							ld  a, (_en_yy)
 							ld  c, a
 							ld  a, (_rdi)
@@ -4327,6 +4365,25 @@ void mueve_bicharracos (void) {
 							sla a
 							ld  (__en_y), a
 
+							#ifdef ENABLE_MARRULLERS
+								ld  a, (__en_t)
+								cp  11
+								jr  c, _en_bg_col_marrv_done
+								cp  15
+								jr  nc, _en_bg_col_marrv_done
+
+								call _marrullers_select_direction
+								jr  _en_bg_collision_end
+
+							._en_bg_col_marrv_done
+							#endif
+
+							ld  a, (__en_my)
+							ld  c, a
+							xor a
+							sub c
+							ld  (__en_my), a
+
 						._en_bg_collision_vert_done
 
 							jr _en_bg_collision_end
@@ -4335,7 +4392,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_ptx1)
 							ld  c, a
 							ld  a, (_pty1)
-							call _attr_2
+							call _attr_enems
 							ld  a, l
 							and 9
 							ret  nz 			// Non zero, A = TRUE
@@ -4343,7 +4400,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_ptx2)
 							ld  c, a
 							ld  a, (_pty2)
-							call _attr_2
+							call _attr_enems
 							ld  a, l
 							and 9
 							ret 				// A = result
@@ -4380,7 +4437,7 @@ void mueve_bicharracos (void) {
 						ld  a, (hl)
 						inc a
 						cp  4
-						jr  c, enemy_animate_update_count
+						jr  c, _enemy_animate_update_count
 
 						push hl
 
@@ -4392,7 +4449,7 @@ void mueve_bicharracos (void) {
 
 						pop hl
 						xor a
-					.enemy_animate_update_count
+					._enemy_animate_update_count
 						ld  (hl), a
 				#endasm
 				

@@ -300,6 +300,22 @@ Los enemigos con tipos 5 y 6 definen enemigos voladores, o *Fantys*, como los ll
 
 * **Tipo 6**: Son muy parecidos pero aparecerán en el lugar de la pantalla donde los ubiques. Además, pueden configurarse para que o bien persigan al jugador siempre, o bien solo lo hagan si el jugador se acerca, volviendo a su posición inicial cual el jugador se "pierde de vista".
 
+### Cuadradores
+
+Son los tipos 7 a 10 (dependiendo del gráfico que queramos que saquen de los 4). El tipo 10 actúa como una plataforma en vista lateral.
+
+En vez de rebotar por el rectángulo definido por sus dos esquinas, los cuadradores andarán por el borde del mismo. El sentido del giro tendrá que ver con cómo se defina la diagonal: hacia abajo a la derecha o hacia arriba a la izquierda.
+
+Ojal, que en el ponedor se escribe en hex. Deberás introducir 7, 8, 9 o A.
+
+### Patrulleros marrulleros genitales
+
+Andan al azar por la pantalla, en una de las cuatro direcciones, hasta que se encuentran con un obstáculo. Entonces cambian de dirección.
+
+Para colocarlos, usa los tipos 11 a 14, dependiendo del gráfico que quieras que aparezca. Sitúalos en su posición original. Coloca el punto destino en cualquier casilla (al lado, por ejemplo). Define su velocidad.
+
+Ojal, que en el ponedor se escribe en hex. Deberás introducir B, C, D o E.
+
 ## *hotspots*
 
 Son, como hemos dicho, los puntos donde aparecen los objetos coleccionables, las llaves, o las recargas de vida. Se colocan en una casilla cada pantalla del mapa y llevan asociado un "tipo", que puede ser 1 (objetos), 2 (llaves) o 3 (recargas, si no activas la macro `LEGACY_REFILLS`), o cualquier otro número si te encargas tú de gestionarlo mediante código *custom*.
@@ -517,7 +533,7 @@ Si activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas 
 
 Los enganches para enemigos custom permiten añadir tipos de enemigos o personalizar los que ya existen. Si activas `ENABLE_CUSTOM_ENEMS`, las siguientes funciones de `custom.h` serán llamadas en diferentes puntos de la gestión de enemigos:
 
-* `void extra_enems_init (void);` se ejecuta durante la inicialización de los enemigos al entrar en cada pantalla. Se llama cuando se está inicializando el enemigo número `gpit`. Sus valores estarán en `malotes [enoffs + gpit]`, una estructura con estos campos:
+* `void extra_enems_init (void);` se ejecuta durante la inicialización de los enemigos al entrar en cada pantalla. Se llama cuando se está inicializando el enemigo número `enit`. Sus valores estarán en `malotes [enoffs + gpit]`, una estructura con estos campos:
 
 ```c
     typedef struct {
@@ -606,7 +622,7 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
     //#define EVIL_ZONE_FREQ        3       // if defined to N kill every M^2 frames; N=M^2-1,  
     //#define EVIL_ZONE_CONDITIONAL         // Active if scenery_info.evil_zone_active
     #define PLAYER_BOUNCES                  // If defined, collisions make player bounce
-    #define PLAYER_FLICKERS 		50	 	// If defined, collisions make player flicker for N frames.
+    #define PLAYER_FLICKERS         50      // If defined, collisions make player flicker for N frames.
     //#define DEACTIVATE_REFILLS            // If defined, no refills.
     //#define LEGACY_REFILLS                // Legacy mode: refills appear in place of collected items/keys
     #define MAX_FLAGS               1       // Number of flags. For scripting and stuff.
@@ -664,7 +680,7 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
 ### Colisión
 
 ```c
-	//#define ENEMIES_COLLIDE 				// Check collisions for linear enemies
+    //#define ENEMIES_COLLIDE               // Check collisions for linear enemies
 ```
 
 Si se define, se añade código que comprueba que los enemigos no colisionen con el escenario. El comportamiento en los enemigos lineales es que cambian de dirección en el eje en el que colisionan. Los enemigos voladores no se ven afectados. Esta macro se define automáticamente si está definida `PLAYER_PUSH_BOXES`.
@@ -972,7 +988,7 @@ Si el jugador está sobre un tile con comportamiento `& 16`, se aplicarán los v
 (Por ahora sólo funcionan en vista lateral)
 
 ```c
-	//#define CONVEYOR_TILES 					// Tiles with beh & 2 are conveyors.
+    //#define CONVEYOR_TILES                    // Tiles with beh & 2 are conveyors.
 ```
 
 ### Tiles quicksands
@@ -980,7 +996,7 @@ Si el jugador está sobre un tile con comportamiento `& 16`, se aplicarán los v
 (Sólo vista lateral)
 
 ```c
-	//#define QUICKSAND_TILES 					// Tiles with beh & 64 are quicksands.
+    //#define QUICKSAND_TILES                   // Tiles with beh & 64 are quicksands.
 
 ```
 
@@ -1023,15 +1039,32 @@ Permite activar y configurar *fantys*.
 ### Los cuadrators
 
 ```c
+    // Quadrators
+    // ----------
 
-// Quadrators
-// ----------
-//#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
+    //#define ENABLE_CUADRATORS                 // Enable QUADRATORS, enemy type 7-10
 ```
 
 Los cuadrators son parecidos a los lineales pero hacen una trayectoria rectangular si has colocado una diagonal en el ponedor. Ocupan unos 206 bytes y no se llevan bien con algunas cosas del motor, como `ENEMIES_COLLIDE`. Pero bueno, ahí están.
 
 Se ponen con los tipos 7 a 10 y pintan el sprite 1 a 4 dependiendo de cuál pongas.
+
+Ojal, que en el ponedor se escribe en hex. Deberás introducir 7, 8, 9 o A.
+
+### Los patrulleros marrulleros genitales
+
+```c
+    // Patrulleros marrulleros genitales
+    // ---------------------------------
+
+    //#define ENABLE_MARRULLERS                 // Enable MARRULLERS, enemy type 11-14
+```
+
+Los patrulleros marrulleros genitales van andando en linea recta hasta que se encuentran un obstáculo. Entonces cambian de dirección. Ocupan unos 395 bytes, que es un pasote.
+
+Se ponen con los tipos 11 a 14.
+
+Ojal, que en el ponedor se escribe en hex. Deberás introducir B, C, D o E.
 
 ### Scripting
 

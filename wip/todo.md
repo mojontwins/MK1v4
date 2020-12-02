@@ -12,7 +12,7 @@ Cosas que planeo
 
 Mari Amelia puede esconderse entre los arbustos para evitar a los espectros.
 
-[ ] Enemigos custom que van por los bordes del rectángulo entre (x1,y1)-(x2,y2).
+[X] Enemigos custom que van por los bordes del rectángulo entre (x1,y1)-(x2,y2).
 
 Tenemos dos casos:
 
@@ -44,7 +44,7 @@ Pseudocódigo:
     }
 ```
 
-[ ] Enemigos custom que se mueven al azar como los patrulleros marrulleros pero en 4 direcciones (genital), o su variación en la que cambian de direción cuando chocan con un obstáculo
+[X] Enemigos custom que se mueven al azar como los patrulleros marrulleros pero en 4 direcciones (genital), o su variación en la que cambian de direción cuando chocan con un obstáculo
 
 El problema de estos tipos de enemigos es que tengo que encontrar la forma de añadirlos de forma consecuente con el resto de las cosas que hay. Teniendo en cuenta que me limité a 16 por el tema de los enemigos muertos (lo cual no voy a ponerme a cambiar ahora), podemos hacer:
 
@@ -246,6 +246,20 @@ Si el flip flop vale 1, estoy moviendo en X, con lo que comprobaría X. Si vale 
 OK, ya los tengo. Pero no se llevan nada bien con la colisión con el escenario XD Pero ahí quedan. Probablemente también se vayan a tomar por culo cuando meta lo de empujarlos con el arma.
 
 Los cuadrators ocupan unos 206 bytes,
+
+~~
+
+Los patrulleros estos deberían avanzar sin problemas hasta que se topen con un obstáculo, en cuyo caso deberían elegir otra dirección. De entrada no deberían ser demasiado complejos: 
+
+* reutilizaré todo lo que llevan los lineales, con el cambio de que cuando haya colisión deberán elegir mx, my al azar ¿Cómo defino la velocidad? Puedo hacer un hack. Como sólo va a avanzar en una de las cuatro direcciones, puedo prealmacenar en una variable al entrar en pantalla el valor de ABS(mx+my).
+
+* Al entrar en la pantalla debería ajustar a tile x e y, para evitar mierdas.
+
+Esto ha funcionado bien, pero tengo que ver que no salgan de la pantalla :D Quizá deba hacer una versión de attr que sea igual pero que si vas out of bounds devuelva 8.
+
+Así parece que todo va bien, pero me hace un extraño y creo que las velocidades están malamente puestas. No, no es eso, creo que sé qué es. Necesito saltar.
+
+WORKING!
 
 [x] Hacer que la colisión por todos los lados con tiles que te matan sea por 4 puntos más "dentro" del player para que sea todo más manejable y menos peor.
 

@@ -185,7 +185,13 @@
 
 // Quadrators
 // ----------
+
 //#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
+
+// Patrulleros marrulleros genitales
+// ---------------------------------
+
+//#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
 
 // Scripting
 // ---------
