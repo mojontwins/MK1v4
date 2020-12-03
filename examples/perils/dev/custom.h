@@ -9,15 +9,15 @@ unsigned char player_min_killable;
 unsigned char level, new_level;
 unsigned char new_level_string [] = "LEVEL 00";
 
-unsigned char scr_ini [] = { 60, 64, 68 };
-unsigned char ini_x [] = { 1, 1, 1 };
+unsigned char scr_ini [] = { 60, 64, 71 };
+unsigned char ini_x [] = { 1, 1, 11 };
 unsigned char ini_y [] = { 4, 4, 4 };
 unsigned char max_enems [] = { 60, 60, 60 };
 
 unsigned char tilemaps [] = {
 	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
 	32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,
-	 0, 17, 46, 47, 43, 44, 35,  6,  8,  7, 19, 22, 12, 39,  4, 15
+	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15
 };
 
 // Custom functions
@@ -59,7 +59,7 @@ void set_hotspot (unsigned char hn) {
 	void hook_init_game (void) {
 		resonators_on = 0;
 		player_min_killable = 4;
-		level = 1;
+		level = 2;
 		new_level = 1;
 	}
 

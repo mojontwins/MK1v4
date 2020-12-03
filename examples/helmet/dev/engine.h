@@ -3522,12 +3522,13 @@ void draw_scr_background (void) {
 	#endif	
 }
 
-void enems_en_an_calc (unsigned char n) {
-	en_an_base_frame [enit] = n << 1;	
-}
-
 void enems_calc_frame (void) {
 	en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
+}
+
+void enems_en_an_calc (unsigned char n) {
+	en_an_base_frame [enit] = n << 1;	
+	enems_calc_frame ();
 }
 
 #ifdef ENABLE_MARRULLERS
@@ -3699,8 +3700,6 @@ void draw_scr (void) {
 				#endif
 			#endif
 		#endif
-
-		enems_calc_frame ();
 	}
 		
 	#ifdef ACTIVATE_SCRIPTING
