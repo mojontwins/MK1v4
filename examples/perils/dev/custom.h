@@ -12,7 +12,6 @@ unsigned char new_level_string [] = "LEVEL 00";
 unsigned char scr_ini [] = { 60, 64, 10/*71*/ };
 unsigned char ini_x [] = { 1, 1, 11 };
 unsigned char ini_y [] = { 4, 4, 4 };
-unsigned char max_enems [] = { 60, 60, 60 };
 
 unsigned char tilemaps [] = {
 	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
@@ -64,7 +63,7 @@ void set_hotspot (unsigned char hn) {
 	}
 
 	void hook_init_mainloop (void) {
-		if (player.killed == max_enems [level]) {
+		if (player.killed == 60) {
 			level ++;
 			if (level < 3) {
 				new_level = 1;
