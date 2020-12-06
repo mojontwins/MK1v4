@@ -9,7 +9,7 @@ unsigned char player_min_killable;
 unsigned char level, new_level;
 unsigned char new_level_string [] = "LEVEL 00";
 
-unsigned char scr_ini [] = { 60, 64, 10/*71*/ };
+unsigned char scr_ini [] = { 60, 64, 71 };
 unsigned char ini_x [] = { 1, 1, 11 };
 unsigned char ini_y [] = { 4, 4, 4 };
 
@@ -58,7 +58,7 @@ void set_hotspot (unsigned char hn) {
 	void hook_init_game (void) {
 		resonators_on = 0;
 		player_min_killable = 4;
-		level = 2;
+		level = 1;
 		new_level = 1;
 	}
 

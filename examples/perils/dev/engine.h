@@ -1049,6 +1049,56 @@ void move (void) {
 		#endif
 	#endif	
 
+	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
+	   a somewhat more controllable jump, so we use the "mario bros" kind of controls:
+	   the longer you press jump, the higher you reach.
+	*/
+
+	#ifdef PLAYER_HAS_JUMP
+		#ifdef RAMIRO_HOP
+			#ifdef SHORT_PLAYER
+				rdi = ((attr ((gpx + 4) >> 4, gpyy + 1) & 12) || (attr ((gpx + 11) >> 4, gpyy + 1) & 12));
+			#else
+				rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
+			#endif
+		#endif
+
+		if (
+			#if defined BOTH_KEYS_JUMP
+				(pad0 & sp_UP) == 0 || (pad0 & sp_FIRE) == 0
+			#elif defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
+				(pad0 & sp_UP) == 0 
+			#else
+				(pad0 & sp_FIRE) == 0
+			#endif	
+		) {
+			if (player.saltando == 0) {
+				if (
+				#ifdef RAMIRO_HOP
+					rdi
+				#else
+					player.possee 
+				#endif
+					|| player.gotten
+				) {
+					player.saltando = 1;
+					player.cont_salto = 0;
+					play_sfx (1);
+				}
+			}
+
+			if (player.saltando) {
+				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
+				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
+				player.cont_salto ++;
+				if (player.cont_salto == 8)
+					player.saltando = 0;
+			} 
+		} else {
+			player.saltando = 0;
+		}
+	#endif
+
 	#ifdef PLAYER_DIZZY
 		if (player.estado & EST_DIZZY) { player.vy >>= 1; player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
 	#endif
@@ -1351,8 +1401,9 @@ void move (void) {
 		#endasm
 
 		if ((rdt1 & 64) || (rdt2 & 64)) {
-			if (rdj < 0) player.saltando = 0;
-			else {
+			if (rdj < 0) {
+				if (player.cont_salto > 1) player.saltando = 0;
+			} else {
 				player.vy = PLAYER_VY_SINKING;
 				player.possee = 1;
 				player.ax = PLAYER_AX_QUICKSANDS;
@@ -1410,56 +1461,6 @@ void move (void) {
 			#endif
 		#endif
 	}
-
-	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
-	   a somewhat more controllable jump, so we use the "mario bros" kind of controls:
-	   the longer you press jump, the higher you reach.
-	*/
-
-	#ifdef PLAYER_HAS_JUMP
-		#ifdef RAMIRO_HOP
-			#ifdef SHORT_PLAYER
-				rdi = ((attr ((gpx + 4) >> 4, gpyy + 1) & 12) || (attr ((gpx + 11) >> 4, gpyy + 1) & 12));
-			#else
-				rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
-			#endif
-		#endif
-
-		if (
-			#if defined BOTH_KEYS_JUMP
-				(pad0 & sp_UP) == 0 || (pad0 & sp_FIRE) == 0
-			#elif defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
-				(pad0 & sp_UP) == 0 
-			#else
-				(pad0 & sp_FIRE) == 0
-			#endif	
-		) {
-			if (player.saltando == 0) {
-				if (
-				#ifdef RAMIRO_HOP
-					rdi
-				#else
-					player.possee 
-				#endif
-					|| player.gotten
-				) {
-					player.saltando = 1;
-					player.cont_salto = 0;
-					play_sfx (1);
-				}
-			}
-
-			if (player.saltando) {
-				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
-				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-				player.cont_salto ++;
-				if (player.cont_salto == 8)
-					player.saltando = 0;
-			} 
-		} else {
-			player.saltando = 0;
-		}
-	#endif
 
 	#ifdef PLAYER_HAS_JETPAC
 		if ((pad0 & sp_UP) == 0) {
