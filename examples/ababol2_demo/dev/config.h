@@ -94,6 +94,7 @@
 //#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 //#define PUSH_OVER_FLOOR 					// Must be on floor to push
 //#define PUSH_AND_PULL 					// Use fire+LEFT/RIGHT to push/pull in side view
+//#define PUSH_AND_PULL_PILES 				// Can push/pull piles of stacked boxes
 //#define PLAYER_GRAB_FRAME 		2		// Use with PUSH_AND_PULL, which frame 0-3.
 //#define FALLING_BOXES						// If defined, boxes can fall off ledges.
 //#define FALLING_BOXES_SPEED 		4		// Boxes fall every nth frame.

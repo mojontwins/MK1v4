@@ -98,4 +98,23 @@ Pero oh, fuck. Aquí viene el problema: esto funciona perfe para propagar el mov
 
 Así que tengo que replantearlo para primero comprobar toda la pila y luego usar esto.
 
-Lo macero.
+El grueso debería ser en la función `can_move_box`. Al final de `move_tile` simplemente podemos añadir esto:
+
+```c
+	#ifdef PUSH_AND_PULL_PILES
+		// Gotten to this point, we know they can
+		// be moved, so...
+			ld  hl, _y0
+			dec (hl)
+
+			ld  a, (_x0)
+			ld  c, a
+			ld  c, (_y0)
+			call qtile_do
+
+			ld  a, l
+			cp  14
+			jr nz, move_tile_do
+	#endif
+```
+

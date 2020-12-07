@@ -1732,6 +1732,10 @@ void move (void) {
 					or  l
 					jr  z, push_pull_undo
 
+				#ifdef PUSH_AND_PULL_PILES 
+						ld  a, (_y1)
+						ld  (_y0), a
+				#endif
 					ld  hl, 1
 					call _move_tile
 					jp  push_pull_done 
@@ -1990,6 +1994,11 @@ void move (void) {
 					xor a
 					or  l
 					jr  z, push_pull_undo
+
+				#ifdef PUSH_AND_PULL_PILES 
+						ld  a, (_y1)
+						ld  (_y0), a
+				#endif
 
 					ld  hl, 1
 					call _move_tile

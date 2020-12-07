@@ -5,7 +5,7 @@ unsigned char map_behaviours [] = {
 	1, 1, 0, 0, 0, 0, 0, 0, 
 	1, 1, 0, 0, 0, 0, 0, 0,
 	1, 1, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0,
+	1, 1, 1, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0,
@@ -14,9 +14,9 @@ unsigned char map_behaviours [] = {
 
 // Level set
 
-unsigned char scr_ini [] = { 16, 2 };
+unsigned char scr_ini [] = { 16, 26 };
 unsigned char ini_x [] = { 2, 7 };
-unsigned char ini_y [] = { 8, 4 };
+unsigned char ini_y [] = { 8, 8 };
 unsigned char hostages [] = { 1, 1 };
 unsigned char new_level;
 unsigned char level;
@@ -72,7 +72,7 @@ void todos_rescatados_check (void) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 0;		
+		level = 1;		
 		player.keys = 1;
 	}
 

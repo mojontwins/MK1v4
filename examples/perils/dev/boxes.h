@@ -53,7 +53,11 @@
 				ld  hl, (_x1)
 				ld  h, 0
 				push hl
+			#ifdef PUSH_AND_PULL_PILES
+				ld  hl, (_y0)
+			#else
 				ld  hl, (_y1)
+			#endif
 				ld  h, 0
 				push hl
 				ld  hl, 14
@@ -66,31 +70,69 @@
 				pop bc
 				pop bc
 				pop bc
+
+			#ifdef PUSH_AND_PULL_PILES
+				// Gotten to this point, we know they can
+				// be moved, so...
+					ld  hl, _y0
+					dec (hl)
+
+					ld  a, (_x0)
+					ld  c, a
+					ld  a, (_y0)
+					call qtile_do
+
+					ld  a, l
+					cp  14
+					jr  z, move_tile_do
+			#endif
 		#endasm
 	}
 
 	unsigned char can_move_box (void) {
-		#ifdef ENEMIES_BLOCK_BOXES	
-			boxx = x1 << 4; boyy = y1 << 4;
-			rdd = enoffs + MAX_ENEMS;
-			for (rdi = enoffs; rdi < rdd; rdi ++) {
-				if (malotes [rdi].x >= boxx - 12 && malotes [rdi].x <= boxx + 12 &&
-					malotes [rdi].y >= boyy - 12 && malotes [rdi].y <= boyy + 12) {
-					play_sfx (9);
-					return 0;
+		#ifdef PUSH_AND_PULL_PILES
+			if (attr (x1, y0 + 1) < 4) return 0;
+			while (1)
+		#endif
+		{
+			#ifdef ENEMIES_BLOCK_BOXES	
+				boxx = x1 << 4; 
+				#ifdef PUSH_AND_PULL_PILES
+					boyy = y0 << 4;
+				#else
+					boyy = y1 << 4;
+				#endif
+				rdd = enoffs + MAX_ENEMS;
+				for (rdi = enoffs; rdi < rdd; rdi ++) {
+					if (malotes [rdi].x >= boxx - 12 && malotes [rdi].x <= boxx + 12 &&
+						malotes [rdi].y >= boyy - 12 && malotes [rdi].y <= boyy + 12) {
+						play_sfx (9);
+						return 0;
+					}
 				}
-			}
-		#endif
+			#endif
 
-		if (qtile (x0, y0) != 14 || (attr (x1, y1) & 0xd))
-			return 0;
+			#ifdef PUSH_AND_PULL_PILES
+				if (attr (x1, y0) & 0xd)
+			#else
+				if (qtile (x0, y0) != 14 || (attr (x1, y1) & 0xd))
+			#endif
+				return 0;
 
-		#ifdef PUSH_OVER_FLOOR
-			if (attr (x1, y1 + 1) < 4) return 0;
-			if (qtile (x0, y0 - 1) == 14) return 0;
-		#endif
+			#ifdef PUSH_OVER_FLOOR
+				#ifndef PUSH_AND_PULL_PILES
+ç					if (attr (x1, y1 + 1) < 4) return 0;
+					if (qtile (x0, y0 - 1) == 14) return 0;
+				#endif
+			#endif
 			
-		return 1;
+			#ifdef PUSH_AND_PULL_PILES
+				y0 --;
+				if (qtile (x0, y0) != 14) return 1;
+			#else
+				return 1;
+			#endif
+		}
 	}
 
 	#ifdef FALLING_BOXES

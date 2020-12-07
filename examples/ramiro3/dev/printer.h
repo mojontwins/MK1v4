@@ -93,6 +93,8 @@ void qtile (unsigned char x, unsigned char y) {
 			dec hl
 			ld  a, (hl) 	// y
 
+			// If you put x in C and y in A you can call here
+			
 		.qtile_do	
 			ld  b, a
 			sla a
