@@ -53,7 +53,7 @@ Parte de la magia viene de esto:
 
 Así el `init_player_values` que llamo desde mi custom tras mostrar la pantalla de `LEVEL XX` me para recolocar al jugador.
 
-### Recatando
+### Rescatando
 
 Al principio de cada nivel el número de objetos del jugador se pone a 0. Si el número de objetos (que son los rehenes) vale `hostages [level]`, entonces se activa un estado de alarma en la que los enemigos patrulleros te ven muy deprisa (5 frames?).
 
@@ -63,3 +63,39 @@ Siempre que te maten, esté como esté la cosa, volverás al punto de inicio, se
 
 Cuando el malo te vea un rato se coscará del todo y dará la alarma. hay que presentar un texto, hacer un sonido feo, y reiniciar.
 
+## Importante mejora
+
+Creo que los puzzles de cajas serán mucho más interesantes si se puede empujar o tirar de pilas de cajas. Para eso tendré que crear una sencilla función recursiva en ensamble para propagar el movimiento.
+
+Cuando se arrastra una caja se llama a `move_tile`, pero no recibe parámetros, por lo que no puedo usar esta misma para el tema de la recursión.
+
+Lo que sí puedo hacer es que `move_tile` no haga nada más que llamar a la recursiva si se activa la característica de empujar y que sea esta la que se encargue de todo. Vamos a pensarlo bien:
+
+1.- El jugador hace la acción y se ejecuta el código que comprueba si tirar o empujar y si se puede. Esto llama a `move_tile (1)`
+
+2.- `move_tile` comprueba `act` y hace ruido. Luego llama a `_move_tile (x0, y0, x1)`.
+
+3.- `_move_tile` mueve el tile de `(_x0, _y0)` a `(_x1, _y0)`. Si hay un tile en `(_x0, _y0 - 1)` mira si puede moverlo a `(_x1, _y0 - 1)` y, si es el caso, llama a `_move_tile (x0, y0 - 1, x1)`.
+
+Todo esto se puede pasar a iterativo muy fácilmente teniendo en cuenta que en este modo (`PUSH_AND_PULL`) estamos en vista lateral y el jugador estará alineado verticalmente, y que x0, y0, x1 e y1 no se utilizan más tras la llamada a `move_tile`, por lo que los valores se pueden ir pisando:
+
+```
+	(pseudocódigo)
+	if (act) ruido ();
+
+	while (1) {
+		borra (x0, y0);
+		pinta (x1, y0);
+
+		y0 --;
+		if (can_move_box () == 0) break;
+	}
+```
+
+Que es tan jodidamente simple que como funcione lo flipo (y una vez más seré king simple algo).
+
+Pero oh, fuck. Aquí viene el problema: esto funciona perfe para propagar el movimiento, pero no me sirve porque si alguna caja no se puede mover, sencillamente se quedará flotando en el aire.
+
+Así que tengo que replantearlo para primero comprobar toda la pila y luego usar esto.
+
+Lo macero.

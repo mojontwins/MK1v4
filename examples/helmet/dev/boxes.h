@@ -53,7 +53,11 @@
 				ld  hl, (_x1)
 				ld  h, 0
 				push hl
+			#ifdef PUSH_AND_PULL_PILES
+				ld  hl, (_y0)
+			#else
 				ld  hl, (_y1)
+			#endif
 				ld  h, 0
 				push hl
 				ld  hl, 14
@@ -66,6 +70,16 @@
 				pop bc
 				pop bc
 				pop bc
+
+			#ifdef PUSH_AND_PULL_PILES
+					ld  hl, _y0
+					dec (hl)
+
+					call _can_move_box
+					xor a
+					or l
+					jr nz, move_tile_do
+			#endif
 		#endasm
 	}
 
