@@ -136,18 +136,18 @@ MALOTE malotes [] = {
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 24
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{128, 16, 128, 16, 160, 80, 2, 2, 3},
+ 	{112, 48, 64, 48, 112, 48, -2, 0, 2},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 25
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{64, 16, 48, 16, 64, 64, -2, 2, 3},
+ 	{112, 32, 112, 32, 144, 80, 2, 2, 3},
+ 	{144, 96, 112, 96, 144, 96, -2, 0, 2},
 
 	// Pantalla 26
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{160, 16, 32, 16, 160, 16, -1, 0, 3},
+ 	{48, 32, 48, 32, 176, 32, 2, 0, 2},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 27
@@ -337,10 +337,10 @@ MALOTE malotes [] = {
 
 };
 
-#define N_ENEMS_TYPE_0 179
+#define N_ENEMS_TYPE_0 172
 #define N_ENEMS_TYPE_1 7
-#define N_ENEMS_TYPE_2 1
-#define N_ENEMS_TYPE_3 0
+#define N_ENEMS_TYPE_2 4
+#define N_ENEMS_TYPE_3 4
 #define N_ENEMS_TYPE_5 4
 #define N_ENEMS_TYPE_6 0
 #define N_ENEMS_TYPE_7 0
@@ -380,7 +380,7 @@ HOTSPOT hotspots [] = {
 	{0, 0, 0}, 
 	{0, 0, 0}, 
 	{0, 0, 0}, 
-	{0, 0, 0}, 
+	{194, 2, 0}, 
 	{0, 0, 0}, 
 	{0, 0, 0}, 
 	{0, 0, 0}, 
@@ -420,9 +420,9 @@ HOTSPOT hotspots [] = {
 	{0, 0, 0}
 };
 
-#define N_HOTSPOTS_TYPE_0 61
+#define N_HOTSPOTS_TYPE_0 60
 #define N_HOTSPOTS_TYPE_1 1
-#define N_HOTSPOTS_TYPE_2 2
+#define N_HOTSPOTS_TYPE_2 3
 #define N_HOTSPOTS_TYPE_3 0
 #define N_HOTSPOTS_TYPE_4 0
 #define N_HOTSPOTS_TYPE_5 0
