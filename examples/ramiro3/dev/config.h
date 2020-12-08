@@ -47,7 +47,7 @@
 //#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
 //#define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
 #define EVIL_TILE_SIMPLE					// For side view, only hit from below.
-//#define DEACTIVATE_EVIL_ZONES				// Zones kill you after a while. Read docs or ask na_th_an
+//#define DEACTIVATE_EVIL_ZONE				// Zones kill you after a while. Read docs or ask na_th_an
 #define EVIL_ZONE_FRAME_COUNT		8		// For countdown in an evil zone.
 #define EVIL_ZONE_BEEPS_COUNT		32		// # of counts before killing
 //#define EVIL_ZONE_FREQ 			3 		// if defined to N kill every M^2 frames; N=M^2-1, 
@@ -61,7 +61,7 @@
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED	 		// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
-//#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
+#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 
 // Coins engine
 // ------------
@@ -91,7 +91,7 @@
 // Boxes engine
 // ------------
 
-#define PLAYER_PUSH_BOXES 					// If defined, tile #14 is pushable
+//#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 //#define PUSH_OVER_FLOOR 					// Must be on floor to push
 //#define PUSH_AND_PULL 					// Use fire+LEFT/RIGHT to push/pull in side view
 //#define PUSH_AND_PULL_PILES 				// Can push/pull piles of stacked boxes

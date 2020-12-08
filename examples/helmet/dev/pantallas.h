@@ -67,6 +67,8 @@ void title_screen (void) {
 			joyfunc = sp_JoySinclair1; break;
 		}			
 	}
+	
+	after_title:
 }
 
 void game_ending (void) {

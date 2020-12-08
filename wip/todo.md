@@ -270,3 +270,18 @@ WORKING!
 [ ] Validar el Hobbit
 
 [ ] Validar Trabajo Basura
+
+~~
+
+[ ] En los ramiros (¿en los TWO_SETS_*?) los enemigos se van a tomar por culo dendiendo del valor del tile offset. En R3, con el tileset 0; en R4, con el otro. Can't fucking explain :-S Wait - tiene que ver con la colisión de los enemigos con el escenario, que cambié hace poco. 
+
+Sin embargo en Cheril sí funciona guay esta colisión.
+
+Ajá, creo que falla solo si es sobre tiles que esconden.
+
+VOIE LA.
+
+Hace AND 9 para que colisionen contra los tiles que matan, y eso cubre a los que esconden. MAL.
+
+Lo cambio YA.
+

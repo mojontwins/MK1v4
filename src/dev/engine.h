@@ -1,4 +1,5 @@
-// MTE MK1 v4.7 // Copyleft 2010, 2011 by The Mojon Twins
+// MTE MK1 v4.8
+// Copyleft 2010, 2011, 2020 by The Mojon Twins
 
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
@@ -2369,7 +2370,7 @@ void move (void) {
 	// Sword
 	#ifdef ENABLE_SWORD
 		if (s_on == 0 && (pad_this_frame & sp_FIRE) == 0) {
-			#if !defined PLAYER_MOGGY_STYLE && !defined SWORD_UP
+			#if !defined PLAYER_MOGGY_STYLE && defined SWORD_UP
 				if ((pad0 & sp_UP) == 0) {
 					s_type = SWORD_TYPE_UP;
 				} else 
@@ -4409,7 +4410,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty1)
 							call _attr_enems
 							ld  a, l
-							and 9
+							and 8
 							ret  nz 			// Non zero, A = TRUE
 
 							ld  a, (_ptx2)
@@ -4417,7 +4418,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty2)
 							call _attr_enems
 							ld  a, l
-							and 9
+							and 8
 							ret 				// A = result
 
 						.__ctileoff

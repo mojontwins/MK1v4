@@ -34,12 +34,12 @@ void unpack (void) {
 			jp depack
 
 		.blackout
-		ld hl, 22528
-		ld de, 22529
-		ld bc, 767
-		xor a
-		ld (hl), a
-		ldir
+			ld hl, 22528
+			ld de, 22529
+			ld bc, 767
+			xor a
+			ld (hl), a
+			ldir
 			ret
 		#endasm
 }
@@ -67,6 +67,8 @@ void title_screen (void) {
 			joyfunc = sp_JoySinclair1; break;
 		}			
 	}
+
+	after_title:
 }
 
 void game_ending (void) {

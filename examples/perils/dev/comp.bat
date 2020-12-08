@@ -15,8 +15,8 @@ echo Making %game%
 ..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
 
-echo Making script
-..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
+rem echo Making script
+rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
 zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
