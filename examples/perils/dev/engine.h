@@ -2977,8 +2977,11 @@ void move (void) {
 }
 
 void init_player_values (void) {
-	player.x = 			PLAYER_INI_X << 10;
-	player.y = 			PLAYER_INI_Y << 10;
+	gpx = 				PLAYER_INI_X << 4;
+	player.x = 			gpx << 6;
+	gpy = 				PLAYER_INI_Y << 4;
+	player.y = 			gpy << 6;
+	
 	player.vy = 		0;
 	player.g = 			PLAYER_G; 
 	player.vx = 		0;

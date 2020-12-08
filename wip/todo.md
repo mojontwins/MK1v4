@@ -270,13 +270,3 @@ WORKING!
 [ ] Validar el Hobbit
 
 [ ] Validar Trabajo Basura
-
-A MEDIAS
-
-[ ] A veces al empezar la segunda partida hay autohit. Comprobar todas las variables.
-
-[ ] Propagar mainloop.h y engine.h desde src/dev
-
-[ ] Poner el continue en el tuto
-
-[ ] Quitar texto de 1, 2, 3 de title en Perils
