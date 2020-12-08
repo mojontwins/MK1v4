@@ -258,7 +258,7 @@ void cortina (void) {
 		
 		.bucle
 			ld	b,	a			; Salvamos el contador de "bucle" en 'b'
-			ld	a,	255
+			xor a ; ld	a,	255
 		
 		.bucle1
 			sla (hl)
@@ -266,7 +266,7 @@ void cortina (void) {
 			dec a
 			jr	nz, bucle1
 				
-			ld	a,	255
+			xor a ; ld	a,	255
 		.bucle2
 			srl (hl)
 			inc hl

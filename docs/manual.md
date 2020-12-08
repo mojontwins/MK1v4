@@ -2227,6 +2227,12 @@ Cuando queramos "pasar de fase", que según el juego será cumpliendo la condici
 
 Si quieres ganar o perder dede tus customs, sólo tienes que asignar un valor a `game_loop_flag`. Normalmente vale 0, pero si vale 1 ganarás el juego (se mostrará `game_ending`) y si vale 2 perderás (el mensaje de *Game Over*).
 
+## Como hacer continues
+
+Se trata de crear una variable `continue_on`, darle 0 en `hook_system_inits`, y luego programar la pantalla extra en `title_screen` de `pantallas.h`, de modo que el valor de `level` sólo se ponga a 0 si no se continua. Obviamente, tendrás que quitar `level = 0` de `hook_init_game`.
+
+
+
 ## Más
 
 Pronto más. ¿Echas en falta algo? Dímelo.

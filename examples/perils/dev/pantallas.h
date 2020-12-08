@@ -45,6 +45,29 @@ void unpack (void) {
 }
 
 void title_screen (void) {
+	// CUSTOM {
+	// Continue screen
+
+	if (continue_on) {
+		sp_UpdateNow();
+		asm_int = (unsigned int) (s_title); unpack ();
+		draw_text (10, 15, 71, " CONTINUE ? ");
+		draw_text (10, 16, 71, "   1> YES   ");
+		draw_text (10, 17, 71, "   2> NO    ");
+		sp_UpdateNow ();
+
+		while (1) {
+			if (sp_KeyPressed (key_1)) {
+				goto after_title;
+			} else if (sp_KeyPressed (key_2)) { 
+				level = 0; break; 
+			}
+		}
+	}
+	continue_on = (level != 0);
+
+	// } END_OF_CUSTOM
+
 	sp_UpdateNow();
 	asm_int = (unsigned int) (s_title); unpack ();
 
@@ -67,6 +90,8 @@ void title_screen (void) {
 			joyfunc = sp_JoySinclair1; break;
 		}			
 	}
+
+	after_title:
 }
 
 void game_ending (void) {

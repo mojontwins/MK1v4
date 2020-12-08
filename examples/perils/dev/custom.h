@@ -19,6 +19,8 @@ unsigned char tilemaps [] = {
 	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15
 };
 
+unsigned char continue_on;
+
 // Custom functions
 
 void paralyze_everyone (void) {
@@ -53,12 +55,13 @@ void set_hotspot (unsigned char hn) {
 	// Hooks
 
 	void hook_system_inits (void) {
+		continue_on = 0;
+		level = 2;
 	}
 
 	void hook_init_game (void) {
 		resonators_on = 0;
 		player_min_killable = 4;
-		level = 0;
 		new_level = 1;
 	}
 

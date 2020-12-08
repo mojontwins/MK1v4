@@ -127,6 +127,7 @@ void main (void) {
 
 	while (1) {
 		// Here the title screen
+		cortina ();
 		title_screen ();
 		
 		#ifndef DIRECT_TO_PLAY
@@ -589,7 +590,6 @@ void main (void) {
 					cortina ();
 					game_ending ();
 					playing = 0;
-					cortina ();
 				}
 			#elif defined ENABLE_CODE_HOOKS
 				if (game_loop_flag == 1) {
@@ -597,7 +597,6 @@ void main (void) {
 					cortina ();
 					game_ending ();
 					playing = 0;
-					cortina ();
 				}
 			#else			
 				#ifdef ACTIVATE_SCRIPTING
@@ -643,7 +642,6 @@ void main (void) {
 						cortina ();
 						game_ending ();
 						playing = 0;
-						cortina ();
 					}
 				}				
 			#endif
@@ -687,7 +685,6 @@ void main (void) {
 				saca_a_todo_el_mundo_de_aqui ();				
 				game_over ();
 				playing = 0;
-				cortina ();
 			}
 			
 			#ifdef USE_SUICIDE_KEY
