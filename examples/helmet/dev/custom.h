@@ -35,8 +35,8 @@ unsigned char patrullero_touch;
 
 // Alarm counter & state
 
-#define MAX_ALARM_TIME_COSCAO 2
-#define MAX_ALARM_TIME_NORMAL 15
+#define MAX_ALARM_TIME_COSCAO 3
+#define MAX_ALARM_TIME_NORMAL 20
 
 unsigned char noticed;
 unsigned char alarm;
@@ -228,7 +228,7 @@ void todos_rescatados_check (void) {
 			// Saw you!
 			rdi = 0; gpit = player_hidden ();
 			
-			if (gpy + 31 >= _en_y && gpy <= _en_y + 27) {
+			if (gpy + 41 >= _en_y && gpy <= _en_y + 27) {
 				if (en_an_facing [enit] == 0 && gpx >= _en_x + 15) {
 					// Enemy facing right, player to the right
 					// If not hidden or too close: gotcha!
