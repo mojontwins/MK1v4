@@ -36,7 +36,7 @@ unsigned char patrullero_touch;
 // Alarm counter & state
 
 #define MAX_ALARM_TIME_COSCAO 2
-#define MAX_ALARM_TIME_NORMAL 30
+#define MAX_ALARM_TIME_NORMAL 15
 
 unsigned char noticed;
 unsigned char alarm;
@@ -176,6 +176,7 @@ void todos_rescatados_check (void) {
 
 	void hook_entering (void) {	
 		// Draw extraction point
+
 		if (n_pant == scr_ini [level]) {
 			set_map_tile (ini_x [level], ini_y [level], 30, 0);
 			set_map_tile (ini_x [level], ini_y [level] + 1, 31, 8);
@@ -191,8 +192,8 @@ void todos_rescatados_check (void) {
 #ifdef ENABLE_CUSTOM_ENEMS
 
 	void extra_enems_init (void) {
-		en_an_facing [gpit] = 0;
-		en_an_walk_ct [gpit] = 0;
+		en_an_facing [enit] = 0;
+		en_an_walk_ct [enit] = 0;
 	}
 
 	void extra_enems_move (void) {
