@@ -14,7 +14,7 @@ unsigned char map_behaviours [] = {
 
 // Level set
 
-unsigned char scr_ini [] = { 16, 26 };
+unsigned char scr_ini [] = { 16, 33 /*26*/ };
 unsigned char ini_x [] = { 2, 7 };
 unsigned char ini_y [] = { 8, 8 };
 unsigned char hostages [] = { 1, 1 };
@@ -112,7 +112,7 @@ void todos_rescatados_check (void) {
 			}
 			player.objs = 0; 
 			enemy_killer = 0xff;
-			alarm = 0;
+			on_pant = 0xff;
 		}
 	}
 
@@ -139,7 +139,6 @@ void todos_rescatados_check (void) {
 			alarm >= (player.objs == hostages [level] ? MAX_ALARM_TIME_COSCAO : MAX_ALARM_TIME_NORMAL)
 			|| patrullero_touch
 		) {
-			alarm = 0;	
 			sp_UpdateNow ();		
 			play_sfx (3);
 			play_sfx (10);
@@ -158,12 +157,14 @@ void todos_rescatados_check (void) {
 
 			draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);		
 			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
+			
 			sp_UpdateNow ();
 			play_sfx (10); play_sfx (8);
 			espera_activa (100);
 			player.is_dead = 1;
 			if (patrullero_touch == 0) player.life --;
 			new_level = 1;
+			alarm = 0;	
 		}
 		enemy_killer = 0xff;
 
