@@ -245,7 +245,13 @@ void main (void) {
 						#ifdef ONLY_ONE_OBJECT
 							draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 						#else
-							draw_2_digits (OBJECTS_X, OBJECTS_Y, player.objs);
+							draw_2_digits (OBJECTS_X, OBJECTS_Y, 
+								#ifdef REVERSE_OBJECT_COUNT
+									PLAYER_NUM_OBJETOS - player.objs
+								#else
+									player.objs
+								#endif
+							);
 						#endif
 					#endif
 					objs_old = player.objs;
@@ -489,7 +495,45 @@ void main (void) {
 			// Animated tiles
 
 			#ifdef ENABLE_ANIMATED_TILES
-				// Pick one at random and change it.
+				#asm
+						// Pick one at random and change it.
+						// MAX_ANIMATED_TILES must be a power of 2
+						call _rand
+						ld  a, l
+						and MAX_ANIMATED_TILES-1
+						ld  e, a
+						ld  d, 0
+						ld  hl, ANIMATED_BASE
+						add hl, de 
+						ld  a, (hl)	// YYYYXXXX
+						cp  0xff
+						jr  z, animated_tiles_done
+						ld  b, a
+
+						and 0x0f 	// 0000XXXX
+						ld  (__x), a
+						ld  c, a
+						
+						ld  a, b
+						srl a
+						srl a
+						srl a
+						srl a 		// 0000YYYY
+						ld  (__y), a
+
+						call qtile_do
+						ld  a, l 	// HL 
+						xor 0x10 	// Flip bit 4
+						ld  (__t), a
+						
+						ld  de, _comportamiento_tiles
+						add hl, de
+						ld  a, (hl)
+						ld  (__n), a
+
+						call set_map_tile_do
+					.animated_tiles_done
+				#endasm
 			#endif
 			
 			// Limit frame rate

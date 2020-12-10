@@ -19,7 +19,7 @@
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			25		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS			(hostages [level])	// Objects to get to finish game
 #define PLAYER_LIFE 				10		// Max and starting life gauge.
 #define PLAYER_REFILL				1		// Life recharge
 
@@ -252,6 +252,7 @@
 #define OBJECTS_Y					23		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
+#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
 #define KEYS_X						22		//
 #define KEYS_Y						23		// Keys counter character coordinates
@@ -299,6 +300,11 @@
 #define TWO_SETS_REAL 						// Tiles have their real value in map_buff
 #define TWO_SETS_CONDITION	((map_behaviours [n_pant] & 1) ? 32 : 0)	// Must return 32 if second tileset is active, 0 otherwise.
 //#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
+
+// Stupid animated tiles
+#define ENABLE_ANIMATED_TILES 				// Enables them
+#define ANIMATED_TILE 				11 		// Which tile. Alternates with N + 16
+#define MAX_ANIMATED_TILES 			16 		// Must be a power of two
 
 // ============================================================================
 // IV. Player movement configuration
@@ -357,7 +363,7 @@
 // 64 = Quicksands
 
 unsigned char comportamiento_tiles [] = {
-	2, 8, 8, 8, 8, 0, 0, 0, 4, 6, 2, 0, 0, 8, 8, 8,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 8,
+	2, 8, 8, 8, 8, 0, 0, 0, 4, 6, 2, 1, 0, 8, 8, 8,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 8,
 	0, 0, 0, 0, 4, 4, 4, 4, 0, 4, 0, 0, 0, 8, 8, 2,
 };

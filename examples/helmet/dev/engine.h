@@ -3071,7 +3071,18 @@ void init_player (void) {
 					jr  nz, _animated_tiles_add_done
 
 					ld  hl, (_animated_ptr)
-					ld  a, (_rdi)
+					
+					// Encode Y, X in nibbles
+					ld  a, (_rdx)
+					srl a 				
+					ld  b, a 			// b = X / 2 = 0000XXXX
+					ld  a, (_rdy)
+					;and 0xfe            // xxxYYYY0
+					sla a
+					sla a
+					sla a 				// YYYY0000
+					or  b 				// YYYYXXXX
+
 					ld  (hl), a
 					inc hl
 					ld  (_animated_ptr), hl
@@ -3144,6 +3155,11 @@ void draw_scr_background (void) {
 		#asm
 				ld  hl, ANIMATED_BASE
 				ld  (_animated_ptr), hl
+				ld  de, ANIMATED_BASE + 1
+				ld  bc, MAX_ANIMATED_TILES - 1
+				ld  a, 0xff
+				ld  (hl), a
+				ldir
 		#endasm
 	#endif
 
