@@ -485,8 +485,15 @@ void main (void) {
 			#ifdef ENABLE_CODE_HOOKS
 				hook_mainloop ();
 			#endif	
+
+			// Animated tiles
+
+			#ifdef ENABLE_ANIMATED_TILES
+				// Pick one at random and change it.
+			#endif
 			
 			// Limit frame rate
+			
 			#ifdef MIN_FAPS_PER_FRAME
 				while (isrc < MIN_FAPS_PER_FRAME) {
 					#asm

@@ -3065,6 +3065,20 @@ void init_player (void) {
 		*/
 
 		#asm
+			#ifdef ENABLE_ANIMATED_TILES
+					ld  a, (__n)
+					cp  ANIMATED_TILE
+					jr  nz, _animated_tiles_add_done
+
+					ld  hl, (_animated_ptr)
+					ld  a, (_rdi)
+					ld  (hl), a
+					inc hl
+					ld  (_animated_ptr), hl
+
+				._animated_tiles_add_done
+			#endif
+
 				ld  bc, (__n)
 				ld  b, 0
 				ld  hl, _comportamiento_tiles
@@ -3126,6 +3140,13 @@ void init_player (void) {
 #endif
 
 void draw_scr_background (void) {
+	#ifdef ENABLE_ANIMATED_TILES
+		#asm
+				ld  hl, ANIMATED_BASE
+				ld  (_animated_ptr), hl
+		#endasm
+	#endif
+
 	rdx = 0; rdy = 0;
 	
 	#ifdef UNPACKED_MAP
@@ -3479,6 +3500,15 @@ void draw_scr_background (void) {
 			.draw_scr_bg_loop_end
 		#endasm
 	#endif	
+
+	#ifdef ENABLE_ANIMATED_TILES
+		#asm
+			// Mark end of list
+				ld  hl, (_animated_ptr)
+				ld  a, 0xff
+				ld  (hl), a
+		#endasm
+	#endif
 
 	#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
 	#else
