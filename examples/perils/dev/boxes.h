@@ -53,7 +53,7 @@
 				ld  hl, (_x1)
 				ld  h, 0
 				push hl
-			#ifdef PUSH_AND_PULL_PILES
+			#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 				ld  hl, (_y0)
 			#else
 				ld  hl, (_y1)
@@ -71,7 +71,7 @@
 				pop bc
 				pop bc
 
-			#ifdef PUSH_AND_PULL_PILES
+			#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 				// Gotten to this point, we know they can
 				// be moved, so...
 					ld  hl, _y0
@@ -90,14 +90,14 @@
 	}
 
 	unsigned char can_move_box (void) {
-		#ifdef PUSH_AND_PULL_PILES
+		#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 			if (attr (x1, y0 + 1) < 4) return 0;
 			while (1)
 		#endif
 		{
 			#ifdef ENEMIES_BLOCK_BOXES	
 				boxx = x1 << 4; 
-				#ifdef PUSH_AND_PULL_PILES
+				#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 					boyy = y0 << 4;
 				#else
 					boyy = y1 << 4;
@@ -112,7 +112,7 @@
 				}
 			#endif
 
-			#ifdef PUSH_AND_PULL_PILES
+			#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 				if (attr (x1, y0) & 0xd)
 			#else
 				if (qtile (x0, y0) != 14 || (attr (x1, y1) & 0xd))
@@ -126,7 +126,7 @@
 				#endif
 			#endif
 			
-			#ifdef PUSH_AND_PULL_PILES
+			#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 				y0 --;
 				if (qtile (x0, y0) != 14) return 1;
 			#else

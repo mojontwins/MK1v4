@@ -194,7 +194,6 @@
 
 //#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
 
-
 // Scripting
 // ---------
 

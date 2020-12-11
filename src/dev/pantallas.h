@@ -41,7 +41,7 @@ void unpack (void) {
 			ld (hl), a
 			ldir
 			ret
-		#endasm
+	#endasm
 }
 
 void title_screen (void) {

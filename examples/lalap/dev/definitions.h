@@ -296,6 +296,10 @@ unsigned char *gp_gen, *gp_gen_org, *gp_gen_alt;
 unsigned char t_alt;
 unsigned char prxx, pryy;
 
+#ifdef ENABLE_ANIMATED_TILES
+	unsigned char *animated_ptr;
+#endif
+
 unsigned char bitmask [] = {
 	1, 2, 4, 8, 16, 32, 64, 128
 };

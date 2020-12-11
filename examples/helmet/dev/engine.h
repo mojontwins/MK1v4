@@ -3517,15 +3517,6 @@ void draw_scr_background (void) {
 		#endasm
 	#endif	
 
-	#ifdef ENABLE_ANIMATED_TILES
-		#asm
-			// Mark end of list
-				ld  hl, (_animated_ptr)
-				ld  a, 0xff
-				ld  (hl), a
-		#endasm
-	#endif
-
 	#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
 	#else
 		// Is there an object in this screen?

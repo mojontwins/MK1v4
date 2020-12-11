@@ -5,8 +5,8 @@
 // I. General configuration
 // ============================================================================
 
-//#define MODE_128K_DUAL				// Uses AY Routines in RAM1 if on 128K mode.
-//#define MIN_FAPS_PER_FRAME	2		// Limits the max # of fps to 50/N
+//#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
+//#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
@@ -251,6 +251,7 @@
 //#define OBJECTS_Y					0		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
+//#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
 #define KEYS_X						19		//
 #define KEYS_Y						22		// Keys counter character coordinates
@@ -298,6 +299,11 @@
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
 //#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
+
+// Stupid animated tiles
+//#define ENABLE_ANIMATED_TILES 			// Enables them
+//#define ANIMATED_TILE 			11 		// Which tile. Alternates with N + 16
+//#define MAX_ANIMATED_TILES 		16 		// Must be a power of two
 
 // ============================================================================
 // IV. Player movement configuration
