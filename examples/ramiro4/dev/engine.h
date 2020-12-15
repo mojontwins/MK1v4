@@ -3794,7 +3794,9 @@ void draw_scr (void) {
 				if ((rdi & 8) || bullets [gpit].x > 240) {
 					bullets [gpit].estado = 0;
 				}
-				if (rdi & 32) add_to_breakables ();
+				#ifdef ENABLE_BREAKABLE
+					if (rdi & 32) add_to_breakables ();
+				#endif
 			}	
 		#endif
 	}

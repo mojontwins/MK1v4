@@ -267,6 +267,12 @@ WORKING!
 
 [ ] Validar Zombie Calavera Prologue ¿y expandir con el full map de NES?
 
+* [ ] Reimplementar NO_MASKS -> parece que sigue estando ahí!
+
+* [ ] Reimplementar (o repensar) `PLAYER_ALT_ANIMATION` para hacer 1 2 3 1 2 3 ... ¿Meter hook?
+
+* [ ] Reimplementar `MAP_BOTTOM_KILLS` (o meter un custom).
+
 [ ] Validar el Hobbit
 
 [ ] Validar Trabajo Basura
