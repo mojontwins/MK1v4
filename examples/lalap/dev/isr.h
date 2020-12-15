@@ -10,6 +10,9 @@
 
 void ISR (void) {	
 	#ifdef MIN_FAPS_PER_FRAME
-		++ isrc;
+		#asm
+			ld  hl, _isrc
+			inc (hl)
+		#endasm
 	#endif
 }
