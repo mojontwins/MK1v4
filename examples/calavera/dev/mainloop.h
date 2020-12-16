@@ -372,7 +372,7 @@ void main (void) {
 			
 			#ifdef PLAYER_CAN_FIRE
 				for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
-					if (bullets [rdi].estado == 1) {
+					if (bullets [rdi].estado) {
 						sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, VIEWPORT_Y + (bullets [rdi].y >> 3), VIEWPORT_X + (bullets [rdi].x >> 3), bullets [rdi].x & 7, bullets [rdi].y & 7);
 					} else {
 						sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);

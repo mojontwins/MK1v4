@@ -83,13 +83,13 @@ void main (void) {
 	
 	// Sprite creation
 	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (sp_XOR_SPRITE, 3, sprite_2_a, 1);
+		sp_player = sp_CreateSpr (NO_MASKS, 3, sprite_2_a, 1);
 		sp_AddColSpr (sp_player, sprite_2_b);
 		sp_AddColSpr (sp_player, sprite_2_c);
 		player.current_frame = player.next_frame = sprite_2_a;
 		
 		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
-			sp_moviles [rdi] = sp_CreateSpr(sp_XOR_SPRITE, 3, sprite_9_a, 1);
+			sp_moviles [rdi] = sp_CreateSpr(NO_MASKS, 3, sprite_9_a, 1);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
 			en_an_current_frame [rdi] = sprite_9_a;
@@ -372,7 +372,7 @@ void main (void) {
 			
 			#ifdef PLAYER_CAN_FIRE
 				for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
-					if (bullets [rdi].estado == 1) {
+					if (bullets [rdi].estado) {
 						sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, VIEWPORT_Y + (bullets [rdi].y >> 3), VIEWPORT_X + (bullets [rdi].x >> 3), bullets [rdi].x & 7, bullets [rdi].y & 7);
 					} else {
 						sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);

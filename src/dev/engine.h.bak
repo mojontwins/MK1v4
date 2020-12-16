@@ -3946,11 +3946,7 @@ void mueve_bicharracos (void) {
 		#endif
 
 		#if defined ENEMIES_MAY_DIE
-			if ((_en_t & 16)
-				#ifdef RANDOM_RESPAWN
-					&& (en_an_fanty_activo [enit] == 0)
-				#endif
-			) goto enems_loop_continue;
+			if (_en_t & 16) goto enems_loop_continue;
 		#endif
 
 		if (_en_t != 0
@@ -4195,6 +4191,8 @@ void mueve_bicharracos (void) {
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
 						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+
+						rdd = 4;
 					} 
 				#endif
 
@@ -4776,17 +4774,10 @@ void mueve_bicharracos (void) {
 				}
 			#endif
 
-			#ifdef ENABLE_CUSTOM_ENEMS
-				extra_enems_checks ();
-			#endif
-		}
-
-		enems_loop_continue:
-
 			#ifdef RANDOM_RESPAWN
 				// Activate fanty
 
-			if ((_en_t & 16) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
+				if (_en_t > 15 && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
 					en_an_fanty_activo [enit] = 1;
 					if (player.y > 5120)
 						en_an_y [enit] = -1024;
@@ -4794,10 +4785,15 @@ void mueve_bicharracos (void) {
 						en_an_y [enit] = 10240;
 					en_an_x [enit] = (rand () % 240 - 8) << 6;
 					en_an_vx [enit] = en_an_vy [enit] = 0;
-				enems_en_an_calc (2);
 				}
 			#endif
 
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_checks ();
+			#endif
+		}
+
+		enems_loop_continue:
 		#asm		
 				// Those values are stored in this order:
 				// x, y, x1, y1, x2, y2, mx, my, t[, life]

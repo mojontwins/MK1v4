@@ -1,3 +1,4 @@
+' ts2bin v0.5 20201216
 ' Tileset to bin
 
 #include "file.bi"
@@ -11,6 +12,7 @@
 #define RGBA_A( c ) ( CUInt( c ) Shr 24         )
 
 Dim Shared As Integer defaultInk
+Dim Shared As Integer inverted
 
 Function speccyColour (colour As Unsigned Long) As uByte
 	Dim res as uByte
@@ -64,8 +66,15 @@ Sub getUDGIntoCharset (img As Any Ptr, x0 As integer, y0 As Integer, tileset () 
 			End If
 		End If
 	end if
-	' Darker colour = PAPER (c2)
-	If c2 > c1 Then Swap c1, c2
+
+	If inverted Then
+		' Darker colour = INK (c1)
+		If c1 > c2 Then Swap c1, c2
+	Else
+		' Darker colour = PAPER (c2)
+		If c2 > c1 Then Swap c1, c2
+	End If
+
 	' Build attribute
 	attr = b + 8 * c2 + c1
 	' Write to array
@@ -98,21 +107,25 @@ End Function
 Sub usage
 	Print "Usage: "
 	Print 
-	Print "$ chr2bin charset.png charset.bin n [defaultink|noattrs]"
+	Print "$ ts2bin font.png/nofont work.png|notiles|blank ts.bin defaultink"
 	Print
 	Print "where:"
-	Print "   * charset.png is a 256x64 file with max. 256 chars."
-	Print "   * charset.bin is the output, 2304/2048 bytes bin file."
-	Print "   * n how many chars, 1-256"
+	Print "   * font.png is a 256x16 file with 64 chars ascii 32-95"
+	Print "     (use 'nofont' if you don't want to include a font & gen. 192 tiles)"
+	Print "   * work.png is a 256x48 file with your 16x16 tiles"
+	Print "     (use 'notiles' if you don't want to include a tileset & gen. 64 tiles)"
+	Print "     (use 'blank' if you want to generate a 100% blank placeholder tileset)"
+	Print "   * ts.bin is the output, 2304 bytes bin file."
 	Print "   * defaultink: a number 0-7. Use this colour as 2nd colour if there's only"
-	Print "     one colour in a 8x8 cell"
-	Print "   * noattrs: just outputs the bitmaps. Omit and you get 256 chars nonetheless"
+	Print "     one colour in a 8x8 cell, but take this in account:"
+	Print "     - Conversion is performed so PAPER<INK."
+	Print "     - User inverted:N for inverted mode, default N. This makes PAPER>INK"
 End Sub
 
 ' VARS.
 
 Dim As Byte flag, is_packed
-Dim As integer i, j, x, y, xx, yy, f, fout, idx, byteswritten, totalsize, iniByte, finByte, noattrs, charCount
+Dim As integer i, j, x, y, xx, yy, f, fout, idx, byteswritten, totalsize, iniByte, finByte
 Dim As uByte d
 Dim As String levelBin
 Dim As Any Ptr img
@@ -120,20 +133,31 @@ Dim As uByte tileset (2303)
 
 ' DO
 
-Print "chr2bin v0.4 20200119 ~ ";
+Print "ts2bin v0.5 20201216 ~ ";
 
-If Len (Command (3)) = 0 Then usage: End
+If Len (Command (3)) = 0 Then
+	usage
+	End
+End If
 
-charCount = Val (Command (3)): If charCount = 0 Then usage: End
+inverted = 0
+If Len (Command (4)) = 0 Then 
+	defaultInk = -1 
+Else 
+	If Len (Command (4)) > 9 And Left (Command (4), 9) = "inverted:" Then
+		defaultInk = Val (Right (Command (4), 1))
+		Print "Inverted " & defaultink & " ~ ";
+		inverted = -1
+	Else
+		defaultInk = Val (Command (4))
+	End If
+End If
 
-If Command (4) = "" Then defaultInk = -1 Else defaultInk = Val (Command (4))
-noattrs = (Command (4) = "noattrs") 
-
-levelBin = Command (2)
+levelBin = Command (3)
 
 screenres 640, 480, 32, , -1
-
 Kill levelBin
+
 fout = FreeFile
 Open levelBin for Binary as #fout
 
@@ -144,20 +168,40 @@ Open levelBin for Binary as #fout
 ' Puts ("building tileset")
 
 
-printf ("Reading charset ~ ")
-img = png_load (Command (1))	
-idx = 0 
-For y = 0 To 7
-	For x = 0 To 31
-		if (idx < charCount) Then
+If command (1) <> "nofont" then
+	printf ("Reading font ~ ")
+	img = png_load (Command (1))	
+	idx = 0 
+	For y = 0 To 1
+		For x = 0 To 31
 			getUDGIntoCharset img, x * 8, y * 8, tileset (), idx
 			idx = idx + 1
-		End If
-	Next x
-Next y
-iniByte = 0
+		Next x
+	Next y
+	iniByte = 0
+Else
+	iniByte = 64*8
+End If
 
-If noattrs Then finByte = idx*8-1 Else finByte = 2303
+If command (2) <> "notiles" then
+	If command (2) = "blank" then
+		img = ImageCreate (256, 48, 0, 32)
+	Else
+		printf ("reading metatiles ~ ")
+		img = png_load (Command (2))	
+	End If
+	x = 0: y = 0: idx = 64
+	For i = 0 to 47
+		getUDGIntoCharset img, x, y, tileset (), idx: idx = idx + 1
+		getUDGIntoCharset img, x + 8, y, tileset (), idx: idx = idx + 1
+		getUDGIntoCharset img, x, y + 8, tileset (), idx: idx = idx + 1
+		getUDGIntoCharset img, x + 8, y + 8, tileset (), idx: idx = idx + 1
+		x = x + 16: If x = 256 Then x = 0: y = y + 16		
+	Next i	
+	finByte = 2303
+Else 
+	finByte = 64*8-1
+End If
 
 For i = iniByte To finByte
 	d = tileset (i)
