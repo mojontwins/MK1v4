@@ -294,7 +294,7 @@
 //#define ROW_MAP 							// Do not check vertical screen flicks
 //#define NO_ALT_BG							// No alternative tile 19 for bg = 0
 //#define NO_MAX_ENEMS						// Less than 3 enems in some screens
-//#define PLAYER_ALTERNATE_ANIMATION		// If defined, animation is 1,2,3,1,2,3... 
+#define PLAYER_ALTERNATE_ANIMATION			// If defined, animation is 1,2,3,1,2,3... 
 //#define TWO_SETS							// If defined, two sets of tiles. Second set is activated if
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.

@@ -2993,12 +2993,21 @@ void move (void) {
 					#else
 						player.vx == 0
 					#endif
-				) {
-					rdd = 1;
-				} else {
-					rdd = ((gpx + 4) >> 3) & 3;
-					if (rdd == 3) rdd = 1;
-				}
+				)
+				#ifdef PLAYER_ALTERNATE_ANIMATION
+					{
+						rdd = 0;
+					} else {
+						rdd = ((gpx + 4) >> 3) % 3;
+					}
+				#else 
+					{
+						rdd = 1;
+					} else {
+						rdd = ((gpx + 4) >> 3) & 3;
+						if (rdd == 3) rdd = 1;
+					}
+				#endif
 			}
 		}
 
