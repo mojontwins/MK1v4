@@ -359,7 +359,15 @@ void cortina (void) {
 	void init_bullets (void) {
 		// Initialize bullets
 		
-		for (gpit = 0; gpit < MAX_BULLETS; gpit ++)	bullets [gpit].estado = 0;
+		//for (gpit = 0; gpit < MAX_BULLETS; gpit ++)	bullets_estado [gpit] = 0;
+		#asm
+				ld  hl, _bullets_estado
+				ld  de, _bullets_estado + 1
+				ld  bc, MAX_BULLETS - 1
+				xor a
+				ld  (hl), a
+				ldir
+		#endasm
 	}
 #endif
 
@@ -399,18 +407,18 @@ void cortina (void) {
 	void fire_bullet (void) {
 		
 		// Search a free bullet slot...
-		
+		/*
 		for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-			if (bullets [gpit].estado == 0) {
-				bullets [gpit].estado = 1;
+			if (bullets_estado [gpit] == 0) {
+				bullets_estado [gpit] = 1;
 				if (player.facing) {
-					bullets [gpit].x = (player.x >> 6) - 4;
-					bullets [gpit].mx = -PLAYER_BULLET_SPEED;
+					bullets_x [gpit] = (player.x >> 6) - 4;
+					bullets_mx [gpit] = -PLAYER_BULLET_SPEED;
 				} else {
-					bullets [gpit].x = (player.x >> 6) + 12;
-					bullets [gpit].mx = PLAYER_BULLET_SPEED;
+					bullets_x [gpit] = (player.x >> 6) + 12;
+					bullets_mx [gpit] = PLAYER_BULLET_SPEED;
 				}
-				bullets [gpit].y = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
+				bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
 				play_sfx (9);
 				#ifdef FIRING_DRAINS_LIFE
 					player.life -= FIRING_DRAIN_AMOUNT;
@@ -418,6 +426,66 @@ void cortina (void) {
 				break;	
 			}	
 		}	
+		*/
+		#asm
+				ld  bc, 0
+			.fire_bullet_search_loop
+				ld  hl, _bullets_estado
+				add hl, bc
+				ld  a, (hl)
+				or  a
+				jr  z, fire_bullet_found
+				inc c
+				ld  a, c
+				cp  MAX_BULLETS
+				jr  nz, fire_bullet_search_loop
+				ret
+
+			.fire_bullet_found
+				inc a
+				ld  (hl), a 			// bullets_estado [gpit] = 1;
+
+				ld  a, (_player + 22)	// player.facing
+				or  a
+				ld  a, (_gpx)
+				jr  z, fire_bullet_right
+
+			.fire_bullet_left
+				sub 4
+				ld  hl, _bullets_x
+				add hl, bc
+				ld  (hl), a 			// bullets_x [gpit] = (player.x >> 6) - 4;
+
+				ld  a, -PLAYER_BULLET_SPEED
+				ld  hl, _bullets_mx
+				add hl, bc
+				ld  (hl), a 			// bullets_mx [gpit] = -PLAYER_BULLET_SPEED;
+
+				jr  fire_bullet_facing_done
+
+			.fire_bullet_right
+				add 12
+				ld  hl, _bullets_x
+				add hl, bc
+				ld  (hl), a 			// bullets_x [gpit] = (player.x >> 6) + 12;
+
+				ld  a, PLAYER_BULLET_SPEED
+				ld  hl, _bullets_mx
+				add hl, bc
+				ld  (hl), a 			// bullets_mx [gpit] = PLAYER_BULLET_SPEED;
+
+			.fire_bullet_facing_done
+				ld  a, (_gpy)
+				add PLAYER_BULLET_Y_OFFSET
+				ld  hl, _bullets_y
+				add hl, bc
+				ld  (hl), a 			// bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;				
+		#endasm
+
+		play_sfx (9);
+		#ifdef FIRING_DRAINS_LIFE
+			player.life -= FIRING_DRAIN_AMOUNT;
+		#endif		
 	}
 #endif
 
@@ -3787,12 +3855,12 @@ void draw_scr (void) {
 			// TODO
 		#else	
 			for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-				bullets [gpit].x += bullets [gpit].mx;
-				_x = bullets [gpit].x >> 4;
-				_y = bullets [gpit].y >> 4; 
+				bullets_x [gpit] += bullets_mx [gpit];
+				_x = bullets_x [gpit] >> 4;
+				_y = bullets_y [gpit] >> 4; 
 				rdi = attr (_x, _y);
-				if ((rdi & 8) || bullets [gpit].x > 240) {
-					bullets [gpit].estado = 0;
+				if ((rdi & 8) || bullets_x [gpit] > 240) {
+					bullets_estado [gpit] = 0;
 				}
 				#ifdef ENABLE_BREAKABLE
 					if (rdi & 32) add_to_breakables ();
@@ -4680,27 +4748,71 @@ void mueve_bicharracos (void) {
 					if (_en_t < 16)
 				#endif
 				{
-					for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {		
-						if (bullets [en_j].estado == 1) {
-							if (bullets [en_j].y >= en_ccy - 4 && bullets [en_j].y <= en_ccy + 12 && bullets [en_j].x >= en_ccx - 4 && bullets [en_j].x <= en_ccx + 12) {
-								#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
-									#ifdef RANDOM_RESPAWN	
-										if (en_an_fanty_activo [enit]) 
-									#else
-										if (_en_t == 6)
-									#endif
-									en_an_vx [enit] += (bullets [enit].mx > 0 ? 128 : -128);
-								#endif
-								en_an_next_frame [enit] = sprite_17_a;
-								en_an_morido [enit] = 1;
-								bullets [en_j].estado = 0;
-								if (_en_t != 4)
-									_en_life --;
-								if (_en_life == 0) {
-									enems_kill ();
-								}
-							}
-						}
+					for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
+						#asm
+								ld  bc, (_en_j)
+								ld  b, 0
+
+								ld  hl, _bullets_estado
+								add hl, bc
+								ld  a, (hl)
+								or  a
+								jp  z, enems_coll_bullets_continue
+
+							// Bullet is active. Collide?
+							// if (bullets_y [en_j] >= en_ccy - 4 
+
+								ld  a, (_en_ccy)
+								sub 4
+								ld  d, a
+								ld  hl, _bullets_y
+								add hl, bc
+								ld  a, (hl)
+								cp  d 
+								jp  c, enems_coll_bullets_continue
+
+							// && bullets_y [en_j] <= en_ccy + 12 -> en_ccy + 12 >= bullets_y [en_j]
+								ld  d, a
+								ld  a, (_en_ccy)
+								add 12
+								cp  d
+								jp  c, enems_coll_bullets_continue
+
+							// && bullets_x [en_j] >= en_ccx - 4 
+								ld  a, (_en_ccx)
+								sub 4
+								ld  d, a 
+								ld  hl, _bullets_x
+								add hl, bc 
+								ld  a, (hl) 
+								cp  d 
+								jp  c, enems_coll_bullets_continue
+
+							// && bullets_x [en_j] <= en_ccx + 12) { -> en_ccx + 12 >= bullets_x [en_j]
+								ld  d, a
+								ld  a, (_en_ccx)
+								add 12
+								cp  d
+								jp  c, enems_coll_bullets_continue
+						#endasm
+
+						#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
+							#ifdef RANDOM_RESPAWN	
+								if (en_an_fanty_activo [enit]) 
+							#else
+								if (_en_t == 6)
+							#endif
+							en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
+						#endif
+						en_an_next_frame [enit] = sprite_17_a;
+						en_an_morido [enit] = 1;
+						bullets_estado [en_j] = 0;
+						if (_en_t != 4)	_en_life --;
+						if (_en_life == 0) enems_kill ();
+						
+						#asm
+							.enems_coll_bullets_continue
+						#endasm
 					}
 				}
 			#endif
