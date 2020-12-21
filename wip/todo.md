@@ -265,19 +265,19 @@ WORKING!
 
 [x] Mapped tilesets como en MK1_NES v0.1r, donde el tileset tipo "packed" se compone de 16 tiles del tileset global segun un array apuntado por `*tileset_mappings` (que el programador debe ocuparse de mantener en sus *customs*).
 
-[ ] Validar Zombie Calavera Prologue ¿y expandir con el full map de NES?
+[X] Validar Zombie Calavera Prologue ¿y expandir con el full map de NES?
 
-* [ ] Reimplementar NO_MASKS -> parece que sigue estando ahí!
+* [X] Reimplementar NO_MASKS -> parece que sigue estando ahí!
 
-* [ ] Reimplementar (o repensar) `PLAYER_ALT_ANIMATION` para hacer 1 2 3 1 2 3 ... ¿Meter hook?
+* [X] Reimplementar (o repensar) `PLAYER_ALT_ANIMATION` para hacer 1 2 3 1 2 3 ... ¿Meter hook?
 
-* [ ] Reimplementar `MAP_BOTTOM_KILLS` (o meter un custom).
+* [X] Reimplementar `MAP_BOTTOM_KILLS` (o meter un custom).
 
 [ ] Validar el Hobbit
 
 [ ] Validar Trabajo Basura
 
-[ ] Simple animated tiles, se tiene una colección y se anima uno al azar. Sólo tengo que almacenar los XYs en un array que se vaya llenando a medida que los voy pintando. Como lo voy a enganchar con `draw_and_advance` no se podrá usar ni en `TWO_SETS` ni en `UNPACKED_MAP`.
+[X] Simple animated tiles, se tiene una colección y se anima uno al azar. Sólo tengo que almacenar los XYs en un array que se vaya llenando a medida que los voy pintando. Como lo voy a enganchar con `draw_and_advance` no se podrá usar ni en `TWO_SETS` ni en `UNPACKED_MAP`.
 
 Cambié
 * `churromain.c`
@@ -285,3 +285,6 @@ Cambié
 * `mainloop.h`
 * `definitions.h`
 * `config.h`
+
+[ ] ¿Es posible detectar el hitter antes que nada e invalidar la colisión normal?
+

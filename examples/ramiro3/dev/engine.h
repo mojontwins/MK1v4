@@ -4615,7 +4615,7 @@ void mueve_bicharracos (void) {
 				en_ccx = _en_x;
 				en_ccy = _en_y;
 			}
-				
+	
 			// Moving platforms engine:
 
 			#ifndef PLAYER_MOGGY_STYLE	
@@ -4650,252 +4650,259 @@ void mueve_bicharracos (void) {
 				
 				} else
 			#endif			
-			
-			// Collision with enemy
+			{
 
-			if (
-				0 == en_tocado && collide_enem () && 
-				(_en_t < 16 
-					#ifdef RANDOM_RESPAWN
-						|| en_an_fanty_activo [enit] == 1
-					#endif
-				) 
-			) {
-				#ifdef PLAYER_KILLS_ENEMIES
-					if (
-						#ifdef SHORT_PLAYER
-							gpy < en_ccy
-						#else
-							gpy <= en_ccy - 8 
+				// Swording
+
+				#ifdef ENABLE_SWORD
+					if (s_on && s_frame > 2 && s_frame < 6) {
+						//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
+						#asm
+								// s_hit_x >= en_ccx
+								ld  a, (_en_ccx)
+								ld  c, a
+								ld  a, (_s_hit_x) 
+								cp  c
+								jp  c, _enems_hit_sword_done
+
+								// s_hit_x <= en_ccx + 15 -> en_ccx + 15 >= s_hit_x
+								ld  a, (_s_hit_x)
+								ld  c, a
+								ld  a, (_en_ccx)
+								add 15
+								cp  c
+								jp  c, _enems_hit_sword_done
+
+								// s_hit_y >= en_ccy 
+								ld  a, (_en_ccy)
+								ld  c, a
+								ld  a, (_s_hit_y)
+								cp  c 
+								jp  c, _enems_hit_sword_done
+
+								// s_hit_y <= en_ccy + 15 -> en_ccy + 15 >= s_hit_y
+								ld  a, (_s_hit_y)
+								ld  c, a
+								ld  a, (_en_ccy)
+								add 15
+								cp  c
+								jp  c, _enems_hit_sword_done
+						#endasm
+						{	
+							#ifdef PLAYER_MIN_KILLABLE
+								if (_en_t >= PLAYER_MIN_KILLABLE)
+							#endif
+							{
+								// Hit!
+								play_sfx (2);
+								s_on = 0;
+
+								#ifdef SWORD_PARALYZES
+									en_an_state [enit] = ENEM_PARALYZED;
+									en_an_count [enit] = SWORD_PARALYZES;
+								#endif
+
+								// Kill?
+								#if SWORD_LINEAL_DAMAGE > 0
+									if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+								#endif
+
+								#if SWORD_FLYING_DAMAGE > 0
+									if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
+								#endif
+
+								#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
+									if (_en_life == 0) {
+										en_an_next_frame [enit] = sprite_17_a;
+										enems_kill ();
+									}
+								#endif
+
+								goto enems_loop_continue;
+							}
+						}
+						#asm
+							._enems_hit_sword_done
+						#endasm
+					}
+				#endif
+				
+
+				// Collision with enemy
+
+				if (
+					0 == en_tocado && collide_enem () && 
+					(_en_t < 16 
+						#ifdef RANDOM_RESPAWN
+							|| en_an_fanty_activo [enit] == 1
 						#endif
-						&& player.vy >= 0 
-						#ifdef PLAYER_MIN_KILLABLE
-							&& _en_t >= PLAYER_MIN_KILLABLE
+					) 
+				) {
+					#ifdef PLAYER_KILLS_ENEMIES
+						if (
+							#ifdef SHORT_PLAYER
+								gpy < en_ccy
+							#else
+								gpy <= en_ccy - 8 
+							#endif
+							&& player.vy >= 0 
+							#ifdef PLAYER_MIN_KILLABLE
+								&& _en_t >= PLAYER_MIN_KILLABLE
+							#endif
+						) {
+							// Step on enemy and kill it.
+							en_an_next_frame [enit] = sprite_17_a;
+							player.vy = -PLAYER_MAX_VY_SALTANDO;
+							enems_kill ();
+						} else	
+					#endif
+					if (
+						player.estado == EST_NORMAL
+						#ifdef PARALYZED_DONT_KILL
+							&& en_an_state [enit] != ENEM_PARALYZED
 						#endif
 					) {
-						// Step on enemy and kill it.
-						en_an_next_frame [enit] = sprite_17_a;
-						player.vy = -PLAYER_MAX_VY_SALTANDO;
-						enems_kill ();
-					} else	
-				#endif
-				if (
-					player.estado == EST_NORMAL
-					#ifdef PARALYZED_DONT_KILL
-						&& en_an_state [enit] != ENEM_PARALYZED
-					#endif
-				) {
-					en_tocado = 1; player.is_dead = 1; play_sfx (2);
-					#ifdef ENABLE_CODE_HOOKS
-						enemy_killer = enit;
-					#endif
-					
-					// We decide which kind of life drain we do:
-					#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-						if (_en_t > 4) {
-							player.life -= FLYING_ENEMY_HIT;
-						} else
-					#endif
-					{
-						player.life -= LINEAR_ENEMY_HIT;
-					}
-					
-					#ifdef PLAYER_BOUNCES
-						#ifndef PLAYER_MOGGY_STYLE	
-							#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-								if (0 == en_an_fanty_activo [enit]) {
-									// Bouncing!
-									if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
-									if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
-									if (_en_my > 0) player.vy = PLAYER_MAX_VX;
-									if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
-								} else {
-									player.vx = en_an_vx [enit] + en_an_vx [enit];
-									player.vy = en_an_vy [enit] + en_an_vy [enit];
-								}
-							#else
-								// Bouncing!
-								if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-								if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-								if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-								if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-							#endif
-						#else
-							// Bouncing:
-							
-							// x
-							if (_en_mx) {
-								if (gpx < en_ccx) player.vx = - (abs (_en_mx << 1) << 7);
-								else player.vx = abs (_en_mx + _en_mx) << 7;
-							}
-							
-							// y
-							if (_en_my) {
-								if (gpy < en_ccy) player.vy = - (abs (_en_my << 1) << 7);
-								else player.vy = abs (_en_my + _en_my) << 7;
-							}
+						en_tocado = 1; player.is_dead = 1; play_sfx (2);
+						#ifdef ENABLE_CODE_HOOKS
+							enemy_killer = enit;
 						#endif
-					#endif
-
-					#ifdef ENABLE_FRIGOABABOL
-						player.estado = EST_FRIGOABABOL;
-						player.ct_estado = FRIGO_MAX_FRAMES;
-					#elif defined PLAYER_FLICKERS
-						// Flickers. People seem to like this more than the bouncing behaviour.
-						player_flicker ();
-					#endif				
-				}
-			}
-			
-			// Enemy update
-				
-			#ifdef PLAYER_CAN_FIRE
-				// Collision with bullets
-				#ifdef RANDOM_RESPAWN
-					if (_en_t < 16 || en_an_fanty_activo [enit] == 1)
-				#else
-					if (_en_t < 16)
-				#endif
-				{
-					for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
-						#asm
-								ld  bc, (_en_j)
-								ld  b, 0
-
-								ld  hl, _bullets_estado
-								add hl, bc
-								ld  a, (hl)
-								or  a
-								jp  z, enems_coll_bullets_continue
-
-							// Bullet is active. Collide?
-							// if (bullets_y [en_j] >= en_ccy - 4 
-
-								ld  a, (_en_ccy)
-								sub 4
-								ld  d, a
-								ld  hl, _bullets_y
-								add hl, bc
-								ld  a, (hl)
-								cp  d 
-								jp  c, enems_coll_bullets_continue
-
-							// && bullets_y [en_j] <= en_ccy + 12 -> en_ccy + 12 >= bullets_y [en_j]
-								ld  d, a
-								ld  a, (_en_ccy)
-								add 12
-								cp  d
-								jp  c, enems_coll_bullets_continue
-
-							// && bullets_x [en_j] >= en_ccx - 4 
-								ld  a, (_en_ccx)
-								sub 4
-								ld  d, a 
-								ld  hl, _bullets_x
-								add hl, bc 
-								ld  a, (hl) 
-								cp  d 
-								jp  c, enems_coll_bullets_continue
-
-							// && bullets_x [en_j] <= en_ccx + 12) { -> en_ccx + 12 >= bullets_x [en_j]
-								ld  d, a
-								ld  a, (_en_ccx)
-								add 12
-								cp  d
-								jp  c, enems_coll_bullets_continue
-						#endasm
-
-						#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
-							#ifdef RANDOM_RESPAWN	
-								if (en_an_fanty_activo [enit]) 
-							#else
-								if (_en_t == 6)
-							#endif
-							en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
-						#endif
-						en_an_next_frame [enit] = sprite_17_a;
-						en_an_morido [enit] = 1;
-						bullets_estado [en_j] = 0;
-						if (_en_t != 4)	_en_life --;
-						if (_en_life == 0) enems_kill ();
 						
-						#asm
-							.enems_coll_bullets_continue
-						#endasm
-					}
-				}
-			#endif
-
-			#ifdef ENABLE_SWORD
-				if (s_on && s_frame > 2 && s_frame < 6) {
-					//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
-					#asm
-							// s_hit_x >= en_ccx
-							ld  a, (_en_ccx)
-							ld  c, a
-							ld  a, (_s_hit_x) 
-							cp  c
-							jp  c, _enems_hit_sword_done
-
-							// s_hit_x <= en_ccx + 15 -> en_ccx + 15 >= s_hit_x
-							ld  a, (_s_hit_x)
-							ld  c, a
-							ld  a, (_en_ccx)
-							add 15
-							cp  c
-							jp  c, _enems_hit_sword_done
-
-							// s_hit_y >= en_ccy 
-							ld  a, (_en_ccy)
-							ld  c, a
-							ld  a, (_s_hit_y)
-							cp  c 
-							jp  c, _enems_hit_sword_done
-
-							// s_hit_y <= en_ccy + 15 -> en_ccy + 15 >= s_hit_y
-							ld  a, (_s_hit_y)
-							ld  c, a
-							ld  a, (_en_ccy)
-							add 15
-							cp  c
-							jp  c, _enems_hit_sword_done
-					#endasm
-					{	
-						#ifdef PLAYER_MIN_KILLABLE
-							if (_en_t >= PLAYER_MIN_KILLABLE)
+						// We decide which kind of life drain we do:
+						#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
+							if (_en_t > 4) {
+								player.life -= FLYING_ENEMY_HIT;
+							} else
 						#endif
 						{
-							// Hit!
-							play_sfx (2);
-							s_on = 0;
-
-							#ifdef SWORD_PARALYZES
-								en_an_state [enit] = ENEM_PARALYZED;
-								en_an_count [enit] = SWORD_PARALYZES;
-							#endif
-
-							// Kill?
-							#if SWORD_LINEAL_DAMAGE > 0
-								if (_en_t < 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
-							#endif
-
-							#if SWORD_FLYING_DAMAGE > 0
-								if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-							#endif
-
-							#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-								if (_en_life == 0) {
-									en_an_next_frame [enit] = sprite_17_a;
-									enems_kill ();
+							player.life -= LINEAR_ENEMY_HIT;
+						}
+						
+						#ifdef PLAYER_BOUNCES
+							#ifndef PLAYER_MOGGY_STYLE	
+								#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
+									if (0 == en_an_fanty_activo [enit]) {
+										// Bouncing!
+										if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
+										if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
+										if (_en_my > 0) player.vy = PLAYER_MAX_VX;
+										if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
+									} else {
+										player.vx = en_an_vx [enit] + en_an_vx [enit];
+										player.vy = en_an_vy [enit] + en_an_vy [enit];
+									}
+								#else
+									// Bouncing!
+									if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+									if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+									if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+									if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+								#endif
+							#else
+								// Bouncing:
+								
+								// x
+								if (_en_mx) {
+									if (gpx < en_ccx) player.vx = - (abs (_en_mx << 1) << 7);
+									else player.vx = abs (_en_mx + _en_mx) << 7;
+								}
+								
+								// y
+								if (_en_my) {
+									if (gpy < en_ccy) player.vy = - (abs (_en_my << 1) << 7);
+									else player.vy = abs (_en_my + _en_my) << 7;
 								}
 							#endif
+						#endif
+
+						#ifdef ENABLE_FRIGOABABOL
+							player.estado = EST_FRIGOABABOL;
+							player.ct_estado = FRIGO_MAX_FRAMES;
+						#elif defined PLAYER_FLICKERS
+							// Flickers. People seem to like this more than the bouncing behaviour.
+							player_flicker ();
+						#endif				
+					}
+				}
+				
+				// Enemy update
+					
+				#ifdef PLAYER_CAN_FIRE
+					// Collision with bullets
+					#ifdef RANDOM_RESPAWN
+						if (_en_t < 16 || en_an_fanty_activo [enit] == 1)
+					#else
+						if (_en_t < 16)
+					#endif
+					{
+						for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
+							#asm
+									ld  bc, (_en_j)
+									ld  b, 0
+
+									ld  hl, _bullets_estado
+									add hl, bc
+									ld  a, (hl)
+									or  a
+									jp  z, enems_coll_bullets_continue
+
+								// Bullet is active. Collide?
+								// if (bullets_y [en_j] >= en_ccy - 4 
+
+									ld  a, (_en_ccy)
+									sub 4
+									ld  d, a
+									ld  hl, _bullets_y
+									add hl, bc
+									ld  a, (hl)
+									cp  d 
+									jp  c, enems_coll_bullets_continue
+
+								// && bullets_y [en_j] <= en_ccy + 12 -> en_ccy + 12 >= bullets_y [en_j]
+									ld  d, a
+									ld  a, (_en_ccy)
+									add 12
+									cp  d
+									jp  c, enems_coll_bullets_continue
+
+								// && bullets_x [en_j] >= en_ccx - 4 
+									ld  a, (_en_ccx)
+									sub 4
+									ld  d, a 
+									ld  hl, _bullets_x
+									add hl, bc 
+									ld  a, (hl) 
+									cp  d 
+									jp  c, enems_coll_bullets_continue
+
+								// && bullets_x [en_j] <= en_ccx + 12) { -> en_ccx + 12 >= bullets_x [en_j]
+									ld  d, a
+									ld  a, (_en_ccx)
+									add 12
+									cp  d
+									jp  c, enems_coll_bullets_continue
+							#endasm
+
+							#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
+								#ifdef RANDOM_RESPAWN	
+									if (en_an_fanty_activo [enit]) 
+								#else
+									if (_en_t == 6)
+								#endif
+								en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
+							#endif
+							en_an_next_frame [enit] = sprite_17_a;
+							en_an_morido [enit] = 1;
+							bullets_estado [en_j] = 0;
+							_en_life --;
+							if (_en_life == 0) enems_kill ();
+							
+							#asm
+								.enems_coll_bullets_continue
+							#endasm
 						}
 					}
-					#asm
-						._enems_hit_sword_done
-					#endasm
-				}
-			#endif
+				#endif
+			}
 
 			#ifdef ENABLE_CUSTOM_ENEMS
 				extra_enems_checks ();

@@ -2,8 +2,6 @@
 // Copyleft 2010-2014, 2020 by the Mojon Twins
 
 // Sprites.h
-// Generado por SprCnv de la Churrera
-// Copyleft 2010 The Mojon Twins
  
 extern unsigned char sprite_1_a []; 
 extern unsigned char sprite_1_b []; 
