@@ -1288,6 +1288,16 @@ La diferencia entre `TWO_SETS` y `TWO_SETS_REAL` es que la primera sólo introdu
 
 El soporte de tiles animados es muy rudimentario y se activa definiendo la macro `ENABLE_ANIMATED_TILES`. Se puede elegir un tile `ANIMATED_TILE` para ser el tile animado. Este tile puede aparecer hasta `MAX_ANIMATED_TILES` veces en pantalla (debe ser potencia de 2). Cada frame se selecciona uno de los tiles y se alterna entre `ANIMATED_TILE` y `ANIMATED_TILE + 16`.
 
+### Modo sin máscaras
+
+El motor se puede configurar para no usar máscaras y volcar los sprites con OR o XOR (esta última opción para los entusiastas de los sprites fantasmunos de AGD):
+
+```c
+	#define NO_MASKS 					sp_OR_SPRITE	// make it sp_XOR_SPRITE or sp_OR_SPRITE
+```
+
+
+
 ## Configuración del movimiento
 
 El movimiento del personaje se puede descomponer en su componente vertical, y su componente horizontal. Ambas componentes se comportan como Movimientos Rectilíneos Uniformemente Acelerados, es decir, que en ambos se maneja su posición, su velocidad, y su aceleración. El motor tiene una resolucioón de 64avos de píxel, por lo que, para calcular el valor en píxels, habrá que dividir los valores que aparecen en el motor por 64. Los valores funcionan por separado (vertical/horizontal) en los juegos de plataformas. En los juegos de vista cenital, los valores de la sección horizontal funcionan en ambos ejes. 
