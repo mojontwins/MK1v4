@@ -265,13 +265,13 @@ WORKING!
 
 [x] Mapped tilesets como en MK1_NES v0.1r, donde el tileset tipo "packed" se compone de 16 tiles del tileset global segun un array apuntado por `*tileset_mappings` (que el programador debe ocuparse de mantener en sus *customs*).
 
-[ ] Validar Zombie Calavera Prologue ¿y expandir con el full map de NES?
+[X] Validar Zombie Calavera Prologue ¿y expandir con el full map de NES?
 
-* [ ] Reimplementar NO_MASKS -> parece que sigue estando ahí!
+* [X] Reimplementar NO_MASKS -> parece que sigue estando ahí!
 
-* [ ] Reimplementar (o repensar) `PLAYER_ALT_ANIMATION` para hacer 1 2 3 1 2 3 ... ¿Meter hook?
+* [X] Reimplementar (o repensar) `PLAYER_ALT_ANIMATION` para hacer 1 2 3 1 2 3 ... ¿Meter hook?
 
-* [ ] Reimplementar `MAP_BOTTOM_KILLS` (o meter un custom).
+* [X] Reimplementar `MAP_BOTTOM_KILLS` (o meter un custom).
 
 [ ] Validar el Hobbit
 

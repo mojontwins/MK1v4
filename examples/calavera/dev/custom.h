@@ -17,6 +17,12 @@
 	}
 
 	void hook_mainloop (void) {
+		if (gpy == 144 && n_pant >= (MAP_W*(MAP_H-1))) {
+			player.life -= 10;
+			player.is_dead = 1;
+			player.vy = -PLAYER_MAX_VY_CAYENDO;
+			play_sfx (2);
+		}
 	}
 
 	void hook_entering (void) {		
