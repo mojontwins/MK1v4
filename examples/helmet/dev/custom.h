@@ -73,7 +73,7 @@ void todos_rescatados_check (void) {
 	void hook_init_game (void) {
 		new_level = 1;
 		level = 1;		
-		player.keys = 1;
+		//player.keys = 0;
 	}
 
 	void hook_init_mainloop (void) {
