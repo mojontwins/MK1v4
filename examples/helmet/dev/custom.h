@@ -113,6 +113,7 @@ void todos_rescatados_check (void) {
 			player.objs = 0; 
 			enemy_killer = 0xff;
 			on_pant = 0xff;
+			flags [PLATFORMS_ON_FLAG] = (level == 2) ? 0 : 1;
 		}
 	}
 

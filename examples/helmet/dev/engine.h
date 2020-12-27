@@ -4044,7 +4044,11 @@ void mueve_bicharracos (void) {
 			{
 
 				if (
-					_en_t <= 4
+					#ifdef PLATFORMS_ON_FLAG
+						(_en_t < 4 || (_en_t == 4 && flags [PLATFORMS_ON_FLAG]))
+					#else
+						_en_t <= 4
+					#endif
 					#ifdef RANDOM_RESPAWN
 						|| 0 == en_an_fanty_activo [enit]
 					#endif
