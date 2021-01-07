@@ -18,7 +18,7 @@ extern unsigned char ts_attr_1 [0];
 		BINARY "ts_attr_1c.bin"
 #endasm
 
-unsigned char scr_ini [] = { 5, 0, 50, 15 };
+unsigned char scr_ini [] = { 5, 40, 50, 15 };
 unsigned char ini_x [] = { 2, 2, 2, 2 };
 unsigned char ini_y [] = { 2, 2, 2, 2 };
 unsigned char *l_ts_attr [] = {
@@ -28,7 +28,7 @@ unsigned char *l_ts_attr [] = {
 unsigned char new_level;
 unsigned char level;
 
-unsigned char new_level_string [] = "LEVEL 00";
+unsigned char new_level_string [] = "LEVEL`00";
 
 
 #ifdef ENABLE_CODE_HOOKS
@@ -55,7 +55,7 @@ unsigned char new_level_string [] = "LEVEL 00";
 			sp_Invalidate (spritesClip, spritesClip);
 			new_level_string [7] = level + '1';
 			draw_text (12, 11, 71, new_level_string);
-			draw_text (11, 13, 71, "_ANDALE!");
+			draw_text (12, 13, 71, "_ANDALE!");
 			sp_UpdateNow ();
 			play_sfx (10);
 			espera_activa (150);
