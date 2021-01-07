@@ -23,6 +23,9 @@
 			player.vy = -PLAYER_MAX_VY_CAYENDO;
 			play_sfx (2);
 		}
+
+		if (player.objs == PLAYER_NUM_OBJETOS)
+			game_loop_flag = 1;
 	}
 
 	void hook_entering (void) {		

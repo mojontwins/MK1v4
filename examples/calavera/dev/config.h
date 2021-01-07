@@ -10,10 +10,10 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						5		//
-#define MAP_H						5		// Map dimmensions in screens
+#define MAP_W						10		//
+#define MAP_H						6		// Map dimmensions in screens
 #define TOTAL_SCREENS				25		// 
-#define SCR_INICIO					20		// Initial screen
+#define SCR_INICIO					40		// Initial screen
 #define PLAYER_INI_X				2		//
 #define PLAYER_INI_Y				2		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
@@ -290,7 +290,7 @@
 
 //#define USE_AUTO_SHADOWS					// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS				// Automatic shadows using specially defined tiles 32-47.
-#define UNPACKED_MAP						// Full, uncompressed maps. Shadows settings are ignored.
+//#define UNPACKED_MAP						// Full, uncompressed maps. Shadows settings are ignored.
 //#define COLUMN_MAP 						// Do not check horizontal screen flicks
 //#define ROW_MAP 							// Do not check vertical screen flicks
 //#define NO_ALT_BG							// No alternative tile 19 for bg = 0
@@ -300,6 +300,7 @@
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
 //#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
+#define RLE_MAP 					62 		// Use RLE compression (values 44, 54, 62; see docs)
 
 // Stupid animated tiles
 //#define ENABLE_ANIMATED_TILES 			// Enables them

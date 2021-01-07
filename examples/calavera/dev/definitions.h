@@ -277,6 +277,10 @@ unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char wall;
 
+#if defined RLE_MAP
+	unsigned char rdc, rdn;
+#endif
+
 #if defined TWO_SETS || defined TWO_SETS_REAL
 	unsigned char tileoffset;
 #endif

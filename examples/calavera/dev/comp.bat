@@ -3,7 +3,8 @@
 set game=calavera
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 5 5 15 10 15 > nul
+rem ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 10 6 15 10 15 > nul
+..\utils\rle62map_sp.exe in=..\map\mapa.MAP out=mapa.h size=10,6 tlock=99 scrsize=15,10 mk1h=mapa.h nodecos > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin inverted:0 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 16 nomask > nul
@@ -28,4 +29,4 @@ zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
 echo Output: %game%.tap
 
 del ..\gfx\*.scr > nul
-del *.bin >nul
+rem del *.bin >nul
