@@ -1,4 +1,4 @@
-' ts2bin v0.5 20201216
+' ts2bin v0.6.20210107
 ' Tileset to bin
 
 #include "file.bi"
@@ -104,10 +104,24 @@ Function getBitPattern (img As Any Ptr, x0 As Integer, y0 As Integer) as uByte
 	getBitPattern = res
 End Function
 
+Function inCommand (spec As String) As Integer
+	Dim As Integer res, i
+
+	i = 0: res = 0
+
+	Do
+		If Command (i) = "" Then Exit Do
+		If Command (i) = spec Then res = -1: Exit Do
+		i = i + 1
+	Loop
+
+	Return res
+End Function
+
 Sub usage
 	Print "Usage: "
 	Print 
-	Print "$ ts2bin font.png/nofont work.png|notiles|blank ts.bin defaultink"
+	Print "$ ts2bin font.png/nofont work.png|notiles|blank ts.bin defaultink [onlyattrs|noattrs]"
 	Print
 	Print "where:"
 	Print "   * font.png is a 256x16 file with 64 chars ascii 32-95"
@@ -120,6 +134,8 @@ Sub usage
 	Print "     one colour in a 8x8 cell, but take this in account:"
 	Print "     - Conversion is performed so PAPER<INK."
 	Print "     - User inverted:N for inverted mode, default N. This makes PAPER>INK"
+	Print "   * onlyattrs: if specified, only output attributes"
+	Print "   * noattrs: if specified, don't output attributes"
 End Sub
 
 ' VARS.
@@ -134,7 +150,7 @@ Dim As Integer switchToInverted
 
 ' DO
 
-Print "ts2bin v0.5 20201216 ~ ";
+Print "ts2bin v0.6.20210107 ~ ";
 
 If Len (Command (3)) = 0 Then
 	usage
@@ -205,6 +221,9 @@ If command (2) <> "notiles" then
 Else 
 	finByte = 64*8-1
 End If
+
+If inCommand ("noattrs") And finByte = 2303 Then finByte = 2047
+If inCommand ("onlyattrs") Then iniByte = 2048: finByte = 2303
 
 For i = iniByte To finByte
 	d = tileset (i)
