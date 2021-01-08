@@ -52,6 +52,18 @@ extern unsigned char sprite_15_c [];
 extern unsigned char sprite_16_a []; 
 extern unsigned char sprite_16_b []; 
 extern unsigned char sprite_16_c []; 
+extern unsigned char extra_sprite_17_a []; 
+extern unsigned char extra_sprite_17_b []; 
+extern unsigned char extra_sprite_17_c []; 
+extern unsigned char extra_sprite_18_a []; 
+extern unsigned char extra_sprite_18_b []; 
+extern unsigned char extra_sprite_18_c []; 
+extern unsigned char extra_sprite_19_a []; 
+extern unsigned char extra_sprite_19_b []; 
+extern unsigned char extra_sprite_19_c []; 
+extern unsigned char extra_sprite_20_a []; 
+extern unsigned char extra_sprite_20_b []; 
+extern unsigned char extra_sprite_20_c []; 
  
 #asm
         defb 0, 0
@@ -742,6 +754,182 @@ extern unsigned char sprite_16_c [];
     ._sprite_15_c
         defb 0
     ._sprite_16_c
+        defb 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Sprites #16 y 17
+; Primera columna
+    ._extra_sprite_17_a
+        defb 1
+    ._extra_sprite_18_a
+        defb 0
+        defb 1, 3
+        defb 1, 3
+        defb 0, 3
+        defb 1, 1
+        defb 3, 3
+        defb 3, 7
+        defb 3, 7
+        defb 3, 7
+        defb 3, 7
+        defb 3, 7
+        defb 15, 6
+        defb 15, 14
+        defb 9, 28
+        defb 1, 24
+        defb 1, 28
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Segunda columna
+    ._extra_sprite_17_b
+        defb 128
+    ._extra_sprite_18_b
+        defb 0
+        defb 192, 0
+        defb 192, 128
+        defb 192, 128
+        defb 128, 128
+        defb 255, 0
+        defb 227, 254
+        defb 192, 198
+        defb 192, 128
+        defb 192, 128
+        defb 224, 224
+        defb 224, 112
+        defb 192, 48
+        defb 128, 48
+        defb 128, 48
+        defb 192, 56
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; tercera columna
+    ._extra_sprite_17_c
+        defb 0
+    ._extra_sprite_18_c
+        defb 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Sprites #18 y 19
+; Primera columna
+    ._extra_sprite_19_a
+        defb 1
+    ._extra_sprite_20_a
+        defb 0
+        defb 3, 0
+        defb 3, 1
+        defb 3, 1
+        defb 1, 1
+        defb 255, 0
+        defb 199, 127
+        defb 3, 99
+        defb 3, 1
+        defb 3, 1
+        defb 7, 7
+        defb 7, 14
+        defb 3, 12
+        defb 1, 12
+        defb 1, 12
+        defb 3, 28
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Segunda columna
+    ._extra_sprite_19_b
+        defb 128
+    ._extra_sprite_20_b
+        defb 0
+        defb 128, 192
+        defb 128, 192
+        defb 0, 192
+        defb 128, 128
+        defb 192, 192
+        defb 192, 224
+        defb 192, 224
+        defb 192, 224
+        defb 192, 224
+        defb 192, 224
+        defb 240, 96
+        defb 240, 112
+        defb 144, 56
+        defb 128, 24
+        defb 128, 56
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; tercera columna
+    ._extra_sprite_19_c
+        defb 0
+    ._extra_sprite_20_c
         defb 0
         defb 0, 0
         defb 0, 0
