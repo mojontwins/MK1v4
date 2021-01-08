@@ -6,6 +6,10 @@ echo Making %game%
 rem ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 10 6 15 10 15 > nul
 ..\utils\rle62map_sp.exe in=..\map\mapa.MAP out=mapa.h size=10,6 tlock=99 scrsize=15,10 mk1h=mapa.h nodecos > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin inverted:0 > nul
+..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png ts_attr_0.bin inverted:0 onlyattrs > nul
+..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work1.png ts_attr_1.bin inverted:0 onlyattrs > nul
+..\utils\apack.exe ts_attr_0.bin ts_attr_0c.bin > nul
+..\utils\apack.exe ts_attr_1.bin ts_attr_1c.bin > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 16 nomask > nul
 rem ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
