@@ -147,6 +147,7 @@ Dim As String levelBin
 Dim As Any Ptr img
 Dim As uByte tileset (2303)
 Dim As Integer switchToInverted
+Dim As Integer switchToDefaultInk
 
 ' DO
 
@@ -159,14 +160,14 @@ End If
 
 switchToInverted = 0
 If Len (Command (4)) = 0 Then 
-	defaultInk = -1 
+	switchToDefaultInk = -1 
 Else 
 	If Len (Command (4)) > 9 And Left (Command (4), 9) = "inverted:" Then
-		defaultInk = Val (Right (Command (4), 1))
-		Print "Inverted " & defaultink & " ~ ";
+		switchToDefaultInk = Val (Right (Command (4), 1))
+		Print "Inverted " & switchToDefaultInk & " ~ ";
 		switchToInverted = -1
 	Else
-		defaultInk = Val (Command (4))
+		switchToDefaultInk = Val (Command (4))
 	End If
 End If
 
@@ -188,6 +189,7 @@ Open levelBin for Binary as #fout
 If command (1) <> "nofont" then
 	printf ("Reading font ~ ")
 	inverted = 0
+	defaultink = -1
 	img = png_load (Command (1))	
 	idx = 0 
 	For y = 0 To 1
@@ -209,6 +211,7 @@ If command (2) <> "notiles" then
 		img = png_load (Command (2))	
 	End If
 	inverted = switchToInverted
+	defaultink = switchToDefaultInk
 	x = 0: y = 0: idx = 64
 	For i = 0 to 47
 		getUDGIntoCharset img, x, y, tileset (), idx: idx = idx + 1
