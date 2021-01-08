@@ -43,4 +43,23 @@ El mapa irá comprimido en RLE62, que ha sido adaptado a MK1v4 específicamente 
 
 Me encantaría poder cambiar el tileset - obviamente no completamente, sino al menos los colores. Para ello tendría que sobrescribir el array de 256 atributos que está situado en `_tileset + 2048`. Esa es la parte fácil. La no tan fácil será la de generar los arrays comprimidos con los sets de atributos. Toca modificar `ts2bin` para que, via un switch `onlyattrs`, sólo saque los atributos.
 
+## El nuevo tipo de enemigos
+
+Como hemos dicho, habrá un nuevo tipo de enemigo más complejo que de costumbre. En el eje vertical necesitaré usar punto fijo, que es lo más sencillo y lo que menos ocupará. 
+
+El enemigo "zombie" tendrá los siguientes estados:
+
+* `Z_APPEARING`, cuando emerge de la tierra. Aparecerá en la posición donde se le colocó (x1, y1) y subirá un pixel cada frame (o cada dos, si veo que es demasiado rápido). Seguirá en este estado hasta que el beh del tile que toque (x+8, y+15) sea <8. En ese momento pasará al siguiente:
+
+* `Z_PURSUING`, se desplaza un pixel en dirección al jugador. 
+
+	* Si el pixel en (x+4, y+16) o (x+11, y+16) (dependiendo de adonde esté caminando) es <4 y el jugador está más alto, o si se encuentra un obstáculo, pasará a `Z_JUMPING`. 
+
+	* Si los dos pixels en (x+4, y+16) y (x+11, y+16) son <4, pasará a `Z_FALLING`.
+
+* `Z_FALLING`, caerá con los mismos valores que el jugador (gravedad y velocidad máxima) hasta que deje de cumplirse que los dos pixels en (x+4, y+16) y (x+11, y+16) sean <4.
+
+* `Z_JUMPING`, se entrará con vy negativa fija, y se aplicará una gravedad reducida durante 8 frames. Luego se aplicará la gravedad normal. Horizontalmente se moverá como en `Z_PURSUING`. Cuando el valor de y sea el mismo que cuando empezó el salto, pasará a `Z_FALLING`.
+
+El tema será organizar todo esto para hacerlo lo más compacto prosible. Primero en C y luego, si se tercia, en ensamble. 
 
