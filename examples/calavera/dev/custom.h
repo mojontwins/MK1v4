@@ -21,6 +21,7 @@ extern unsigned char ts_attr_1 [0];
 unsigned char scr_ini [] = { 5, 40, 50, 15 };
 unsigned char ini_x [] = { 2, 2, 2, 2 };
 unsigned char ini_y [] = { 2, 2, 2, 2 };
+unsigned char l_crucifixes [] = { 1, 16, 1, 16 };
 unsigned char *l_ts_attr [] = {
 	ts_attr_0, ts_attr_0, ts_attr_1, ts_attr_1
 };
@@ -28,7 +29,7 @@ unsigned char *l_ts_attr [] = {
 unsigned char new_level;
 unsigned char level;
 
-unsigned char new_level_string [] = "LEVEL`00";
+unsigned char new_level_string [] = "LEVEL 00";
 
 
 #ifdef ENABLE_CODE_HOOKS
@@ -76,14 +77,22 @@ unsigned char new_level_string [] = "LEVEL`00";
 	}
 
 	void hook_mainloop (void) {
-		if (gpy == 144 && n_pant >= (MAP_W*(MAP_H-1))) {
+		// Revised level boundaries.
+
+		// Bottom two rows can't connect down.
+		if (gpy == 144 && (n_pant >= 40)) {
 			player.life -= 10;
 			player.is_dead = 1;
 			player.vy = -PLAYER_MAX_VY_CAYENDO;
 			play_sfx (2);
 		}
 
-		if (player.objs == PLAYER_NUM_OBJETOS)
+		// Bottom row (level 3) can't connect up
+		if (gpy == 0 && (n_pant >= 50)) { player.vy = 0; }
+
+		// End of level custom conditions
+
+		if (player.objs == l_crucifixes [level])
 			game_loop_flag = 1;
 	}
 
