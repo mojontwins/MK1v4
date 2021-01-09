@@ -35,6 +35,9 @@
 	void extra_enems_checks (void) {
 	}
 
+	void extra_enems_killed (void) {
+	}
+	
 #endif
 
 // This is a dirty hack

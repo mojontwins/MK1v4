@@ -253,4 +253,7 @@ void todos_rescatados_check (void) {
 	void extra_enems_checks (void) {
 	}
 
+	void extra_enems_killed (void) {
+	}
+	
 #endif

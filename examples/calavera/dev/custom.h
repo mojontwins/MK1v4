@@ -71,6 +71,43 @@ void pop_and_pursue (void) {
 	_en_an_state = Z_PURSUING;
 }
 
+void check_feet (void) {
+	// Set a flag if there's ground under feet
+	#asm
+			// Left foot
+			ld  a, (__en_x)
+			add 4
+			call shr4
+			ld  c, a
+			ld  a, (__en_y)
+			add 16
+			call shr4
+			call _attr_enems
+			ld  a, l
+			and 12
+			ld  (__en_an_lfoot), a
+
+			// Right foot
+			ld  a, (__en_x)
+			add 11
+			call shr4
+			ld  c, a
+			ld  a, (__en_y)
+			add 16
+			call shr4
+			call _attr_enems
+			ld  a, l
+			and 12
+			ld  (__en_an_rfoot), a
+
+			// Both feet
+			ld  c, a
+			ld  a, (__en_an_lfoot)
+			or  c
+			ld  (__en_an_feet), a
+	#endasm
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -190,40 +227,7 @@ void pop_and_pursue (void) {
 				#endasm
 			} else {
 
-				// Set a flag if there's ground under feet
-				#asm
-						// Left foot
-						ld  a, (__en_x)
-						add 4
-						call shr4
-						ld  c, a
-						ld  a, (__en_y)
-						add 16
-						call shr4
-						call _attr_enems
-						ld  a, l
-						and 12
-						ld  (__en_an_lfoot), a
-
-						// Right foot
-						ld  a, (__en_x)
-						add 11
-						call shr4
-						ld  c, a
-						ld  a, (__en_y)
-						add 16
-						call shr4
-						call _attr_enems
-						ld  a, l
-						and 12
-						ld  (__en_an_rfoot), a
-
-						// Both feet
-						ld  c, a
-						ld  a, (__en_an_lfoot)
-						or  c
-						ld  (__en_an_feet), a
-				#endasm
+				check_feet ();
 
 				// Horizontal movement
 				if (_en_an_state & Z_PURSUING) {				
@@ -269,24 +273,27 @@ void pop_and_pursue (void) {
 
 					if ((_en_an_state & Z_JUMPING) == 0) {
 						if (
-							(_en_an_facing && _en_an_rfoot == 0) ||
-							(_en_an_facing == 0 && _en_an_lfoot == 0) ||
+							(gpy < _en_y && 
+								(_en_an_facing && _en_an_rfoot == 0) ||
+								(_en_an_facing == 0 && _en_an_lfoot == 0)
+							) ||
 							rdd
 						) {
 							// Jump!
 							_en_an_state |= Z_JUMPING;
 							en_an_ct_j [enit] = 8;
-							en_an_vy [enit] = -256;
+							en_an_vy [enit] = -128;
 							_en_y2 = _en_y;
 							goto en_zombie_continue;
 						}
-					}
 
-					// Make fall?
-					if (_en_an_feet == 0) {
-						_en_an_state = Z_FALLING;
-						en_an_vy [enit] = 0;
-						goto en_zombie_continue;
+						// Make fall?
+						
+						if (_en_an_feet == 0) {
+							_en_an_state = Z_FALLING;
+							en_an_vy [enit] = 0;
+							goto en_zombie_continue;
+						}
 					}
 
 					// Move
@@ -295,6 +302,8 @@ void pop_and_pursue (void) {
 						if (gpx > _en_x) _en_x ++;
 					}
 				}
+
+				check_feet ();
 
 				// Jump
 				if (_en_an_state & Z_JUMPING) {
@@ -322,15 +331,15 @@ void pop_and_pursue (void) {
 
 				// Fall
 				if (_en_an_state & Z_FALLING) {
+					if (_en_an_feet) {
+						// POP!
+						pop_and_pursue ();
+						goto en_zombie_continue;
+					}
 					en_an_vy [enit] += PLAYER_G;
 					en_an_y [enit] += en_an_vy [enit];
 					_en_y = en_an_y [enit] >> 6;
 					
-					if (_en_an_feet) {
-						// POP!
-						pop_and_pursue ();
-						//goto en_zombie_continue;
-					}
 				}
 			
 			}
@@ -344,4 +353,12 @@ void pop_and_pursue (void) {
 	void extra_enems_checks (void) {
 	}
 
+	void extra_enems_killed (void) {
+		// Zombies must respawn forever
+		if (enemy_died == 15) {
+			_en_t = 15; 
+			_en_x = _en_x1; _en_y = _en_y1;
+			en_an_state [enit] = Z_APPEARING;
+		}
+	}
 #endif

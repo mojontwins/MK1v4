@@ -149,4 +149,7 @@ void set_hotspot (unsigned char hn) {
 	void extra_enems_checks (void) {
 	}
 
+	void extra_enems_killed (void) {
+	}
+	
 #endif

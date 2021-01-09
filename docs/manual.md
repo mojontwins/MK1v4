@@ -601,7 +601,7 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
 
 * `latest_hotspot` valdrá distinto de cero si el jugador acaba de tocar un hotspot y contendrá el valor de dicho hotspot.
 
-* `enemy_died` contiene el número del último enemigo que el jugador ha eliminado (0-2). Es tarea del programador ponerlo a 0. Este índice se puede usar para obtener o modificar cualquier valor del enemigo, que ocupará el espacio `enoffs + enemy_died` del array `malotes`.
+* `enemy_died` contiene el tipo del último enemigo que el jugador ha eliminado. Es tarea del programador ponerlo a 0. 
 
 * `enemy_killer` contiene el número del último enemigo que mató al jugador (0-2). Es tarea del programador ponerlo a 0. Este índice se puede usar para obtener o modificar cualquier valor del enemigo, que ocupará el espacio `enoffs + enemy_died` del array `malotes`.
 

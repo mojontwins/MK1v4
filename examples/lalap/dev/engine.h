@@ -4023,6 +4023,10 @@ void platform_get_player (void) {
 			en_an_fanty_activo [enit] = 0;
 			_en_life = FANTIES_LIFE_GAUGE;
 		#endif
+
+		#ifdef ENABLE_CUSTOM_ENEMS
+			extra_enems_killed ();
+		#endif
 	}
 #endif
 
