@@ -387,13 +387,13 @@ void add_vy_to_y_and_cnv (void) {
 				// if ((_en_an_state & Z_JUMPING) == 0) {
 					ld  a, (__en_an_state)
 					and Z_JUMPING
-					jr  nz, z_pursing_jump_fall_done
+					jp  nz, z_pursing_jump_fall_done
 
 				/*
 					if (
 						(gpy < _en_y && 
-							(_en_an_facing && _en_an_rfoot == 0) ||
-							(_en_an_facing == 0 && _en_an_lfoot == 0)
+							(_en_an_facing && _en_an_lfoot == 0) ||
+							(_en_an_facing == 0 && _en_an_rfoot == 0)
 						) ||
 						rdd
 					) {
@@ -411,7 +411,7 @@ void add_vy_to_y_and_cnv (void) {
 					or a 
 					jr  z, z_pursuing_jfc12
 
-					ld  a, (__en_an_rfoot)
+					ld  a, (__en_an_lfoot)
 					or a
 					jr  z, z_pursuing_jump_start
 
@@ -420,7 +420,7 @@ void add_vy_to_y_and_cnv (void) {
 					or  a
 					jr  nz, z_pursuing_jfc2
 
-					ld  a, (__en_an_lfoot)
+					ld  a, (__en_an_rfoot)
 					or  a
 					jr  z, z_pursuing_jump_start
 
@@ -428,18 +428,17 @@ void add_vy_to_y_and_cnv (void) {
 					ld  a, (_rdd)
 					or  a
 					jr  z, z_pursuing_jump_start_done
-/*
+
 				// Also both feet on the ground
-				// WHY ISN'T THIS WORKING?
 
 					ld  a, (__en_an_lfoot)
 					or  a
-					jr  z, z_pursuing_jump_start_done
+					jr  z, z_pop_and_fall
 
 					ld  a, (__en_an_rfoot)
 					or  a
-					jr  z, z_pursuing_jump_start_done
-*/
+					jr  z, z_pop_and_fall
+
 				.z_pursuing_jump_start
 				
 				// Jump!
@@ -479,11 +478,12 @@ void add_vy_to_y_and_cnv (void) {
 
 				// Make fall?
 					
-				// if (_en_an_feet == 0) {
+				// if (_en_an_feet == 0) {				
 					ld  a, (__en_an_feet)
 					or  a
 					jr  nz, z_pursuing_fall_start_done
 				
+				.z_pursuing_fall_start_do
 				// _en_an_state = Z_FALLING;
 					ld  a, Z_FALLING
 					ld  (__en_an_state), a
@@ -499,7 +499,21 @@ void add_vy_to_y_and_cnv (void) {
 					inc hl
 					ld  (hl), a
 						
-					jr en_zombie_continue
+					jp en_zombie_continue
+
+				.z_pop_and_fall
+					ld  hl, __en_x
+					ld  a, (__en_an_facing) 	// 0 = right
+					or  a
+					jr  z, z_pop_right
+
+				.z_pop_left
+					inc (hl)
+					jr  z_pursuing_fall_start_do
+
+				.z_pop_right 
+					dec (hl)
+					jr  z_pursuing_fall_start_do
 					
 				.z_pursuing_fall_start_done
 				
