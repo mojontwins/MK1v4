@@ -62,3 +62,7 @@ El enemigo "zombie" tendrá los siguientes estados:
 * `Z_JUMPING`, se entrará con vy negativa fija, y se aplicará una gravedad reducida durante 8 frames. Luego se aplicará la gravedad normal. Horizontalmente se moverá como en `Z_PURSUING`. Cuando el valor de y sea el mismo que cuando empezó el salto, pasará a `Z_FALLING`.
 
 Al final lo programé de tal forma que pasarlo a ensamble ha sido coser y cantar. Podrá optimizarse más seguro, pero sigo por debajo de 30K y eso me place.
+
+## Retroceso
+
+El retroceso del arma ha sido introducido especialmente para este juego y porque ha sido realmente fácil de metel.

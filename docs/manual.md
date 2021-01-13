@@ -810,6 +810,7 @@ En esta versión de **MTE MK1** sólo funciona en vista lateral.
     //#define PLAYER_BULLET_SPEED   8       // Pixels/frame. 
     //#define MAX_BULLETS           3       // Max number of bullets on screen. Be careful!.
     //#define PLAYER_BULLET_Y_OFFSET    4   // vertical offset from the player's top.
+    //#define PLAYER_AX_RECOIL      128     // If defined, recoil.
 
     //#define FIRING_DRAINS_LIFE            // If defined, firing drains life (oi!)
     //#define FIRING_DRAIN_AMOUNT   2       // what to substract when firing.
@@ -822,6 +823,8 @@ En esta versión de **MTE MK1** sólo funciona en vista lateral.
 * `MAX_BULLETS` define el máximo número de balas en pantalla. Hay que tener cuidado porque a más balas, menos velocidad y más memoria dinámica tendremos que reservar (ver al final de esta sección).
 
 * `PLAYER_BULLET_Y_OFFSET`: número de píxels desde el borde superior del jugador desde el que se dispara la bala. Cuanto mayor sea, más abajo saldrá.
+
+* `PLAYER_AX_RECOIL`: Si se define, se añadirá esta aceleración al eje horizontal en sentido contrario al sentido en el que mire el jugador cada vez que se dispare (retroceso del arma).
 
 * `FIRING_DRAINS_LIFE` (opcional): si se define, disparar resta vida (como en **Cheril the Goddess**).
 

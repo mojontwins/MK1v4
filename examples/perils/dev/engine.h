@@ -485,7 +485,11 @@ void cortina (void) {
 		play_sfx (9);
 		#ifdef FIRING_DRAINS_LIFE
 			player.life -= FIRING_DRAIN_AMOUNT;
-		#endif		
+		#endif
+
+		#ifdef PLAYER_AX_RECOIL
+			player.vx += (player.facing ? PLAYER_AX_RECOIL : -PLAYER_AX_RECOIL);
+		#endif
 	}
 #endif
 
