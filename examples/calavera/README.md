@@ -61,18 +61,4 @@ El enemigo "zombie" tendrá los siguientes estados:
 
 * `Z_JUMPING`, se entrará con vy negativa fija, y se aplicará una gravedad reducida durante 8 frames. Luego se aplicará la gravedad normal. Horizontalmente se moverá como en `Z_PURSUING`. Cuando el valor de y sea el mismo que cuando empezó el salto, pasará a `Z_FALLING`.
 
-El tema será organizar todo esto para hacerlo lo más compacto prosible. Primero en C y luego, si se tercia, en ensamble. 
-
-### Gráficos
-
-El primer paso será crear los nuevos gráficos. Necesito 2 cells para cada dirección, 4 en total. Como estoy usando sprites XOR ocupan la mitad, así que esto me tomará 288 bytes extra.
-
-### Inicialización
-
-Tendremos que establecer el estado a `Z_APPEARING`, y colocarlo en  `x1, y1`. El `facing` se calculará al vuelo durante la ejecución, en todo momento. Como voy a usar `en_an_state` para el estado, no tendré que inicializarla porque se pone a 0. Sólo tengo que definir *bien* las constantes:
-
-```c
-
-```
-
-
+Al final lo programé de tal forma que pasarlo a ensamble ha sido coser y cantar. Podrá optimizarse más seguro, pero sigo por debajo de 30K y eso me place.

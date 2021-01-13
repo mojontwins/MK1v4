@@ -568,6 +568,8 @@ Deberemos detectar nuestro tipo custom usando `_en_t`. Aquí podremos *mover* al
 
 * `void extra_enems_checks (void);` se ejecuta al final del bucle que actualiza los enemigos. Podemos añadir código en este punto, por ejemplo para comprobar la colisión con algún elemento que hayamos introducido en nuestros *customs*.
 
+* `void extra_enems_killed (void);` se ejecuta cada vez que un enemigo muere, al final de todo el proceso. Es importante notar que `_en_t` tendrá el bit 4 arriba (el enemigo ya se ha marcado como muerto), así que si se quiere obtener el tipo real habrá que hacer AND con 0xEF, o, en el caso de tener `ENABLE_CODE_HOOKS`, usar el valor de `enemy_died`. Todas las variables pueden consultarse y modificarse igual que en `extra_enems_move` y `extra_enems_checks`.
+
 Aquí tenemos un ejemplo tonto de un enemigo que sólo "tirita" y cambia de frame cada cierto tiempo, sin moverse del sitio:
 
 ```c
