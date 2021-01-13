@@ -66,3 +66,7 @@ Al final lo programé de tal forma que pasarlo a ensamble ha sido coser y cantar
 ## Retroceso
 
 El retroceso del arma ha sido introducido especialmente para este juego y porque ha sido realmente fácil de metel.
+
+## El desafío final
+
+El desafío final serán 20 pantallas donde haya que llevar una a una 3 llaves para liberar a María. Las llaves estarán en los extremos del mapa y se indicará que llevamos una llave con un sprite de 8x8 custom. Las pantallas deben ser complicadas y el recorrido laberíntico. Tiene que haber muchos fanties "de serie".

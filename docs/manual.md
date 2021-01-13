@@ -296,9 +296,27 @@ Cuando hablamos de trayectorias lineales tenemos dos posibles casos:
 
 Los enemigos con tipos 5 y 6 definen enemigos voladores, o *Fantys*, como los llamamos en Mojonia. Este tipo de enemigos persigue al jugador por la pantalla, con diferentes comportamientos configurables. No se puede usar tipos 5 y 6 simultaneamente, y tanto uno como otro hay que activarlos explícitamente pues no forman parte del core básico, como veremos.
 
-* **Tipo 5**: Los enemigos de tipo 5 se crearon para **Zombie Calavera** y se conocen internamente como *Randown Respawn*. Su comportamiento es un tanto específico de este juego: aparecen si has matado alguno de los enemigos lineales de la pantalla. Se crean en un lugar aleatorio del borde de la pantalla y siguen al jugador si este no está *oculto* (colocado sobre un tile con comportamiento *oculta*).
+#### Tipo 5, *Random Respawn*
 
-* **Tipo 6**: Son muy parecidos pero aparecerán en el lugar de la pantalla donde los ubiques. Además, pueden configurarse para que o bien persigan al jugador siempre, o bien solo lo hagan si el jugador se acerca, volviendo a su posición inicial cual el jugador se "pierde de vista".
+Los enemigos de tipo 5 se crearon para **Zombie Calavera** y se conocen internamente como *Randown Respawn*. Su comportamiento es un tanto específico de este juego: aparecen si has matado alguno de los enemigos lineales de la pantalla. Se crean en un lugar aleatorio del borde de la pantalla y siguen al jugador si este no está *oculto* (colocado sobre un tile con comportamiento *oculta*). Puedes forzar a que aparezcan desde el principio si los colocas en cualquier parte de la pantalla (aparecerán igualmente desde el borde).
+
+Este es su comportamiento, a nivel interno:
+
+* El tipo (colocado) es el 5. Si se detecta un enemigo tipo 5 en alguna pantalla, al entrar en la misma se "auto mata" (levantándoles el bit 4).
+
+* Al entrar en cada pantalla, los tres `en_an_fanty_activo` se ponen a 0.
+
+* Durante el game loop, 
+
+	* Si `en_an_fanty_activo` vale 0, el enemigo correspondiente está muerto, y se cumple que `(rand () & 31) == 1`, se pone `en_an_fanty_activo` a 1 y se inicializa su posición (arriba o abajo, fuera de la pantalla, dependiendo de en qué mitad esté el jugador; en una posición aleatoria horizontal) y su velocidad (a 0 en ambos ejes). La vida se establece a `FANTIES_LIFE_GAUGE`.
+
+	* si `en_an_fanty_activo` vale 1 para un enemigo, reacciona como un espectro: Se acerca al usuario si no está escondido, o se alejan de él (repulsión lineal) si lo está, hasta salir de la pantalla.
+
+* Al morir un fanty, `en_an_fanty_activo` vuelve a 0 y la vida se establece a `FANTIES_LIFE_GAUGE`. O sea, que cuando matas un fanty aparecerá otro nuevo por el borde casi enseguida.
+
+#### Tipo 6, *Fanties*
+
+Son muy parecidos pero aparecerán en el lugar de la pantalla donde los ubiques. Además, pueden configurarse para que o bien persigan al jugador siempre, o bien solo lo hagan si el jugador se acerca, volviendo a su posición inicial cual el jugador se "pierde de vista".
 
 ### Cuadradores
 
@@ -1027,7 +1045,7 @@ Permite activar y configurar *fantys*.
 
 * `HIDDEN_CAN_MOVE`: Se usa con `PLAYER_CAN_HIDE`. Si activas esta macro, podrás moverte en los tiles que esconden y seguir escondido. Si no, además de tocar un tile que esconde deberás estar *quieto*.
 
-* `RANDOM_RESPAWN`: activa los *fantys* de tipo 5 que aparecen al eliminar enemigos lineales (no se colocan con `ponedor.exe`).
+* `RANDOM_RESPAWN`: activa los *fantys* de tipo 5 que aparecen al eliminar enemigos lineales. También pueden colocarse directamente en el mapa como tipo 5. Da igual donde se pongan, aparecerán por el borde superior o inferior.
 
 * `USE_TYPE_6`: activa los *fantys* de tipo 6 que se colocan con el ponedor (los *fantys* normales). **No es compatible con `RANDOM_RESPAWN`**.
 
