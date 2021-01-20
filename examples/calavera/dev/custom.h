@@ -12,22 +12,25 @@
 
 extern unsigned char ts_attr_0 [0];
 extern unsigned char ts_attr_1 [0];
+extern unsigned char ts_attr_2 [0];
 
 #asm
 	._ts_attr_0
 		BINARY "ts_attr_0c.bin"
 	._ts_attr_1
 		BINARY "ts_attr_1c.bin"
+	._ts_attr_2
+		BINARY "ts_attr_2c.bin"
 #endasm
 
 // Level set
 
-unsigned char scr_ini [] = { 5, 40, 50, 15 };
-unsigned char ini_x [] = { 2, 2, 2, 2 };
-unsigned char ini_y [] = { 2, 2, 2, 2 };
-unsigned char l_crucifixes [] = { 1, 16, 1, 16 };
+unsigned char scr_ini [] = { 5, 40, 50, 17 };
+unsigned char ini_x [] = { 2, 2, 2, 4 };
+unsigned char ini_y [] = { 2, 2, 2, 0 };
+unsigned char l_crucifixes [] = { 1, 16, 1, 1 };
 unsigned char *l_ts_attr [] = {
-	ts_attr_0, ts_attr_0, ts_attr_1, ts_attr_1
+	ts_attr_0, ts_attr_0, ts_attr_1, ts_attr_2
 };
 
 unsigned char new_level;
@@ -52,6 +55,16 @@ unsigned char _en_an_rfoot;
 unsigned char *zombie_cells [] = {
 	extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a
 };
+
+// Enemy type 'María'
+
+unsigned char *maria_cells [] = {
+	extra_sprite_21_a, extra_sprite_22_a
+};
+
+// Keys
+
+unsigned char phaskey;
 
 // Aux
 
@@ -184,7 +197,8 @@ void add_vy_to_y_and_cnv (void) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 2;
+		level = 3;
+		phaskey = 0;
 	}
 
 	void hook_init_mainloop (void) {
@@ -233,6 +247,18 @@ void add_vy_to_y_and_cnv (void) {
 		// Bottom row (level 3) can't connect up
 		if (gpy == 0 && (n_pant >= 50)) { player.vy = 0; }
 
+		// Locks in the last level repel if you aren't carrying a key
+		if (level == 3) {
+			if (qtile ((gpx + 11) >> 4, (gpy + 8) >> 4) == 47) {
+				if (phaskey == 0) {
+					play_sfx (3);
+					player.vx = -256;
+				} else {
+
+				}
+			}
+		} 
+
 		// End of level custom conditions
 
 		if (player.objs == l_crucifixes [level])
@@ -258,6 +284,12 @@ void add_vy_to_y_and_cnv (void) {
 	}
 
 	void extra_enems_move (void) {
+		// María
+
+		if (_en_t == 14) {
+			en_an_next_frame [enit] = maria_cells [gpx >= 112 ? 1 : 0];
+		}
+
 		// Zombie
 
 		if (_en_t == 15) {

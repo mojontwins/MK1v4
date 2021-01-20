@@ -64,6 +64,15 @@ extern unsigned char extra_sprite_19_c [];
 extern unsigned char extra_sprite_20_a []; 
 extern unsigned char extra_sprite_20_b []; 
 extern unsigned char extra_sprite_20_c []; 
+extern unsigned char extra_sprite_21_a []; 
+extern unsigned char extra_sprite_21_b []; 
+extern unsigned char extra_sprite_21_c []; 
+extern unsigned char extra_sprite_22_a []; 
+extern unsigned char extra_sprite_22_b []; 
+extern unsigned char extra_sprite_22_c []; 
+extern unsigned char extra_sprite_23_a []; 
+extern unsigned char extra_sprite_23_b []; 
+extern unsigned char extra_sprite_23_c []; 
  
 #asm
         defb 0, 0
@@ -930,6 +939,182 @@ extern unsigned char extra_sprite_20_c [];
     ._extra_sprite_19_c
         defb 0
     ._extra_sprite_20_c
+        defb 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Sprites #20 y 21
+; Primera columna
+    ._extra_sprite_21_a
+        defb 0
+    ._extra_sprite_22_a
+        defb 14
+        defb 3, 15
+        defb 3, 15
+        defb 3, 7
+        defb 1, 143
+        defb 3, 78
+        defb 7, 63
+        defb 11, 7
+        defb 7, 7
+        defb 3, 7
+        defb 3, 15
+        defb 7, 15
+        defb 7, 15
+        defb 15, 8
+        defb 4, 4
+        defb 12, 8
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Segunda columna
+    ._extra_sprite_21_b
+        defb 0
+    ._extra_sprite_22_b
+        defb 0
+        defb 128, 0
+        defb 192, 0
+        defb 192, 128
+        defb 224, 0
+        defb 192, 0
+        defb 160, 0
+        defb 144, 0
+        defb 160, 128
+        defb 192, 128
+        defb 192, 192
+        defb 192, 192
+        defb 192, 224
+        defb 224, 128
+        defb 32, 64
+        defb 64, 64
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; tercera columna
+    ._extra_sprite_21_c
+        defb 0
+    ._extra_sprite_22_c
+        defb 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Sprites #22 y 23
+; Primera columna
+    ._extra_sprite_23_a
+        defb 3
+    ._extra_sprite_24_a
+        defb 0
+        defb 5, 0
+        defb 7, 0
+        defb 3, 0
+        defb 3, 0
+        defb 0, 0
+        defb 1, 0
+        defb 1, 0
+        defb 1, 0
+        defb 1, 0
+        defb 29, 0
+        defb 7, 0
+        defb 29, 0
+        defb 23, 0
+        defb 29, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; Segunda columna
+    ._extra_sprite_23_b
+        defb 192
+    ._extra_sprite_24_b
+        defb 0
+        defb 160, 0
+        defb 224, 0
+        defb 192, 0
+        defb 64, 0
+        defb 0, 0
+        defb 128, 0
+        defb 128, 0
+        defb 128, 0
+        defb 128, 0
+        defb 128, 0
+        defb 128, 0
+        defb 128, 0
+        defb 128, 0
+        defb 128, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+        defb 0, 0
+ 
+; tercera columna
+    ._extra_sprite_23_c
+        defb 0
+    ._extra_sprite_24_c
         defb 0
         defb 0, 0
         defb 0, 0

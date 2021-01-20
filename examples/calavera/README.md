@@ -69,4 +69,25 @@ El retroceso del arma ha sido introducido especialmente para este juego y porque
 
 ## El desafío final
 
-El desafío final serán 20 pantallas donde haya que llevar una a una 3 llaves para liberar a María. Las llaves estarán en los extremos del mapa y se indicará que llevamos una llave con un sprite de 8x8 custom. Las pantallas deben ser complicadas y el recorrido laberíntico. Tiene que haber muchos fanties "de serie".
+El desafío final serán 20 pantallas donde haya que llevar una a una 3 llaves para liberar a María. Las llaves estarán en los extremos del mapa y se indicará que llevamos una llave con un sprite custom. Las pantallas deben ser complicadas y el recorrido laberíntico. Tiene que haber muchos fanties "de serie".
+
+### María
+
+María nos espera detrás de tres cerrojos. Se implementará como un nuevo tipo de "enemigo". Tocarlo terminará el juego (WIN). María aparecerá en su sitio y si nos acercamos cambiará el sprite para que parezca que "nos anhela". Va a quedar muy pro. Pero mirad qué sencillo:
+
+```c
+	void extra_enems_move (void) {
+		// María
+
+		if (_en_t == 14) {
+			en_an_next_frame [enit] = maria_cells [gpx >= 112];
+		}
+	
+		[...]
+	}
+```
+
+### La celda
+
+Los tiles 47 se podrán traspasar pero te repelerán fuertemente si no llevas la llave. Como siempre se atacarán desde la izquierda, pondré un valor alto en negativo si el tile en (gpx + 11, gpy + 8) vale 47.
+

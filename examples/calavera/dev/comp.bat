@@ -8,10 +8,12 @@ rem ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 10 6 15 10 15 > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin inverted:0 > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png ts_attr_0.bin inverted:0 onlyattrs > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work1.png ts_attr_1.bin inverted:0 onlyattrs > nul
+..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work2.png ts_attr_2.bin inverted:0 onlyattrs > nul
 ..\utils\apack.exe ts_attr_0.bin ts_attr_0c.bin > nul
 ..\utils\apack.exe ts_attr_1.bin ts_attr_1c.bin > nul
+..\utils\apack.exe ts_attr_2.bin ts_attr_2c.bin > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
-..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra nomask > nul
+..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 23 extra nomask > nul
 rem ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
 ..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
