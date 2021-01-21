@@ -8,6 +8,12 @@
 
 // Attribute binaries are created using ts2bin and compressed with aplib.
 
+// Protos & inlines
+
+unsigned int __FASTCALL__ abs (int n);
+#define make_sign(s,n)			((s) < 0 ? -(n) : (n))
+#define make_nsign(s,n)			((s) > 0 ? -(n) : (n))
+
 // Custom tile colour attributes
 
 extern unsigned char ts_attr_0 [0];
@@ -192,6 +198,17 @@ void add_vy_to_y_and_cnv (void) {
 	#endasm
 }
 
+void set_hotspot (unsigned char hn) {
+	hotspots [n_pant].act = 1;
+	hotspot_t = hn;
+	hotspots [n_pant].tipo = hotspot_t;
+	rdx = (hotspots [n_pant].xy >> 4);
+	rdy = (hotspots [n_pant].xy & 15);
+	hotspot_x = rdx << 4;
+	hotspot_y = rdy << 4;
+	set_map_tile (rdx, rdy, 16 + hn, 0);
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -276,6 +293,7 @@ void add_vy_to_y_and_cnv (void) {
 					play_sfx (3);
 					player.vx = -256;
 				} else {
+					phaskey = 0;
 					play_sfx (8);
 					set_map_tile (rdx, rdy, 1, 0);
 					openlocks ++;
@@ -286,7 +304,11 @@ void add_vy_to_y_and_cnv (void) {
 		// Get key
 		if (latest_hotspot == 33) {
 			if (phaskey) {
-				
+				// We have to restore the hotspot!
+				set_hotspot (33);
+				play_sfx (8);
+				player.vx = make_nsign (player.vx, 256);
+				player.vy = make_nsign (player.vy, 256);
 			} else phaskey = 1;
 		}
 

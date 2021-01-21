@@ -3000,7 +3000,7 @@ void move (void) {
 				)
 				#ifdef PLAYER_ALTERNATE_ANIMATION
 					{
-						rdd = 0;
+						rdd = player.facing ? 2 : 0;
 					} else {
 						rdd = ((gpx + 4) >> 3) % 3;
 					}
