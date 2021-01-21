@@ -65,6 +65,10 @@ unsigned char *maria_cells [] = {
 // Keys
 
 unsigned char phaskey;
+struct sp_SS *sp_pinv;
+unsigned char *pinv_next_frame, *pinv_current_frame;
+
+unsigned char openlocks;
 
 // Aux
 
@@ -193,17 +197,26 @@ void add_vy_to_y_and_cnv (void) {
 	// Hooks
 
 	void hook_system_inits (void) {
+		sp_pinv = sp_CreateSpr (sp_OR_SPRITE, 3, extra_sprite_23_a, 3);
+		sp_AddColSpr (sp_pinv, extra_sprite_23_b);
+		sp_AddColSpr (sp_pinv, extra_sprite_23_c);
+		pinv_current_frame = pinv_next_frame = extra_sprite_23_a;
 	}
 
 	void hook_init_game (void) {
 		new_level = 1;
 		level = 3;
 		phaskey = 0;
+		openlocks = 0;
 	}
 
 	void hook_init_mainloop (void) {
-		// End of level check
+		// End of level check. Never to be met in level 4, of course.
 
+		if (player.objs == l_crucifixes [level]) {
+			new_level = 1;
+			level ++;
+		}
 
 		// New level screen 
 
@@ -234,6 +247,14 @@ void add_vy_to_y_and_cnv (void) {
 	}
 
 	void hook_mainloop (void) {
+		// End of game is when you collide with María. 
+
+		if (n_pant == 17 && enemy_killer != 0xff) {
+			game_loop_flag = 1;
+			player.is_dead = 0; 	// Just in case, be clean.
+		} 
+		enemy_killer = 0xff;
+
 		// Revised level boundaries.
 
 		// Bottom two rows can't connect down.
@@ -248,24 +269,47 @@ void add_vy_to_y_and_cnv (void) {
 		if (gpy == 0 && (n_pant >= 50)) { player.vy = 0; }
 
 		// Locks in the last level repel if you aren't carrying a key
-		if (level == 3) {
-			if (qtile ((gpx + 11) >> 4, (gpy + 8) >> 4) == 47) {
+		if (n_pant == 17) {
+			rdx = (gpx + 11) >> 4; rdy = (gpy + 8) >> 4;
+			if (qtile (rdx, rdy) == 47) {
 				if (phaskey == 0) {
 					play_sfx (3);
 					player.vx = -256;
 				} else {
-
+					play_sfx (8);
+					set_map_tile (rdx, rdy, 1, 0);
+					openlocks ++;
 				}
 			}
 		} 
 
-		// End of level custom conditions
+		// Get key
+		if (latest_hotspot == 33) {
+			if (phaskey) {
+				
+			} else phaskey = 1;
+		}
 
-		if (player.objs == l_crucifixes [level])
-			game_loop_flag = 1;
+		// Carrying object
+		if (phaskey) {
+			if (player.facing) rdx = gpx - 4; else rdx = gpx + 4;
+			rdy = gpy - 4;
+		} else rdx = 240;
+
+		sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
+			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+		pinv_current_frame = pinv_next_frame;
 	}
 
-	void hook_entering (void) {		
+	void hook_entering (void) {	
+		// Clear open locks
+		if (n_pant == 17) {
+			for (gpit = 0; gpit < openlocks; gpit ++) 
+				set_map_tile (10 + gpit, 4, 1, 0);
+		}
+
+		// Reset this
+		enemy_killer = 0xff;
 	}
 
 #endif

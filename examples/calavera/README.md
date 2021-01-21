@@ -87,7 +87,73 @@ María nos espera detrás de tres cerrojos. Se implementará como un nuevo tipo 
 	}
 ```
 
+Finalmente, habrá que controlar la colisión con María. Cuando colisionemos con ella se pondrá un valor en `enemy_killer` (será el 0). Como `hook_mainloop` se ejecuta antes de calcular que el player esté muerto, podremos "cazarlo" y terminar el juego limpiamente.
+
+```c
+	void hook_mainloop (void) {
+		// End of game is when you collide with María. 
+		if (n_pant == 17 && enemy_killer != 0xff) {
+			game_loop_flag = 1;
+			player.is_dead = 0; 	// Just in case, be clean.
+		} 
+		enemy_killer = 0xff;
+
+		[...]
+	}
+```
+
 ### La celda
 
-Los tiles 47 se podrán traspasar pero te repelerán fuertemente si no llevas la llave. Como siempre se atacarán desde la izquierda, pondré un valor alto en negativo si el tile en (gpx + 11, gpy + 8) vale 47.
+Los tiles 47 se podrán traspasar pero te repelerán fuertemente si no llevas la llave. Como siempre se atacarán desde la izquierda, se pone un valor alto en negativo si el tile en (gpx + 11, gpy + 8) vale 47.
+
+Si llevamos la llave, habrá que eliminar el tile. También necesitamos cierta persistencia. Como los cerrojos sólo se pueden abrir en secuencia, nos vale con una variable normal.
+
+### Las llaves
+
+En un principio pensé hacer las llaves como un enemigo custom, pero esto me iba a causar todo tipo de problemas, así que lo haré como un ente aparte.
+
+El sprite extra (¡no hay que olvidar subir en 10 el valor de `NUMBLOCKS`) se crea en `hook_system_inits`:
+
+```c
+	void hook_system_inits (void) {
+		sp_pinv = sp_CreateSpr (sp_OR_SPRITE, 3, extra_sprite_23_a, 3);
+		sp_AddColSpr (sp_pinv, extra_sprite_23_b);
+		sp_AddColSpr (sp_pinv, extra_sprite_23_c);
+		pinv_current_frame = pinv_next_frame = extra_sprite_23_a;
+	}
+```
+
+Y se imprime al final de `hook_mainloop`:
+
+```c
+	void hook_mainloop (void) {
+		[...]
+
+		// Carrying object
+		if (phaskey) {
+			if (player.facing) rdx = gpx - 4; else rdx = gpx + 4;
+			rdy = gpy - 4;
+		} else rdx = 240;
+
+		sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
+			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+		pinv_current_frame = pinv_next_frame;
+	}
+```
+
+La parte de "llevas la llave" es muy fácil, porque sólo hay que añadir un sprite *custom* pegado a la espalda del personaje, al igual que ocurre en Ramiro 4. El tema de presentar las llaves como entes antes de cogerlas tiene más chicha, porque no tengo tiles vacíos.
+
+Mirando la fuente pensé en que quizá podría hacer una carambola con salto mortal y tentetieso. Si intentamos pintar un tile más allá del número 47, fijáos en la "cuenta": se pintan los 4 caracteres a partir de t*4+64, pero todo esto se hace dentro del registro a, por lo que en realidad es `(((t*4) MOD 256) + 64) MOD 256`.
+
+* Para t = 48, (48 * 4) = 192, 192 + 64 = 256, 256 MOD 256 = 0 -> que quedaría dentro de la fuente.
+
+Jugando con esto podría imprimir un tile "nuevo" si lo mapeo sobre la fuente, sobre símbolos que no use. Por ejemplo, 
+
+* Para t = 49, (49 * 4) = 196, 196 + 64 = 260, 260 MOD 256 = 4
+
+Y los caracteres 4, 5, 6 y 7 son `$`, `%`, `&` y `'`, que no se usan. Por lo tanto, si pongo ahí los 4 trozos de una llave de 16x16 y llamo a la función que pinta un caracter pasándole el valor 49, usará esos cuatro caracteres para poner la llave. Clever.
+
+Para hacerlas aparecer en el mapa sin tener que programar absolutamente nada, abusaremos del motor de hotspots. Recordemos que el hotspot (salvo las recargas) se pintará con el `tile 16 + t`, con `t` el tipo de hotspot. Para que se use el tile especial número 49 sólo tendremos que añadir un hotspot de tipo 33, o 0x21 en HEX.
+
+En nuestro código custom, detectamos que hemos tomado un hotspot tipo 33 y activamos la llave.
 
