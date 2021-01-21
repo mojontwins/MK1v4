@@ -288,6 +288,6 @@ Cambié
 
 [X] ¿Es posible detectar el hitter antes que nada e invalidar la colisión normal?
 
-[ ] En ene2h, no hacer la inversión de coordenadas (x1, y1) (x2, y2) si hay un switch para enemigos con ID 5, 6 o 15, y con otro para enemigos con ID > 4.
+[X] En ene2h, no hacer la inversión de coordenadas (x1, y1) (x2, y2) si hay un switch para enemigos con ID 5, 6 o 15, y con otro para enemigos con ID > 4.
 
-[ ] Retroceso para los disparos.
+[X] Retroceso para los disparos.

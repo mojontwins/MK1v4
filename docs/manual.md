@@ -454,6 +454,12 @@ La conversión se hace desde `comp.bat` empleando `ene2h.exe`:
     ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ```
 
+### Parámetros opcionales de `ene2h.exe`
+
+Por defecto, `eneh2.exe` intercambiará los valores de x1 con x2 o de y1 con y2 para asegurarse de que las coordenadas "1" sean menores que las "2", lo que simplifica y acelera el código del motor. Sin embargo, para algunos customs puede que no se desée que se intercambien estas coordenadas. Por ejemplo, el enemigo tipo Zombie de **Zombie Calavera** necesita reaparecer siempre donde se ha colocado, por lo que no podemos permitir que x1 se intercambie con x2 o y1 con y2.
+
+En ese caso podemos usar un cuarto parámetro: `dsall` hará que no se intercambien las coordenadas si los enemigos no son de tipo lineal (1 a 4). `dslight` intercambiará todas las coordenadas salvo las de los tipos 5, 6 y 15, pensada para usar (si fuera necesario) con los enemigos de tipo "Cuadrators" o "Marrullers".
+
 # Capítulo 6 - Configurando el güego
 
 El comportamiento básico del juego se define en el archivo `config.h` que hay situado en `dev`. Luego podremos tunear mediante el scripting o el código inyectable de `custom.h`, pero hay que empezar por el principio. 

@@ -1,17 +1,40 @@
-' ene2h.bas v0.3.20201201-v4
+' ene2h.bas v0.4.20210121-v4
 
 Sub usage
 	Print
-	Print "$ ene2h.exe enems.ene enems.h [2bytes]"
+	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall]"
 	Print
-	Print "The 2bytes parameter is for really old .ene files which"
-	Print "stored the hotspots 2 bytes each instead of 3 bytes."
-	Print "As a rule of thumb:"
-	Print ".ene file created with ponedor.exe -> 3 bytes."
-	Print ".ene file created with colocador.exe for MK1 -> 2 bytes."
+	Print "2bytes (optional) - support really old .ene files which stored the hotspots"
+	Print "    2 bytes each instead of 3 bytes.  As a rule of thumb: "
+	Print "    * .ene file created with ponedor.exe -> 3 bytes."
+	Print "    * .ene file created with colocador.exe for MK1 -> 2 bytes."
+	Print
+	Print "dslight (optional) - x1/x2 and y1/y2 are usually switched to make sure 1<2."
+	Print "    If 'dslight' is specified, only types 1-4 and 7-14 are switched."
+	Print
+	Print "dsall (optional) - Like dslight, but only types 1-4 are switched."
+	Print
 End Sub
 
-Dim As Integer use2bytes
+Function inCommand (spec As String) As Integer
+	Dim As Integer res, i
+
+	i = 0: res = 0
+
+	Do
+		If Command (i) = "" Then Exit Do
+		If Command (i) = spec Then res = -1: Exit Do
+		i = i + 1
+	Loop
+
+	Return res
+End Function
+
+Const DS_NONE = 0
+Const DS_LIGHT = 1
+Const DS_ALL = 2
+
+Dim As Integer use2bytes, dontswitch
 Dim As Integer fIn, fOut, i, j, mapPants
 Dim As uByte d, mapW, mapH, nEnems
 Dim As uByte t, a, b, xx, yy, mn, x, y, s1, s2, xy
@@ -20,7 +43,7 @@ Dim As Integer enTypeCounters (255)
 Dim As String Dummy
 Dim As Integer sx, sy
 
-Print "ene2h.bas v0.3.20201201-v4 ";
+Print "ene2h.bas v0.4.20210121-v4 ";
 
 If Command (2) = "" Then usage: End
 
@@ -29,7 +52,15 @@ For i = 0 To 255
 	typecounters (i) = 0
 Next i
 
-use2bytes = (Command (3) = "2bytes")
+use2bytes = inCommand ("2bytes")
+
+If inCommand ("dsall") Then 
+	dontswitch = DS_ALL
+ElseIf inCommand ("dslight") Then
+	dontswitch = DS_LIGHT
+Else
+	dontswitch = DS_NONE
+End If
 
 fIn = FreeFile
 Open Command (1) For Binary As #fIn
@@ -86,8 +117,12 @@ For i = 1 To mapPants
 		sx = Sgn (xx - x)
 		sy = Sgn (yy - y)
 
-		If x > xx Then Swap x, xx 
-		If y > yy Then Swap y, yy
+		If dontswitch = DS_NONE Or _ 
+			(dontswitch = DS_LIGHT And (t < 5 Or (t > 6 And t < 15))) Or _ 
+			(dontswitch = DS_ALL And t < 5) Then
+			If x > xx Then Swap x, xx 
+			If y > yy Then Swap y, yy
+		End If
 
 		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x1 y1
 		Print #fOut, "" & (16*xx) & ", " & (16*yy) & ", ";		' x2 y2
