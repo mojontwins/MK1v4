@@ -62,6 +62,7 @@ typedef struct {
 } INERCIA;
 
 typedef struct {
+
 	unsigned char show_coins;	
 	unsigned char evil_kills_slowly;
 	unsigned char evil_zone_active;

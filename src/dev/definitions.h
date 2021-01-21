@@ -62,13 +62,7 @@ typedef struct {
 } INERCIA;
 
 typedef struct {
-	unsigned char x;
-	unsigned char y;
-	char mx;
-	unsigned char estado;
-} BULLET;
 
-typedef struct {
 	unsigned char show_coins;	
 	unsigned char evil_kills_slowly;
 	unsigned char evil_zone_active;
@@ -134,7 +128,10 @@ struct sp_Rect *spritesClip;
 
 INERCIA player;
 #ifdef PLAYER_CAN_FIRE
-	BULLET bullets [MAX_BULLETS];
+	unsigned char bullets_x [MAX_BULLETS];
+	unsigned char bullets_y [MAX_BULLETS];
+	signed char bullets_mx [MAX_BULLETS];
+	unsigned char bullets_estado [MAX_BULLETS];
 #endif
 signed int ptgmx, ptgmy;
 
@@ -280,6 +277,10 @@ unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char wall;
+
+#if defined RLE_MAP
+	unsigned char rdc, rdn;
+#endif
 
 #if defined TWO_SETS || defined TWO_SETS_REAL
 	unsigned char tileoffset;

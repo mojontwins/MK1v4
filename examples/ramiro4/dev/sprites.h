@@ -74,9 +74,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_1_a
 ; Sprite #0 y máscara
 ; Primera columna
+    ._sprite_1_a
         defb 1, 254
         defb 2, 252
         defb 4, 248
@@ -102,8 +102,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_1_b
 ; Segunda columna
+    ._sprite_1_b
         defb 160, 31
         defb 0, 15
         defb 80, 7
@@ -129,8 +129,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_1_c
 ; tercera columna
+    ._sprite_1_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -156,9 +156,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_2_a
 ; Sprite #1 y máscara
 ; Primera columna
+    ._sprite_2_a
         defb 0, 255
         defb 1, 254
         defb 2, 252
@@ -184,8 +184,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_2_b
 ; Segunda columna
+    ._sprite_2_b
         defb 0, 255
         defb 160, 31
         defb 0, 15
@@ -211,8 +211,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_2_c
 ; tercera columna
+    ._sprite_2_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -238,9 +238,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_3_a
 ; Sprite #2 y máscara
 ; Primera columna
+    ._sprite_3_a
         defb 0, 255
         defb 1, 254
         defb 2, 252
@@ -266,8 +266,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_3_b
 ; Segunda columna
+    ._sprite_3_b
         defb 208, 15
         defb 0, 7
         defb 40, 3
@@ -293,8 +293,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_3_c
 ; tercera columna
+    ._sprite_3_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -320,9 +320,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_4_a
 ; Sprite #3 y máscara
 ; Primera columna
+    ._sprite_4_a
         defb 0, 255
         defb 1, 254
         defb 2, 252
@@ -348,8 +348,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_4_b
 ; Segunda columna
+    ._sprite_4_b
         defb 208, 15
         defb 0, 7
         defb 40, 3
@@ -375,8 +375,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_4_c
 ; tercera columna
+    ._sprite_4_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -402,9 +402,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_5_a
 ; Sprite #4 y máscara
 ; Primera columna
+    ._sprite_5_a
         defb 5, 248
         defb 0, 240
         defb 10, 224
@@ -430,8 +430,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_5_b
 ; Segunda columna
+    ._sprite_5_b
         defb 128, 127
         defb 64, 63
         defb 32, 31
@@ -457,8 +457,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_5_c
 ; tercera columna
+    ._sprite_5_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -484,9 +484,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_6_a
 ; Sprite #5 y máscara
 ; Primera columna
+    ._sprite_6_a
         defb 0, 255
         defb 5, 248
         defb 0, 240
@@ -512,8 +512,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_6_b
 ; Segunda columna
+    ._sprite_6_b
         defb 0, 255
         defb 128, 127
         defb 64, 63
@@ -539,8 +539,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_6_c
 ; tercera columna
+    ._sprite_6_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -566,9 +566,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_7_a
 ; Sprite #6 y máscara
 ; Primera columna
+    ._sprite_7_a
         defb 11, 240
         defb 0, 224
         defb 20, 192
@@ -594,8 +594,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_7_b
 ; Segunda columna
+    ._sprite_7_b
         defb 0, 255
         defb 128, 127
         defb 64, 63
@@ -621,8 +621,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_7_c
 ; tercera columna
+    ._sprite_7_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -648,9 +648,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_8_a
 ; Sprite #7 y máscara
 ; Primera columna
+    ._sprite_8_a
         defb 11, 240
         defb 0, 224
         defb 20, 192
@@ -676,8 +676,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_8_b
 ; Segunda columna
+    ._sprite_8_b
         defb 0, 255
         defb 128, 127
         defb 64, 63
@@ -703,8 +703,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_8_c
 ; tercera columna
+    ._sprite_8_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -730,9 +730,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_9_a
 ; Sprite #8 y máscara
 ; Primera columna
+    ._sprite_9_a
         defb 1, 248
         defb 3, 24
         defb 66, 8
@@ -758,8 +758,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_9_b
 ; Segunda columna
+    ._sprite_9_b
         defb 128, 31
         defb 192, 8
         defb 163, 0
@@ -785,8 +785,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_9_c
 ; tercera columna
+    ._sprite_9_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -812,9 +812,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_10_a
 ; Sprite #9 y máscara
 ; Primera columna
+    ._sprite_10_a
         defb 1, 248
         defb 3, 16
         defb 197, 0
@@ -840,8 +840,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_10_b
 ; Segunda columna
+    ._sprite_10_b
         defb 128, 31
         defb 192, 24
         defb 66, 16
@@ -867,8 +867,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_10_c
 ; tercera columna
+    ._sprite_10_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -894,9 +894,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_11_a
 ; Sprite #10 y máscara
 ; Primera columna
+    ._sprite_11_a
         defb 1, 240
         defb 7, 224
         defb 3, 192
@@ -922,8 +922,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_11_b
 ; Segunda columna
+    ._sprite_11_b
         defb 192, 15
         defb 192, 15
         defb 224, 7
@@ -949,8 +949,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_11_c
 ; tercera columna
+    ._sprite_11_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -976,9 +976,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_12_a
 ; Sprite #11 y máscara
 ; Primera columna
+    ._sprite_12_a
         defb 3, 240
         defb 3, 240
         defb 7, 224
@@ -1004,8 +1004,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_12_b
 ; Segunda columna
+    ._sprite_12_b
         defb 128, 15
         defb 224, 7
         defb 192, 3
@@ -1031,8 +1031,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_12_c
 ; tercera columna
+    ._sprite_12_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1058,9 +1058,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_13_a
 ; Sprite #12 y máscara
 ; Primera columna
+    ._sprite_13_a
         defb 0, 195
         defb 60, 129
         defb 124, 1
@@ -1086,8 +1086,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_13_b
 ; Segunda columna
+    ._sprite_13_b
         defb 0, 195
         defb 60, 129
         defb 62, 128
@@ -1113,8 +1113,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_13_c
 ; tercera columna
+    ._sprite_13_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1140,9 +1140,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_14_a
 ; Sprite #13 y máscara
 ; Primera columna
+    ._sprite_14_a
         defb 0, 255
         defb 0, 223
         defb 32, 141
@@ -1168,8 +1168,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_14_b
 ; Segunda columna
+    ._sprite_14_b
         defb 0, 255
         defb 0, 251
         defb 4, 177
@@ -1195,8 +1195,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_14_c
 ; tercera columna
+    ._sprite_14_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1222,9 +1222,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_15_a
 ; Sprite #14 y máscara
 ; Primera columna
+    ._sprite_15_a
         defb 255, 0
         defb 255, 0
         defb 127, 0
@@ -1250,8 +1250,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_15_b
 ; Segunda columna
+    ._sprite_15_b
         defb 255, 0
         defb 255, 0
         defb 254, 0
@@ -1277,8 +1277,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_15_c
 ; tercera columna
+    ._sprite_15_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1304,9 +1304,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_16_a
 ; Sprite #15 y máscara
 ; Primera columna
+    ._sprite_16_a
         defb 255, 0
         defb 255, 0
         defb 127, 0
@@ -1332,8 +1332,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_16_b
 ; Segunda columna
+    ._sprite_16_b
         defb 255, 0
         defb 255, 0
         defb 254, 0
@@ -1359,8 +1359,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._sprite_16_c
 ; tercera columna
+    ._sprite_16_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1386,9 +1386,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_17_a
 ; Sprite #16 y máscara
 ; Primera columna
+    ._extra_sprite_17_a
         defb 0, 255
         defb 0, 255
         defb 0, 224
@@ -1414,8 +1414,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_17_b
 ; Segunda columna
+    ._extra_sprite_17_b
         defb 0, 255
         defb 0, 255
         defb 0, 3
@@ -1441,8 +1441,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_17_c
 ; tercera columna
+    ._extra_sprite_17_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1468,9 +1468,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_18_a
 ; Sprite #17 y máscara
 ; Primera columna
+    ._extra_sprite_18_a
         defb 0, 15
         defb 96, 1
         defb 124, 0
@@ -1496,8 +1496,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_18_b
 ; Segunda columna
+    ._extra_sprite_18_b
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1523,8 +1523,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_18_c
 ; tercera columna
+    ._extra_sprite_18_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1550,9 +1550,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_19_a
 ; Sprite #18 y máscara
 ; Primera columna
+    ._extra_sprite_19_a
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1578,8 +1578,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_19_b
 ; Segunda columna
+    ._extra_sprite_19_b
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1605,8 +1605,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_19_c
 ; tercera columna
+    ._extra_sprite_19_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1632,9 +1632,9 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_20_a
 ; Sprite #19 y máscara
 ; Primera columna
+    ._extra_sprite_20_a
         defb 0, 255
         defb 0, 248
         defb 7, 224
@@ -1660,8 +1660,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_20_b
 ; Segunda columna
+    ._extra_sprite_20_b
         defb 0, 255
         defb 0, 31
         defb 224, 7
@@ -1687,8 +1687,8 @@ extern unsigned char extra_sprite_20_c [];
         defb 0, 255
         defb 0, 255
  
-    ._extra_sprite_20_c
 ; tercera columna
+    ._extra_sprite_20_c
         defb 0, 255
         defb 0, 255
         defb 0, 255
