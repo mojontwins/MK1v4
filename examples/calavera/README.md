@@ -155,5 +155,25 @@ Y los caracteres 4, 5, 6 y 7 son `$`, `%`, `&` y `'`, que no se usan. Por lo tan
 
 Para hacerlas aparecer en el mapa sin tener que programar absolutamente nada, abusaremos del motor de hotspots. Recordemos que el hotspot (salvo las recargas) se pintará con el `tile 16 + t`, con `t` el tipo de hotspot. Para que se use el tile especial número 49 sólo tendremos que añadir un hotspot de tipo 33, o 0x21 en HEX.
 
-En nuestro código custom, detectamos que hemos tomado un hotspot tipo 33 y activamos la llave.
+En nuestro código custom, detectamos que hemos tomado un hotspot tipo 33 y activamos la llave. Y si ya tenemos la llave, habrá que restaurar el hotspot (con la función pillada directamente de **Cheril Perils** y hacer rebotar al personaje):
+
+```c
+	void hook_mainloop (void) {
+		[...]
+
+		// Get key
+		if (latest_hotspot == 33) {
+			if (phaskey) {
+				// We have to restore the hotspot!
+				set_hotspot (33);
+				play_sfx (8);
+				player.vx = make_nsign (player.vx, 256);
+				player.vy = make_nsign (player.vy, 256);
+			} else phaskey = 1;
+		}
+
+		[...]
+	}
+
+```
 

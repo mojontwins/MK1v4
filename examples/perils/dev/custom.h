@@ -3,6 +3,9 @@
 
 // Add here your custom routines & vars
 
+// Comment this to remove the "next level" cheat
+#define ENABLE_CHEAT
+
 unsigned char resonators_on;
 unsigned char player_min_killable;
 
@@ -66,6 +69,13 @@ void set_hotspot (unsigned char hn) {
 	}
 
 	void hook_init_mainloop (void) {
+
+		#ifdef ENABLE_CHEAT
+			if (sp_KeyPressed (key_1) && sp_KeyPressed (key_3)) {
+				player.killed = 60;
+			}
+		#endif
+
 		if (player.killed == 60) {
 			level ++;
 			if (level < 3) {
