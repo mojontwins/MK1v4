@@ -10,8 +10,6 @@
 
 // Protos & inlines
 
-unsigned int __FASTCALL__ abs (int n);
-#define make_sign(s,n)			((s) < 0 ? -(n) : (n))
 #define make_nsign(s,n)			((s) > 0 ? -(n) : (n))
 
 // Custom tile colour attributes
@@ -198,6 +196,7 @@ void add_vy_to_y_and_cnv (void) {
 	#endasm
 }
 
+/*
 void set_hotspot (unsigned char hn) {
 	hotspots [n_pant].act = 1;
 	hotspot_t = hn;
@@ -206,6 +205,64 @@ void set_hotspot (unsigned char hn) {
 	rdy = (hotspots [n_pant].xy & 15);
 	hotspot_x = rdx << 4;
 	hotspot_y = rdy << 4;
+	set_map_tile (rdx, rdy, 16 + hn, 0);
+}
+*/
+
+void set_hotspot (unsigned char hn) {
+	// Hotspot structure is xy, tipo, act.
+	hotspot_t = hn;
+
+	#asm
+		// First, make a pointer to hotspots [n_pant]
+			ld  a, (_n_pant)
+			ld  b, a
+			sla a 				// x2
+			add a, b  			// x3
+			ld  c, a
+			ld  b, 0
+			ld  hl, _hotspots
+			add hl, bc
+
+		// We'll be using xy and modifying tipo and act.
+			ld  c, (hl)			// C = xy
+			inc hl				// now HL points to tipo
+
+		// hotspots [n_pant].tipo = hotspot_t;
+			ld  a, (_hotspot_t)
+			ld  (hl), a
+			inc hl 				// now HL points to act
+
+		// hotspots [n_pant].act = 1;
+			ld  a, 1
+			ld  (hl), a
+
+		// rdx = (hotspots [n_pant].xy >> 4);
+			ld  a, c
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (_rdx), a
+		
+		// hotspot_x = rdx << 4;
+			ld  a, c
+			and 0xf0
+			ld  (_hotspot_x), a
+
+		// rdy = (hotspots [n_pant].xy & 15);
+			ld  a, c
+			and 15
+			ld  (_rdy), a
+		
+		// hotspot_y = rdy << 4;
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (_hotspot_y), a
+	#endasm
+
 	set_map_tile (rdx, rdy, 16 + hn, 0);
 }
 
@@ -223,7 +280,7 @@ void set_hotspot (unsigned char hn) {
 	void hook_init_game (void) {
 		new_level = 1;
 		level = 3;
-		phaskey = 0;
+		phaskey = 1;
 		openlocks = 0;
 	}
 

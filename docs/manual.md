@@ -2202,6 +2202,67 @@ Este código mínimo en `hook_mainloop` hará que un hotspot de tipo 6 pueda "to
     }
 ```
 
+Puedes ahorrar muchos ciclos y 73 bytes si usas la versión en ensamble:
+
+```c
+	void set_hotspot (unsigned char hn) {
+		// Hotspot structure is xy, tipo, act.
+		hotspot_t = hn;
+
+		#asm
+			// First, make a pointer to hotspots [n_pant]
+				ld  a, (_n_pant)
+				ld  b, a
+				sla a 				// x2
+				add a, b  			// x3
+				ld  c, a
+				ld  b, 0
+				ld  hl, _hotspots
+				add hl, bc
+
+			// We'll be using xy and modifying tipo and act.
+				ld  c, (hl)			// C = xy
+				inc hl				// now HL points to tipo
+
+			// hotspots [n_pant].tipo = hotspot_t;
+				ld  a, (_hotspot_t)
+				ld  (hl), a
+				inc hl 				// now HL points to act
+
+			// hotspots [n_pant].act = 1;
+				ld  a, 1
+				ld  (hl), a
+
+			// rdx = (hotspots [n_pant].xy >> 4);
+				ld  a, c
+				srl a
+				srl a
+				srl a
+				srl a
+				ld  (_rdx), a
+			
+			// hotspot_x = rdx << 4;
+				ld  a, c
+				and 0xf0
+				ld  (_hotspot_x), a
+
+			// rdy = (hotspots [n_pant].xy & 15);
+				ld  a, c
+				and 15
+				ld  (_rdy), a
+			
+			// hotspot_y = rdy << 4;
+				sla a
+				sla a
+				sla a
+				sla a
+				ld  (_hotspot_y), a
+		#endasm
+
+		set_map_tile (rdx, rdy, 16 + hn, 0);
+	}
+```
+
 ## Paralizar a los enemigos
 
 Si activas `ENEMIES_MAY_BE_PARALIZED` puedes paralizar a cualquiera de los enemigos que hay en pantalla colocando su `en_an_state` a `ENEM_PARALYZED` y estableciendo un número de cuadros en `en_an_count`. Los enemigos paralizados recuperarán su estado normal cuando se agote el contador. Una forma de evitar esto y que se desparalicen cuando tú quieras es restaurar continuamente el valor de `en_an_count`. 
