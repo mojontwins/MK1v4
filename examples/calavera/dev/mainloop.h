@@ -340,7 +340,7 @@ void main (void) {
 				animate_boxes ();
 			#endif
 
-			// Render		
+			// Render
 			for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 				#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 					#ifdef RANDOM_RESPAWN

@@ -290,6 +290,10 @@ unsigned char wall;
 	unsigned char *tileset_mappings;
 #endif
 
+#ifdef RANDOM_RESPAWN
+	signed char rds;
+#endif
+
 unsigned char ptx1, ptx2, pty1, pty2;
 	
 unsigned char pti, ptj;
