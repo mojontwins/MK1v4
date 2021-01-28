@@ -308,9 +308,9 @@ Este es su comportamiento, a nivel interno:
 
 * Durante el game loop, 
 
-	* Si `en_an_fanty_activo` vale 0, el enemigo correspondiente está muerto, y se cumple que `(rand () & 31) == 1`, se pone `en_an_fanty_activo` a 1 y se inicializa su posición (arriba o abajo, fuera de la pantalla, dependiendo de en qué mitad esté el jugador; en una posición aleatoria horizontal) y su velocidad (a 0 en ambos ejes). La vida se establece a `FANTIES_LIFE_GAUGE`.
+    * Si `en_an_fanty_activo` vale 0, el enemigo correspondiente está muerto, y se cumple que `(rand () & 31) == 1`, se pone `en_an_fanty_activo` a 1 y se inicializa su posición (arriba o abajo, fuera de la pantalla, dependiendo de en qué mitad esté el jugador; en una posición aleatoria horizontal) y su velocidad (a 0 en ambos ejes). La vida se establece a `FANTIES_LIFE_GAUGE`.
 
-	* si `en_an_fanty_activo` vale 1 para un enemigo, reacciona como un espectro: Se acerca al usuario si no está escondido, o se alejan de él (repulsión lineal) si lo está, hasta salir de la pantalla.
+    * si `en_an_fanty_activo` vale 1 para un enemigo, reacciona como un espectro: Se acerca al usuario si no está escondido, o se alejan de él (repulsión lineal) si lo está, hasta salir de la pantalla.
 
 * Al morir un fanty, `en_an_fanty_activo` vuelve a 0 y la vida se establece a `FANTIES_LIFE_GAUGE`. O sea, que cuando matas un fanty aparecerá otro nuevo por el borde casi enseguida.
 
@@ -2199,6 +2199,67 @@ Este código mínimo en `hook_mainloop` hará que un hotspot de tipo 6 pueda "to
 
         // no queremos que desaparezca:
         set_hotspot (6);
+    }
+```
+
+Puedes ahorrar muchos ciclos y 73 bytes si usas la versión en ensamble:
+
+```c
+    void set_hotspot (unsigned char hn) {
+        // Hotspot structure is xy, tipo, act.
+        hotspot_t = hn;
+
+        #asm
+            // First, make a pointer to hotspots [n_pant]
+                ld  a, (_n_pant)
+                ld  b, a
+                sla a               // x2
+                add a, b            // x3
+                ld  c, a
+                ld  b, 0
+                ld  hl, _hotspots
+                add hl, bc
+
+            // We'll be using xy and modifying tipo and act.
+                ld  c, (hl)         // C = xy
+                inc hl              // now HL points to tipo
+
+            // hotspots [n_pant].tipo = hotspot_t;
+                ld  a, (_hotspot_t)
+                ld  (hl), a
+                inc hl              // now HL points to act
+
+            // hotspots [n_pant].act = 1;
+                ld  a, 1
+                ld  (hl), a
+
+            // rdx = (hotspots [n_pant].xy >> 4);
+                ld  a, c
+                srl a
+                srl a
+                srl a
+                srl a
+                ld  (_rdx), a
+            
+            // hotspot_x = rdx << 4;
+                ld  a, c
+                and 0xf0
+                ld  (_hotspot_x), a
+
+            // rdy = (hotspots [n_pant].xy & 15);
+                ld  a, c
+                and 15
+                ld  (_rdy), a
+            
+            // hotspot_y = rdy << 4;
+                sla a
+                sla a
+                sla a
+                sla a
+                ld  (_hotspot_y), a
+        #endasm
+
+        set_map_tile (rdx, rdy, 16 + hn, 0);
     }
 ```
 

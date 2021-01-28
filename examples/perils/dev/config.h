@@ -334,9 +334,9 @@
 
 // IV.2. Horizontal (side view) or general (top view) movement.
 
-#define PLAYER_MAX_VX				256 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX					24		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX					32		// Friction (32/64 = 0,5 píxels/frame^2)
+#define PLAYER_MAX_VX				200 	// Max velocity (192/64 = 3 píxels/frame)
+#define PLAYER_AX					32		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX					48		// Friction (32/64 = 0,5 píxels/frame^2)
 
 #define PLAYER_AX_SLIPPERY 			8
 #define PLAYER_RX_SLIPPERY 			8

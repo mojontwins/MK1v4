@@ -4348,29 +4348,23 @@ void mueve_bicharracos (void) {
 
 				#ifdef RANDOM_RESPAWN
 					if (en_an_fanty_activo [enit]) { 
-						#ifdef PLAYER_CAN_HIDE			
-							if (player_hidden ()) {
-								if (player.x < en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-									en_an_vx [enit] += FANTY_A >> 1;
-								else if (player.x > en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-									en_an_vx [enit] -= FANTY_A >> 1;
-								if (player.y < en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-									en_an_vy [enit] += FANTY_A >> 1;
-								else if (player.y > en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-									en_an_vy [enit] -= FANTY_A >> 1;
-							} else
-						#endif 
-						if ((rand () & 7) > 1) {
-							if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-								en_an_vx [enit] += FANTY_A;
-							else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-								en_an_vx [enit] -= FANTY_A;
-							if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-								en_an_vy [enit] += FANTY_A;
-							else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-								en_an_vy [enit] -= FANTY_A;
-						}
-										
+						#ifdef PLAYER_CAN_HIDE
+							rds = player_hidden () ? (-(FANTY_A>>1)) : FANTY_A;
+						#else
+							rds = FANTY_A;
+						#endif
+
+						if (player.x > en_an_x [enit]) en_an_vx [enit] += rds;
+						else en_an_vx [enit] -= rds;
+
+						if (player.y > en_an_y [enit]) en_an_vy [enit] += rds;
+						else en_an_vy [enit] -= rds;
+
+						if (en_an_vx [enit] < -FANTY_MAX_V) en_an_vx [enit] = -FANTY_MAX_V;
+						if (en_an_vy [enit] < -FANTY_MAX_V) en_an_vy [enit] = -FANTY_MAX_V;
+						if (en_an_vx [enit] > FANTY_MAX_V) en_an_vx [enit] = FANTY_MAX_V;
+						if (en_an_vy [enit] > FANTY_MAX_V) en_an_vy [enit] = FANTY_MAX_V;
+									
 						en_an_x [enit] += en_an_vx [enit];
 						en_an_y [enit] += en_an_vy [enit];
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
