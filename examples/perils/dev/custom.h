@@ -158,6 +158,7 @@ void set_hotspot (unsigned char hn) {
 			n_pant = scr_ini [level];
 			init_player_values ();
 			player.killed = 0; 
+			resonators_on = 0;
 			tileset_mappings = (unsigned char *) (tilemaps + (level << 4));
 		}
 	}
