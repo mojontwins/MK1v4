@@ -146,6 +146,7 @@ void set_hotspot (unsigned char hn) {
 		}
 
 		if (new_level) {
+			saca_a_todo_el_mundo_de_aqui ();
 			new_level = 0;
 			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
 			sp_Invalidate (spritesClip, spritesClip);
