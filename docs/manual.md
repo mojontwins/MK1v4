@@ -2404,6 +2404,91 @@ Se trata de crear una variable `continue_on`, darle 0 en `hook_system_inits`, y 
     }
 ```
 
+## Rutinas de movimiento personalizadas
+
+Si no te vale con lo que hay para tu juego, puedes desactivar los ejes vertical y/o vertical y programar los tuyos propios. Para ello tendrás que añadir esto al principio de `config.h` (no viene por defecto):
+
+```c
+	#define PLAYER_CUSTOM_VERT_AXIS
+	#define PLAYER_CUSTOM_HORZ_AXIS
+```
+
+Puedes definir cualquiera de los dos, o los dos, dependiendo de tus necesidades. Cada una de estas directivas desactiva el código que modifica `player.vy` o `player.vx`, respectivamente. Esto significa que tendrás que añadir tu código:
+
+* Si has desactivado el eje vertical con `PLAYER_CUSTOM_VERT_AXIS`, deberás añadir un archivo `custom_vert_axis.h` con tu código. El archivo podrá leer los controles de `pad0` y deberá terminar estableciendo `player.vy`. Nótese que desactivar el eje vertical desactiva la gravedad, el salto y el jetpack en modo lateral.
+
+* Si has desactivado el eje vertical con `PLAYER_CUSTOM_HORZ_AXIS`, deberás añadir un archivo `custom_horz_axis.h` con tu código. El archivo podrá leer los controles de `pad0` y deberá terminar estableciendo `player.vx`.
+
+Como ejemplo tonto puedes ver esta reimplementación del modo genital, que leen `pad0` y terminan modificando `player.vy` y `player.vx`:
+
+```c
+	// custom_vert_axis.h
+	if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
+		if (player.vy > 0) {
+			player.vy -= player.rx;
+			if (player.vy < 0)
+				player.vy = 0;
+		} else if (player.vy < 0) {
+			player.vy += player.rx;
+			if (player.vy > 0)
+				player.vy = 0;
+		}
+	}
+
+	if ((pad0 & sp_UP) == 0) {
+		if (player.vy > -player.max_vx) {
+			player.vy -= player.ax;					
+		}
+		player.facing = GENITAL_FACING_UP;
+	}
+
+	if ((pad0 & sp_DOWN) == 0) {
+		if (player.vy < player.max_vx) {
+			player.vy += player.ax;
+		}
+		player.facing = GENITAL_FACING_DOWN;
+	}
+```
+
+```c
+	// custom_horz_axis.h
+	if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
+		if (player.vx > 0) {
+			player.vx -= player.rx;
+			if (player.vx < 0)
+				player.vx = 0;
+		} else if (player.vx < 0) {
+			player.vx += player.rx;
+			if (player.vx > 0)
+				player.vx = 0;
+		}
+	}
+
+	if ((pad0 & sp_LEFT) == 0) {
+		if (player.vx > -player.max_vx) {
+			player.vx -= player.ax;
+		}
+		player.facing = GENITAL_FACING_LEFT;		
+	}
+
+	if ((pad0 & sp_RIGHT) == 0) {
+		if (player.vx < player.max_vx) {
+			player.vx += player.ax;
+		}
+		player.facing = GENITAL_FACING_RIGHT;		
+	}
+```
+
+## Selección de sprite personalizada
+
+Para invalidar el código por defecto y usar el tuyo propio, debes añadir esto al principio de `config.h` (no viene por defecto):
+
+```c
+	#define PLAYER_CUSTOM_ANIMATION
+```
+
+Si lo defines, tendrás que añadir un archivo `custom_animation.h` con tu código, que debe encargarse de examinar el estado del jugador para finalmente dejar `player.next_frame` apuntando al gráfico que debe pintarse en el cuadro actual.
+
 ## Más
 
 Pronto más. ¿Echas en falta algo? Dímelo.

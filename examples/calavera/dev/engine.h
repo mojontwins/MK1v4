@@ -1020,110 +1020,181 @@ void move (void) {
 
 	*/
 
-	#ifdef PLAYER_NO_INERTIA
-		if ((pad0 & sp_UP) == 0) { player.vy = -PLAYER_CONST_V; player.facing = GENITAL_FACING_UP; }
-		if ((pad0 & sp_DOWN) == 0) { player.vy = PLAYER_CONST_V; player.facing = GENITAL_FACING_DOWN; }
-		if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0)) player.vy = 0;
-	#else	
-		#ifndef PLAYER_MOGGY_STYLE
-			// If side view, get affected by gravity:
-			
-			#ifdef RAMIRO_HOVER
-				if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
-					#asm
-						._player_hover
-							ld  a, (_pad0)
-							or  sp_DOWN
-							ld  (_pad0), a
+	#ifdef PLAYER_CUSTOM_VERT_AXIS
+		#include "custom_vert_axis.h"
+	#else
 
+		/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
+		   a somewhat more controllable jump, so we use the "mario bros" kind of controls:
+		   the longer you press jump, the higher you reach.
+		*/
+
+		#ifdef PLAYER_HAS_JUMP
+			#ifdef RAMIRO_HOP
+				#ifdef SHORT_PLAYER
+					rdi = ((attr ((gpx + 4) >> 4, gpyy + 1) & 12) || (attr ((gpx + 11) >> 4, gpyy + 1) & 12));
+				#else
+					rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
+				#endif
+			#endif
+
+			if (
+				#if defined BOTH_KEYS_JUMP
+					(pad0 & sp_UP) == 0 || (pad0 & sp_FIRE) == 0
+				#elif defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
+					(pad0 & sp_UP) == 0 
+				#else
+					(pad0 & sp_FIRE) == 0
+				#endif	
+			) {
+				if (player.saltando == 0) {
+					if (
+					#ifdef RAMIRO_HOP
+						rdi
+					#else
+						player.possee 
+					#endif
+						|| player.gotten
+					) {
+						player.saltando = 1;
+						player.cont_salto = 0;
+						play_sfx (1);
+					}
+				}
+
+				if (player.saltando) {
+					player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
+					if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
+					player.cont_salto ++;
+					if (player.cont_salto == 8)
+						player.saltando = 0;
+				} 
+			} else {
+				player.saltando = 0;
+			}
+		#endif
+
+		#ifdef PLAYER_HAS_JETPAC
+			if ((pad0 & sp_UP) == 0) {
+				player.vy -= PLAYER_INCR_JETPAC;
+				if (player.vy < -PLAYER_MAX_VY_JETPAC) player.vy = -PLAYER_MAX_VY_JETPAC;
+				#ifdef JETPAC_DRAINS_LIFE
+					jetpac_frame_counter ++;
+					if (jetpac_frame_counter == JETPAC_DRAIN_OFFSET + JETPAC_DRAIN_RATIO) {
+						jetpac_frame_counter = JETPAC_DRAIN_OFFSET;
+						player.life --;
+					}
+				#endif
+			} else {
+				jetpac_frame_counter = 0;
+			}
+		#endif
+
+		#ifdef PLAYER_NO_INERTIA
+			if ((pad0 & sp_UP) == 0) { player.vy = -PLAYER_CONST_V; player.facing = GENITAL_FACING_UP; }
+			if ((pad0 & sp_DOWN) == 0) { player.vy = PLAYER_CONST_V; player.facing = GENITAL_FACING_DOWN; }
+			if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0)) player.vy = 0;
+		#else	
+			#ifndef PLAYER_MOGGY_STYLE
+				// If side view, get affected by gravity:
+				
+				#ifdef RAMIRO_HOVER
+					if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
+						#asm
+							._player_hover
+								ld  a, (_pad0)
+								or  sp_DOWN
+								ld  (_pad0), a
+
+								ld  hl, (_player + 8) 		// player.vy
+								ld  de, PLAYER_MAX_VY_CAYENDO_H - PLAYER_G_HOVER
+								or  a
+								push hl 
+								sbc hl, de 
+								pop hl 
+								jr  nc, player_hover_maximum
+
+								ld  de, PLAYER_G_HOVER
+								add hl, de 
+								jr  player_hover_set
+
+							.player_hover_maximum
+								ld  hl, PLAYER_MAX_VY_CAYENDO_H
+
+							.player_hover_set
+								ld  (_player + 8), hl
+						#endasm
+					} else
+				#endif
+				{
+					#asm
+						._player_gravity
+							// Signed comparison shortcut by my picha
+							// If player.vy < 0 add PLAYER_G
+							// If player.vy > 0 do a signed comparison
 							ld  hl, (_player + 8) 		// player.vy
-							ld  de, PLAYER_MAX_VY_CAYENDO_H - PLAYER_G_HOVER
+							bit 7, h
+							jr  nz, player_gravity_add  // < 0
+
+							ld  de, PLAYER_MAX_VY_CAYENDO - PLAYER_G
 							or  a
 							push hl 
 							sbc hl, de 
 							pop hl 
-							jr  nc, player_hover_maximum
+							jr  nc, player_gravity_maximum
 
-							ld  de, PLAYER_G_HOVER
+						.player_gravity_add
+							ld  de, PLAYER_G
 							add hl, de 
-							jr  player_hover_set
+							jr  player_gravity_vy_set
 
-						.player_hover_maximum
-							ld  hl, PLAYER_MAX_VY_CAYENDO_H
+						.player_gravity_maximum
+							ld  hl, PLAYER_MAX_VY_CAYENDO
 
-						.player_hover_set
-							ld  (_player + 8), hl
+						.player_gravity_vy_set
+							ld  (_player + 8), hl 
+
+						.player_gravity_done
 					#endasm
-				} else
+				}
+
+				if (player.gotten) player.vy = 0;		
+			#else
+				// If top-down view, vertical movement = horizontal movement.
+				#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
+					if (player.estado != EST_FRIGOABABOL)
+				#endif
+				if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
+					if (player.vy > 0) {
+						player.vy -= player.rx;
+						if (player.vy < 0)
+							player.vy = 0;
+					} else if (player.vy < 0) {
+						player.vy += player.rx;
+						if (player.vy > 0)
+							player.vy = 0;
+					}
+				}
+
+				if ((pad0 & sp_UP) == 0) {
+					if (player.vy > -player.max_vx) {
+						player.vy -= player.ax;					
+					}
+					player.facing = GENITAL_FACING_UP;
+				}
+
+				if ((pad0 & sp_DOWN) == 0) {
+					if (player.vy < player.max_vx) {
+						player.vy += player.ax;
+					}
+					player.facing = GENITAL_FACING_DOWN;
+				}
 			#endif
-			{
-				#asm
-					._player_gravity
-						// Signed comparison shortcut by my picha
-						// If player.vy < 0 add PLAYER_G
-						// If player.vy > 0 do a signed comparison
-						ld  hl, (_player + 8) 		// player.vy
-						bit 7, h
-						jr  nz, player_gravity_add  // < 0
+		#endif	
 
-						ld  de, PLAYER_MAX_VY_CAYENDO - PLAYER_G
-						or  a
-						push hl 
-						sbc hl, de 
-						pop hl 
-						jr  nc, player_gravity_maximum
-
-					.player_gravity_add
-						ld  de, PLAYER_G
-						add hl, de 
-						jr  player_gravity_vy_set
-
-					.player_gravity_maximum
-						ld  hl, PLAYER_MAX_VY_CAYENDO
-
-					.player_gravity_vy_set
-						ld  (_player + 8), hl 
-
-					.player_gravity_done
-				#endasm
-			}
-
-			if (player.gotten) player.vy = 0;		
-		#else
-			// If top-down view, vertical movement = horizontal movement.
-			#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
-				if (player.estado != EST_FRIGOABABOL)
-			#endif
-			if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
-				if (player.vy > 0) {
-					player.vy -= player.rx;
-					if (player.vy < 0)
-						player.vy = 0;
-				} else if (player.vy < 0) {
-					player.vy += player.rx;
-					if (player.vy > 0)
-						player.vy = 0;
-				}
-			}
-
-			if ((pad0 & sp_UP) == 0) {
-				if (player.vy > -player.max_vx) {
-					player.vy -= player.ax;					
-				}
-				player.facing = GENITAL_FACING_UP;
-			}
-
-			if ((pad0 & sp_DOWN) == 0) {
-				if (player.vy < player.max_vx) {
-					player.vy += player.ax;
-				}
-				player.facing = GENITAL_FACING_DOWN;
-			}
+		#ifdef PLAYER_DIZZY
+			if (player.estado & EST_DIZZY) { player.vy >>= 1; player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
 		#endif
-	#endif	
-
-	#ifdef PLAYER_DIZZY
-		if (player.estado & EST_DIZZY) { player.vy >>= 1; player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
 	#endif
 
 	player.y += player.vy;
@@ -1484,71 +1555,6 @@ void move (void) {
 		#endif
 	}
 
-	/* Jump: Jumping is as easy as giving vy a negative value. Nevertheless, we want
-	   a somewhat more controllable jump, so we use the "mario bros" kind of controls:
-	   the longer you press jump, the higher you reach.
-	*/
-
-	#ifdef PLAYER_HAS_JUMP
-		#ifdef RAMIRO_HOP
-			#ifdef SHORT_PLAYER
-				rdi = ((attr ((gpx + 4) >> 4, gpyy + 1) & 12) || (attr ((gpx + 11) >> 4, gpyy + 1) & 12));
-			#else
-				rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
-			#endif
-		#endif
-
-		if (
-			#if defined BOTH_KEYS_JUMP
-				(pad0 & sp_UP) == 0 || (pad0 & sp_FIRE) == 0
-			#elif defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
-				(pad0 & sp_UP) == 0 
-			#else
-				(pad0 & sp_FIRE) == 0
-			#endif	
-		) {
-			if (player.saltando == 0) {
-				if (
-				#ifdef RAMIRO_HOP
-					rdi
-				#else
-					player.possee 
-				#endif
-					|| player.gotten
-				) {
-					player.saltando = 1;
-					player.cont_salto = 0;
-					play_sfx (1);
-				}
-			}
-
-			if (player.saltando) {
-				player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
-				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-				player.cont_salto ++;
-				if (player.cont_salto == 8)
-					player.saltando = 0;
-			} 
-		} else {
-			player.saltando = 0;
-		}
-	#endif
-
-	#ifdef PLAYER_HAS_JETPAC
-		if ((pad0 & sp_UP) == 0) {
-			player.vy -= PLAYER_INCR_JETPAC;
-			if (player.vy < -PLAYER_MAX_VY_JETPAC) player.vy = -PLAYER_MAX_VY_JETPAC;
-			#ifdef JETPAC_DRAINS_LIFE
-				jetpac_frame_counter ++;
-				if (jetpac_frame_counter == JETPAC_DRAIN_OFFSET + JETPAC_DRAIN_RATIO) {
-					jetpac_frame_counter = JETPAC_DRAIN_OFFSET;
-					player.life --;
-				}
-			#endif
-		} else {
-			jetpac_frame_counter = 0;
-		}
-	#endif
 
 	// Done with vertical movement.
 
@@ -2100,53 +2106,57 @@ void move (void) {
 		#endif
 	#endif
 
-	#ifdef PLAYER_NO_INERTIA
-		if ((pad0 & sp_LEFT) == 0) { player.vx = -PLAYER_CONST_V; player.facing = GENITAL_FACING_LEFT; }
-		if ((pad0 & sp_RIGHT) == 0) { player.vx = PLAYER_CONST_V; player.facing = GENITAL_FACING_RIGHT; }
-		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
+	#ifdef PLAYER_CUSTOM_HORZ_AXIS
+		#include "custom_horz_axis.h"
 	#else
-		#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
-			if (player.estado != EST_FRIGOABABOL)
+		#ifdef PLAYER_NO_INERTIA
+			if ((pad0 & sp_LEFT) == 0) { player.vx = -PLAYER_CONST_V; player.facing = GENITAL_FACING_LEFT; }
+			if ((pad0 & sp_RIGHT) == 0) { player.vx = PLAYER_CONST_V; player.facing = GENITAL_FACING_RIGHT; }
+			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
+		#else
+			#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
+				if (player.estado != EST_FRIGOABABOL)
+			#endif
+			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
+				if (player.vx > 0) {
+					player.vx -= player.rx;
+					if (player.vx < 0)
+						player.vx = 0;
+				} else if (player.vx < 0) {
+					player.vx += player.rx;
+					if (player.vx > 0)
+						player.vx = 0;
+				}
+			}
+
+			if ((pad0 & sp_LEFT) == 0) {
+				if (player.vx > -player.max_vx) {
+					#ifndef PLAYER_MOGGY_STYLE
+						player.facing = 1;
+					#endif
+					player.vx -= player.ax;
+				}
+				#ifdef PLAYER_MOGGY_STYLE
+					player.facing = GENITAL_FACING_LEFT;
+				#endif
+			}
+
+			if ((pad0 & sp_RIGHT) == 0) {
+				if (player.vx < player.max_vx) {
+					player.vx += player.ax;
+					#ifndef PLAYER_MOGGY_STYLE
+						player.facing = 0;
+					#endif
+				}
+				#ifdef PLAYER_MOGGY_STYLE
+					player.facing = GENITAL_FACING_RIGHT;
+				#endif
+			}
 		#endif
-		if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
-			if (player.vx > 0) {
-				player.vx -= player.rx;
-				if (player.vx < 0)
-					player.vx = 0;
-			} else if (player.vx < 0) {
-				player.vx += player.rx;
-				if (player.vx > 0)
-					player.vx = 0;
-			}
-		}
 
-		if ((pad0 & sp_LEFT) == 0) {
-			if (player.vx > -player.max_vx) {
-				#ifndef PLAYER_MOGGY_STYLE
-					player.facing = 1;
-				#endif
-				player.vx -= player.ax;
-			}
-			#ifdef PLAYER_MOGGY_STYLE
-				player.facing = GENITAL_FACING_LEFT;
-			#endif
-		}
-
-		if ((pad0 & sp_RIGHT) == 0) {
-			if (player.vx < player.max_vx) {
-				player.vx += player.ax;
-				#ifndef PLAYER_MOGGY_STYLE
-					player.facing = 0;
-				#endif
-			}
-			#ifdef PLAYER_MOGGY_STYLE
-				player.facing = GENITAL_FACING_RIGHT;
-			#endif
-		}
-	#endif
-
-	#ifdef PLAYER_DIZZY
-		if (player.estado & EST_DIZZY) { player.vx >>= 1; player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
+		#ifdef PLAYER_DIZZY
+			if (player.estado & EST_DIZZY) { player.vx >>= 1; player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
+		#endif
 	#endif
 
 	player.x += player.vx;
@@ -2961,100 +2971,104 @@ void move (void) {
 
 	// Select next frame to paint...
 
-	#ifndef PLAYER_MOGGY_STYLE
-		// In this case, the spriteset is:
-		// 1  2  3  4  5  6  7  8
-		// R1 R2 R3 RJ L1 L2 L3 LJ
-
-		#ifdef ENABLE_FRIGOABABOL
-			if (player.estado == EST_FRIGOABABOL) {
-				rdd = 8; rdi = 0;
-			} else
-		#endif
-
-		{
-			#asm
-				ld  a, (_player+22)					// player.facing
-				or  a
-				jr  z, _player_cell_sel_set_rdi		// if A = 0 set 0
-				ld  a, 4							// ELSE     set 4
-			._player_cell_sel_set_rdi
-				ld  (_rdi), a
-			#endasm
-
-			#ifdef PUSH_AND_PULL
-				if (player.grab_block) rdd = PLAYER_GRAB_FRAME; else
-			#endif
-			#ifdef ENABLE_SWORD
-				if (s_on) rdd = SWORD_HIT_FRAME; else
-			#endif
-			if (0 == player.possee && 0 == player.gotten) {
-				rdd = 3;
-			} else {
-				if (
-					#ifdef SLIPPERY_TILES
-						((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0)
-					#else
-						player.vx == 0
-					#endif
-				)
-				#ifdef PLAYER_ALTERNATE_ANIMATION
-					{
-						rdd = player.facing ? 2 : 0;
-					} else {
-						rdd = ((gpx + 4) >> 3) % 3;
-					}
-				#else 
-					{
-						rdd = 1;
-					} else {
-						rdd = ((gpx + 4) >> 3) & 3;
-						if (rdd == 3) rdd = 1;
-					}
-				#endif
-			}
-		}
-
-		player.next_frame = player_cells [rdi + rdd];
+	#ifdef PLAYER_CUSTOM_ANIMATION
+		#include "custom_animation.h"
 	#else
-		// In this case, the spriteset is
-		// 1  2  3  4  5  6  7  8
-		// R1 R2 L1 L2 U1 U2 D1 D2
-		
-		#ifdef ENABLE_FRIGOABABOL
-			if (player.estado == EST_FRIGOABABOL) {
-				player.next_frame = sprite_frigo;
-			} else
-		#endif
-		{
-			#if defined ENABLE_SWORD && defined GENITAL_HIT_FRAMES
-				if (s_on) {
-					rdd = 9 + player.facing;
+		#ifndef PLAYER_MOGGY_STYLE
+			// In this case, the spriteset is:
+			// 1  2  3  4  5  6  7  8
+			// R1 R2 R3 RJ L1 L2 L3 LJ
+
+			#ifdef ENABLE_FRIGOABABOL
+				if (player.estado == EST_FRIGOABABOL) {
+					rdd = 8; rdi = 0;
+				} else
+			#endif
+
+			{
+				#asm
+					ld  a, (_player+22)					// player.facing
+					or  a
+					jr  z, _player_cell_sel_set_rdi		// if A = 0 set 0
+					ld  a, 4							// ELSE     set 4
+				._player_cell_sel_set_rdi
+					ld  (_rdi), a
+				#endasm
+
+				#ifdef PUSH_AND_PULL
+					if (player.grab_block) rdd = PLAYER_GRAB_FRAME; else
+				#endif
+				#ifdef ENABLE_SWORD
+					if (s_on) rdd = SWORD_HIT_FRAME; else
+				#endif
+				if (0 == player.possee && 0 == player.gotten) {
+					rdd = 3;
+				} else {
+					if (
+						#ifdef SLIPPERY_TILES
+							((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0)
+						#else
+							player.vx == 0
+						#endif
+					)
+					#ifdef PLAYER_ALTERNATE_ANIMATION
+						{
+							rdd = player.facing ? 2 : 0;
+						} else {
+							rdd = ((gpx + 4) >> 3) % 3;
+						}
+					#else 
+						{
+							rdd = 1;
+						} else {
+							rdd = ((gpx + 4) >> 3) & 3;
+							if (rdd == 3) rdd = 1;
+						}
+					#endif
+				}
+			}
+
+			player.next_frame = player_cells [rdi + rdd];
+		#else
+			// In this case, the spriteset is
+			// 1  2  3  4  5  6  7  8
+			// R1 R2 L1 L2 U1 U2 D1 D2
+			
+			#ifdef ENABLE_FRIGOABABOL
+				if (player.estado == EST_FRIGOABABOL) {
+					player.next_frame = sprite_frigo;
 				} else
 			#endif
 			{
-				if ((pad0 ^ (sp_LEFT|sp_RIGHT|sp_UP|sp_DOWN)) & (sp_LEFT|sp_RIGHT|sp_UP|sp_DOWN)) {
-					player.subframe ++;
-					if (player.subframe == 4) {
-						player.subframe = 0;
-						player.frame = !player.frame;
-						step (); 
-					}
-				}
-				
-				#ifdef LOOK_AT_THE_CAMERA				
-					rdd = player.frame;
-					if (player.vx == 0) {		
-						if (player.vy < 0) rdd += 4;
-						else rdd += 6; 
-					} else if (player.vx < 0) rdd += 2;
-				#else
-					rdd = player.frame + (player.facing << 1);
+				#if defined ENABLE_SWORD && defined GENITAL_HIT_FRAMES
+					if (s_on) {
+						rdd = 9 + player.facing;
+					} else
 				#endif
+				{
+					if ((pad0 ^ (sp_LEFT|sp_RIGHT|sp_UP|sp_DOWN)) & (sp_LEFT|sp_RIGHT|sp_UP|sp_DOWN)) {
+						player.subframe ++;
+						if (player.subframe == 4) {
+							player.subframe = 0;
+							player.frame = !player.frame;
+							step (); 
+						}
+					}
+					
+					#ifdef LOOK_AT_THE_CAMERA				
+						rdd = player.frame;
+						if (player.vx == 0) {		
+							if (player.vy < 0) rdd += 4;
+							else rdd += 6; 
+						} else if (player.vx < 0) rdd += 2;
+					#else
+						rdd = player.frame + (player.facing << 1);
+					#endif
+				}
+				player.next_frame = player_cells [rdd];
 			}
-			player.next_frame = player_cells [rdd];
-		}
 
+		#endif
 	#endif
 }
 
