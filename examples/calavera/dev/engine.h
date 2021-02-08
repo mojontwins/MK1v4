@@ -1099,7 +1099,9 @@ void move (void) {
 				// If side view, get affected by gravity:
 				
 				#ifdef RAMIRO_HOVER
+					player.hovering = 0;
 					if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
+						player_hovering = 1;
 						#asm
 							._player_hover
 								ld  a, (_pad0)

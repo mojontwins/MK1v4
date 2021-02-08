@@ -59,6 +59,7 @@ typedef struct {
 	unsigned char ceiling; 								// 37
 	unsigned char grab_block; 							// 38
 	signed int max_vx; 									// 39
+	unsigned char hovering; 							// 41
 } INERCIA;
 
 typedef struct {
