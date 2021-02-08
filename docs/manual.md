@@ -2489,6 +2489,22 @@ Para invalidar el código por defecto y usar el tuyo propio, debes añadir esto 
 
 Si lo defines, tendrás que añadir un archivo `custom_animation.h` con tu código, que debe encargarse de examinar el estado del jugador para finalmente dejar `player.next_frame` apuntando al gráfico que debe pintarse en el cuadro actual.
 
+Es posible que para implementar tu selección personalizada necesites definir tu propia array de cells `player_cells`. Para ello, tienes que añadir esta otra directiva en  `config.h` (no viene por defecto):
+
+```c
+	#define PLAYER_CUSTOM_CELLS
+```
+
+y crear un archivo `custom_player_cells.h` donde se defina este array, que debe contener punteros `sprite_N_a` o `extra_sprite_N_a`.
+
+```c
+	// custom_player_cells.h
+
+	unsigned char *player_cells [] = {
+		// una colección de sprite_N_a o extra_sprite_N_a
+	};
+```
+
 ## Más
 
 Pronto más. ¿Echas en falta algo? Dímelo.

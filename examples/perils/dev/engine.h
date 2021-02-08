@@ -6,18 +6,22 @@
 
 unsigned char line_of_text_clear [] = "                                ";
 
-unsigned char *player_cells [] = {
-	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
-	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
-	#ifdef ENABLE_FRIGOABABOL
-		sprite_frigo,
-	#else 
-		0,
-	#endif
-	#if defined ENABLE_SWORD && defined PLAYER_MOGGY_STYLE && defined GENITAL_HIT_FRAMES
-		extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a,
-	#endif
-};
+#ifdef PLAYER_CUSTOM_CELLS
+	#include "custom_player_cells.h"
+#else
+	unsigned char *player_cells [] = {
+		sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
+		sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+		#ifdef ENABLE_FRIGOABABOL
+			sprite_frigo,
+		#else 
+			0,
+		#endif
+		#if defined ENABLE_SWORD && defined PLAYER_MOGGY_STYLE && defined GENITAL_HIT_FRAMES
+			extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a,
+		#endif
+	};
+#endif
 
 unsigned char *enem_cells [] = {
 	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
