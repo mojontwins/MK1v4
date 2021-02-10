@@ -203,6 +203,11 @@
 							  "IRE VISITAR A MARISA%"
 							  "A CHUPARLE LOS PIES";
 
+	unsigned char text25 [] = "SI SACAS LA MONEDA%"
+							  "ENFADARAS A HORUS!%"
+							  "YA SOLO TE QUEDA%"
+							  "RASCARLE LOS OJUS!";
+
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
 		text1, text2, text3, text4, 		// Altar describe objetos
@@ -213,7 +218,8 @@
 		text15, text16, text17,				// Final
 		text18, text19,						// Más mensajes del altar
 		text20, 							// Ya te abrí.
-		text21, text22, text23, text24 		// Gracias por el objeto
+		text21, text22, text23, text24,		// Gracias por el objeto
+		text25								// Cisterna
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -451,7 +457,7 @@
 		pofrendas = 0;
 		water_level = 0; 
 		pofrendas_old = 0xff;
-		
+n_pant= 5;		
 		#asm
 				ld b, 4
 				ld a, r 
