@@ -457,7 +457,7 @@
 		pofrendas = 0;
 		water_level = 0; 
 		pofrendas_old = 0xff;
-n_pant= 5;		
+		
 		#asm
 				ld b, 4
 				ld a, r 
@@ -758,9 +758,30 @@ n_pant= 5;
 	}
 
 	void hook_entering (void) {		
+		/*
 		evil_eye_screen = map_behaviours [n_pant] & 2;
 		trap_screen = map_behaviours [n_pant] & 4;
 		trap_coins = map_behaviours [n_pant] & 8;
+		*/
+		#asm
+				ld  bc, (_n_pant)
+				ld  b, 0
+				ld  hl, _map_behaviours
+				add hl, bc
+				ld  c, (hl)
+
+				ld  a, c
+				and 2
+				ld  (_evil_eye_screen), a
+
+				ld  a, c
+				and 4
+				ld  (_trap_screen), a
+
+				ld  a, c
+				and 8
+				ld  (_trap_coins), a		
+		#endasm
 
 		scenery_info.evil_zone_active = 0;
 		scenery_info.allow_type_6 = 0;
