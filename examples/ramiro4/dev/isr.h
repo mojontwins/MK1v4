@@ -13,6 +13,13 @@ void ISR (void) {
 		#asm
 			ld  hl, _isrc
 			inc (hl)
+			#ifdef ENABLE_ARKOS
+				ld  b, ARKOS_RAM
+				call SetRAMBank
+				call ARKOS_ADDRESS_ATPLAY
+				ld  b, 0
+				call SetRAMBank
+			#endif
 		#endasm
 	#endif
 }

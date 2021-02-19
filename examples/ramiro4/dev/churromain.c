@@ -62,6 +62,27 @@
 	#define ANIMATED_BASE 	PERSIST_BASE
 #endif
 
+#if defined MODE_128K_DUAL
+	#asm
+		.SetRAMBank
+			ld	a, b
+			or	a
+			jp	z, restISR
+			xor	a
+			ld	i, a
+			jp	SetRAMBankKeepGoing
+		.restISR
+			ld	a, $f0
+			ld	i, a
+		.SetRAMBankKeepGoing
+			ld	a, 16
+			or	b
+			ld	bc, $7ffd
+			out (C), a			
+			ret 
+	#endasm
+#endif
+
 // Program modules in strict order...
 
 #include "definitions.h"

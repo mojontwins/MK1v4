@@ -183,3 +183,31 @@ Con este código pongo a 1 o a 0 una variable `is128k` y la pila se queda donde 
 
 He creado un nuevo `isr.h` donde he metido la rutina `ISR`. Ahora pondré los enganches y el limitador de frames.
 
+# La OGT
+
+Vamos a empezar a montar el tema de la OGT. La idea es tener RAM1 con el player, los sonidos, y todas las canciones comprimidas justo detrás. Para tocar una canción, se descomprimirá en el buffer y se tocará desde ahí. Voy a calcular el tamaño del buffer para poder ponerlo en un sitio fijo al final de la RAM.
+
+Esto es ARKOS1. Para calcular el sitio que necesito tengo que convertir todas las canciones y luego hacer sitio para la más tocha.
+
+Lo mismo haré con los sonidos. En el binario final irá el player y todos los comprimidos. Al empezar lo primero que haré será descomprimir los sonidos. Luego, para tocar cada canción se descomprimirá y luego se tocará.
+
+Crear/modificar `make_ogt.bat`
+
+* Hay que compilar cada música en `MUSIC_BUFFER_ADDRESS`.
+* Hay que compilar los SFX en `SFX_BUFFER_ADDRESS`. 
+* Comprimir todos los binarios.
+
+En `atPlayer.speccy.asm`
+
+* Hay que definir `MUSIC_BUFFER_ADDRESS` y `SFX_BUFFER_ADDRESS` al final de la RAM para que la música más larga y los sonidos quepan (descomprimidos).
+* Añadir todos los binarios comprimidos (músicas y efectos) en `song_XX` y `song_sfx`. Luego no olvidarse de poner todas las etiquetas en la lista de `compressed_song_index`. 
+* Hay que compilar y mirar en `RAM1.map.txt` las direcciones que luego habrá que configurar en `config.h`, a saber:
+
+`ARKOS_ADDRESS_ATPLAY` -> `atPlay`
+`ARKOS_ADDRESS_ATSFXPLAY` -> `atSfxPlay`
+`ARKOS_ADDRESS_MT_LOAD_SONG` -> `mt_load_song`
+`ARKOS_ADDRESS_ATSFXSTOPALL` -> `atSfxStopAll`
+`ARKOS_ADDRESS_ATSTOP` ->  `atStop`
+`ARKOS_ADDRESS_MT_INIT` -> `mt_init`
+
+* Activar `ENABLE_ARKOS` y rellenar todas sus constantes.
