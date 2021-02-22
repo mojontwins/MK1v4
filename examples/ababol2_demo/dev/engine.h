@@ -4755,30 +4755,31 @@ void mueve_bicharracos (void) {
 					#endif
 					) && gpx >= en_ccx - 15 && gpx <= en_ccx + 15
 				) {
-					// Vertical
-					if (_en_my && (player.saltando == 0 || player.cont_salto > 4)) {
-						if (_en_my < 0) {
-							// Go up.
-							if (gpy + 17 >= en_ccy && gpy + 11 <= en_ccy) {
-								platform_get_player ();
-							}
-						} else {
-							// Go down.
-							if (gpy + 20 >= en_ccy && gpy + 13 <= en_ccy) {
-								platform_get_player ();
+					if (player.saltando == 0 || player.cont_salto > 4) {
+						// Vertical
+						if (_en_my) {
+							if (_en_my < 0) {
+								// Go up.
+								if (gpy + 17 >= en_ccy && gpy + 11 <= en_ccy) {
+									platform_get_player ();
+								}
+							} else {
+								// Go down.
+								if (gpy + 20 >= en_ccy && gpy + 13 <= en_ccy) {
+									platform_get_player ();
+								}
 							}
 						}
-					}
 
-					// Horizontal
-					if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
-						platform_get_player ();
-						#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
-							if (en_an_state [enit] != ENEM_PARALYZED)
-						#endif
-						ptgmx = (_en_mx << 6);
+						// Horizontal
+						if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
+							platform_get_player ();
+							#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
+								if (en_an_state [enit] != ENEM_PARALYZED)
+							#endif
+							ptgmx = (_en_mx << 6);
+						}
 					}
-					
 				
 				} else
 			#endif			
