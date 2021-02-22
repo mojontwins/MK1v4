@@ -257,15 +257,24 @@
 
 void play_sfx (unsigned char n) {
 	// Cargar en A el valor de n
-	asm_int = n;
-	#asm
-		push ix
-		push iy
-		ld a, (_asm_int)
-		call sound_play
-		pop ix
-		pop iy
-	#endasm
+	#ifdef MODE_128K_DUAL
+		if (is128k) {
+			#ifdef ENABLE_ARKOS
+				arkos_play_sound (n);
+			#endif
+		}
+	#endif
+	{
+		asm_int = n;
+		#asm
+			push ix
+			push iy
+			ld a, (_asm_int)
+			call sound_play
+			pop ix
+			pop iy
+		#endasm
+	}
 }
 
 void beepet (void) {

@@ -20,11 +20,23 @@ echo Making script
 
 zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
-..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
-..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
-..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
+
+..\utils\imanol.exe ^
+    in=loader_128.asm-orig ^
+    out=loader.asm ^
+    ram1_length=?..\ogt\RAM1.bin ^
+    mb_length=?%game%.bin  > nul
+
+..\utils\pasmo.exe loader.asm loader.bin
+
+..\..\..\src\utils\GenTape.exe %game%.tap ^
+    basic '%game%' 10 loader.bin ^
+    data              loading.bin ^
+    data              %game%.bin ^
+    data              ..\ogt\RAM1.bin
 
 echo Output: %game%.tap
 
 del ..\gfx\*.scr > nul
+rem del loader.asm > nul
 del *.bin >nul

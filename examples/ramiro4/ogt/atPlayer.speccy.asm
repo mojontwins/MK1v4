@@ -8,7 +8,7 @@
 ; I know, I know... I'm a tab-indent-zealot =)
 
 MUSIC_BUFFER_ADDRESS equ $F000
-SFX_BUFFER_ADDRESS equ $FC00
+SFX_BUFFER_ADDRESS equ $FD00
 
 org $C000
 
@@ -1667,7 +1667,7 @@ song_02: INCBIN "02_hurry_c.bin"
 song_03: INCBIN "03_gover_c.bin" 
 song_04: INCBIN "04_ending_c.bin" 
 
-song_sfx: 
+song_sfx: INCBIN "sfx_c.bin"
 
 compressed_song_index:
 		defw  song_00, song_01, song_02, song_03, song_04

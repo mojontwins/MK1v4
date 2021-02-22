@@ -10,28 +10,34 @@ void main (void) {
 			ld  sp, STACK_ADDR
 
 		#ifdef MODE_128K_DUAL
-			ld  bc, 0x7ffd
-			xor a
-			out (c), a
-			ld  a, (0x1)
-			ld  h, a
-			ld  a, 0x10
-			out (c), a
-			ld  a, (0x1)
-			cp  h
-			jr  z, no128K
+				ld  bc, 0x7ffd
+				xor a
+				out (c), a
+				ld  a, (0x1)
+				ld  h, a
+				ld  a, 0x10
+				out (c), a
+				ld  a, (0x1)
+				cp  h
+				jr  z, no128K
 
 			// 128K mode: set the stack in low RAM
-			ld  sp, 24199
+				ld  sp, 24199
 
-			ld  a, 1
-			jr  detectionDone
+			#ifdef ENABLE_ARKOS
+				// ARKOS initialization
+				.arkos_address_call
+					call ARKOS_ADDRESS_MT_INIT					
+			#endif
 
-		.no128K
-			xor a
-		
-		.detectionDone
-			ld  (_is128k), a
+				ld  a, 1			
+				jr  detectionDone
+
+			.no128K
+				xor a
+			
+			.detectionDone
+				ld  (_is128k), a
 
 		#endif
 	#endasm
