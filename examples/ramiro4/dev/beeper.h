@@ -255,26 +255,43 @@
 	
 */
 
-void play_sfx (unsigned char n) {
-	// Cargar en A el valor de n
-	#ifdef MODE_128K_DUAL
-		if (is128k) {
+void __FASTCALL__ play_sfx (unsigned char n) {
+	
+	#asm
+		#ifdef MODE_128K_DUAL
+				ld  a, (_is128k)
+				or  a
+				jr  z, _skip_ay
+
 			#ifdef ENABLE_ARKOS
-				arkos_play_sound (n);
+					di
+					ld b, ARKOS_RAM
+					call SetRAMBank
+					
+					; __FASTCALL__ -> fx_number is in l!
+					ld a, ARKOS_SFX_CHANNEL
+					ld h, 15
+					ld e, 50
+					ld d, 0
+					ld bc, 0
+					call ARKOS_ADDRESS_ATSFXPLAY
+					
+					ld b,0
+					call SetRAMBank
+					ei
+					ret
 			#endif
-		}
-	#endif
-	{
-		asm_int = n;
-		#asm
-			push ix
-			push iy
-			ld a, (_asm_int)
-			call sound_play
-			pop ix
-			pop iy
-		#endasm
-	}
+
+			._skip_ay
+		#endif
+
+		push ix
+		push iy
+		ld a, l
+		call sound_play
+		pop ix
+		pop iy
+	#endasm
 }
 
 void beepet (void) {

@@ -495,6 +495,8 @@
 				
 				djnz shuffle_loop
 		#endasm
+
+		if (is128k) arkos_play_music (1);
 	}
 
 	void hook_init_mainloop (void) {
@@ -521,6 +523,7 @@
 
 		// To make trap active, we detect the player got a new obj.
 		if (trap_screen && player.objs != objs_old) {
+			if (is128k) arkos_stop_sound ();
 			flags [10 + flags [15]] = 1;
 			trap_active = 1;
 			seed = n_pant + 1;
@@ -540,6 +543,7 @@
 				sp_UpdateNow ();
 				play_sfx (10);
 			}
+			if (is128k) arkos_play_music (2);
 		}
 
 		if (trap_active) {
@@ -681,7 +685,9 @@
 							scenery_info.allow_type_6 = 0;
 							play_sfx (8);
 							trap_active = 0;
+							if (is128k) arkos_stop_sound ();
 							draw_scr_background ();
+							if (is128k) arkos_play_music (1);
 						} 
 					}
 				}

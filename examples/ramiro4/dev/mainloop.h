@@ -27,7 +27,14 @@ void main (void) {
 			#ifdef ENABLE_ARKOS
 				// ARKOS initialization
 				.arkos_address_call
-					call ARKOS_ADDRESS_MT_INIT					
+					xor a
+					ld  (_ay_player_on), a
+					
+					ld b, ARKOS_RAM
+					call SetRAMBank
+					call ARKOS_ADDRESS_MT_INIT				
+					ld b, 0
+					call SetRAMBank
 			#endif
 
 				ld  a, 1			

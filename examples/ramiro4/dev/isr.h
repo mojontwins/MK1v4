@@ -14,7 +14,7 @@ void ISR (void) {
 				ld  hl, _isrc
 				inc (hl)
 			#ifdef ENABLE_ARKOS
-					ld  a, (_is128k)
+					ld  a, (_ay_player_on)
 					or  a
 					jr  z, skip_arkos
 					
