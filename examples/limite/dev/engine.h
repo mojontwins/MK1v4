@@ -1103,8 +1103,14 @@ void move (void) {
 				// If side view, get affected by gravity:
 				
 				#ifdef RAMIRO_HOVER
+					#ifdef MODE_128K_DUAL
+						rda = player.hovering;
+					#endif
 					player.hovering = 0;
 					if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
+						#ifdef MODE_128K_DUAL
+							if (rda == 0) play_sfx (12);
+						#endif
 						player.hovering = 1;
 						#asm
 							._player_hover
@@ -2932,7 +2938,12 @@ void move (void) {
 					#endif
 				) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
-					if (0 == player.killingzone_framecount) play_sfx (3);
+					if (
+						0 == player.killingzone_framecount
+						#ifdef MODE_128K_DUAL
+							|| is128k
+						#endif
+					) play_sfx (3);
 					player.life --;	
 				}
 			} else {
@@ -4745,17 +4756,19 @@ void mueve_bicharracos (void) {
 					) && gpx >= en_ccx - 15 && gpx <= en_ccx + 15
 				) {
 					// Vertical
-					if (_en_my < 0) {
-						// Go up.
-						if (gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
-							platform_get_player ();
+					if (_en_my && (player.saltando == 0 || player.cont_salto > 4)) {
+						if (_en_my < 0) {
+							// Go up.
+							if (gpy + 17 >= en_ccy && gpy + 11 <= en_ccy) {
+								platform_get_player ();
+							}
+						} else {
+							// Go down.
+							if (gpy + 20 >= en_ccy && gpy + 13 <= en_ccy) {
+								platform_get_player ();
+							}
 						}
-					} else if (_en_my > 0) {
-						// Go down.
-						if (gpy >= en_ccy - 20 && gpy <= en_ccy - 14 && player.vy >= 0) {
-							platform_get_player ();
-								}
-						}
+					}
 
 					// Horizontal
 					if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {

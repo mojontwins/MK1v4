@@ -400,6 +400,17 @@
 
 			sp_UpdateNow ();
 			play_sfx (talk_sounds [rand () & 1]);
+
+			#ifdef MODE_128K_DUAL
+				if (is128k) {
+					#asm
+							ld  b, 20
+						.textbox_delay
+							halt
+							djnz textbox_delay
+					#endasm
+				}
+			#endif
 		
 			if (*gp_gen == 0) break;
 			gp_gen ++;
@@ -800,6 +811,7 @@
 		evil_eye_state = 2;
 		evil_eye_counter = 0;
 
+		if (trap_active && is128k) arkos_play_music (1);
 		trap_active = 0;
 
 		// Water level:

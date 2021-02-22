@@ -252,7 +252,7 @@
 	9	shoot
 	10	explosion
 	11	talk 2	
-	
+	12  ramiro hover (only AY)
 */
 
 void __FASTCALL__ play_sfx (unsigned char n) {
