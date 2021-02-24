@@ -2009,6 +2009,8 @@ Puedes usar estas funciones:
 
 * `void saca_a_todo_el_mundo_de_aqui ();`: Saca los sprites estándar (jugador, enemigos, espada, disparos) del área de juego.
 
+* `void render_all_sprites ();`: Mueve todos los sprites a sus lugares correspondientes. Se llama normalmente desde el mainloop pero puede venir bien en tus *customs*, especialmente si los has sacado desde un `EXTERN` del *scripting* o desde un *hook*, ya que se ejecutan antes del `sp_UpdateNow` ¡y tendrás un frame sin sprites!
+
 * `void init_player_values ();`: Inicializa los valores del player: posición inicial, velocidad 0, salto desactivado, etc.
 
 * `void play_sfx (unsigned char s);` reproduce el efecto de sonido `s`, según esta tabla:

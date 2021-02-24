@@ -10,6 +10,9 @@ void main (void) {
 			ld  sp, STACK_ADDR
 
 		#ifdef MODE_128K_DUAL
+				xor a
+				ld  (_ay_player_on), a
+
 				ld  bc, 0x7ffd
 				xor a
 				out (c), a
@@ -25,40 +28,31 @@ void main (void) {
 				ld  sp, 24199
 
 			#ifdef ENABLE_ARKOS
-				// ARKOS initialization
-				.arkos_address_call
-					xor a
-					ld  (_ay_player_on), a
-					
-					ld b, ARKOS_RAM
-					call SetRAMBank
-					call ARKOS_ADDRESS_MT_INIT				
-					ld b, 0
-					call SetRAMBank
+				// We need to page in so make sure this is LOW in RAM
+				call arkos_address_call
 			#endif
 
-				ld  a, 1
+				ld  a, 1			
 				jr  detectionDone
-	
+
 			.no128K
 				xor a
 			
 			.detectionDone
 				ld  (_is128k), a
-
 		#endif
 	#endasm
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-		sp_InitIM2(0xf1f1);
-		sp_CreateGenericISR(0xf1f1);
-		sp_RegisterHook(255, ISR);
+		sp_InitIM2 (0xf1f1);
+		sp_CreateGenericISR (0xf1f1);
+		sp_RegisterHook (255, ISR);
 	#endif
 
 	// splib2 initialization
 	sp_Initialize (7, 0);
 	sp_Border (BLACK);
-	sp_AddMemory(0, NUMBLOCKS, 14, AD_FREE);
+	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 		#asm
@@ -353,46 +347,9 @@ void main (void) {
 				animate_boxes ();
 			#endif
 
-			// Render		
-			for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
-				#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-					#ifdef RANDOM_RESPAWN
-						if (en_an_fanty_activo [rdi])
-					#else
-						if (malotes [enoffs + rdi].t == 6 || malotes [enoffs + rdi].t == 0)
-					#endif
-					{
-						rdx = en_an_x [rdi] >> 6;
-						rdy = en_an_y [rdi] >> 6;
-					} else 
-				#endif
-				{
-					rdx = malotes [enoffs + rdi].x;
-					rdy = malotes [enoffs + rdi].y;
-				}
-				sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an_next_frame [rdi] - en_an_current_frame [rdi], VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7);
-				en_an_current_frame [rdi] = en_an_next_frame [rdi];
-			}
-
-			rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
-			#ifdef BETTER_VERTICAL_CONNECTIONS
-				if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
-				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, rdi, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
-			#else
-				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
-			#endif
-			player.current_frame = player.next_frame;
+			// Render
+			render_all_sprites ();	
 			
-			#ifdef PLAYER_CAN_FIRE
-				for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
-					if (bullets_estado [rdi]) {
-						sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, VIEWPORT_Y + (bullets_y [rdi] >> 3), VIEWPORT_X + (bullets_x [rdi] >> 3), bullets_x [rdi] & 7, bullets_y [rdi] & 7);
-					} else {
-						sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
-					}
-				}
-			#endif
-
 			#ifdef ACTIVATE_SCRIPTING
 				if (f_zone_ac == 1) {
 					if (gpx >= fzx1 && gpx <= fzx2 && gpy >= fzy1 && gpy <= fzy2) {

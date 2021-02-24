@@ -80,6 +80,16 @@
 			ld	bc, $7ffd
 			out (C), a			
 			ret 
+
+		#ifdef ENABLE_ARKOS
+			// ARKOS initialization
+			.arkos_address_call
+				ld b, ARKOS_RAM
+				call SetRAMBank
+				call ARKOS_ADDRESS_MT_INIT				
+				ld b, 0
+				jp SetRAMBank					
+		#endif
 	#endasm
 #endif
 

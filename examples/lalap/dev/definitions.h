@@ -194,7 +194,7 @@ unsigned char orig_tile;	// Original background tile
 	unsigned char is128k;
 #endif
 
-unsigned char isrc @ 23700;
+unsigned char isrc           @ 23700;
 unsigned char ay_player_on   @ 23701;
 
 #ifndef WIN_ON_SCRIPTING
@@ -319,6 +319,7 @@ void init_falling_box_buffer (void);
 unsigned char can_move_box (void);
 void do_extern_action (unsigned char n);
 void saca_a_todo_el_mundo_de_aqui (void);
+void render_all_sprites (void);
 void draw_scr_background (void);
 void draw_scr (void);
 void init_player_values (void); 

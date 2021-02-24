@@ -417,7 +417,10 @@
 		}
 
 		while (any_key ()); while (!any_key ()); 
-		if (redraw_after_text) redraw_from_buffer ();
+		if (redraw_after_text) {
+			redraw_from_buffer ();
+			render_all_sprites ();
+		}
 		redraw_after_text = 1;
 	}
 
