@@ -62,11 +62,35 @@
 	#define ANIMATED_BASE 	PERSIST_BASE
 #endif
 
+#if defined MODE_128K_DUAL
+	#asm
+		.SetRAMBank
+			ld	a, b
+			or	a
+			jp	z, restISR
+			xor	a
+			ld	i, a
+			jp	SetRAMBankKeepGoing
+		.restISR
+			ld	a, $f0
+			ld	i, a
+		.SetRAMBankKeepGoing
+			ld	a, 16
+			or	b
+			ld	bc, $7ffd
+			out (C), a			
+			ret 
+	#endasm
+#endif
+
 // Program modules in strict order...
 
 #include "definitions.h"
 #if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 	#include "isr.h"
+	#ifdef ENABLE_ARKOS
+		#include "arkos.h"
+	#endif
 #endif
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h"

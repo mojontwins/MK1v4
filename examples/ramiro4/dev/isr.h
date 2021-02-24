@@ -13,7 +13,7 @@ void ISR (void) {
 		#asm
 				ld  hl, _isrc
 				inc (hl)
-			#ifdef ENABLE_ARKOS
+			#if defined MODE_128K_DUAL && defined ENABLE_ARKOS
 					ld  a, (_ay_player_on)
 					or  a
 					jr  z, skip_arkos

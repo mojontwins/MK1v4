@@ -252,16 +252,42 @@
 	9	shoot
 	10	explosion
 	11	talk 2	
-	
+	12  ramiro hover (only AY)
 */
+	
+void __FASTCALL__ play_sfx (unsigned char n) {
 
-void play_sfx (unsigned char n) {
-	// Cargar en A el valor de n
-	asm_int = n;
 	#asm
+		#ifdef MODE_128K_DUAL
+				ld  a, (_is128k)
+				or  a
+				jr  z, _skip_ay
+
+			#ifdef ENABLE_ARKOS
+					di
+					ld b, ARKOS_RAM
+					call SetRAMBank
+					
+					; __FASTCALL__ -> fx_number is in l!
+					ld a, ARKOS_SFX_CHANNEL
+					ld h, 15
+					ld e, 50
+					ld d, 0
+					ld bc, 0
+					call ARKOS_ADDRESS_ATSFXPLAY
+					
+					ld b,0
+					call SetRAMBank
+					ei
+					ret
+			#endif
+
+			._skip_ay
+		#endif
+
 		push ix
 		push iy
-		ld a, (_asm_int)
+		ld a, l
 		call sound_play
 		pop ix
 		pop iy
