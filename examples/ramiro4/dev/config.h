@@ -11,7 +11,7 @@
 // Arkos support. Get the addresses from ogt/RAM1.map.txt after compiling RAM1.bin
 
 #define ENABLE_ARKOS
-#define ARKOS_SFX_CHANNEL 			1
+#define ARKOS_SFX_CHANNEL 			0
 #define ARKOS_RAM 					1
 #define ARKOS_ADDRESS_ATPLAY 		0xC000 	
 #define ARKOS_ADDRESS_ATSTOP 		0xC6E1
