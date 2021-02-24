@@ -2409,8 +2409,8 @@ Se trata de crear una variable `continue_on`, darle 0 en `hook_system_inits`, y 
 Si no te vale con lo que hay para tu juego, puedes desactivar los ejes vertical y/o vertical y programar los tuyos propios. Para ello tendrás que añadir esto al principio de `config.h` (no viene por defecto):
 
 ```c
-	#define PLAYER_CUSTOM_VERT_AXIS
-	#define PLAYER_CUSTOM_HORZ_AXIS
+    #define PLAYER_CUSTOM_VERT_AXIS
+    #define PLAYER_CUSTOM_HORZ_AXIS
 ```
 
 Puedes definir cualquiera de los dos, o los dos, dependiendo de tus necesidades. Cada una de estas directivas desactiva el código que modifica `player.vy` o `player.vx`, respectivamente. Esto significa que tendrás que añadir tu código:
@@ -2422,61 +2422,61 @@ Puedes definir cualquiera de los dos, o los dos, dependiendo de tus necesidades.
 Como ejemplo tonto puedes ver esta reimplementación del modo genital, que leen `pad0` y terminan modificando `player.vy` y `player.vx`:
 
 ```c
-	// custom_vert_axis.h
-	if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
-		if (player.vy > 0) {
-			player.vy -= player.rx;
-			if (player.vy < 0)
-				player.vy = 0;
-		} else if (player.vy < 0) {
-			player.vy += player.rx;
-			if (player.vy > 0)
-				player.vy = 0;
-		}
-	}
+    // custom_vert_axis.h
+    if ( ((pad0 & sp_UP) != 0 && (pad0 & sp_DOWN) != 0)) {
+        if (player.vy > 0) {
+            player.vy -= player.rx;
+            if (player.vy < 0)
+                player.vy = 0;
+        } else if (player.vy < 0) {
+            player.vy += player.rx;
+            if (player.vy > 0)
+                player.vy = 0;
+        }
+    }
 
-	if ((pad0 & sp_UP) == 0) {
-		if (player.vy > -player.max_vx) {
-			player.vy -= player.ax;					
-		}
-		player.facing = GENITAL_FACING_UP;
-	}
+    if ((pad0 & sp_UP) == 0) {
+        if (player.vy > -player.max_vx) {
+            player.vy -= player.ax;                 
+        }
+        player.facing = GENITAL_FACING_UP;
+    }
 
-	if ((pad0 & sp_DOWN) == 0) {
-		if (player.vy < player.max_vx) {
-			player.vy += player.ax;
-		}
-		player.facing = GENITAL_FACING_DOWN;
-	}
+    if ((pad0 & sp_DOWN) == 0) {
+        if (player.vy < player.max_vx) {
+            player.vy += player.ax;
+        }
+        player.facing = GENITAL_FACING_DOWN;
+    }
 ```
 
 ```c
-	// custom_horz_axis.h
-	if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
-		if (player.vx > 0) {
-			player.vx -= player.rx;
-			if (player.vx < 0)
-				player.vx = 0;
-		} else if (player.vx < 0) {
-			player.vx += player.rx;
-			if (player.vx > 0)
-				player.vx = 0;
-		}
-	}
+    // custom_horz_axis.h
+    if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
+        if (player.vx > 0) {
+            player.vx -= player.rx;
+            if (player.vx < 0)
+                player.vx = 0;
+        } else if (player.vx < 0) {
+            player.vx += player.rx;
+            if (player.vx > 0)
+                player.vx = 0;
+        }
+    }
 
-	if ((pad0 & sp_LEFT) == 0) {
-		if (player.vx > -player.max_vx) {
-			player.vx -= player.ax;
-		}
-		player.facing = GENITAL_FACING_LEFT;		
-	}
+    if ((pad0 & sp_LEFT) == 0) {
+        if (player.vx > -player.max_vx) {
+            player.vx -= player.ax;
+        }
+        player.facing = GENITAL_FACING_LEFT;        
+    }
 
-	if ((pad0 & sp_RIGHT) == 0) {
-		if (player.vx < player.max_vx) {
-			player.vx += player.ax;
-		}
-		player.facing = GENITAL_FACING_RIGHT;		
-	}
+    if ((pad0 & sp_RIGHT) == 0) {
+        if (player.vx < player.max_vx) {
+            player.vx += player.ax;
+        }
+        player.facing = GENITAL_FACING_RIGHT;       
+    }
 ```
 
 ## Selección de sprite personalizada
@@ -2484,7 +2484,7 @@ Como ejemplo tonto puedes ver esta reimplementación del modo genital, que leen 
 Para invalidar el código por defecto y usar el tuyo propio, debes añadir esto al principio de `config.h` (no viene por defecto):
 
 ```c
-	#define PLAYER_CUSTOM_ANIMATION
+    #define PLAYER_CUSTOM_ANIMATION
 ```
 
 Si lo defines, tendrás que añadir un archivo `custom_animation.h` con tu código, que debe encargarse de examinar el estado del jugador para finalmente dejar `player.next_frame` apuntando al gráfico que debe pintarse en el cuadro actual.
@@ -2492,17 +2492,17 @@ Si lo defines, tendrás que añadir un archivo `custom_animation.h` con tu códi
 Es posible que para implementar tu selección personalizada necesites definir tu propia array de cells `player_cells`. Para ello, tienes que añadir esta otra directiva en  `config.h` (no viene por defecto):
 
 ```c
-	#define PLAYER_CUSTOM_CELLS
+    #define PLAYER_CUSTOM_CELLS
 ```
 
 y crear un archivo `custom_player_cells.h` donde se defina este array, que debe contener punteros `sprite_N_a` o `extra_sprite_N_a`.
 
 ```c
-	// custom_player_cells.h
+    // custom_player_cells.h
 
-	unsigned char *player_cells [] = {
-		// una colección de sprite_N_a o extra_sprite_N_a
-	};
+    unsigned char *player_cells [] = {
+        // una colección de sprite_N_a o extra_sprite_N_a
+    };
 ```
 
 ## Más
@@ -2547,32 +2547,32 @@ En **Ramido 4**, por ejemplo, la canción más grande tiene 2362 bytes y los son
 El siguiente paso es volver a compilar todas las músicas y los sonidos en las direcciones definitivas (en nuestro ejemplo, 0xF000 para las músicas y 0xFD00 para el archivo con los sonidos), y después comprimirlas con `apack.exe`. Nosotros solemos hacernos un archivo `.bat` dentro de `ogt/` para estos menesteres parecido a este:
 
 ```bat
-	@echo off
+    @echo off
 
-	set base=0xF000
-	set basesfx=0xFD00
+    set base=0xF000
+    set basesfx=0xFD00
 
-	if [%1]==[justassemble] goto :assemble
+    if [%1]==[justassemble] goto :assemble
 
-	echo Convirtiendo . . .
-	..\utils\AKSToBIN.exe -a %base% title.aks 00_title.bin 
-	..\utils\AKSToBIN.exe -a %base% ingame.aks 01_ingame.bin 
-	..\utils\AKSToBIN.exe -a %base% hurry.aks 02_hurry.bin 
-	..\utils\AKSToBIN.exe -a %base% gover.aks 03_gover.bin 
-	..\utils\AKSToBIN.exe -a %base% ending.aks 04_ending.bin 
-	..\utils\AKSToBIN.exe -s -a %basesfx% sfx.aks sfx.bin
+    echo Convirtiendo . . .
+    ..\utils\AKSToBIN.exe -a %base% title.aks 00_title.bin 
+    ..\utils\AKSToBIN.exe -a %base% ingame.aks 01_ingame.bin 
+    ..\utils\AKSToBIN.exe -a %base% hurry.aks 02_hurry.bin 
+    ..\utils\AKSToBIN.exe -a %base% gover.aks 03_gover.bin 
+    ..\utils\AKSToBIN.exe -a %base% ending.aks 04_ending.bin 
+    ..\utils\AKSToBIN.exe -s -a %basesfx% sfx.aks sfx.bin
 
-	echo Comprimiendo . . .
-	..\utils\apack.exe 00_title.bin 00_title_c.bin > nul
-	..\utils\apack.exe 01_ingame.bin 01_ingame_c.bin > nul
-	..\utils\apack.exe 02_hurry.bin 02_hurry_c.bin > nul
-	..\utils\apack.exe 03_gover.bin 03_gover_c.bin > nul
-	..\utils\apack.exe 04_ending.bin 04_ending_c.bin > nul
-	..\utils\apack.exe sfx.bin sfx_c.bin > nul
+    echo Comprimiendo . . .
+    ..\utils\apack.exe 00_title.bin 00_title_c.bin > nul
+    ..\utils\apack.exe 01_ingame.bin 01_ingame_c.bin > nul
+    ..\utils\apack.exe 02_hurry.bin 02_hurry_c.bin > nul
+    ..\utils\apack.exe 03_gover.bin 03_gover_c.bin > nul
+    ..\utils\apack.exe 04_ending.bin 04_ending_c.bin > nul
+    ..\utils\apack.exe sfx.bin sfx_c.bin > nul
 
-	:assemble
-	echo Ensamblando . . .
-	..\utils\pasmo.exe atPlayer.speccy.asm RAM1.bin RAM1.map.txt
+    :assemble
+    echo Ensamblando . . .
+    ..\utils\pasmo.exe atPlayer.speccy.asm RAM1.bin RAM1.map.txt
 ```
 
 La última linea llama a `pasmo.exe` para ensamblar el player con las músicas, pero aún no estamos listos para eso. Primero habrá que montar el player. Para eso tendremos que editar el player "preparado" de Arkos que incluimos en `ogt/`, el archivo `atPlayer.speccy.asm`.
@@ -2580,18 +2580,18 @@ La última linea llama a `pasmo.exe` para ensamblar el player con las músicas, 
 La sección que tendremos que modificar está al final del archivo, a partir de la linea 1667. Primero hay una sección donde se incluye, con `INCBIN`, cada una de las canciones *comprimidas*, tras una etiqueta descriptiva. Luego se incluye, igualmente con `INCBIN`, el archivo con los sonidos *comprimido*. A continuamción, hay una lista con las etiquetas que apuntan a cada canción, el *índice de canciones*. En Ramiro tenemos cinco músicas comprimidas (como se ve en el `.bat` de ejemplo de más arriba) y el archivo nos queda así:
 
 ```asm
-	[...]
+    [...]
 
-	song_00: INCBIN "00_title_c.bin" 
-	song_01: INCBIN "01_ingame_c.bin" 
-	song_02: INCBIN "02_hurry_c.bin" 
-	song_03: INCBIN "03_gover_c.bin" 
-	song_04: INCBIN "04_ending_c.bin" 
+    song_00: INCBIN "00_title_c.bin" 
+    song_01: INCBIN "01_ingame_c.bin" 
+    song_02: INCBIN "02_hurry_c.bin" 
+    song_03: INCBIN "03_gover_c.bin" 
+    song_04: INCBIN "04_ending_c.bin" 
 
-	song_sfx: INCBIN "sfx_c.bin"
+    song_sfx: INCBIN "sfx_c.bin"
 
-	compressed_song_index:
-			defw  song_00, song_01, song_02, song_03, song_04
+    compressed_song_index:
+            defw  song_00, song_01, song_02, song_03, song_04
 ```
 
 Con esto, podemos ensamblar obteniendo así `RAM1.bin` y `RAM1.map.txt`. Este archivo contiene las direcciones de memoria donde han terminado los diferentes elementos ensamblados, y será necesario para configurar el player en el motor, en el siguiente paso.
@@ -2601,15 +2601,15 @@ Con esto, podemos ensamblar obteniendo así `RAM1.bin` y `RAM1.map.txt`. Este ar
 El siguiente paso es activar el `MODE_128K_DUAL` y luego `ENABLE_ARKOS` para configurar sus valores, que están al principio de `config.h`, y que son estos:
 
 ```c
-	#define ENABLE_ARKOS
-	#define ARKOS_SFX_CHANNEL 			1
-	#define ARKOS_RAM 					1
-	#define ARKOS_ADDRESS_ATPLAY 		0xC000 	
-	#define ARKOS_ADDRESS_ATSTOP 		0xC6E1
-	#define ARKOS_ADDRESS_ATSFXSTOPALL	0xC6F7
-	#define ARKOS_ADDRESS_ATSFXPLAY 	0xC704
-	#define ARKOS_ADDRESS_MT_LOAD_SONG	0xC7FC
-	#define ARKOS_ADDRESS_MT_INIT 		0xC81C
+    #define ENABLE_ARKOS
+    #define ARKOS_SFX_CHANNEL           1
+    #define ARKOS_RAM                   1
+    #define ARKOS_ADDRESS_ATPLAY        0xC000  
+    #define ARKOS_ADDRESS_ATSTOP        0xC6E1
+    #define ARKOS_ADDRESS_ATSFXSTOPALL  0xC6F7
+    #define ARKOS_ADDRESS_ATSFXPLAY     0xC704
+    #define ARKOS_ADDRESS_MT_LOAD_SONG  0xC7FC
+    #define ARKOS_ADDRESS_MT_INIT       0xC81C
 ```
 
 `ARKOS_SFX_CHANNEL` es donde quieres que suenen los efectos. Los efectos interrumpen las notas de la música que suena por un canal. Aquí eliges cuál. `ARKOS_RAM` debería ser 1 a menos que estés haciendo cosas raras.
@@ -2630,94 +2630,94 @@ Las demás macros, `ARKOS_ADDRESS_*`, se refieren a direcciones de memoria con e
 Ahora tendremos que montar un nuevo loader, en ensamble, que detecte el modelo y decida si cargar o no el bloque extra `RAM1.bin` en RAM1 de los modelos de 128K. Para ello empezaremos creando un archivo llamado `loader_128.asm-orig` en `dev/` con este contenido (o lo puedes compiar del `dev/` de **Ramiro 4**):
 
 ```asm
-	; loader.asm
-	; loads the loader
-	; by na_th_an - Thanks to Antonio Villena for his tutorials and utilities.
+    ; loader.asm
+    ; loads the loader
+    ; by na_th_an - Thanks to Antonio Villena for his tutorials and utilities.
 
-		org $5ccb
-		ld  sp, 24199
-		di
-		db	$de, $c0, $37, $0e, $8f, $39, $96 ;OVER USR 7 ($5ccb)
-		
-		ld  bc, 767
-		ld	hl, $5800
-		ld	de, $5801
-		ld	(hl), l
-		ldir
+        org $5ccb
+        ld  sp, 24199
+        di
+        db  $de, $c0, $37, $0e, $8f, $39, $96 ;OVER USR 7 ($5ccb)
+        
+        ld  bc, 767
+        ld  hl, $5800
+        ld  de, $5801
+        ld  (hl), l
+        ldir
 
-	; load screen
-		scf
-		ld	a, $ff
-		ld	ix, $4000
-		ld	de, 6912
-		call $0556
-		di
+    ; load screen
+        scf
+        ld  a, $ff
+        ld  ix, $4000
+        ld  de, 6912
+        call $0556
+        di
 
-	; Main binary
-		scf
-		ld	a, $ff
-		ld	ix, 24200
-		ld	de, %%%mb_length%%%
-		call $0556
-		di
+    ; Main binary
+        scf
+        ld  a, $ff
+        ld  ix, 24200
+        ld  de, %%%mb_length%%%
+        call $0556
+        di
 
-	; Detect if it's a 128K model to load RAM1.
-		ld  bc, 0x7ffd
-		xor a
-		out (c), a
-		ld  a, (0x1)
-		ld  h, a
-		ld  a, 0x10
-		out (c), a
-		ld  a, (0x1)
-		cp  h
-		jr  z, launch_exe
+    ; Detect if it's a 128K model to load RAM1.
+        ld  bc, 0x7ffd
+        xor a
+        out (c), a
+        ld  a, (0x1)
+        ld  h, a
+        ld  a, 0x10
+        out (c), a
+        ld  a, (0x1)
+        cp  h
+        jr  z, launch_exe
 
-	; RAM1
-		ld	a, $11 		; ROM 1, RAM 1
-		ld	bc, $7ffd
-		out (C), a
+    ; RAM1
+        ld  a, $11      ; ROM 1, RAM 1
+        ld  bc, $7ffd
+        out (C), a
 
-		scf
-		ld	a, $ff
-		ld	ix, $C000
-		ld	de, %%%ram1_length%%%
-		call $0556
-		di
+        scf
+        ld  a, $ff
+        ld  ix, $C000
+        ld  de, %%%ram1_length%%%
+        call $0556
+        di
 
-		ld	a, $10 		; ROM 1, RAM 0
-		ld	bc, $7ffd
-		out (C), a
-		
-	; run game!
-	launch_exe:
-		jp 24200
+        ld  a, $10      ; ROM 1, RAM 0
+        ld  bc, $7ffd
+        out (C), a
+        
+    ; run game!
+    launch_exe:
+        jp 24200
 ```
 
 Este código tiene dos macros, `%%%mb_length%%%` y `%%%ram1_length%%%`, que usando la utilizad `imanol.exe` serán sustituidos por los tamaños del binario principal y de `RAM1.bin`, respectivamente, antes de ser enviado a ensamblar con `pasmo.exe`. Todo esto se hará en `comp.bat`. Hay que sustituir el montaje de la cinta original, o sea, este trozo:
 
 ```bat
-	..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
-	..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
-	..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
+    ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
+    ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
+    ..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
 ```
 
 Por este otro trozo:
 
 ```bat
-	..\utils\imanol.exe ^
-	    in=loader_128.asm-orig ^
-	    out=loader.asm ^
-	    ram1_length=?..\ogt\RAM1.bin ^
-	    mb_length=?%game%.bin  > nul
+    ..\utils\imanol.exe ^
+        in=loader_128.asm-orig ^
+        out=loader.asm ^
+        ram1_length=?..\ogt\RAM1.bin ^
+        mb_length=?%game%.bin  > nul
 
-	..\utils\pasmo.exe loader.asm loader.bin
+    ..\utils\pasmo.exe loader.asm loader.bin
 
-	..\..\..\src\utils\GenTape.exe %game%.tap ^
-	    basic '%game%' 10 loader.bin ^
-	    data              loading.bin ^
-	    data              %game%.bin ^
-	    data              ..\ogt\RAM1.bin
+    ..\..\..\src\utils\GenTape.exe %game%.tap ^
+        basic '%game%' 10 loader.bin ^
+        data              loading.bin ^
+        data              %game%.bin ^
+        data              ..\ogt\RAM1.bin
 ```
 
 * En primer lugar, `imanol.exe` procesa nuestro nuevo cargador en `loader_128.asm-orig`, sustituyendo las macros  `%%%mb_length%%%` y `%%%ram1_length%%%` por los tamaños del binario principal y de `RAM1.bin`, respectivamente, generando un archivo `loader.asm` con los valores correctos.
@@ -2731,8 +2731,8 @@ Por este otro trozo:
 La integración de los efectos de sonido es automática, pero las músicas deberás lanzarlas tú. Puedes modificar el código de `pantallas.h` para lanzar la música de título, de game over, o del final del juego, y emplear los *hooks* de `custom.h` para lanzar las músicas *ingame*. Puedes consultar el diario de **Ramiro 4** como ejemplo de integración. Para ello puedes usar las dos funciones de `arkos.h`:
 
 ```c
-	void __FASTCALL__ arkos_play_music (unsigned char song_number);
-	void arkos_stop_sound (void);
+    void __FASTCALL__ arkos_play_music (unsigned char song_number);
+    void arkos_stop_sound (void);
 ```
 
 `arkos_play_music` tocará la música `song_number` del *índice de canciones* que definimos al montar el player, teniendo en cuenta que la primera canción es la número 0.
