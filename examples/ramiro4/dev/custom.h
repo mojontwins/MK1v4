@@ -5,6 +5,10 @@
 
 #ifdef ENABLE_CODE_HOOKS
 
+	#asm
+		LIB SPPrintAtInv
+	#endasm
+
 	// Custom routines for Ramiro 4
 
 	// bit 0 = which set.
@@ -347,7 +351,7 @@
 		#endasm
 	}
 
-	void show_text_box (unsigned char n) {
+	void sprite_remove_aid (void) {
 		saca_a_todo_el_mundo_de_aqui ();
 		sp_MoveSprAbs (sp_pinv, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
 
@@ -361,6 +365,10 @@
 				ld  iy, fsClipStruct
 				call SPValidate
 		#endasm
+	}
+
+	void show_text_box (unsigned char n) {
+		sprite_remove_aid ();
 
 		gp_gen = texts [n];
 
@@ -424,12 +432,81 @@
 		redraw_after_text = 1;
 	}
 
+	void recuadrius (void) {	
+		sprite_remove_aid ();			
+		for (rdi = 0; rdi < 10; rdi ++) {
+			for (rdx = rdi; rdx < 30 - rdi; rdx ++) {
+				#asm
+						// sp_PrintAtInv (VIEWPORT_Y + rdi, VIEWPORT_X + rdx, 71, 0);
+						ld  de, 0x4700
+						ld  a, (_rdx)
+						add VIEWPORT_X
+						ld  c, a
+						ld  a, (_rdi)
+						add VIEWPORT_Y
+						call SPPrintAtInv
+					
+						// sp_PrintAtInv (VIEWPORT_Y + 19 - rdi, VIEWPORT_X + rdx, 71, 0);
+						ld  de, 0x4700
+						ld  a, (_rdx)
+						add VIEWPORT_X
+						ld  c, a
+						ld  a, (_rdi)
+						ld  b, a
+						ld  a, VIEWPORT_Y + 19
+						sub b
+						call SPPrintAtInv
+				#endasm
+
+				if (rdx < 19 - rdi) {
+					#asm
+							// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + rdi, 71, 0);
+							ld  de, 0x4700
+							ld  a, (_rdi)
+							add VIEWPORT_X
+							ld  c, a
+							ld  a, (_rdx)
+							add VIEWPORT_Y
+							call SPPrintAtInv
+
+							// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + 29 - rdi, 71, 0);
+							ld  de, 0x4700
+							ld  a, (_rdi)
+							ld  b, a
+							ld  a, VIEWPORT_X + 29
+							sub b
+							ld  c, a
+							ld  a, (_rdx)
+							add VIEWPORT_Y							
+							call SPPrintAtInv
+					#endasm
+				}
+			}
+			#asm
+				halt
+			#endasm
+			sp_UpdateNow (0);
+		}
+	}
+
 	void trap_kill (void) {
 		sp_UpdateNow ();
 		play_sfx (10);
+		#ifdef MODE_128K_DUAL
+			if (is128k) {
+				#asm
+						ld  b, 50
+					.trap_kill_delay
+						halt
+						djnz trap_kill_delay
+				#endasm
+			}
+		#endif
 		player.life -= BLOCK_HIT; 
 		player.estado = EST_PARP;
 		player.ct_estado = 50;
+		player.vy = 0;
+		recuadrius ();
 	}
 
 	void water_trap_setup (void) {
@@ -471,7 +548,8 @@
 		pofrendas = 0;
 		water_level = 0; 
 		pofrendas_old = 0xff;
-		flags [6] = 1; // REMOVE!!
+		//flags [6] = 1; 
+		//n_pant = 3;
 		
 		#asm
 				ld b, 4
@@ -728,6 +806,7 @@
 			if (n_pant == 29) {
 				water_level = 25;
 				water_trap_setup ();
+				if (is128k) arkos_play_music (2);
 			}
 		}
 
@@ -757,7 +836,8 @@
 				pofrendas --;
 				n_pant = 5;
 				gpy = player.y = 0;
-				gpx = 120; player.x = 120<<6;				
+				gpx = 120; player.x = 120<<6;
+				if (is128k) arkos_play_music (1);				
 			}
 
 			// Detect horus tiles
@@ -823,8 +903,10 @@
 			player.vy = -PLAYER_MAX_VY_SALTANDO;
 			water_trap_setup ();
 			
-			if (n_pant == 5) water_level = 0;
-			else water_level = 25;
+			if (n_pant == 5) {
+				water_level = 0;
+				if (is128k) arkos_play_music (1);
+			} else water_level = 25;
 		}
 	}
 #endif
