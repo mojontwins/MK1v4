@@ -27,17 +27,23 @@ void do_extern_action (unsigned char n) {
 	} else {
 		// Work with characters n-64:
 		which_character = n - 64;
-		if (flags [which_character]) {
+		if (flags [which_character] == 2) {
 			show_text_box (20);
-		} else if (pinv == 0) {
+		} else if (flags [which_character] == 0 || pinv == 0) {
 			show_text_box (8 + which_character);
+			if (flags [which_character] == 0) {
+				flags [which_character] = 1;
+			}
+			sp_UpdateNow ();
 		} else if (pinv != which_character) {
 			show_text_box (4 + which_character);
-		} else {
+		} 
+
+		if (pinv == which_character) {
 			show_text_box (20 + which_character);
 			draw_text (LINE_OF_TEXT_X + 1, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, "CRIPTA ABIERTA! PUEDES PASAR");
 			on_pant = 0xff; 		// Force reenter
-			flags [which_character] = 1;
+			flags [which_character] = 2;
 			pinv = 0;
 			play_sfx (6);
 		}

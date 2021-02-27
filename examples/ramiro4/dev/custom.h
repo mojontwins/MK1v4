@@ -471,6 +471,7 @@
 		pofrendas = 0;
 		water_level = 0; 
 		pofrendas_old = 0xff;
+		flags [6] = 1; // REMOVE!!
 		
 		#asm
 				ld b, 4

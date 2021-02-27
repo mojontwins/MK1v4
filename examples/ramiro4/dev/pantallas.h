@@ -80,6 +80,7 @@ void title_screen (void) {
 	}
 	
 	while (1) {
+		rda = rand ();	// This makes RNG randomer
 		if (sp_KeyPressed (key_1)) {
 			joyfunc = sp_JoyKeyboard; break;
 		} else if (sp_KeyPressed (key_2)) {
