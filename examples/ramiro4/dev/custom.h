@@ -229,6 +229,12 @@
 	unsigned char talk_sounds [] = { 7, 11 };
 	unsigned char redraw_after_text = 0;
 
+	// Admiration signs (!)
+	// Coordiantes are screen-absolute, precalculated.
+	unsigned char adm_s_n_pant [] = {  0,  2,  5, 10, 13, 19, 25};
+	unsigned char adm_s_x [] =      {  6, 20, 22, 16, 20,  6,  6};
+	unsigned char adm_s_y [] =      { 12, 14, 16, 10, 16,  4,  4};
+
 	// Aux. functions
 
 	void clear_gamearea (void) {
@@ -907,6 +913,16 @@
 				water_level = 0;
 				if (is128k) arkos_play_music (1);
 			} else water_level = 25;
+		}
+
+		// Admiration (!)
+		rdi = 0;
+		while (adm_s_n_pant [rdi] <= n_pant) {			
+			if (adm_s_n_pant [rdi] == n_pant) {
+				draw_coloured_tile (adm_s_x [rdi], adm_s_y [rdi], 49);
+				break;
+			}
+			rdi ++;
 		}
 	}
 #endif
