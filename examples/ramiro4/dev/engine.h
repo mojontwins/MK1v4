@@ -3180,28 +3180,25 @@ void init_player (void) {
 	#endif
 }
 
-#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
-#else
-	void init_hotspots (void) {
-		/*
-		for (gpit = 0; gpit < MAP_W * MAP_H; gpit ++)
-			hotspots [gpit].act = 1;
-		*/
-		#asm
-				// iterate MAP_W*MAP_H times
-				// start with _hotspots + 2
-				// set to 1, increment pointer by 3
-				ld  b, MAP_W * MAP_H
-				ld  hl, _hotspots + 2
-				ld  de, 3
-				ld  a, 1
-			.init_hotspots_loop
-				ld  (hl), a
-				add hl, de
-				djnz init_hotspots_loop
-		#endasm
-	}
-#endif
+void init_hotspots (void) {
+	/*
+	for (gpit = 0; gpit < MAP_W * MAP_H; gpit ++)
+		hotspots [gpit].act = 1;
+	*/
+	#asm
+			// iterate MAP_W*MAP_H times
+			// start with _hotspots + 2
+			// set to 1, increment pointer by 3
+			ld  b, MAP_W * MAP_H
+			ld  hl, _hotspots + 2
+			ld  de, 3
+			ld  a, 1
+		.init_hotspots_loop
+			ld  (hl), a
+			add hl, de
+			djnz init_hotspots_loop
+	#endasm
+}
 
 #if !defined TWO_SETS && !defined UNPACKED_MAP
 	void draw_and_advance (void) {
@@ -3302,6 +3299,46 @@ void init_player (void) {
 		#endasm
 	}
 #endif
+
+void hotspot_paint (void) {
+	// Is there an object in this screen?
+	
+	hotspot_y = 240;
+	hotspot_t = 0;
+	if (hotspots [n_pant].act == 1) {
+		#if defined(ACTIVATE_SCRIPTING) && defined(OBJECTS_ON_VAR)
+			if (flags [OBJECTS_ON_VAR])
+		#endif
+		{
+			if (hotspots [n_pant].tipo) {
+				hotspot_t = hotspots [n_pant].tipo;					
+			}
+
+		}
+
+	}
+	#if !defined DEACTIVATE_REFILLS && defined LEGACY_REFILLS
+		else if (hotspots [n_pant].act == 0) {
+			// Randomly, if there's no active object, we draw a recharge.
+			if (rand () % 3 == 2) {
+				hotspot_t = 3;					
+			}
+		}
+	#endif
+		
+	if (hotspot_t) {
+		// Calculate tile coordinates
+		rdx = (hotspots [n_pant].xy >> 4);
+		rdy = (hotspots [n_pant].xy & 15);
+		// Convert to pixels and store
+		hotspot_x = rdx << 4;
+		hotspot_y = rdy << 4;
+		// Remember which tile was there
+		orig_tile = map_buff [15 * rdy + rdx];
+		// Draw the object.
+		draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), hotspot_t == 3 ? 16 : 16 + hotspot_t);
+	}
+}
 
 void draw_scr_background (void) {
 	#ifdef ENABLE_ANIMATED_TILES
@@ -3767,46 +3804,7 @@ void draw_scr_background (void) {
 		#endasm
 	#endif	
 
-	#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
-	#else
-		// Is there an object in this screen?
-		
-		hotspot_y = 240;
-		hotspot_t = 0;
-		if (hotspots [n_pant].act == 1) {
-			#if defined(ACTIVATE_SCRIPTING) && defined(OBJECTS_ON_VAR)
-				if (flags [OBJECTS_ON_VAR])
-			#endif
-			{
-				if (hotspots [n_pant].tipo) {
-					hotspot_t = hotspots [n_pant].tipo;					
-				}
-
-			}
-
-		}
-		#if !defined DEACTIVATE_REFILLS && defined LEGACY_REFILLS
-			else if (hotspots [n_pant].act == 0) {
-				// Randomly, if there's no active object, we draw a recharge.
-				if (rand () % 3 == 2) {
-					hotspot_t = 3;					
-				}
-			}
-		#endif
-			
-		if (hotspot_t) {
-			// Calculate tile coordinates
-			rdx = (hotspots [n_pant].xy >> 4);
-			rdy = (hotspots [n_pant].xy & 15);
-			// Convert to pixels and store
-			hotspot_x = rdx << 4;
-			hotspot_y = rdy << 4;
-			// Remember which tile was there
-			orig_tile = map_buff [15 * rdy + rdx];
-			// Draw the object.
-			draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), hotspot_t == 3 ? 16 : 16 + hotspot_t);
-		}
-	#endif
+	hotspot_paint ();
 	
 	#ifndef DEACTIVATE_KEYS
 		// Is there a bolt which has been already opened in this screen?

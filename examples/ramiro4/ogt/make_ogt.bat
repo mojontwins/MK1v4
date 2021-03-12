@@ -11,6 +11,7 @@ echo Convirtiendo . . .
 ..\utils\AKSToBIN.exe -a %base% hurry.aks 02_hurry.bin 
 ..\utils\AKSToBIN.exe -a %base% gover.aks 03_gover.bin 
 ..\utils\AKSToBIN.exe -a %base% ending.aks 04_ending.bin 
+..\utils\AKSToBIN.exe -a %base% blank.aks 05_blank.bin 
 ..\utils\AKSToBIN.exe -s -a %basesfx% sfx.aks sfx.bin
 
 echo Comprimiendo . . .
@@ -19,6 +20,7 @@ echo Comprimiendo . . .
 ..\utils\apack.exe 02_hurry.bin 02_hurry_c.bin > nul
 ..\utils\apack.exe 03_gover.bin 03_gover_c.bin > nul
 ..\utils\apack.exe 04_ending.bin 04_ending_c.bin > nul
+..\utils\apack.exe 05_blank.bin 05_blank_c.bin > nul
 ..\utils\apack.exe sfx.bin sfx_c.bin > nul
 
 :assemble

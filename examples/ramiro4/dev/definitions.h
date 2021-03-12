@@ -320,6 +320,7 @@ unsigned char can_move_box (void);
 void do_extern_action (unsigned char n);
 void saca_a_todo_el_mundo_de_aqui (void);
 void render_all_sprites (void);
+void hotspot_paint (void);
 void draw_scr_background (void);
 void draw_scr (void);
 void init_player_values (void); 

@@ -227,7 +227,7 @@
 
 	unsigned char text29 [] = "SOY GUSTAVO EL%"
 							  "ESCLAVO,%"
-							  "GUARDIAN DE LA"
+							  "GUARDIAN DE LA%"
 							  "PRIMERA CRIPTA";
 
 	unsigned char text30 [] = "LOS TROZOS ESTAN%"
@@ -243,7 +243,7 @@
 	unsigned char text32 [] = "CUIDADO CON EL OJO%"
 							  "SE HACE LA DORMIDA%"
 							  "PERO SI TE VE%"
-							  "TE CHUPA LA VIDA!%";
+							  "TE CHUPA LA VIDA!";
 
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
@@ -268,9 +268,9 @@
 
 	// Admiration signs (!)
 	// Coordiantes are screen-absolute, precalculated.
-	unsigned char adm_s_n_pant [] = {  0,  2,  5, 10, 13, 19, 25};
-	unsigned char adm_s_x [] =      {  6, 20, 22, 16, 20,  6,  6};
-	unsigned char adm_s_y [] =      { 12, 14, 16, 10, 16,  4,  4};
+	unsigned char adm_s_n_pant [] = {  0,  2,  5, 10, 13, 14, 19, 25};
+	unsigned char adm_s_x [] =      {  6, 20, 22, 16, 20,  6,  6,  6};
+	unsigned char adm_s_y [] =      { 12, 14, 16, 10, 16, 16,  4,  4};
 
 	// Aux. functions
 
@@ -410,6 +410,24 @@
 		#endasm
 	}
 
+	void decorate_screen (void) {
+		// Admiration (!)
+		rdi = 0;
+		while (adm_s_n_pant [rdi] <= n_pant) {			
+			if (adm_s_n_pant [rdi] == n_pant) {
+				draw_coloured_tile (adm_s_x [rdi], adm_s_y [rdi], 49);
+				break;
+			}
+			rdi ++;
+		}
+
+		// Paint evil eye
+		if (evil_eye_screen) {
+			draw_coloured_tile (EYE_X-2, EYE_Y, 28);
+			draw_coloured_tile (EYE_X, EYE_Y, 29);
+		}
+	}
+
 	void show_text_box (unsigned char n) {
 		sprite_remove_aid ();
 
@@ -470,6 +488,8 @@
 		while (any_key ()); while (!any_key ()); 
 		if (redraw_after_text) {
 			redraw_from_buffer ();
+			hotspot_paint ();
+			decorate_screen ();
 			render_all_sprites ();
 		}
 		redraw_after_text = 1;
@@ -536,9 +556,6 @@
 		sp_UpdateNow ();
 		play_sfx (10);
 
-		show_text_box (31);
-		sp_UpdateNow ();
-
 		#ifdef MODE_128K_DUAL
 			if (is128k) {
 				#asm
@@ -549,6 +566,11 @@
 				#endasm
 			}
 		#endif
+		
+		if (is128k) arkos_play_music (5);
+		show_text_box (31);
+		sp_UpdateNow ();
+		
 		player.life -= BLOCK_HIT; 
 		player.estado = EST_PARP;
 		player.ct_estado = 50;
@@ -595,8 +617,11 @@
 		pofrendas = 0;
 		water_level = 0; 
 		pofrendas_old = 0xff;
-		//flags [6] = 1; 
-		//n_pant = 3;
+		
+		flags [6] = 1; 
+		pinv = 4; pinv_next_frame = object_cells [pinv];
+		gpx = 160; player.x = 160<<6;
+		n_pant = 2;
 		
 		#asm
 				ld b, 4
@@ -936,10 +961,8 @@
 		scenery_info.evil_zone_active = 0;
 		scenery_info.allow_type_6 = 0;
 
-		if (evil_eye_screen) {
-			draw_coloured_tile (EYE_X-2, EYE_Y, 28);
-			draw_coloured_tile (EYE_X, EYE_Y, 29);
-		}
+		// Paint eye and admiration bubbles
+		decorate_screen ();
 
 		evil_eye_state = 2;
 		evil_eye_counter = 0;
@@ -958,15 +981,6 @@
 			} else water_level = 25;
 		}
 
-		// Admiration (!)
-		rdi = 0;
-		while (adm_s_n_pant [rdi] <= n_pant) {			
-			if (adm_s_n_pant [rdi] == n_pant) {
-				draw_coloured_tile (adm_s_x [rdi], adm_s_y [rdi], 49);
-				break;
-			}
-			rdi ++;
-		}
 	}
 #endif
 

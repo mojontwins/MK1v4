@@ -1669,8 +1669,9 @@ song_01: INCBIN "01_ingame_c.bin"
 song_02: INCBIN "02_hurry_c.bin" 
 song_03: INCBIN "03_gover_c.bin" 
 song_04: INCBIN "04_ending_c.bin" 
+song_05: INCBIN "05_blank_c.bin" 
 
 song_sfx: INCBIN "sfx_c.bin"
 
 compressed_song_index:
-		defw  song_00, song_01, song_02, song_03, song_04
+		defw  song_00, song_01, song_02, song_03, song_04, song_05
