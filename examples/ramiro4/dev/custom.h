@@ -125,24 +125,23 @@
 	unsigned char text8 [] = "PERO QUE ME TRAES?%"
 							 "BOTARATE TALLOCEBOLLA!";
 
-	unsigned char text9 [] = "SOY SONIA LA MOMIA%"
+	unsigned char text9 [] = "Y AY, QUE POCAS LUCES%"
 							 "ME DUELE LA PETACA.%"
 							 "COMI MUCHAS CHUCHES%"
 							 "Y ME HAGO MUCHA CACA.";
 
-	unsigned char text10 [] = "SOY CLEMENTE, LA%"
-							  "SERPIENTE, NO CONSIGO%"
-							  "DORMIR. TENGO MUCHO%"
-							  "INSOMNIO. QUE PUEDO%"
-							  "HACIR?";
+	unsigned char text10 [] = "AUNQUE SEA DENOCHE%"
+							  "NO CONSIGO DORMIR.%"
+							  "TENGO MUCHO INSOMNIO%"
+							  "QUE PUEDO HACIR?";
 
-	unsigned char text11 [] = "SOY MARISA LA SACER-%"
-							  "DOTISA, Y AYER FUI%"
-							  "LO PEOR. ME DESMADRE%"
-							  "EN UN CUMPLE Y PERDI%"
-							  "LA ROPA INTERIOR.";
+	unsigned char text11 [] = "QUE DESPISTE TENGO%"
+							  "AYER FUI LO PEOR. ME%"
+							  "DESMADRE EN UN CUMPLE%"
+							  "Y PERDI LA ROPA%"
+							  "INTERIOR.";
 
-	unsigned char text12 [] = "GUSTAVO EL ESCLAVO%"
+	unsigned char text12 [] = "ESTOY SIN RECATO%"
 							  "A SU SERVICIO.%"
 							  "TRABAJO MUY BARATO%"
 							  "PERO EL CUERO ES MI%"
@@ -184,7 +183,7 @@
 	unsigned char text19 [] = "HAZ BUEN USO DE LO%"
 							  "QUE TE HE DADO!";
 
-	unsigned char text20 [] = "YA TE ABRI. AHORA%"
+	unsigned char text20 [] = "Y YA TE ABRI. AHORA%"
 							  "JUYE... JUYE!!";
 
 	unsigned char text21 [] = "OH, QUE SUAVE ES!%"
@@ -195,7 +194,7 @@
 	unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
 							  "CON FEO SU SONIDO%"
 							  "EN SOLO UNOS MITUTOS%"
-							  "YA ESTARE DORMIDO%";
+							  "YA ESTARE DORMIDO";
 
 	unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
 							  "RECIBO CON ALBOROTO%"
@@ -212,6 +211,40 @@
 							  "YA SOLO TE QUEDA%"
 							  "RASCARLE LOS OJUS!";
 
+	unsigned char text26 [] = "SOY SONIA LA MOMIA%"
+							  "GUARDIANA DE LA%"
+							  "TERCERA CRIPTA";
+
+	unsigned char text27 [] = "SOY CLIEMENTE LA%"
+							  "SERPIENTE,%"
+							  "GUARDIAN DE LA%"
+							  "CUARTA CRIPTA";
+
+	unsigned char text28 [] = "SOY MARISA LA%"
+							  "SACERDOTISA,%"
+							  "GUARDIANA DE LA%"
+							  "SEGUNDA CRIPTA";
+
+	unsigned char text29 [] = "SOY GUSTAVO EL%"
+							  "ESCLAVO,%"
+							  "GUARDIAN DE LA"
+							  "PRIMERA CRIPTA";
+
+	unsigned char text30 [] = "LOS TROZOS ESTAN%"
+							  "EN CRIPTAS CERRADAS,%"
+							  "TENDRAS QUE COMPLACER%"
+							  "A SUS GUARDIANES";
+
+	unsigned char text31 [] = "\"TE PILLE!\",%"
+							  "CHILLA LA TRAMPA%"
+							  "Y CON UN RESORTE%"
+							  "SE REINICIA";
+
+	unsigned char text32 [] = "CUIDADO CON EL OJO%"
+							  "SE HACE LA DORMIDA%"
+							  "PERO SI TE VE%"
+							  "TE CHUPA LA VIDA!%";
+
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
 		text1, text2, text3, text4, 		// Altar describe objetos
@@ -223,7 +256,11 @@
 		text18, text19,						// Más mensajes del altar
 		text20, 							// Ya te abrí.
 		text21, text22, text23, text24,		// Gracias por el objeto
-		text25								// Cisterna
+		text25,								// Cisterna
+		text26, text27, text28, text29, 	// Guardian de...
+		text30,								// Tendras que complacer
+		text31,								// Te pillé!
+		text32 								// Advertencia Ramón
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -498,6 +535,10 @@
 	void trap_kill (void) {
 		sp_UpdateNow ();
 		play_sfx (10);
+
+		show_text_box (31);
+		sp_UpdateNow ();
+
 		#ifdef MODE_128K_DUAL
 			if (is128k) {
 				#asm
@@ -697,7 +738,7 @@
 						jr  trap_block_write
 
 					.trap_block_set_coins
-						ld  a, 18
+						ld  a, 50
 
 					.trap_block_write
 						ld  hl, _trap_bt
@@ -755,7 +796,7 @@
 						
 							if (map_attr [rda + 15] & 12) {
 								if (rdx == _trap_bx && rdy == _trap_by) {
-									if (player.estado != EST_PARP) {
+									//if (player.estado != EST_PARP) {
 										// Crushed!
 										trap_kill ();
 
@@ -765,9 +806,11 @@
 										on_pant = 0xff;
 										flags [10 + flags [15]] = 0;
 										break;
+									/*
 									} else {
 										player.y -= 16<<6;
 									}
+									*/
 								}
 								map_attr [rda] = comportamiento_tiles [_trap_bt];
 								map_buff [rda] = _trap_bt;

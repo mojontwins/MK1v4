@@ -22,11 +22,18 @@ void do_extern_action (unsigned char n) {
 			clear_gamearea ();
 			redraw_after_text = 0; show_text_box (rdi);
 		}
+	} else if (n == 1) {
+		// Ramon speech
+		show_text_box (14); sp_UpdateNow ();
+		show_text_box (13); sp_UpdateNow ();
+		show_text_box (30); sp_UpdateNow ();
 	} else if (n < 64) {
 		show_text_box (n);
 	} else {
 		// Work with characters n-64:
 		which_character = n - 64;
+		show_text_box (25 + which_character);
+		sp_UpdateNow ();
 		if (flags [which_character] == 2) {
 			show_text_box (20);
 		} else if (flags [which_character] == 0 || pinv == 0) {

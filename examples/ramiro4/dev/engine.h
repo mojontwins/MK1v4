@@ -1150,7 +1150,7 @@ void move (void) {
 					player.hovering = 0;
 					if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
 						#ifdef MODE_128K_DUAL
-							if (rda == 0) play_sfx (12);
+							if (rda == 0 && is128k) play_sfx (12);
 						#endif
 						player.hovering = 1;
 						#asm
