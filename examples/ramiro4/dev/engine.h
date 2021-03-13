@@ -1015,9 +1015,20 @@ void move (void) {
 	// Read device (keyboard, joystick ...)
 	pad_this_frame = pad1;
 	pad1 = pad0 = (joyfunc) (&keys); 
-	pad_this_frame = (~pad_this_frame) | pad1;
 
 	// Keys held this frame
+	pad_this_frame = (~pad_this_frame) | pad1;
+
+	// Jump button
+	#ifndef PLAYER_MOGGY_STYLE
+		#if defined BOTH_KEYS_JUMP
+			button_jump = (pad0 & (sp_UP|sp_FIRE)) != (sp_UP|sp_FIRE);
+		#elif defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
+			button_jump = ((pad0 & sp_UP) == 0); 
+		#else
+			button_jump = ((pad0 & sp_FIRE) == 0);
+		#endif
+	#endif
 
 	#ifdef ENABLE_FRIGOABABOL
 		if (player.estado == EST_FRIGOABABOL) {
@@ -1083,16 +1094,12 @@ void move (void) {
 				#endif
 			#endif
 
-			if (
-				#if defined BOTH_KEYS_JUMP
-					(pad0 & sp_UP) == 0 || (pad0 & sp_FIRE) == 0
-				#elif defined PLAYER_CAN_FIRE || !defined FIRE_TO_JUMP
-					(pad0 & sp_UP) == 0 
-				#else
-					(pad0 & sp_FIRE) == 0
-				#endif	
-			) {
-				if (player.saltando == 0) {
+			if (button_jump) {
+				if (player.saltando == 0
+					#ifdef RAMIRO_HOVER
+						&& player.just_hovered == 0
+					#endif
+				) {
 					if (
 					#ifdef RAMIRO_HOP
 						rdi
@@ -1102,6 +1109,7 @@ void move (void) {
 						|| player.gotten
 					) {
 						player.saltando = 1;
+						player.just_jumped = 1;
 						player.cont_salto = 0;
 						play_sfx (1);
 					}
@@ -1116,6 +1124,7 @@ void move (void) {
 				} 
 			} else {
 				player.saltando = 0;
+				player.just_jumped = 0;
 			}
 		#endif
 
@@ -1144,40 +1153,45 @@ void move (void) {
 				// If side view, get affected by gravity:
 				
 				#ifdef RAMIRO_HOVER
-					#ifdef MODE_128K_DUAL
-						rda = player.hovering;
-					#endif
-					player.hovering = 0;
-					if (player.vy > 0 && (pad0 & sp_DOWN) == 0) {
-						#ifdef MODE_128K_DUAL
-							if (rda == 0 && is128k) play_sfx (12);
-						#endif
-						player.hovering = 1;
-						#asm
-							._player_hover
-								ld  a, (_pad0)
-								or  sp_DOWN
-								ld  (_pad0), a
+					 player.hovering = 0;
+					 #ifdef MODE_128K_DUAL
+					 	rda = player.hovering;
+					 #endif
+					if ((pad0 & sp_DOWN) == 0 || (button_jump && player.just_jumped == 0)) {
+						player.just_hovered = 1;
+						if (player.vy > 0) {
+							#ifdef MODE_128K_DUAL
+								if (rda == 0 && is128k) play_sfx (12);
+							#endif
+							player.hovering = 1;
+							#asm
+								._player_hover
+									ld  a, (_pad0)
+									or  sp_DOWN
+									ld  (_pad0), a
 
-								ld  hl, (_player + 8) 		// player.vy
-								ld  de, PLAYER_MAX_VY_CAYENDO_H - PLAYER_G_HOVER
-								or  a
-								push hl 
-								sbc hl, de 
-								pop hl 
-								jr  nc, player_hover_maximum
+									ld  hl, (_player + 8) 		// player.vy
+									ld  de, PLAYER_MAX_VY_CAYENDO_H - PLAYER_G_HOVER
+									or  a
+									push hl 
+									sbc hl, de 
+									pop hl 
+									jr  nc, player_hover_maximum
 
-								ld  de, PLAYER_G_HOVER
-								add hl, de 
-								jr  player_hover_set
+									ld  de, PLAYER_G_HOVER
+									add hl, de 
+									jr  player_hover_set
 
-							.player_hover_maximum
-								ld  hl, PLAYER_MAX_VY_CAYENDO_H
+								.player_hover_maximum
+									ld  hl, PLAYER_MAX_VY_CAYENDO_H
 
-							.player_hover_set
-								ld  (_player + 8), hl
-						#endasm
-					} else
+								.player_hover_set
+									ld  (_player + 8), hl
+							#endasm
+						} 
+					} else player.just_hovered = 0;
+
+					if (player.hovering == 0)
 				#endif
 				{
 					#asm
