@@ -160,11 +160,8 @@ void main (void) {
 
 		init_player ();
 
-		#if defined(DEACTIVATE_KEYS) && defined(DEACTIVATE_OBJECTS)
-		#else
-			init_hotspots ();
-		#endif
-
+		init_hotspots ();
+		
 		#ifndef DEACTIVATE_KEYS
 			init_cerrojos ();
 		#endif	

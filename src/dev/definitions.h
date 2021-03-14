@@ -60,6 +60,8 @@ typedef struct {
 	unsigned char grab_block; 							// 38
 	signed int max_vx; 									// 39
 	unsigned char hovering; 							// 41
+	unsigned char just_hovered; 						// 42
+	unsigned char just_jumped;							// 43
 } INERCIA;
 
 typedef struct {
@@ -311,6 +313,10 @@ unsigned char bitmask [] = {
 	1, 2, 4, 8, 16, 32, 64, 128
 };
 
+#ifndef PLAYER_MOGGY_STYLE
+	unsigned char button_jump;
+#endif
+
 // Prototypes
 
 void fall_box (void);
@@ -320,6 +326,7 @@ unsigned char can_move_box (void);
 void do_extern_action (unsigned char n);
 void saca_a_todo_el_mundo_de_aqui (void);
 void render_all_sprites (void);
+void hotspot_paint (void);
 void draw_scr_background (void);
 void draw_scr (void);
 void init_player_values (void); 

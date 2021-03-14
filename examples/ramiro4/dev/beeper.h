@@ -256,7 +256,6 @@
 */
 
 void __FASTCALL__ play_sfx (unsigned char n) {
-	
 	#asm
 		#ifdef MODE_128K_DUAL
 				ld  a, (_is128k)

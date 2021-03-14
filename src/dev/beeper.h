@@ -254,9 +254,8 @@
 	11	talk 2	
 	12  ramiro hover (only AY)
 */
-	
-void __FASTCALL__ play_sfx (unsigned char n) {
 
+void __FASTCALL__ play_sfx (unsigned char n) {
 	#asm
 		#ifdef MODE_128K_DUAL
 				ld  a, (_is128k)
