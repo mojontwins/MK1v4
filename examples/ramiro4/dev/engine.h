@@ -1153,10 +1153,10 @@ void move (void) {
 				// If side view, get affected by gravity:
 				
 				#ifdef RAMIRO_HOVER
-					 player.hovering = 0;
-					 #ifdef MODE_128K_DUAL
-					 	rda = player.hovering;
-					 #endif
+					#ifdef MODE_128K_DUAL
+						rda = player.hovering;
+					#endif
+					player.hovering = 0;
 					if ((pad0 & sp_DOWN) == 0 || (button_jump && player.just_jumped == 0)) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
