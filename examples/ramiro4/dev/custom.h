@@ -235,15 +235,30 @@
 							  "TENDRAS QUE COMPLACER%"
 							  "A SUS GUARDIANES";
 
-	unsigned char text31 [] = "\"TE PILLE!\",%"
-							  "CHILLA LA TRAMPA%"
-							  "Y CON UN RESORTE%"
-							  "SE REINICIA";
+	unsigned char text31 [] = "\"TE PILLE, LORITO!\",%"
+							  "OYES A ALGUIEN GRITAR%"
+							  "\"NO PIERDAS TU PORTE%"
+							  "Y VUELVE A EMPEZAR!\"";
 
-	unsigned char text32 [] = "CUIDADO CON EL OJO%"
+	unsigned char text32 [] = "CUIDADO CON EL OJO!%"
 							  "SE HACE LA DORMIDA%"
 							  "PERO SI TE VE%"
 							  "TE CHUPA LA VIDA!";
+
+	unsigned char text33 [] = "RAMON EL FARAON,%"
+							  "TE INVITO A SU KELI%"
+							  "Y ENTRE VINOS Y HUMO%"
+							  "TE CONTO SU PELI...";
+
+	unsigned char text34 [] = "SI JUNTAS 4 PARTES%"
+							  "EL PODEWR DEL PAPIRO%"
+							  "OCULTO EN ESTE SITIO%"
+							  "SERA TUYO, RAMIRO";
+
+	unsigned char text35 [] = "BUSCA A RAMON Y QUE%"
+							  "CON SU ABRACADABRA%"
+							  "NO SE HAGA EL REMOLON%"
+							  "Y LA PIRAMIDE TE ABRA";
 
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
@@ -260,7 +275,8 @@
 		text26, text27, text28, text29, 	// Guardian de...
 		text30,								// Tendras que complacer
 		text31,								// Te pillé!
-		text32 								// Advertencia Ramón
+		text32, 							// Advertencia Ramón
+		text33, text34, text35 				// Intro
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -397,17 +413,17 @@
 	void sprite_remove_aid (void) {
 		saca_a_todo_el_mundo_de_aqui ();
 		sp_MoveSprAbs (sp_pinv, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
-
+		
 		// Validate whole screen so sprites stay on next update
 		#asm
 				LIB SPValidate
 				ld  c, VIEWPORT_X
 				ld  b, VIEWPORT_Y
-				ld  d, VIEWPORT_X+29
-				ld  e, VIEWPORT_Y+19
+				ld  d, VIEWPORT_Y+19
+				ld  e, VIEWPORT_X+29
 				ld  iy, fsClipStruct
 				call SPValidate
-		#endasm
+		#endasm				
 	}
 
 	void decorate_screen (void) {
@@ -618,11 +634,12 @@
 		water_level = 0; 
 		pofrendas_old = 0xff;
 		
+		/*
 		flags [6] = 1; 
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
 		n_pant = 2;
-		
+		*/
 		#asm
 				ld b, 4
 				ld a, r 
@@ -929,6 +946,14 @@
 					play_sfx (8);
 				}
 			}
+		}
+
+		// Intro 
+		if (n_pant == 12 && flags [5] == 0 && player.possee) {
+			flags [5] = 1;
+			render_all_sprites (); 
+			sp_UpdateNow ();
+			do_extern_action (2);
 		}
 	}
 

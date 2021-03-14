@@ -4,6 +4,12 @@
 
 unsigned char which_character;
 
+void speech (unsigned char a, unsigned char b, unsigned char c) {
+	show_text_box (a); sp_UpdateNow ();
+	show_text_box (b); sp_UpdateNow ();
+	show_text_box (c); sp_UpdateNow ();
+}
+
 void do_extern_action (unsigned char n) {
 	redraw_after_text = 1;
 	if (n == 128) {
@@ -24,9 +30,9 @@ void do_extern_action (unsigned char n) {
 		}
 	} else if (n == 1) {
 		// Ramon speech
-		show_text_box (14); sp_UpdateNow ();
-		show_text_box (13); sp_UpdateNow ();
-		show_text_box (30); sp_UpdateNow ();
+		speech (14, 13, 30);
+	} else if (n == 2) {
+		speech (33, 34, 35);		
 	} else if (n < 64) {
 		show_text_box (n);
 	} else {
