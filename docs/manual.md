@@ -1985,6 +1985,28 @@ Cuando haces `EXTERN n` con n un valor de 0 a 255, se ejecutará `do_extern_acti
                             inicialización init_player_values).
 ```
 
+## Constantes desde C
+
+Gracias a la forma en la que se codifican los scripts en MK1 v4, puedes importar constantes de C en tu script (por ejemplo, las que introduzcas en `custom.h`) si les pones @ delante. El script las incluirá verbatim (sin el @) en los arrays de `msc.h`.
+
+Por ejemplo, 
+
+```c
+	// custom.h
+	#define SCORE_DO_ACTION 10
+```
+
+```spt
+	# script
+
+	ENTERING SCREEN 0
+		IF FLAG 5 = 3
+		THEN
+			INC FLAG 4, @SCORE_DO_ACTION
+		END
+	END
+```
+
 # Capítulo 8 - Código custom
 
 En esta sección vamos a explicar cómo hacer cosas chulas con código custom. Todo ha sido sacado de diversos *postmortems* de juegos hechos con **MTE MK1 v4**. Atención, porque por cosas como estas a lo mejor vas a preferir usar *v4* que una versión actual. Pero antes hay que ver un poco de la API:

@@ -87,7 +87,7 @@ Sub stringToArray (in As String)
 			hadComillas = -1
 		ElseIf comillas Then 
 			lP (index) = lP (index) + character
-		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Then
+		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Or character = "@" Then
 			lP (index) = lP (index) + character
 		Else
 			If Not hadComillas Then lP (index) = Ltrim (Rtrim (lP (index)))
@@ -196,20 +196,20 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 								' 0  1    2 3 4
 								' IF FLAG x = 1
 
-								If Val (lP (2)) < 16 And _
-									Val (lP (4)) < 2 And _
+								If pVal (lP (2)) < 16 And _
+									pVal (lP (4)) < 2 And _
 									(lP (3) = "=" Or lP (3) = "<>" Or lP (3) = "!=") Then
 
-									If (lP (3) = "=" And Val (lP (4)) = 0) Or _
-										((lP (3) = "<>" Or lP (3) = "!=") And Val (lP (4)) = 1) Then
+									If (lP (3) = "=" And pVal (lP (4)) = 0) Or _
+										((lP (3) = "<>" Or lP (3) = "!=") And pVal (lP (4)) = 1) Then
 										clausula = clausula + mChr (&HA0 + Val (lP (2)))
 										numclausulas = numclausulas + 1
 										clausulasUsed (&HA0) = -1
 										Print "IF FLAG " & lP (2) & " = 0 -> 0x" & Hex (&HA0 + Val (lP (2)),2)
 									End If
 
-									If (lP (3) = "=" And Val (lP (4)) = 1) Or _
-										((lP (3) = "<>" Or lP (3) = "!=") And Val (lP (0)) = 1) Then
+									If (lP (3) = "=" And pVal (lP (4)) = 1) Or _
+										((lP (3) = "<>" Or lP (3) = "!=") And pVal (lP (4)) = 1) Then
 										clausula = clausula + mChr (&HB0 + Val (lP (2)))
 										numclausulas = numclausulas + 1
 										clausulasUsed (&HA0) = -1
@@ -335,11 +335,11 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 								' 0   1    2 3 4
 								' SET FLAG x = 1
 
-								If Val (lP (2)) < 16 And _
-									Val (lP (4)) < 2 And _
+								If pVal (lP (2)) < 16 And _
+									pVal (lP (4)) < 2 And _
 									(lP (3) = "=" Or lP (3) = "<>" Or lP (3) = "!=") Then
 
-									If Val (lP (4)) = 0 Then
+									If pVal (lP (4)) = 0 Then
 										clausula = clausula + mChr (&HA0 + Val (lP (2)))
 										numclausulas = numclausulas + 1
 										actionsUsed (&HA0) = -1
