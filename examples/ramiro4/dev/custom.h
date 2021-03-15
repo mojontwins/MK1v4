@@ -638,7 +638,7 @@
 		flags [6] = 1; 
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
-		n_pant = 2;
+		n_pant = 26;
 		*/
 		#asm
 				ld b, 4

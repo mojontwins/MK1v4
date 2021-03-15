@@ -2970,7 +2970,12 @@ void move (void) {
 				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
 				else player.vy = -player.vy;
 			#else
-			player.vy = -player.vy;
+				#ifdef EVIL_TILE_SIMPLE
+					player.vy = -abs (player.vy);
+					if (player.vy > -(PLAYER_G<<2)) player.vy = -(PLAYER_G<<2);
+				#else
+					player.vy = -player.vy;
+				#endif
 			#endif
 		}
 		#asm

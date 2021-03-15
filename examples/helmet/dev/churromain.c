@@ -113,10 +113,10 @@
 #include "enems.h"
 #include "beeper.h"
 #include "printer.h"
+#include "custom.h"
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc.h"
 #endif
-#include "custom.h"
 #include "pantallas.h"
 #include "msc_extern.h"
 #include "engine.h"

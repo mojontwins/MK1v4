@@ -125,7 +125,6 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 	Dim clausulas As String
 	Dim clausula As String
 	Dim numclausulas As Integer
-	Dim longitud As Integer
 	Dim ai As Integer
 
 	Dim As Integer fzx1, fzx2, fzy1, fzy2
@@ -133,7 +132,6 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 	terminado = 0
 	estado = 0
 	numclausulas = 0
-	longitud = 0
 	clausulas = ""
 	clausula = ""
 	

@@ -383,3 +383,7 @@ Tenemos que hacer sonar el tema principal al empezar la partida y el time attack
 
 Aquí viene el fancy fancy: Hay que hacer un cargador en ensamble que sea capaz de detectar el modo 128K para cargar o no un bloque extra. Para ello usamos el template de **Antonio Villena**.
 
+## Puntuación
+
+Diversos hitos en el juego añadirán puntos. 
+
