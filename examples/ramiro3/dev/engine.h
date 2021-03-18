@@ -2970,7 +2970,12 @@ void move (void) {
 				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
 				else player.vy = -player.vy;
 			#else
-			player.vy = -player.vy;
+				#ifdef EVIL_TILE_SIMPLE
+					player.vy = -abs (player.vy);
+					if (player.vy > -(PLAYER_G<<2)) player.vy = -(PLAYER_G<<2);
+				#else
+					player.vy = -player.vy;
+				#endif
 			#endif
 		}
 		#asm
@@ -3317,6 +3322,7 @@ void init_hotspots (void) {
 void hotspot_paint (void) {
 	// Is there an object in this screen?
 	
+	/*
 	hotspot_y = 240;
 	hotspot_t = 0;
 	if (hotspots [n_pant].act == 1) {
@@ -3327,10 +3333,9 @@ void hotspot_paint (void) {
 			if (hotspots [n_pant].tipo) {
 				hotspot_t = hotspots [n_pant].tipo;					
 			}
-
+		}
 		}
 
-	}
 	#if !defined DEACTIVATE_REFILLS && defined LEGACY_REFILLS
 		else if (hotspots [n_pant].act == 0) {
 			// Randomly, if there's no active object, we draw a recharge.
@@ -3350,8 +3355,106 @@ void hotspot_paint (void) {
 		// Remember which tile was there
 		orig_tile = map_buff [15 * rdy + rdx];
 		// Draw the object.
+
 		draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), hotspot_t == 3 ? 16 : 16 + hotspot_t);
 	}
+	*/
+	#asm
+			ld  a, 240
+			ld  (_hotspot_y), a 
+			xor a
+			ld  (_hotspot_t), a
+
+			// Calculate base for hotspots; max = 85 screens.
+			ld  a, (_n_pant)
+			ld  b, a
+			sla a
+			add b
+
+			ld  c, a
+			ld  b, 0
+			ld  ix, _hotspots
+			add ix, bc
+
+			// Struct is xy, tipo, act
+
+			ld  a, (ix+2) 		// .act
+			cp  1
+			jr  nz, hotspot_paint_act_skip
+
+			#if defined(ACTIVATE_SCRIPTING) && defined(OBJECTS_ON_VAR)
+				ld  a, (_flags + OBJECTS_ON_VAR)
+				or  a
+				jr  z, hotspot_paint_act_skip
+			#endif
+
+			ld  a, (ix+1)		// .tipo
+			or  a
+			jr  z, hotspot_paint_act_skip
+
+			ld  (_hotspot_t), a
+
+		.hotspot_paint_act_skip
+
+		#if !defined DEACTIVATE_REFILLS && defined LEGACY_REFILLS
+				ld  a, (ix+2) 		// .act
+				or  a
+				jr  nz, hotspot_paint_noact_skip
+
+				call _rand
+				ld  a, l
+				and 3
+				cp  2
+				jr  nz, hotspot_paint_noact_skip
+
+				ld  a, 3
+				ld  (_hotspot_t), a
+
+			.hotspot_paint_noact_skip
+		#endif		
+
+			ld  a, (_hotspot_t)
+			or  a
+			ret z
+
+			// Calculate tile coordinates
+			// Convert to pixels and store
+
+			ld  a, (ix+0) 		// .xy, byte = XY (nibbles)
+			ld  b, a
+			and 0xf0
+			ld  (_hotspot_x), a
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (_rdx), a
+			ld  e, a 			// E = rdx
+			ld  a, b
+			and 15
+			ld  (_rdy), a
+			ld  b, a 			// B = rdy
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (_hotspot_y), a
+
+			// orig_tile = map_buff [15 * rdy + rdx];
+			// 15*rdy + rdx = 16*rdy - rdy + rdx = hotspot_y - rdy + rdx
+			sub b
+			add e
+
+			ld  c, a
+			ld  b, 0
+			ld  hl, _map_buff
+			add hl, bc
+			ld  a, (hl)
+			ld  (_orig_tile), a
+	#endasm
+
+	// Draw the object.
+	draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), hotspot_t == 3 ? 16 : 16 + hotspot_t);
 }
 
 void draw_scr_background (void) {
