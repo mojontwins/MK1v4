@@ -387,3 +387,17 @@ Aquí viene el fancy fancy: Hay que hacer un cargador en ensamble que sea capaz 
 
 Diversos hitos en el juego añadirán puntos. 
 
+|Puntos|total|Khe
+|---|---|---
+|5|5|Abrir la pirámide
+|2|8(2x4)|Hablar con personaje
+|2|8(2x4)|Abrir la cripta
+|5|20(5x4)|Vencer la cripta
+|5|5|Ramón warning Ojo
+|5|5|Ramón warning Agua
+|5|20(5x4)|Coger moneda
+|5|20(5x4)|Obtener objeto
+|4|4|Coger objeto falso
+|4|4|Llevar a Gustavo objeto falso
+
+Total = 99 puntos.

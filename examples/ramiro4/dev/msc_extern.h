@@ -20,6 +20,7 @@ void do_extern_action (unsigned char n) {
 			pinv_next_frame = object_cells [pinv];
 			show_text_box (pinv);
 			pofrendas --;
+			PSCORE += SCORE_GET_OBJECT;
 		} else show_text_box (0);
 	} else if (n == 64) {
 		// Final sequence (call before win game)
@@ -46,6 +47,7 @@ void do_extern_action (unsigned char n) {
 			show_text_box (8 + which_character);
 			if (flags [which_character] == 0) {
 				flags [which_character] = 1;
+				PSCORE += SCORE_CHARACTER_TALK;
 			}
 			sp_UpdateNow ();
 		} else if (pinv != which_character) {
@@ -59,6 +61,7 @@ void do_extern_action (unsigned char n) {
 			flags [which_character] = 2;
 			pinv = 0;
 			play_sfx (6);
+			PSCORE += SCORE_OPEN_CRYPT;
 		}
 	}
 }

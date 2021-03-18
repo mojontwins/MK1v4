@@ -68,7 +68,7 @@
 #define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
 #define DEACTIVATE_REFILLS					// If defined, no refills.
 //#define LEGACY_REFILLS 					// Legacy mode: refills appear in place of collected items/keys
-#define MAX_FLAGS					16		// Number of flags. For scripting and stuff.
+#define MAX_FLAGS					20		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 						// The Hobbit
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED 			// Custom paralyze enemies.

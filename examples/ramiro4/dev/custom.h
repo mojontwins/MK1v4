@@ -5,6 +5,20 @@
 
 #ifdef ENABLE_CODE_HOOKS
 
+	// Score is stored in flags [16]
+	#define PSCORE flags[16]
+
+	#define SCORE_OPEN_PYRAMID 		5
+	#define SCORE_CHARACTER_TALK 	2
+	#define SCORE_OPEN_CRYPT 		2
+	#define SCORE_WIN_CRYPT 		5
+	#define SCORE_RAMON_EYE 		5
+	#define SCORE_RAMON_WATER 		5
+	#define SCORE_GET_COIN 			5
+	#define SCORE_GET_OBJECT 		5
+	#define SCORE_FALSE_OBJECT 		4
+	#define SCORE_FALSE_INTERACTION	4
+
 	#asm
 		LIB SPPrintAtInv
 	#endasm
@@ -633,6 +647,7 @@
 		pofrendas = 0;
 		water_level = 0; 
 		pofrendas_old = 0xff;
+		PSCORE = 0;
 		
 		/*
 		flags [6] = 1; 
@@ -899,6 +914,8 @@
 				water_trap_setup ();
 				if (is128k) arkos_play_music (2);
 			}
+
+			PSCORE += SCORE_GET_COIN;
 		}
 
 		if (pofrendas != pofrendas_old) {
@@ -992,7 +1009,10 @@
 		evil_eye_state = 2;
 		evil_eye_counter = 0;
 
-		if (trap_active && is128k) arkos_play_music (1);
+		if (trap_active) {
+			if (is128k) arkos_play_music (1);
+			PSCORE += SCORE_WIN_CRYPT;
+		} 
 		trap_active = 0;
 
 		// Water level:
