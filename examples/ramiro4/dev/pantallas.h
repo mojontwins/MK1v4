@@ -102,6 +102,14 @@ void game_ending (void) {
 	// CUSTOM { 
 	draw_text (7, 15, 7, "EL VAMPIRO RAMIRO");
 	draw_text (8, 17, 7, "NUNCA GANA . . .");
+
+	if (flags [16] < 99) {
+		draw_text (9, 20, 5, "COMPLETADO   /");
+		draw_2_digits (20, 20, flags [16] + 1);
+	} else {
+		draw_text (9, 20, 5, "COMPLETADO 100/");
+	}
+
 	sp_UpdateNow ();
 	// } END OF CUSTOM
 

@@ -109,25 +109,270 @@ void render_all_sprites (void) {
 			rdx = malotes [enoffs + rdi].x;
 			rdy = malotes [enoffs + rdi].y;
 		}
-		sp_MoveSprAbs (sp_moviles [rdi], spritesClip, en_an_next_frame [rdi] - en_an_current_frame [rdi], VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7);
+		/*
+		sp_MoveSprAbs (
+			sp_moviles [rdi], 
+			spritesClip, 
+			en_an_next_frame [rdi] - en_an_current_frame [rdi], 
+			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
+		);
+
 		en_an_current_frame [rdi] = en_an_next_frame [rdi];
+		*/
+		#asm
+				// sp_moviles [rdi] = sp_moviles + rdi*2
+				ld  a, (_rdi)
+				sla a
+				ld  c, a
+				ld  b, 0 				// BC = offset to [rdi] in 16bit arrays
+				ld  hl, _sp_moviles
+				add hl, bc
+				ld  e, (hl)
+				inc hl 
+				ld  d, (hl)
+				push de						
+				pop ix
+
+				// Clipping rectangle
+				ld  iy, vpClipStruct
+
+				// Animation
+				// en_an_next_frame [rdi] - en_an_current_frame [rdi]
+				ld  hl, _en_an_current_frame
+				add hl, bc 				// HL -> en_an_current_frame [rdi]
+				ld  e, (hl)
+				inc hl 
+				ld  d, (hl) 			// DE = en_an_current_frame [rdi]
+
+				ld  hl, _en_an_next_frame
+				add hl, bc 				// HL -> en_an_next_frame [rdi]
+				ld  a, (hl)
+				inc hl
+				ld  h, (hl)
+				ld  l, a 				// HL = en_an_next_frame [rdi]
+
+				or  a 					// clear carry
+				sbc hl, de 				// en_an_next_frame [rdi] - en_an_current_frame [rdi]
+
+				push bc 				// Save for later
+
+				ld  b, h
+				ld  c, l 				// ** BC = animate bitdef **	
+
+				//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
+				ld  a, (_rdy)					
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_Y
+				ld h, a
+
+				ld  a, (_rdx)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_X
+				ld  l, a
+
+				// rdx & 7, rdy & 7
+				ld  a, (_rdx)
+				and 7
+				ld  d, a
+
+				ld  a, (_rdy)
+				and 7
+				ld  e, a
+
+				call SPMoveSprAbs
+
+				// en_an_current_frame [enit] = en_an_next_frame [enit];
+
+				pop bc 					// Retrieve index
+
+				ld  hl, _en_an_current_frame
+				add hl, bc
+				ex  de, hl 				// DE -> en_an_current_frame [enit]	
+
+				ld  hl, _en_an_next_frame
+				add hl, bc 				// HL -> en_an_next_frame [enit]
+
+				ldi
+				ldi
+		#endasm
 	}
 
 	rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
 	#ifdef BETTER_VERTICAL_CONNECTIONS
+		/*
 		if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
-		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, rdi, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+		sp_MoveSprAbs (
+			sp_player, spritesClip, player.next_frame - player.current_frame, 
+			rdi, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
+		);
+		*/
+		#asm
+				ld  ix, (_sp_player)
+				ld  iy, vpClipStruct
+
+				ld  hl, (_player + 17)			// player.next_frame
+				ld  de, (_player + 15) 			// player.current_frame
+				or  a
+				sbc hl, de
+				ld  b, h
+				ld  c, l
+
+				ld  a, (_rdy)
+				cp  248
+				jr  c, ras_player_on_screen
+
+				ld  a, VIEWPORT_Y-1
+				jr  ras_rdi_calc_done
+
+			.ras_player_on_screen
+				ld  a, (_rdy)
+				srl a 
+				srl a 
+				srl a 
+				add VIEWPORT_Y
+
+			.ras_rdi_calc_done
+				ld  h, a 
+
+				ld  a, (_rdx)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_X
+				ld  l, a 
+				
+				ld  a, (_rdx)
+				and 7
+				ld  d, a
+
+				ld  a, (_rdy)
+				and 7
+				ld  e, a
+
+				call SPMoveSprAbs
+		#endasm		
 	#else
-		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+		/*
+		sp_MoveSprAbs (
+			sp_player, spritesClip, player.next_frame - player.current_frame, 
+			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
+		);
+		*/
+		#asm
+				ld  ix, (_sp_player)
+				ld  iy, vpClipStruct
+
+				ld  hl, (_player + 17)			// player.next_frame
+				ld  de, (_player + 15) 			// player.current_frame
+				or  a
+				sbc hl, de
+				ld  b, h
+				ld  c, l
+
+				ld  a, (_rdy)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_Y
+				ld  h, a 
+
+				ld  a, (_rdx)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_X
+				ld  l, a 
+				
+				ld  a, (_rdx)
+				and 7
+				ld  d, a
+
+				ld  a, (_rdy)
+				and 7
+				ld  e, a
+
+				call SPMoveSprAbs
+		#endasm
 	#endif
 	player.current_frame = player.next_frame;
 	
 	#ifdef PLAYER_CAN_FIRE
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
-				sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, VIEWPORT_Y + (bullets_y [rdi] >> 3), VIEWPORT_X + (bullets_x [rdi] >> 3), bullets_x [rdi] & 7, bullets_y [rdi] & 7);
+				rdx = bullets_x [rdi]; rdy = bullets_y [rdi];
+				/*
+				sp_MoveSprAbs (
+					sp_bullets [rdi], spritesClip, 0, 
+					VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
+				);
+				*/
+				#asm
+						ld  a, (_rdi)
+						sla a
+						ld  c, a
+						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
+						ld  hl, _sp_bullets
+						add hl, bc
+						ld  e, (hl)
+						inc hl 
+						ld  d, (hl)
+						push de						
+						pop ix
+
+						ld  iy, vpClipStruct
+						ld  bc, 0
+
+						ld  a, (_rdy)
+						srl a
+						srl a
+						srl a
+						add VIEWPORT_Y
+						ld  h, a
+
+						ld  a, (_rdx)
+						srl a
+						srl a
+						srl a
+						add VIEWPORT_X
+						ld  l, a
+
+						ld  a, (_rdx)
+						and 7
+						ld  d, a 
+
+						ld  a, (_rdy)
+						and 7
+						ld  e, a 
+						
+						call SPMoveSprAbs
+				#endasm				
 			} else {
-				sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
+				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
+				#asm
+						ld  a, (_rdi)
+						sla a
+						ld  c, a
+						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
+						ld  hl, _sp_bullets
+						add hl, bc
+						ld  e, (hl)
+						inc hl 
+						ld  d, (hl)
+						push de						
+						pop ix
+
+						ld  iy, vpClipStruct
+						ld  bc, 0
+
+						ld  hl, 0xfefe
+						ld  de, 0 
+						
+						call SPMoveSprAbs
+				#endasm
 			}
 		}
 	#endif

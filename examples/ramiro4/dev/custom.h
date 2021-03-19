@@ -438,7 +438,15 @@
 
 	void sprite_remove_aid (void) {
 		saca_a_todo_el_mundo_de_aqui ();
-		sp_MoveSprAbs (sp_pinv, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
+		// sp_MoveSprAbs (sp_pinv, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
+		#asm
+				ld  ix, (_sp_pinv)
+				ld  iy, vpClipStruct
+				ld  bc, 0
+				ld  hl, 0xfefe	// -2, -2
+				ld  de, 0
+				call SPMoveSprAbs
+		#endasm
 		
 		// Validate whole screen so sprites stay on next update
 		#asm
@@ -667,7 +675,7 @@
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
 		*/
-		n_pant = 18;
+		
 		#asm
 				ld b, 4
 				ld a, r 
@@ -912,8 +920,46 @@
 			rdy = gpy - 4;
 		} else rdx = 240;
 
+		/*
 		sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
 			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+		*/
+		#asm
+				ld  ix, (_sp_pinv)
+				ld  iy, vpClipStruct
+
+				ld  hl, (_pinv_next_frame)			// player.next_frame
+				ld  de, (_pinv_current_frame) 			// player.current_frame
+				or  a
+				sbc hl, de
+				ld  b, h
+				ld  c, l
+
+				ld  a, (_rdy)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_Y
+				ld  h, a 
+
+				ld  a, (_rdx)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_X
+				ld  l, a 
+				
+				ld  a, (_rdx)
+				and 7
+				ld  d, a
+
+				ld  a, (_rdy)
+				and 7
+				ld  e, a
+
+				call SPMoveSprAbs
+		#endasm
+
 		pinv_current_frame = pinv_next_frame;
 
 		// Offers
