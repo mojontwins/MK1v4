@@ -80,7 +80,7 @@
 // ------------
 
 #define USE_COINS							// Coin engine activated
-#define COIN_TILE					18		// Coin is tile #X
+#define COIN_TILE					50		// Coin is tile #X
 //#define COIN_BEH 					16 		// Detect coin by behaviour rather than tile nº
 #define COIN_FLAG					10		// Coins are counted in flag #N
 #define COINS_REFILL 				1		// If defined, add this to player.life
@@ -261,7 +261,7 @@
 //#define LIFE_H_X 					1
 //#define LIFE_H_Y					8
 
-#define OBJECTS_X					29		//
+#define OBJECTS_X					21		//
 #define OBJECTS_Y					23		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
@@ -284,8 +284,8 @@
 //#define ITEM_SHOW_X				2		//
 //#define ITEM_SHOW_Y				21		// Position
 
-#define COINS_X 					12 		// Coins coint character coordinates
-#define COINS_Y						23
+//#define COINS_X 					9 		// Coins count character coordinates
+//#define COINS_Y					23
 
 //#define EVIL_GAUGE_X				21		// For evil zone counters
 //#define EVIL_GAUGE_Y				23
@@ -380,6 +380,7 @@ unsigned char comportamiento_tiles [] = {
 	0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 4, 0,
 	0, 0,16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 0, 3, 4, 1,
+	0, 0, 0, 0 // Extra values 'cause I'm cheating a lot!
 };
 
 #define PLAYER_CUSTOM_ANIMATION

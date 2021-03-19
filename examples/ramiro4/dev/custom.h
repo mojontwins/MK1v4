@@ -5,20 +5,6 @@
 
 #ifdef ENABLE_CODE_HOOKS
 
-	// Score is stored in flags [16]
-	#define PSCORE flags[16]
-
-	#define SCORE_OPEN_PYRAMID 		5
-	#define SCORE_CHARACTER_TALK 	2
-	#define SCORE_OPEN_CRYPT 		2
-	#define SCORE_WIN_CRYPT 		5
-	#define SCORE_RAMON_EYE 		5
-	#define SCORE_RAMON_WATER 		5
-	#define SCORE_GET_COIN 			5
-	#define SCORE_GET_OBJECT 		5
-	#define SCORE_FALSE_OBJECT 		4
-	#define SCORE_FALSE_INTERACTION	4
-
 	#asm
 		LIB SPPrintAtInv
 	#endasm
@@ -69,6 +55,12 @@
 	unsigned char _trap_bt;
 	unsigned char rda, rdb;
 
+	// Coins trap extra stuff
+
+	#define C_COINS_X 		9 		// Coins count character coordinates
+	#define C_COINS_Y		23
+	#define TRAP_COINS_MAX	30
+
 	// Carrying an object
 
 	unsigned char *object_cells [] = {
@@ -80,7 +72,7 @@
 
 	// Offers
 
-	#define OFRENDAS_X 		21
+	#define OFRENDAS_X 		15
 	#define OFRENDAS_Y 		23
 	unsigned char pofrendas, pofrendas_old; 
 	unsigned char ofrendas_order [] = { 1, 2, 3, 4 };
@@ -95,6 +87,26 @@
 	unsigned char water_top_door_x;
 
 	unsigned char water_pushplates [] = { 0, 0x26, 0x4D, 0x57, 0x79 };
+
+	// Score 
+	
+	#define PSCORE flags[16]
+	
+	#define SCORE_OPEN_PYRAMID 		5
+	#define SCORE_CHARACTER_TALK 	2
+	#define SCORE_OPEN_CRYPT 		2
+	#define SCORE_WIN_CRYPT 		5
+	#define SCORE_RAMON_EYE 		5
+	#define SCORE_RAMON_WATER 		5
+	#define SCORE_GET_COIN 			5
+	#define SCORE_GET_OBJECT 		5
+	#define SCORE_FALSE_OBJECT 		4
+	#define SCORE_FALSE_INTERACTION	4
+
+	#define SCORE_X 		28
+	#define SCORE_Y 		23
+
+	unsigned char opscore;
 
 	// Text
 
@@ -642,19 +654,20 @@
 	}
 
 	void hook_init_game (void) {
+		water_level = 0; 
 		pinv = 0;
 		ofrendas_idx = 0;
 		pofrendas = 0;
-		water_level = 0; 
 		pofrendas_old = 0xff;
 		PSCORE = 0;
+		opscore = 0xff;
 		
 		/*
 		flags [6] = 1; 
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
-		n_pant = 26;
 		*/
+		n_pant = 18;
 		#asm
 				ld b, 4
 				ld a, r 
@@ -879,7 +892,7 @@
 						trap_by [gpit] = _trap_by;
 
 						// Finally
-						if (flags [COIN_FLAG] == 30) {
+						if (flags [COIN_FLAG] == TRAP_COINS_MAX) {
 							// Deativate trap!
 							scenery_info.allow_type_6 = 0;
 							play_sfx (8);
@@ -921,6 +934,16 @@
 		if (pofrendas != pofrendas_old) {
 			draw_2_digits (OFRENDAS_X, OFRENDAS_Y, pofrendas);
 			pofrendas_old = pofrendas;
+		}
+
+		if (flags [COIN_FLAG] != coins_old) {
+			draw_2_digits (C_COINS_X, C_COINS_Y, TRAP_COINS_MAX - flags [COIN_FLAG]);
+			coins_old = flags [COIN_FLAG];
+		}
+
+		if (PSCORE != opscore) {
+			draw_2_digits (SCORE_X, SCORE_Y, PSCORE);
+			opscore = PSCORE;
 		}
 
 		// Water level
