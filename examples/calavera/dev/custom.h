@@ -375,8 +375,46 @@ void set_hotspot (unsigned char hn) {
 			rdy = gpy - 4;
 		} else rdx = 240;
 
+		/*
 		sp_MoveSprAbs (sp_pinv, spritesClip, pinv_next_frame - pinv_current_frame, 
 			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+		*/
+		#asm
+				ld  ix, (_sp_pinv)
+				ld  iy, vpClipStruct
+
+				ld  hl, (_pinv_next_frame)			// player.next_frame
+				ld  de, (_pinv_current_frame) 			// player.current_frame
+				or  a
+				sbc hl, de
+				ld  b, h
+				ld  c, l
+
+				ld  a, (_rdy)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_Y
+				ld  h, a 
+
+				ld  a, (_rdx)
+				srl a
+				srl a
+				srl a
+				add VIEWPORT_X
+				ld  l, a 
+				
+				ld  a, (_rdx)
+				and 7
+				ld  d, a
+
+				ld  a, (_rdy)
+				and 7
+				ld  e, a
+
+				call SPMoveSprAbs
+		#endasm
+
 		pinv_current_frame = pinv_next_frame;
 	}
 
