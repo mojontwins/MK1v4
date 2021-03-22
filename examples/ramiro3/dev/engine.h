@@ -810,8 +810,8 @@ void cortina (void) {
 		play_sfx (5);
 
 		#if defined ACTIVATE_SCRIPTING && defined COINS_SCRIPTING
-			// Run f_script #max_screens + 1
-			script = f_scripts [max_screens + 1];
+			// Run f_script #MAX_SCREENS + 1
+			script = f_scripts [MAX_SCREENS + 1];
 			run_script ();
 		#endif
 
@@ -4451,7 +4451,7 @@ void platform_get_player (void) {
 		player.killed ++;
 
 		#ifdef ACTIVATE_SCRIPTING
-			script = f_scripts [max_screens + 2];
+			script = f_scripts [MAX_SCREENS + 2];
 			run_script ();
 		#endif								
 

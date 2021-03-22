@@ -179,7 +179,6 @@ void main (void) {
 		#endif
 
 		n_pant = SCR_INICIO;
-		on_pant = 0xff;
 		maincounter = 0;
 		
 		#ifdef ACTIVATE_SCRIPTING		
@@ -190,7 +189,7 @@ void main (void) {
 			#endif
 		
 			// Execute "ENTERING GAME" script
-			script = e_scripts [max_screens];
+			script = e_scripts [MAX_SCREENS];
 			run_script ();
 		#endif
 
@@ -218,7 +217,18 @@ void main (void) {
 			fall_frame_counter = 0;
 		#endif
 
-		objs_old = life_old = keys_old = killed_old = item_old = ezg_old = coins_old = 0xff;
+		//objs_old = life_old = keys_old = killed_old = item_old = ezg_old = coins_old = 0xff;
+		#asm
+			ld  a, 255
+			ld  (_objs_old), a 
+			ld  (_life_old), a 
+			ld  (_keys_old), a 
+			ld  (_killed_old), a 
+			ld  (_item_old), a 
+			ld  (_ezg_old), a 
+			ld  (_coins_old), a
+			ld  (_on_pant), a
+		#endasm
 
 		while (playing) {
 			#ifdef ENABLE_CODE_HOOKS
@@ -227,9 +237,24 @@ void main (void) {
 
 			// Update SCR
 
+			/*
 			if (n_pant != on_pant) {
 				draw_scr (); on_pant = n_pant;
 			}
+			*/
+			#asm
+					ld  a, (_n_pant)
+					ld  c, a
+					ld  a, (_on_pant)
+					cp  c
+					jr  z, ml_ud_skip
+
+					call _draw_scr 
+
+					ld  a, (_n_pant)
+					ld  (_on_pant), a
+				.ml_ud_skip
+			#endasm
 
 			// Update  HUD
 
@@ -347,20 +372,72 @@ void main (void) {
 			// Render
 			render_all_sprites ();	
 			
-			#ifdef ACTIVATE_SCRIPTING
+			#if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
+				/*
 				if (f_zone_ac == 1) {
 					if (gpx >= fzx1 && gpx <= fzx2 && gpy >= fzy1 && gpy <= fzy2) {
 						script = f_scripts [n_pant];
 						run_script ();
 					}	
 				}
+				*/
+				#asm
+						ld  a, (_f_zone_ac)
+						dec a
+						jr  nz, ml_f_zone_skip
+
+						// gpx >= fzx1
+						ld  a, (_fzx1)
+						ld  c, a
+						ld  a, (_gpx)
+						cp  c
+						jr  c, ml_f_zone_skip
+
+						// gpx <= fzx2 -> fzx2 >= gpx
+						ld  a, (_gpx)
+						ld  c, a
+						ld  a, (_fzx2)
+						cp  c
+						jr  c, ml_f_zone_skip
+
+						// gpy >= fzy1
+						ld  a, (_fzy1)
+						ld  c, a
+						ld  a, (_gpy)
+						cp  c
+						jr  c, ml_f_zone_skip
+
+						// gpy <= fzy2 -> fzy2 >= gpy
+						ld  a, (_gpy)
+						ld  c, a
+						ld  a, (_fzy2)
+						cp  c
+						jr  c, ml_f_zone_skip
+
+						// script = f_scripts [n_pant];
+						ld  a, (_n_pant)
+						sla a
+						ld  c, a
+						ld  b, 0
+						ld  hl, _f_scripts
+						add hl, bc
+						ld  a, (hl)
+						inc hl
+						ld  h, (hl)
+						ld  l, a
+						ld  (_script), hl
+
+						call _run_script
+
+					.ml_f_zone_skip
+				#endasm
 			#endif
 			
+			// Hotspot interaction.
+
 			#ifdef ENABLE_CODE_HOOKS
 				latest_hotspot = 0;
 			#endif
-
-			// Hotspot interaction.
 
 			//if (gpx >= hotspot_x - 15 && gpx <= hotspot_x + 15 && gpy >= hotspot_y - 15 && gpy <= hotspot_y + 15) 
 			#asm
@@ -506,11 +583,25 @@ void main (void) {
 			// Limit frame rate
 			
 			#ifdef MIN_FAPS_PER_FRAME
+				/*
 				while (isrc < MIN_FAPS_PER_FRAME) {
 					#asm
 						halt
 					#endasm
 				} isrc = 0;
+				*/
+				#asm
+					.ml_min_faps_loop
+						ld  a, (_isrc)
+						cp  MIN_FAPS_PER_FRAME
+						jr  nc, ml_min_faps_loop_end
+						halt
+						jr  ml_min_faps_loop
+
+					.ml_min_faps_loop_end
+						xor a
+						ld  (_isrc), a
+				#endasm
 			#endif
 
 			// Update to screen
@@ -559,12 +650,14 @@ void main (void) {
 					if ((pad0 & sp_DOWN) == 0)
 				#endif
 				{
-					script = f_scripts [max_screens];
+					
+					script = f_scripts [MAX_SCREENS];
 					run_script ();
 					// Any scripts to run in this screen?
 					script = f_scripts [n_pant];
 					run_script ();
 					//if (!script_something_done) play_sfx (9);
+					
 				}
 			#endif
 

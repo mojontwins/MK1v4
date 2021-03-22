@@ -660,6 +660,9 @@ End If
 print #f, "unsigned char script_result = 0;"
 print #f, "unsigned char script_something_done = 0;"
 print #f, " "
+If Not actionsUsed (&H51) Then
+	Print #f, "#define DEACTIVATE_FIRE_ZONE"
+End If
 close #f
 
 open outFileName for output as #f

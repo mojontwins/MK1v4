@@ -214,7 +214,7 @@ unsigned char fzx1, fzx2, fzy1, fzy2;
 #if (defined(USE_COINS) && defined(COINS_DEACTIVABLE)) || defined (USE_TYPE_6) || !defined (DEACTIVATE_EVIL_ZONE)
 	SCENERY_INFO scenery_info; 
 #endif	
-unsigned char max_screens = MAP_W * MAP_H;
+#define MAX_SCREENS (MAP_W*MAP_H)
 
 // Flags are now in the main engine
 

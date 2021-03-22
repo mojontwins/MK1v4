@@ -5,3 +5,4 @@
 unsigned char script_result = 0;
 unsigned char script_something_done = 0;
  
+#define DEACTIVATE_FIRE_ZONE

@@ -12,14 +12,23 @@ void speech (unsigned char a, unsigned char b, unsigned char c) {
 
 void do_extern_action (unsigned char n) {
 	redraw_after_text = 1;
-	if (n == 128) {
-		if (pinv) {
+	if (n == 3 || n == 128) {
+		// Altar de las ofrendas y altar falso
+		if (n == 3 && flags [18]) {
+			show_text_box (38);
+		} else if (pinv) {
 			show_text_box (19);
-		} else if (pofrendas) {
-			pinv = ofrendas_order [ofrendas_idx ++];
+		} else if (pofrendas || n == 3) {
+			if (n == 128) {
+				pinv = ofrendas_order [ofrendas_idx ++];
+				pofrendas --;
+				show_text_box (pinv);
+			} else {
+				pinv = 5;
+				show_text_box (36);
+				flags [18] = 1;
+			}
 			pinv_next_frame = object_cells [pinv];
-			show_text_box (pinv);
-			pofrendas --;
 			PSCORE += SCORE_GET_OBJECT;
 		} else show_text_box (0);
 	} else if (n == 64) {
@@ -33,7 +42,7 @@ void do_extern_action (unsigned char n) {
 		// Ramon speech
 		speech (14, 13, 30);
 	} else if (n == 2) {
-		speech (33, 34, 35);		
+		speech (33, 34, 35);
 	} else if (n < 64) {
 		show_text_box (n);
 	} else {

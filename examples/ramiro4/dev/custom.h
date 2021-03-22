@@ -64,7 +64,7 @@
 	// Carrying an object
 
 	unsigned char *object_cells [] = {
-		0, extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a
+		0, extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a, extra_sprite_21_a
 	};
 	unsigned char pinv;
 	struct sp_SS *sp_pinv;
@@ -206,8 +206,8 @@
 							  "OFRENDA, YO SOLTARE%"
 							  "PRENDA...";
 
-	unsigned char text19 [] = "HAZ BUEN USO DE LO%"
-							  "QUE TE HE DADO!";
+	unsigned char text19 [] = "YA TIENES UN OBJETO!%"
+							  "USALO ANTES, CATETO.";
 
 	unsigned char text20 [] = "Y YA TE ABRI. AHORA%"
 							  "JUYE... JUYE!!";
@@ -286,6 +286,18 @@
 							  "NO SE HAGA EL REMOLON%"
 							  "Y LA PIRAMIDE TE ABRA";
 
+	unsigned char text36 [] = "ESTE ES EL ALTAR ROTO%"
+							  "QUE NO TE DISCRIMINA%"
+							  "Y SI LE TOCAS EL TOTO%"
+							  "TE DA PAPEL DE COCINA";
+
+	unsigned char text37 [] = "QUE HACES, ALOCADO?%"
+							  "ESE PAPEL DE COCINA%"
+							  "A MI CULO DELICADO%"
+							  "LO HARIA FOSFATINA!";
+
+	unsigned char text38 [] = "EL ALTAR NO CONTESTA";
+
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
 		text1, text2, text3, text4, 		// Altar describe objetos
@@ -302,7 +314,8 @@
 		text30,								// Tendras que complacer
 		text31,								// Te pillé!
 		text32, 							// Advertencia Ramón
-		text33, text34, text35 				// Intro
+		text33, text34, text35, 			// Intro
+		text36, text37, text38				// Troleo papel de cocina
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -310,9 +323,9 @@
 
 	// Admiration signs (!)
 	// Coordiantes are screen-absolute, precalculated.
-	unsigned char adm_s_n_pant [] = {  0,  2,  5, 10, 13, 14, 19, 25};
-	unsigned char adm_s_x [] =      {  6, 20, 22, 16, 20,  6,  6,  6};
-	unsigned char adm_s_y [] =      { 12, 14, 16, 10, 16, 16,  4,  4};
+	unsigned char adm_s_n_pant [] = {  0,  2,  5,  6, 10, 13, 14, 19, 25};
+	unsigned char adm_s_x [] =      {  6, 20, 22,  8, 16, 20,  6,  6,  6};
+	unsigned char adm_s_y [] =      { 12, 14, 16, 12, 10, 16, 16,  4,  4};
 
 	// Aux. functions
 

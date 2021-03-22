@@ -20,6 +20,7 @@
 # 16 - SCORE
 # 17 - Advertencia de Ramón (Ojo)
 # 18 - Advertencia de Ramón (Agua)
+# 19 - Altar de las ofrendas mal
 
 ENTERING SCREEN 0
 	IF TRUE
@@ -104,6 +105,24 @@ PRESS_FIRE AT SCREEN 5
 	THEN
 		SET FLAG 18 = 1
 		INC FLAG 16, @SCORE_RAMON_WATER
+	END
+END
+
+## Altar roto
+
+ENTERING SCREEN 6
+	IF TRUE
+	THEN
+		SET TILE (3, 6) = 21
+		SET TILE (4, 6) = 22	
+	END
+END 
+
+PRESS_FIRE AT SCREEN 6
+	IF PLAYER_IN_X_TILES 3, 4
+	IF PLAYER_IN_Y_TILES 6, 6
+	THEN
+		EXTERN 3
 	END
 END
 
