@@ -12,23 +12,26 @@ void speech (unsigned char a, unsigned char b, unsigned char c) {
 
 void do_extern_action (unsigned char n) {
 	redraw_after_text = 1;
-	if (n == 3 || n == 128) {
-		// Altar de las ofrendas y altar falso
-		if (n == 3 && flags [18]) {
+	if (n == 3) {
+		if (flags [18]) {
 			show_text_box (38);
 		} else if (pinv) {
 			show_text_box (19);
-		} else if (pofrendas || n == 3) {
-			if (n == 128) {
-				pinv = ofrendas_order [ofrendas_idx ++];
-				pofrendas --;
-				show_text_box (pinv);
-			} else {
-				pinv = 5;
-				show_text_box (36);
-				flags [18] = 1;
-			}
+		} else {
+			pinv = 5; 
 			pinv_next_frame = object_cells [pinv];
+			show_text_box (36);
+			flags [18] = 1;
+			PSCORE += SCORE_FALSE_INTERACTION;
+		}
+	} else if (n == 128) {
+		if (pinv) {
+			show_text_box (19);
+		} else if (pofrendas) {
+			pinv = ofrendas_order [ofrendas_idx ++];
+			pinv_next_frame = object_cells [pinv];
+			show_text_box (pinv);
+			pofrendas --;
 			PSCORE += SCORE_GET_OBJECT;
 		} else show_text_box (0);
 	} else if (n == 64) {
@@ -50,6 +53,13 @@ void do_extern_action (unsigned char n) {
 		which_character = n - 64;
 		show_text_box (25 + which_character);
 		sp_UpdateNow ();
+
+		if (pinv == 5 && which_character == 1) {
+			show_text_box (37);
+			pinv = 0;
+			PSCORE += SCORE_FALSE_INTERACTION;
+		}
+
 		if (flags [which_character] == 2) {
 			show_text_box (20);
 		} else if (flags [which_character] == 0 || pinv == 0) {

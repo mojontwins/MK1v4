@@ -383,20 +383,20 @@
 		//draw_coloured_tile (VIEWPORT_X + (_trap_bx << 1), VIEWPORT_Y + (_trap_by << 1), _trap_bt);
 		
 		#asm
-			ld  a, (__trap_bx)
-			sla a
-			add VIEWPORT_X
-			ld  (__x), a
+				ld  a, (__trap_bx)
+				sla a
+				add VIEWPORT_X
+				ld  (__x), a
 
-			ld  a, (__trap_by)
-			sla a
-			add VIEWPORT_Y
-			ld  (__y), a
-		
-			ld  a, (__trap_bt)
-			ld  (__t), a
+				ld  a, (__trap_by)
+				sla a
+				add VIEWPORT_Y
+				ld  (__y), a
+			
+				ld  a, (__trap_bt)
+				ld  (__t), a
 
-			jp _draw_coloured_tile_do	
+				jp _draw_coloured_tile_do	
 		#endasm
 	}
 
@@ -687,8 +687,9 @@
 		flags [6] = 1; 
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
+		n_pant = 14;
 		*/
-		
+
 		#asm
 				ld b, 4
 				ld a, r 
@@ -737,6 +738,7 @@
 
 		// Eye of horus
 
+		/*
 		if (evil_eye_screen) {
 			if (evil_eye_counter) {
 				evil_eye_counter --;
@@ -747,6 +749,70 @@
 				scenery_info.evil_zone_active = (evil_eye_state == 2);
 			}
 		}
+		*/
+
+		#asm
+				ld  a, (_evil_eye_screen)
+				or  a
+				jr  z, eoh_done
+
+				ld  a, (_evil_eye_counter)
+				or  a
+				jr  z, eoh_counter_done
+
+				dec a
+				ld  (_evil_eye_counter), a
+				jr  eoh_done
+
+			.eoh_counter_done
+				// evil_eye_state ++; if (evil_eye_state == 5) evil_eye_state = 0;
+
+				ld  a, (_evil_eye_state)
+				inc a
+				cp  5
+				jr  nz, eoh_reset_state_done
+
+				xor a
+			.eoh_reset_state_done
+				ld  (_evil_eye_state), a
+
+				// evil_eye_counter = evil_eye_state_cts [evil_eye_state];
+
+				ld  c, a
+				ld  b, 0
+				ld  hl, _evil_eye_state_cts
+				add hl, bc
+				ld  a, (hl)
+				ld  (_evil_eye_counter), a
+
+				// draw_coloured_tile (EYE_X, EYE_Y, evil_eye_state_tiles [evil_eye_state]);
+				ld  a, EYE_X
+				ld  (__x), a
+				ld  a, EYE_Y
+				ld  (__y), a
+				ld  bc, (_evil_eye_state)
+				ld  b, 0
+				ld  hl, _evil_eye_state_tiles
+				add hl, bc
+				ld  a, (hl)
+				ld  (__t), a
+				call _draw_coloured_tile_do
+
+				ld  a, (_evil_eye_state)
+				cp  2
+				jr  z, eoh_ez_set1
+
+				xor a
+				jr  eoh_ez_set
+
+			.eoh_ez_set1
+				ld  a, 1
+
+			.eoh_ez_set
+				ld  (_scenery_info+2), a 		// scenery_info.evil_zone_active
+
+			.eoh_done
+		#endasm		
 
 		sp_Border ((scenery_info.evil_zone_active & half_life) ? 2 : 0);
 
@@ -1082,14 +1148,24 @@
 				ld  (_trap_coins), a		
 		#endasm
 
+		/*
 		scenery_info.evil_zone_active = 0;
 		scenery_info.allow_type_6 = 0;
+		evil_eye_counter = 0;
+		evil_eye_state = 2;
+		*/
+
+		#asm
+				xor a
+				ld  (_scenery_info+2), a 		// scenery_info.evil_zone_active
+				ld  (_scenery_info+3), a 		// scenery_info.allow_type_6
+				ld  (_evil_eye_counter), a 
+				ld  a, 2
+				ld  (_evil_eye_state), a
+		#endasm
 
 		// Paint eye and admiration bubbles
 		decorate_screen ();
-
-		evil_eye_state = 2;
-		evil_eye_counter = 0;
 
 		if (trap_active) {
 			if (is128k) arkos_play_music (1);
@@ -1107,7 +1183,6 @@
 				if (is128k) arkos_play_music (1);
 			} else water_level = 25;
 		}
-
 	}
 #endif
 

@@ -1,0 +1,62 @@
+#asm
+		ld  a, (_evil_eye_screen)
+		or  a
+		jr  z, eoh_done
+
+		ld  a, (_evil_eye_counter)
+		or  a
+		jr  z, eoh_counter_done
+
+		dec a
+		ld  (_evil_eye_counter), a
+		jr  eoh_done
+
+	.eoh_counter_done
+		// evil_eye_state ++; if (evil_eye_state == 5) evil_eye_state = 0;
+
+		ld  a, (_evil_eye_state)
+		inc a
+		cp  5
+		jr  nz, eoh_reset_state_done
+
+		xor a
+	.eoh_reset_state_done
+		ld  (_evil_eye_state), a
+
+		// evil_eye_counter = evil_eye_state_cts [evil_eye_state];
+
+		ld  c, a
+		ld  b, 0
+		ld  hl, _evil_eye_state_cts
+		add hl, bc
+		ld  a, (hl)
+		ld  (_evil_eye_counter), a
+
+		// draw_coloured_tile (EYE_X, EYE_Y, evil_eye_state_tiles [evil_eye_state]);
+		ld  a, EYE_X
+		ld  (__x), a
+		ld  a, EYE_Y
+		ld  (__y), a
+		ld  bc, (_evil_eye_state)
+		ld  b, 0
+		ld  hl, _evil_eye_state_tiles
+		add hl, bc
+		ld  a, (hl)
+		ld  (__t), a
+		call _draw_coloured_tile_do
+
+		ld  a, (_evil_eye_state)
+		cp  2
+		jr  z, eoh_ez_set1
+
+		xor a
+		jr  eoh_ez_set
+
+	.eoh_ez_set1
+		ld  a, 1
+
+	.eoh_ez_set
+		ld  (_scenery_info + 1), a 		// scenery_info.evil_zone_active
+
+	.eoh_done
+#endasm
