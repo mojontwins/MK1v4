@@ -58,6 +58,7 @@ void do_extern_action (unsigned char n) {
 			show_text_box (37);
 			pinv = 0;
 			PSCORE += SCORE_FALSE_INTERACTION;
+			return;
 		}
 
 		if (flags [which_character] == 2) {

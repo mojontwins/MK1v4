@@ -1061,7 +1061,7 @@
 			pofrendas_old = pofrendas;
 		}
 
-		if (flags [COIN_FLAG] != coins_old) {
+		if (flags [COIN_FLAG] != coins_old && trap_coins) {
 			draw_2_digits (C_COINS_X, C_COINS_Y, TRAP_COINS_MAX - flags [COIN_FLAG]);
 			coins_old = flags [COIN_FLAG];
 		}
