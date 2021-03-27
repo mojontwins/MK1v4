@@ -1,6 +1,8 @@
 MTE MK1 v4
 ==========
 
+Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+
 Esta versión se conserva aquí por motivos históricos.
 
 **MK1** empezó a evolucionar de forma desvocada en 2012. Se nos ocurrían ideas loquísimas para los juegos y todo lo hacíamos formar parte del motor sin preocuparnos mucho de no romper nada, con lo que el tema iba creeciendo a lo alto, ancho y profundo como un engendro.
