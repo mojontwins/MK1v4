@@ -82,6 +82,7 @@ void do_extern_action (unsigned char n) {
 			pinv = 0;
 			play_sfx (6);
 			PSCORE += SCORE_OPEN_CRYPT;
+			player.life += 10; 		// Life boost
 		}
 	}
 }

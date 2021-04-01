@@ -80,7 +80,7 @@
 
 	// Water trap
 
-	#define WATER_PERIOD 20
+	#define WATER_PERIOD 22
 	unsigned char water_level;
 	unsigned char water_ct;
 	unsigned char water_locks;
@@ -675,19 +675,32 @@
 	}
 
 	void hook_init_game (void) {
+		/*
 		water_level = 0; 
 		pinv = 0;
 		ofrendas_idx = 0;
 		pofrendas = 0;
 		pofrendas_old = 0xff;
-		PSCORE = 0;
 		opscore = 0xff;
+		*/
+
+		#asm
+				xor a
+				ld  (_water_level), a
+				ld  (_pinv), a 
+				ld  (_ofrendas_idx), a 
+				ld  (_pofrendas), a 
+				dec a 
+				ld  (_pofrendas_old), a 
+				ld  (_opscore), a
+		#endasm
+
+		PSCORE = 0;
 		
 		/*
-		flags [6] = 1; 
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
-		n_pant = 14;
+		n_pant = 5;
 		*/
 
 		#asm
@@ -1176,6 +1189,7 @@
 		// Water level:
 		if (water_level) {
 			player.vy = -PLAYER_MAX_VY_SALTANDO;
+			player.y = 136<<6; gpy = 136;
 			water_trap_setup ();
 			
 			if (n_pant == 5) {

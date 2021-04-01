@@ -482,7 +482,7 @@ void main (void) {
 				#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
 					switch (hotspot_t) {
 						#ifndef DEACTIVATE_OBJECTS
-							case 1:
+							case HOTSPOT_TYPE_OBJECT:
 								#ifdef ONLY_ONE_OBJECT
 									if (player.objs == 0) {
 										player.objs ++;
@@ -502,14 +502,14 @@ void main (void) {
 						#endif
 				
 						#ifndef DEACTIVATE_KEYS
-							case 2:
+							case HOTSPOT_TYPE_KEY:
 								player.keys ++;
 								play_sfx (6);
 								break;
 						#endif
 
 						#ifndef DEACTIVATE_REFILLS
-							case 3:
+							case HOTSPOT_TYPE_REFILL:
 								player.life += PLAYER_REFILL;
 								if (player.life > 99)
 									player.life = 99;
@@ -644,10 +644,10 @@ void main (void) {
 		
 			#ifdef ACTIVATE_SCRIPTING		
 				#ifdef SCRIPTING_KEY_M			
-					if (sp_KeyPressed (key_m) || ((pad0 & sp_FIRE) == 0))
+					if (sp_KeyPressed (key_m) || ((pad_this_frame & sp_FIRE) == 0))
 				#endif
 				#ifdef SCRIPTING_DOWN
-					if ((pad0 & sp_DOWN) == 0)
+					if ((pad_this_frame & sp_DOWN) == 0)
 				#endif
 				{
 					

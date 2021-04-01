@@ -36,6 +36,10 @@
 #define GENITAL_FACING_UP 		2
 #define GENITAL_FACING_DOWN 	3
 
+#define HOTSPOT_TYPE_OBJECT 	1
+#define HOTSPOT_TYPE_KEY 		2
+#define HOTSPOT_TYPE_REFILL 	3
+
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
 	int vx, vy; 										// 6, 8

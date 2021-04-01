@@ -58,7 +58,7 @@ ENTERING SCREEN 2
 		SET TILE (9, 7) = 26
 	END
 
-	IF FLAG 4 = 1
+	IF FLAG 4 = 2
 	THEN
 		SET TILE (14, 1) = 0
 		SET TILE (14, 2) = 0
@@ -134,7 +134,7 @@ ENTERING SCREEN 10
 		SET TILE (7, 5) = 25
 	END
 
-	IF FLAG 3 = 1
+	IF FLAG 3 = 2
 	THEN
 		SET TILE (5, 7) = 0
 		SET TILE (5, 8) = 0
@@ -219,7 +219,7 @@ ENTERING SCREEN 19
 		SET TILE (2, 2) = 24
 	END
 
-	IF FLAG 2 = 1
+	IF FLAG 2 = 2
 	THEN
 		SET TILE (0, 1) = 0
 		SET TILE (0, 2) = 0
@@ -241,7 +241,7 @@ ENTERING SCREEN 25
 		SET TILE (2, 2) = 23
 	END
 
-	IF FLAG 1 = 1
+	IF FLAG 1 = 2
 	THEN
 		SET TILE (0, 1) = 0
 		SET TILE (0, 2) = 0
