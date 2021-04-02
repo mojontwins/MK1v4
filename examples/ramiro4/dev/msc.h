@@ -172,21 +172,21 @@ void run_script (void) {
                     // IF PLAYER_TOUCHES x, y
                     // Opcode: 20 x y
                     read_x_y ();
-                    sc_terminado = (! ((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15));
+                    sc_terminado = (! (gpx >= (sc_x << 4) - 15 && gpx <= (sc_x << 4) + 15 && gpy >= (sc_y << 4) - 15 && gpy <= (sc_y << 4) + 15));
                     break;
                 case 0x21:
                     // IF PLAYER_IN_X x1, x2
                     // Opcode: 21 x1 x2
                     sc_x = read_byte ();
                     sc_y = read_byte ();
-                    sc_terminado = (! ((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y));
+                    sc_terminado = (! (gpx >= sc_x && gpx <= sc_y));
                     break;
                 case 0x22:
                     // IF PLAYER_IN_Y y1, y2
                     // Opcode: 22 y1 y2
                     sc_x = read_byte ();
                     sc_y = read_byte ();
-                    sc_terminado = (! ((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y));
+                    sc_terminado = (! (gpy >= sc_x && gpy <= sc_y));
                     break;
                 case 0x41:
                      // IF OBJECT_COUNT = n

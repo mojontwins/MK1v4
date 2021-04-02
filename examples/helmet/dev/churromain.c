@@ -62,40 +62,11 @@
 	#define ANIMATED_BASE 	PERSIST_BASE
 #endif
 
-#if defined MODE_128K_DUAL
-	#asm
-		.SetRAMBank
-			ld	a, b
-			or	a
-			jp	z, restISR
-			xor	a
-			ld	i, a
-			jp	SetRAMBankKeepGoing
-		.restISR
-			ld	a, $f0
-			ld	i, a
-		.SetRAMBankKeepGoing
-			ld	a, 16
-			or	b
-			ld	bc, $7ffd
-			out (C), a			
-			ret 
-
-		#ifdef ENABLE_ARKOS
-			// ARKOS initialization
-			.arkos_address_call
-				ld b, ARKOS_RAM
-				call SetRAMBank
-				call ARKOS_ADDRESS_MT_INIT				
-				ld b, 0
-				jp SetRAMBank					
-		#endif
-	#endasm
-#endif
 
 // Program modules in strict order...
 
 #include "definitions.h"
+#include "mtasmlib.h"
 #if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 	#include "isr.h"
 	#ifdef ENABLE_ARKOS

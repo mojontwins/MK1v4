@@ -895,7 +895,7 @@ if clausulasUsed (&H20) Then
 	print #f, "                    // IF PLAYER_TOUCHES x, y"
 	print #f, "                    // Opcode: 20 x y"
 	print #f, "                    read_x_y ();"	
-	print #f, "                    sc_terminado = (! ((player.x >> 6) >= (sc_x << 4) - 15 && (player.x >> 6) <= (sc_x << 4) + 15 && (player.y >> 6) >= (sc_y << 4) - 15 && (player.y >> 6) <= (sc_y << 4) + 15));"
+	print #f, "                    sc_terminado = (! (gpx >= (sc_x << 4) - 15 && gpx <= (sc_x << 4) + 15 && gpy >= (sc_y << 4) - 15 && gpy <= (sc_y << 4) + 15));"
 	print #f, "                    break;"
 end if
 
@@ -905,7 +905,7 @@ if clausulasUsed (&H21) Then
 	print #f, "                    // Opcode: 21 x1 x2"
 	print #f, "                    sc_x = read_byte ();"
 	print #f, "                    sc_y = read_byte ();"	
-	print #f, "                    sc_terminado = (! ((player.x >> 6) >= sc_x && (player.x >> 6) <= sc_y));"
+	print #f, "                    sc_terminado = (! (gpx >= sc_x && gpx <= sc_y));"
 	print #f, "                    break;"
 end if
 	
@@ -915,7 +915,7 @@ if clausulasUsed (&H22) Then
 	print #f, "                    // Opcode: 22 y1 y2"
 	print #f, "                    sc_x = read_byte ();"
 	print #f, "                    sc_y = read_byte ();"	
-	print #f, "                    sc_terminado = (! ((player.y >> 6) >= sc_x && (player.y >> 6) <= sc_y));"
+	print #f, "                    sc_terminado = (! (gpy >= sc_x && gpy <= sc_y));"
 	print #f, "                    break;"
 end if
 

@@ -702,7 +702,8 @@
 		gpx = 160; player.x = 160<<6;
 		n_pant = 5;
 		*/
-
+		n_pant = 18;
+		
 		#asm
 				ld b, 4
 				ld a, r 

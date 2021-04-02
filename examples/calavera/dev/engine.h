@@ -101,8 +101,36 @@ void render_all_sprites (void) {
 				if (malotes [enoffs + rdi].t == 6 || malotes [enoffs + rdi].t == 0)
 			#endif
 			{
+				/*
 				rdx = en_an_x [rdi] >> 6;
 				rdy = en_an_y [rdi] >> 6;
+				*/
+				#asm
+						ld  a, (_rdi)
+						sla a
+						ld  c, a
+						ld  b, 0
+
+						ld  hl, _en_an_x
+						add hl, bc
+						ld  a, (hl)
+						inc hl
+						ld  h, (hl)
+						ld  l, a 
+
+						call HLshr6_A
+						ld  (_rdx), a
+
+						ld  hl, _en_an_y
+						add hl, bc
+						ld  a, (hl)
+						inc hl
+						ld  h, (hl)
+						ld  l, a 
+
+						call HLshr6_A
+						ld  (_rdy), a
+				#endasm
 			} else 
 		#endif
 		{
@@ -1528,10 +1556,32 @@ void move (void) {
 		back until the edge of the tile.
 	*/
 
+	/*
 	gpx = player.x >> 6;				// Divide / 64 for pixels, then / 16 for tiles.
 	gpy = player.y >> 6;
 	gpxx = gpx >> 4;
 	gpyy = gpy >> 4;
+	*/
+
+	#asm
+			ld  hl, (_player + 0) 		// player.x
+			call HLshr6_A
+			ld  (_gpx), a
+			srl a
+			srl a 
+			srl a 
+			srl a
+			ld  (_gpxx), a
+
+			ld  hl, (_player + 2) 		// player.y
+			call HLshr6_A
+			ld  (_gpy), a 
+			srl a 
+			srl a 
+			srl a 
+			srl a
+			ld  (_gpyy), a
+	#endasm
 	
 	// Cool
 
@@ -1700,10 +1750,14 @@ void move (void) {
 			and 15
 			ld  c, a
 
+			/*
 			ld  de, (_player + 8) 	// player.vy
 			ld  l, 6
 			call l_asr
 			ld  a, l
+			*/
+			ld  hl, (_player + 8) 	// player.vy
+			call HLshr6_A
 
 			cp  c
 			jr  c, vert_collision_done
@@ -2482,8 +2536,20 @@ void move (void) {
 	if (player.x > 14336)
 		player.x = 14336;
 
+	/*
 	gpx = player.x >> 6;
 	gpxx = gpx >> 4;
+	*/
+	#asm
+			ld  hl, (_player + 0) 		// player.x
+			call HLshr6_A
+			ld  (_gpx), a 
+			srl a
+			srl a 
+			srl a
+			srl a 
+			ld  (_gpxx), a
+	#endasm
 
 	/*
 	wall = 0;	
@@ -5138,8 +5204,36 @@ void mueve_bicharracos (void) {
 						#endif
 					#endif
 				) {
+					/*
 					en_ccx = en_an_x [enit] >> 6;
 					en_ccy = en_an_y [enit] >> 6;
+					*/
+					#asm
+							ld  a, (_enit)
+							sla a
+							ld  c, a
+							ld  b, 0
+
+							ld  hl, _en_an_x
+							add hl, bc
+							ld  a, (hl)
+							inc hl
+							ld  h, (hl)
+							ld  l, a 
+
+							call HLshr6_A
+							ld  (_en_ccx), a
+
+							ld  hl, _en_an_y
+							add hl, bc
+							ld  a, (hl)
+							inc hl
+							ld  h, (hl)
+							ld  l, a 
+
+							call HLshr6_A
+							ld  (_en_ccy), a
+					#endasm
 				} else 
 			#endif
 			{
