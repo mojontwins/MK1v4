@@ -401,3 +401,11 @@ Diversos hitos en el juego añadirán puntos.
 |4|4|Llevar a Gustavo objeto falso
 
 Total = 99 puntos.
+
+# Bugs tela de chungos / enmiendas
+
+[ ] Añadir textos a todas las pantallas de personajes.
+[X] Velocidad de rebote mínimo contra los pinchos mayor (suficiente para subir un bloque).
+[X] Agua no debe quitar vida.
+[X] La colisión con los tiles y los enemigos parece glitchear un poco. No era tal, es que con un cambio en el mapa un enemigo aparecía directamente sobre un obstáculo.
+[X] Cuelgue misterioso en la pantalla 33 - había un bug con el código que calculaba si debería pintar las admiraciones (!).

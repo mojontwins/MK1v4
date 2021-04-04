@@ -323,6 +323,7 @@
 
 	// Admiration signs (!)
 	// Coordiantes are screen-absolute, precalculated.
+	#define MAX_ADMIRATION_SIGNS 9
 	unsigned char adm_s_n_pant [] = {  0,  2,  5,  6, 10, 13, 14, 19, 25};
 	unsigned char adm_s_x [] =      {  6, 20, 22,  8, 16, 20,  6,  6,  6};
 	unsigned char adm_s_y [] =      { 12, 14, 16, 12, 10, 16, 16,  4,  4};
@@ -475,13 +476,12 @@
 
 	void decorate_screen (void) {
 		// Admiration (!)
-		rdi = 0;
-		while (adm_s_n_pant [rdi] <= n_pant) {			
+		
+		for (rdi = 0; rdi < MAX_ADMIRATION_SIGNS; rdi ++) {			
 			if (adm_s_n_pant [rdi] == n_pant) {
 				draw_coloured_tile (adm_s_x [rdi], adm_s_y [rdi], 49);
 				break;
 			}
-			rdi ++;
 		}
 
 		// Paint evil eye
@@ -634,7 +634,7 @@
 		show_text_box (31);
 		sp_UpdateNow ();
 		
-		player.life -= BLOCK_HIT; 
+		//player.life -= BLOCK_HIT; 
 		player.estado = EST_PARP;
 		player.ct_estado = 50;
 		player.vy = 0;
@@ -700,8 +700,8 @@
 		/*
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
-		n_pant = 5;
 		*/
+		n_pant = 32;
 		
 		#asm
 				ld b, 4
@@ -837,7 +837,7 @@
 			flags [10 + flags [15]] = 1;
 			trap_active = 1;
 			seed = n_pant + 1;
-			player.life += BLOCK_HIT;
+			//player.life += BLOCK_HIT;
 			scenery_info.allow_type_6 = 1;
 			flags [COIN_FLAG] = 0;
 			#asm
@@ -856,8 +856,7 @@
 			if (is128k) arkos_play_music (2);
 		}
 
-		if (trap_active) {
-			
+		if (trap_active) {			
 			// throw a new block
 			if ((rand () & TRAP_CHANCE) == 1) { 
 				#asm
@@ -1007,9 +1006,9 @@
 		}
 
 		// Carrying object
+		rdy = gpy - 4;
 		if (pinv) {
 			if (player.facing) rdx = gpx - 4; else rdx = gpx + 4;
-			rdy = gpy - 4;
 		} else rdx = 240;
 
 		/*

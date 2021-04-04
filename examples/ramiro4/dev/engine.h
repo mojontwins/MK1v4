@@ -3283,7 +3283,7 @@ void move (void) {
 			#else
 				#ifdef EVIL_TILE_SIMPLE
 					player.vy = -abs (player.vy);
-					if (player.vy > -(PLAYER_G<<2)) player.vy = -(PLAYER_G<<2);
+					if (player.vy > -(PLAYER_G*9)) player.vy = -(PLAYER_G*9);
 				#else
 					player.vy = -player.vy;
 				#endif
