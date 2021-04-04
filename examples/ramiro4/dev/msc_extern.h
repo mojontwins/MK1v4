@@ -13,7 +13,7 @@ void speech (unsigned char a, unsigned char b, unsigned char c) {
 void do_extern_action (unsigned char n) {
 	redraw_after_text = 1;
 	if (n == 3) {
-		if (flags [18]) {
+		if (flags [19]) {
 			show_text_box (38);
 		} else if (pinv) {
 			show_text_box (19);
@@ -21,7 +21,7 @@ void do_extern_action (unsigned char n) {
 			pinv = 5; 
 			pinv_next_frame = object_cells [pinv];
 			show_text_box (36);
-			flags [18] = 1;
+			flags [19] = 1;
 			PSCORE += SCORE_FALSE_INTERACTION;
 		}
 	} else if (n == 128) {

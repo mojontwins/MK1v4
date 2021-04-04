@@ -241,7 +241,7 @@
 							  "GUARDIANA DE LA%"
 							  "TERCERA CRIPTA";
 
-	unsigned char text27 [] = "SOY CLIEMENTE LA%"
+	unsigned char text27 [] = "SOY CLEMENTE LA%"
 							  "SERPIENTE,%"
 							  "GUARDIAN DE LA%"
 							  "CUARTA CRIPTA";
@@ -700,8 +700,9 @@
 		/*
 		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
+		flags [6] = 1;
+		n_pant = 12;	
 		*/
-		n_pant = 32;
 		
 		#asm
 				ld b, 4
@@ -1102,6 +1103,7 @@
 				water_level = 0;
 				hotspots [29].act = 1;
 				pofrendas --;
+				PSCORE -= SCORE_GET_COIN;
 				n_pant = 5;
 				gpy = player.y = 0;
 				gpx = 120; player.x = 120<<6;

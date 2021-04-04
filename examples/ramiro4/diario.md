@@ -404,8 +404,10 @@ Total = 99 puntos.
 
 # Bugs tela de chungos / enmiendas
 
-[ ] Añadir textos a todas las pantallas de personajes.
+[X] Añadir textos a todas las pantallas de personajes.
 [X] Velocidad de rebote mínimo contra los pinchos mayor (suficiente para subir un bloque).
 [X] Agua no debe quitar vida.
 [X] La colisión con los tiles y los enemigos parece glitchear un poco. No era tal, es que con un cambio en el mapa un enemigo aparecía directamente sobre un obstáculo.
 [X] Cuelgue misterioso en la pantalla 33 - había un bug con el código que calculaba si debería pintar las admiraciones (!).
+[X] Descoger la moneda de la trampa del agua implica perder los puntos!
+[ ] ¿No funciona bien la dación puntil del Ramón del agua?

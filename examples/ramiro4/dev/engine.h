@@ -1430,7 +1430,11 @@ void move (void) {
 						rda = player.hovering;
 					#endif
 					player.hovering = 0;
-					if ((pad0 & sp_DOWN) == 0 || (button_jump && player.just_jumped == 0)) {
+					if ((pad0 & sp_DOWN) == 0 
+						#ifdef HOVER_WITH_JUMP_ALSO
+							|| (button_jump && player.just_jumped == 0)
+						#endif
+					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
 							#ifdef MODE_128K_DUAL

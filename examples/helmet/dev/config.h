@@ -238,6 +238,7 @@
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 //#define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
 //#define RAMIRO_HOVER 						// press down to hover
+//#define HOVER_WITH_JUMP_ALSO 				// use jump to hover as well
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
 //#define JETPAC_DRAINS_LIFE				// If defined, flying drains life.
 //#define JETPAC_DRAIN_RATIO		3		// Drain 1 each X frames.
