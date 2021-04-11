@@ -665,6 +665,12 @@
 		water_locks = 0;
 	}
 
+	void win_crypt (void) {
+		if (is128k) arkos_play_music (1);
+		PSCORE += SCORE_WIN_CRYPT;
+		player.life += 10;
+	}
+
 	// Hooks
 
 	void hook_system_inits (void) {
@@ -698,14 +704,14 @@
 		PSCORE = 0;
 		
 		/*
-		pinv = 4; pinv_next_frame = object_cells [pinv];
 		gpx = 160; player.x = 160<<6;
+		n_pant = 13;	
+		pinv = 4; pinv_next_frame = object_cells [pinv];
 		flags [6] = 1;
-		n_pant = 12;	
 		*/
-		
+
 		#asm
-				ld b, 4
+				ld b, 8
 				ld a, r 
 				ld (_seed), a
 
@@ -975,6 +981,7 @@
 										player.objs --;
 										on_pant = 0xff;
 										flags [10 + flags [15]] = 0;
+										trap_active = 0;
 										break;
 									/*
 									} else {
@@ -999,7 +1006,7 @@
 							trap_active = 0;
 							if (is128k) arkos_stop_sound ();
 							draw_scr_background ();
-							if (is128k) arkos_play_music (1);
+							win_crypt ();
 						} 
 					}
 				}
@@ -1181,10 +1188,7 @@
 		// Paint eye and admiration bubbles
 		decorate_screen ();
 
-		if (trap_active) {
-			if (is128k) arkos_play_music (1);
-			PSCORE += SCORE_WIN_CRYPT;
-		} 
+		if (trap_active) win_crypt ();
 		trap_active = 0;
 
 		// Water level:
