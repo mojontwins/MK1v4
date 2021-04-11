@@ -199,8 +199,8 @@ unsigned char orig_tile;	// Original background tile
 	unsigned char is128k;
 #endif
 
-unsigned char isrc           @ 23700;
-unsigned char ay_player_on   @ 23701;
+unsigned char isrc           @ 23296;
+unsigned char ay_player_on   @ 23297;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
