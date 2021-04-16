@@ -1,4 +1,4 @@
-' ts2bin v0.6.20210107
+' ts2bin v0.7.20210416
 ' Tileset to bin
 
 #include "file.bi"
@@ -16,22 +16,42 @@ Dim Shared As Integer inverted
 
 Function speccyColour (colour As Unsigned Long) As uByte
 	Dim res as uByte
-	If RGBA_R (colour) >= 128 Then 
+	Dim As Integer r, g, b 
+	r = RGBA_R (colour)
+	g = RGBA_G (colour)
+	b = RGBA_B (colour)
+
+	If r >= 128 Then 
 		res = res Or 2
-		If RGBA_R (colour) >= 240 Then
+		If r >= 240 Then
+			res = res Or 64
+		ElseIf r < 192 Then
 			res = res Or 128
+			If r >= 160 Then
+				res = res Or 64
+			End If
 		End If
 	End If
-	If RGBA_G (colour) >= 128 Then 
+	If g >= 128 Then 
 		res = res Or 4
-		If RGBA_G (colour) >= 240 Then
+		If g >= 240 Then
+			res = res Or 64
+		ElseIf g < 192 Then
 			res = res Or 128
+			If g >= 160 Then
+				res = res Or 64
+			End If
 		End If
 	End If
-	If RGBA_B (colour) >= 128 Then 
+	If b >= 128 Then 
 		res = res Or 1
-		If RGBA_B (colour) >= 240 Then
+		If b >= 240 Then
+			res = res Or 64
+		ElseIf b < 192 Then
 			res = res Or 128
+			If b >= 160 Then
+				res = res Or 64
+			End If
 		End If
 	End If
 	speccyColour = res
@@ -39,7 +59,7 @@ End Function
 
 Sub getUDGIntoCharset (img As Any Ptr, x0 As integer, y0 As Integer, tileset () As uByte, idx As Integer)
 	Dim As Integer x, y
-	Dim As uByte c1, c2, b, c, attr
+	Dim As uByte c1, c2, b, c, f, attr
 	Dim As String o
 	
 	' First: detect colours
@@ -51,10 +71,17 @@ Sub getUDGIntoCharset (img As Any Ptr, x0 As integer, y0 As Integer, tileset () 
 			If c <> c1 Then c2 = c
 		Next x
 	Next y
+	
+	' Detect encoded flash:
+	f = 0
+	If c1 And 128 Then f = 128: c1 = c1 And 127
+	If c2 And 128 Then f = 128: c2 = c2 And 127
+
 	' Detect bright:
 	b = 0
-	If c1 And 128 Then b = 64: c1 = c1 And 127
-	If c2 And 128 Then b = 64: c2 = c2 And 127
+	If c1 And 64 Then b = 64: c1 = c1 And 63
+	If c2 And 64 Then b = 64: c2 = c2 And 63
+
 	If c1 = c2 Then 
 		If defaultInk <> -1 Then
 			c1 = defaultInk
@@ -151,7 +178,7 @@ Dim As Integer switchToDefaultInk
 
 ' DO
 
-Print "ts2bin v0.6.20210107 ~ ";
+Print "ts2bin v0.7.20210416 ~ ";
 
 If Len (Command (3)) = 0 Then
 	usage

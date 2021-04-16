@@ -291,3 +291,21 @@ Cambié
 [X] En ene2h, no hacer la inversión de coordenadas (x1, y1) (x2, y2) si hay un switch para enemigos con ID 5, 6 o 15, y con otro para enemigos con ID > 4.
 
 [X] Retroceso para los disparos.
+
+20210416
+========
+
+Soporte experimental en splib2 para "sprites que pasan por detrás del fondo" - que no es más que marcar celdas como "nunca actualizar sprites" usando el bit 7 del atributo (el flash).
+
+He hecho el cambio en sp_UpdateNow, ahora tengo que idear una forma de indicar el flash en el conversor de tilesets `ts2bin`.
+
+Ahora mismo se pone el bit 6 dependiendo si cualquier componente es mayor de 240, y se detecta "nivel" de R, G o B si la componente es mayor de 128. Puedo codificar así:
+
+- >= 128 : componente ON
+- 128-191 : flash ON
+- 160-191 : flash ON, bright ON.
+- 192-255 : flash OFF
+- 240-255 : flash OFF, bright ON.
+
+Si hago un colour sheet para usar de referencia, mejor.
+

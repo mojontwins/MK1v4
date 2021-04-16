@@ -88,6 +88,8 @@ Vayas a utilizar 16 o 48 tiles para el mapa, hay algunos tiles especiales, a sab
 * El tile 18 (el tercero de la segunda fila) representará las *llaves* si están activas. Si no, puedes usarlo normalmente.
 * El tile 19 (el cuarto de la segunda fila) representará un tile alternativo por el que se sustituirá el tile 0 de forma aleatoria, para hacer bonito. Esto también se puede desactivar, en cuyo caso puedes usarlo normalmente.
 
+## `ts2bin.exe` y los colores del Spectrum
+
 Los tilesets se convierten con la herramienta `ts2bin.exe`. **MTE MK1** espera que queden en `dev/tileset.bin`, por lo que, si abres `comp.bat` con tu editor de textos, verás que la llamada es:
 
 ```cmd
@@ -95,6 +97,14 @@ Los tilesets se convierten con la herramienta `ts2bin.exe`. **MTE MK1** espera q
 ```
 
 `ts2bin.exe` necesita también un archivo png de 256x16 con la fuente del juego. El cuarto parámetro (un número) es la tinta por defecto que se emplea si un cuadro de 8x8 tiene un solo color. Si se pasa "-1", el conversor elegirá blanco para los colores oscuros o negro para los claros.
+
+La forma de detectar los colores del Spectrum tiene ciertas particularidades. Los colores serán detectados a partir de valores R, G o B mayores o iguales de 128, con un nivel mayor o igual que 192 para los colores sin brillo y mayor o igual a 240 para los colores con brillo.
+
+**MTE MK1 v4** no soporta flash, pero puede utilizar el bit 7 del atributo (el de flash) para hacer algo muy interesante: las celdas con este bit a 1 no mostrarán sprites sobre ellas, con lo que parecerá que los sprites pasan *por detrás* de estos cuadros. Para que el conversor levante el bit 7 hay que utilizar valores diferentes para R, G o B: entre 128 y 159 para colores sin brillo y entre 160 y 191 para colores con brillo.
+
+Para guiarte puedes usar esta plantilla. Los colores de arriba representan a los colores del Spectrum sin y con BRIGHT. Las dos filas de abajo representan esos mismos colores pero harán que el conversor levante el bit 7.
+
+![Colores para el conversor](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/colours.png)
 
 ## El tileset para mappy
 
