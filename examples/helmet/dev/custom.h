@@ -143,18 +143,28 @@ void todos_rescatados_check (void) {
 			sp_UpdateNow ();		
 			play_sfx (3);
 			play_sfx (10);
+
 			saca_a_todo_el_mundo_de_aqui ();
-			sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + 20, VIEWPORT_X + 30, 0, 0);
+			// sp_MoveSprAbs (sp_alarm, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
+			#asm
+					ld  ix, (_sp_alarm)
+					ld  iy, vpClipStruct
+					ld  bc, 0
+					ld  hl, 0xfefe	// -2, -2
+					ld  de, 0
+					call SPMoveSprAbs
+			#endasm
+			
 			// Validate whole screen so sprites stay on next update
 			#asm
 					LIB SPValidate
 					ld  c, VIEWPORT_X
 					ld  b, VIEWPORT_Y
-					ld  d, VIEWPORT_X+29
-					ld  e, VIEWPORT_Y+19
+					ld  d, VIEWPORT_Y+19
+					ld  e, VIEWPORT_X+29
 					ld  iy, fsClipStruct
 					call SPValidate
-			#endasm
+			#endasm	
 
 			draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);		
 			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
@@ -220,7 +230,7 @@ void todos_rescatados_check (void) {
 				
 				if (_en_mx) {
 					en_xx = (_en_x >> 4) + _en_mx; en_yy = _en_y >> 4;
-					if ((_en_x & 15) || ((attr (en_xx, en_yy + 1) & 12) && (attr (en_xx, en_yy) & 8) == 0)) _en_x += _en_mx;
+					if ((_en_x & 15) || ((attr (en_xx, en_yy + 1) & 12) && (attr (en_xx, en_yy) & 12) == 0)) _en_x += _en_mx;
 				}
 			}
 			

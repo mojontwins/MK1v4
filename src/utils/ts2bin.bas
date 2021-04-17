@@ -71,7 +71,6 @@ Sub getUDGIntoCharset (img As Any Ptr, x0 As integer, y0 As Integer, tileset () 
 			If c <> c1 Then c2 = c
 		Next x
 	Next y
-	
 	' Detect encoded flash:
 	f = 0
 	If c1 And 128 Then f = 128: c1 = c1 And 127
@@ -103,7 +102,8 @@ Sub getUDGIntoCharset (img As Any Ptr, x0 As integer, y0 As Integer, tileset () 
 	End If
 
 	' Build attribute
-	attr = b + 8 * c2 + c1
+	attr = f + b + 8 * c2 + c1
+	'Puts ("ATTR " & attr & " F " & f & ", B " & b & " - " & c1 & ", " & c2)
 	' Write to array
 	tileset (2048 + idx) = attr
 
@@ -113,7 +113,7 @@ Sub getUDGIntoCharset (img As Any Ptr, x0 As integer, y0 As Integer, tileset () 
 	For y = 0 To 7
 		b = 0
 		For x = 0 To 7
-			c = speccyColour (Point (x0 + x, y0 + y, img)) And 127
+			c = speccyColour (Point (x0 + x, y0 + y, img)) And 63u
 			If c = c1 Then b = b + 2 ^ (7- x)
 		Next x
 		tileset (8 * idx + y) = b

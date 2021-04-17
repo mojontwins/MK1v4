@@ -106,6 +106,12 @@ Para guiarte puedes usar esta plantilla. Los colores de arriba representan a los
 
 ![Colores para el conversor](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/colours.png)
 
+Por último, si vas a usar esta funcionalidad tendrás que linkar contra `splib2f` en lugar de `splib2` modificando la linea que llama a `zcc` en `comp.bat`:
+
+```cmd
+	zcc +zx -vn churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
+```
+
 ## El tileset para mappy
 
 Mappy tiene su historia y necesita que el primer tile sea completamente negro. En esta versión de **MTE MK1** tendrás que generar un segundo tileset específico para Mappy con el primer tile negro si el primer tile no lo es. Puedes grabarlo como `mappy.png` en `gfx`.

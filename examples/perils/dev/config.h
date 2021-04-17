@@ -6,7 +6,7 @@
 // ============================================================================
 
 //#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
-//#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
+#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
 
 // Arkos support. Get the addresses from ogt/RAM1.map.txt after compiling RAM1.bin
 

@@ -20,6 +20,8 @@ cd ..
 
 z80asm -I. -d -ns -nm -Mo -DFORzx -xsplib2 @sp.lst
 
+
+
 cd backgroundtiles
 del *.o
 cd ..
@@ -79,3 +81,5 @@ cd ..
 cd updater
 del *.o
 cd ..
+
+:end

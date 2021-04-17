@@ -119,7 +119,7 @@ void set_hotspot (unsigned char hn) {
 
 	void hook_system_inits (void) {
 		continue_on = 0;
-		level = 0;
+		level = 1;
 	}
 
 	void hook_init_game (void) {

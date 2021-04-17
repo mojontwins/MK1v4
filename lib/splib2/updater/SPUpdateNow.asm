@@ -577,8 +577,10 @@ ENDIF
    ;; na_th_an
 IF FLASHASFG
    ; Check if we must skip sprite rendering based upon cell attribute (bit 7 set = no sprites)
-   ld  hl, tempcolour
-   bit 7, (hl)
+   
+   ld  iy, tempcolour
+   bit 7, (iy+0)
+   
    jp  nz, coloursprite
 ENDIF
 
