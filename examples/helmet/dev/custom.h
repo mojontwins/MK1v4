@@ -72,8 +72,8 @@ void todos_rescatados_check (void) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 0;		
-		//player.keys = 0;
+		level = 1;		
+		player.keys = 1;
 	}
 
 	void hook_init_mainloop (void) {
@@ -230,7 +230,9 @@ void todos_rescatados_check (void) {
 				
 				if (_en_mx) {
 					en_xx = (_en_x >> 4) + _en_mx; en_yy = _en_y >> 4;
-					if ((_en_x & 15) || ((attr (en_xx, en_yy + 1) & 12) && (attr (en_xx, en_yy) & 12) == 0)) _en_x += _en_mx;
+					if ((_en_x & 15) || ((attr (en_xx, en_yy + 1) & 12) && (attr (en_xx, en_yy) & 12) == 0)) 
+						_en_x += _en_mx;
+					else _en_mx = -_en_mx;
 				}
 			}
 			
