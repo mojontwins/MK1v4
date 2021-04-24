@@ -755,6 +755,7 @@
 	}
 
 	void hook_mainloop (void) {
+		if (player.life > 99) player.life = 99;
 
 		// Eye of horus
 
