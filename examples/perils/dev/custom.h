@@ -17,7 +17,7 @@ unsigned char ini_x [] = { 1, 1, 11 };
 unsigned char ini_y [] = { 4, 4, 4 };
 
 unsigned char tilemaps [] = {
-	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+	 0,  1,  2,  3, 25,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
 	32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,
 	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15
 };
@@ -119,7 +119,7 @@ void set_hotspot (unsigned char hn) {
 
 	void hook_system_inits (void) {
 		continue_on = 0;
-		level = 1;
+		level = 0;
 	}
 
 	void hook_init_game (void) {

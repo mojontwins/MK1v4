@@ -362,6 +362,7 @@ void espera_activa (int espera) {
 	// Waits until "espera" halts have passed 
 	// or a key has been pressed.
 
+	pti = any_key ();
 	while (espera--)  {
 		#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 			#asm
@@ -371,9 +372,11 @@ void espera_activa (int espera) {
 			rdd = 250; do { rdi = 1; } while (rdd --);
 		#endif
 
-		if (any_key ()) {
+		ptj = any_key ();
+		if (ptj && pti == 0) {
 			break;
 		}
+		pti = ptj;
 	}
 }
 
