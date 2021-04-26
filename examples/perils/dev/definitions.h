@@ -330,6 +330,10 @@ unsigned char bitmask [] = {
 	unsigned char paralyzed_dont_kill;
 #endif
 
+#ifdef RAMIRO_HOVER_ON_VAR
+	unsigned char ramiro_hover;
+#endif
+
 // Prototypes
 
 void fall_box (void);

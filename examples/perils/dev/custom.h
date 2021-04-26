@@ -126,6 +126,7 @@ void set_hotspot (unsigned char hn) {
 		resonators_on = 0;
 		player_min_killable = 4;
 		new_level = 1;
+		//player.keys = 1;
 	}
 
 	void hook_init_mainloop (void) {

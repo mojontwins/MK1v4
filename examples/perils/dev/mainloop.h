@@ -138,13 +138,20 @@ void main (void) {
 		title_screen ();
 		
 		// Special initializations
-		#ifdef MASTER_OF_KEYS
-			master_of_keys = 0;
-		#endif
+		#asm
+				xor a
+			#ifdef MASTER_OF_KEYS
+					ld (_master_of_keys), a
+			#endif
+		
+			#ifdef PARALYZED_DONT_KILL_ON_VAR
+					ld (_paralyzed_dont_kill), a
+			#endif
 
-		#ifdef PARALYZED_DONT_KILL_ON_VAR
-			paralyzed_dont_kill = 0;
-		#endif
+			#ifdef RAMIRO_HOVER_ON_VAR
+					ld (_ramiro_hover), a
+			#endif
+		#endasm
 
 		#ifndef DIRECT_TO_PLAY
 			// Clear screen and show game frame

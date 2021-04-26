@@ -2857,8 +2857,7 @@ void move (void) {
 				wall
 			#endif
 			&& (gpy & 15) == 0
-			&& (
-				player.keys > 0
+			&& (player.keys > 0
 				#ifdef MASTER_OF_KEYS
 					|| master_of_keys
 				#endif
@@ -3715,9 +3714,10 @@ void hotspot_paint (void) {
 
 		#ifdef MASTER_OF_KEYS
 				cp  2
-				jr  nz, .hotspot_paint_mok_done
+				jr  nz, hotspot_paint_mok_done
 
 				ld  a, (_master_of_keys)
+				or  a
 				jr  z, hotspot_paint_mok_set2
 
 				ld  a, 3
@@ -5414,6 +5414,9 @@ void mueve_bicharracos (void) {
 						player.estado == EST_NORMAL
 						#ifdef PARALYZED_DONT_KILL
 							&& en_an_state [enit] != ENEM_PARALYZED
+						#endif
+						#ifdef PARALYZED_DONT_KILL_ON_VAR
+							&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
 						#endif
 					) {
 						en_tocado = 1; player.is_dead = 1; play_sfx (2);

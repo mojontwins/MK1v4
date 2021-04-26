@@ -4,6 +4,10 @@
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+#if defined RAMIRO_HOVER_ON_VAR && !defined RAMIRO_HOVER
+	#define RAMIRO_HOVER
+#endif
+
 unsigned char line_of_text_clear [] = "                                ";
 
 #ifdef PLAYER_CUSTOM_CELLS
@@ -92,21 +96,104 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	#endasm
 }
 
+void render_this_enemy (void) {
+	#asm
+			// sp_moviles [enit] = sp_moviles + enit*2
+			ld  a, (_enit)
+			sla a
+			ld  c, a
+			ld  b, 0 				// BC = offset to [enit] in 16bit arrays
+			ld  hl, _sp_moviles
+			add hl, bc
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl)
+			push de						
+			pop ix
+
+			// Clipping rectangle
+			ld  iy, vpClipStruct
+
+			// Animation
+			// en_an_next_frame [enit] - en_an_current_frame [enit]
+			ld  hl, _en_an_current_frame
+			add hl, bc 				// HL -> en_an_current_frame [enit]
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl) 			// DE = en_an_current_frame [enit]
+
+			ld  hl, _en_an_next_frame
+			add hl, bc 				// HL -> en_an_next_frame [enit]
+			ld  a, (hl)
+			inc hl
+			ld  h, (hl)
+			ld  l, a 				// HL = en_an_next_frame [enit]
+
+			or  a 					// clear carry
+			sbc hl, de 				// en_an_next_frame [enit] - en_an_current_frame [enit]
+
+			push bc 				// Save for later
+
+			ld  b, h
+			ld  c, l 				// ** BC = animate bitdef **	
+
+			//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
+			ld  a, (_rdy)					
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_Y
+			ld h, a
+
+			ld  a, (_rdx)
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_X
+			ld  l, a
+
+			// rdx & 7, rdy & 7
+			ld  a, (_rdx)
+			and 7
+			ld  d, a
+
+			ld  a, (_rdy)
+			and 7
+			ld  e, a
+
+			call SPMoveSprAbs
+
+			// en_an_current_frame [enit] = en_an_next_frame [enit];
+
+			pop bc 					// Retrieve index
+
+			ld  hl, _en_an_current_frame
+			add hl, bc
+			ex  de, hl 				// DE -> en_an_current_frame [enit]	
+
+			ld  hl, _en_an_next_frame
+			add hl, bc 				// HL -> en_an_next_frame [enit]
+
+			ldi
+			ldi
+	#endasm
+}
+
 void render_all_sprites (void) {
-	for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 			#ifdef RANDOM_RESPAWN
-				if (en_an_fanty_activo [rdi])
+				if (en_an_fanty_activo [enit])
 			#else
-				if (malotes [enoffs + rdi].t == 6 || malotes [enoffs + rdi].t == 0)
+				if (malotes [enoffs + enit].t == 6 || malotes [enoffs + enit].t == 0)
 			#endif
 			{
 				/*
-				rdx = en_an_x [rdi] >> 6;
-				rdy = en_an_y [rdi] >> 6;
+				rdx = en_an_x [enit] >> 6;
+				rdy = en_an_y [enit] >> 6;
 				*/
 				#asm
-						ld  a, (_rdi)
+						ld  a, (_enit)
 						sla a
 						ld  c, a
 						ld  b, 0
@@ -134,98 +221,21 @@ void render_all_sprites (void) {
 			} else 
 		#endif
 		{
-			rdx = malotes [enoffs + rdi].x;
-			rdy = malotes [enoffs + rdi].y;
+			rdx = malotes [enoffs + enit].x;
+			rdy = malotes [enoffs + enit].y;
 		}
 		/*
 		sp_MoveSprAbs (
-			sp_moviles [rdi], 
+			sp_moviles [enit], 
 			spritesClip, 
-			en_an_next_frame [rdi] - en_an_current_frame [rdi], 
+			en_an_next_frame [enit] - en_an_current_frame [enit], 
 			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
 		);
 
-		en_an_current_frame [rdi] = en_an_next_frame [rdi];
+		en_an_current_frame [enit] = en_an_next_frame [enit];
 		*/
 		#asm
-				// sp_moviles [rdi] = sp_moviles + rdi*2
-				ld  a, (_rdi)
-				sla a
-				ld  c, a
-				ld  b, 0 				// BC = offset to [rdi] in 16bit arrays
-				ld  hl, _sp_moviles
-				add hl, bc
-				ld  e, (hl)
-				inc hl 
-				ld  d, (hl)
-				push de						
-				pop ix
-
-				// Clipping rectangle
-				ld  iy, vpClipStruct
-
-				// Animation
-				// en_an_next_frame [rdi] - en_an_current_frame [rdi]
-				ld  hl, _en_an_current_frame
-				add hl, bc 				// HL -> en_an_current_frame [rdi]
-				ld  e, (hl)
-				inc hl 
-				ld  d, (hl) 			// DE = en_an_current_frame [rdi]
-
-				ld  hl, _en_an_next_frame
-				add hl, bc 				// HL -> en_an_next_frame [rdi]
-				ld  a, (hl)
-				inc hl
-				ld  h, (hl)
-				ld  l, a 				// HL = en_an_next_frame [rdi]
-
-				or  a 					// clear carry
-				sbc hl, de 				// en_an_next_frame [rdi] - en_an_current_frame [rdi]
-
-				push bc 				// Save for later
-
-				ld  b, h
-				ld  c, l 				// ** BC = animate bitdef **	
-
-				//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
-				ld  a, (_rdy)					
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_Y
-				ld h, a
-
-				ld  a, (_rdx)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_X
-				ld  l, a
-
-				// rdx & 7, rdy & 7
-				ld  a, (_rdx)
-				and 7
-				ld  d, a
-
-				ld  a, (_rdy)
-				and 7
-				ld  e, a
-
-				call SPMoveSprAbs
-
-				// en_an_current_frame [enit] = en_an_next_frame [enit];
-
-				pop bc 					// Retrieve index
-
-				ld  hl, _en_an_current_frame
-				add hl, bc
-				ex  de, hl 				// DE -> en_an_current_frame [enit]	
-
-				ld  hl, _en_an_next_frame
-				add hl, bc 				// HL -> en_an_next_frame [enit]
-
-				ldi
-				ldi
+				call _render_this_enemy
 		#endasm
 	}
 
@@ -608,8 +618,33 @@ void cortina (void) {
 	void clear_cerrojo (unsigned char x, unsigned char y) {
 		// search & toggle
 		
+		/*
 		set_map_tile (x, y, 0, comportamiento_tiles [0]);
 		_x = x; _y = y;
+		*/
+		#asm
+				ld  hl, 4
+				add hl, sp
+				ld  a, (hl)
+				ld  (__x), a
+				ld  (_rdx), a
+				ld  c, a
+				dec hl
+				dec hl
+				ld  a, (hl)
+				ld  (__y), a
+				ld  (_rdy), a
+				xor a
+				ld  (__t), a
+				ld  (__n), a
+
+				call set_map_tile_do
+
+				ld  a, (_rdx)
+				ld  (__x), a
+				ld  a, (_rdy)
+				ld  (__y), a
+		#endasm
 
 		/*	
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) 
@@ -1430,9 +1465,13 @@ void move (void) {
 						rda = player.hovering;
 					#endif
 					player.hovering = 0;
-					if ((pad0 & sp_DOWN) == 0 
+					if (((pad0 & sp_DOWN) == 0 
 						#ifdef HOVER_WITH_JUMP_ALSO
 							|| (button_jump && player.just_jumped == 0)
+						#endif
+						)
+						#ifdef RAMIRO_HOVER_ON_VAR
+							&& ramiro_hover 
 						#endif
 					) {
 						player.just_hovered = 1;
@@ -4263,6 +4302,7 @@ void draw_scr_background (void) {
 	#ifndef DEACTIVATE_KEYS
 		// Is there a bolt which has been already opened in this screen?
 		// If so, delete it:
+		/*
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
 			if (cerrojos [gpit].np == n_pant && 0 == cerrojos [gpit].st) {
 				draw_coloured_tile (VIEWPORT_X + (cerrojos [gpit].x << 1), VIEWPORT_Y + (cerrojos [gpit].y << 1), 0);
@@ -4271,6 +4311,50 @@ void draw_scr_background (void) {
 				map_buff [rdi] = 0;
 			}
 		}
+		*/
+		#asm
+				ld  hl, _cerrojos
+				ld  b, MAX_CERROJOS
+
+			.draw_scr_bolts_loop
+				; Cerrojos structure is np, x, y, st
+				ld  c, (hl)		; np
+				inc hl
+				ld  d, (hl) 	; x
+				inc hl
+				ld  e, (hl)		; y 
+				inc hl 
+				ld  a, (hl) 	; st
+				inc hl
+
+				; Open lock? (st == 0)
+				or  a 
+				jr  nz, draw_scr_bolts_continue
+
+				; Current screen? 
+				ld  a, (_n_pant)
+				cp  c
+				jr  nz, draw_scr_bolts_continue
+
+				; Clear bolt
+				push bc
+
+				ld  a, d
+				ld  c, d 				;; Call directly needs C
+				ld  (__x), a
+				ld  a, e
+				ld  (__y), a
+				xor a
+				ld  (__t), a
+				ld  (__n), a
+
+				call set_map_tile_do
+
+				pop bc
+
+			.draw_scr_bolts_continue
+				djnz draw_scr_bolts_loop
+		#endasm
 	#endif	
 }
 
@@ -4531,8 +4615,18 @@ void platform_get_player (void) {
 		#endif
 
 		// Kill enemy
+		/*
 		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
 		en_an_current_frame [enit] = en_an_next_frame [enit];
+		*/
+		#asm
+				ld  a, (_en_ccx)
+				ld  (_rdx), a
+				ld  a, (_en_ccy)
+				ld  (_rdy), a 
+				call _render_this_enemy
+		#endasm
+
 		sp_UpdateNow ();
 		play_sfx (10);
 		en_an_next_frame [enit] = sprite_18_a;

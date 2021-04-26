@@ -66,3 +66,20 @@ Haremos el multifase fingido de la misma manera que en **Helmet**: un mapa grand
 	}
 ```
 
+## Revamp 2
+
+Voy a darle un poco de age como más tarde explicaré, pero antes quiero bajar un poco de peso el motor una vez más. Ya lo bajé a saco haciendo Helmet y Ramiro 4, pero hay cosas que aún están sin tocar porque se usan mayormente en este.
+
+### borrar tiles cerrojo abiertos al entrar en pantalla
+
+Pasando el bucle a ensamble optimizado pasamos de 32317 a 32139 (!)
+
+### borrar tiles cerrojo al usar una llave
+
+El grueso estaba en ensamble, pero la inicialización de la función que contenía las copias de los parámetros a `_x` e `_y` y una llamada a `set_map_tile` no. Pasamos de 32139 a 32127. Menos da una piedra :-/
+
+### Cambiar el único sp_MoveSprAbs que quedaba
+
+Con esta configuración esto es: el de `enems_kill`. Paso a ensamble y me fumo la interfaz C. Pasamos de 32127 a 32008. Aún puedo ahorrar más si encapsulo esta rutina y la reutilizo en `render_all_sprites`: ¡31931!
+
+El objetivo principal era bajar de 32000 con los add-ons (por ahora, `MASTER_OF_KEYS`, `PARALYZED_DONT_KILL_ON_VAR` y `RAMIRO_HOVER_ON_VAR` (¡que activa `RAMIRO_HOVER`!)), que ya estaría cumplido... De todos modos mañana echaré otro vistazo. Añadir una cuarta fase subirá la ocupación a 2544 bytes más, y quiero tener todo el sitio posible para las pantallas y lógica nuevas.
