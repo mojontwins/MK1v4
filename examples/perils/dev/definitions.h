@@ -199,8 +199,8 @@ unsigned char orig_tile;	// Original background tile
 	unsigned char is128k;
 #endif
 
-unsigned char isrc           @ 23700;
-unsigned char ay_player_on   @ 23701;
+unsigned char isrc           @ 23296;
+unsigned char ay_player_on   @ 23297;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
@@ -318,6 +318,12 @@ unsigned char bitmask [] = {
 
 #ifndef PLAYER_MOGGY_STYLE
 	unsigned char button_jump;
+#endif
+
+// Special
+
+#ifdef MASTER_OF_KEYS
+	unsigned char master_of_keys;
 #endif
 
 // Prototypes

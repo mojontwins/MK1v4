@@ -246,6 +246,11 @@
 #define PLAYER_KILLS_ENEMIES			  	// If defined, stepping on enemies kills them
 #define PLAYER_MIN_KILLABLE 	player_min_killable		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 
+// Very special things which you may find useful
+// ---------------------------------------------
+
+#define MASTER_OF_KEYS 						// If master_of_keys == 1, no keys are needed to open bolts
+											// and keys = refills.
 
 // ============================================================================
 // III. Screen configuration
@@ -320,6 +325,8 @@
 //#define ENABLE_ANIMATED_TILES 			// Enables them
 //#define ANIMATED_TILE 			11 		// Which tile. Alternates with N + 16
 //#define MAX_ANIMATED_TILES 		16 		// Must be a power of two
+
+//#define NO_MASKS 					sp_OR_SPRITE	// make it sp_XOR_SPRITE or sp_OR_SPRITE
 
 // ============================================================================
 // IV. Player movement configuration

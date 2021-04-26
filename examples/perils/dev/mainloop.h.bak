@@ -234,6 +234,7 @@ void main (void) {
 			#ifdef ENABLE_CODE_HOOKS
 				hook_init_mainloop ();
 			#endif
+
 			// Update SCR
 
 			/*

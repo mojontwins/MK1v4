@@ -137,6 +137,11 @@ void main (void) {
 		cortina ();
 		title_screen ();
 		
+		// Special initializations
+		#ifdef MASTER_OF_KEYS
+			master_of_keys = 0;
+		#endif
+
 		#ifndef DIRECT_TO_PLAY
 			// Clear screen and show game frame
 			cortina ();

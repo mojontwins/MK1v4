@@ -1430,7 +1430,11 @@ void move (void) {
 						rda = player.hovering;
 					#endif
 					player.hovering = 0;
-					if ((pad0 & sp_DOWN) == 0 || (button_jump && player.just_jumped == 0)) {
+					if ((pad0 & sp_DOWN) == 0 
+						#ifdef HOVER_WITH_JUMP_ALSO
+							|| (button_jump && player.just_jumped == 0)
+						#endif
+					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
 							#ifdef MODE_128K_DUAL
@@ -2853,20 +2857,25 @@ void move (void) {
 				wall
 			#endif
 			&& (gpy & 15) == 0
+			&& (player.keys > 0
+				#ifdef MASTER_OF_KEYS
+					|| master_of_keys
+				#endif
+			)
 		) {
-			if (qtile (gpxx + 1, gpyy) == 15 && player.keys > 0) {
+			if (qtile (gpxx + 1, gpyy) == 15) {
 				clear_cerrojo (gpxx + 1, gpyy);
 				player.keys --;
 				play_sfx (8);
 			} else 
 			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
-				if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
+				if (qtile (gpxx - 1, gpyy) == 15) {
 					clear_cerrojo (gpxx - 1, gpyy);
 					player.keys --;
 					play_sfx (8);
 				}
 			#else
-				if (qtile (gpxx, gpyy) == 15 && player.keys > 0) {
+				if (qtile (gpxx, gpyy) == 15) {
 					clear_cerrojo (gpxx, gpyy);
 					player.keys --;
 					play_sfx (8);
@@ -3283,7 +3292,7 @@ void move (void) {
 			#else
 				#ifdef EVIL_TILE_SIMPLE
 					player.vy = -abs (player.vy);
-					if (player.vy > -(PLAYER_G<<2)) player.vy = -(PLAYER_G<<2);
+					if (player.vy > -(PLAYER_G*9)) player.vy = -(PLAYER_G*9);
 				#else
 					player.vy = -player.vy;
 				#endif
@@ -3702,6 +3711,23 @@ void hotspot_paint (void) {
 			ld  a, (ix+1)		// .tipo
 			or  a
 			jr  z, hotspot_paint_act_skip
+
+		#ifdef MASTER_OF_KEYS
+				cp  2
+				jr  nz, hotspot_paint_mok_done
+
+				ld  a, (_master_of_keys)
+				or  a
+				jr  z, hotspot_paint_mok_set2
+
+				ld  a, 3
+				jr  hotspot_paint_mok_done
+
+			.hotspot_paint_mok_set2
+				ld  a, 2
+
+			.hotspot_paint_mok_done
+		#endif
 
 			ld  (_hotspot_t), a
 

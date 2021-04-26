@@ -320,6 +320,12 @@ unsigned char bitmask [] = {
 	unsigned char button_jump;
 #endif
 
+// Special
+
+#ifdef MASTER_OF_KEYS
+	unsigned char master_of_keys;
+#endif
+
 // Prototypes
 
 void fall_box (void);
