@@ -326,6 +326,10 @@ unsigned char bitmask [] = {
 	unsigned char master_of_keys;
 #endif
 
+#ifdef PARALYZED_DONT_KILL_ON_VAR
+	unsigned char paralyzed_dont_kill;
+#endif
+
 // Prototypes
 
 void fall_box (void);

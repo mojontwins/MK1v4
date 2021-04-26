@@ -142,6 +142,10 @@ void main (void) {
 			master_of_keys = 0;
 		#endif
 
+		#ifdef PARALYZED_DONT_KILL_ON_VAR
+			paralyzed_dont_kill = 0;
+		#endif
+
 		#ifndef DIRECT_TO_PLAY
 			// Clear screen and show game frame
 			cortina ();

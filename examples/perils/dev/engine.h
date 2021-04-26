@@ -5415,6 +5415,9 @@ void mueve_bicharracos (void) {
 						#ifdef PARALYZED_DONT_KILL
 							&& en_an_state [enit] != ENEM_PARALYZED
 						#endif
+						#ifdef PARALYZED_DONT_KILL_ON_VAR
+							&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
+						#endif
 					) {
 						en_tocado = 1; player.is_dead = 1; play_sfx (2);
 						#ifdef ENABLE_CODE_HOOKS

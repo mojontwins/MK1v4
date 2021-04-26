@@ -251,6 +251,7 @@
 
 #define MASTER_OF_KEYS 						// If master_of_keys == 1, no keys are needed to open bolts
 											// and keys = refills.
+#define PARALYZED_DONT_KILL_ON_VAR 			// If paralyzed_dont_kill == 1, paralyzed enemies don't kill
 
 // ============================================================================
 // III. Screen configuration
