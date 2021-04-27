@@ -8,6 +8,7 @@
 
 unsigned char resonators_on;
 unsigned char player_min_killable;
+unsigned char resct_old;
 
 unsigned char level, new_level;
 unsigned char new_level_string [] = "LEVEL 00";
@@ -42,23 +43,8 @@ void restore_everyone (void) {
 	}
 }
 
-/*
-void set_hotspot (unsigned char hn) {
-	hotspots [n_pant].act = 1;
-	hotspot_t = hn;
-	hotspots [n_pant].tipo = hotspot_t;
-	rdx = (hotspots [n_pant].xy >> 4);
-	rdy = (hotspots [n_pant].xy & 15);
-	hotspot_x = rdx << 4;
-	hotspot_y = rdy << 4;
-	set_map_tile (rdx, rdy, 16 + hn, 0);
-}
-*/
-
-
-void set_hotspot (unsigned char hn) {
+void set_hotspot (void) {
 	// Hotspot structure is xy, tipo, act.
-	hotspot_t = hn;
 
 	#asm
 		// First, make a pointer to hotspots [n_pant]
@@ -110,7 +96,7 @@ void set_hotspot (unsigned char hn) {
 			ld  (_hotspot_y), a
 	#endasm
 
-	set_map_tile (rdx, rdy, 16 + hn, 0);
+	set_map_tile (rdx, rdy, 16 + hotspot_t, 0);
 }
 
 #ifdef ENABLE_CODE_HOOKS
@@ -124,6 +110,7 @@ void set_hotspot (unsigned char hn) {
 
 	void hook_init_game (void) {
 		resonators_on = 0;
+		resct_old = 0;
 		player_min_killable = 4;
 		new_level = 1;
 		//player.keys = 1;
@@ -180,22 +167,37 @@ void set_hotspot (unsigned char hn) {
 			}
 
 			// Hotspot has to be restored ALWAYS
-			set_hotspot (latest_hotspot);			
+			//hotspot_t = latest_hotspot; set_hotspot ();
+			#asm
+					ld  a, (_latest_hotspot)
+					ld  (_hotspot_t), a
+					call _set_hotspot
+			#endasm
 		}
 
 		if (resonators_on) {
-			rdi = resonators_on / 25;
 			resonators_on --;
 			rdd = resonators_on / 25;
-			if (rdi != rdd) {
+			if (resct_old != rdd) {
 				play_sfx (4);
 				draw_2_digits (25, 1, rdd);
+				resct_old = rdd;
 			}
 
 			if (resonators_on == 0) {
 				play_sfx (3);
 				restore_everyone ();				
-				if (hotspot_t >= 4) set_hotspot (4);
+				if (hotspot_t >= 4) {
+					/*
+					hotspot_t = 4;
+					set_hotspot ();
+					*/
+					#asm
+							ld  a, 4
+							ld  (_hotspot_t), a
+							call _set_hotspot
+					#endasm
+				}
 			}
 		} 
 	}
@@ -203,7 +205,17 @@ void set_hotspot (unsigned char hn) {
 	void hook_entering (void) {
 		// Modify hotspots upon resonators_on
 		if (hotspot_t >= 4) {
-			set_hotspot (resonators_on ? 5 : 4);			
+			// hotspot_t = resonators_on ? 5 : 4; set_hotspot ();
+			#asm
+					ld  a, (_resonators_on)
+					or  a 						// if resonators_on -> Z set
+					ld  a, 4
+					jr  z, he_res_set
+					inc a
+				.he_res_set
+					ld  (_hotspot_t), a
+					call _set_hotspot 
+			#endasm
 		}
 				
 		if (resonators_on) paralyze_everyone ();
