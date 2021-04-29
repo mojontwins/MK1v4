@@ -246,6 +246,14 @@
 //#define PLAYER_KILLS_ENEMIES			  	// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 		3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 
+// Very special things which you may find useful
+// ---------------------------------------------
+
+//#define MASTER_OF_KEYS 					// If master_of_keys == 1, no keys are needed to open bolts
+											// and keys = refills.
+//#define PARALYZED_DONT_KILL_ON_VAR 		// If paralyzed_dont_kill == 1, paralyzed enemies don't kill
+//#define RAMIRO_HOVER_ON_VAR 				// If ramiro_hover == 1 player can hover.
+//#define DISABLE_SLIPPERY_ON_VAR 			// If disable_slippery == 1, slippery tiles are disabled
 
 // ============================================================================
 // III. Screen configuration

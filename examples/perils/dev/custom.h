@@ -50,14 +50,7 @@ void set_hotspot (void) {
 
 	#asm
 		// First, make a pointer to hotspots [n_pant]
-			ld  a, (_n_pant)
-			ld  b, a
-			sla a 				// x2
-			add a, b  			// x3
-			ld  c, a
-			ld  b, 0
-			ld  hl, _hotspots
-			add hl, bc
+			call _calc_hotspot_ptr
 
 		// We'll be using xy and modifying tipo and act.
 			ld  c, (hl)			// C = xy

@@ -3801,6 +3801,19 @@ void init_hotspots (void) {
 	}
 #endif
 
+void calc_hotspot_ptr (void) {
+	#asm
+			ld  hl, (_n_pant)
+			ld  h, 0
+			ld  b, h
+			ld  c, l
+			add hl, hl 			// x2
+			add hl, bc 			// x3
+			ld  de, _hotspots
+			add hl, de
+	#endasm
+}
+
 void hotspot_paint (void) {
 	// Is there an object in this screen?
 	
@@ -3847,16 +3860,10 @@ void hotspot_paint (void) {
 			xor a
 			ld  (_hotspot_t), a
 
-			// Calculate base for hotspots; max = 85 screens.
-			ld  a, (_n_pant)
-			ld  b, a
-			sla a
-			add b
-
-			ld  c, a
-			ld  b, 0
-			ld  ix, _hotspots
-			add ix, bc
+			call _calc_hotspot_ptr
+			
+			ld  ixh, h
+			ld  ixl, l
 
 			// Struct is xy, tipo, act
 
