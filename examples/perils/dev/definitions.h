@@ -334,6 +334,10 @@ unsigned char bitmask [] = {
 	unsigned char ramiro_hover;
 #endif
 
+#ifdef DISABLE_SLIPPERY_ON_VAR
+	unsigned char disable_slippery;
+#endif
+
 // Prototypes
 
 void fall_box (void);

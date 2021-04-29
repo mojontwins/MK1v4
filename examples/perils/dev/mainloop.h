@@ -151,6 +151,10 @@ void main (void) {
 			#ifdef RAMIRO_HOVER_ON_VAR
 					ld (_ramiro_hover), a
 			#endif
+
+			#ifdef DISABLE_SLIPPERY_ON_VAR
+					ld (_disable_slippery), a
+			#endif
 		#endasm
 
 		#ifndef DIRECT_TO_PLAY

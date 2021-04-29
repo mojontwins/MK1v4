@@ -83,3 +83,27 @@ El grueso estaba en ensamble, pero la inicialización de la función que conten�
 Con esta configuración esto es: el de `enems_kill`. Paso a ensamble y me fumo la interfaz C. Pasamos de 32127 a 32008. Aún puedo ahorrar más si encapsulo esta rutina y la reutilizo en `render_all_sprites`: ¡31931!
 
 El objetivo principal era bajar de 32000 con los add-ons (por ahora, `MASTER_OF_KEYS`, `PARALYZED_DONT_KILL_ON_VAR` y `RAMIRO_HOVER_ON_VAR` (¡que activa `RAMIRO_HOVER`!)), que ya estaría cumplido... De todos modos mañana echaré otro vistazo. Añadir una cuarta fase subirá la ocupación a 2544 bytes más, y quiero tener todo el sitio posible para las pantallas y lógica nuevas.
+
+### Slippery
+
+Paso a ensamble el código que detecta los tiles resbalosos y modifica AX, RX, 31916->31903.
+
+### Conveyors
+
+Escribo un trozo de ensamble bastante ingenioso (nada de traducción directa de C) para manejar las cintas transportadoras: 31903->31846
+
+## Las nuevas habilidades
+
+La idea de reconducir el proyecto es dejar jugar las fases (4 en total al final, he de añadir una cuarta) en cualquier orden, pero permitir "comprar" habilidades si en cada fase recogemos un objeto especial (¿monedas para una tienda?). El juego tendrá continues infinitos y se podrá "reiniciar" - o mejor explicado, las fases completadas serán "recordadas" entre partidas hasta que decidamos "reiniciar".
+
+Estas son las mejoras que hemos ideado:
+
+* **Maestra de las llaves** - no necesitas llaves para abrir cerrojos, y las llaves que existen en el mapa se convierten en recargas de vida.
+* **Maestra de vuelo** - se activa el "ramiro hover".
+* **Maestra de resistencia** - Los monstruos no matan estando paralizados.
+* **Maestra del tiempo** - los resonadores hacen tick más despacio.
+* **Maestra de estabilidad** - No te resbalas.
+
+Las habilidades están requiriendo cambios y adiciones en el motor, `MASTER_OF_KEYS`, `PARALYZED_DONT_KILL_ON_VAR`, `RAMIRO_HOVER_ON_VAR`, `DISABLE_SLIPPERY_ON_VAR` para las mejoras 1, 2, 3 y 5. La habilidad 4 requerirá cambiar la forma en la que se manejan los resonadores. Ahora se hace con un contador general hasta 250 y dividiendo por 25 usando el runtime (aprovechando que esa rutina se incluye de todos modos), tendré que usar otro método con dos contadores que intentaré que ocupe lo menos posible para no impactar demasiado.
+
+

@@ -1946,20 +1946,97 @@ void move (void) {
 	#endif
 	{
 		#ifdef SLIPPERY_TILES
+			/*
 			if ((rdt1 & 16) || (rdt2 & 16)) {
-				player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
+				#ifdef DISABLE_SLIPPERY_ON_VAR
+					if (disable_slippery == 0)
+				#endif
+				{
+					player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
+				}
 			}
+			*/
+
+			#asm
+					ld  a, (_rdt1)
+					and 16
+					jr  nz, slippery_check_do
+
+					ld  a, (_rdt2)
+					and 16
+					jr  z, slippery_check_done
+
+				.slippery_check_do
+
+					#ifdef DISABLE_SLIPPERY_ON_VAR
+						ld  a, (_disable_slippery)
+						or  a
+						jr  nz, slippery_check_done
+					#endif
+
+					ld  a, PLAYER_AX_SLIPPERY
+					ld  (_player+11), a 			// player.ax
+
+					ld  a, PLAYER_RX_SLIPPERY
+					ld  (_player+12), a 			// player.rx
+
+				.slippery_check_done
+			#endasm
 		#endif
 
 		#ifdef CONVEYOR_TILES
 			#ifdef PLAYER_MOGGY_STYLE
 
 			#else
+				/*
 				rdj = 0;
 				if (rdt1 & 2) { rdj = (rdt1 & 1) ? 1 : -1; }
 				if (rdt2 & 2) { rdj += (rdt2 & 1) ? 1 : -1; }
 				if (rdj < 0) ptgmx = -PLAYER_VX_CONVEYORS;
 				else if (rdj > 0) ptgmx = PLAYER_VX_CONVEYORS;
+				*/
+				#asm
+						// c ~ rdj in this rewrite
+						ld  c, 0
+
+						ld  a, (_rdt1)
+						bit 1, a 			// rdt1 & 2
+						call nz, conveyor_add_to_rdj
+
+						ld  a, (_rdt2)
+						bit 1, a
+						call nz, conveyor_add_to_rdj
+
+						// check rdj 0, <0 or >0...
+						xor a
+						or  c
+						jr  z, conveyor_check_done
+
+						bit 7, a 			// Positive or negative?
+						ld  hl, (_ptgmx)
+						ld  bc, PLAYER_VX_CONVEYORS
+						jr  z, conveyor_right
+
+					.conveyor_left
+						sbc hl, bc
+						jr  conveyor_set_ptgmx
+
+					.conveyor_add_to_rdj
+						and 1
+						sla a
+						dec a
+						add c
+						ld  c, a
+						ret
+
+					.conveyor_right
+						add hl, bc
+
+					.conveyor_set_ptgmx
+						ld  (_ptgmx), hl
+
+					.conveyor_check_done
+				#endasm
 			#endif
 		#endif
 	}
