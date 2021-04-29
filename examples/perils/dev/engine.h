@@ -97,6 +97,16 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 }
 
 void render_this_enemy (void) {
+	/*
+	sp_MoveSprAbs (
+		sp_moviles [enit], 
+		spritesClip, 
+		en_an_next_frame [enit] - en_an_current_frame [enit], 
+		VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
+	);
+
+	en_an_current_frame [enit] = en_an_next_frame [enit];
+	*/
 	#asm
 			// sp_moviles [enit] = sp_moviles + enit*2
 			ld  a, (_enit)
@@ -179,6 +189,31 @@ void render_this_enemy (void) {
 	#endasm
 }
 
+void calc_baddies_pointer (void) {
+	#asm
+		#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			add hl, hl 				// x2
+			ld  d, h
+			ld  e, l 				// DE = x2
+			add hl, hl 				// x4
+			add hl, hl 				// x8
+
+			add hl, de 				// HL = x8 + x2 = x10
+		#else
+			ld  d, h
+			ld  e, l 				// DE = x1
+			add hl, hl 				// x2
+			add hl, hl 				// x4
+			add hl, hl 				// x8
+
+			add hl, de 				// HL = x8 + x1 = x9
+		#endif
+
+		ld  de, _malotes
+		add hl, de			
+	#endasm
+}
+
 void render_all_sprites (void) {
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
@@ -221,19 +256,30 @@ void render_all_sprites (void) {
 			} else 
 		#endif
 		{
+			/*
 			rdx = malotes [enoffs + enit].x;
 			rdy = malotes [enoffs + enit].y;
-		}
-		/*
-		sp_MoveSprAbs (
-			sp_moviles [enit], 
-			spritesClip, 
-			en_an_next_frame [enit] - en_an_current_frame [enit], 
-			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
-		);
+			*/
+			#asm
+					ld  hl, (_enoffs)
+					ld  bc, (_enit)
+					ld  b, 0
+					add hl, bc
+					
+					call _calc_baddies_pointer
 
-		en_an_current_frame [enit] = en_an_next_frame [enit];
-		*/
+					// malotes struct is:
+					// x, y, x1, y1, x2, y2, mx, my, t[, life]
+
+					ld  a, (hl)
+					ld  (_rdx), a 
+					inc hl 
+
+					ld  a, (hl)
+					ld  (_rdy), a 
+			#endasm
+		}
+
 		#asm
 				call _render_this_enemy
 		#endasm
@@ -4746,28 +4792,9 @@ void mueve_bicharracos (void) {
 				// Point HL to baddies [enoffsmasi]. The struct is 9 or 10 bytes long
 				// so this is baddies + enoffsmasi*(9|10) depending on PLAYER_CAN_FIRE
 				ld 	hl, (_enoffsmasi)
-				ld  h, 0
+				// ld  h, 0
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
-				add hl, hl 				// x2
-				ld  d, h
-				ld  e, l 				// DE = x2
-				add hl, hl 				// x4
-				add hl, hl 				// x8
-
-				add hl, de 				// HL = x8 + x2 = x10
-			#else
-				ld  d, h
-				ld  e, l 				// DE = x1
-				add hl, hl 				// x2
-				add hl, hl 				// x4
-				add hl, hl 				// x8
-
-				add hl, de 				// HL = x8 + x1 = x9
-			#endif
-
-				ld  de, _malotes
-				add hl, de
+				call _calc_baddies_pointer
 
 				ld  (__baddies_pointer), hl 		// Save address for later
 

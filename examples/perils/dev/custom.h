@@ -6,7 +6,9 @@
 // Comment this to remove the "next level" cheat
 #define ENABLE_CHEAT
 
-unsigned char resonators_on;
+#define RESONATORS_FRAMES 25
+
+unsigned char resonators_on, resonators_ct, resonators_frames;
 unsigned char player_min_killable;
 unsigned char resct_old;
 
@@ -106,6 +108,7 @@ void set_hotspot (void) {
 	void hook_system_inits (void) {
 		continue_on = 0;
 		level = 1;
+		resonators_frames = RESONATORS_FRAMES;
 	}
 
 	void hook_init_game (void) {
@@ -160,7 +163,8 @@ void set_hotspot (void) {
 				&& gpy + 8 <= hotspot_y
 			) {
 				play_sfx (6);
-				resonators_on = 250;
+				resonators_on = 10; // 250;
+				resonators_ct = 0;
 				latest_hotspot = 5;
 				paralyze_everyone ();
 				player.vy = -PLAYER_MAX_VY_SALTANDO;
@@ -176,29 +180,25 @@ void set_hotspot (void) {
 		}
 
 		if (resonators_on) {
-			resonators_on --;
-			rdd = resonators_on / 25;
-			if (resct_old != rdd) {
-				play_sfx (4);
-				draw_2_digits (25, 1, rdd);
-				resct_old = rdd;
-			}
+			if (resonators_ct) resonators_ct --; else {
+				resonators_on --;
 
-			if (resonators_on == 0) {
-				play_sfx (3);
-				restore_everyone ();				
-				if (hotspot_t >= 4) {
-					/*
-					hotspot_t = 4;
-					set_hotspot ();
-					*/
-					#asm
-							ld  a, 4
-							ld  (_hotspot_t), a
-							call _set_hotspot
-					#endasm
+				if (resonators_on == 0) {
+					play_sfx (3);
+					restore_everyone ();				
+					if (hotspot_t >= 4) {			
+						#asm
+								ld  a, 4
+								ld  (_hotspot_t), a
+								call _set_hotspot
+						#endasm
+					}
+				} else {
+					play_sfx (4);
+					draw_2_digits (25, 1, resonators_on);
+					resonators_ct = resonators_frames;
 				}
-			}
+			}			
 		} 
 	}
 

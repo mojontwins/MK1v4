@@ -92,6 +92,10 @@ Paso a ensamble el código que detecta los tiles resbalosos y modifica AX, RX, 3
 
 Escribo un trozo de ensamble bastante ingenioso (nada de traducción directa de C) para manejar las cintas transportadoras: 31903->31846
 
+### Encapsular `calc_baddies_pointer`
+
+... Y reaprovecharlo para calcular las coordenadas en las que hay que pintar a los enemigos normales: 31846->31794.
+
 ## Las nuevas habilidades
 
 La idea de reconducir el proyecto es dejar jugar las fases (4 en total al final, he de añadir una cuarta) en cualquier orden, pero permitir "comprar" habilidades si en cada fase recogemos un objeto especial (¿monedas para una tienda?). El juego tendrá continues infinitos y se podrá "reiniciar" - o mejor explicado, las fases completadas serán "recordadas" entre partidas hasta que decidamos "reiniciar".
@@ -106,4 +110,58 @@ Estas son las mejoras que hemos ideado:
 
 Las habilidades están requiriendo cambios y adiciones en el motor, `MASTER_OF_KEYS`, `PARALYZED_DONT_KILL_ON_VAR`, `RAMIRO_HOVER_ON_VAR`, `DISABLE_SLIPPERY_ON_VAR` para las mejoras 1, 2, 3 y 5. La habilidad 4 requerirá cambiar la forma en la que se manejan los resonadores. Ahora se hace con un contador general hasta 250 y dividiendo por 25 usando el runtime (aprovechando que esa rutina se incluye de todos modos), tendré que usar otro método con dos contadores que intentaré que ocupe lo menos posible para no impactar demasiado.
 
+```c
+	if (resonators_on) {
+		resonators_on --;
+		rdd = resonators_on / 25;
+		if (resct_old != rdd) {
+			play_sfx (4);
+			draw_2_digits (25, 1, rdd);
+			resct_old = rdd;
+		}
 
+		if (resonators_on == 0) {
+			play_sfx (3);
+			restore_everyone ();				
+			if (hotspot_t >= 4) {
+				/*
+				hotspot_t = 4;
+				set_hotspot ();
+				*/
+				#asm
+						ld  a, 4
+						ld  (_hotspot_t), a
+						call _set_hotspot
+				#endasm
+			}
+		}
+	} 
+```
+
+Este es el código original. Necesitaré dos contadores. Ahora `resonators_on` irá de 10 a 0, se pintará -1, y tendremos `resonators_ct`. Implemento en C y luego ensamblo si eso.
+
+```c
+	if (resonators_on) {
+		if (resonators_ct) resonators_ct --; else {
+			resonators_ct = resonators_frames;
+			resonators_on --;
+
+			if (resonators_on == 0) {
+				play_sfx (3);
+				restore_everyone ();				
+				if (hotspot_t >= 4) {			
+					#asm
+							ld  a, 4
+							ld  (_hotspot_t), a
+							call _set_hotspot
+					#endasm
+				}
+			} else {
+				play_sfx (4);
+				draw_2_digits (25, 1, resonators_on);
+			}
+		}			
+	} 
+```
+
+Con todo el setup ocupa 2 bytes menos, pero puedo mejorar desde 31792 si lo paso a ensamble: 

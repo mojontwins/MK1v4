@@ -157,8 +157,8 @@ unsigned char en_an_state [MAX_ENEMS]				@ (23600 + MAX_ENEMS*16);
 unsigned char en_an_ff [MAX_ENEMS] 					@ (23600 + MAX_ENEMS*17);
 unsigned char en_an_base_frame [MAX_ENEMS] 			@ (23600 + MAX_ENEMS*18);
 
-unsigned char enoffs;
-unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
+unsigned int enoffs, enoffsmasi;
+unsigned char en_j, en_x, en_y, en_xx, en_yy;
 unsigned char en_cx, en_cy;
 unsigned char en_ccx, en_ccy;
 // Only one enemy may hurt the player at once, so we need this flag:
