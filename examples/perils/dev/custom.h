@@ -103,7 +103,7 @@ void set_hotspot (void) {
 
 	void hook_system_inits (void) {
 		continue_on = 0;
-		level = 1;
+		level = 0;
 		resonators_frames = RESONATORS_FRAMES;
 	}
 
@@ -113,6 +113,7 @@ void set_hotspot (void) {
 		player_min_killable = 4;
 		new_level = 1;
 		//player.keys = 1;
+		level = 3;
 	}
 
 	void hook_init_mainloop (void) {
