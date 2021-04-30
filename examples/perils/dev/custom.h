@@ -15,14 +15,15 @@ unsigned char resct_old;
 unsigned char level, new_level;
 unsigned char new_level_string [] = "LEVEL 00";
 
-unsigned char scr_ini [] = { 60, 64, 71 };
-unsigned char ini_x [] = { 1, 1, 11 };
-unsigned char ini_y [] = { 4, 4, 4 };
+unsigned char scr_ini [] = { 60, 64, 71, 84 };
+unsigned char ini_x [] = { 1, 1, 11, 7 };
+unsigned char ini_y [] = { 4, 4, 4, 4 };
 
 unsigned char tilemaps [] = {
 	 0,  1,  2,  3, 25,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
 	32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,
-	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15
+	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15,
+	42, 39, 46, 47,  4, 28, 29, 30, 31,  7, 19, 17, 23, 24, 12, 15
 };
 
 unsigned char continue_on;
@@ -51,6 +52,8 @@ void set_hotspot (void) {
 	#asm
 		// First, make a pointer to hotspots [n_pant]
 			call _calc_hotspot_ptr
+			ld  hl, _hotspots
+			add hl, de
 
 		// We'll be using xy and modifying tipo and act.
 			ld  c, (hl)			// C = xy
@@ -122,7 +125,7 @@ void set_hotspot (void) {
 
 		if (player.killed == 60) {
 			level ++;
-			if (level < 3) {
+			if (level < 4) {
 				new_level = 1;
 			} else {
 				game_loop_flag = 1;
@@ -172,6 +175,7 @@ void set_hotspot (void) {
 			#endasm
 		}
 
+		/*
 		if (resonators_on) {
 			if (resonators_ct) resonators_ct --; else {
 				resonators_on --;
@@ -193,6 +197,66 @@ void set_hotspot (void) {
 				}
 			}			
 		} 
+		*/
+
+		#asm
+			.resonators_do
+				ld  a, (_resonators_on)
+				ld  c, a
+				or  a
+				jr  z, resonators_done
+
+				ld  a, (_resonators_ct)
+				or  a
+				jr  z, resonators_tick
+
+				dec a
+				ld  (_resonators_ct), a
+				jr  resonators_done
+
+			.resonators_tick
+				ld  a, c
+				dec a
+				ld  (_resonators_on), a
+
+				jr  nz, resonators_next_tick
+
+			.resonators_last_tick
+				ld  hl, 3
+				call _play_sfx
+
+				call _restore_everyone
+
+				ld  a, (_hotspot_t)
+				cp  4
+				jr  c, resonators_done
+
+				ld  a, 4
+				ld  (_hotspot_t), a
+				call _set_hotspot
+
+				jr resonators_done
+
+			.resonators_next_tick
+				ld  hl, 4
+				call _play_sfx
+
+				ld  hl, 25
+				push hl
+				ld  hl, 1
+				push hl
+				ld  hl, (_resonators_on)
+				push hl
+				call _draw_2_digits 
+				pop bc
+				pop bc
+				pop bc
+
+				ld  a, (_resonators_frames)
+				ld  (_resonators_ct), a
+
+			.resonators_done
+		#endasm
 	}
 
 	void hook_entering (void) {

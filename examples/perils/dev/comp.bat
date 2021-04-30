@@ -3,7 +3,7 @@
 set game=perils
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 12 6 15 10 15 packed  > nul
+..\utils\mapcnv.exe ..\map\mapa.map mapa.h 12 8 15 10 15 packed  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul
@@ -18,7 +18,7 @@ echo Making %game%
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
-zcc +zx -vn churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
+zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
 ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
 ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul

@@ -164,4 +164,9 @@ Este es el código original. Necesitaré dos contadores. Ahora `resonators_on` i
 	} 
 ```
 
-Con todo el setup ocupa 2 bytes menos, pero puedo mejorar desde 31792 si lo paso a ensamble: 
+Con todo el setup ocupa 2 bytes menos, pero puedo mejorar desde 31792 si lo paso a ensamble.
+
+## Más de 85 pantallas
+
+Los cálculos son de 8 bits para algunas cosas y eso limitaba a 85 el máximo número de pantallas. Cambiando los cálculos puedo tener las 96 pantallas que necesitamos para este juego. Ahora mismo estamos a 31774 bytes, antes de añadir las 24 nuevas pantallas de la cuarta fase.
+
