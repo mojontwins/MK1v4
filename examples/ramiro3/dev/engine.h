@@ -4,6 +4,10 @@
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+#if defined RAMIRO_HOVER_ON_VAR && !defined RAMIRO_HOVER
+	#define RAMIRO_HOVER
+#endif
+
 unsigned char line_of_text_clear [] = "                                ";
 
 #ifdef PLAYER_CUSTOM_CELLS
@@ -92,21 +96,139 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	#endasm
 }
 
+void render_this_enemy (void) {
+	/*
+	sp_MoveSprAbs (
+		sp_moviles [enit], 
+		spritesClip, 
+		en_an_next_frame [enit] - en_an_current_frame [enit], 
+		VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
+	);
+
+	en_an_current_frame [enit] = en_an_next_frame [enit];
+	*/
+	#asm
+			// sp_moviles [enit] = sp_moviles + enit*2
+			ld  a, (_enit)
+			sla a
+			ld  c, a
+			ld  b, 0 				// BC = offset to [enit] in 16bit arrays
+			ld  hl, _sp_moviles
+			add hl, bc
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl)
+			push de						
+			pop ix
+
+			// Clipping rectangle
+			ld  iy, vpClipStruct
+
+			// Animation
+			// en_an_next_frame [enit] - en_an_current_frame [enit]
+			ld  hl, _en_an_current_frame
+			add hl, bc 				// HL -> en_an_current_frame [enit]
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl) 			// DE = en_an_current_frame [enit]
+
+			ld  hl, _en_an_next_frame
+			add hl, bc 				// HL -> en_an_next_frame [enit]
+			ld  a, (hl)
+			inc hl
+			ld  h, (hl)
+			ld  l, a 				// HL = en_an_next_frame [enit]
+
+			or  a 					// clear carry
+			sbc hl, de 				// en_an_next_frame [enit] - en_an_current_frame [enit]
+
+			push bc 				// Save for later
+
+			ld  b, h
+			ld  c, l 				// ** BC = animate bitdef **	
+
+			//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
+			ld  a, (_rdy)					
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_Y
+			ld h, a
+
+			ld  a, (_rdx)
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_X
+			ld  l, a
+
+			// rdx & 7, rdy & 7
+			ld  a, (_rdx)
+			and 7
+			ld  d, a
+
+			ld  a, (_rdy)
+			and 7
+			ld  e, a
+
+			call SPMoveSprAbs
+
+			// en_an_current_frame [enit] = en_an_next_frame [enit];
+
+			pop bc 					// Retrieve index
+
+			ld  hl, _en_an_current_frame
+			add hl, bc
+			ex  de, hl 				// DE -> en_an_current_frame [enit]	
+
+			ld  hl, _en_an_next_frame
+			add hl, bc 				// HL -> en_an_next_frame [enit]
+
+			ldi
+			ldi
+	#endasm
+}
+
+void calc_baddies_pointer (void) {
+	#asm
+		#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			add hl, hl 				// x2
+			ld  d, h
+			ld  e, l 				// DE = x2
+			add hl, hl 				// x4
+			add hl, hl 				// x8
+
+			add hl, de 				// HL = x8 + x2 = x10
+		#else
+			ld  d, h
+			ld  e, l 				// DE = x1
+			add hl, hl 				// x2
+			add hl, hl 				// x4
+			add hl, hl 				// x8
+
+			add hl, de 				// HL = x8 + x1 = x9
+		#endif
+
+		ld  de, _malotes
+		add hl, de			
+	#endasm
+}
+
 void render_all_sprites (void) {
-	for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 			#ifdef RANDOM_RESPAWN
-				if (en_an_fanty_activo [rdi])
+				if (en_an_fanty_activo [enit])
 			#else
-				if (malotes [enoffs + rdi].t == 6 || malotes [enoffs + rdi].t == 0)
+				if (malotes [enoffs + enit].t == 6 || malotes [enoffs + enit].t == 0)
 			#endif
 			{
 				/*
-				rdx = en_an_x [rdi] >> 6;
-				rdy = en_an_y [rdi] >> 6;
+				rdx = en_an_x [enit] >> 6;
+				rdy = en_an_y [enit] >> 6;
 				*/
 				#asm
-						ld  a, (_rdi)
+						ld  a, (_enit)
 						sla a
 						ld  c, a
 						ld  b, 0
@@ -134,98 +256,32 @@ void render_all_sprites (void) {
 			} else 
 		#endif
 		{
-			rdx = malotes [enoffs + rdi].x;
-			rdy = malotes [enoffs + rdi].y;
+			/*
+			rdx = malotes [enoffs + enit].x;
+			rdy = malotes [enoffs + enit].y;
+			*/
+			#asm
+					ld  hl, (_enoffs)
+					ld  bc, (_enit)
+					ld  b, 0
+					add hl, bc
+					
+					call _calc_baddies_pointer
+
+					// malotes struct is:
+					// x, y, x1, y1, x2, y2, mx, my, t[, life]
+
+					ld  a, (hl)
+					ld  (_rdx), a 
+					inc hl 
+
+					ld  a, (hl)
+					ld  (_rdy), a 
+			#endasm
 		}
-		/*
-		sp_MoveSprAbs (
-			sp_moviles [rdi], 
-			spritesClip, 
-			en_an_next_frame [rdi] - en_an_current_frame [rdi], 
-			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
-		);
 
-		en_an_current_frame [rdi] = en_an_next_frame [rdi];
-		*/
 		#asm
-				// sp_moviles [rdi] = sp_moviles + rdi*2
-				ld  a, (_rdi)
-				sla a
-				ld  c, a
-				ld  b, 0 				// BC = offset to [rdi] in 16bit arrays
-				ld  hl, _sp_moviles
-				add hl, bc
-				ld  e, (hl)
-				inc hl 
-				ld  d, (hl)
-				push de						
-				pop ix
-
-				// Clipping rectangle
-				ld  iy, vpClipStruct
-
-				// Animation
-				// en_an_next_frame [rdi] - en_an_current_frame [rdi]
-				ld  hl, _en_an_current_frame
-				add hl, bc 				// HL -> en_an_current_frame [rdi]
-				ld  e, (hl)
-				inc hl 
-				ld  d, (hl) 			// DE = en_an_current_frame [rdi]
-
-				ld  hl, _en_an_next_frame
-				add hl, bc 				// HL -> en_an_next_frame [rdi]
-				ld  a, (hl)
-				inc hl
-				ld  h, (hl)
-				ld  l, a 				// HL = en_an_next_frame [rdi]
-
-				or  a 					// clear carry
-				sbc hl, de 				// en_an_next_frame [rdi] - en_an_current_frame [rdi]
-
-				push bc 				// Save for later
-
-				ld  b, h
-				ld  c, l 				// ** BC = animate bitdef **	
-
-				//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
-				ld  a, (_rdy)					
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_Y
-				ld h, a
-
-				ld  a, (_rdx)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_X
-				ld  l, a
-
-				// rdx & 7, rdy & 7
-				ld  a, (_rdx)
-				and 7
-				ld  d, a
-
-				ld  a, (_rdy)
-				and 7
-				ld  e, a
-
-				call SPMoveSprAbs
-
-				// en_an_current_frame [enit] = en_an_next_frame [enit];
-
-				pop bc 					// Retrieve index
-
-				ld  hl, _en_an_current_frame
-				add hl, bc
-				ex  de, hl 				// DE -> en_an_current_frame [enit]	
-
-				ld  hl, _en_an_next_frame
-				add hl, bc 				// HL -> en_an_next_frame [enit]
-
-				ldi
-				ldi
+				call _render_this_enemy
 		#endasm
 	}
 
@@ -608,8 +664,33 @@ void cortina (void) {
 	void clear_cerrojo (unsigned char x, unsigned char y) {
 		// search & toggle
 		
+		/*
 		set_map_tile (x, y, 0, comportamiento_tiles [0]);
 		_x = x; _y = y;
+		*/
+		#asm
+				ld  hl, 4
+				add hl, sp
+				ld  a, (hl)
+				ld  (__x), a
+				ld  (_rdx), a
+				ld  c, a
+				dec hl
+				dec hl
+				ld  a, (hl)
+				ld  (__y), a
+				ld  (_rdy), a
+				xor a
+				ld  (__t), a
+				ld  (__n), a
+
+				call set_map_tile_do
+
+				ld  a, (_rdx)
+				ld  (__x), a
+				ld  a, (_rdy)
+				ld  (__y), a
+		#endasm
 
 		/*	
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) 
@@ -1430,7 +1511,15 @@ void move (void) {
 						rda = player.hovering;
 					#endif
 					player.hovering = 0;
-					if ((pad0 & sp_DOWN) == 0 || (button_jump && player.just_jumped == 0)) {
+					if (((pad0 & sp_DOWN) == 0 
+						#ifdef HOVER_WITH_JUMP_ALSO
+							|| (button_jump && player.just_jumped == 0)
+						#endif
+						)
+						#ifdef RAMIRO_HOVER_ON_VAR
+							&& ramiro_hover 
+						#endif
+					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
 							#ifdef MODE_128K_DUAL
@@ -1903,20 +1992,97 @@ void move (void) {
 	#endif
 	{
 		#ifdef SLIPPERY_TILES
+			/*
 			if ((rdt1 & 16) || (rdt2 & 16)) {
-				player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
+				#ifdef DISABLE_SLIPPERY_ON_VAR
+					if (disable_slippery == 0)
+				#endif
+				{
+					player.ax = PLAYER_AX_SLIPPERY; player.rx = PLAYER_RX_SLIPPERY;
+				}
 			}
+			*/
+
+			#asm
+					ld  a, (_rdt1)
+					and 16
+					jr  nz, slippery_check_do
+
+					ld  a, (_rdt2)
+					and 16
+					jr  z, slippery_check_done
+
+				.slippery_check_do
+
+					#ifdef DISABLE_SLIPPERY_ON_VAR
+						ld  a, (_disable_slippery)
+						or  a
+						jr  nz, slippery_check_done
+					#endif
+
+					ld  a, PLAYER_AX_SLIPPERY
+					ld  (_player+11), a 			// player.ax
+
+					ld  a, PLAYER_RX_SLIPPERY
+					ld  (_player+12), a 			// player.rx
+
+				.slippery_check_done
+			#endasm
 		#endif
 
 		#ifdef CONVEYOR_TILES
 			#ifdef PLAYER_MOGGY_STYLE
 
 			#else
+				/*
 				rdj = 0;
 				if (rdt1 & 2) { rdj = (rdt1 & 1) ? 1 : -1; }
 				if (rdt2 & 2) { rdj += (rdt2 & 1) ? 1 : -1; }
 				if (rdj < 0) ptgmx = -PLAYER_VX_CONVEYORS;
 				else if (rdj > 0) ptgmx = PLAYER_VX_CONVEYORS;
+				*/
+				#asm
+						// c ~ rdj in this rewrite
+						ld  c, 0
+
+						ld  a, (_rdt1)
+						bit 1, a 			// rdt1 & 2
+						call nz, conveyor_add_to_rdj
+
+						ld  a, (_rdt2)
+						bit 1, a
+						call nz, conveyor_add_to_rdj
+
+						// check rdj 0, <0 or >0...
+						xor a
+						or  c
+						jr  z, conveyor_check_done
+
+						bit 7, a 			// Positive or negative?
+						ld  hl, (_ptgmx)
+						ld  bc, PLAYER_VX_CONVEYORS
+						jr  z, conveyor_right
+
+					.conveyor_left
+						sbc hl, bc
+						jr  conveyor_set_ptgmx
+
+					.conveyor_add_to_rdj
+						and 1
+						sla a
+						dec a
+						add c
+						ld  c, a
+						ret
+
+					.conveyor_right
+						add hl, bc
+
+					.conveyor_set_ptgmx
+						ld  (_ptgmx), hl
+
+					.conveyor_check_done
+				#endasm
 			#endif
 		#endif
 	}
@@ -2853,20 +3019,25 @@ void move (void) {
 				wall
 			#endif
 			&& (gpy & 15) == 0
+			&& (player.keys > 0
+				#ifdef MASTER_OF_KEYS
+					|| master_of_keys
+				#endif
+			)
 		) {
-			if (qtile (gpxx + 1, gpyy) == 15 && player.keys > 0) {
+			if (qtile (gpxx + 1, gpyy) == 15) {
 				clear_cerrojo (gpxx + 1, gpyy);
 				player.keys --;
 				play_sfx (8);
 			} else 
 			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
-				if (qtile (gpxx - 1, gpyy) == 15 && player.keys > 0) {
+				if (qtile (gpxx - 1, gpyy) == 15) {
 					clear_cerrojo (gpxx - 1, gpyy);
 					player.keys --;
 					play_sfx (8);
 				}
 			#else
-				if (qtile (gpxx, gpyy) == 15 && player.keys > 0) {
+				if (qtile (gpxx, gpyy) == 15) {
 					clear_cerrojo (gpxx, gpyy);
 					player.keys --;
 					play_sfx (8);
@@ -3283,7 +3454,7 @@ void move (void) {
 			#else
 				#ifdef EVIL_TILE_SIMPLE
 					player.vy = -abs (player.vy);
-					if (player.vy > -(PLAYER_G<<2)) player.vy = -(PLAYER_G<<2);
+					if (player.vy > -(PLAYER_G*9)) player.vy = -(PLAYER_G*9);
 				#else
 					player.vy = -player.vy;
 				#endif
@@ -3630,6 +3801,18 @@ void init_hotspots (void) {
 	}
 #endif
 
+void calc_hotspot_ptr (void) {
+	#asm
+			ld  hl, (_n_pant)
+			ld  h, 0
+			ld  b, h
+			ld  c, l
+			add hl, hl 			// x2
+			add hl, bc 			// x3
+			ex  de, hl
+	#endasm
+}
+
 void hotspot_paint (void) {
 	// Is there an object in this screen?
 	
@@ -3676,16 +3859,10 @@ void hotspot_paint (void) {
 			xor a
 			ld  (_hotspot_t), a
 
-			// Calculate base for hotspots; max = 85 screens.
-			ld  a, (_n_pant)
-			ld  b, a
-			sla a
-			add b
-
-			ld  c, a
-			ld  b, 0
+			call _calc_hotspot_ptr
+			
 			ld  ix, _hotspots
-			add ix, bc
+			add ix, de
 
 			// Struct is xy, tipo, act
 
@@ -3702,6 +3879,23 @@ void hotspot_paint (void) {
 			ld  a, (ix+1)		// .tipo
 			or  a
 			jr  z, hotspot_paint_act_skip
+
+		#ifdef MASTER_OF_KEYS
+				cp  2
+				jr  nz, hotspot_paint_mok_done
+
+				ld  a, (_master_of_keys)
+				or  a
+				jr  z, hotspot_paint_mok_set2
+
+				ld  a, 3
+				jr  hotspot_paint_mok_done
+
+			.hotspot_paint_mok_set2
+				ld  a, 2
+
+			.hotspot_paint_mok_done
+		#endif
 
 			ld  (_hotspot_t), a
 
@@ -3787,11 +3981,20 @@ void draw_scr_background (void) {
 	#ifdef RLE_MAP
 		#asm
 			._draw_scr_get_scr_address
+				/*
 				ld  a, (_n_pant)
 				sla a
 				ld  d, 0
 				ld  e, a
 				ld  hl, _mapa
+				*/
+
+				// Full 16 bits calculation
+				ld  hl, (_n_pant)
+				ld  h, 0
+				add hl, hl
+				ld  de, _mapa
+
 				add hl, de 		; HL = map + (n_pant << 1)
 				ld  e, (hl)
 				inc hl
@@ -4237,6 +4440,7 @@ void draw_scr_background (void) {
 	#ifndef DEACTIVATE_KEYS
 		// Is there a bolt which has been already opened in this screen?
 		// If so, delete it:
+		/*
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
 			if (cerrojos [gpit].np == n_pant && 0 == cerrojos [gpit].st) {
 				draw_coloured_tile (VIEWPORT_X + (cerrojos [gpit].x << 1), VIEWPORT_Y + (cerrojos [gpit].y << 1), 0);
@@ -4245,6 +4449,50 @@ void draw_scr_background (void) {
 				map_buff [rdi] = 0;
 			}
 		}
+		*/
+		#asm
+				ld  hl, _cerrojos
+				ld  b, MAX_CERROJOS
+
+			.draw_scr_bolts_loop
+				; Cerrojos structure is np, x, y, st
+				ld  c, (hl)		; np
+				inc hl
+				ld  d, (hl) 	; x
+				inc hl
+				ld  e, (hl)		; y 
+				inc hl 
+				ld  a, (hl) 	; st
+				inc hl
+
+				; Open lock? (st == 0)
+				or  a 
+				jr  nz, draw_scr_bolts_continue
+
+				; Current screen? 
+				ld  a, (_n_pant)
+				cp  c
+				jr  nz, draw_scr_bolts_continue
+
+				; Clear bolt
+				push bc
+
+				ld  a, d
+				ld  c, d 				;; Call directly needs C
+				ld  (__x), a
+				ld  a, e
+				ld  (__y), a
+				xor a
+				ld  (__t), a
+				ld  (__n), a
+
+				call set_map_tile_do
+
+				pop bc
+
+			.draw_scr_bolts_continue
+				djnz draw_scr_bolts_loop
+		#endasm
 	#endif	
 }
 
@@ -4505,8 +4753,18 @@ void platform_get_player (void) {
 		#endif
 
 		// Kill enemy
+		/*
 		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
 		en_an_current_frame [enit] = en_an_next_frame [enit];
+		*/
+		#asm
+				ld  a, (_en_ccx)
+				ld  (_rdx), a
+				ld  a, (_en_ccy)
+				ld  (_rdy), a 
+				call _render_this_enemy
+		#endasm
+
 		sp_UpdateNow ();
 		play_sfx (10);
 		en_an_next_frame [enit] = sprite_18_a;
@@ -4549,28 +4807,9 @@ void mueve_bicharracos (void) {
 				// Point HL to baddies [enoffsmasi]. The struct is 9 or 10 bytes long
 				// so this is baddies + enoffsmasi*(9|10) depending on PLAYER_CAN_FIRE
 				ld 	hl, (_enoffsmasi)
-				ld  h, 0
+				// ld  h, 0
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
-				add hl, hl 				// x2
-				ld  d, h
-				ld  e, l 				// DE = x2
-				add hl, hl 				// x4
-				add hl, hl 				// x8
-
-				add hl, de 				// HL = x8 + x2 = x10
-			#else
-				ld  d, h
-				ld  e, l 				// DE = x1
-				add hl, hl 				// x2
-				add hl, hl 				// x4
-				add hl, hl 				// x8
-
-				add hl, de 				// HL = x8 + x1 = x9
-			#endif
-
-				ld  de, _malotes
-				add hl, de
+				call _calc_baddies_pointer
 
 				ld  (__baddies_pointer), hl 		// Save address for later
 
@@ -5388,6 +5627,9 @@ void mueve_bicharracos (void) {
 						player.estado == EST_NORMAL
 						#ifdef PARALYZED_DONT_KILL
 							&& en_an_state [enit] != ENEM_PARALYZED
+						#endif
+						#ifdef PARALYZED_DONT_KILL_ON_VAR
+							&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
 						#endif
 					) {
 						en_tocado = 1; player.is_dead = 1; play_sfx (2);

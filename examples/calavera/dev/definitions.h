@@ -157,8 +157,8 @@ unsigned char en_an_state [MAX_ENEMS]				@ (23600 + MAX_ENEMS*16);
 unsigned char en_an_ff [MAX_ENEMS] 					@ (23600 + MAX_ENEMS*17);
 unsigned char en_an_base_frame [MAX_ENEMS] 			@ (23600 + MAX_ENEMS*18);
 
-unsigned char enoffs;
-unsigned char en_j, enoffsmasi, en_x, en_y, en_xx, en_yy;
+unsigned int enoffs, enoffsmasi;
+unsigned char en_j, en_x, en_y, en_xx, en_yy;
 unsigned char en_cx, en_cy;
 unsigned char en_ccx, en_ccy;
 // Only one enemy may hurt the player at once, so we need this flag:
@@ -199,8 +199,8 @@ unsigned char orig_tile;	// Original background tile
 	unsigned char is128k;
 #endif
 
-unsigned char isrc           @ 23700;
-unsigned char ay_player_on   @ 23701;
+unsigned char isrc           @ 23296;
+unsigned char ay_player_on   @ 23297;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
@@ -318,6 +318,24 @@ unsigned char bitmask [] = {
 
 #ifndef PLAYER_MOGGY_STYLE
 	unsigned char button_jump;
+#endif
+
+// Special
+
+#ifdef MASTER_OF_KEYS
+	unsigned char master_of_keys;
+#endif
+
+#ifdef PARALYZED_DONT_KILL_ON_VAR
+	unsigned char paralyzed_dont_kill;
+#endif
+
+#ifdef RAMIRO_HOVER_ON_VAR
+	unsigned char ramiro_hover;
+#endif
+
+#ifdef DISABLE_SLIPPERY_ON_VAR
+	unsigned char disable_slippery;
 #endif
 
 // Prototypes

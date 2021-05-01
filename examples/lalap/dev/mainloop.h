@@ -137,6 +137,26 @@ void main (void) {
 		cortina ();
 		title_screen ();
 		
+		// Special initializations
+		#asm
+				xor a
+			#ifdef MASTER_OF_KEYS
+					ld (_master_of_keys), a
+			#endif
+		
+			#ifdef PARALYZED_DONT_KILL_ON_VAR
+					ld (_paralyzed_dont_kill), a
+			#endif
+
+			#ifdef RAMIRO_HOVER_ON_VAR
+					ld (_ramiro_hover), a
+			#endif
+
+			#ifdef DISABLE_SLIPPERY_ON_VAR
+					ld (_disable_slippery), a
+			#endif
+		#endasm
+
 		#ifndef DIRECT_TO_PLAY
 			// Clear screen and show game frame
 			cortina ();
