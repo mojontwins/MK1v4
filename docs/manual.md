@@ -109,7 +109,7 @@ Para guiarte puedes usar esta plantilla. Los colores de arriba representan a los
 Por último, si vas a usar esta funcionalidad tendrás que linkar contra `splib2f` en lugar de `splib2` modificando la linea que llama a `zcc` en `comp.bat`:
 
 ```cmd
-	zcc +zx -vn churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
+    zcc +zx -vn churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
 ```
 
 ## El tileset para mappy
@@ -2010,19 +2010,19 @@ Gracias a la forma en la que se codifican los scripts en MK1 v4, puedes importar
 Por ejemplo, 
 
 ```c
-	// custom.h
-	#define SCORE_DO_ACTION 10
+    // custom.h
+    #define SCORE_DO_ACTION 10
 ```
 
 ```spt
-	# script
+    # script
 
-	ENTERING SCREEN 0
-		IF FLAG 5 = 3
-		THEN
-			INC FLAG 4, @SCORE_DO_ACTION
-		END
-	END
+    ENTERING SCREEN 0
+        IF FLAG 5 = 3
+        THEN
+            INC FLAG 4, @SCORE_DO_ACTION
+        END
+    END
 ```
 
 # Capítulo 8 - Código custom
@@ -2547,9 +2547,73 @@ y crear un archivo `custom_player_cells.h` donde se defina este array, que debe 
     };
 ```
 
-## Más
+## Conexiones de pantalla personalizadas
 
-Pronto más. ¿Echas en falta algo? Dímelo.
+Para gestionar de una forma más personalizada los cambios de pantalla deberás añadir esta linea en `config.h` (no viene por defecto):
+
+```c
+    #define CUSTOM_SCREEN_CONNECTIONS
+```
+
+Con esto activo hay que crear un archivo `custom_screen_connections.h` que defina cuatro funciones:
+
+```c
+    // custom_screen_connections.h
+
+    unsigned char override_flick_up (void) {
+        return 0;
+    }
+
+    unsigned char override_flick_down (void) {
+        return 0;
+    }
+
+    unsigned char override_flick_left (void) {
+        return 0;
+    }
+
+    unsigned char override_flick_right (void) {
+        return 0;
+    }
+```
+
+Siempre que se detecte que el personaje vaya a salir de la pantalla se llamará a la función correspondiente dependiendo de por donde salga. Si la función devuelve 0, se hará la conexión normal y corriente.
+
+Para definir una regla especial colocaremos el código en la función correspondiente y devolveremos 1. Podemos verlo en acción en el ejemplo de Cheril, en la fase de la playa.
+
+```c
+    // custom_screen_connections.h
+
+    unsigned char override_flick_up (void) {
+        if (n_pant >= 72 && n_pant < 84) {
+            player.vy = 0; return 1;
+        } else return 0;
+    }
+
+    unsigned char override_flick_down (void) {
+        return 0;
+    }
+
+    unsigned char override_flick_left (void) {
+        if (n_pant == 72 || n_pant == 84) { 
+            n_pant += 11; gpx = 224; player.x = 224<<6; 
+            return 1;
+        }
+        return 0;
+    }
+
+    unsigned char override_flick_right (void) {
+        if (n_pant == 83 || n_pant == 95) { 
+            n_pant -= 11; gpx = 0; player.x = 0; 
+            return 1;
+        }
+        return 0;
+    }
+```
+
+Es este juego, la fase 4 ocupa las dos últimas filas del mapa de 8x12 pantallas. En la fila superior no debemos permitir pasar a la fila superior, por lo que interceptamos los cambios hacia arriba entre las pantallas 72 y 83 (ambas inclusive) y devolvemos 1 para que no se ejecute el código general.
+
+De forma parecida, las pantallas a los extremos de estas filas conectan con la del extremo opuesto, de forma cíclica.
 
 # Capítulo 9 - `MODE_128K_DUAL`
 

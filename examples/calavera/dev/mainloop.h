@@ -4,6 +4,10 @@
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
 
+#ifdef CUSTOM_SCREEN_CONNECTIONS
+	#include "custom_screen_connections.h"
+#endif
+
 void main (void) {
 	#asm
 			di 
@@ -681,34 +685,104 @@ void main (void) {
 				}
 			#endif
 
+			// Flick screen
+
 			#ifndef FIXED_SCREENS
 				#ifndef COLUMN_MAP
 					if (gpx == 0 && player.vx < 0) {
-						n_pant --;
-						gpx = 224; player.x = 224<<6; 
+						#asm
+							#ifdef CUSTOM_SCREEN_CONNECTIONS
+									call _override_flick_left
+									xor a
+									or  l
+									jr  nz, flick_left_done
+							#endif
+
+								ld  hl, _n_pant
+								dec (hl)
+
+								ld  a, 224
+								ld  (_gpx), a
+
+								ld  hl, #(224*64)
+								ld  (_player), hl 		// player.x = 224<<6
+							.flick_left_done
+						#endasm
+
 					} else if (gpx == 224 && player.vx > 0) {
-						n_pant ++;
-						gpx = player.x = 0;
+						#asm
+							#ifdef CUSTOM_SCREEN_CONNECTIONS
+									call _override_flick_right
+									xor a
+									or  l
+									jr  nz, flick_right_done
+							#endif
+
+								ld  hl, _n_pant
+								inc (hl)
+
+								xor a
+								ld  (_gpx), a
+
+								ld  hl, 0
+								ld  (_player), hl 		// player.x = 0
+
+							.flick_right_done
+						#endasm
 					}
 				#endif
 
 				#ifndef ROW_MAP
 					#ifdef BETTER_VERTICAL_CONNECTIONS
-						if (player.y == -512 && player.vy < 0 && n_pant >= MAP_W) {
-							n_pant -= MAP_W;
-							gpy = 144; player.y = 144<<6;
+						if (player.y == -512 && player.vy < 0 && n_pant >= MAP_W) 
+					#else
+						if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) 
+					#endif
+					{
+
+						#ifdef BETTER_VERTICAL_CONNECTIONS
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
 							player.cont_salto = 0;
-						}
-					#else
-						if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
-							n_pant -= MAP_W;
-							gpy = 144; player.y = 144<<6;
-						} 
-					#endif
-					else if (gpy == 144 && player.vy > 0) {
-						n_pant += MAP_W;
-						gpy = player.y = 0;
+						#endif
+
+						#asm
+							#ifdef CUSTOM_SCREEN_CONNECTIONS
+									call _override_flick_up
+									xor a
+									or  l
+									jr  nz, flick_up_done
+							#endif
+								ld  a, (_n_pant)
+								sub MAP_W
+								ld  (_n_pant), a 
+
+								ld  a, 144
+								ld  (_gpy), a 
+
+								ld  hl, #(144*64)
+								ld  (_player+2), hl 		// player.y = 144 << 6
+
+							.flick_up_done
+						#endasm				
+					} else if (gpy == 144 && player.vy > 0) {
+						#asm
+							#ifdef CUSTOM_SCREEN_CONNECTIONS
+									call _override_flick_down
+									xor a 
+									or  l
+									jr  nz, flick_down_done
+							#endif
+								ld  a, (_n_pant)
+								add MAP_W
+								ld  (_n_pant), a 
+
+								xor a 
+								ld  (_gpy), a
+
+								ld  hl, 0
+								ld  (_player+2),hl 			// player.y = 0
+							.flick_down_done
+						#endasm
 					}
 				#endif
 			#endif
