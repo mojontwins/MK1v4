@@ -3816,43 +3816,6 @@ void calc_hotspot_ptr (void) {
 void hotspot_paint (void) {
 	// Is there an object in this screen?
 	
-	/*
-	hotspot_y = 240;
-	hotspot_t = 0;
-	if (hotspots [n_pant].act == 1) {
-		#if defined(ACTIVATE_SCRIPTING) && defined(OBJECTS_ON_VAR)
-			if (flags [OBJECTS_ON_VAR])
-		#endif
-		{
-			if (hotspots [n_pant].tipo) {
-				hotspot_t = hotspots [n_pant].tipo;					
-			}
-		}
-		}
-
-	#if !defined DEACTIVATE_REFILLS && defined LEGACY_REFILLS
-		else if (hotspots [n_pant].act == 0) {
-			// Randomly, if there's no active object, we draw a recharge.
-			if (rand () % 3 == 2) {
-				hotspot_t = 3;					
-			}
-		}
-	#endif
-		
-	if (hotspot_t) {
-		// Calculate tile coordinates
-		rdx = (hotspots [n_pant].xy >> 4);
-		rdy = (hotspots [n_pant].xy & 15);
-		// Convert to pixels and store
-		hotspot_x = rdx << 4;
-		hotspot_y = rdy << 4;
-		// Remember which tile was there
-		orig_tile = map_buff [15 * rdy + rdx];
-		// Draw the object.
-
-		draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), hotspot_t == 3 ? 16 : 16 + hotspot_t);
-	}
-	*/
 	#asm
 			ld  a, 240
 			ld  (_hotspot_y), a 
@@ -3956,13 +3919,9 @@ void hotspot_paint (void) {
 			add hl, bc
 			ld  a, (hl)
 			ld  (_orig_tile), a
-	#endasm
-
-	// Draw the object.
-	/*
-	draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), hotspot_t == 3 ? 16 : 16 + hotspot_t);
-	*/
-	#asm
+		
+		// Draw the object.
+	
 			ld  a, (_rdx)
 			sla a 
 			add VIEWPORT_X
@@ -4000,8 +3959,12 @@ void draw_scr_background (void) {
 		#endasm
 	#endif
 
-	rdx = 0; rdy = 0;
-	rdi = 0;
+	#asm
+			xor a
+			ld  (_rdx), a
+			ld  (_rdy), a
+			ld  (_rdi), a
+	#endasm
 	
 	#ifdef RLE_MAP
 		#asm
@@ -4340,31 +4303,6 @@ void draw_scr_background (void) {
 			._draw_scr_loop_done
 		#endasm
 	#else
-		// PACKED map, every byte contains two tiles, plus admits
-		// some special effects (autoshadows, see below).
-		/*
-		rdi = 0;
-		for (gpit = 0; gpit < 75; gpit ++) {
-			rdd = *gp_gen ++;
-			rdt1 = rdd >> 4;
-			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt1 == COIN_TILE && 0 == scenery_info.show_coins) rdt1 = COIN_TILE_DEACT_SUBS;
-			#endif
-			rdt2 = rdd & 15;
-			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
-				if (rdt2 == COIN_TILE && 0 == scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
-			#endif
-			#ifndef NO_ALT_BG
-				if ((rand () & 15) < 2 && rdt1 == 0)
-					rdt1 = 19;
-				if ((rand () & 15) < 2 && rdt2 == 0)
-					rdt2 = 19;
-			#endif
-			_n = rdt1; draw_and_advance ();
-			_n = rdt2; draw_and_advance ();
-		}
-		*/
-
 		#asm
 				xor a
 				ld  (_rdi), a
@@ -4465,16 +4403,7 @@ void draw_scr_background (void) {
 	#ifndef DEACTIVATE_KEYS
 		// Is there a bolt which has been already opened in this screen?
 		// If so, delete it:
-		/*
-		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
-			if (cerrojos [gpit].np == n_pant && 0 == cerrojos [gpit].st) {
-				draw_coloured_tile (VIEWPORT_X + (cerrojos [gpit].x << 1), VIEWPORT_Y + (cerrojos [gpit].y << 1), 0);
-				rdi = 15 * cerrojos [gpit].y + cerrojos [gpit].x;
-				map_attr [rdi] = 0;
-				map_buff [rdi] = 0;
-			}
-		}
-		*/
+
 		#asm
 				ld  hl, _cerrojos
 				ld  b, MAX_CERROJOS
@@ -4522,7 +4451,37 @@ void draw_scr_background (void) {
 }
 
 void enems_calc_frame (void) {
-	en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
+	// en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
+	#asm
+			ld  a, (_enit)
+			sla a
+			ld  b, 0
+			ld  c, a
+			ld  hl, _en_an_next_frame
+			add hl, bc
+		
+			push hl 		// en_an_next_frame [enit]
+			
+			ld  bc, (_enit)
+			ld  b, 0
+			
+			ld  hl, _en_an_frame
+			add hl, bc
+			ld  a, (hl)
+			ld  hl, _en_an_base_frame
+			add hl, bc
+			add a, (hl)
+
+			sla a 			// This will work in 8 bit. Always few frames max.			
+			ld  c, a 		// B is already 0
+			ld  hl, _enem_cells
+
+			add hl, bc 		// HL -> enem_cells [...]
+			pop de 			// DE -> en_an_next_frame [enit]
+
+			ldi
+			ldi
+	#endasm
 }
 
 void enems_en_an_calc (unsigned char n) {
@@ -4586,7 +4545,9 @@ void draw_scr (void) {
 		draw_persistent ();
 	#endif
 			
-	f_zone_ac = 0;
+	#if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
+		f_zone_ac = 0;
+	#endif
 
 	// Set up enemies.
 
@@ -4601,9 +4562,27 @@ void draw_scr (void) {
 	#endif
 
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+		/*
 		en_an_frame [enit] = 0;
 		en_an_state [enit] = 0;
 		enoffsmasi = enit + enoffs;
+		*/
+		
+		#asm
+				ld  bc, (_enit)
+				xor a
+				ld  b, a
+				ld  hl, _en_an_frame
+				add hl, bc
+				ld  (hl), a
+				ld  hl, _en_an_state
+				add hl, bc
+				ld  (hl), a
+				
+				ld  hl, (_enoffs)
+				add hl, bc
+				ld  (_enoffsmasi), hl
+		#endasm
 
 		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) 
 			en_an_next_frame [enit] = sprite_18_a;

@@ -198,9 +198,13 @@ void set_hotspot (void) {
 					jr  nz, activate_resonator_done
 
 					// player.vy is 16 bits, load MSB and check bit 7
-					ld  a, (_player+9)
-					bit 7, a
+					// We want vy > 0 only
+					ld  hl, (_player+8)
+					bit 7, h
 					jr  nz, activate_resonator_done
+					ld  a, h
+					or  l
+					jr  z, activate_resonator_done 
 
 					// hotspot_y >= gpy + 8
 					ld  a, (_gpy)
