@@ -83,7 +83,19 @@ void todos_rescatados_check (void) {
 		if (n_pant == scr_ini [level] && player.objs == hostages [level]) {
 			if (((gpx + 8) >> 4) == ini_x [level] &&
 				((gpy + 8) >> 4) == ini_y [level]) {
-				draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);	
+				#asm
+						ld  a, 7
+						ld  (__x), a
+						ld  a, 11
+						ld  (__y), a
+						ld  a, 24
+						ld  (__x2), a
+						ld  a, 13
+						ld  (__y2), a
+						ld  a, GAME_OVER_ATTR
+						ld  (__t), a
+				#endasm
+				draw_rectangle ();	
 				draw_text (8, 12, GAME_OVER_ATTR, "MISION CUMPLIDA!");
 				sp_UpdateNow ();
 				beepet ();
@@ -166,7 +178,19 @@ void todos_rescatados_check (void) {
 					call SPValidate
 			#endasm	
 
-			draw_rectangle (7, 11, 24, 13, GAME_OVER_ATTR);		
+			#asm
+					ld  a, 7
+					ld  (__x), a
+					ld  a, 11
+					ld  (__y), a
+					ld  a, 24
+					ld  (__x2), a
+					ld  a, 13
+					ld  (__y2), a
+					ld  a, GAME_OVER_ATTR
+					ld  (__t), a
+			#endasm					
+			draw_rectangle ();
 			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
 			
 			sp_UpdateNow ();

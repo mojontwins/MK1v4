@@ -79,7 +79,20 @@ void game_ending (void) {
 }
 
 void game_over (void) {
-	draw_rectangle (10, 11, 21, 13, GAME_OVER_ATTR);		
+	//10, 11, 21, 13, GAME_OVER_ATTR
+	#asm
+			ld  a, 10
+			ld  (__x), a
+			ld  a, 11
+			ld  (__y), a
+			ld  a, 21
+			ld  (__x2), a
+			ld  a, 13
+			ld  (__y2), a
+			ld  a, GAME_OVER_ATTR
+			ld  (__t), a
+	#endasm
+	draw_rectangle ();	
 	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
 	sp_UpdateNow ();
 	beepet (); play_sfx (10);

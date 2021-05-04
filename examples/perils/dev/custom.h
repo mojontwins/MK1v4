@@ -31,19 +31,56 @@ unsigned char continue_on;
 // Custom functions
 
 void paralyze_everyone (void) {
+	/*
 	player_min_killable = 0;
 	for (enit = 0; enit < 3; enit ++) {
 		en_an_count [enit] = 0xff;
 		en_an_state [enit] = ENEM_PARALYZED;
 	}
+	*/
+	#asm
+			xor a
+			ld  (_player_min_killable), a 
+
+			ld  hl, _en_an_count
+			ld  de, _en_an_state
+			ld  b, 3
+		.paralyze_do 
+			ld  a, 0xff
+			ld  (hl), a
+			ld  a, ENEM_PARALYZED
+			ld  (de), a
+			inc hl 
+			inc de
+
+			djnz paralyze_do
+	#endasm
 }
 
 void restore_everyone (void) {
+	/*
 	player_min_killable = 4;
 	for (enit = 0; enit < 3; enit ++) {
 		en_an_count [enit] = 0;
 		en_an_state [enit] = 0;
 	}
+	*/
+	#asm
+			ld  a, 4
+			ld  (_player_min_killable), a 
+
+			ld  hl, _en_an_count
+			ld  de, _en_an_state
+			xor a
+			ld  b, 3
+		.deparalyze_do 
+			ld  (hl), a
+			ld  (de), a
+			inc hl 
+			inc de
+
+			djnz deparalyze_do
+	#endasm
 }
 
 void set_hotspot (void) {
@@ -154,18 +191,43 @@ void set_hotspot (void) {
 
 	void hook_mainloop (void) {
 		if (latest_hotspot >= 4) {
-			// Check 
-			if (latest_hotspot == 4
-				&& player.vy > 0
-				&& gpy + 8 <= hotspot_y
-			) {
-				play_sfx (6);
-				resonators_on = 10; // 250;
-				resonators_ct = 0;
-				latest_hotspot = 5;
-				paralyze_everyone ();
-				player.vy = -PLAYER_MAX_VY_SALTANDO;
-			}
+			// Activate resonator ? 
+			#asm
+					ld  a, (_latest_hotspot)
+					cp  4
+					jr  nz, activate_resonator_done
+
+					// player.vy is 16 bits, load MSB and check bit 7
+					ld  a, (_player+9)
+					bit 7, a
+					jr  nz, activate_resonator_done
+
+					// hotspot_y >= gpy + 8
+					ld  a, (_gpy)
+					add 8
+					ld  c, a
+					ld  a, (_hotspot_y)
+					cp  c
+					jr  c, activate_resonator_done
+
+				.activate_resonator
+					ld  hl, 6
+					call _play_sfx
+
+					ld  a, 10
+					ld  (_resonators_on), a
+					xor a
+					ld  (_resonators_ct), a
+					ld  a, 5
+					ld  (_latest_hotspot), a
+					
+					call _paralyze_everyone
+
+					ld  hl, #(-PLAYER_MAX_VY_SALTANDO)
+					ld  (_player+8), hl
+
+				.activate_resonator_done
+			#endasm
 
 			// Hotspot has to be restored ALWAYS
 			//hotspot_t = latest_hotspot; set_hotspot ();
@@ -175,30 +237,6 @@ void set_hotspot (void) {
 					call _set_hotspot
 			#endasm
 		}
-
-		/*
-		if (resonators_on) {
-			if (resonators_ct) resonators_ct --; else {
-				resonators_on --;
-
-				if (resonators_on == 0) {
-					play_sfx (3);
-					restore_everyone ();				
-					if (hotspot_t >= 4) {			
-						#asm
-								ld  a, 4
-								ld  (_hotspot_t), a
-								call _set_hotspot
-						#endasm
-					}
-				} else {
-					play_sfx (4);
-					draw_2_digits (25, 1, resonators_on);
-					resonators_ct = resonators_frames;
-				}
-			}			
-		} 
-		*/
 
 		#asm
 			.resonators_do

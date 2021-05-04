@@ -283,6 +283,7 @@ int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
 unsigned char _x, _y, _t, _n;
+unsigned char _x2, _y2;
 unsigned char wall;
 
 #if defined RLE_MAP

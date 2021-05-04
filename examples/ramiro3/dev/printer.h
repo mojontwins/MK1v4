@@ -4,10 +4,61 @@
 // printer.h
 // Miscellaneous printing functions (tiles, status, etc).
 
-void draw_rectangle (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char c) {	
-	for (pti = y1; pti <= y2; pti ++)
-		for (ptj = x1; ptj <= x2; ptj ++)
-			sp_PrintAtInv (pti, ptj, c, 0);	
+void draw_rectangle (void) {	
+	#asm
+			ld  a, (__x)
+			ld  c, a
+
+			ld  a, (__y)
+			ld  b, a
+			
+			ld  a, (__x2)
+			ld  e, a
+
+			ld  a, (__y2)
+			ld  d, a
+			
+			ld  iy, fsClipStruct
+			call SPInvalidate	
+
+		.dr_outter_loop
+			ld  a, (__y)
+			ld  b, a
+
+			ld  a, (__y2)
+			cp  b
+			ret c
+
+			ld  a, (__x)
+			ld  c, a
+			ld  a, (__y)
+			call SPCompDListAddr 	// Won't destroy c!
+
+			ld  a, (__x)
+			ld  b, a
+			ld  a, (__x2)
+			inc a 
+			sub b
+			ld  b, a
+			
+		.dr_inner_loop
+			ld  a, (__t)
+			ld  (hl), a
+			inc hl
+			
+			xor a
+			ld  (hl), a
+			inc hl
+			inc hl 
+			inc hl			
+
+			djnz dr_inner_loop
+
+		.dr_outter_loop_continue
+			ld  hl, __y
+			inc (hl)
+			jr  dr_outter_loop
+	#endasm
 }
 
 void attr (char x, char y) {
