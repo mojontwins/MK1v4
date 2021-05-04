@@ -3959,7 +3959,32 @@ void hotspot_paint (void) {
 	#endasm
 
 	// Draw the object.
+	/*
 	draw_coloured_tile (VIEWPORT_X + (rdx << 1), VIEWPORT_Y + (rdy << 1), hotspot_t == 3 ? 16 : 16 + hotspot_t);
+	*/
+	#asm
+			ld  a, (_rdx)
+			sla a 
+			add VIEWPORT_X
+			ld  (__x), a
+
+			ld  a, (_rdy)
+			sla a 
+			add VIEWPORT_Y
+			ld  (__y), a
+
+			ld  a, (_hotspot_t)
+			ld  b, a
+			cp  3
+			
+			ld  a, 16
+			jr  z, hotspot_paint_set_t
+
+			add b
+		.hotspot_paint_set_t
+			ld  (__t), a
+			call _draw_coloured_tile_do
+	#endasm
 }
 
 void draw_scr_background (void) {
