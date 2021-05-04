@@ -789,7 +789,7 @@ void cortina (void) {
 
 #ifdef ENEMIES_MAY_DIE
 	void init_malotes (void) {
-		
+		/*
 		for (gpit = 0; gpit < MAP_W * MAP_H * MAX_ENEMS; gpit ++) {
 			malotes [gpit].t = malotes [gpit].t & 15;	
 			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
@@ -799,6 +799,46 @@ void cortina (void) {
 				#endif
 			#endif
 		}
+		*/
+		#asm
+			// 0  1  2   3   4   5   6   7   8   9
+			// x, y, x1, y1, x2, y2, mx, my, t[, life]
+
+			ld  bc, MAP_W * MAP_H * MAX_ENEMS
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+				ld  de, 10
+			#else
+				ld  de, 9
+			#endif
+			ld  ix, _malotes
+			
+			.init_malotes_loop
+				//malotes [gpit].t = malotes [gpit].t & 15;
+				ld  a, (ix+8)
+				and 15
+				
+			#ifdef RANDOM_RESPAWN
+					cp  5
+					jr  nz, .init_malotes_not_5	
+
+					or  16
+				.init_malotes_not_5
+			#endif
+
+				ld  (ix+8), a
+
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+					ld  a, ENEMIES_LIFE_GAUGE
+					ld  (ix+9), a
+			#endif
+
+				add ix, de
+
+				dec bc
+				ld  a, b 
+				or  c
+				jr  nz, init_malotes_loop
+		#endasm
 	}
 #endif
 
@@ -993,59 +1033,6 @@ void adjust_to_tile_y (void) {
 #endif
 
 #ifdef ENABLE_SWORD
-	/*
-	void swing_sword (void) {
-		if (s_on) {
-			#ifdef SWORD_UP
-				if (s_type == SWORD_TYPE_UP) {
-					#ifdef SWORD_STAB
-						s_x = gpx + SWORD_STAB;
-					#else
-						s_x = gpx + swoffs_y [s_frame];
-					#endif
-					s_y = gpy + 8 - swoffs_x [s_frame];
-					s_hit_x = s_x + 4;
-					s_hit_y = s_y;			
-				} else 
-			#endif
-			{
-				#ifdef SWORD_STAB
-					s_y = gpy + SWORD_STAB;
-				#else
-					s_y = gpy + swoffs_y [s_frame]; 
-				#endif
-				s_hit_y = (s_y + 4);
-
-				if (s_type == SWORD_TYPE_LEFT) {
-					s_x = gpx + 8 - swoffs_x [s_frame];
-					s_hit_x = s_x;				
-				} else {
-					s_x = gpx + swoffs_x [s_frame];
-					s_hit_x = s_x + 7;				
-				}
-			}
-
-			// Detect breakable
-			#ifdef ENABLE_BREAKABLE
-				if (s_frame > 2 && s_frame < 6) {
-					_x = s_hit_x >> 4;
-					_y = s_hit_y >> 4;
-					if (attr (_x, _y) & 32) add_to_breakables ();
-				}
-			#endif
-
-			s_frame ++;
-			if (s_frame == 9) s_on = 0;
-			rdx = s_x;
-		} else {
-			rdx = 240;
-		}
-
-		sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
-		s_current_frame = s_next_frame;
-	}
-	*/
-
 	void swing_sword (void) {
 		#asm
 				ld  a, (_s_on)
@@ -1470,7 +1457,7 @@ void move (void) {
 				}
 
 				if (player.saltando) {
-					player.vy -= (player.salto + PLAYER_INCR_SALTO - (player.cont_salto>>1));
+					player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto>>1));
 					if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
 					player.cont_salto ++;
 					if (player.cont_salto == 8)
@@ -3633,36 +3620,44 @@ void move (void) {
 
 void init_player_values (void) {
 	gpx = 				PLAYER_INI_X << 4;
+	gpy = PLAYER_INI_Y << 4;
 	player.x = 			gpx << 6;
-	gpy = 				PLAYER_INI_Y << 4;
 	player.y = 			gpy << 6;
 	
-	player.vy = 		0;
-	player.g = 			PLAYER_G; 
-	player.vx = 		0;
+	#asm
 	#ifndef SLIPPERY_TILES
-		player.ax = 		PLAYER_AX;
-		player.rx = 		PLAYER_RX;
+				ld  a, PLAYER_AX
+				ld  (_player+11), a 			// .ax
+
+				ld  a, PLAYER_RX
+				ld  (_player+12), a 			// .rx
 	#endif
 	#ifndef QUICKSAND_TILES
-		player.max_vx = 	PLAYER_MAX_VX;
+				ld  hl, PLAYER_MAX_VX
+				ld  (_player+39), hl 			// .max_vx
 	#endif
-	player.salto = 		PLAYER_VY_INICIAL_SALTO;
-	player.cont_salto = 1;
-	player.saltando = 	0;
-	player.frame = 		0;
-	player.subframe = 	0;
+
+			ld  hl, 0
+			ld  (_player+6), hl 				// .vx
+			ld  (_player+8), hl 				// .vy
+
+			xor a
+			ld  (_player+19),a 					// .saltando
+			ld  (_player+20),a 					// .frame
+			ld  (_player+21),a 					// .subframe
+			ld  (_player+23), a 				// .estado
+			ld  (_player+24),a 					// .ct_estado
+			ld  (_player+33),a 					// .disparando
+			ld  (_player+34),a 					// .killingzone_framecount
+			ld  (_player+35),a 					// .killingzone_beepcount
+			ld  (_player+36),a 					// .is_dead
+
 	#ifdef PLAYER_MOGGY_STYLE
-		player.facing = 	GENITAL_FACING_DOWN;
-	#else
-		player.facing = 	0;
+				ld  a, GENITAL_FACING_DOWN
 	#endif
-	player.estado = 	EST_NORMAL;
-	player.ct_estado = 	0;
-	player.disparando = 0;
-	player.killingzone_beepcount = 0;
-	player.killingzone_framecount = 0;	
-	player.is_dead =    0;
+
+			ld (_player+22),a 					// .facing
+	#endasm
 }
 
 void init_player (void) {
@@ -3670,15 +3665,20 @@ void init_player (void) {
 	// (hence the initialize thing)
 	init_player_values ();
 	
+	/*
 	player.life = 		PLAYER_LIFE;
 	player.objs =		0;
 	player.keys = 		0;
 	player.killed = 	0;
-	#ifndef WIN_ON_SCRIPTING
-		#ifdef SCR_FIN
-			pant_final = SCR_FIN;
-		#endif
-	#endif
+	*/
+	#asm
+			ld  hl, 0
+			ld  (_player+29), hl 				// .life
+			xor a
+			ld  (_player+27), hl 				// .objs
+			ld  (_player+28), hl 				// .keys
+			ld  (_player+32), hl 				// .killed
+	#endasm
 }
 
 void init_hotspots (void) {
