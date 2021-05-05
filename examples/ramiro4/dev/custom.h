@@ -298,6 +298,11 @@
 
 	unsigned char text38 [] = "EL ALTAR NO CONTESTA";
 
+	unsigned char text39 [] = "NO HE VISTO NI POR%"
+							  "DONDE VENIAN,%"
+							  "JA JA JA JA JA%"
+							  "... CABRONI!%";
+
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
 		text1, text2, text3, text4, 		// Altar describe objetos
@@ -315,7 +320,8 @@
 		text31,								// Te pillé!
 		text32, 							// Advertencia Ramón
 		text33, text34, text35, 			// Intro
-		text36, text37, text38				// Troleo papel de cocina
+		text36, text37, text38,				// Troleo papel de cocina
+		text39 								// Cabroni
 	};
 
 	unsigned char talk_sounds [] = { 7, 11 };
@@ -327,6 +333,9 @@
 	unsigned char adm_s_n_pant [] = {  0,  2,  5,  6, 10, 13, 14, 19, 25};
 	unsigned char adm_s_x [] =      {  6, 20, 22,  8, 16, 20,  6,  6,  6};
 	unsigned char adm_s_y [] =      { 12, 14, 16, 12, 10, 16, 16,  4,  4};
+
+	// Cabroni
+	unsigned char cabroni;
 
 	// Aux. functions
 
@@ -696,6 +705,7 @@
 				ld  (_pinv), a 
 				ld  (_ofrendas_idx), a 
 				ld  (_pofrendas), a 
+				ld  (_cabroni), a
 				dec a 
 				ld  (_pofrendas_old), a 
 				ld  (_opscore), a
@@ -1008,6 +1018,7 @@
 							if (is128k) arkos_stop_sound ();
 							draw_scr_background ();
 							win_crypt ();
+							if (n_pant == 0x12) cabroni = 1;
 						} 
 					}
 				}
@@ -1141,6 +1152,13 @@
 			render_all_sprites (); 
 			sp_UpdateNow ();
 			do_extern_action (2);
+		}
+
+		// Cabroni
+		if (cabroni && n_pant == 0x13) {
+			cabroni = 0;
+			show_text_box (39);
+			sp_UpdateNow ();
 		}
 	}
 
