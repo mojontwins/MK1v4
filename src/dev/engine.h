@@ -562,15 +562,8 @@ unsigned char rand (void) {
 }
 
 unsigned int __FASTCALL__ abs (int n) {
-	/*
-	if (n < 0)
-		return (unsigned int) (-n);
-	else 
-		return (unsigned int) n;
-	*/
 	#asm
 		// HL = n
-
 		bit 7, h
 		ret z
 
@@ -981,11 +974,31 @@ void cortina (void) {
 #endif
 
 void adjust_to_tile_x (void) {
-	gpx = gpxx << 4; player.x = gpx << 6;
+	// gpx = gpxx << 4; player.x = gpx << 6;
+	#asm
+			ld  a, (_gpxx)
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (_gpx), a
+			call Ashl16_HL
+			ld  (_player), hl
+	#endasm
 }
 
 void adjust_to_tile_y (void) {
-	gpy = gpyy << 4; player.y = gpy << 6;
+	// gpy = gpyy << 4; player.y = gpy << 6;
+	#asm
+			ld a, (_gpyy)
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (_gpy), a
+			call Ashl16_HL
+			ld  (_player+2), hl
+	#endasm
 }
 
 #ifdef PLAYER_FLICKERS
@@ -1807,11 +1820,14 @@ void move (void) {
 					add 12
 					ld  (_gpy), a
 
+					/*
 					ld  a, (_gpy)
 					ld  e, a
 					ld  d, 0
 					ld  l, 6
 					call l_asl
+					*/
+					call Ashl16_HL
 					ld  (_player + 2), hl 	// player.y
 
 					ld  a, 1
@@ -2349,11 +2365,14 @@ void move (void) {
 					srl a
 					ld  (_gpxx), a
 
+					/*
 					ld  a, (_gpx)
 					ld  e, a
 					ld  d, 0
 					ld  l, 6
 					call l_asl
+					*/
+					call Ashl16_HL
 					ld  (_player), hl 		// player.x
 
 				.push_pull_done
@@ -2613,11 +2632,14 @@ void move (void) {
 					srl a
 					ld  (_gpxx), a
 
+					/*
 					ld  a, (_gpx)
 					ld  e, a
 					ld  d, 0
 					ld  l, 6
 					call l_asl
+					*/
+					call Ashl16_HL
 					ld  (_player), hl 		// player.x
 
 				.push_pull_done
@@ -2882,11 +2904,14 @@ void move (void) {
 				add 12
 				ld  (_gpx), a
 
+				/*
 				ld  a, (_gpx)
 				ld  e, a
 				ld  d, 0
 				ld  l, 6
 				call l_asl
+				*/
+				call Ashl16_HL
 				ld  (_player), hl 		// player.x
 
 				ld  a, WALL_LEFT
@@ -2950,11 +2975,14 @@ void move (void) {
 				add 4
 				ld  (_gpx), a
 
+				/*
 				ld  a, (_gpx)
 				ld  e, a
 				ld  d, 0
 				ld  l, 6
 				call l_asl
+				*/
+				call Ashl16_HL
 				ld  (_player), hl 		// player.x
 
 				ld  a, WALL_RIGHT
@@ -3619,12 +3647,18 @@ void move (void) {
 }
 
 void init_player_values (void) {
-	gpx = 				PLAYER_INI_X << 4;
-	gpy = PLAYER_INI_Y << 4;
-	player.x = 			gpx << 6;
-	player.y = 			gpy << 6;
+	gpx = 		PLAYER_INI_X << 4;
+	gpy =		PLAYER_INI_Y << 4;
 	
 	#asm
+			ld  a, (_gpx)
+			call Ashl16_HL
+			ld  (_player), hl
+
+			ld  a, (_gpy)
+			call Ashl16_HL
+			ld  (_player + 2), hl
+
 	#ifndef SLIPPERY_TILES
 				ld  a, PLAYER_AX
 				ld  (_player+11), a 			// .ax
@@ -3672,7 +3706,7 @@ void init_player (void) {
 	player.killed = 	0;
 	*/
 	#asm
-			ld  hl, 0
+			ld  hl, PLAYER_LIFE
 			ld  (_player+29), hl 				// .life
 			xor a
 			ld  (_player+27), hl 				// .objs
@@ -4742,12 +4776,26 @@ void draw_scr (void) {
 #endif
 
 void platform_get_player (void) {
-	player.gotten = 1;
-	gpy = en_ccy - 16; 
-	player.y = gpy << 6;
-	player.vy = 0;						
-	gpyy = gpy >> 4;
-	ptgmy = (_en_my << 6);
+	#asm
+			ld  a, 1
+			ld  (_player+25), a 		// .gotten
+			ld  a, (_en_ccy)
+			sub 16
+			ld  (_gpy), a 
+			call Ashl16_HL
+			ld  (_player+2), hl 		// .y
+			ld  hl, 0
+			ld  (_player+8), hl 		// .vy
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (_gpyy), a 
+			ld  a, (__en_my)
+			call Ashl16_HL
+			call withSign
+			ld  (_ptgmy), hl
+	#endasm
 }
 
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD
@@ -4811,7 +4859,6 @@ void mueve_bicharracos (void) {
 				// Point HL to baddies [enoffsmasi]. The struct is 9 or 10 bytes long
 				// so this is baddies + enoffsmasi*(9|10) depending on PLAYER_CAN_FIRE
 				ld 	hl, (_enoffsmasi)
-				// ld  h, 0
 
 				call _calc_baddies_pointer
 
@@ -5395,6 +5442,7 @@ void mueve_bicharracos (void) {
 					#endasm
 				#endif
 
+				// Animate
 				/*
 				en_an_count [enit] ++; 
 				if (en_an_count [enit] >= 4) {
@@ -5493,6 +5541,7 @@ void mueve_bicharracos (void) {
 					#endif
 					) && gpx >= en_ccx - 15 && gpx <= en_ccx + 15
 				) {
+					/*
 					if (player.saltando == 0 || player.cont_salto > 4) {
 						// Vertical
 						if (_en_my) {
@@ -5515,10 +5564,135 @@ void mueve_bicharracos (void) {
 							#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
 								if (en_an_state [enit] != ENEM_PARALYZED)
 							#endif
-							ptgmx = (_en_mx << 6);
+							//ptgmx = (_en_mx << 6);
+							#asm
+									ld  a, (__en_mx)
+									call Ashl16_HL
+									call withSign
+									ld  (_ptgmx), hl
+							#endasm
 						}
 					}
-				
+					*/
+					#asm
+						.moving_platforms
+							// if (player.saltando == 0 || player.cont_salto > 4)
+							ld  a, (_player+19) 		// .saltando
+							or  a
+							jr  z, moving_platforms_do
+
+							ld  a, (_player+14)			// .cont_salto
+							cp  5 						// a > 4 === a >= 5
+							jp  c, moving_platforms_done
+
+						.moving_platforms_do
+
+						.moving_platforms_vert
+							// Vertical
+							// if (_en_my) 
+							ld  a, (__en_my)
+							or  a
+							jr  z, moving_platforms_vert_done
+
+							// Negative/positive
+							bit 7, a
+							jr  z, moving_platforms_vert_down
+
+						.moving_platforms_vert_up
+							// if (gpy + 17 >= en_ccy && gpy + 11 <= en_ccy)
+
+							// gpy + 17 >= en_ccy
+							ld  a, (_en_ccy)
+							ld  c, a
+							ld  a, (_gpy)
+							add 17
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							// gpy + 11 <= en_ccy -> en_ccy >= gpy + 11
+							ld  a, (_gpy)
+							add 11
+							ld  c, a
+							ld  a, (_en_ccy)
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							call _platform_get_player
+
+							jr  moving_platforms_vert_done
+
+						.moving_platforms_vert_down
+							// if (gpy + 20 >= en_ccy && gpy + 13 <= en_ccy)
+
+							// gpy + 20 >= en_ccy
+							ld  a, (_en_ccy)
+							ld  c, a
+							ld  a, (_gpy)
+							add 20
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							// gpy + 13 <= en_ccy -> en_ccy >= gpy + 13
+							ld  a, (_gpy)
+							add 13
+							ld  c, a
+							ld  a, (_en_ccy)
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							call _platform_get_player
+
+						.moving_platforms_vert_done
+
+						.moving_platforms_horz
+							// if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0)
+							ld  a, (__en_mx)
+							or  a
+							jr  z, moving_platforms_done
+
+							// gpy >= en_ccy - 16 -> gpy + 16 >= en_ccy
+							ld  a, (_en_ccy)
+							ld  c, a
+							ld  a, (_gpy)
+							add 16
+							cp  c
+							jr  c, moving_platforms_done
+
+							// gpy <= en_ccy - 11 -> gpy + 11 <= en_ccy -> en_ccy >= gpy + 11
+							ld  a, (_gpy)
+							add 11
+							ld  c, a
+							ld  a, (_en_ccy)
+							cp  c
+							jr  c, moving_platforms_done
+
+							// player.vy >= 0
+							ld  a, (_player+9)		// .vy MSB
+							bit 7, a
+							jr  nz, moving_platforms_done
+
+							call _platform_get_player
+
+						#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
+								// if (en_an_state [enit] != ENEM_PARALYZED)
+								ld  bc, (_enit)
+								ld  b, 0
+								ld  hl, _en_an_state
+								add hl, bc
+								ld  a, (hl)
+								cp  ENEM_PARALYZED
+								jr  z, moving_platforms_done
+						#endif		
+
+							//ptgmx = (_en_mx << 6);
+							ld  a, (__en_mx)
+							call Ashl16_HL
+							call withSign
+							ld  (_ptgmx), hl
+
+						.moving_platforms_done
+
+					#endasm
 				} else
 			#endif			
 			{
