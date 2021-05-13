@@ -156,10 +156,10 @@
 							 "COMI MUCHAS CHUCHES%"
 							 "Y ME HAGO MUCHA CACA.";
 
-	unsigned char text10 [] = "AUNQUE SEA DENOCHE%"
+	unsigned char text10 [] = "AUNQUE SEA DENOCHES%"
 							  "NO CONSIGO DORMIR.%"
 							  "TENGO MUCHO INSOMNIO%"
-							  "QUE PUEDO HACIR?";
+							  "ESTO ES UN SINVIVIR";
 
 	unsigned char text11 [] = "QUE DESPISTE TENGO%"
 							  "AYER FUI LO PEOR. ME%"
@@ -301,7 +301,7 @@
 	unsigned char text39 [] = "NO HE VISTO NI POR%"
 							  "DONDE VENIAN,%"
 							  "JA JA JA JA JA%"
-							  "... CABRONI!%";
+							  "... CABRONI!";
 
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar
@@ -698,6 +698,7 @@
 		pofrendas_old = 0xff;
 		opscore = 0xff;
 		*/
+		n_pant=0x12;
 
 		#asm
 				xor a
@@ -1156,7 +1157,9 @@
 
 		// Cabroni
 		if (cabroni && n_pant == 0x13) {
+			sp_UpdateNow ();
 			cabroni = 0;
+			redraw_after_text = 1;
 			show_text_box (39);
 			sp_UpdateNow ();
 		}

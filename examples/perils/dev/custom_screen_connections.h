@@ -29,7 +29,7 @@ unsigned char override_flick_down (void) {
 
 unsigned char override_flick_left (void) {
 	/*
-	if (n_pant == 72 || n_pant == 84) { 
+	if (n_pant == 84) { 
 		n_pant += 11; gpx = 224; player.x = 224<<6; 
 		return 1;
 	}
@@ -38,10 +38,31 @@ unsigned char override_flick_left (void) {
 	#asm
 			ld  hl, 0
 
+			// First, the hub
 			ld  a, (_n_pant)
 			cp  72
-			jr  z, ofl_do
+			jr  nz, ofl_nothub
 
+		.ofl_hub
+			ld  hl, 1
+			ld  a, l
+			ld  (_new_level), a
+
+			ld  a, (_gpy)
+			cp  48
+			jr  c, jump_level_1
+
+		.jump_level_0
+			xor a
+			ld  (_level), a
+			ret
+
+		.jump_level_1
+			ld  a, 1
+			ld  (_level), a
+			ret
+
+		.ofl_nothub
 			cp  84
 			ret nz
 
@@ -62,7 +83,7 @@ unsigned char override_flick_left (void) {
 
 unsigned char override_flick_right (void) {
 	/*
-	if (n_pant == 83 || n_pant == 95) { 
+	if (n_pant == 95) { 
 		n_pant -= 11; gpx = 0; player.x = 0; 
 		return 1;
 	}
@@ -71,9 +92,29 @@ unsigned char override_flick_right (void) {
 	#asm
 			ld  hl, 0
 			ld  a, (_n_pant)
-			cp  83
-			jr  z, ofr_do
+			cp  72
+			jr  nz, ofr_nothub
 
+		.ofr_hub
+			ld  hl, 1
+			ld  a, l
+			ld  (_new_level), a
+
+			ld  a, (_gpy)
+			cp  48
+			jr  c, jump_level_3
+
+		.jump_level_2
+			ld  a, 2
+			ld  (_level), a
+			ret
+
+		.jump_level_3
+			ld  a, 3
+			ld  (_level), a
+			ret
+
+		.ofr_nothub
 			cp  95
 			ret nz 
 

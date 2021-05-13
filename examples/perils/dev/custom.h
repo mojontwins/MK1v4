@@ -3,6 +3,10 @@
 
 // Add here your custom routines & vars
 
+#asm
+		LIB SPPrintAtInv
+#endasm
+
 // Comment this to remove the "next level" cheat
 #define ENABLE_CHEAT
 
@@ -15,29 +19,32 @@ unsigned char resct_old;
 unsigned char level, new_level;
 unsigned char new_level_string [] = "LEVEL 00";
 
-unsigned char scr_ini [] = { 60, 64, 71, 84 };
-unsigned char ini_x [] = { 1, 1, 11, 7 };
-unsigned char ini_y [] = { 4, 4, 4, 4 };
+unsigned char scr_ini [] = { 60, 64, 71, 84, 72 };
+unsigned char ini_x [] = { 1, 1, 11, 7, 7 };
+unsigned char ini_y [] = { 4, 4, 4, 4, 0 };
 
 unsigned char tilemaps [] = {
-	 0,  1,  2,  3, 25,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-	32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,
-	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15,
-	42, 39, 46, 47,  4, 28, 29, 30, 31,  7, 19, 17, 23, 24, 12, 15
+	 0,  1,  2,  3, 25,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 	// level 0
+	32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,		// level 1
+	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15, 	// level 2
+	42, 39, 46, 47,  4, 28, 29, 30, 31,  7, 19, 17, 23, 24, 12, 15,		// level 3
+	 0, 10,  7, 25, 39, 43, 23, 24, 35,  9, 22, 17, 29, 30, 31, 15 		// level 4 (HUB)
 };
 
+// Those are ordered by level!
+// Note that most routines are optimized as leftmost signs have X==2.
+// if coordinates are changed, supporting routines should be adapted.
+unsigned char hub_signs_x [] = { 2, 2, 13, 12 };
+unsigned char hub_signs_y [] = { 5, 2, 5, 2 };
+
+unsigned char level_finished [] = { 0, 0, 0, 0 };
+
 unsigned char continue_on;
+unsigned char ls;
 
 // Custom functions
 
 void paralyze_everyone (void) {
-	/*
-	player_min_killable = 0;
-	for (enit = 0; enit < 3; enit ++) {
-		en_an_count [enit] = 0xff;
-		en_an_state [enit] = ENEM_PARALYZED;
-	}
-	*/
 	#asm
 			xor a
 			ld  (_player_min_killable), a 
@@ -58,13 +65,6 @@ void paralyze_everyone (void) {
 }
 
 void restore_everyone (void) {
-	/*
-	player_min_killable = 4;
-	for (enit = 0; enit < 3; enit ++) {
-		en_an_count [enit] = 0;
-		en_an_state [enit] = 0;
-	}
-	*/
 	#asm
 			ld  a, 4
 			ld  (_player_min_killable), a 
@@ -134,6 +134,114 @@ void set_hotspot (void) {
 	set_map_tile (rdx, rdy, 16 + hotspot_t, 0);
 }
 
+void paint_sign (void) {
+	// Paints sign @ _x, _y
+
+	// Looks left when _x = 2, right otherwise
+	// Very very custom and not reusable but things
+
+	// SPPrintAtInv
+	// A = row position (0..23)
+	// C = col position (0..31/63)
+	// D = pallette #
+	// E = graphic #
+
+	#asm
+			// Bottom char is common
+			ld  a, (__x)
+			ld  c, a
+			ld  a, (__y)
+			inc a
+			ld  de, #((2+64)*256+62)
+			call SPPrintAtInv
+
+			ld  a, (__x)
+			inc a
+			ld  c, a
+			ld  a, (__y)
+			inc a
+			ld  de, #((2+64)*256+63)
+			call SPPrintAtInv
+
+			// Left or right?
+			ld  d, 7
+
+			ld  a, (__x)
+			cp  #(VIEWPORT_X+2*2)
+			jr  nz, paint_sign_right
+
+		.paint_sign_left
+			ld  c, a
+			ld  a, (__y)
+			ld  e, 59
+			call SPPrintAtInv
+
+			ld  a, (__x)
+			inc a 
+			jr  paint_sign_body
+
+		.paint_sign_right
+			inc a
+			ld  c, a
+			ld  a, (__y)
+			ld  e, 61
+			call SPPrintAtInv
+
+			ld  a, (__x)
+			
+		.paint_sign_body
+			ld  c, a
+			ld  a, (_ls)
+			ld  e, a
+			ld  a, (__y)
+			ld  d, 0x7
+			call SPPrintAtInv
+	#endasm
+}
+
+void set_block (void) {
+	// Adds blockage for cleared levels.
+	// These use the same coordinates as signs, but
+	// _x is interpreted so X = (_x == 2 ? 0:14)
+
+	#asm
+			ld  a, (__x)
+			cp  2
+			jr  nz, set_block_right
+
+		.set_block_left
+			xor a
+			jr  set_block_do
+
+		.set_block_right
+			ld  a, 14
+
+		.set_block_do
+			ld  (__x), a
+			ld  c, a
+
+			ld  a, 4 			// Stone block
+			ld  (__t), a
+
+			ld  a, 8 			// Non walkable
+			ld  (__n), a
+
+			call set_map_tile_do
+	#endasm
+}
+
+void reset_game (void) {
+	// Clears level_finished array
+	#asm
+			ld  hl, _level_finished
+			ld  de, _level_finished + 1
+			ld  bc, 3
+			xor a
+			ld  (hl), a 
+			ldir
+	#endasm
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -142,6 +250,8 @@ void set_hotspot (void) {
 		continue_on = 0;
 		level = 0;
 		resonators_frames = RESONATORS_FRAMES;
+
+		reset_game ();
 	}
 
 	void hook_init_game (void) {
@@ -150,7 +260,7 @@ void set_hotspot (void) {
 		player_min_killable = 4;
 		new_level = 1;
 		//player.keys = 1;
-		level = 3;
+		level = 4;
 	}
 
 	void hook_init_mainloop (void) {
@@ -162,25 +272,58 @@ void set_hotspot (void) {
 		#endif
 
 		if (player.killed == 60) {
-			level ++;
-			if (level < 4) {
-				new_level = 1;
-			} else {
-				game_loop_flag = 1;
-			}
+			#asm
+					// Mark as finished
+					ld  bc, (_level)
+					ld  b, 0
+					ld  hl, _level_finished
+					add hl, bc 
+					ld  a, 1
+					ld  (hl), a
+
+					// Check all levels are finished
+				.win_game_check
+					ld  b, 4
+					xor a
+					ld  hl, _level_finished
+				.win_game_check_loop
+					add (hl)
+					inc hl
+					djnz win_game_check_loop
+
+					cp 4
+					jr z, win_game_check_won
+
+					// Not won, back to hub
+					ld  a, 4
+					ld  (_level), a
+					ld  a, 1
+					ld  (_new_level), a
+					jr  win_game_check_done
+
+				.win_game_check_won
+					ld  a, 1
+					ld  (_game_loop_flag), a
+
+				.win_game_check_done
+			#endasm
 		}
 
 		if (new_level) {
-			saca_a_todo_el_mundo_de_aqui ();
 			new_level = 0;
-			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
-			sp_Invalidate (spritesClip, spritesClip);
-			new_level_string [7] = level + '1';
-			draw_text (12, 11, 71, new_level_string);
-			draw_text (11, 13, 71, "KICK ASSES");
-			sp_UpdateNow ();
-			play_sfx (10);
-			espera_activa (150);
+			saca_a_todo_el_mundo_de_aqui ();
+
+			if (level != 4) {
+				sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
+				sp_Invalidate (spritesClip, spritesClip);
+				new_level_string [7] = level + '1';
+				draw_text (12, 11, 71, new_level_string);
+				draw_text (11, 13, 71, "KICK ASSES");
+				sp_UpdateNow ();
+				play_sfx (10);
+				espera_activa (150);
+			}
+			
 			n_pant = scr_ini [level];
 			init_player_values ();
 			player.killed = 0; 
@@ -319,6 +462,66 @@ void set_hotspot (void) {
 		}
 				
 		if (resonators_on) paralyze_everyone ();
+
+		// Hub screen
+		// Leave this as the last code snippet in hook_entering!
+
+		#asm
+				ld  a, (_n_pant)
+				cp  72
+				ret nz
+
+				ld  bc, 0x0004
+			.hub_screen_loop
+				dec bc
+				push bc
+
+				ld  a, c
+				add 26
+				ld  (_ls), a
+
+				ld  hl, _hub_signs_x
+				add hl, bc 
+				ld  a, (hl)
+				ld  (_rdx), a
+				ld  (__x), a
+
+				ld  hl, _hub_signs_y
+				add hl, bc 
+				ld  a, (hl)
+				ld  (_rdy), a
+				ld  (__y), a
+
+				ld  hl, _level_finished
+				add hl, bc
+				ld  a, (hl)
+				or  a
+				jr  z, hub_screen_level_finished_done
+
+			.hub_screen_level_finished
+				call _set_block
+
+			.hub_screen_level_finished_done
+
+				ld  a, (_rdx)
+				sla a
+				ld  c, VIEWPORT_X
+				add c
+				ld  (__x), a
+
+				ld  a, (_rdy)
+				sla a
+				ld  c, VIEWPORT_Y
+				add c
+				ld  (__y), a
+
+				call _paint_sign
+
+				pop bc
+				ld  a, c
+				or  b
+				jr  nz, hub_screen_loop
+		#endasm
 	}
 
 #endif

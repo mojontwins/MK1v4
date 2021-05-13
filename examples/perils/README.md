@@ -23,47 +23,47 @@ Tendré que trabajar también en la forma de reducir los mapas. Puedo usar Photo
 Haremos el multifase fingido de la misma manera que en **Helmet**: un mapa grande con todas las secciones. Sin embargo, en este juego usamos mapped tilesets y habrá que, además, asignar el tileset correcto en cada fase:
 
 ```c
-	[...]
+    [...]
 
-	unsigned char level, new_level;
-	unsigned char new_level_string [] = "LEVEL 00";
+    unsigned char level, new_level;
+    unsigned char new_level_string [] = "LEVEL 00";
 
-	unsigned char scr_ini [] = { 60, 64, 68 };
-	unsigned char ini_x [] = { 1, 1, 1 };
-	unsigned char ini_y [] = { 4, 4, 4 };
-	unsigned char max_enems [] = { 1, 1 };
+    unsigned char scr_ini [] = { 60, 64, 68 };
+    unsigned char ini_x [] = { 1, 1, 1 };
+    unsigned char ini_y [] = { 4, 4, 4 };
+    unsigned char max_enems [] = { 1, 1 };
 
-	unsigned char tilemaps [] = {
-		 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-		32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,
-		 0, 17, 46, 47, 43, 44, 35,  6,  8,  7, 19, 22, 12, 39,  4, 15
-	};
+    unsigned char tilemaps [] = {
+         0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+        32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,
+         0, 17, 46, 47, 43, 44, 35,  6,  8,  7, 19, 22, 12, 39,  4, 15
+    };
 
-	[...]
+    [...]
 
-	void hook_init_game (void) {
-		[...]
-		level = 0;
-		new_level = 1;
-	}
+    void hook_init_game (void) {
+        [...]
+        level = 0;
+        new_level = 1;
+    }
 
-	void hook_init_mainloop (void) {
-		if (new_level) {
-			new_level = 0;
-			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
-			sp_Invalidate (spritesClip, spritesClip);
-			new_level_string [7] = level + '1';
-			draw_text (12, 11, 71, new_level_string);
-			draw_text (11, 13, 71, "KICK ASSES");
-			sp_UpdateNow ();
-			play_sfx (10);
-			espera_activa (150);
-			n_pant = scr_ini [level];
-			init_player_values ();
-			player.killed = 0; 
-			tileset_mappings = (unsigned char *) (tilemaps + (level << 4));
-		}
-	}
+    void hook_init_mainloop (void) {
+        if (new_level) {
+            new_level = 0;
+            sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
+            sp_Invalidate (spritesClip, spritesClip);
+            new_level_string [7] = level + '1';
+            draw_text (12, 11, 71, new_level_string);
+            draw_text (11, 13, 71, "KICK ASSES");
+            sp_UpdateNow ();
+            play_sfx (10);
+            espera_activa (150);
+            n_pant = scr_ini [level];
+            init_player_values ();
+            player.killed = 0; 
+            tileset_mappings = (unsigned char *) (tilemaps + (level << 4));
+        }
+    }
 ```
 
 ## Revamp 2
@@ -111,57 +111,57 @@ Estas son las mejoras que hemos ideado:
 Las habilidades están requiriendo cambios y adiciones en el motor, `MASTER_OF_KEYS`, `PARALYZED_DONT_KILL_ON_VAR`, `RAMIRO_HOVER_ON_VAR`, `DISABLE_SLIPPERY_ON_VAR` para las mejoras 1, 2, 3 y 5. La habilidad 4 requerirá cambiar la forma en la que se manejan los resonadores. Ahora se hace con un contador general hasta 250 y dividiendo por 25 usando el runtime (aprovechando que esa rutina se incluye de todos modos), tendré que usar otro método con dos contadores que intentaré que ocupe lo menos posible para no impactar demasiado.
 
 ```c
-	if (resonators_on) {
-		resonators_on --;
-		rdd = resonators_on / 25;
-		if (resct_old != rdd) {
-			play_sfx (4);
-			draw_2_digits (25, 1, rdd);
-			resct_old = rdd;
-		}
+    if (resonators_on) {
+        resonators_on --;
+        rdd = resonators_on / 25;
+        if (resct_old != rdd) {
+            play_sfx (4);
+            draw_2_digits (25, 1, rdd);
+            resct_old = rdd;
+        }
 
-		if (resonators_on == 0) {
-			play_sfx (3);
-			restore_everyone ();				
-			if (hotspot_t >= 4) {
-				/*
-				hotspot_t = 4;
-				set_hotspot ();
-				*/
-				#asm
-						ld  a, 4
-						ld  (_hotspot_t), a
-						call _set_hotspot
-				#endasm
-			}
-		}
-	} 
+        if (resonators_on == 0) {
+            play_sfx (3);
+            restore_everyone ();                
+            if (hotspot_t >= 4) {
+                /*
+                hotspot_t = 4;
+                set_hotspot ();
+                */
+                #asm
+                        ld  a, 4
+                        ld  (_hotspot_t), a
+                        call _set_hotspot
+                #endasm
+            }
+        }
+    } 
 ```
 
 Este es el código original. Necesitaré dos contadores. Ahora `resonators_on` irá de 10 a 0, se pintará -1, y tendremos `resonators_ct`. Implemento en C y luego ensamblo si eso.
 
 ```c
-	if (resonators_on) {
-		if (resonators_ct) resonators_ct --; else {
-			resonators_ct = resonators_frames;
-			resonators_on --;
+    if (resonators_on) {
+        if (resonators_ct) resonators_ct --; else {
+            resonators_ct = resonators_frames;
+            resonators_on --;
 
-			if (resonators_on == 0) {
-				play_sfx (3);
-				restore_everyone ();				
-				if (hotspot_t >= 4) {			
-					#asm
-							ld  a, 4
-							ld  (_hotspot_t), a
-							call _set_hotspot
-					#endasm
-				}
-			} else {
-				play_sfx (4);
-				draw_2_digits (25, 1, resonators_on);
-			}
-		}			
-	} 
+            if (resonators_on == 0) {
+                play_sfx (3);
+                restore_everyone ();                
+                if (hotspot_t >= 4) {           
+                    #asm
+                            ld  a, 4
+                            ld  (_hotspot_t), a
+                            call _set_hotspot
+                    #endasm
+                }
+            } else {
+                play_sfx (4);
+                draw_2_digits (25, 1, resonators_on);
+            }
+        }           
+    } 
 ```
 
 Con todo el setup ocupa 2 bytes menos, pero puedo mejorar desde 31792 si lo paso a ensamble.
@@ -170,3 +170,32 @@ Con todo el setup ocupa 2 bytes menos, pero puedo mejorar desde 31792 si lo paso
 
 Los cálculos son de 8 bits para algunas cosas y eso limitaba a 85 el máximo número de pantallas. Cambiando los cálculos puedo tener las 96 pantallas que necesitamos para este juego. Ahora mismo estamos a 31774 bytes, antes de añadir las 24 nuevas pantallas de la cuarta fase.
 
+## El hub
+
+Lo mejor para poder acceder libremente a las 4 fases es hacer una pantalla "Hub". La pantalla debe dar acceso a las 4 fases por 4 salidas bien aparentes, y bloquearlas al terminar las fases. Cheril debe aparecer siempre por la parte de arriba en el tile central y caer. La pantalla debería usar un arreglo de tiles que incluyese tiles definitorios de cada una de las cuatro fases.
+
+Debe mostrarse 4 "carteles" señalando a las 4 salidas, dos a la izquierda y dos a la derecha, en (2, 5) (level 0), (2, 2) (level 1), (13, 5) (level 2), (12, 2) (level 3). Para pintar estos carteles necesitaré ocupar algunos caracteres y tener una función custom que espero que me ocupe muy poco :-/.
+
+La conexión con las fases la voy a hacer en los `custom_screen_connection`. Dependiendo si gpy >= 48 o no va a una fase u otra.
+
+## Implementando compra habilidades
+
+Necesitaré un título de la habilidad y un pequeño texto con una descripción, y tengo que lograr que esto sea lo más compacto posible. Por ejemplo:
+
+|Podewr|Descripción
+|---|---
+|`MASTER OF LOCKS`   |`OPEN LOCKS WITHOUT A KEY`
+|`MASTER OF WIND`    |`FLOAT WHILE FALLING WITH ↓`
+|`MASTER OF STRENGTH`|`PARALYZED GOONS ARE HARMLESS`
+|`MASTER OF TIME`    |`RESONATORS TICK SLOWER`
+|`MASTER OF GRIP`    |`CHERIL WON'T SLIP ON ICE`
+
+|Podewr|Descripción
+|---|---
+|`REINA DEL CERROJO` |`ABRE CERROJOS SIN LLAVES`
+|`REINA DEL VIENTO`  |`FLOAT WHILE FALLING WITH ↓`
+|`REINA DEL PODER`   |`MALOS PARALIZADOS NO MATAN`
+|`REINA DEL TIEMPO`  |`RESONADORES VAN MAS LENTOS`
+|`REINA DEL AGARRE`  |`CHERIL NO SE RESBALA`
+
+(↓ es un caracter definido para ser una flechita pabajo)

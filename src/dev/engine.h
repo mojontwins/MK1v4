@@ -3709,9 +3709,9 @@ void init_player (void) {
 			ld  hl, PLAYER_LIFE
 			ld  (_player+29), hl 				// .life
 			xor a
-			ld  (_player+27), hl 				// .objs
-			ld  (_player+28), hl 				// .keys
-			ld  (_player+32), hl 				// .killed
+			ld  (_player+27), a 				// .objs
+			ld  (_player+28), a 				// .keys
+			ld  (_player+32), a 				// .killed
 	#endasm
 }
 
