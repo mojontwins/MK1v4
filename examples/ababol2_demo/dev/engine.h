@@ -968,7 +968,9 @@ void cortina (void) {
 		player.next_frame = sprite_17_a;
 		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
 		player.current_frame = player.next_frame;
-		sp_UpdateNow ();
+		#asm 
+			call SPUpdateNow
+		#endasm
 		play_sfx (10);	
 	}
 #endif
@@ -1036,7 +1038,9 @@ void adjust_to_tile_y (void) {
 				b_y [gpit] = _y;
 				b_f [gpit] = MAX_BREAKABLE_FRAMES;
 				set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_BREAKING_TILE, comportamiento_tiles [BREAKABLE_BREAKING_TILE]);
-				sp_UpdateNow ();
+				#asm 
+					call SPUpdateNow
+				#endasm
 				play_sfx (9);
 				process_breakable = 1;
 				break;
@@ -4556,7 +4560,9 @@ void draw_scr (void) {
 			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, 71, cad_level);
 			draw_2_digits (VIEWPORT_X + 17, VIEWPORT_Y + 10, (n_pant+1));
 		#endif
-		sp_UpdateNow ();
+		#asm 
+			call SPUpdateNow
+		#endasm
 		play_sfx (6);
 		espera_activa (1000);
 	#endif
@@ -4817,7 +4823,9 @@ void platform_get_player (void) {
 				call _render_this_enemy
 		#endasm
 
-		sp_UpdateNow ();
+		#asm 
+			call SPUpdateNow
+		#endasm
 		play_sfx (10);
 		en_an_next_frame [enit] = sprite_18_a;
 

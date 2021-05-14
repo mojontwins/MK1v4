@@ -225,15 +225,15 @@ void main (void) {
 
 		//objs_old = life_old = keys_old = killed_old = item_old = ezg_old = coins_old = 0xff;
 		#asm
-				ld  a, 255
-				ld  (_objs_old), a 
-				ld  (_life_old), a 
-				ld  (_keys_old), a 
-				ld  (_killed_old), a 
-				ld  (_item_old), a 
-				ld  (_ezg_old), a 
-				ld  (_coins_old), a
-				ld  (_on_pant), a
+			ld  a, 255
+			ld  (_objs_old), a 
+			ld  (_life_old), a 
+			ld  (_keys_old), a 
+			ld  (_killed_old), a 
+			ld  (_item_old), a 
+			ld  (_ezg_old), a 
+			ld  (_coins_old), a
+			ld  (_on_pant), a
 		#endasm
 
 		while (playing) {

@@ -386,14 +386,111 @@ void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned c
 }
 
 void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
-	sp_PrintAtInv (y, x, 71, 16 + (value % 100) / 10);
-	sp_PrintAtInv (y, 1 + x, 71, 16 + value % 10);
+	#asm
+			ld  hl, 6
+			add hl, sp
+			ld  a, (hl)
+			ld  (__x), a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			ld  (__y), a
+			dec hl
+			dec hl
+			ld  a, (hl)
+			
+			ld  d, 0
+			ld  e, a
+			ld  hl, 10
+			call l_div_u 	// HL = division, DE = rest
+
+			ld  a, e
+			ld  (__n), a
+			ld  a, l
+			
+			add 16
+			ld  e, a
+			ld  d, 71
+			ld  a, (__x)
+			ld  c, a
+			ld  a, (__y)
+			call SPPrintAtInv
+
+			ld  a, (__n)
+			add 16
+			ld  e, a
+			ld  d, 71
+			ld  a, (__x)
+			inc a
+			ld  c, a
+			ld  a, (__y)
+			call SPPrintAtInv			
+	#endasm
 }
 
 void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
-	while (*s) {
-		sp_PrintAtInv (y, x ++, c, (*s) - 32); s ++;
-	}
+	// Zero terminated strings, supports newlines with %
+	#asm
+			ld  hl, 8
+			add hl, sp
+			
+			ld  a, (hl)
+			ld  (__x), a
+			ld  (__t), a
+			dec hl
+			dec hl
+
+			ld  a, (hl)
+			ld  (__y), a
+			dec hl
+			dec hl
+			
+			ld  a, (hl)
+			ld  (__n), a
+			dec hl
+
+			ld  a, (hl)
+			dec hl 
+			ld  l, (hl)
+			ld  h, a
+
+		.draw_text_loop
+			ld  a, (__x)
+			ld  c, a
+			inc a
+			ld  (__x), a
+
+			ld  a, (__n)
+			ld  d, a
+			
+			ld  a, (hl)
+			or  a
+			ret z
+			
+			inc hl
+
+			cp  0x25
+			jr  z, draw_text_nl
+
+			sub 32
+			ld  e, a
+			
+			ld  a, (__y)
+			
+			push hl
+			call SPPrintAtInv
+			pop hl
+			
+			jr  draw_text_loop
+
+		.draw_text_nl
+			ld  a, (__t)
+			ld  (__x), a
+			ld  a, (__y)
+			inc a
+			ld  (__y), a
+			jr draw_text_loop
+	#endasm
 }
 
 void any_key (void) {
@@ -408,6 +505,13 @@ void any_key (void) {
 	#endasm
 }
 
+void pad_read (void) {
+	pad_this_frame = pad1;
+	pad1 = pad0 = (joyfunc) (&keys); 
+
+	// Keys held this frame
+	pad_this_frame = (~pad_this_frame) | pad1;
+}
 
 void espera_activa (int espera) {
 	// Waits until "espera" halts have passed 

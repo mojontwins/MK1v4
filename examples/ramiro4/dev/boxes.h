@@ -200,7 +200,11 @@
 											en_an_next_frame [enit] = sprite_17_a;											
 											sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffsmasi].y >> 3), VIEWPORT_X + (malotes [enoffsmasi].x >> 3), malotes [enoffsmasi].x & 7, malotes [enoffsmasi].y & 7);
 											en_an_current_frame [enit] = en_an_next_frame [enit];
-											sp_UpdateNow ();
+											
+											#asm 
+												call SPUpdateNow
+											#endasm
+												
 											play_sfx (10);
 											en_an_next_frame [enit] = sprite_18_a;
 											malotes [enoffsmasi].t |= 16;			// Marked as "dead"

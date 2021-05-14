@@ -11,6 +11,8 @@
 		LIB SPCompDListAddr
 		LIB SPMoveSprAbs
 		LIB SPTileArray	
+		LIB SPPrintAtInv
+		LIB SPUpdateNow
 #endasm
 
 /* splib2 memory map

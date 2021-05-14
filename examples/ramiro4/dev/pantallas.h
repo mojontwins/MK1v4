@@ -45,7 +45,9 @@ void unpack (void) {
 }
 
 void title_screen (void) {
-	sp_UpdateNow();
+	#asm 
+		call SPUpdateNow
+	#endasm
 	asm_int = (unsigned int) (s_title); unpack ();
 
 	// CUSTOM {
@@ -96,7 +98,9 @@ void title_screen (void) {
 }
 
 void game_ending (void) {
-	sp_UpdateNow();
+	#asm 
+		call SPUpdateNow
+	#endasm
 	asm_int = (unsigned int) (s_ending); unpack ();
 
 	// CUSTOM { 
@@ -139,7 +143,9 @@ void game_over (void) {
 	#endasm
 	draw_rectangle ();		
 	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
-	sp_UpdateNow ();
+	#asm 
+		call SPUpdateNow
+	#endasm
 
 	if (is128k) {
 		arkos_play_music (3);
