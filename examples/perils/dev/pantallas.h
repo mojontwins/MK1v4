@@ -48,34 +48,38 @@ void title_screen (void) {
 	// CUSTOM {
 	// Continue screen
 
-	sp_UpdateNow();
+	#asm 
+		call SPUpdateNow
+	#endasm
 	asm_int = (unsigned int) (s_title); unpack ();
 
 	if (continue_on) {
-		draw_text (11, 15, 71, "CONTINUE ?");
-		draw_text (13, 16, 71, "1> YES");
-		draw_text (13, 17, 71, "2> NO");
-		sp_UpdateNow ();
+		draw_text (11, 15, 71, "CONTINUE ?%  1/ YES%  2/ NO");
+		#asm 
+			call SPUpdateNow
+		#endasm
 
 		while (1) {
 			if (sp_KeyPressed (key_1)) {
 				goto after_title;
 			} else if (sp_KeyPressed (key_2)) { 
-				level = 0; break; 
+				break; 
 			}
 		}
 	}
 	while (any_key ());
-	continue_on = (level != 0);
+	
+	reset_game ();
+	continue_on = 1;
 
 	// } END_OF_CUSTOM
 
 	// CUSTOM {
 	// Print options
-	draw_text (11, 15, 71, "1>KEYBOARD");
-	draw_text (11, 16, 71, "2>KEMPSTON");
-	draw_text (11, 17, 71, "3>SINCLAIR");
-	sp_UpdateNow ();
+	draw_text (11, 15, 71, "1 KEYBOARD%2 KEMPSTON%3 SINCLAIR");
+	#asm 
+		call SPUpdateNow
+	#endasm
 	// }
 
 	#asm
@@ -102,7 +106,9 @@ void title_screen (void) {
 }
 
 void game_ending (void) {
-	sp_UpdateNow();
+	#asm 
+		call SPUpdateNow
+	#endasm
 	asm_int = (unsigned int) (s_ending); unpack ();
 	beepet (); play_sfx (11);
 	espera_activa (500);
@@ -124,7 +130,9 @@ void game_over (void) {
 	#endasm
 	draw_rectangle ();	
 	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
-	sp_UpdateNow ();
+	#asm 
+		call SPUpdateNow
+	#endasm
 	beepet (); play_sfx (10);
 	espera_activa (500);
 }

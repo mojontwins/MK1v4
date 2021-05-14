@@ -1367,11 +1367,7 @@ void move (void) {
 	gpcy = player.y;
 
 	// Read device (keyboard, joystick ...)
-	pad_this_frame = pad1;
-	pad1 = pad0 = (joyfunc) (&keys); 
-
-	// Keys held this frame
-	pad_this_frame = (~pad_this_frame) | pad1;
+	pad_read ();
 
 	// Jump button
 	#ifndef PLAYER_MOGGY_STYLE

@@ -1207,6 +1207,26 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 * `PLAYER_MIN_KILLABLE`: se usa con `PLAYER_KILLS_ENEMIES` o con `ENABLE_SWORD`: Solo matar a los enemigos con id >= a este valor.
 
+## Algunas cosas especiales que puedes encontrar útiles
+
+Son customizaciones misceláneas que se añadieron para algunos juegos que te pueden servir. Recordad que v5 era "la churrera Vanilla que podrás completar" y v4 era "la churrera frankenstein que manteníamos internamente".
+
+```c
+	#define MASTER_OF_KEYS 						// If master_of_keys == 1, no keys are needed to open bolts
+												// and keys = refills.
+	#define PARALYZED_DONT_KILL_ON_VAR 			// If paralyzed_dont_kill == 1, paralyzed enemies don't kill
+	#define RAMIRO_HOVER_ON_VAR 				// If ramiro_hover == 1 player can hover.
+	#define DISABLE_SLIPPERY_ON_VAR 			// If disable_slippery == 1, slippery tiles are disabled
+```
+
+* `MASTER_OF_KEYS`: Si se define, la variable `master_of_keys` controlará si el jugador puede abrir cerrojos sin llaves. `master_of_keys` debe ser puesta a 0 explícitamente por el programador para que el comportamiento llaves/cerrojos sea el normal. Si `master_of_keys` está activo, los hotspots que contengan llaves se cambiarán por recargas de vida al entrar en las pantallas de nuevo.
+
+* `PARALYZED_DONT_KILL_ON_VAR` (que excluye a `PARALYZED_DONT_KILL`),te deja controlar si los enemigos matan mientras están paralizados según el valor de `paralyzed_dont_kill`. Esta variable debe ser puesta a 0 explícitamente para que los enemigos maten cuando están paralizados.
+
+* `RAMIRO_HOVER_ON_VAR` necesita `RAMIRO_HOVER` pero sólo activará el revoloteo ramiresco si `ramiro_hover` vale 1. Esta variable debe ser puesta a 0 explícitamente para que el jugador no pueda revolotear.
+
+* `DISABLE_SLIPPERY_ON_VAR` funciona obviamente con `SLIPPERY_TILES`. Si `disable_slippery` vale 1 los tiles resbalosos no resbalan. Esta variable debe ser puesta a 0 explícitamente para que el jugador resbale.
+
 ## Configuración de la pantalla
 
 Estas directivas controlan la ubicación del area de juego y de los marcadores. En el caso de los marcadores, si se comentan las directivas que definen la ubicación no se pintará el marcador correspondiente.

@@ -196,6 +196,6 @@ Necesitaré un título de la habilidad y un pequeño texto con una descripción,
 |`REINA DEL VIENTO`  |`FLOTA MIENTRAS CAES CON ↓`
 |`REINA DEL PODER`   |`MALOS PARALIZADOS NO MATAN`
 |`REINA DEL TIEMPO`  |`RESONADORES VAN MAS LENTOS`
-|`REINA DEL AGARRE`  |`CHERIL NO SE RESBALA`
+|`REINA DEL AGARRE`  |`CHERIL NO RESBALA EN HIELO`
 
 (↓ es un caracter definido para ser una flechita pabajo)

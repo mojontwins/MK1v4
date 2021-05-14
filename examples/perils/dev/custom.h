@@ -3,10 +3,6 @@
 
 // Add here your custom routines & vars
 
-#asm
-		LIB SPPrintAtInv
-#endasm
-
 // Comment this to remove the "next level" cheat
 #define ENABLE_CHEAT
 
@@ -42,7 +38,74 @@ unsigned char level_finished [] = { 0, 0, 0, 0 };
 unsigned char continue_on;
 unsigned char ls;
 
+// Special powers
+#ifdef LANG_ES
+	unsigned char power_name0 [] = "CERROJO";
+	unsigned char power_name1 [] = "VIENTO";
+	unsigned char power_name2 [] = "PODER";
+	unsigned char power_name3 [] = "TIEMPO";
+	unsigned char power_name4 [] = "AGARRE";	
+
+	//                              XXXXXXXXXXXXXXXXXXXXXXXXXXXX 28 chars
+	unsigned char power_desc0 [] = "  ABRE CERROJOS SIN LLAVES ";
+	unsigned char power_desc1 [] = " FLOTA MIENTRAS CAES CON > ";
+	unsigned char power_desc2 [] = " MALOS PARALIZADOS NO MATAN";
+	unsigned char power_desc3 [] = " RESONADORES VAN MAS LENTOS";
+	unsigned char power_desc4 [] = " CHERIL NO RESBALA EN HIELO";
+#else
+	unsigned char power_name0 [] = "LOCKS";
+	unsigned char power_name1 [] = "WIND";
+	unsigned char power_name2 [] = "STRENGTH";
+	unsigned char power_name3 [] = "TIME";
+	unsigned char power_name4 [] = "GRIP";
+
+	//                              XXXXXXXXXXXXXXXXXXXXXXXXXXXX 28 chars
+	unsigned char power_desc0 [] = "  OPEN LOCKS WITHOUT A KEY  ";
+	unsigned char power_desc1 [] = " FLOAT WHILE FALLING WITH > ";
+	unsigned char power_desc2 [] = "PARALYZED GOONS ARE HARMLESS";
+	unsigned char power_desc3 [] = "   RESONATORS TICK SLOWER   ";
+	unsigned char power_desc4 [] = "  CHERIL WON\"T SLIP ON ICE ";	
+#endif
+
+unsigned char *power_names [] = {
+	power_name0, power_name1, power_name2, power_name3, power_name4
+};
+
+unsigned char *power_descs [] = {
+	power_desc0, power_desc1, power_desc2, power_desc3, power_desc4
+};
+
+unsigned char power_on [] = { 0, 0, 0, 0, 0 };
+
+unsigned char buy_new_power; 
+
 // Custom functions
+
+void clear_game_area (void) {
+	//sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
+	//sp_Invalidate (spritesClip, spritesClip);
+	#asm
+			LIB SPClearRect
+
+			ld  hl, #(VIEWPORT_Y*256+VIEWPORT_X)
+			ld  bc, #((VIEWPORT_Y+19)*256+VIEWPORT_X+29)
+			ld  de, 0
+			ld  a, 0x03
+			ex  af, af
+			call SPClearRect
+
+			ld  a, VIEWPORT_X
+			ld  c, a
+
+			ld  a, VIEWPORT_Y
+			ld  b, a
+			
+			ld  de, #((VIEWPORT_Y+19)*256+VIEWPORT_X+29)
+			
+			ld  iy, fsClipStruct
+			call SPInvalidate	
+	#endasm
+}
 
 void paralyze_everyone (void) {
 	#asm
@@ -231,15 +294,216 @@ void set_block (void) {
 }
 
 void reset_game (void) {
-	// Clears level_finished array
 	#asm
+		// Clears level_finished array
+			
+			xor a
+		
 			ld  hl, _level_finished
 			ld  de, _level_finished + 1
 			ld  bc, 3
-			xor a
 			ld  (hl), a 
 			ldir
+
+		// Clears super powers
+
+			ld  hl, _power_on
+			ld  de, _power_on + 1
+			ld  bc, 4
+			ld  (hl), a
+			ldir
+			
+			ld  (_master_of_keys), a 
+			ld  (_ramiro_hover), a
+			ld  (_paralyzed_dont_kill), a
+			ld  (_disable_slippery), a
+
+			ld  a, RESONATORS_FRAMES
+			ld  (_resonators_frames), a
 	#endasm
+}
+
+void enable_power (void) {
+	#asm
+		// enables power #rdy
+			ld  bc, (_rdy)
+			ld  b, 0
+			ld  hl, _power_on
+			add hl, bc 
+			ld  a, 1
+			ld  (hl), a 
+
+			ld  a, c
+			cp  4
+			jr  z, enable_grip
+			cp  3
+			jr  z, enable_time
+			cp  2
+			jr  z, enable_strength
+			cp  1
+			jr  z, enable_wind
+
+		.enable_locks
+			ld  a, 1
+			ld  (_master_of_keys), a 
+			ret
+
+		.enable_wind
+			ld  a, 1
+			ld  (_ramiro_hover), a 
+			ret
+
+		.enable_strength
+			ld  a, 1
+			ld  (_paralyzed_dont_kill), a 
+			ret
+
+		.enable_time
+			ld  a, 35
+			ld  (_resonators_frames), a
+			ret
+
+		.enable_grip
+			ld  a, 1
+			ld  (_disable_slippery), a
+	#endasm
+}
+
+void select_power (void) {
+	#ifdef LANG_ES
+		draw_text (5, VIEWPORT_Y+2, 71, "ELIGE UN NUEVO PODEWWR");
+	#else
+		draw_text (6, VIEWPORT_Y+2, 71, "SELECT A NEW PODEWWR");
+	#endif
+
+	for (gpit = 0; gpit < 5; gpit ++) {
+		rdy = VIEWPORT_Y+6 + (gpit << 1);
+		#ifdef LANG_ES
+			draw_text (7, rdy, 7, "REINA DEL");
+		#else
+			draw_text (7, rdy, 7, "MASTER OF");
+		#endif
+		
+		draw_text (17, rdy, 7, power_names [gpit]);
+
+		#asm
+			// SPPrintAtInv
+			// A = row position (0..23)
+			// C = col position (0..31/63)
+			// D = pallette #
+			// E = graphic #
+
+				ld  hl, _power_on
+				ld  bc, (_gpit)
+				ld  b, 0
+				add hl, bc
+				ld  a, (hl)
+				or  a
+				jr  z, select_power_no_tick
+
+				ld  a, (_rdy)
+				ld  c, 25
+				ld  de, #((64+4)*256 + 60)
+				call SPPrintAtInv
+			.select_power_no_tick
+		#endasm
+	}
+
+	rdy = 0; rdx = 1;
+	while (1) {
+		if (rdy != rdx) {
+			#asm
+					ld  c, 5
+					ld  a, (_rdx)
+					sla a
+					add VIEWPORT_Y+6
+					ld  de, 0
+					call SPPrintAtInv
+
+					ld  c, 5
+					ld  a, (_rdy)
+					sla a
+					add VIEWPORT_Y+6
+					ld  de, #((6+64)*256 + 15)
+					call SPPrintAtInv
+			#endasm
+			rdx = rdy;
+			draw_text (2, VIEWPORT_Y+18, 7, power_descs [rdy]);
+			#asm 
+				call SPUpdateNow
+			#endasm
+			play_sfx (9);
+		}
+
+		/*
+		pad_read ();
+		if ((pad_this_frame & sp_UP) == 0) { if (rdy) rdy --; else rdy = 4; }
+		if ((pad_this_frame & sp_DOWN) == 0) { if (rdy < 4) rdy ++; else rdy = 0; }
+		if ((pad_this_frame & sp_FIRE) == 0 && power_on [rdy] == 0) {
+			enable_power ();
+			play_sfx (8);
+			break;
+		}
+		*/
+
+		#asm
+				call _pad_read
+
+				ld  a, (_pad_this_frame)
+				ld  c, a
+
+				and sp_UP 
+				jr  nz, select_power_up_done
+
+			.select_power_up
+				ld  a, (_rdy)
+				or  a
+				jr  nz, select_power_up_dec
+				ld  a, 4
+				jr  select_power_up_set
+			.select_power_up_dec
+				dec a
+			.select_power_up_set
+				ld  (_rdy), a
+				jr  select_power_continue
+			.select_power_up_done
+
+				ld  a, c
+				and sp_DOWN
+				jr  nz, select_power_down_done
+
+			.select_power_down
+				ld  a, (_rdy)
+				cp  4
+				jr  c, select_power_down_inc
+				xor a
+				jr  select_power_down_set
+			.select_power_down_inc
+				inc a
+			.select_power_down_set
+				ld  (_rdy), a
+				jr  select_power_continue
+			.select_power_down_done
+
+				ld  a, c
+				and sp_FIRE
+				jr  nz, select_power_continue
+
+				ld  hl, _power_on
+				ld  bc, (_rdy)
+				ld  b, 0
+				add hl, bc
+				ld  a, (hl)
+				or  a
+				jr  nz, select_power_continue
+
+				ld  hl, 8
+				call _play_sfx 
+				jp  _enable_power
+
+			.select_power_continue
+		#endasm
+	} 
 }
 
 #ifdef ENABLE_CODE_HOOKS
@@ -247,11 +511,7 @@ void reset_game (void) {
 	// Hooks
 
 	void hook_system_inits (void) {
-		continue_on = 0;
-		level = 0;
-		resonators_frames = RESONATORS_FRAMES;
-
-		reset_game ();
+		continue_on = 0;		
 	}
 
 	void hook_init_game (void) {
@@ -260,7 +520,7 @@ void reset_game (void) {
 		player_min_killable = 4;
 		new_level = 1;
 		//player.keys = 1;
-		level = 4;
+		level = 4;		
 	}
 
 	void hook_init_mainloop (void) {
@@ -314,15 +574,16 @@ void reset_game (void) {
 			saca_a_todo_el_mundo_de_aqui ();
 
 			if (level != 4) {
-				sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
-				sp_Invalidate (spritesClip, spritesClip);
+				clear_game_area ();
 				new_level_string [7] = level + '1';
 				draw_text (12, 11, 71, new_level_string);
 				draw_text (11, 13, 71, "KICK ASSES");
-				sp_UpdateNow ();
+				#asm 
+					call SPUpdateNow
+				#endasm
 				play_sfx (10);
 				espera_activa (150);
-			}
+			} 
 			
 			n_pant = scr_ini [level];
 			init_player_values ();
