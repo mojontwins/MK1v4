@@ -283,8 +283,8 @@
 
 #define SHOW_KILLED	
 //#define SHOW_TOTAL
-#define KILLED_X					16		//
-#define KILLED_Y					1		// Kills counter character coordinates
+//#define KILLED_X					16		// 
+//#define KILLED_Y					1		// Kills counter character coordinates
 
 // Use this to show tile = ITEM_FIRST_TILE + flags [ITEM_IN_FLAG] - 1 at coordinates
 // ITEM_SHOW_X, ITEM_SHOW_Y.

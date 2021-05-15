@@ -24,7 +24,7 @@ unsigned char tilemaps [] = {
 	32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,		// level 1
 	 0, 17, 46, 47, 43, 44, 35,  6, 26,  9, 19, 22, 27, 39, 25, 15, 	// level 2
 	42, 39, 46, 47,  4, 28, 29, 30, 31,  7, 19, 17, 23, 24, 12, 15,		// level 3
-	 0, 10,  7, 25, 39, 43, 23, 24, 35,  9, 22, 17, 29, 30, 31, 15 		// level 4 (HUB)
+	 0, 42,  7, 25, 39, 43, 23, 24, 35,  9, 22, 17, 29, 30, 31, 15 		// level 4 (HUB)
 };
 
 // Those are ordered by level!
@@ -52,6 +52,7 @@ unsigned char ls;
 	unsigned char power_desc2 [] = " MALOS PARALIZADOS NO MATAN";
 	unsigned char power_desc3 [] = " RESONADORES VAN MAS LENTOS";
 	unsigned char power_desc4 [] = " CHERIL NO RESBALA EN HIELO";
+	unsigned char power_desc5 [] = "                           ";
 #else
 	unsigned char power_name0 [] = "LOCKS";
 	unsigned char power_name1 [] = "WIND";
@@ -65,6 +66,7 @@ unsigned char ls;
 	unsigned char power_desc2 [] = "PARALYZED GOONS ARE HARMLESS";
 	unsigned char power_desc3 [] = "   RESONATORS TICK SLOWER   ";
 	unsigned char power_desc4 [] = "  CHERIL WON\"T SLIP ON ICE ";	
+	unsigned char power_desc5 [] = "                            ";
 #endif
 
 unsigned char *power_names [] = {
@@ -72,12 +74,11 @@ unsigned char *power_names [] = {
 };
 
 unsigned char *power_descs [] = {
-	power_desc0, power_desc1, power_desc2, power_desc3, power_desc4
+	power_desc0, power_desc1, power_desc2, power_desc3, power_desc4, power_desc5
 };
 
 unsigned char power_on [] = { 0, 0, 0, 0, 0 };
-
-unsigned char buy_new_power; 
+unsigned char p_bellotas;
 
 // Custom functions
 
@@ -317,6 +318,7 @@ void reset_game (void) {
 			ld  (_ramiro_hover), a
 			ld  (_paralyzed_dont_kill), a
 			ld  (_disable_slippery), a
+			ld  (_p_bellotas), a
 
 			ld  a, RESONATORS_FRAMES
 			ld  (_resonators_frames), a
@@ -370,14 +372,16 @@ void enable_power (void) {
 }
 
 void select_power (void) {
+	clear_game_area ();
+
 	#ifdef LANG_ES
-		draw_text (5, VIEWPORT_Y+2, 71, "ELIGE UN NUEVO PODEWWR");
+		draw_text (5, VIEWPORT_Y+1, 71, "ELIGE UN NUEVO PODEWWR");
 	#else
-		draw_text (6, VIEWPORT_Y+2, 71, "SELECT A NEW PODEWWR");
+		draw_text (6, VIEWPORT_Y+1, 71, "SELECT A NEW PODEWWR");
 	#endif
 
 	for (gpit = 0; gpit < 5; gpit ++) {
-		rdy = VIEWPORT_Y+6 + (gpit << 1);
+		rdy = VIEWPORT_Y+5 + (gpit << 1);
 		#ifdef LANG_ES
 			draw_text (7, rdy, 7, "REINA DEL");
 		#else
@@ -409,6 +413,12 @@ void select_power (void) {
 		#endasm
 	}
 
+	#ifdef LANG_ES
+		draw_text (7, VIEWPORT_Y+15, 7, "SALIR");
+	#else
+		draw_text (7, VIEWPORT_Y+15, 7, "EXIT");
+	#endif
+
 	rdy = 0; rdx = 1;
 	while (1) {
 		if (rdy != rdx) {
@@ -416,19 +426,19 @@ void select_power (void) {
 					ld  c, 5
 					ld  a, (_rdx)
 					sla a
-					add VIEWPORT_Y+6
+					add VIEWPORT_Y+5
 					ld  de, 0
 					call SPPrintAtInv
 
 					ld  c, 5
 					ld  a, (_rdy)
 					sla a
-					add VIEWPORT_Y+6
+					add VIEWPORT_Y+5
 					ld  de, #((6+64)*256 + 15)
 					call SPPrintAtInv
 			#endasm
 			rdx = rdy;
-			draw_text (2, VIEWPORT_Y+18, 7, power_descs [rdy]);
+			draw_text (2, VIEWPORT_Y+18, 6, power_descs [rdy]);
 			#asm 
 				call SPUpdateNow
 			#endasm
@@ -459,7 +469,7 @@ void select_power (void) {
 				ld  a, (_rdy)
 				or  a
 				jr  nz, select_power_up_dec
-				ld  a, 4
+				ld  a, 5
 				jr  select_power_up_set
 			.select_power_up_dec
 				dec a
@@ -474,7 +484,7 @@ void select_power (void) {
 
 			.select_power_down
 				ld  a, (_rdy)
-				cp  4
+				cp  5
 				jr  c, select_power_down_inc
 				xor a
 				jr  select_power_down_set
@@ -489,8 +499,21 @@ void select_power (void) {
 				and sp_FIRE
 				jr  nz, select_power_continue
 
+				ld  a, (_rdy)
+				cp  5
+				ret z
+
+				ld  a, (_p_bellotas)
+				or  a
+				jr  nz, select_has_bellotas
+
+				ld  hl, 2
+				call _play_sfx
+				jr  select_power_continue
+
+			.select_has_bellotas
 				ld  hl, _power_on
-				ld  bc, (_rdy)
+				ld  c, a
 				ld  b, 0
 				add hl, bc
 				ld  a, (hl)
@@ -519,8 +542,10 @@ void select_power (void) {
 		resct_old = 0;
 		player_min_killable = 4;
 		new_level = 1;
+		level = 4; 
+
 		//player.keys = 1;
-		level = 4;		
+		//select_power ();
 	}
 
 	void hook_init_mainloop (void) {
@@ -571,7 +596,7 @@ void select_power (void) {
 
 		if (new_level) {
 			new_level = 0;
-			saca_a_todo_el_mundo_de_aqui ();
+			//saca_a_todo_el_mundo_de_aqui ();
 
 			if (level != 4) {
 				clear_game_area ();
@@ -594,6 +619,12 @@ void select_power (void) {
 	}
 
 	void hook_mainloop (void) {
+		// Body count in hud is custom, so KILLED_X must be undefined in config.h!
+		if (player.killed != killed_old) {
+			draw_2_digits (16, 1, 60-player.killed);
+			killed_old = player.killed;	
+		}
+
 		if (latest_hotspot >= 4) {
 			// Activate resonator ? 
 			#asm
@@ -688,7 +719,7 @@ void select_power (void) {
 				ld  hl, 4
 				call _play_sfx
 
-				ld  hl, 25
+				ld  hl, 22
 				push hl
 				ld  hl, 1
 				push hl
@@ -708,7 +739,7 @@ void select_power (void) {
 
 	void hook_entering (void) {
 		// Modify hotspots upon resonators_on
-		if (hotspot_t >= 4) {
+		if (hotspot_t == 4 || hotspot_t == 5) {
 			// hotspot_t = resonators_on ? 5 : 4; set_hotspot ();
 			#asm
 					ld  a, (_resonators_on)
