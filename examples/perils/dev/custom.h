@@ -79,6 +79,8 @@ unsigned char *power_descs [] = {
 
 unsigned char power_on [] = { 0, 0, 0, 0, 0 };
 unsigned char p_bellotas;
+unsigned char p_got_bellota;
+unsigned char hotspots_semaphore;
 
 // Custom functions
 
@@ -371,6 +373,25 @@ void enable_power (void) {
 	#endasm
 }
 
+void update_bellotas (void) {
+	#asm
+			// SPPrintAtInv
+			// A = row position (0..23)
+			// C = col position (0..31/63)
+			// D = pallette #
+			// E = graphic #
+
+			ld  a, (_p_bellotas)
+			add 16
+			ld  e, a		
+			ld  a, 1
+			ld  c, 30
+			ld  d, 71
+
+			call SPPrintAtInv
+	#endasm
+}
+
 void select_power (void) {
 	clear_game_area ();
 
@@ -520,6 +541,10 @@ void select_power (void) {
 				or  a
 				jr  nz, select_power_continue
 
+				ld  hl, _p_bellotas
+				dec (hl)
+				call _update_bellotas
+				call SPUpdateNow
 				ld  hl, 8
 				call _play_sfx 
 				jp  _enable_power
@@ -543,6 +568,8 @@ void select_power (void) {
 		player_min_killable = 4;
 		new_level = 1;
 		level = 4; 
+
+		update_bellotas ();
 
 		//player.keys = 1;
 		//select_power ();
@@ -614,6 +641,7 @@ void select_power (void) {
 			init_player_values ();
 			player.killed = 0; 
 			resonators_on = 0;
+			p_got_bellota = 0;
 			tileset_mappings = (unsigned char *) (tilemaps + (level << 4));
 		}
 	}
@@ -625,7 +653,18 @@ void select_power (void) {
 			killed_old = player.killed;	
 		}
 
-		if (latest_hotspot >= 4) {
+		if (latest_hotspot == 33) {
+			p_bellotas ++;
+			p_got_bellota = 1;
+			update_bellotas ();
+		} else if (latest_hotspot == 34) {
+			if (hotspots_semaphore == 0) {
+				select_power ();
+				hotspots [n_pant].act = 1;
+				on_pant = 0xff;
+			}
+			hotspots_semaphore = 1;
+		} if (latest_hotspot >= 4) {
 			// Activate resonator ? 
 			#asm
 					ld  a, (_latest_hotspot)
@@ -666,16 +705,14 @@ void select_power (void) {
 					ld  (_player+8), hl
 
 				.activate_resonator_done
-			#endasm
 
-			// Hotspot has to be restored ALWAYS
-			//hotspot_t = latest_hotspot; set_hotspot ();
-			#asm
+				// Hotspot has to be restored ALWAYS
+				//hotspot_t = latest_hotspot; set_hotspot ();
 					ld  a, (_latest_hotspot)
 					ld  (_hotspot_t), a
 					call _set_hotspot
 			#endasm
-		}
+		} else hotspots_semaphore = 0;
 
 		#asm
 			.resonators_do
@@ -821,9 +858,67 @@ void select_power (void) {
 #ifdef ENABLE_CUSTOM_ENEMS
 
 	void extra_enems_init (void) {
+		if (_en_t == 15) {
+			// Gyrosaws. See README.md
+			/*
+			malotes [enoffsmasi].mx = 0;
+			malotes [enoffsmasi].my = (malotes [enoffsmasi].x1 < malotes [enoffsmasi].x2);
+			*/
+			#asm
+					ld  hl, (_enoffsmasi)
+					call _calc_baddies_pointer
+
+					// Now transfer HL to IX
+					push hl 
+					pop ix
+
+					// 0  1  2   3   4   5   6   7   8   9
+					// x, y, x1, y1, x2, y2, mx, my, t[, life]
+					xor a
+					ld  (ix+6), a 
+
+					ld  c, (ix+4)
+					ld  a, (ix+2)
+					cp  c
+					jr  c, gyrosaw_clockwise
+
+				.gyrosaw_counter_clockwise
+					ld  a, 1
+					jr gyrosaw_direction_set
+
+				.gyrosaw_clockwise
+					xor a
+
+				.gyrosaw_direction_set
+					ld  (ix+7), a
+			#endasm
+		}
 	}
 
 	void extra_enems_move (void) {		
+		if (_en_t == 15) {
+			// mx -> counter
+			// my -> 1 = clockwise, 0 = counter clockwise
+
+			// delta = (_GYROSAW_DIRECTION ? (_en_state >> 1) : (((_en_state + 1) & 3) >> 1)) ? GYROSAW_V : -GYROSAW_V;
+			// Which means:
+			/* 
+				if (my) {
+					rdd = en_an_state [enit] >> 1;
+				} else {
+					rdd = ((en_an_state [enit] + 1) & 3) >> 1;
+				}
+
+				if (rdd)
+					rdd = GYROSAW_V;
+				else
+					rdd = -GYROSAW_V;
+			*/
+
+			// if (en_an_state [enit] & 1) _en_y += rdd; else _en_x += rdd;
+
+			// mx = (mx + GYROSAW_V) & 31; if (!mx) en_an_state [enit] = (en_an_state [enit] + 1) & 3;
+		}
 	}
 
 	void extra_enems_checks (void) {

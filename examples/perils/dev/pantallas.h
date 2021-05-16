@@ -54,6 +54,8 @@ void title_screen (void) {
 	asm_int = (unsigned int) (s_title); unpack ();
 
 	if (continue_on) {
+		if (p_got_bellota) p_got_bellota --;
+
 		draw_text (11, 15, 71, "CONTINUE ?%  1/ YES%  2/ NO");
 		#asm 
 			call SPUpdateNow

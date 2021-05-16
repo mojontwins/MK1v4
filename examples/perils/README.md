@@ -199,3 +199,62 @@ Necesitaré un título de la habilidad y un pequeño texto con una descripción,
 |`REINA DEL AGARRE`  |`CHERIL NO RESBALA EN HIELO`
 
 (↓ es un caracter definido para ser una flechita pabajo)
+
+## Sierras giratorias
+
+La idea es implementar las sierras giratorias para dar más age, junto con otros tipos de enemigos sencillos. El reto es implementar este código de Yun/AGNES usando la mínima expresión en ensamble.
+
+```c
+    // MT MK2 NES v0.8y - Yun Edition
+    // Copyleft 2017 by The Mojon Twins
+
+        // Gyrosaws
+        // Clockwise is L U R D, place here:
+        // ···
+        // ·Xv
+        // ·<o with SPEED = 1
+
+        // Counter-clockwise is L D R U, place here:
+        // ·<o
+        // ·X^
+        // ··· with SPEED = 0
+
+        // en_r is GYROSAW_STATE.
+        // en_mx is GYROSAW_COUNTER.
+        // en_my = 1 means "clockwise" GYROSAW_DIRECTION
+        
+    #ifdef GYROSAW_SLOW
+        if (half_life) 
+    #endif
+        {
+            delta = (_GYROSAW_DIRECTION ? (_en_state >> 1) : (((_en_state + 1) & 3) >> 1)) ? GYROSAW_V : -GYROSAW_V;
+            if (_en_state & 1) _en_y += delta; else _en_x += delta;
+            _GYROSAW_COUNTER = (_GYROSAW_COUNTER + GYROSAW_V) & 31; if (!_GYROSAW_COUNTER) _en_state = (_en_state + 1) & 3;
+        }
+        
+        spr_id = GYROSAW_CELL_BASE + half_life;
+        // enems_spr ();
+```
+
+Veamos, necesito un "en_state", un contador y una dirección. El código original reaprovecha `mx` y `my` para contador y dirección. Para el estado no puedo usar "en_an_state" porque ese "estado" es el interno del motor que emplea para "paralizado", por ejemplo, entre otras cosas. Aunque lo suyo sería que estos enemigos no separalizasen...
+
+Los customs que (des)paralizan no deberían paralizar las sierras.
+
+Voy a usar el tipo 15. Pongo una en la playa y a probar.
+
+El tema (antes de nada) es la colocación. Aquí los valores del .ene se traducen directamente quizá tenga que jugar con x1, y1, x2, y2. Los coloco en una de estas dos posiciones y pongo el punto de final en la diagonal opuesta.
+
+```
+    o>·
+    ^X·
+    ··· con x1 < x2
+
+    ···
+    ·X^
+    ·>o con x1 > x2
+```
+
+El conversor no debe invertir las coordenadas para los tipos > 4.
+
+En la inicialización establezco todos los parámeros especiales: `state` ya vendrá a 0, pero tengo que establecer `mx` a 0 (es el contador) y `my` a 0 si `x1 > x2` o 1 si `x2 > x1`.
+
