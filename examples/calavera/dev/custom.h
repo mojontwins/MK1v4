@@ -301,7 +301,9 @@ void set_hotspot (unsigned char hn) {
 			new_level_string [7] = level + '1';
 			draw_text (12, 11, 71, new_level_string);
 			draw_text (12, 13, 71, "_ANDALE!");
-			sp_UpdateNow ();
+			#asm 
+				call SPUpdateNow
+			#endasm
 			play_sfx (10);
 			espera_activa (150);
 			n_pant = scr_ini [level];

@@ -97,7 +97,9 @@ void todos_rescatados_check (void) {
 				#endasm
 				draw_rectangle ();	
 				draw_text (8, 12, GAME_OVER_ATTR, "MISION CUMPLIDA!");
-				sp_UpdateNow ();
+				#asm 
+					call SPUpdateNow
+				#endasm
 				beepet ();
 				espera_activa (100);
 				level ++;
@@ -114,7 +116,9 @@ void todos_rescatados_check (void) {
 			new_level_string [7] = level + '1';
 			draw_text (12, 11, 71, new_level_string);
 			draw_text (11, 13, 71, "GET READY!");
-			sp_UpdateNow ();
+			#asm 
+				call SPUpdateNow
+			#endasm
 			play_sfx (10);
 			espera_activa (150);
 			n_pant = scr_ini [level];
@@ -152,7 +156,9 @@ void todos_rescatados_check (void) {
 			alarm >= (player.objs == hostages [level] ? MAX_ALARM_TIME_COSCAO : MAX_ALARM_TIME_NORMAL)
 			|| patrullero_touch
 		) {
-			sp_UpdateNow ();		
+			#asm 
+				call SPUpdateNow
+			#endasm
 			play_sfx (3);
 			play_sfx (10);
 
@@ -193,7 +199,9 @@ void todos_rescatados_check (void) {
 			draw_rectangle ();
 			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
 			
-			sp_UpdateNow ();
+			#asm 
+				call SPUpdateNow
+			#endasm
 			play_sfx (10); play_sfx (8);
 			espera_activa (100);
 			player.is_dead = 1;

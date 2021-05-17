@@ -589,6 +589,26 @@ void select_power (void) {
 
 		if (player.killed == 60) {
 			#asm
+					ld  a, 9
+					ld  (__x), a
+					ld  a, 11
+					ld  (__y), a
+					ld  a, 22
+					ld  (__x2), a
+					ld  a, 13
+					ld  (__y2), a
+					ld  a, GAME_OVER_ATTR
+					ld  (__t), a
+			#endasm
+			draw_rectangle ();	
+			draw_text (10, 12, GAME_OVER_ATTR, "LEVEL CLEAR!");
+			#asm 
+				call SPUpdateNow
+			#endasm
+			beepet (); play_sfx (10);
+			espera_activa (500);
+
+			#asm
 					// Mark as finished
 					ld  bc, (_level)
 					ld  b, 0
@@ -625,6 +645,7 @@ void select_power (void) {
 			#endasm
 		}
 
+		/*
 		if (new_level) {
 			new_level = 0;
 			//saca_a_todo_el_mundo_de_aqui ();
@@ -648,6 +669,64 @@ void select_power (void) {
 			p_got_bellota = 0;
 			tileset_mappings = (unsigned char *) (tilemaps + (level << 4));
 		}
+		*/
+		#asm
+				xor a
+				ld  hl, _new_level
+				or  (hl)
+				ret z 
+
+				xor a
+				ld  (hl), a
+
+				ld  a, (_level)
+				cp  4
+				jr  z, level_screen_done
+
+				add 0x31 // '1'
+				ld  (_new_level_string + 7), a
+
+				call _clear_game_area
+		#endasm
+			draw_text (12, 11, 71, new_level_string);
+			draw_text (11, 13, 71, "KICK ASSES");
+		#asm
+				call SPUpdateNow
+
+				ld  hl, 10
+				call _play_sfx 
+
+				ld  hl, 150
+				push hl
+				call _espera_activa
+
+			.level_screen_done
+				ld  bc, (_level)
+				ld  b, 0
+				ld  hl, _scr_ini
+				add hl, bc
+				ld  a, (hl)
+				ld  (_n_pant), a
+
+				call _init_player_values
+
+				xor a
+				ld  (_player + 32), a 		// player.killed
+				ld  (_resonators_on), a 
+				ld  (_p_got_bellota), a
+
+				ld  a, (_level)
+				sla a
+				sla a
+				sla a
+				sla a
+				ld  c, a
+				ld  b, 0
+				ld  hl, _tilemaps
+				add hl, bc
+				ld  (_tileset_mappings), hl
+		#endasm
+		// Nothing else below this or you have to change the assembly!
 	}
 
 	void hook_mainloop (void) {
