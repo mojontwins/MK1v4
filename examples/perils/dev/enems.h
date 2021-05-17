@@ -436,8 +436,8 @@ MALOTE malotes [] = {
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 84
- 	{64, 48, 64, 48, 96, 80, 0, 0, 21},
- 	{160, 48, 160, 48, 128, 16, 0, 0, 21},
+ 	{64, 48, 64, 48, 96, 80, 0, 0, 15},
+ 	{160, 48, 160, 48, 128, 16, 0, 0, 15},
  	{160, 64, 160, 64, 160, 128, 0, 1, 4},
 
 	// Pantalla 85
@@ -504,7 +504,7 @@ MALOTE malotes [] = {
 #define N_ENEMS_TYPE_5 0
 #define N_ENEMS_TYPE_6 0
 #define N_ENEMS_TYPE_7 0
-#define N_ENEMS_TYPE_21 2
+#define N_ENEMS_TYPE_15 2
 
 // This is output the way it worked originally, please modify if you need
 // You may want to add type 5 or 6's below.

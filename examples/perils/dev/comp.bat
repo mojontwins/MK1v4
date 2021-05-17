@@ -6,7 +6,7 @@ echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 12 8 15 10 15 packed  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes dsall  > nul
-..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h  > nul
+..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 17 extra > nul
 ..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul

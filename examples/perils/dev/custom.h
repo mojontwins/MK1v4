@@ -82,6 +82,11 @@ unsigned char p_bellotas;
 unsigned char p_got_bellota;
 unsigned char hotspots_semaphore;
 
+// Gyrosaws 
+
+#define GYROSAW_V 				2
+#define GYROSAW_SPRITE_CELL		extra_sprite_17_a
+
 // Custom functions
 
 void clear_game_area (void) {
@@ -571,8 +576,7 @@ void select_power (void) {
 
 		update_bellotas ();
 
-		//player.keys = 1;
-		//select_power ();
+		level = 3;
 	}
 
 	void hook_init_mainloop (void) {
@@ -883,41 +887,120 @@ void select_power (void) {
 					jr  c, gyrosaw_clockwise
 
 				.gyrosaw_counter_clockwise
-					ld  a, 1
+					xor a
 					jr gyrosaw_direction_set
 
 				.gyrosaw_clockwise
-					xor a
+					ld  a, 1
 
 				.gyrosaw_direction_set
 					ld  (ix+7), a
+
+					// Reset to x1, y1
+					ld  a, (ix+2)
+					ld  (ix+0), a
+					ld  a, (ix+3)
+					ld  (ix+1), a
 			#endasm
 		}
 	}
 
-	void extra_enems_move (void) {		
+	void extra_enems_move (void) {				
 		if (_en_t == 15) {
 			// mx -> counter
 			// my -> 1 = clockwise, 0 = counter clockwise
 
-			// delta = (_GYROSAW_DIRECTION ? (_en_state >> 1) : (((_en_state + 1) & 3) >> 1)) ? GYROSAW_V : -GYROSAW_V;
-			// Which means:
-			/* 
-				if (my) {
-					rdd = en_an_state [enit] >> 1;
-				} else {
-					rdd = ((en_an_state [enit] + 1) & 3) >> 1;
-				}
+			#asm
+					ld  bc, (_enit)
+					ld  b, 0
+					ld  hl, _en_an_state
+					add hl, bc 						// HL -> state (0-3)
 
-				if (rdd)
-					rdd = GYROSAW_V;
-				else
-					rdd = -GYROSAW_V;
-			*/
+					ld  d, (hl) 					// D = state
 
-			// if (en_an_state [enit] & 1) _en_y += rdd; else _en_x += rdd;
+				.gyrosaw_sign
+					// Calculate advancement positive (0) or negative (1)
+					// my = 1 -> clockwise,        sign = state >> 1.
+					// my = 0 -> counterclockwise, sign = 1-(state >> 1) (flipped)
 
-			// mx = (mx + GYROSAW_V) & 31; if (!mx) en_an_state [enit] = (en_an_state [enit] + 1) & 3;
+					ld  b, d  						// state
+					srl b 							// state >> 1					
+
+					ld  a, (__en_my)
+					or  a
+
+					ld  a, b
+					jr  nz, gyrosaw_sign_done
+
+					// my = 0, flip bit
+					xor 1
+				.gyrosaw_sign_done
+
+				.gyrosaw_velocity
+					or  a 							// zero means positive
+					jr  nz, gyrosaw_adv_negative
+
+				.gyrosaw_adv_positive
+					ld  c, GYROSAW_V
+					jr  gyrosaw_velocity_set
+
+				.gyrosaw_adv_negative
+					ld  c, -GYROSAW_V
+					
+				.gyrosaw_velocity_set
+
+					// Calculate which direction, horizontal (0) or vertical (1)
+					// my = 1 -> clockwise,        direction = state & 1
+					// my = 0 -> counterclockwise, direction = 1-(state & 1) (flipped)
+					
+				// if (en_an_state [enit] & 1) _en_y += rdd; else _en_x += rdd;
+				.gyrosaw_advance
+					ld  a, d 
+					and 1 							// state >> 1
+					ld  b, a 						// save for later
+
+					ld  a, (__en_my)
+					or  a
+
+					ld  a, b 
+					jr  nz, gyrosaw_advance_do 
+					xor 1
+
+				.gyrosaw_advance_do 
+					or  a
+					jr  z, gyrosaw_horizontal
+
+				.gyrosaw_vertical
+					ld  a, (__en_y)
+					add c 							// C = velocity
+					ld  (__en_y), a
+					jr  gyrosaw_advance_done
+
+				.gyrosaw_horizontal
+					ld  a, (__en_x)
+					add c 							// C = velocity
+					ld  (__en_x), a
+
+				.gyrosaw_advance_done
+
+				// mx = (mx + GYROSAW_V) & 31; if (!mx) en_an_state [enit] = (en_an_state [enit] + 1) & 3;
+				.gyrosaw_state_change
+					ld  a, (__en_mx)
+					add GYROSAW_V
+					and 31 							// MOD 32, also sets Z!
+					ld  (__en_mx), a
+
+					jr  nz, gyrosaw_done
+
+					ld  a, d
+					inc a
+					and 3
+					ld  (hl), a
+
+				.gyrosaw_done
+			#endasm
+
+			en_an_next_frame [enit] = GYROSAW_SPRITE_CELL;
 		}
 	}
 
