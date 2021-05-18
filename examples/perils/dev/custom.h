@@ -87,6 +87,15 @@ unsigned char hotspots_semaphore;
 #define GYROSAW_V 				2
 #define GYROSAW_SPRITE_CELL		extra_sprite_17_a
 
+// Pezons
+
+signed char pezon_incs [] = {
+    -12, -10, -9, -8, -8, -6, -5, -4, -4, -2, -1, 0,
+    0, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10, 11
+};
+
+#define PEZON_SPRITE_CELL 		extra_sprite_18_a
+
 // Custom functions
 
 void clear_game_area (void) {
@@ -117,7 +126,7 @@ void clear_game_area (void) {
 
 void paralyze_everyone (void) {
 	#asm
-			xor a
+			xor a							// Killable is none
 			ld  (_player_min_killable), a 
 
 			ld  hl, _en_an_count
@@ -137,7 +146,7 @@ void paralyze_everyone (void) {
 
 void restore_everyone (void) {
 	#asm
-			ld  a, 4
+			ld  a, 5						// Covers all linears + pezons (5)
 			ld  (_player_min_killable), a 
 
 			ld  hl, _en_an_count
@@ -699,6 +708,7 @@ void select_power (void) {
 				ld  hl, 150
 				push hl
 				call _espera_activa
+				pop bc
 
 			.level_screen_done
 				ld  bc, (_level)
@@ -941,50 +951,92 @@ void select_power (void) {
 #ifdef ENABLE_CUSTOM_ENEMS
 
 	void extra_enems_init (void) {
-		if (_en_t == 15) {
-			// Gyrosaws. See README.md
-			/*
-			malotes [enoffsmasi].mx = 0;
-			malotes [enoffsmasi].my = (malotes [enoffsmasi].x1 < malotes [enoffsmasi].x2);
-			*/
-			#asm
-					ld  hl, (_enoffsmasi)
-					call _calc_baddies_pointer
+		/*
+		malotes [enoffsmasi].mx = 0;
+		malotes [enoffsmasi].my = (malotes [enoffsmasi].x1 < malotes [enoffsmasi].x2);
+		*/
+		
+		#asm
+				ld  hl, (_enoffsmasi)
+				call _calc_baddies_pointer
 
-					// Now transfer HL to IX
-					push hl 
-					pop ix
+				// Now transfer HL to IX
+				push hl 
+				pop ix
 
-					// 0  1  2   3   4   5   6   7   8   9
-					// x, y, x1, y1, x2, y2, mx, my, t[, life]
-					xor a
-					ld  (ix+6), a 
+				ld  a, (__en_t)
+				cp  5
+				jr  z, extra_enemsgeneral_inits
 
-					ld  c, (ix+4)
-					ld  a, (ix+2)
-					cp  c
-					jr  c, gyrosaw_clockwise
+				cp  15
+				ret nz
 
-				.gyrosaw_counter_clockwise
-					xor a
-					jr gyrosaw_direction_set
+				// 0  1  2   3   4   5   6   7   8   9
+				// x, y, x1, y1, x2, y2, mx, my, t[, life]
+				ld  c, (ix+4)
+				ld  a, (ix+2)
+				cp  c
+				jr  c, gyrosaw_clockwise
 
-				.gyrosaw_clockwise
-					ld  a, 1
+			.gyrosaw_counter_clockwise
+				xor a
+				jr gyrosaw_direction_set
 
-				.gyrosaw_direction_set
-					ld  (ix+7), a
+			.gyrosaw_clockwise
+				ld  a, 1
 
-					// Reset to x1, y1
-					ld  a, (ix+2)
-					ld  (ix+0), a
-					ld  a, (ix+3)
-					ld  (ix+1), a
-			#endasm
-		}
+			.gyrosaw_direction_set
+				ld  (ix+7), a
+
+			// Gyrosaws and Pezons
+
+			.extra_enemsgeneral_inits
+				// mx (counter = 0)
+				xor a
+				ld  (ix+6), a 
+
+				// Reset to x1, y1
+				ld  a, (ix+2)
+				ld  (ix+0), a
+				ld  a, (ix+3)
+				ld  (ix+1), a
+		#endasm
 	}
 
-	void extra_enems_move (void) {				
+	void extra_enems_move (void) {		
+		if (_en_t == 5) {
+			// Pezons / zurullis
+			#asm
+					ld  a, (__en_mx)
+					ld  c, a
+					cp  24
+					jr  nc, pezons_idle
+
+				.pezons_moving
+					ld  b, 0					
+					ld  hl, _pezon_incs
+					add hl, bc
+					ld  d, (hl)
+
+					ld  a, (__en_y)
+					add d
+
+					jr  pezons_move_done
+
+				.pezons_idle
+					ld  a, (__en_y1)
+
+				.pezons_move_done
+					ld  (__en_y), a
+
+					ld  a, c
+					inc a
+					and 63
+					ld  (__en_mx), a
+			#endasm
+			en_an_next_frame [enit] = PEZON_SPRITE_CELL;
+		}
+
 		if (_en_t == 15) {
 			// mx -> counter
 			// my -> 1 = clockwise, 0 = counter clockwise
@@ -1078,7 +1130,6 @@ void select_power (void) {
 
 				.gyrosaw_done
 			#endasm
-
 			en_an_next_frame [enit] = GYROSAW_SPRITE_CELL;
 		}
 	}

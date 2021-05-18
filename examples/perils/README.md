@@ -258,3 +258,44 @@ El conversor no debe invertir las coordenadas para los tipos > 4.
 
 En la inicialización establezco todos los parámeros especiales: `state` ya vendrá a 0, pero tengo que establecer `mx` a 0 (es el contador) y `my` a 0 si `x1 > x2` o 1 si `x2 > x1`.
 
+## Pezones
+
+Los pezones (o zurullis) eran máquinas de estados de 2 estados, con los incrementos verticales para subir y bajar precalculados en un array:
+
+```c
+#ifdef ENABLE_PRECALC_PEZON
+    #define PEZON_INCS_MAX 48
+    #define PEZON_INCS_FIRST_FALL 26
+    const signed char pezon_incs [] = {
+        -6, -6, -5, -5, -5, -4, -4, -4,
+        -4, -4, -3, -3, -3, -2, -2, -2, 
+        -2, -2, -1, -1, -1, 0, 0, 0, 
+        0, 0, 1, 1, 1, 2, 2, 2, 
+        2, 2, 3, 3, 3, 4, 4, 4, 
+        4, 4, 4, 4, 4, 4, 4, 4
+    };
+#endif
+```
+
+Ahí ya tenemos 48 bytes de datos. Se trata de incrementos sobre "y". Hay que tener en cuenta que esto viene de la NES a 50Hz así que podría reducirlo a la mitad sumando dos a dos:
+
+```c
+    signed char pezon_incs [] = {
+        -12, -10, -9, -8, -8, -6, -5, -4, -4, -2, -1, 0,
+        0, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10, 11
+    }
+```
+
+Aquí necesito un contador de 0 a 23 para la primera etapa y luego ese mismo contador durante 25 frames durante la segunda etapa. Puedo hacer que siempre cuente de 0 a 31, como en el caso del gyrosaw, pero que sólo se mueva pezon_incs si es < 24 y que no haga nada durante el idle. Igualmente puedo unificarlo en una única cuenta hasta 4 y ver si funciona, y si no reducirlo.
+
+En C, para plantear, con mx el contador:
+
+```c
+    if (mx < 24) _en_y += pezon_incs [mx];
+    else _en_y = _en_y1;
+
+    mx = (mx + 1) & 63;
+```
+
+Los zurullis deberían poder matarse, así que los colocaré como tipo 5 y modificaré el paralyzed.
+
