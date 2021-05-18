@@ -721,7 +721,7 @@ void select_power (void) {
 				call _init_player_values
 
 				xor a
-				ld  (_player + 32), a 		// player.killed
+				ld  (_player + 32), a 				// player.killed
 				ld  (_resonators_on), a 
 				ld  (_p_got_bellota), a
 
@@ -873,7 +873,7 @@ void select_power (void) {
 			// hotspot_t = resonators_on ? 5 : 4; set_hotspot ();
 			#asm
 					ld  a, (_resonators_on)
-					or  a 						// if resonators_on -> Z set
+					or  a 							// if resonators_on -> Z set
 					ld  a, 4
 					jr  z, he_res_set
 					inc a
