@@ -126,7 +126,7 @@ void clear_game_area (void) {
 
 void paralyze_everyone (void) {
 	#asm
-			xor a							// Killable is none
+			xor a							// Killable is all
 			ld  (_player_min_killable), a 
 
 			ld  hl, _en_an_count
@@ -146,7 +146,7 @@ void paralyze_everyone (void) {
 
 void restore_everyone (void) {
 	#asm
-			ld  a, 5						// Covers all linears + pezons (5)
+			ld  a, 6						// Covers all linears + pezons (5)
 			ld  (_player_min_killable), a 
 
 			ld  hl, _en_an_count
@@ -584,8 +584,7 @@ void select_power (void) {
 		level = 4; 
 
 		update_bellotas ();
-
-		level = 3;
+		level=3;
 	}
 
 	void hook_init_mainloop (void) {
@@ -792,8 +791,6 @@ void select_power (void) {
 					ld  a, 5
 					ld  (_latest_hotspot), a
 					
-					call _paralyze_everyone
-
 					ld  hl, #(-PLAYER_MAX_VY_SALTANDO)
 					ld  (_player+8), hl
 
@@ -863,6 +860,8 @@ void select_power (void) {
 				ld  a, (_resonators_frames)
 				ld  (_resonators_ct), a
 
+				call _paralyze_everyone
+				
 			.resonators_done
 		#endasm
 	}
@@ -966,7 +965,7 @@ void select_power (void) {
 
 				ld  a, (__en_t)
 				cp  5
-				jr  z, extra_enemsgeneral_inits
+				jr  z, enems_init_zurulli
 
 				cp  15
 				ret nz
@@ -995,12 +994,22 @@ void select_power (void) {
 				xor a
 				ld  (ix+6), a 
 
+				// State on y2
+				ld  (ix+5), a
+
 				// Reset to x1, y1
 				ld  a, (ix+2)
 				ld  (ix+0), a
 				ld  a, (ix+3)
 				ld  (ix+1), a
 		#endasm
+		en_an_next_frame [enit] = GYROSAW_SPRITE_CELL;
+		#asm
+				ret
+
+			.enems_init_zurulli
+		#endasm
+		en_an_next_frame [enit] = PEZON_SPRITE_CELL;
 	}
 
 	void extra_enems_move (void) {		
@@ -1042,10 +1051,13 @@ void select_power (void) {
 			// my -> 1 = clockwise, 0 = counter clockwise
 
 			#asm
+					/*
 					ld  bc, (_enit)
 					ld  b, 0
 					ld  hl, _en_an_state
 					add hl, bc 						// HL -> state (0-3)
+					*/
+					ld  hl, __en_y2
 
 					ld  d, (hl) 					// D = state
 

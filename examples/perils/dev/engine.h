@@ -5802,6 +5802,9 @@ void mueve_bicharracos (void) {
 							#ifdef PLAYER_MIN_KILLABLE
 								&& _en_t >= PLAYER_MIN_KILLABLE
 							#endif
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
 						) {
 							// Step on enemy and kill it.
 							en_an_next_frame [enit] = sprite_17_a;

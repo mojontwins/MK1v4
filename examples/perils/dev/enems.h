@@ -66,7 +66,7 @@ MALOTE malotes [] = {
  	{32, 32, 32, 32, 176, 32, 1, 0, 3},
 
 	// Pantalla 10
- 	{96, 128, 32, 128, 96, 128, -2, 0, 2},
+ 	{64, 144, 64, 144, 64, 128, 0, 0, 5},
  	{112, 80, 32, 80, 112, 96, -2, 2, 3},
  	{176, 16, 176, 16, 176, 64, 0, 1, 1},
 
@@ -281,7 +281,7 @@ MALOTE malotes [] = {
  	{112, 32, 112, 32, 176, 32, 2, 0, 1},
 
 	// Pantalla 53
- 	{64, 32, 64, 32, 144, 32, 2, 0, 3},
+ 	{64, 64, 32, 64, 64, 64, -2, 0, 3},
  	{144, 128, 48, 128, 144, 128, -2, 0, 2},
  	{144, 64, 144, 64, 208, 64, 1, 0, 1},
 
@@ -306,7 +306,7 @@ MALOTE malotes [] = {
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 58
- 	{112, 96, 112, 96, 176, 96, 2, 0, 2},
+ 	{144, 112, 144, 112, 144, 96, 0, 0, 5},
  	{96, 32, 96, 32, 96, 80, 0, 1, 3},
  	{80, 96, 32, 96, 80, 96, -1, 0, 1},
 
@@ -367,11 +367,11 @@ MALOTE malotes [] = {
 
 	// Pantalla 70
  	{48, 96, 48, 96, 112, 96, 2, 0, 3},
- 	{144, 96, 144, 96, 176, 96, 2, 0, 1},
+ 	{128, 112, 128, 112, 128, 96, 0, 0, 5},
  	{128, 32, 128, 32, 128, 64, 0, 2, 2},
 
 	// Pantalla 71
- 	{64, 96, 64, 96, 144, 96, 2, 0, 2},
+ 	{96, 128, 96, 128, 96, 112, 0, 0, 5},
  	{208, 64, 192, 64, 208, 64, -1, 0, 1},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
@@ -498,10 +498,10 @@ MALOTE malotes [] = {
 };
 
 #define N_ENEMS_TYPE_0 79
-#define N_ENEMS_TYPE_1 50
-#define N_ENEMS_TYPE_2 74
+#define N_ENEMS_TYPE_1 49
+#define N_ENEMS_TYPE_2 71
 #define N_ENEMS_TYPE_3 60
-#define N_ENEMS_TYPE_5 1
+#define N_ENEMS_TYPE_5 5
 #define N_ENEMS_TYPE_6 0
 #define N_ENEMS_TYPE_7 0
 #define N_ENEMS_TYPE_15 2
@@ -532,7 +532,7 @@ HOTSPOT hotspots [] = {
 	{101, 4, 0}, 
 	{100, 4, 0}, 
 	{152, 2, 0}, 
-	{53, 4, 0}, 
+	{17, 33, 0}, 
 	{40, 4, 0}, 
 	{216, 3, 0}, 
 	{151, 4, 0}, 
@@ -561,7 +561,7 @@ HOTSPOT hotspots [] = {
 	{152, 4, 0}, 
 	{71, 4, 0}, 
 	{87, 4, 0}, 
-	{22, 3, 0}, 
+	{22, 2, 0}, 
 	{99, 4, 0}, 
 	{54, 3, 0}, 
 	{86, 4, 0}, 
@@ -573,7 +573,7 @@ HOTSPOT hotspots [] = {
 	{115, 4, 0}, 
 	{36, 4, 0}, 
 	{149, 4, 0}, 
-	{180, 2, 0}, 
+	{195, 33, 0}, 
 	{195, 4, 0}, 
 	{147, 4, 0}, 
 	{51, 4, 0}, 
@@ -616,11 +616,11 @@ HOTSPOT hotspots [] = {
 #define N_HOTSPOTS_TYPE_0 24
 #define N_HOTSPOTS_TYPE_1 0
 #define N_HOTSPOTS_TYPE_2 6
-#define N_HOTSPOTS_TYPE_3 13
-#define N_HOTSPOTS_TYPE_4 51
+#define N_HOTSPOTS_TYPE_3 12
+#define N_HOTSPOTS_TYPE_4 50
 #define N_HOTSPOTS_TYPE_5 0
 #define N_HOTSPOTS_TYPE_6 0
 #define N_HOTSPOTS_TYPE_7 0
-#define N_HOTSPOTS_TYPE_33 1
+#define N_HOTSPOTS_TYPE_33 3
 #define N_HOTSPOTS_TYPE_34 1
 
