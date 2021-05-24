@@ -1183,6 +1183,7 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
     //#define JETPAC_DRAIN_OFFSET   8       // Drain after X frames.
     //#define PLAYER_KILLS_ENEMIES          // If defined, stepping on enemies kills them
     //#define PLAYER_MIN_KILLABLE   3       // Only kill enemies with id >= PLAYER_MIN_KILLABLE
+    //#define PLAYER_MAX_KILLABLE 	6 		// Only kill enemies if id <= PLAYER_MAX_KILLABLE
 ```
 
 * `PLAYER_HAS_JUMP`: el jugador puede saltar pulsando "arriba".
@@ -1205,7 +1206,9 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 * `PLAYER_KILLS_ENEMIES`: Se puede saltar sobre los enemigos para matarlos.
 
-* `PLAYER_MIN_KILLABLE`: se usa con `PLAYER_KILLS_ENEMIES` o con `ENABLE_SWORD`: Solo matar a los enemigos con id >= a este valor.
+* `PLAYER_MIN_KILLABLE`: se usa con `PLAYER_KILLS_ENEMIES` o con `ENABLE_SWORD`: Si se define, sólo se puede matar a los enemigos con id >= a este valor.
+
+* `PLAYER_MAX_KILLABLE`: se usa con `PLAYER_KILLS_ENEMIES` o con `ENABLE_SWORD`: Si se define, sólo se puede matar a los enemigos con id <= a este valor.
 
 ## Algunas cosas especiales que puedes encontrar útiles
 

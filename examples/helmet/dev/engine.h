@@ -4702,20 +4702,19 @@ void draw_scr (void) {
 
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
-				#ifdef BOXES_ONLY_KILL_TYPE
-					if (_en_t == BOXES_ONLY_KILL_TYPE) {
-						flags [COUNT_KILLABLE_ON] ++;
-						continue;
-					}
-				#endif
-				#ifdef PLAYER_MIN_KILLABLE
-					if (_en_t >= PLAYER_MIN_KILLABLE) {
-						flags [COUNT_KILLABLE_ON] ++;
-					}
-				#endif
-				#if !defined(BOXES_ONLY_KILL_TYPE) && !defined (PLAYER_MIN_KILLABLE)
+				if (1
+					#ifdef BOXES_ONLY_KILL_TYPE
+						&& _en_t == BOXES_ONLY_KILL_TYPE
+					#endif
+					#ifdef PLAYER_MIN_KILLABLE
+						&& _en_t >= PLAYER_MIN_KILLABLE
+					#endif
+					#ifdef PLAYER_MAX_KILLABLE
+						&& _en_t <= PLAYER_MAX_KILLABLE
+					#endif
+				) {
 					flags [COUNT_KILLABLE_ON] ++;
-				#endif
+				}
 			#endif
 		#endif
 	}
@@ -5742,10 +5741,14 @@ void mueve_bicharracos (void) {
 								jp  c, _enems_hit_sword_done
 						#endasm
 						{	
+							if (1
 							#ifdef PLAYER_MIN_KILLABLE
-								if (_en_t >= PLAYER_MIN_KILLABLE)
+								&& _en_t >= PLAYER_MIN_KILLABLE
 							#endif
-							{
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
+							) {
 								// Hit!
 								play_sfx (2);
 								s_on = 0;
@@ -5801,6 +5804,9 @@ void mueve_bicharracos (void) {
 							&& player.vy >= 0 
 							#ifdef PLAYER_MIN_KILLABLE
 								&& _en_t >= PLAYER_MIN_KILLABLE
+							#endif
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
 							#endif
 						) {
 							// Step on enemy and kill it.

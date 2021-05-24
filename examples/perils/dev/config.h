@@ -248,6 +248,7 @@
 #define PLAYER_KILLS_ENEMIES			  	// If defined, stepping on enemies kills them
 #define PLAYER_MIN_KILLABLE 	player_min_killable		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 #define PLAYER_MAX_KILLABLE 		6 		// Only kill enemies if id <= PLAYER_MAX_KILLABLE
+
 // Very special things which you may find useful
 // ---------------------------------------------
 
