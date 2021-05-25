@@ -1,8 +1,19 @@
-' ene2h.bas v0.4.20210121-v4
+' ene2h.bas v0.5.20210524-v4
+
+' Commands first draft
+' CMD=C,T,O,V where C = command, T = type, O = output member, V = value
+'
+' First version CMD=S,T,O,V (SET), example CMD=S,15,Y2,0, sets Y2=0 for t=15
+
+' Have to parse & encode commands into a numeric array.
+' Then 'Run' the array for each enemy processed.
+
+#include "mtparser.bi"
+#include "cmdlineparser.bi"
 
 Sub usage
 	Print
-	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall]"
+	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall] [zerom=,b,...]"
 	Print
 	Print "2bytes (optional) - support really old .ene files which stored the hotspots"
 	Print "    2 bytes each instead of 3 bytes.  As a rule of thumb: "
@@ -13,6 +24,7 @@ Sub usage
 	Print "    If 'dslight' is specified, only types 1-4 and 7-14 are switched."
 	Print
 	Print "dsall (optional) - Like dslight, but only types 1-4 are switched."
+	Print "zerom (optional) - List of types for which mx, my will be zeroed."
 	Print
 End Sub
 
@@ -37,13 +49,17 @@ Const DS_ALL = 2
 Dim As Integer use2bytes, dontswitch
 Dim As Integer fIn, fOut, i, j, mapPants
 Dim As uByte d, mapW, mapH, nEnems
-Dim As uByte t, a, b, xx, yy, mn, x, y, s1, s2, xy
+Dim As uByte t, a, b, xx, yy, mn, x, y, s1, s2, xy, whichCommand
 Dim As Integer typeCounters (255)
 Dim As Integer enTypeCounters (255)
-Dim As String Dummy
-Dim As Integer sx, sy
+Dim As String Dummy, cmm
+Dim As Integer sx, sy, equals
+Dim As Integer zeroThis (15), coords (16)
+Dim As Integer outX, outY, outX1, outX2, outY1, outY2, outMX, outMY, outT
 
-Print "ene2h.bas v0.4.20210121-v4 ";
+Print "ene2h.bas v0.5.20210524-v4 ";
+
+sclpParseAttrs
 
 If Command (2) = "" Then usage: End
 
@@ -60,6 +76,13 @@ ElseIf inCommand ("dslight") Then
 	dontswitch = DS_LIGHT
 Else
 	dontswitch = DS_NONE
+End If
+
+If sclpGetValue ("zerom") <> "" Then
+	parseCoordinatesString sclpGetValue ("zerom"), coords ()
+	For i = 0 To 15
+		If coords (i) > 0 Then zeroThis (coords (i)) = -1
+	Next i
 End If
 
 fIn = FreeFile
@@ -108,14 +131,19 @@ For i = 1 To mapPants
 		Get #fIn, , s1
 		Get #fIn, , s2
 
+		outX = 16*x: outY = 16*y
+
 		enTypeCounters (t) = enTypeCounters (t) + 1
 
-		Print #fOut, " 	{";
-		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x y
 
 		' New logic to ensure x1 < x2, y1 < y2
 		sx = Sgn (xx - x)
 		sy = Sgn (yy - y)
+
+		outX1 = 16*x: outY1 = 16*y
+		outX2 = 16*xx: outY2 = 16*yy
+		outMX = mn*sx: outMY = mn*sy
+		outT = t
 
 		If dontswitch = DS_NONE Or _ 
 			(dontswitch = DS_LIGHT And (t < 5 Or (t > 6 And t < 15))) Or _ 
@@ -124,11 +152,14 @@ For i = 1 To mapPants
 			If y > yy Then Swap y, yy
 		End If
 
-		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x1 y1
-		Print #fOut, "" & (16*xx) & ", " & (16*yy) & ", ";		' x2 y2
-		Print #fOut, "" & (mn * sx) &  ", "; 		' mx
-		Print #fOut, "" & (mn * sy) & ", "; 		' my
-		Print #fOut, "" & t; 								' t
+		Print #fOut, " 	{";
+		Print #fOut, "" & (outX) & ", " & (outY) & ", ";		' x y
+		Print #fOut, "" & (outX1) & ", " & (outY1) & ", ";		' x1 y1
+		Print #fOut, "" & (outX2) & ", " & (outY2) & ", ";		' x2 y2
+		Print #fOut, "" & (outMX) &  ", "; 		' mx
+		Print #fOut, "" & (outMY) & ", "; 		' my
+		
+		Print #fOut, "" & (outT); 								' t
 		Print #fOut, "}";
 
 		If i < mapPants Or j < nEnems Then Print #fOut, "," Else Print #fOut, ""

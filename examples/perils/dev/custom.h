@@ -991,11 +991,11 @@ void select_power (void) {
 
 			.extra_enemsgeneral_inits
 				// mx (counter = 0)
-				xor a
-				ld  (ix+6), a 
+				;xor a
+				;ld  (ix+6), a 
 
 				// State on y2
-				ld  (ix+5), a
+				;ld  (ix+5), a
 
 				// Reset to x1, y1
 				ld  a, (ix+2)
