@@ -986,22 +986,6 @@ void select_power (void) {
 
 			.gyrosaw_direction_set
 				ld  (ix+7), a
-
-			// Gyrosaws and Pezons
-
-			.extra_enemsgeneral_inits
-				// mx (counter = 0)
-				;xor a
-				;ld  (ix+6), a 
-
-				// State on y2
-				;ld  (ix+5), a
-
-				// Reset to x1, y1
-				ld  a, (ix+2)
-				ld  (ix+0), a
-				ld  a, (ix+3)
-				ld  (ix+1), a
 		#endasm
 		en_an_next_frame [enit] = GYROSAW_SPRITE_CELL;
 		#asm

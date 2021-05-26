@@ -11,9 +11,16 @@
 #include "mtparser.bi"
 #include "cmdlineparser.bi"
 
+Type CMD
+	cmd As String * 1
+	t As Integer
+	o As String * 2
+	v As Integer
+End Type
+
 Sub usage
 	Print
-	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall] [zerom=,b,...]"
+	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall] [CMD=C,T,O,V]"
 	Print
 	Print "2bytes (optional) - support really old .ene files which stored the hotspots"
 	Print "    2 bytes each instead of 3 bytes.  As a rule of thumb: "
@@ -24,7 +31,6 @@ Sub usage
 	Print "    If 'dslight' is specified, only types 1-4 and 7-14 are switched."
 	Print
 	Print "dsall (optional) - Like dslight, but only types 1-4 are switched."
-	Print "zerom (optional) - List of types for which mx, my will be zeroed."
 	Print
 End Sub
 
@@ -47,15 +53,18 @@ Const DS_LIGHT = 1
 Const DS_ALL = 2
 
 Dim As Integer use2bytes, dontswitch
-Dim As Integer fIn, fOut, i, j, mapPants
+Dim As Integer fIn, fOut, i, j, k, mapPants
 Dim As uByte d, mapW, mapH, nEnems
 Dim As uByte t, a, b, xx, yy, mn, x, y, s1, s2, xy, whichCommand
 Dim As Integer typeCounters (255)
 Dim As Integer enTypeCounters (255)
 Dim As String Dummy, cmm
 Dim As Integer sx, sy, equals
-Dim As Integer zeroThis (15), coords (16)
+Dim As Integer coords (16)
 Dim As Integer outX, outY, outX1, outX2, outY1, outY2, outMX, outMY, outT
+Dim As CMD cmds (31)
+Dim As Integer cmdIndex
+Dim As String tokens (16)
 
 Print "ene2h.bas v0.5.20210524-v4 ";
 
@@ -78,12 +87,22 @@ Else
 	dontswitch = DS_NONE
 End If
 
-If sclpGetValue ("zerom") <> "" Then
-	parseCoordinatesString sclpGetValue ("zerom"), coords ()
-	For i = 0 To 15
-		If coords (i) > 0 Then zeroThis (coords (i)) = -1
-	Next i
-End If
+' Look for & parse CMDs
+i = 3
+cmdIndex = 0
+While (Command (i) <> "")
+	If Len (Command (i)) > 4 And Left (Command (i), 4) = "CMD=" Then
+		parseCommaSeparatedString Right (Command (i), Len (Command (i)) - 4), tokens ()
+		cmds (cmdIndex).cmd = tokens (0)
+		cmds (cmdIndex).t = Val (tokens(1))
+		cmds (cmdIndex).o = tokens(2)
+		cmds (cmdIndex).v = Val (tokens(3))
+		cmdIndex = cmdIndex + 1
+	End If
+	i = i + 1
+Wend
+
+If cmdIndex > 0 Then Print "~ " & cmdIndex & " commands found ";
 
 fIn = FreeFile
 Open Command (1) For Binary As #fIn
@@ -135,15 +154,9 @@ For i = 1 To mapPants
 
 		enTypeCounters (t) = enTypeCounters (t) + 1
 
-
 		' New logic to ensure x1 < x2, y1 < y2
 		sx = Sgn (xx - x)
 		sy = Sgn (yy - y)
-
-		outX1 = 16*x: outY1 = 16*y
-		outX2 = 16*xx: outY2 = 16*yy
-		outMX = mn*sx: outMY = mn*sy
-		outT = t
 
 		If dontswitch = DS_NONE Or _ 
 			(dontswitch = DS_LIGHT And (t < 5 Or (t > 6 And t < 15))) Or _ 
@@ -151,6 +164,32 @@ For i = 1 To mapPants
 			If x > xx Then Swap x, xx 
 			If y > yy Then Swap y, yy
 		End If
+
+		outX1 = 16*x: outY1 = 16*y
+		outX2 = 16*xx: outY2 = 16*yy
+		outMX = mn*sx: outMY = mn*sy
+		outT = t
+
+		' Run commands
+		For k = 0 To cmdIndex - 1
+			If cmds (k).t = t Then 
+				Select Case cmds (k).cmd
+					Case "S":
+						' Setter
+						Select Case cmds (k).o
+							Case "X": outX = cmds (k).v
+							Case "Y": outY = cmds (k).v
+							Case "X1": outX1 = cmds (k).v
+							Case "Y1": outY1 = cmds (k).v
+							Case "X2": outX2 = cmds (k).v
+							Case "Y2": outY2 = cmds (k).v
+							Case "MX": outMX = cmds (k).v
+							Case "MY": outMY = cmds (k).v
+							Case "T": outT = cmds (k).v
+						End Select
+				End Select
+			End If
+		Next k
 
 		Print #fOut, " 	{";
 		Print #fOut, "" & (outX) & ", " & (outY) & ", ";		' x y

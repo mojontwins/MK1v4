@@ -258,6 +258,8 @@ El conversor no debe invertir las coordenadas para los tipos > 4.
 
 En la inicialización establezco todos los parámeros especiales: `state` ya vendrá a 0, pero tengo que establecer `mx` a 0 (es el contador) y `my` a 0 si `x1 > x2` o 1 si `x2 > x1`.
 
+Al final he usado y2 como el estado para no liarla. Como quiero que la posición de las sierras se mantenga al cambiar pantallas, tengo que asegurarme de que se parte de un estado controlado, y para eso tengo que hacer que y2 valga 0 al terminar de cargar el juego. Para ello empleo la susitución en `ene2h.exe` con CMD=S,5,Y2,0.
+
 ## Pezones
 
 Los pezones (o zurullis) eran máquinas de estados de 2 estados, con los incrementos verticales para subir y bajar precalculados en un array:
