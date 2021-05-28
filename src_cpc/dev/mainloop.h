@@ -9,141 +9,178 @@
 #endif
 
 void main (void) {
-	#asm
-			di 
-			ld  sp, STACK_ADDR
-
-		#ifdef MODE_128K_DUAL
-				xor a
-				ld  (_ay_player_on), a
-
-				ld  bc, 0x7ffd
-				xor a
-				out (c), a
-				ld  a, (0x1)
-				ld  h, a
-				ld  a, 0x10
-				out (c), a
-				ld  a, (0x1)
-				cp  h
-				jr  z, no128K
-
-			// 128K mode: set the stack in low RAM
-				ld  sp, 24199
-
-			#ifdef ENABLE_ARKOS
-				// We need to page in so make sure this is LOW in RAM
-				call arkos_address_call
-			#endif
-
-				ld  a, 1			
-				jr  detectionDone
-
-			.no128K
-				xor a
-			
-			.detectionDone
-				ld  (_is128k), a
-		#endif
-	#endasm
-
-	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-		sp_InitIM2 (0xf1f1);
-		sp_CreateGenericISR (0xf1f1);
-		sp_RegisterHook (255, ISR);
-	#endif
-
-	// splib2 initialization
-	sp_Initialize (7, 0);
-	sp_Border (BLACK);
-	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
-
-	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-		#asm
-				ei
-		#endasm
-	#endif
-
-	// Define keys and default controls
-	joyfunc = sp_JoyKeyboard;
-
-	// Load tileset
-	#asm
-			ld  b, 0
-			ld  hl, SPTileArray
-			ld  de, _tileset
-		.load_tileset_loop
-			ld  (hl), e
-			inc h
-			ld  (hl), d
-			dec h
-			inc hl
-			inc de
-			inc de
-			inc de
-			inc de
-			inc de
-			inc de
-			inc de
-			inc de
-			djnz load_tileset_loop
-	#endasm
-
-	// Clipping rectangle	
-	spritesClip = &spritesClipValues;
+	// CPC initialization
 	
+	AY_INIT ();
+
+	#asm
+		di
+
+		ld  hl, 0xC000
+		xor a
+		ld  (hl), a
+		ld  de, 0xC001
+		ld  bc, 0x3DFF
+		ldir
+
+		ld  a, 195
+		ld  (0x38), a
+		ld  hl, _isr
+		ld  (0x39), hl
+		jp  isr_done
+
+	._isr
+		push af 
+		
+		#ifdef SOUND_WYZ
+			ld  a, (_isr_player_on)
+			or  a
+			jr  z, _skip_wyz
+
+			ld  a, (isr_c1)
+			inc a
+			cp  6
+			jr  c, _skip_wyz
+
+			push hl
+			push de
+			push bc
+			push ix
+			push iy
+
+			call WYZ_PLAYER_ISR
+
+			pop iy
+			pop ix
+			pop bc
+			pop de 
+			pop hl
+
+			xor a
+
+		._skip_wyz 
+			ld  (isr_c1), a	
+		#endif
+		
+		pop af
+		ei
+		ret
+
+	.isr_c1 
+		defb 0
+
+	.isr_done
+	#endasm
+	
+	// Border 0
+
+	#asm
+		ld 	a, 0x54
+		ld  bc, 0x7F11
+		out (c), c
+		out (c), a
+	#endasm
+
+	// Decompress LUT in place
+
+	unpack ((unsigned int) (trpixlutc), BASE_LUT);
+
+	blackout ();
+	pal_set (my_inks);
+	
+	// Set mode
+
+	cpc_SetMode (CPC_GFX_MODE);
+
+	// Set tweaked mode 
+	// (thanks Augusto Ruiz for the code & explanations!)
+	
+	#asm
+		; Horizontal chars (32), CRTC REG #1
+		ld    b, 0xbc
+		ld    c, 1			; REG = 1
+		out   (c), c
+		inc   b
+		ld    c, 32			; VALUE = 32
+		out   (c), c
+
+		; Horizontal pos (42), CRTC REG #2
+		ld    b, 0xbc
+		ld    c, 2			; REG = 2
+		out   (c), c
+		inc   b
+		ld    c, 42			; VALUE = 42
+		out   (c), c
+
+		; Vertical chars (24), CRTC REG #6
+		ld    b, 0xbc
+		ld    c, 6			; REG = 6
+		out   (c), c
+		inc   b
+		ld    c, 24			; VALUE = 24
+		out   (c), c
+	#endasm
+
 	// Sprite creation
-	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (NO_MASKS, 3, sprite_2_a, 1);
-		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
-		player.current_frame = player.next_frame = sprite_2_a;
-		
-		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
-			sp_moviles [rdi] = sp_CreateSpr(NO_MASKS, 3, sprite_9_a, 1);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
-			en_an_current_frame [rdi] = sprite_9_a;
-		}
-	#else
-		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1);
-		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
-		player.current_frame = player.next_frame = sprite_2_a;
-		
-		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
-			sp_moviles [rdi] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
-			en_an_current_frame [rdi] = sprite_9_a;
-		}
-	#endif
+
+	// Player 
+
+	sp_sw [SP_PLAYER].cox = sm_cox [0];
+	sp_sw [SP_PLAYER].coy = sm_coy [0];
+	sp_sw [SP_PLAYER].invfunc = sm_invfunc [0];
+	sp_sw [SP_PLAYER].updfunc = sm_updfunc [0];
+	sp_sw [SP_PLAYER].sp0 = sp_sw [SP_PLAYER].sp1 = (unsigned int) (sm_sprptr [0]);
+
+	// Enemies 
+
+	for (gpit = SP_ENEMS_BASE; gpit < SP_ENEMS_BASE + MAX_ENEMS; gpit ++) {
+		sp_sw [gpit].invfunc = cpc_PutSpTileMap4x8;
+		sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
+	}
+
+	// Bullets are 4x8
 
 	#ifdef PLAYER_CAN_FIRE
-		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
-			sp_bullets [rdi] = sp_CreateSpr (sp_OR_SPRITE, 2, sprite_19_a, 1);
-			sp_AddColSpr (sp_bullets [rdi], sprite_19_b);
+		for (gpit = SP_BULLETS_BASE; gpit < SP_BULLETS_BASE + MAX_BULLETS; gpit ++) {
+			sp_sw [gpit].cox = 0;
+			sp_sw [gpit].coy = 0;
+			sp_sw [gpit].invfunc =cpc_PutSpTileMap4x8;
+			sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
+			sp_sw [gpit].sp0 = sp_sw [gpit].sp1 = (unsigned int) (sprite_19_a);
 		}
 	#endif
 
-	#ifdef ENABLE_SWORD
-		sp_sword = sp_CreateSpr (sp_MASK_SPRITE, 2, sprite_sword, 2);
-		sp_AddColSpr (sp_sword, sprite_sword + 32);
-		s_current_frame = sprite_sword;
+	// Sword is 4x8
+
+	#ifdef ENABLE_SWORD	
+		sp_sw [SP_SWORD_BASE].cox = 0;
+		sp_sw [SP_SWORD_BASE].coy = 0;
+		sp_sw [SP_SWORD_BASE].invfunc =cpc_PutSpTileMap4x8;
+		sp_sw [SP_SWORD_BASE].updfunc = cpc_PutTrSp4x8TileMap2b;
+		sp_sw [SP_SWORD_BASE].sp0 = sp_sw [SP_SWORD_BASE].sp1 = (unsigned int) (sprite_19_a);		
 	#endif
 
+	// Turn off all sprites
+	for (gpit = 0; gpit < SW_SPRITES_ALL; ++ gpit) {
+		spr_on [gpit] = 0;
+		sp_sw [gpit].ox = (VIEWPORT_X*8) >> 2;
+		sp_sw [gpit].oy = VIEWPORT_Y*8;
+	}	
+	
 	#ifdef ENABLE_CODE_HOOKS
 		hook_system_inits ();
 	#endif
 
+	#asm
+		ei
+	#endasm
+
 	while (1) {
 		// Here the title screen
-		cortina ();
 		title_screen ();
 		
 		#ifndef DIRECT_TO_PLAY
 			// Clear screen and show game frame
-			cortina ();
 			#asm 
 				call SPUpdateNow
 			#endasm
@@ -776,14 +813,12 @@ void main (void) {
 			#ifdef WIN_ON_SCRIPTING
 				if (script_result == 1) {
 					saca_a_todo_el_mundo_de_aqui ();
-					cortina ();
 					game_ending ();
 					playing = 0;
 				}
 			#elif defined ENABLE_CODE_HOOKS
 				if (game_loop_flag == 1) {
 					saca_a_todo_el_mundo_de_aqui ();
-					cortina ();
 					game_ending ();
 					playing = 0;
 				}
@@ -828,7 +863,6 @@ void main (void) {
 					#endif
 					{
 						saca_a_todo_el_mundo_de_aqui ();
-						cortina ();
 						game_ending ();
 						playing = 0;
 					}

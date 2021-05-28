@@ -84,51 +84,37 @@ typedef struct {
 
 // Controller
 
-struct sp_UDK keys = {
-	0x017f, // .fire
-	0x01df, // .right
-	0x02df, // .left
-	0x01fd, // .down
-	0x01fb	// .up
-};
-void *joyfunc;
+extern unsigned char def_keys_joy [0];
+#asm
+	._def_keys_joy
+		defw 0x4904, 0x4908, 0x4901, 0x4902, 0x4910, 0x4920
+		defw 0x4004, 0x4804, 0x4880, 0x4780, 0x4801, 0x4802
+#endasm
 
-#ifdef SCRIPTING_KEY_M
-	int key_m = 0x047f;
-#endif
+#define KEY_M 0x4440
+#define KEY_S 0x4710
 
-#ifdef USE_SUICIDE_KEY
-	int key_s = 0x02fd;
-#endif
-
-unsigned int key_1 = 0x01f7;
-unsigned int key_2 = 0x02f7;
-unsigned int key_3 = 0x04f7;
-
-// System
-
-void *my_malloc(uint bytes) { return sp_BlockAlloc(0); }
-void *u_malloc = my_malloc;
-void *u_free = sp_FreeBlock;
+#define KEY_1 0x4801
+#define KEY_2 0x4802
 
 // Sprite structs
 
-struct sp_SS *sp_player;
-struct sp_SS *sp_moviles [MAX_ENEMS];
-#ifdef PLAYER_CAN_FIRE
-	struct sp_SS *sp_bullets [MAX_BULLETS];
-#endif
-#ifdef ENABLE_SWORD
-	struct sp_SS *sp_sword;
-#endif
+typedef struct sprite {
+	unsigned int sp0;			// 0
+	unsigned int sp1; 			// 2
+	unsigned int coord0;
+	signed char cox, coy;		// 6 7
+	unsigned char cx, cy; 		// 8 9
+	unsigned char ox, oy;		// 10 11
+	void *invfunc;				// 12
+	void *updfunc;				// 14
+} SPR;
 
-struct sp_Rect spritesClipValues = { VIEWPORT_Y, VIEWPORT_X, 20, 30 };
-struct sp_Rect *spritesClip;
-
-#asm
-	.fsClipStruct defb 0, 24, 0, 32
-	.vpClipStruct defb VIEWPORT_Y, VIEWPORT_Y + 20, VIEWPORT_X, VIEWPORT_X + 30
-#endasm
+SPR sp_sw [SW_SPRITES_ALL] 					@ BASE_SPRITES;
+unsigned char *spr_next [SW_SPRITES_ALL] 	@ BASE_SPRITES + (SW_SPRITES_ALL)*16;
+unsigned char spr_on [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*18;
+unsigned char spr_x [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*19;
+unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
 
 // Player
 
@@ -143,19 +129,19 @@ signed int ptgmx, ptgmy;
 
 // Enemies
 
-unsigned char en_an_frame [MAX_ENEMS]				@ 23600;
-unsigned char en_an_count [MAX_ENEMS]				@ (23600 + MAX_ENEMS);
-unsigned char *en_an_current_frame [MAX_ENEMS]		@ (23600 + MAX_ENEMS*2);
-unsigned char *en_an_next_frame [MAX_ENEMS]			@ (23600 + MAX_ENEMS*4);
-unsigned char en_an_morido [MAX_ENEMS] 				@ (23600 + MAX_ENEMS*6);
-signed int en_an_x [MAX_ENEMS] 						@ (23600 + MAX_ENEMS*7);
-signed int en_an_y [MAX_ENEMS]						@ (23600 + MAX_ENEMS*9);
-signed int en_an_vx [MAX_ENEMS]						@ (23600 + MAX_ENEMS*11);
-signed int en_an_vy [MAX_ENEMS]	 					@ (23600 + MAX_ENEMS*13);
-unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (23600 + MAX_ENEMS*15);
-unsigned char en_an_state [MAX_ENEMS]				@ (23600 + MAX_ENEMS*16);
-unsigned char en_an_ff [MAX_ENEMS] 					@ (23600 + MAX_ENEMS*17);
-unsigned char en_an_base_frame [MAX_ENEMS] 			@ (23600 + MAX_ENEMS*18);
+unsigned char en_an_frame [MAX_ENEMS]				@ BASE_ARRAYS;
+unsigned char en_an_count [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS);
+unsigned char *en_an_current_frame [MAX_ENEMS]		@ (BASE_ARRAYS + MAX_ENEMS*2);
+unsigned char *en_an_next_frame [MAX_ENEMS]			@ (BASE_ARRAYS + MAX_ENEMS*4);
+unsigned char en_an_morido [MAX_ENEMS] 				@ (BASE_ARRAYS + MAX_ENEMS*6);
+signed int en_an_x [MAX_ENEMS] 						@ (BASE_ARRAYS + MAX_ENEMS*7);
+signed int en_an_y [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*9);
+signed int en_an_vx [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*11);
+signed int en_an_vy [MAX_ENEMS]	 					@ (BASE_ARRAYS + MAX_ENEMS*13);
+unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (BASE_ARRAYS + MAX_ENEMS*15);
+unsigned char en_an_state [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS*16);
+unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*17);
+unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*18);
 
 unsigned int enoffs, enoffsmasi;
 unsigned char en_j, en_x, en_y, en_xx, en_yy;
@@ -176,8 +162,8 @@ unsigned char *_baddies_pointer;
 
 // Tile behaviour array and tile array for the current screen
 
-unsigned char map_attr [150] @ 23300;
-unsigned char map_buff [150] @ 23450;
+unsigned char map_attr [150] @ BASE_ROOM_BUFFERS;
+unsigned char map_buff [150] @ BASE_ROOM_BUFFERS+150;
 
 // Hotspot related shortcut variables. hotspot_x and hotspot_y contain
 // the pixel coordinates of the current screen hotspot.
@@ -195,12 +181,8 @@ unsigned char orig_tile;	// Original background tile
 
 // Game flow
 
-#ifdef MODE_128K_DUAL
-	unsigned char is128k;
-#endif
-
-unsigned char isrc           @ 23296;
-unsigned char ay_player_on   @ 23297;
+unsigned char isrc;
+unsigned char ay_player_on;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
@@ -357,3 +339,5 @@ void init_player_values (void);
 unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
+
+// CPC Stuff

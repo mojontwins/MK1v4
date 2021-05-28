@@ -4,28 +4,36 @@ set game=cheril
 
 echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 5 5 15 10 15 packed  > nul
-..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
-..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h > nul
-..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
-..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul
-..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
-..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
-..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
-..\utils\apack.exe ..\gfx\title.scr title.bin  > nul
-..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
-..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
+
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=chars in=..\gfx\font.png out=font.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=strait2x2 in=..\gfx\work.png out=work.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites.png out=sprites.bin mappings=assets\spriteset_mappings.h max=16 silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=3 silent > nul
+
+..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=..\bin\marco.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=..\bin\ending.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=..\bin\title.bin silent > nul
+..\utils\apack.exe ..\bin\title.bin ..\bin\titlec.bin > nul
+..\utils\apack.exe ..\bin\marco.bin ..\bin\marcoc.bin > nul
+..\utils\apack.exe ..\bin\ending.bin ..\bin\endingc.bin > nul
 
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
-zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
+rem luts
+..\utils\pasmo.exe assets\cpc_TrPixLutM0.asm trpixlut.bin
+..\utils\apack.exe trpixlut.bin trpixlutc.bin > nul
+rem ..\utils\wyzTrackerParser.exe ..\mus\instrumentos.asm assets\instrumentos.h
+
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin tilemap_conf.asm churromain.c > nul
+
 ..\utils\printsize.exe %game%.bin
-..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
-..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
-..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
 
-echo Output: %game%.tap
+del %game%.sna > nul
+..\utils\cpctbin2sna.exe %game%.bin 0x400 -pc 0x400 -o %game%.sna
+echo Output: %game%.sna
 
-del ..\gfx\*.scr > nul
 del *.bin >nul

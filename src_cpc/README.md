@@ -116,7 +116,40 @@ Para empezar, `play_sfx` será dummy y no llamará a nada. Luego los play_music 
 
 Por suerte tuve a bien encapsularlo en una funcioncita.
 
+## Luts
+
+Hará falta meter las cosas de Wyz Player pero por ahora sólo tengo que recordar la lut que emplean los sprites, que debe ensamblarse, comprimirse, e incluirse en el binario (`trpixlutc.bin`) y descomprimirse durante la inicialización en su posición final.
+
 ## Para empezar
 
 La idea es tener el cheril of the bosque v4 funcionando como hito número 1. Pero para ello necesitaré todos los assets. Tengo que hacer todos los gráficos antes de siquiera empezar. No me voy a rayar, va a ser drop-in con el mapa y los enemigos.
+
+## Montando, apuntes random para una posible documentación
+
+### El sistema de sprites
+
+El sistema de sprites está formado por `SW_SPRITES_ALL` *entidades* o *sprites software*. A cada uno podemos asignar un *cell* o *gráfico de sprite* del spriteset. Todas se almacenan en el array de sprites que se coloca en `BASE_SPRITES`, y se describen por esta `struct` y estos arrays:
+
+```c
+	typedef struct sprite {
+		unsigned int sp0;			// 0
+		unsigned int sp1; 			// 2
+		unsigned int coord0;
+		signed char cox, coy;		// 6 7
+		unsigned char cx, cy; 		// 8 9
+		unsigned char ox, oy;		// 10 11
+		void *invfunc;				// 12
+		void *updfunc;				// 14
+	} SPR;
+
+	SPR sp_sw [SW_SPRITES_ALL] 					@ BASE_SPRITES;
+	unsigned char *spr_next [SW_SPRITES_ALL] 	@ BASE_SPRITES + (SW_SPRITES_ALL)*16;
+	unsigned char spr_on [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*18;
+	unsigned char spr_x [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*19;
+	unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
+```
+
+Por el momento `spr_on` no se utiliza, y ya veré qué hago con eso en el futuro (próximo). `spr_x` y `spr_y` son offsets que se calculan automáticamente (con los valores de `spriteset_mappings.h`). `spr_next` se emplea para asignar el próximo gráfico a cada sprite sin tener que liarla mucho.
+
+dentro de `sp_sw`, el jugador está en la posición 0 o `SP_PLAYER`, los enemigos a partir de `SP_ENEMS_BASE` (por defecto 1). Las balas a partir de `SP_BULLETS_BASE`, el sprite de la espada o lo que sea en `SP_SWORD_BASE`, y los custom que añada el programador a partir de `SP_CUSTOM_BASE`.
 

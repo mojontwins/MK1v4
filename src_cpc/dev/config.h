@@ -5,20 +5,8 @@
 // I. General configuration
 // ============================================================================
 
-//#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
 //#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
-
-// Arkos support. Get the addresses from ogt/RAM1.map.txt after compiling RAM1.bin
-
-//#define ENABLE_ARKOS
-//#define ARKOS_SFX_CHANNEL 			1
-//#define ARKOS_RAM 					1
-//#define ARKOS_ADDRESS_ATPLAY 			0xC000 	
-//#define ARKOS_ADDRESS_ATSTOP 			0xC6E1
-//#define ARKOS_ADDRESS_ATSFXSTOPALL	0xC6F7
-//#define ARKOS_ADDRESS_ATSFXPLAY 		0xC704
-//#define ARKOS_ADDRESS_MT_LOAD_SONG	0xC7FC
-//#define ARKOS_ADDRESS_MT_INIT 		0xC81C
+#define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
@@ -245,6 +233,7 @@
 //#define JETPAC_DRAIN_OFFSET		8		// Drain after X frames.
 //#define PLAYER_KILLS_ENEMIES			  	// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 		3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
+//#define PLAYER_MAX_KILLABLE 		6 		// Only kill enemies if id <= PLAYER_MAX_KILLABLE
 
 // Very special things which you may find useful
 // ---------------------------------------------

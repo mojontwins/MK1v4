@@ -12,38 +12,36 @@ extern unsigned char s_ending [];
 
 #asm
 	._s_title
-		BINARY "../bin/titlec.bin"
+		BINARY "title.bin"
 	._s_marco
 #endasm
 #ifndef DIRECT_TO_PLAY
-	#asm
-			BINARY "../bin/marcoc.bin"
-	#endasm
+#asm
+		BINARY "marco.bin"
+#endasm
 #endif
 #asm
 	._s_ending
-		BINARY "../bin/endingc.bin"
+		BINARY "ending.bin"
 #endasm
 
-void blackout (void) {
-	rda = BLACK_COLOUR_BYTE;
+void unpack (void) {
 	#asm
-			ld  a, 0xc0
-		.bo_l1
-			ld  h, a
-			ld  l, 0
-			ld  b, a
-			ld  a, (_rda)
-			ld  (hl), a
-			ld  a, b
-			ld  d, a
-			ld  e, 1
-			ld  bc, 0x5ff
-			ldir
+			call blackout
 
-			add 8
-			jr  nz, bo_l1
-	#endasm
+			ld hl, (_asm_int)
+			ld de, 16384
+			jp depack
+
+		.blackout
+		ld hl, 22528
+		ld de, 22529
+		ld bc, 767
+		xor a
+		ld (hl), a
+		ldir
+			ret
+		#endasm
 }
 
 void title_screen (void) {
