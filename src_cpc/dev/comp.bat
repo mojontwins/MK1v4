@@ -25,16 +25,39 @@ rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
 rem luts
-..\utils\pasmo.exe cpc_TrPixLutM0.asm trpixlut.bin
+..\utils\pasmo.exe system\cpc_TrPixLutM0.asm trpixlut.bin
 ..\utils\apack.exe trpixlut.bin trpixlutc.bin > nul
 rem ..\utils\wyzTrackerParser.exe ..\mus\instrumentos.asm assets\instrumentos.h
 
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin tilemap_conf.asm churromain.c > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c > nul
 
 ..\utils\printsize.exe %game%.bin
 
 del %game%.sna > nul
 ..\utils\cpctbin2sna.exe %game%.bin 0x400 -pc 0x400 -o %game%.sna
 echo Output: %game%.sna
+
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal_loading.png mode=scr in=..\gfx\loading.png out=loading.bin silent > nul
+..\utils\zx7.exe loading.bin loading.c.bin > nul
+..\utils\zx7.exe %game%.bin %game%.c.bin > nul
+
+..\utils\imanol.exe in=system\loadercpc.asm-orig out=system\loadercpc.asm ^
+	scrc_size=?loading.c.bin ^
+	mainbin_size=?%game%.c.bin ^
+	loading_palette=!..\gfx\pal_loading.png ^
+	loader_mode=0 > nul
+..\utils\pasmo.exe system\loadercpc.asm loader.bin  > nul
+
+..\utils\imanol.exe in=system\preloadercpc.asm-orig out=system\preloadercpc.asm ^
+	loader_size=?loader.bin ^
+	loader_mode=0 > nul
+..\utils\pasmo.exe system\preloadercpc.asm preloader.bin  > nul
+
+del %game%.cdt > nul
+..\utils\cpc2cdt.exe -r %game% -m cpc -l 1024 -x 1024 -p 2000 preloader.bin %game%.cdt > nul
+..\utils\cpc2cdt.exe -r LOADER -m raw1full -rl 740 -p 2000 loader.bin %game%.cdt > nul
+..\utils\cpc2cdt.exe -r SCR -m raw1full -rl 740 -p 2000 loading.c.bin %game%.cdt > nul
+..\utils\cpc2cdt.exe -r MAIN -m raw1full -rl 740 -p 2000 %game%.c.bin %game%.cdt > nul
+echo Output: %game%.cdt
 
 del *.bin >nul
