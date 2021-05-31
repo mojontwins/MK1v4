@@ -41,9 +41,9 @@
 #define HOTSPOT_TYPE_REFILL 	3
 
 typedef struct {
-	int x, y, cx;										// 0, 2, 4
-	int vx, vy; 										// 6, 8
-	char g, ax, rx; 									// 10, 11, 12
+	signed int x, y, cx;								// 0, 2, 4
+	signed int vx, vy; 									// 6, 8
+	signed char g, ax, rx; 								// 10, 11, 12
 	unsigned char salto, cont_salto; 					// 13, 14
 	unsigned char *current_frame, *next_frame; 			// 15, 17
 	unsigned char saltando; 							// 19
@@ -52,8 +52,8 @@ typedef struct {
 	unsigned char ct_estado; 							// 24
 	unsigned char gotten; 								// 25
 	unsigned char possee; 								// 26
-	char objs, keys; 									// 27, 28
-	int life; 											// 29
+	signed char objs, keys; 							// 27, 28
+	signed int life; 									// 29
 	unsigned char fuel; 								// 31
 	unsigned char killed; 								// 32
 	unsigned char disparando; 							// 33
@@ -84,6 +84,52 @@ typedef struct {
 
 // Controller
 
+// How keys work (in sideview)
+// - If player can't fire, BUTTON_A will JUMP.
+// - If player can fire, and USE_TWO_BUTTONS is DEFINED, BUTTON_A will FIRE, BUTTON_B will JUMP
+// - If player can fire, and USE_TWO_BUTTONS is DEFINED, BUTTON_A will FIRE, ÛP will JUMP
+
+// To define different keys, the first two hex digits are the COLUMN, the next the ROW
+// (Adapt. from cpctelera docs @ https://lronaldo.github.io/cpctelera/files/keyboard/keyboard-txt.html)
+/*
+=========================================================================================================
+|     |                                       column                                                    |
+|     |-------------------------------------------------------------------------------------------------|
+| row |     40      |     41     |  42   | 43  | 44  | 45   |     46       | 47  |   48     |    49     |
+|=====|=============|============|=======|=====|=====|======|==============|=====|==========|===========|
+| 80  | f.          | f0         | Ctrl  | > , | < . | Space| V            | X   | Z        | Del       |
+| 40  | Enter       | f2         | ` \   | ? / | M   | N    | B            | C   | Caps Lock| Unused    |
+| 20  | f3          | f1         | Shift | * : | K   | J    | F Joy1_Fire1 | D   | A        | Joy0_Fire1|
+| 10  | f6          | f5         | f4    | + ; | L   | H    | G Joy1_Fire2 | S   | Tab      | Joy0_Fire2|
+| 08  | f9          | f8         | } ]   | P   | I   | Y    | T Joy1_Right | W   | Q        | Joy0_Right|
+| 04  | Cursor Down | f7         | Return| | @ | O   | U    | R Joy1_Left  | E   | Esc      | Joy0_Left |
+| 02  | Cursor Right| Copy       | { [   | = - | ) 9 | ' 7  | % 5 Joy1_Down| # 3 | " 2      | Joy0_Down |
+| 01  | Cursor Up   | Cursor Left| Clr   | £ ^ | _ 0 | ( 8  | & 6 Joy1_Up  | $ 4 | ! 1      | Joy0_Up   |
+=========================================================================================================
+*/
+
+//#define USE_TWO_BUTTONS					// Alternate keyboard scheme for two-buttons games
+
+extern unsigned char def_keys [0];
+#asm
+	._def_keys
+		defw $4404 		; LEFT     O
+		defw $4308 		; RIGHT    P
+		defw $4808 		; UP       Q
+		defw $4820 		; DOWN     A
+
+		defw $4580 		; BUTTON_A SPACE
+		defw $4808 		; BUTTON_B Q
+
+		defw $4204		; KEY_ENTER
+		defw $4804		; KEY_ESC	
+
+		defw $4880		; KEY_AUX1 Z
+		defw $4780 		; KEY_AUX2 X
+		defw $4801 		; KEY_AUX3 1
+		defw $4802 		; KEY_AUX4 2
+#endasm
+
 extern unsigned char def_keys_joy [0];
 #asm
 	._def_keys_joy
@@ -96,6 +142,25 @@ extern unsigned char def_keys_joy [0];
 
 #define KEY_1 0x4801
 #define KEY_2 0x4802
+
+#define KEY_LEFT 		0
+#define KEY_RIGHT		1
+#define KEY_UP  		2
+#define KEY_DOWN 		3
+#define KEY_BUTTON_A	4
+#define KEY_BUTTON_B	5
+#define KEY_ENTER		6
+#define KEY_ESC			7
+#define KEY_AUX1		8
+#define KEY_AUX2		9
+#define KEY_AUX3 		10
+#define KEY_AUX4 		11
+
+#define sp_LEFT           0x01
+#define sp_RIGHT          0x02
+#define sp_UP             0x04		
+#define sp_DOWN           0x08
+#define sp_FIRE           0x10
 
 // Sprite structs
 
@@ -124,6 +189,7 @@ INERCIA player;
 	unsigned char bullets_y [MAX_BULLETS];
 	signed char bullets_mx [MAX_BULLETS];
 	unsigned char bullets_estado [MAX_BULLETS];
+	unsigned char bspr_it;
 #endif
 signed int ptgmx, ptgmy;
 
@@ -263,12 +329,13 @@ signed int rdj;
 unsigned char rdx, rdy;
 unsigned char gpit, enit, pad0, pad1, pad_this_frame;
 unsigned char gpx, gpy, gpxx, gpyy;
-int gpcx, gpcy;
+signed int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char _x2, _y2;
 unsigned char wall;
+unsigned char rda, rdb;
 
 #if defined RLE_MAP
 	unsigned char rdc, rdn;

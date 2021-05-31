@@ -7,6 +7,8 @@
 
 //#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
+#define BLACK_COLOUR_BYTE 			1		// Which pen is black?
+#define SOUND_NONE
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 

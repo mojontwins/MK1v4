@@ -32,163 +32,37 @@
 #ifdef ENEMIES_MAY_DIE
 	#asm
 		._sprite_17_a
-			defb 0, 128
-			defb 56, 0
-			defb 117, 0
-			defb 123, 0
-			defb 127, 0
-			defb 57, 0
-			defb 0, 0
-			defb 96, 0
-			defb 238, 0
-			defb 95, 0
-			defb 31, 0
-			defb 62, 0
-			defb 53, 128
-			defb 42, 128
-			defb 20, 128
-			defb 0, 192
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-	 
-		._sprite_17_b
-			defb 0, 3
-			defb 240, 1
-			defb 248, 0
-			defb 236, 0
-			defb 212, 0
-			defb 248, 0
-			defb 224, 1
-			defb 24, 0
-			defb 124, 0
-			defb 120, 0
-			defb 244, 0
-			defb 168, 0
-			defb 0, 1
-			defb 0, 3
-			defb 0, 63
-			defb 0, 127
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-	 
-		._sprite_17_c
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
-			defb 0, 255
+			BINARY "sprites_extra.bin"
 	#endasm
 #endif
 			
 #if defined NO_MAX_ENEMS || defined ENEMIES_MAY_DIE
 	#asm	
 		._sprite_18_a
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			
-		._sprite_18_b
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			
-		._sprite_18_c
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
-			defb 0, 255, 0, 255, 0, 255, 0, 255
+			defs 96, 0
 	#endasm
 #endif
 
 #ifdef PLAYER_CAN_FIRE
 	#asm
 		._sprite_19_a
-			defb 0, 0
-			defb 0, 0
-			defb 24, 0
-			defb 60, 0
-			defb 60, 0
-			defb 24, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-		
-		._sprite_19_b
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
-			defb 0, 0
+			BINARY "sprites_bullet.bin"
 	#endasm
 #endif
 
 #ifdef ENABLE_SWORD
 	#asm
 		._sprite_sword
-			BINARY "sprite_sword.bin"
+			BINARY "sprites_sword.bin"
 	#endasm
 #endif
 
 #ifdef ENABLE_FRIGOABABOL
 	#asm
 		._sprite_frigo
-			BINARY "sprite_frigo.bin"
+			BINARY "sprites_frigo.bin"
 	#endasm
 #endif
+
+#define SPRFR_EXPL  sprite_17_a
+#define SPRFR_EMPTY sprite_18_a

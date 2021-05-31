@@ -22,9 +22,11 @@
 // We are using some stuff from CPCRSLIB directly
 #asm
 		XREF _nametable
+		XREF tabla_teclas
 		LIB cpc_KeysData
 		LIB cpc_UpdTileTable
 		LIB cpc_InvalidateRect
+		LIB cpc_TestKeyboard
 #endasm
 
 #include "config.h"
@@ -68,9 +70,31 @@
 #define SP_SWORD_BASE 		SP_BULLETS_BASE + MAX_BULLETS
 #define SP_CUSTOM_BASE		SP_SWORD_BASE + SWORD_SW_SPRITE_ON
 
+#ifdef SOUND_NONE
+	#define AY_INIT()        ;
+	#define AY_PLAY_SOUND(a) ;
+	#define AY_STOP_SOUND()  ;
+	#define AY_PLAY_MUSIC(a) ;
+#elif defined SOUND_WYZ
+	#define AY_INIT()        wyz_init ();
+	#define AY_PLAY_SOUND(a) wyz_play_sound (a);
+	#define AY_STOP_SOUND()  wyz_stop_sound ();
+	#define AY_PLAY_MUSIC(a) wyz_play_music (a);
+#endif		
+
+extern unsigned char trpixlutc [0];
+
+#asm
+	; LUT for transparent pixels in sprites
+	; taken from CPCTelera
+	._trpixlutc
+		BINARY "trpixlutc.bin"
+#endasm
+
 // Program modules in strict order...
 
 #include "definitions.h"
+#include "pal.h"
 #include "mtasmlib.h"
 #if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 	#include "isr.h"
@@ -85,6 +109,7 @@
 #include "mapa.h"
 #include "tileset.h"
 #include "sprites.h"
+#include "spriteset_mappings.h"
 #include "extrasprites.h"
 #include "enems.h"
 #include "beeper.h"

@@ -604,7 +604,7 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			push hl
 
 			xor a 
-			ld  (_rdn), a 		; Strlen
+			ld  (__n), a 		; Strlen
 
 			call __tile_address	; DE = buffer address
 			
@@ -621,9 +621,9 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			inc hl
 			inc de 
 
-			ld  a, (_rdn)
+			ld  a, (__n)
 			inc a
-			ld  (_rdn), a
+			ld  (__n), a
 
 			jr  print_str_loop
 
@@ -635,7 +635,7 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			ld  d, a
 			ld  a, (__x)
 			ld  c, a
-			ld  a, (_rdn)
+			ld  a, (__n)
 			add c
 			dec a
 			ld  e, a
@@ -649,7 +649,39 @@ void any_key (void) {
 
 void pad_read (void) {
 	pad_this_frame = pad1;
-	pad1 = pad0 = (joyfunc) (&keys); 
+
+	// pad1 = pad0 = (joyfunc) (&keys); 
+	// Fill pad1 and pad0 with the status of the first 8 keys in `tabla_teclas`.
+	#asm 
+			ld  hl, cpc_KeysData + 12
+			xor a
+			ld  (_pad0), a
+			ld  b, 1 				// Bit to switch
+		pad_read_loop:
+			push bc
+			ld  d, (hl) 			// LSB: Column
+			inc hl
+			ld  a, (hl) 			// MSB: Line
+			inc hl
+			call cpc_TestKeyboard
+			and d  					// Pressed?
+			pop bc
+			jr  z, pad_read_not_pressed
+
+			ld  a, (_pad0)
+			or  b
+			ld  (_pad0), a
+
+		.pad_read_not_pressed
+			sla b
+			jr  nz, pad_read_loop
+
+
+			ld  a, (_pad0)
+			cpl
+			ld  (_pad0), a
+			ld  (_pad1), a
+	#endasm
 
 	// Keys held this frame
 	pad_this_frame = (~pad_this_frame) | pad1;
@@ -717,3 +749,164 @@ void espera_activa (int espera) {
 		// TODO
 	}
 #endif
+
+// MTE MK1 (la Churrera) v5.0
+// Copyleft 2010-2014, 2020 by the Mojon Twins
+
+// cpc_UpdateNow () - Updates the screen.
+
+// SPR struct is 16 bytes wide. So iteration is simple
+// if you write your code by hand ... 
+
+void cpc_UpdateNow (unsigned char sprites) {
+	if (sprites) {
+		#asm
+			// Call the invalidate function for all sprites 
+
+			/*
+			for (gpit = 0; gpit < SW_SPRITES_ALL; gpit ++) {
+				(sp_sw [gpit].invfunc) ((int) (&sp_sw [gpit]));
+			}
+			*/
+
+				ld  b, 0
+			._cpc_screen_update_inv_loop
+				push bc
+				// SW_SPRITES_ALL will be at very most = 16,
+				// so we can multiply by 16 safely in 8 bits.
+				ld  a, b
+				sla a
+				sla a
+				sla a 
+				sla a
+				ld d, 0
+				ld e, a
+				ld  hl, _sp_sw
+				add hl, de
+
+				// Save paremeter
+				ld  b, h
+				ld  c, l
+
+				// Push return address into stack
+				ld  de, _cpc_screen_update_inv_ret
+				push de
+
+				// Push function pointer into stack
+				// Offset 12 into the structure: invfunc
+				ld  de, 12
+				add hl, de
+				ld  e, (hl)
+				inc hl
+				ld  d, (hl)
+				push de
+
+				// __fastcall__ expects parameter in HL
+				ld  h, b
+				ld  l, c
+
+				// ret will pop the function pointer from the
+				// stack and jp to it. Next ret will get to 
+				// _cpc_screen_update_inv_ret
+				ret
+
+			._cpc_screen_update_inv_ret
+				pop bc
+				inc b
+				ld  a, b
+				cp  SW_SPRITES_ALL
+				jr  nz, _cpc_screen_update_inv_loop
+		#endasm
+	}
+
+	#asm
+		._cpc_screen_update_upd_buffer
+			call cpc_UpdScr 
+	#endasm
+
+	if (sprites) {
+		// Call the drawing function for all sprites
+
+		#asm
+			/*
+				for (gpjt = 0; gpjt < SW_SPRITES_ALL; gpjt ++) {
+					gpit = spr_order [gpjt];
+					(sp_sw [gpit].updfunc) ((int) (&sp_sw [gpit]));
+				}
+			*/	
+				ld  b, SW_SPRITES_ALL
+			._cpc_screen_update_upd_loop
+				dec b
+				push bc
+				ld  a, b
+
+				// SW_SPRITES_ALL will be at very most = 16,
+				// so we can multiply by 16 safely in 8 bits.
+				sla a
+				sla a
+				sla a 
+				sla a
+				ld d, 0
+				ld e, a
+				ld  hl, _sp_sw
+				add hl, de
+
+				// Save paremeter
+				ld  b, h
+				ld  c, l
+
+				// Push return address into stack
+				ld  de, _cpc_screen_update_upd_ret
+				push de
+
+				// Push function pointer into stack
+				// Offset 12 into the structure: updfunc
+				ld  de, 14
+				add hl, de
+				ld  e, (hl)
+				inc hl
+				ld  d, (hl)
+				push de
+
+				// __fastcall__ expects parameter in HL
+				ld  h, b
+				ld  l, c
+
+				// ret will pop the function pointer from the
+				// stack and jp to it. Next ret will get to 
+				// _cpc_screen_update_inv_ret
+				ret
+
+			._cpc_screen_update_upd_ret
+				pop bc
+				xor a
+				or  b
+				jr  nz, _cpc_screen_update_upd_loop
+
+			._cpc_screen_update_done
+		#endasm
+	}
+
+	#ifdef MIN_FAPS_PER_FRAME
+		while (isrc < MIN_FAPS_PER_FRAME*6) {
+			#asm
+				halt
+			#endasm
+		} isrc = 0;
+	#endif
+
+	#asm
+			call cpc_ShowTouchedTiles
+			call cpc_ResetTouchedTiles
+	#endasm
+}
+
+void pal_set (unsigned char *pal) {
+	#if CPC_GFX_MODE == 0
+		gpit = 16;
+	#else
+		gpit = 4;
+	#endif
+	while (gpit --) cpc_SetColour (gpit, pal[gpit]);
+}
+

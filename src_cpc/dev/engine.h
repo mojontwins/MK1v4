@@ -13,30 +13,34 @@ unsigned char line_of_text_clear [] = "                                ";
 #ifdef PLAYER_CUSTOM_CELLS
 	#include "custom_player_cells.h"
 #else
-	unsigned char *player_cells [] = {
-		sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
-		sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
-		#ifdef ENABLE_FRIGOABABOL
-			sprite_frigo,
-		#else 
-			0,
-		#endif
-		#if defined ENABLE_SWORD && defined PLAYER_MOGGY_STYLE && defined GENITAL_HIT_FRAMES
-			extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a,
-		#endif
-	};
+	extern unsigned char *player_cells [0];
+	#asm
+		._player_cells 
+			defw SPRITE_00, SPRITE_01, SPRITE_02, SPRITE_03
+			defw SPRITE_04, SPRITE_05, SPRITE_06, SPRITE_07
+			#ifdef ENABLE_FRIGOABABOL
+				defw _sprite_frigo
+			#else
+				defw 0
+			#endif
+			#if defined ENABLE_SWORD && defined PLAYER_MOGGY_STYLE && defined GENITAL_HIT_FRAMES
+				defw SPRITE_10, SPRITE_11, SPRITE_12, SPRITE_13
+			#endif
+	#endasm
 #endif
 
-unsigned char *enem_cells [] = {
-	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
-};
+extern unsigned char *enem_cells [0];
+#asm
+		._enem_cells
+			defw SPRITE_08, SPRITE_09, SPRITE_0A, SPRITE_0B
+			defw SPRITE_0C, SPRITE_0D, SPRITE_0E, SPRITE_0F
+#endasm
 
 #ifdef ENABLE_SWORD
 	extern unsigned char *sword_cells [0];
 	#asm 
 		._sword_cells
-			defw _sprite_sword, _sprite_sword + 64, _sprite_sword + 128, _sprite_sword + 192
+			defw _sprite_sword, _sprite_sword + 16, _sprite_sword + 32, _sprite_sword + 48
 	#endasm
 #endif
 
@@ -49,144 +53,16 @@ void abs_a (void) {
 }
 
 void saca_a_todo_el_mundo_de_aqui (void) {
-	// ¡Saca a todo el mundo de aquí!
-	#asm
-			ld  ix, (_sp_player)
-			ld  iy, vpClipStruct
-			ld  bc, 0
-			ld  hl, 0xfefe	// -2, -2
-			ld  de, 0
-			call SPMoveSprAbs
-	
-			xor a
-		.hide_sprites_enems_loop
-			ld  (_gpit), a
-
-			sla a
-			ld  c, a
-			ld  b, 0
-			ld  hl, _sp_moviles
-			add hl, bc
-			ld  e, (hl)
-			inc hl
-			ld  d, (hl)
-			push de
-			pop ix
-
-			ld  iy, vpClipStruct
-			ld  bc, 0
-			ld  hl, 0xfefe	// -2, -2
-			ld  de, 0
-
-			call SPMoveSprAbs
-
-			ld  a, (_gpit)
-			inc a
-			cp  MAX_ENEMS
-			jr  nz, hide_sprites_enems_loop
-
-		#ifdef ENABLE_SWORD
-			ld  ix, (_sp_sword)
-			ld  iy, vpClipStruct
-			ld  bc, 0
-			ld  hl, 0xfefe	// -2, -2
-			ld  de, 0
-			call SPMoveSprAbs			
-		#endif
-	#endasm
+	for (gpit = 0; gpit < SW_SPRITES_ALL; gpit ++) {
+		sp_sw [gpit].sp0 = (int) (SPRFR_EMPTY);
+	}
 }
 
 void render_this_enemy (void) {
-	/*
-	sp_MoveSprAbs (
-		sp_moviles [enit], 
-		spritesClip, 
-		en_an_next_frame [enit] - en_an_current_frame [enit], 
-		VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
-	);
-
-	en_an_current_frame [enit] = en_an_next_frame [enit];
-	*/
-	#asm
-			// sp_moviles [enit] = sp_moviles + enit*2
-			ld  a, (_enit)
-			sla a
-			ld  c, a
-			ld  b, 0 				// BC = offset to [enit] in 16bit arrays
-			ld  hl, _sp_moviles
-			add hl, bc
-			ld  e, (hl)
-			inc hl 
-			ld  d, (hl)
-			push de						
-			pop ix
-
-			// Clipping rectangle
-			ld  iy, vpClipStruct
-
-			// Animation
-			// en_an_next_frame [enit] - en_an_current_frame [enit]
-			ld  hl, _en_an_current_frame
-			add hl, bc 				// HL -> en_an_current_frame [enit]
-			ld  e, (hl)
-			inc hl 
-			ld  d, (hl) 			// DE = en_an_current_frame [enit]
-
-			ld  hl, _en_an_next_frame
-			add hl, bc 				// HL -> en_an_next_frame [enit]
-			ld  a, (hl)
-			inc hl
-			ld  h, (hl)
-			ld  l, a 				// HL = en_an_next_frame [enit]
-
-			or  a 					// clear carry
-			sbc hl, de 				// en_an_next_frame [enit] - en_an_current_frame [enit]
-
-			push bc 				// Save for later
-
-			ld  b, h
-			ld  c, l 				// ** BC = animate bitdef **	
-
-			//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
-			ld  a, (_rdy)					
-			srl a
-			srl a
-			srl a
-			add VIEWPORT_Y
-			ld h, a
-
-			ld  a, (_rdx)
-			srl a
-			srl a
-			srl a
-			add VIEWPORT_X
-			ld  l, a
-
-			// rdx & 7, rdy & 7
-			ld  a, (_rdx)
-			and 7
-			ld  d, a
-
-			ld  a, (_rdy)
-			and 7
-			ld  e, a
-
-			call SPMoveSprAbs
-
-			// en_an_current_frame [enit] = en_an_next_frame [enit];
-
-			pop bc 					// Retrieve index
-
-			ld  hl, _en_an_current_frame
-			add hl, bc
-			ex  de, hl 				// DE -> en_an_current_frame [enit]	
-
-			ld  hl, _en_an_next_frame
-			add hl, bc 				// HL -> en_an_next_frame [enit]
-
-			ldi
-			ldi
-	#endasm
+	rda = SP_ENEMS_BASE + enit;
+	sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 2;
+	sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
+	sp_sw [rda].sp0 = (int) (en_an_next_frame [enit]);
 }
 
 void calc_baddies_pointer (void) {
@@ -294,51 +170,7 @@ void render_all_sprites (void) {
 			rdi, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
 		);
 		*/
-		#asm
-				ld  ix, (_sp_player)
-				ld  iy, vpClipStruct
-
-				ld  hl, (_player + 17)			// player.next_frame
-				ld  de, (_player + 15) 			// player.current_frame
-				or  a
-				sbc hl, de
-				ld  b, h
-				ld  c, l
-
-				ld  a, (_rdy)
-				cp  248
-				jr  c, ras_player_on_screen
-
-				ld  a, VIEWPORT_Y-1
-				jr  ras_rdi_calc_done
-
-			.ras_player_on_screen
-				ld  a, (_rdy)
-				srl a 
-				srl a 
-				srl a 
-				add VIEWPORT_Y
-
-			.ras_rdi_calc_done
-				ld  h, a 
-
-				ld  a, (_rdx)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_X
-				ld  l, a 
-				
-				ld  a, (_rdx)
-				and 7
-				ld  d, a
-
-				ld  a, (_rdy)
-				and 7
-				ld  e, a
-
-				call SPMoveSprAbs
-		#endasm		
+		// TODO
 	#else
 		/*
 		sp_MoveSprAbs (
@@ -346,118 +178,35 @@ void render_all_sprites (void) {
 			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
 		);
 		*/
-		#asm
-				ld  ix, (_sp_player)
-				ld  iy, vpClipStruct
-
-				ld  hl, (_player + 17)			// player.next_frame
-				ld  de, (_player + 15) 			// player.current_frame
-				or  a
-				sbc hl, de
-				ld  b, h
-				ld  c, l
-
-				ld  a, (_rdy)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_Y
-				ld  h, a 
-
-				ld  a, (_rdx)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_X
-				ld  l, a 
-				
-				ld  a, (_rdx)
-				and 7
-				ld  d, a
-
-				ld  a, (_rdy)
-				and 7
-				ld  e, a
-
-				call SPMoveSprAbs
-		#endasm
+		sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
+		sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
+		if ( (player.estado & EST_PARP) && half_life ) 
+			sp_sw [SP_PLAYER].sp0 = (int) (SPRFR_EMPTY);
+		else
+			sp_sw [SP_PLAYER].sp0 = (int) (player.next_frame);
 	#endif
 	player.current_frame = player.next_frame;
 	
 	#ifdef PLAYER_CAN_FIRE
+		bspr_it = SP_BULLETS_BASE;
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
-				rdx = bullets_x [rdi]; rdy = bullets_y [rdi];
 				/*
 				sp_MoveSprAbs (
 					sp_bullets [rdi], spritesClip, 0, 
 					VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
 				);
 				*/
-				#asm
-						ld  a, (_rdi)
-						sla a
-						ld  c, a
-						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
-						ld  hl, _sp_bullets
-						add hl, bc
-						ld  e, (hl)
-						inc hl 
-						ld  d, (hl)
-						push de						
-						pop ix
-
-						ld  iy, vpClipStruct
-						ld  bc, 0
-
-						ld  a, (_rdy)
-						srl a
-						srl a
-						srl a
-						add VIEWPORT_Y
-						ld  h, a
-
-						ld  a, (_rdx)
-						srl a
-						srl a
-						srl a
-						add VIEWPORT_X
-						ld  l, a
-
-						ld  a, (_rdx)
-						and 7
-						ld  d, a 
-
-						ld  a, (_rdy)
-						and 7
-						ld  e, a 
-						
-						call SPMoveSprAbs
-				#endasm				
+				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
+				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
 			} else {
 				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
-				#asm
-						ld  a, (_rdi)
-						sla a
-						ld  c, a
-						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
-						ld  hl, _sp_bullets
-						add hl, bc
-						ld  e, (hl)
-						inc hl 
-						ld  d, (hl)
-						push de						
-						pop ix
-
-						ld  iy, vpClipStruct
-						ld  bc, 0
-
-						ld  hl, 0xfefe
-						ld  de, 0 
-						
-						call SPMoveSprAbs
-				#endasm
+				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cy = (VIEWPORT_Y * 8);
+				sp_sw [bspr_it].sp0 = (int) (SPRFR_EMPTY);
 			}
+			bspr_it ++;
 		}
 	#endif
 }
@@ -1309,12 +1058,7 @@ void move (void) {
 	gpcx = player.x;
 	gpcy = player.y;
 
-	// Read device (keyboard, joystick ...)
-	pad_this_frame = pad1;
-	pad1 = pad0 = (joyfunc) (&keys); 
-
-	// Keys held this frame
-	pad_this_frame = (~pad_this_frame) | pad1;
+	pad_read ();
 
 	// Jump button
 	#ifndef PLAYER_MOGGY_STYLE
@@ -4462,7 +4206,14 @@ void enems_calc_frame (void) {
 }
 
 void enems_en_an_calc (unsigned char n) {
-	en_an_base_frame [enit] = n << 1;	
+	rdb = en_an_base_frame [enit] = n << 1;
+
+	rda = SP_ENEMS_BASE + enit;
+	sp_sw [rda].cox = sm_cox [rdb];
+	sp_sw [rda].coy = sm_coy [rdb];
+	sp_sw [rda].invfunc = sm_invfunc [rdb];
+	sp_sw [rda].updfunc = sm_updfunc [rdb];
+		
 	enems_calc_frame ();
 }
 
@@ -4631,7 +4382,7 @@ void draw_scr (void) {
 
 			#if defined (ENEMIES_MAY_DIE)
 				default:
-					en_an_next_frame [enit] = sprite_18_a;
+					en_an_next_frame [enit] = SPRFR_EMPTY;
 			#endif
 		}
 		

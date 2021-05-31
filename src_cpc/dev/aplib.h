@@ -4,6 +4,9 @@
 // aplib.h
 // Cointains the aPPack decompressor.
 
+unsigned int ram_address;
+unsigned int ram_destination;
+
 #asm
 
 ; aPPack decompressor
@@ -141,3 +144,12 @@
 		
 			ret
 #endasm
+
+void unpack (unsigned int address, unsigned int destination) {
+	ram_address = address; ram_destination = destination;
+	#asm
+		ld hl, (_ram_address)
+		ld de, (_ram_destination)
+		call depack
+	#endasm
+}

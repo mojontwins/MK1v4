@@ -90,7 +90,7 @@ void main (void) {
 	
 	// Set mode
 
-	cpc_SetMode (CPC_GFX_MODE);
+	cpc_SetMode (0);
 
 	// Set tweaked mode 
 	// (thanks Augusto Ruiz for the code & explanations!)
@@ -180,11 +180,8 @@ void main (void) {
 		title_screen ();
 		
 		#ifndef DIRECT_TO_PLAY
-			// Clear screen and show game frame
-			#asm 
-				call SPUpdateNow
-			#endasm
-			asm_int = (unsigned int) (s_marco); unpack ();
+			unpack ((unsigned int) (s_marco), BASE_SUPERBUFF);
+			cpc_ShowTileMap (1);
 		#endif
 
 		// Let's do it.
@@ -244,9 +241,12 @@ void main (void) {
 		#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 			#ifdef SHOW_TOTAL
 				// Show total of enemies next to the killed amount.
+				/*
 				sp_PrintAtInv (KILLED_Y, 2 + KILLED_X, 71, 15);
 				sp_PrintAtInv (KILLED_Y, 3 + KILLED_X, 71, 16 + BADDIES_COUNT / 10);
 				sp_PrintAtInv (KILLED_Y, 4 + KILLED_X, 71, 16 + BADDIES_COUNT % 10);
+				*/
+				// TODO
 			#endif
 		#endif
 				
@@ -305,10 +305,41 @@ void main (void) {
 				if (player.objs != objs_old) {
 					#if defined ONLY_ONE_OBJECT && defined OBJECTS_ICON_X
 						if (player.objs) {
+							/*
 							sp_PrintAtInv (OBJECTS_ICON_Y, OBJECTS_ICON_X, 135, 132);
 							sp_PrintAtInv (OBJECTS_ICON_Y, OBJECTS_ICON_X + 1, 135, 133);
 							sp_PrintAtInv (OBJECTS_ICON_Y + 1, OBJECTS_ICON_X, 135, 134);
 							sp_PrintAtInv (OBJECTS_ICON_Y + 1, OBJECTS_ICON_X + 1, 135, 135);
+							*/
+							#asm
+									// Calculate address in the display list
+
+									ld  a, OBJECTS_ICON_X
+									ld  (__x), a
+									ld  c, a
+									ld  a, OBJECTS_ICON_Y
+									ld  (__y), a
+									
+									call __tile_address	; DE = buffer address
+									ex de, hl
+
+									// Now write 4 chars.
+									ld  a, 132
+									
+									ld  (hl), a
+									inc hl
+									inc a
+									ld  (hl), a
+									ld  bc, 31
+									add hl, bc
+									inc a
+									ld  (hl), a
+									inc hl
+									inc a
+									ld  (hl), a							
+
+									call _invalidate_tile
+							#endasm						
 						} else {
 							draw_coloured_tile (OBJECTS_ICON_X, OBJECTS_ICON_Y, 17);
 						}
@@ -333,9 +364,6 @@ void main (void) {
 			#ifdef LIFE_X
 				if (player.life != life_old) {
 					if (player.life > 0) pti = (unsigned char) player.life; else pti = 0;
-					#ifdef DRAW_HI_DIGIT
-						sp_PrintAtInv (LIFE_H_Y, LIFE_H_X, 71, 16 + pti / 100);
-					#endif
 					draw_2_digits (LIFE_X, LIFE_Y, pti);
 					life_old = player.life;
 				}
@@ -636,7 +664,7 @@ void main (void) {
 				#asm
 					.ml_min_faps_loop
 						ld  a, (_isrc)
-						cp  MIN_FAPS_PER_FRAME
+						cp  MIN_FAPS_PER_FRAME*6
 						jr  nc, ml_min_faps_loop_end
 						halt
 						jr  ml_min_faps_loop
@@ -649,9 +677,7 @@ void main (void) {
 
 			// Update to screen
 
-			#asm 
-				call SPUpdateNow
-			#endasm
+			cpc_UpdateNow (1);
 			
 			// Dead enemies
 
@@ -689,10 +715,10 @@ void main (void) {
 		
 			#ifdef ACTIVATE_SCRIPTING		
 				#ifdef SCRIPTING_KEY_M			
-					if (sp_KeyPressed (key_m) || ((pad_this_frame & sp_FIRE) == 0))
+					if (cpc_TestKey (KEY_AUX1))
 				#endif
 				#ifdef SCRIPTING_DOWN
-					if ((pad_this_frame & sp_DOWN) == 0)
+					if (cpc_TestKey (KEY_DOWN))
 				#endif
 				{
 					
@@ -911,7 +937,7 @@ void main (void) {
 			}
 			
 			#ifdef USE_SUICIDE_KEY
-				if (sp_KeyPressed (key_s)) {
+				if (cpc_TestKey (KEY_AUX4)) {
 					player.is_dead = 1;
 					player.life --;
 				}

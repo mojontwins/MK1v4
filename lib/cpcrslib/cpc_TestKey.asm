@@ -21,12 +21,9 @@ XREF  tabla_teclas
 	add hl,de
 	
 	ld a,(HL)
-	;ld (cpc_TestKeyboard+linea_a_buscar+1),a		;cambia la línea a explorar
-	;XOR A
 	call cpc_TestKeyboard		; esta rutina lee la línea del teclado correspondiente 
 	DEC hl						; pero sólo nos interesa una de las teclas.
 	and (HL) ;para filtrar por el bit de la tecla (puede haber varias pulsadas)
-	;xor a
 	CP (hl)	;comprueba si el byte coincide
 	ld h,0
 	jp z,pulsado

@@ -37,6 +37,7 @@ void beepet (void) {
 		play_sfx (3);
 	}
 	*/
+	/*
 	#asm
 		push ix
 		push iy
@@ -59,4 +60,5 @@ void beepet (void) {
 		pop iy
 		pop ix
 	#endasm
+	*/
 }
