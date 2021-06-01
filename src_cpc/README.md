@@ -153,3 +153,25 @@ Por el momento `spr_on` no se utiliza, y ya veré qué hago con eso en el futuro
 
 dentro de `sp_sw`, el jugador está en la posición 0 o `SP_PLAYER`, los enemigos a partir de `SP_ENEMS_BASE` (por defecto 1). Las balas a partir de `SP_BULLETS_BASE`, el sprite de la espada o lo que sea en `SP_SWORD_BASE`, y los custom que añada el programador a partir de `SP_CUSTOM_BASE`.
 
+# 20210601
+
+Ahora mismo tengo el motor funcionando, al menos con el proyecto por defecto (Cheril of the Bosque). Ahora viene el tema del player de la música y tó sus muertos. Y tengo que decidir:
+
+- WYZ está ya integrado, pero por alguna razón los cepeceros lo detestan, y Davidian también.
+- ARKOS 1 se puede beberciar, pero esto ocupaba un huevo de pato más.
+- ARKOS 2 es para RASM y otros ensambladores pijos e integrarlo puede ser un pequeño dolor. Adaptar el player a z88dk parece tarea imposible (aunque entendiese todas las mierdas RASM que usa). La otra idea es compilarlo externamente a una dirección fija que sea como un "blob" que englobe player y canciones y cargarlo como bloque aparte. El problema es que esto apesta a trabajo manual.
+
+Lo he intentado con ARKOS 2 y he desistido porque tengo que liarla demasiado parda.
+
+Voy a intentar una integración con ARKOS 1 parecida a la que tengo con Wyz, y que pasa por meter las rutinas de ARKOS en un `.h` o un `.asm` que pueda enganchar en z88dk directamente. Esto significa domar los fuentes, deshacer los defines y mil cosas pequeñas.
+
+Estas son las subrutinas que habrá que exportar:
+
+```asm
+	jp PLY_Init						;Call Player = Initialise song (DE = Song address).
+	jp PLY_Play						;Call Player + 3 = Play song.
+	jp PLY_Stop						;Call Player + 6 = Stop song.
+
+
+```
+

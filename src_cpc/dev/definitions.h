@@ -247,7 +247,6 @@ unsigned char orig_tile;	// Original background tile
 
 // Game flow
 
-unsigned char isrc;
 unsigned char ay_player_on;
 
 #ifndef WIN_ON_SCRIPTING

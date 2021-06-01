@@ -32,15 +32,19 @@ void main (void) {
 	._isr
 		push af 
 		
-		#ifdef SOUND_WYZ
+		ld  a, (isr_c1)
+		inc a
+		cp  6
+		jr  c, _skip_ay_player
+
+		ld  a, (isr_c2)
+		inc a
+		ld  (isr_c2), a
+
+	#ifdef SOUND_WYZ
 			ld  a, (_isr_player_on)
 			or  a
-			jr  z, _skip_wyz
-
-			ld  a, (isr_c1)
-			inc a
-			cp  6
-			jr  c, _skip_wyz
+			jr  z, _skip_ay_player
 
 			push hl
 			push de
@@ -56,17 +60,20 @@ void main (void) {
 			pop de 
 			pop hl
 
-			xor a
+	#endif
 
-		._skip_wyz 
-			ld  (isr_c1), a	
-		#endif
+		xor a
+
+	._skip_ay_player 
+		ld  (isr_c1), a	
 		
 		pop af
 		ei
 		ret
 
 	.isr_c1 
+		defb 0
+	.isr_c2
 		defb 0
 
 	.isr_done
@@ -648,30 +655,6 @@ void main (void) {
 
 						call set_map_tile_do
 					.animated_tiles_done
-				#endasm
-			#endif
-			
-			// Limit frame rate
-			
-			#ifdef MIN_FAPS_PER_FRAME
-				/*
-				while (isrc < MIN_FAPS_PER_FRAME) {
-					#asm
-						halt
-					#endasm
-				} isrc = 0;
-				*/
-				#asm
-					.ml_min_faps_loop
-						ld  a, (_isrc)
-						cp  MIN_FAPS_PER_FRAME*6
-						jr  nc, ml_min_faps_loop_end
-						halt
-						jr  ml_min_faps_loop
-
-					.ml_min_faps_loop_end
-						xor a
-						ld  (_isrc), a
 				#endasm
 			#endif
 

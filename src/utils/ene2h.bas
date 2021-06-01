@@ -1,26 +1,8 @@
-' ene2h.bas v0.5.20210524-v4
-
-' Commands first draft
-' CMD=C,T,O,V where C = command, T = type, O = output member, V = value
-'
-' First version CMD=S,T,O,V (SET), example CMD=S,15,Y2,0, sets Y2=0 for t=15
-
-' Have to parse & encode commands into a numeric array.
-' Then 'Run' the array for each enemy processed.
-
-#include "mtparser.bi"
-#include "cmdlineparser.bi"
-
-Type CMD
-	cmd As String * 1
-	t As Integer
-	o As String * 2
-	v As Integer
-End Type
+' ene2h.bas v0.4.20210121-v4
 
 Sub usage
 	Print
-	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall] [CMD=C,T,O,V]"
+	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall]"
 	Print
 	Print "2bytes (optional) - support really old .ene files which stored the hotspots"
 	Print "    2 bytes each instead of 3 bytes.  As a rule of thumb: "
@@ -53,22 +35,15 @@ Const DS_LIGHT = 1
 Const DS_ALL = 2
 
 Dim As Integer use2bytes, dontswitch
-Dim As Integer fIn, fOut, i, j, k, mapPants
+Dim As Integer fIn, fOut, i, j, mapPants
 Dim As uByte d, mapW, mapH, nEnems
-Dim As uByte t, a, b, xx, yy, mn, x, y, s1, s2, xy, whichCommand
+Dim As uByte t, a, b, xx, yy, mn, x, y, s1, s2, xy
 Dim As Integer typeCounters (255)
 Dim As Integer enTypeCounters (255)
-Dim As String Dummy, cmm
-Dim As Integer sx, sy, equals
-Dim As Integer coords (16)
-Dim As Integer outX, outY, outX1, outX2, outY1, outY2, outMX, outMY, outT
-Dim As CMD cmds (31)
-Dim As Integer cmdIndex
-Dim As String tokens (16)
+Dim As String Dummy
+Dim As Integer sx, sy
 
-Print "ene2h.bas v0.5.20210524-v4 ";
-
-sclpParseAttrs
+Print "ene2h.bas v0.4.20210121-v4 ";
 
 If Command (2) = "" Then usage: End
 
@@ -86,23 +61,6 @@ ElseIf inCommand ("dslight") Then
 Else
 	dontswitch = DS_NONE
 End If
-
-' Look for & parse CMDs
-i = 3
-cmdIndex = 0
-While (Command (i) <> "")
-	If Len (Command (i)) > 4 And Left (Command (i), 4) = "CMD=" Then
-		parseCommaSeparatedString Right (Command (i), Len (Command (i)) - 4), tokens ()
-		cmds (cmdIndex).cmd = tokens (0)
-		cmds (cmdIndex).t = Val (tokens(1))
-		cmds (cmdIndex).o = tokens(2)
-		cmds (cmdIndex).v = Val (tokens(3))
-		cmdIndex = cmdIndex + 1
-	End If
-	i = i + 1
-Wend
-
-If cmdIndex > 0 Then Print "~ " & cmdIndex & " commands found ";
 
 fIn = FreeFile
 Open Command (1) For Binary As #fIn
@@ -129,8 +87,8 @@ Print #fOut, ""
 Print #fOut, "typedef struct {"
 Print #fOut, "	unsigned char x, y;"
 Print #fOut, "	unsigned char x1, y1, x2, y2;"
-Print #fOut, "	char mx, my;"
-Print #fOut, "	char t;"
+Print #fOut, "	signed char mx, my;"
+Print #fOut, "	signed char t;"
 Print #fOut, "#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD"
 Print #fOut, "	unsigned char life;"
 Print #fOut, "#endif"
@@ -150,9 +108,10 @@ For i = 1 To mapPants
 		Get #fIn, , s1
 		Get #fIn, , s2
 
-		outX = 16*x: outY = 16*y
-
 		enTypeCounters (t) = enTypeCounters (t) + 1
+
+		Print #fOut, " 	{";
+		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x y
 
 		' New logic to ensure x1 < x2, y1 < y2
 		sx = Sgn (xx - x)
@@ -165,40 +124,11 @@ For i = 1 To mapPants
 			If y > yy Then Swap y, yy
 		End If
 
-		outX1 = 16*x: outY1 = 16*y
-		outX2 = 16*xx: outY2 = 16*yy
-		outMX = mn*sx: outMY = mn*sy
-		outT = t
-
-		' Run commands
-		For k = 0 To cmdIndex - 1
-			If cmds (k).t = t Then 
-				Select Case cmds (k).cmd
-					Case "S":
-						' Setter
-						Select Case cmds (k).o
-							Case "X": outX = cmds (k).v
-							Case "Y": outY = cmds (k).v
-							Case "X1": outX1 = cmds (k).v
-							Case "Y1": outY1 = cmds (k).v
-							Case "X2": outX2 = cmds (k).v
-							Case "Y2": outY2 = cmds (k).v
-							Case "MX": outMX = cmds (k).v
-							Case "MY": outMY = cmds (k).v
-							Case "T": outT = cmds (k).v
-						End Select
-				End Select
-			End If
-		Next k
-
-		Print #fOut, " 	{";
-		Print #fOut, "" & (outX) & ", " & (outY) & ", ";		' x y
-		Print #fOut, "" & (outX1) & ", " & (outY1) & ", ";		' x1 y1
-		Print #fOut, "" & (outX2) & ", " & (outY2) & ", ";		' x2 y2
-		Print #fOut, "" & (outMX) &  ", "; 		' mx
-		Print #fOut, "" & (outMY) & ", "; 		' my
-		
-		Print #fOut, "" & (outT); 								' t
+		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x1 y1
+		Print #fOut, "" & (16*xx) & ", " & (16*yy) & ", ";		' x2 y2
+		Print #fOut, "" & (mn * sx) &  ", "; 		' mx
+		Print #fOut, "" & (mn * sy) & ", "; 		' my
+		Print #fOut, "" & t; 								' t
 		Print #fOut, "}";
 
 		If i < mapPants Or j < nEnems Then Print #fOut, "," Else Print #fOut, ""

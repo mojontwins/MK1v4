@@ -729,6 +729,14 @@ Si estás usando enganches, el motor deja valores interesantes en algunas variab
 
 Si se define, se añade código que comprueba que los enemigos no colisionen con el escenario. El comportamiento en los enemigos lineales es que cambian de dirección en el eje en el que colisionan. Los enemigos voladores no se ven afectados. Esta macro se define automáticamente si está definida `PLAYER_PUSH_BOXES`.
 
+Por defecto, los enemigos colisionarán con obstáculos (8) y tiles que matan (1). Si quieres cambiar este comportamiento debes añadir la definición de otra macro,
+
+```c
+	#define ENEMIES_COLLIDE_MASK 	9
+```
+
+Donde colocar el valor que se hará "AND" con el comportamiento del tile para detectar colisión. Por ejemplo, para detectar sólo con obstáculos sería 8, para obstáculos y tiles que matan 9 (8 + 1), para obstáculos y plataformas 12 (8 + 4), para obstáculos, plataformas, y tiles que matan 13 (8 + 4 + 1), etc.
+
 ### Monedas
 
 Sirve para activar las monedas, que no son más que un tile específico del tileset que podemos recoger. Al hacerlo, se incrementará el valor de un flag. Se utilizan de manera muy diferente en los cuatro Ramiros y en la demo de Sir Ababol 2:

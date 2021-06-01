@@ -7,8 +7,8 @@
 typedef struct {
 	unsigned char x, y;
 	unsigned char x1, y1, x2, y2;
-	char mx, my;
-	char t;
+	signed char mx, my;
+	signed char t;
 #if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 	unsigned char life;
 #endif

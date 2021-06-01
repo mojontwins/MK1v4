@@ -4,6 +4,10 @@
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+#if defined ENEMIES_COLLIDE && !defined ENEMIES_COLLIDE_MASK
+	#define ENEMIES_COLLIDE_MASK 9
+#endif
+
 #if defined RAMIRO_HOVER_ON_VAR && !defined RAMIRO_HOVER
 	#define RAMIRO_HOVER
 #endif
@@ -59,10 +63,58 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 }
 
 void render_this_enemy (void) {
+	/*
 	rda = SP_ENEMS_BASE + enit;
 	sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 2;
 	sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
 	sp_sw [rda].sp0 = (int) (en_an_next_frame [enit]);
+	*/
+	// sp_sw struct is 16 bytes wide. This is easy
+	// 0   2   4      6   7   8  9  10 11 12      14
+	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+	#asm
+			ld  a, (_enit)
+			add SP_ENEMS_BASE
+			ld  h, 0
+			ld  l, a
+			add hl, hl
+			add hl, hl
+			add hl, hl
+			add hl, hl 		// x16
+			ld  de, BASE_SPRITES
+			add hl, de
+			push hl
+			pop ix
+
+			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 2;
+			ld  a, (_rdx)
+			add #(VIEWPORT_X*8)
+			add (ix + 6)
+			srl a
+			srl a
+			ld  (ix + 8), a
+
+			// sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
+			ld  a, (_rdy) 
+			add #(VIEWPORT_Y*8)
+			add (ix + 7)
+			ld  (ix + 9), a
+
+			// sp_sw [rda].sp0 = (int) (en_an_next_frame [enit]);
+			ld  a, (_enit)
+			sla a
+			ld  b, 0
+			ld  c, a
+			ld  hl, _en_an_next_frame			
+			add hl, bc
+			ld  a, (hl)
+			inc hl
+			ld  h, (hl)
+			ld  l, a
+
+			ld (ix + 0), l
+			ld (ix + 1), h
+	#endasm
 }
 
 void calc_baddies_pointer (void) {
@@ -173,17 +225,53 @@ void render_all_sprites (void) {
 		// TODO
 	#else
 		/*
-		sp_MoveSprAbs (
-			sp_player, spritesClip, player.next_frame - player.current_frame, 
-			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
-		);
-		*/
 		sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
 		sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
 		if ( (player.estado & EST_PARP) && half_life ) 
 			sp_sw [SP_PLAYER].sp0 = (int) (SPRFR_EMPTY);
 		else
 			sp_sw [SP_PLAYER].sp0 = (int) (player.next_frame);
+		*/
+		// This ASSUMES SP_PLAYER = 0.
+		// 0   2   4      6   7   8  9  10 11 12      14
+		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+		#asm
+				ld  ix, BASE_SPRITES
+
+				// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
+				ld  a, (_gpx)
+				add #(VIEWPORT_X*8)
+				add (ix + 6)
+				srl a
+				srl a
+				ld  (ix + 8), a
+
+				// sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
+				ld  a, (_gpy)
+				add #(VIEWPORT_Y*8)
+				add (ix + 7)
+				ld  (ix + 9), a
+
+				// if ( (player.estado & EST_PARP) && half_life ) 
+				ld  a, (_player + 23) 		// player.estado
+				and EST_PARP
+				jr  z, player_render_graphic
+
+				ld  a, (_half_life)
+				or  a
+				jr  z, player_render_graphic
+
+			.player_render_empty
+				ld  hl, _sprite_18_a
+				jr  player_render_set_sp0
+
+			.player_render_graphic
+				ld  hl, (_player + 17)		// player.next_frame
+
+			.player_render_set_sp0
+				ld  (ix + 0), l
+				ld  (ix + 1), h
+		#endasm
 	#endif
 	player.current_frame = player.next_frame;
 	
@@ -1058,6 +1146,7 @@ void move (void) {
 	gpcx = player.x;
 	gpcy = player.y;
 
+	// Read device (keyboard, joystick ...)
 	pad_read ();
 
 	// Jump button
@@ -4687,6 +4776,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							ld  (__en_mx), a
 
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_x1)
+								ld  (__en_x), a
+							#endif
+
 						.horz_limit_skip_1
 
 							// _en_x >= _en_x2
@@ -4700,6 +4794,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							neg
 							ld  (__en_mx), a
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_x2)
+								ld  (__en_x), a
+							#endif
 
 						.horz_limit_skip_2
 
@@ -4715,6 +4814,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							ld  (__en_my), a
 
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_y1)
+								ld  (__en_y), a
+							#endif
+
 						.vert_limit_skip_1
 
 							// _en_y >= _en_y2
@@ -4728,6 +4832,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							neg
 							ld  (__en_my), a
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_y2)
+								ld  (__en_y), a
+							#endif
 
 						.vert_limit_skip_2
 
@@ -4966,21 +5075,9 @@ void mueve_bicharracos (void) {
 					*/
 					#asm
 						._en_bg_collision
-
-							ld  a, (__en_x)
-							srl a
-							srl a
-							srl a
-							srl a
-							ld  (_en_xx), a
-
-							ld  a, (__en_y)
-							srl a
-							srl a
-							srl a
-							srl a
-							ld  (_en_yy), a
-
+							call en_xx_calc
+							call en_yy_calc
+							
 							ld  a, (__en_mx)
 							or  a
 							jr  z, _en_bg_collision_horz_done
@@ -5042,6 +5139,8 @@ void mueve_bicharracos (void) {
 							ld  (__en_mx), a
 						
 						._en_bg_collision_horz_done
+
+							call en_xx_calc
 
 							ld  a, (__en_my)
 							or  a
@@ -5105,6 +5204,8 @@ void mueve_bicharracos (void) {
 
 						._en_bg_collision_vert_done
 
+							call en_yy_calc
+
 							jr _en_bg_collision_end
 
 						._en_bg_collision_check
@@ -5113,7 +5214,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty1)
 							call _attr_enems
 							ld  a, l
-							and 8
+							and ENEMIES_COLLIDE_MASK
 							ret  nz 			// Non zero, A = TRUE
 
 							ld  a, (_ptx2)
@@ -5121,7 +5222,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty2)
 							call _attr_enems
 							ld  a, l
-							and 8
+							and ENEMIES_COLLIDE_MASK
 							ret 				// A = result
 
 						.__ctileoff
@@ -5134,6 +5235,24 @@ void mueve_bicharracos (void) {
 
 						.__ctileoff_1
 							ld  a, 1
+							ret
+
+						.en_xx_calc
+							ld  a, (__en_x)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_xx), a
+							ret
+
+						.en_yy_calc
+							ld  a, (__en_y)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_yy), a
 							ret
 
 						._en_bg_collision_end
@@ -5432,10 +5551,14 @@ void mueve_bicharracos (void) {
 								jp  c, _enems_hit_sword_done
 						#endasm
 						{	
+							if (1
 							#ifdef PLAYER_MIN_KILLABLE
-								if (_en_t >= PLAYER_MIN_KILLABLE)
+								&& _en_t >= PLAYER_MIN_KILLABLE
 							#endif
-							{
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
+							) {
 								// Hit!
 								play_sfx (2);
 								s_on = 0;
@@ -5491,6 +5614,9 @@ void mueve_bicharracos (void) {
 							&& player.vy >= 0 
 							#ifdef PLAYER_MIN_KILLABLE
 								&& _en_t >= PLAYER_MIN_KILLABLE
+							#endif
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
 							#endif
 						) {
 							// Step on enemy and kill it.

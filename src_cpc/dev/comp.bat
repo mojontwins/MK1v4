@@ -29,7 +29,7 @@ rem luts
 ..\utils\apack.exe trpixlut.bin trpixlutc.bin > nul
 rem ..\utils\wyzTrackerParser.exe ..\mus\instrumentos.asm assets\instrumentos.h
 
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c ..\ogt\arkos.asm > nul
 
 ..\utils\printsize.exe %game%.bin
 

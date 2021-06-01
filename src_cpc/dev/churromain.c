@@ -96,12 +96,6 @@ extern unsigned char trpixlutc [0];
 #include "definitions.h"
 #include "pal.h"
 #include "mtasmlib.h"
-#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-	#include "isr.h"
-	#ifdef ENABLE_ARKOS
-		#include "arkos.h"
-	#endif
-#endif
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h"
 #endif
