@@ -161,7 +161,7 @@ void main (void) {
 			ld  (ix + 13), h
 			ld  (ix + 12), l
 
-			ld  hl, (_sm_updfunc)		// sm_invfunc [0]
+			ld  hl, (_sm_updfunc)		// sm_updfunc [0]
 			ld  (ix + 15), h
 			ld  (ix + 14), l
 
@@ -189,12 +189,12 @@ void main (void) {
 
 		.sp_sw_init_enems_loop
 			ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
-			ld  (ix + 15), h
-			ld  (ix + 14), l
+			ld  (ix + 13), h
+			ld  (ix + 12), l
 
-			ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_sprptr [0]
-			ld  (ix + 1), h
-			ld  (ix + 0), l	
+			ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
+			ld  (ix + 15), h
+			ld  (ix + 14), l	
 
 			add ix, de
 			djnz sp_sw_init_enems_loop		
@@ -224,12 +224,12 @@ void main (void) {
 				ld  (ix + 7), a
 
 				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
-				ld  (ix + 15), h
-				ld  (ix + 14), l
+				ld  (ix + 13), h
+				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_sprptr [0]
-				ld  (ix + 1), h
-				ld  (ix + 0), l	
+				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
+				ld  (ix + 15), h
+				ld  (ix + 14), l	
 
 				ld  hl, _sprite_19_a 					// sm_sprptr [0]
 				ld  (ix + 1), h
@@ -246,19 +246,60 @@ void main (void) {
 	// Sword is 4x8
 
 	#ifdef ENABLE_SWORD	
+		/*
 		sp_sw [SP_SWORD_BASE].cox = 0;
 		sp_sw [SP_SWORD_BASE].coy = 0;
 		sp_sw [SP_SWORD_BASE].invfunc =cpc_PutSpTileMap4x8;
 		sp_sw [SP_SWORD_BASE].updfunc = cpc_PutTrSp4x8TileMap2b;
-		sp_sw [SP_SWORD_BASE].sp0 = sp_sw [SP_SWORD_BASE].sp1 = (unsigned int) (sprite_19_a);		
+		sp_sw [SP_SWORD_BASE].sp0 = sp_sw [SP_SWORD_BASE].sp1 = (unsigned int) (sprite_19_a);
+		*/
+		#asm
+				ld  ix, #(BASE_SPRITES+(SP_SWORD_BASE*2))
+
+				xor a
+				ld  (ix + 6), a
+				ld  (ix + 7), a
+
+				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
+				ld  (ix + 13), h
+				ld  (ix + 12), l
+
+				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
+				ld  (ix + 15), h
+				ld  (ix + 14), l	
+
+				ld  hl, _sprite_19_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+
+				ld  (ix + 3), h
+				ld  (ix + 2), l				
+		#endasm
 	#endif
 
 	// Turn off all sprites
+
+	/*
 	for (gpit = 0; gpit < SW_SPRITES_ALL; ++ gpit) {
-		spr_on [gpit] = 0;
 		sp_sw [gpit].ox = (VIEWPORT_X*8) >> 2;
 		sp_sw [gpit].oy = VIEWPORT_Y*8;
-	}	
+	}
+	*/
+	#asm
+			ld  ix, BASE_SPRITES
+			ld  de, 16
+			ld  b, SW_SPRITES_ALL
+
+		.sp_sw_init_turnoff_loop			
+			ld  a, #((VIEWPORT_X*8)/4)
+			ld  (ix + 10), a
+			
+			ld  a, #(VIEWPORT_Y*8)
+			ld  (ix + 11), a 
+
+			add ix, de
+			djnz sp_sw_init_turnoff_loop
+	#endasm	
 	
 	#ifdef ENABLE_CODE_HOOKS
 		hook_system_inits ();

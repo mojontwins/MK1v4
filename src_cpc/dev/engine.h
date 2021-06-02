@@ -57,9 +57,24 @@ void abs_a (void) {
 }
 
 void saca_a_todo_el_mundo_de_aqui (void) {
+	/*
 	for (gpit = 0; gpit < SW_SPRITES_ALL; gpit ++) {
 		sp_sw [gpit].sp0 = (int) (SPRFR_EMPTY);
 	}
+	*/
+	#asm
+			ld  de, 15
+			ld  b, SW_SPRITES_ALL
+		.clear_sprites_loop
+			ld  hl, BASE_SPRITES
+			ld  a, #(_sprite_18_a%256)
+			ld  (hl), a
+			inc hl
+			ld  a, #(_sprite_18_a/256)
+			ld  (hl), a 
+			add hl, de
+			djnz clear_sprites_loop
+	#endasm
 }
 
 void render_this_enemy (void) {
@@ -236,7 +251,7 @@ void render_all_sprites (void) {
 		// 0   2   4      6   7   8  9  10 11 12      14
 		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 		#asm
-				ld  ix, BASE_SPRITES
+				ld  ix, #(BASE_SPRITES + (SP_PLAYER*2))
 
 				// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
 				ld  a, (_gpx)
