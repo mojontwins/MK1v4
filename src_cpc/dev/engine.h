@@ -78,12 +78,6 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 }
 
 void render_this_enemy (void) {
-	/*
-	rda = SP_ENEMS_BASE + enit;
-	sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 2;
-	sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
-	sp_sw [rda].sp0 = (int) (en_an_next_frame [enit]);
-	*/
 	// sp_sw struct is 16 bytes wide. This is easy
 	// 0   2   4      6   7   8  9  10 11 12      14
 	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
@@ -239,14 +233,6 @@ void render_all_sprites (void) {
 		*/
 		// TODO
 	#else
-		/*
-		sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
-		sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
-		if ( (player.estado & EST_PARP) && half_life ) 
-			sp_sw [SP_PLAYER].sp0 = (int) (SPRFR_EMPTY);
-		else
-			sp_sw [SP_PLAYER].sp0 = (int) (player.next_frame);
-		*/
 		// This ASSUMES SP_PLAYER = 0.
 		// 0   2   4      6   7   8  9  10 11 12      14
 		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
@@ -294,12 +280,6 @@ void render_all_sprites (void) {
 		bspr_it = SP_BULLETS_BASE;
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
-				/*
-				sp_MoveSprAbs (
-					sp_bullets [rdi], spritesClip, 0, 
-					VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
-				);
-				*/
 				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
 				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
 				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
