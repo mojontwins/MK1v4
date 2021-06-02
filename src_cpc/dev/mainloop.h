@@ -90,7 +90,12 @@ void main (void) {
 
 	// Decompress LUT in place
 
-	unpack ((unsigned int) (trpixlutc), BASE_LUT);
+	//unpack ((unsigned int) (trpixlutc), BASE_LUT);
+	#asm
+			ld  hl, _trpixlutc
+			ld  de, BASE_LUT
+			call depack
+	#endasm
 
 	blackout ();
 	pal_set (my_inks);
@@ -187,7 +192,12 @@ void main (void) {
 		title_screen ();
 		
 		#ifndef DIRECT_TO_PLAY
-			unpack ((unsigned int) (s_marco), BASE_SUPERBUFF);
+			//unpack ((unsigned int) (s_marco), BASE_SUPERBUFF);
+			#asm
+					ld  hl, _s_marco
+					ld  de, BASE_SUPERBUFF
+					call depack
+			#endasm
 			cpc_ShowTileMap (1);
 		#endif
 
@@ -928,6 +938,6 @@ void main (void) {
 				}
 			#endif
 		}	
-		AY_STOP_SOUND()
+		AY_STOP_SOUND();
 	}
 }

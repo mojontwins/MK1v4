@@ -48,7 +48,15 @@ void blackout (void) {
 
 void title_screen (void) {
 	blackout ();
-	unpack ((unsigned int) (s_title), BASE_SUPERBUFF);
+	//unpack ((unsigned int) (s_title), BASE_SUPERBUFF);
+	#asm
+			ld  hl, _s_title
+			ld  de, BASE_SUPERBUFF
+			call depack
+	#endasm
+	draw_text (11, 17, 7, "1 KEYBOARD");
+	draw_text (11, 18, 7, "2 JOYSTICK");
+	cpc_UpdScr ();
 	cpc_ShowTileMap (1);
 
 	AY_PLAY_MUSIC (0);
@@ -70,7 +78,12 @@ void title_screen (void) {
 
 void game_ending (void) {
 	blackout ();
-	unpack ((unsigned int) (s_ending), BASE_SUPERBUFF);
+	//unpack ((unsigned int) (s_ending), BASE_SUPERBUFF);
+	#asm
+			ld  hl, _s_ending
+			ld  de, BASE_SUPERBUFF
+			call depack
+	#endasm
 	cpc_ShowTileMap (1);
 	
 	AY_PLAY_MUSIC (0);
@@ -89,8 +102,6 @@ void game_over (void) {
 			ld  (__x2), a
 			ld  a, 13
 			ld  (__y2), a
-			ld  a, GAME_OVER_ATTR
-			ld  (__t), a
 	#endasm
 	draw_rectangle ();	
 	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");

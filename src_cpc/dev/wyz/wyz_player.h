@@ -2,9 +2,6 @@
 // This needs a buffer to decompress songs.
 // Biggest .mus file must fit, so adjust if needed:
 
-#define WYZ_SONG_BUFFER 0x8800
-#define BASE_WYZ 		0xDF80
-
 void wyz_init (void) {
 	isr_player_on = 0; 
 	#asm
@@ -13,8 +10,20 @@ void wyz_init (void) {
 }
 
 void __FASTCALL__ wyz_play_music (unsigned char m) {
-	unpack ((unsigned int) (wyz_songs [m]), (unsigned int) (WYZ_SONG_BUFFER));
 	#asm
+		// HL -> song number
+		add hl, hl 	// *2
+		ld  de, _wyz_songs
+		add hl, de
+
+		ld  a, (hl)
+		inc hl
+		ld  h, (hl)
+		ld  l, a 	// Read pointer
+
+		ld  de, WYZ_SONG_BUFFER
+		call depack
+
 		ld  a, 0
 		call CARGA_CANCION
 		ld  a, 1

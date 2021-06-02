@@ -77,11 +77,11 @@
 	#define AY_STOP_SOUND()  ;
 	#define AY_PLAY_MUSIC(a) ;
 #elif defined SOUND_WYZ
-	#define AY_INIT()        wyz_init ();
-	#define AY_PLAY_SOUND(a) wyz_play_sound (a);
-	#define play_sfx(a)      wyz_play_sound (a);
-	#define AY_STOP_SOUND()  wyz_stop_sound ();
-	#define AY_PLAY_MUSIC(a) wyz_play_music (a);
+	#define AY_INIT()        wyz_init ()
+	#define AY_PLAY_SOUND(a) wyz_play_sound (a)
+	#define play_sfx(a)      wyz_play_sound (a)
+	#define AY_STOP_SOUND()  wyz_stop_sound ()
+	#define AY_PLAY_MUSIC(a) wyz_play_music (a)
 #endif		
 
 extern unsigned char trpixlutc [0];

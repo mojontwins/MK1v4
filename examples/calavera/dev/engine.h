@@ -4,6 +4,10 @@
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+#if defined ENEMIES_COLLIDE && !defined ENEMIES_COLLIDE_MASK
+	#define ENEMIES_COLLIDE_MASK 9
+#endif
+
 #if defined RAMIRO_HOVER_ON_VAR && !defined RAMIRO_HOVER
 	#define RAMIRO_HOVER
 #endif
@@ -4992,6 +4996,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							ld  (__en_mx), a
 
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_x1)
+								ld  (__en_x), a
+							#endif
+
 						.horz_limit_skip_1
 
 							// _en_x >= _en_x2
@@ -5005,6 +5014,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							neg
 							ld  (__en_mx), a
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_x2)
+								ld  (__en_x), a
+							#endif
 
 						.horz_limit_skip_2
 
@@ -5020,6 +5034,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							ld  (__en_my), a
 
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_y1)
+								ld  (__en_y), a
+							#endif
+
 						.vert_limit_skip_1
 
 							// _en_y >= _en_y2
@@ -5033,6 +5052,11 @@ void mueve_bicharracos (void) {
 							call _abs_a
 							neg
 							ld  (__en_my), a
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_y2)
+								ld  (__en_y), a
+							#endif
 
 						.vert_limit_skip_2
 
@@ -5271,20 +5295,9 @@ void mueve_bicharracos (void) {
 					*/
 					#asm
 						._en_bg_collision
+							call en_xx_calc
+							call en_yy_calc
 
-							ld  a, (__en_x)
-							srl a
-							srl a
-							srl a
-							srl a
-							ld  (_en_xx), a
-
-							ld  a, (__en_y)
-							srl a
-							srl a
-							srl a
-							srl a
-							ld  (_en_yy), a
 
 							ld  a, (__en_mx)
 							or  a
@@ -5410,6 +5423,8 @@ void mueve_bicharracos (void) {
 
 						._en_bg_collision_vert_done
 
+							call en_yy_calc
+
 							jr _en_bg_collision_end
 
 						._en_bg_collision_check
@@ -5418,7 +5433,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty1)
 							call _attr_enems
 							ld  a, l
-							and 8
+							and ENEMIES_COLLIDE_MASK
 							ret  nz 			// Non zero, A = TRUE
 
 							ld  a, (_ptx2)
@@ -5426,7 +5441,7 @@ void mueve_bicharracos (void) {
 							ld  a, (_pty2)
 							call _attr_enems
 							ld  a, l
-							and 8
+							and ENEMIES_COLLIDE_MASK
 							ret 				// A = result
 
 						.__ctileoff
@@ -5439,6 +5454,24 @@ void mueve_bicharracos (void) {
 
 						.__ctileoff_1
 							ld  a, 1
+							ret
+
+						.en_xx_calc
+							ld  a, (__en_x)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_xx), a
+							ret
+
+						.en_yy_calc
+							ld  a, (__en_y)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_yy), a
 							ret
 
 						._en_bg_collision_end

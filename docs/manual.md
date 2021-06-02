@@ -1100,7 +1100,9 @@ Permite activar y configurar *fantys*.
     //#define ENABLE_CUADRATORS                 // Enable QUADRATORS, enemy type 7-10
 ```
 
-Los cuadrators son parecidos a los lineales pero hacen una trayectoria rectangular si has colocado una diagonal en el ponedor. Ocupan unos 206 bytes y no se llevan bien con algunas cosas del motor, como `ENEMIES_COLLIDE`. Pero bueno, ahí están.
+Los cuadrators son parecidos a los lineales pero hacen una trayectoria rectangular si has colocado una diagonal en el ponedor. Ocupan unos 206 bytes y NO SE VEN AFECTADOS POR LAS COLISIONES CON EL ESCENARIO, cuidado con esto.
+
+Los sentidos de giro tienen que ver con cómo se coloquen. Si la diagonal del rectángulo es \ girarán en sentido antihorario, y si es / girarán en sentido horario.
 
 Se ponen con los tipos 7 a 10 y pintan el sprite 1 a 4 dependiendo de cuál pongas.
 

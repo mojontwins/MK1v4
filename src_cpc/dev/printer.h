@@ -4,8 +4,91 @@
 // printer.h
 // Miscellaneous printing functions (tiles, status, etc).
 
+void _tile_address (void) {
+	#asm
+			ld  a, (__y)
+
+			add a, a	; 2		4
+			add a, a	; 4		4
+			add a, a	; 8		4
+			ld  h, 0	;		2
+			ld  l, a 	;		4
+			add hl, hl  ; 16	11
+			add hl, hl  ; 32	11
+			;					44 t-states
+
+			; HL = _y * 32
+
+			ld 	de, (__x)			
+			ld 	d, 0
+			add hl, de
+
+			; HL = _y * 32 + _x
+
+			ld  de, _nametable
+			add hl, de
+			
+			ex  de, hl
+
+			; DE = buffer address
+	#endasm
+}
+
 void draw_rectangle (void) {	
-	// TODO
+	#asm
+			call __tile_address		// DE = buffer address
+
+			// Number of lines
+			ld  a, (__y2)
+			inc a
+			ld  hl, __y
+			sub (hl)
+			ld  b, a
+
+			// Precalc value to add for next line
+			ld  a, (__x)
+			add 31
+			ld  hl, __x2
+			sub (hl)
+			dec a
+			ld  (__n), a
+
+		.draw_rectangle_it1
+			push bc
+
+			ld  a, (__x)
+			ld  b, a
+		.draw_rectangle_it2
+			xor a
+			ld  (de), a
+			inc de
+			inc b
+
+			ld  a, (__x2)
+			inc a
+			cp  b
+			jr  nc, draw_rectangle_it2
+
+			ld  hl, (__n)
+			ld  h, 0
+			add hl, de
+			ex  de, hl
+
+			pop bc
+			djnz draw_rectangle_it1
+
+			// Invalidate rectangle			
+			ld  a, (__y)
+			ld  b, a
+			ld  a, (__x)
+			ld  c, a
+			ld  a, (__y2)
+			ld  d, a
+			ld  a, (__x2)
+			ld  e, a
+
+			call cpc_InvalidateRect
+	#endasm
 }
 
 void attr (char x, char y) {
@@ -109,37 +192,6 @@ void qtile (unsigned char x, unsigned char y) {
 
 			ld  l, (hl)
 			ld  h, 0
-	#endasm
-}
-
-void _tile_address (void) {
-	#asm
-			ld  a, (__y)
-
-			add a, a	; 2		4
-			add a, a	; 4		4
-			add a, a	; 8		4
-			ld  h, 0	;		2
-			ld  l, a 	;		4
-			add hl, hl  ; 16	11
-			add hl, hl  ; 32	11
-			;					44 t-states
-
-			; HL = _y * 32
-
-			ld 	a, (__x)
-			ld 	e, a 
-			ld 	d, 0
-			add hl, de
-
-			; HL = _y * 32 + _x
-
-			ld  de, _nametable
-			add hl, de
-			
-			ex  de, hl
-
-			; DE = buffer address
 	#endasm
 }
 

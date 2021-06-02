@@ -4937,6 +4937,11 @@ void mueve_bicharracos (void) {
 							ld  (hl), a
 
 						._cuadrators_update_done
+
+						#ifdef ENEMIES_COLLIDE
+								// Cuadrators don't like collisions with BG!
+								jp _en_bg_collision_end
+						#endif
 					#endasm						
 					}
 				#endif
