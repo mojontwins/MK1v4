@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Jun 02 13:38:09 2021
+;	Module compile time: Wed Jun 02 16:25:47 2021
 
 
 
@@ -10449,39 +10449,22 @@
 	inc b
 	ld c, 24 ; VALUE = 24
 	out (c), c
-	ld	hl,_sp_sw+6
-	push	hl
-	ld	hl,(_sm_cox)
-	ld	h,0
-	ld	a,l
-	call	l_sxt
-	pop	de
-	ld	a,l
-	ld	(de),a
-	ld	hl,_sp_sw+7
-	push	hl
-	ld	hl,(_sm_coy)
-	ld	h,0
-	ld	a,l
-	call	l_sxt
-	pop	de
-	ld	a,l
-	ld	(de),a
-	ld	de,_sp_sw+12
-	ld	hl,(_sm_invfunc)
-	call	l_pint
-	ld	de,_sp_sw+14
-	ld	hl,(_sm_updfunc)
-	call	l_pint
-	ld	hl,_sp_sw
-	push	hl
-	inc	hl
-	inc	hl
-	ex	de,hl
-	ld	hl,(_sm_sprptr)
-	call	l_pint
-	pop	de
-	call	l_pint
+	ld ix, 0xE000 + 0x600
+	ld a, (_sm_cox)
+	ld (ix + 6), a
+	ld a, (_sm_coy)
+	ld (ix + 7), a
+	ld hl, (_sm_invfunc)
+	ld (ix + 13), h
+	ld (ix + 12), l
+	ld hl, (_sm_updfunc)
+	ld (ix + 15), h
+	ld (ix + 14), l
+	ld hl, (_sm_sprptr)
+	ld (ix + 1), h
+	ld (ix + 0), l
+	ld (ix + 3), h
+	ld (ix + 2), l
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_gpit),a

@@ -137,18 +137,68 @@ void main (void) {
 
 	// Player 
 
+	// sp_sw struct is 16 bytes wide. This is easy
+	// 0   2   4      6   7   8  9  10 11 12      14
+	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+
+	/*
 	sp_sw [SP_PLAYER].cox = sm_cox [0];
 	sp_sw [SP_PLAYER].coy = sm_coy [0];
 	sp_sw [SP_PLAYER].invfunc = sm_invfunc [0];
 	sp_sw [SP_PLAYER].updfunc = sm_updfunc [0];
 	sp_sw [SP_PLAYER].sp0 = sp_sw [SP_PLAYER].sp1 = (unsigned int) (sm_sprptr [0]);
+	*/
+	#asm
+			ld  ix, #(BASE_SPRITES+(SP_PLAYER*2))
+			
+			ld  a, (_sm_cox) 			// sm_cox [0]
+			ld  (ix + 6), a
+
+			ld  a, (_sm_coy) 			// sm_coy [0]
+			ld  (ix + 7), a
+
+			ld  hl, (_sm_invfunc)		// sm_invfunc [0]
+			ld  (ix + 13), h
+			ld  (ix + 12), l
+
+			ld  hl, (_sm_updfunc)		// sm_invfunc [0]
+			ld  (ix + 15), h
+			ld  (ix + 14), l
+
+			ld  hl, (_sm_sprptr) 		// sm_sprptr [0]
+			ld  (ix + 1), h
+			ld  (ix + 0), l
+
+			ld  (ix + 3), h
+			ld  (ix + 2), l			
+	#endasm
 
 	// Enemies 
 
+	/*
 	for (gpit = SP_ENEMS_BASE; gpit < SP_ENEMS_BASE + MAX_ENEMS; gpit ++) {
 		sp_sw [gpit].invfunc = cpc_PutSpTileMap4x8;
 		sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
 	}
+	*/
+	#asm
+			ld  ix, #(BASE_SPRITES+(SP_ENEMS_BASE*2))
+			ld  de, 16
+
+			ld  b, MAX_ENEMS
+
+		.sp_sw_init_enems_loop
+			ld  hl, _cpc_PutSpTileMap4x8			// sm_invfunc [0]
+			ld  (ix + 15), h
+			ld  (ix + 14), l
+
+			ld  hl, _cpc_PutTrSp4x8TileMap2b 		// sm_sprptr [0]
+			ld  (ix + 1), h
+			ld  (ix + 0), l	
+
+			add ix, de
+			djnz sp_sw_init_enems_loop		
+	#endasm
 
 	// Bullets are 4x8
 
