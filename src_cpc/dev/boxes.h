@@ -23,10 +23,9 @@
 				or l 
 				jr z, move_tile_do
 
-				ld  hl, 8
-				push hl
-				call _play_sfx
-				pop bc 
+		#endasm
+		play_sfx (8);				
+		#asm				
 
 				#ifdef FALLING_BOXES
 					call _fall_box

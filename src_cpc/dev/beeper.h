@@ -26,39 +26,6 @@
 	12  ramiro hover (only AY)
 */
 
-void __FASTCALL__ play_sfx (unsigned char n) {
-	// TODO
-}
-
 void beepet (void) {
-	/*
-	for (gpit = 0; gpit < 4; gpit ++) {
-		play_sfx (6);
-		play_sfx (3);
-	}
-	*/
-	/*
-	#asm
-		push ix
-		push iy
-		ld  a, 6
-		call sound_play
-		ld  a, 3
-		call sound_play
-		ld  a, 6
-		call sound_play
-		ld  a, 3
-		call sound_play
-		ld  a, 6
-		call sound_play
-		ld  a, 3
-		call sound_play
-		ld  a, 6
-		call sound_play
-		ld  a, 3
-		call sound_play
-		pop iy
-		pop ix
-	#endasm
-	*/
+
 }

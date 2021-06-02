@@ -27,9 +27,9 @@ rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 rem luts
 ..\utils\pasmo.exe system\cpc_TrPixLutM0.asm trpixlut.bin
 ..\utils\apack.exe trpixlut.bin trpixlutc.bin > nul
-rem ..\utils\wyzTrackerParser.exe ..\mus\instrumentos.asm assets\instrumentos.h
+..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c ..\ogt\arkos.asm > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c > nul
 
 ..\utils\printsize.exe %game%.bin
 

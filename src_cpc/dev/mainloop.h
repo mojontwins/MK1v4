@@ -280,6 +280,8 @@ void main (void) {
 			ld  (_on_pant), a
 		#endasm
 
+		AY_PLAY_MUSIC (1);
+
 		while (playing) {
 			#ifdef ENABLE_CODE_HOOKS
 				hook_init_mainloop ();
@@ -926,5 +928,6 @@ void main (void) {
 				}
 			#endif
 		}	
+		AY_STOP_SOUND()
 	}
 }

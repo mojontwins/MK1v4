@@ -73,11 +73,13 @@
 #ifdef SOUND_NONE
 	#define AY_INIT()        ;
 	#define AY_PLAY_SOUND(a) ;
+	#define play_sfx(a)      ;
 	#define AY_STOP_SOUND()  ;
 	#define AY_PLAY_MUSIC(a) ;
 #elif defined SOUND_WYZ
 	#define AY_INIT()        wyz_init ();
 	#define AY_PLAY_SOUND(a) wyz_play_sound (a);
+	#define play_sfx(a)      wyz_play_sound (a);
 	#define AY_STOP_SOUND()  wyz_stop_sound ();
 	#define AY_PLAY_MUSIC(a) wyz_play_music (a);
 #endif		
@@ -100,6 +102,12 @@ extern unsigned char trpixlutc [0];
 	#include "msc-config.h"
 #endif
 #include "aplib.h"
+#ifdef SOUND_WYZ
+	#include "wyz/efectos.h"
+	#include "wyz/instrumentos.h"
+	#include "wyz/songs.h"
+	#include "wyz/wyz_player.h"
+#endif
 #include "mapa.h"
 #include "tileset.h"
 #include "sprites.h"
@@ -117,10 +125,5 @@ extern unsigned char trpixlutc [0];
 #include "engine.h"
 #include "boxes.h"
 #include "mainloop.h"
-
-// From beepola. Phaser engine by Shiru. We stick this at the end 'cause
-// we don't want this in contended memory.
-
-#include "music.h"
 
 // And that's all, folks.
