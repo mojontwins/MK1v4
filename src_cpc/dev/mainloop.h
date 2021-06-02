@@ -188,11 +188,11 @@ void main (void) {
 			ld  b, MAX_ENEMS
 
 		.sp_sw_init_enems_loop
-			ld  hl, _cpc_PutSpTileMap4x8			// sm_invfunc [0]
+			ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
 			ld  (ix + 15), h
 			ld  (ix + 14), l
 
-			ld  hl, _cpc_PutTrSp4x8TileMap2b 		// sm_sprptr [0]
+			ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_sprptr [0]
 			ld  (ix + 1), h
 			ld  (ix + 0), l	
 
@@ -203,6 +203,7 @@ void main (void) {
 	// Bullets are 4x8
 
 	#ifdef PLAYER_CAN_FIRE
+		/*
 		for (gpit = SP_BULLETS_BASE; gpit < SP_BULLETS_BASE + MAX_BULLETS; gpit ++) {
 			sp_sw [gpit].cox = 0;
 			sp_sw [gpit].coy = 0;
@@ -210,6 +211,36 @@ void main (void) {
 			sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
 			sp_sw [gpit].sp0 = sp_sw [gpit].sp1 = (unsigned int) (sprite_19_a);
 		}
+		*/
+		#asm
+				ld  ix, #(BASE_SPRITES+(SP_BULLETS_BASE*2))
+				ld  de, 16
+
+				ld  b, MAX_BULLETS
+
+			.sp_sw_init_bullets_loop
+				xor a
+				ld  (ix + 6), a
+				ld  (ix + 7), a
+
+				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
+				ld  (ix + 15), h
+				ld  (ix + 14), l
+
+				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l	
+
+				ld  hl, _sprite_19_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+
+				ld  (ix + 3), h
+				ld  (ix + 2), l		
+
+				add ix, de
+				djnz sp_sw_init_bullets_loop
+		#endasm
 	#endif
 
 	// Sword is 4x8

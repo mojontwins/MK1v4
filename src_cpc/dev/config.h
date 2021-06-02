@@ -26,7 +26,7 @@
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS			13		// Objects to get to finish game
-#define PLAYER_LIFE 				1		// Max and starting life gauge.
+#define PLAYER_LIFE 				99		// Max and starting life gauge.
 #define PLAYER_REFILL				25		// Life recharge
 
 #define LINEAR_ENEMY_HIT			1		// Amount of life to substract when normal enemy hits
