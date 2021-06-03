@@ -149,7 +149,9 @@ void main (void) {
 	sp_sw [SP_PLAYER].sp0 = sp_sw [SP_PLAYER].sp1 = (unsigned int) (sm_sprptr [0]);
 	*/
 	#asm
-			ld  ix, #(BASE_SPRITES+(SP_PLAYER*2))
+		.sprite_creation
+
+			ld  ix, #(BASE_SPRITES+(SP_PLAYER*16))
 			
 			ld  a, (_sm_cox) 			// sm_cox [0]
 			ld  (ix + 6), a
@@ -182,7 +184,7 @@ void main (void) {
 	}
 	*/
 	#asm
-			ld  ix, #(BASE_SPRITES+(SP_ENEMS_BASE*2))
+			ld  ix, #(BASE_SPRITES+(SP_ENEMS_BASE*16))
 			ld  de, 16
 
 			ld  b, MAX_ENEMS
@@ -213,7 +215,7 @@ void main (void) {
 		}
 		*/
 		#asm
-				ld  ix, #(BASE_SPRITES+(SP_BULLETS_BASE*2))
+				ld  ix, #(BASE_SPRITES+(SP_BULLETS_BASE*16))
 				ld  de, 16
 
 				ld  b, MAX_BULLETS
@@ -254,7 +256,7 @@ void main (void) {
 		sp_sw [SP_SWORD_BASE].sp0 = sp_sw [SP_SWORD_BASE].sp1 = (unsigned int) (sprite_19_a);
 		*/
 		#asm
-				ld  ix, #(BASE_SPRITES+(SP_SWORD_BASE*2))
+				ld  ix, #(BASE_SPRITES+(SP_SWORD_BASE*16))
 
 				xor a
 				ld  (ix + 6), a

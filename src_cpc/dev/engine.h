@@ -237,7 +237,7 @@ void render_all_sprites (void) {
 		// 0   2   4      6   7   8  9  10 11 12      14
 		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 		#asm
-				ld  ix, #(BASE_SPRITES + (SP_PLAYER*2))
+				ld  ix, #(BASE_SPRITES + (SP_PLAYER*16))
 
 				// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
 				ld  a, (_gpx)

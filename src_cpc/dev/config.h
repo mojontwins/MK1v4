@@ -200,7 +200,7 @@
 // Patrulleros marrulleros genitales
 // ---------------------------------
 
-//#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
+#define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
 
 // Scripting
 // ---------
@@ -226,7 +226,7 @@
 // ----------
 
 //#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
-//#define SHORT_PLAYER 						// Bounding box 12x16
+#define SHORT_PLAYER 						// Bounding box 12x16
 //#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
