@@ -797,8 +797,33 @@ void espera_activa (int espera) {
 	}
 
 	void print_hex (unsigned char x, unsigned char y, unsigned char h) {
+		#asm
+				ld  hl, 6
+				add hl, sp
+				ld  a, (hl)
+				ld  (__x), a
+				dec hl
+				dec hl
+				ld  a, (hl)
+				ld  (__y), a
+		#endasm
 		drda = hex_code (h >> 4); drdb = hex_code (h & 15);
-		// TODO
+		#asm
+				call __tile_address	; DE = buffer address
+				ld  a, (_drda)
+				ld  (de), a
+				inc de
+				ld  a, (_drdb)
+				ld  (de), a
+
+				ld  a, (__x)
+				ld  e, a
+				ld  a, (__y)
+				ld  d, a
+				call cpc_UpdTileTable
+				inc e
+				call cpc_UpdTileTable
+		#endasm		
 	}
 #endif
 

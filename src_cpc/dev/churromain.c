@@ -17,6 +17,8 @@
 // E600 sprite structures
 // FE00 LUT
 
+//#define DEBUG
+
 #include <cpcrslib.h>
 
 // We are using some stuff from CPCRSLIB directly
