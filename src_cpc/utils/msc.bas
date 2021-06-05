@@ -22,6 +22,7 @@ Dim Shared As Integer useFlipFlops
 Dim Shared As Integer useShortSetTile
 Dim Shared As String externalConstants (100)
 Dim Shared As Integer externalConstantsIndex
+Dim Shared As Integer isCpc
 
 Sub newConstant (constantName As String)
 	externalConstants (externalConstantsIndex) = constantName
@@ -535,11 +536,12 @@ maxpants = pval (command (3))
 
 useFlipFlops = inCommand ("flipflops")
 useShortSetTile = inCommand ("shortsettile")
+isCpc = inCommand ("cpc")
 
 print "msc para MTE MK1 v4"
 
 if command (2) = "" or maxpants = 0 then
-	print "uso: msc input output maxpants [flipflops] [shortsettile]"
+	print "uso: msc input output maxpants [flipflops] [shortsettile] [cpc]"
 	system
 end if
 
@@ -1300,7 +1302,11 @@ If actionsUsed (&HE1) Then
 	print #f, "                    case 0xE1:"
 	print #f, "                        // SHOW"
 	print #f, "                        // Opcode: E1"
-	print #f, "                        sp_UpdateNow ();"
+	If isCpc Then
+		print #f, "                        cpc_UpdateNow (1);"
+	Else
+		print #f, "                        sp_UpdateNow ();"
+	End If
 	print #f, "                        break;"
 End If
 

@@ -5,20 +5,14 @@
 // I. General configuration
 // ============================================================================
 
-//#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
-//#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
+#define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
+#define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
+#define BLACK_COLOUR_BYTE 			1		// Which pen is black?
 
-// Arkos support. Get the addresses from ogt/RAM1.map.txt after compiling RAM1.bin
-
-//#define ENABLE_ARKOS
-//#define ARKOS_SFX_CHANNEL 			1
-//#define ARKOS_RAM 					1
-//#define ARKOS_ADDRESS_ATPLAY 			0xC000 	
-//#define ARKOS_ADDRESS_ATSTOP 			0xC6E1
-//#define ARKOS_ADDRESS_ATSFXSTOPALL	0xC6F7
-//#define ARKOS_ADDRESS_ATSFXPLAY 		0xC704
-//#define ARKOS_ADDRESS_MT_LOAD_SONG	0xC7FC
-//#define ARKOS_ADDRESS_MT_INIT 		0xC81C
+// Select sound engine
+//#define SOUND_NONE
+#define SOUND_WYZ
+#define WYZ_FX_CHANNEL 				1		// Where to play sound effects
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
@@ -38,8 +32,8 @@
 #define LINEAR_ENEMY_HIT			7		// Amount of life to substract when normal enemy hits
 #define FLYING_ENEMY_HIT			12		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
-//#define ENABLE_CUSTOM_ENEMS 			// Hooks for custom enemies @ custom.h
+//#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
+//#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
 
 // ============================================================================
 // II. Engine type
@@ -111,7 +105,7 @@
 //#define PUSH_AND_PULL_PILES 				// Can push/pull piles of stacked boxes
 //#define PLAYER_GRAB_FRAME 		2		// Use with PUSH_AND_PULL, which frame 0-3.
 //#define FALLING_BOXES						// If defined, boxes can fall off ledges.
-//#define FALLING_BOXES_SPEED 		4		// Boxes fall every nth frame.
+//#define FALLING_BOXES_SPEED	 	4		// Boxes fall every nth frame.
 //#define ENEMIES_BLOCK_BOXES				// If defined, you can't push a box if it collides an enemy
 //#define BOXES_KILL_ENEMIES				// If defined, falling boxes can kill enemies.
 //#define BOXES_ONLY_KILL_TYPE 		1		// If defined, only enemies type N can be killed with boxes.
@@ -134,7 +128,7 @@
 
 //#define ENABLE_SWORD 						// Let the player swing a sword
 //#define SWORD_UP 							// Can hit upwards
-//#define SWORD_LINEAL_DAMAGE		0		// Damage to linear.
+//#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
 //#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
 //#define SWORD_PARALYZES			32		// If defined, paralyze for N frames
 //#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
@@ -234,7 +228,7 @@
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define SHORT_PLAYER 						// Bounding box 12x16
-#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
+//#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 #define RAMIRO_HOP 							// press jump when reaching a type 4 platform to jump again 
@@ -358,8 +352,8 @@
 // IV.2. Horizontal (side view) or general (top view) movement.
 
 #define PLAYER_MAX_VX				256 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX					64		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX					48		// Friction (32/64 = 0,5 píxels/frame^2)	
+#define PLAYER_AX					32		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX					24		// Friction (32/64 = 0,5 píxels/frame^2)
 
 #define PLAYER_AX_SLIPPERY 			8
 #define PLAYER_RX_SLIPPERY 			8
