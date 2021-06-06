@@ -17,6 +17,11 @@
 # 14 - Cripta de Aitor el leñador
 # 15 - Seta de Aitor el leñador
 
+## Estado de las criptas:
+# 0 - botón off
+# 1 - botón on
+# 2 - cripta abierta
+
 ENTERING GAME
 	IF TRUE
 	THEN
@@ -58,7 +63,7 @@ ENTERING SCREEN 5
 		SET TILE (13, 6) = 24
 		SET FLAG 6 = 0
 		SET FLAG 7 = 0
-		SET_FIRE_ZONE 180, 84, 223, 127
+		#SET_FIRE_ZONE 180, 84, 223, 127
 	END
 END
 
@@ -130,27 +135,29 @@ ENTERING SCREEN 15
 		#TEXT "________MARGOT_MAGGOT_________"
 		#TEXT "___MACARIA_LA_ESTRAFALARIA____"
 		SET TILE (2, 7) = 21
-		SET TILE (3, 7) = 29
-		SET_FIRE_ZONE 24, 100, 76, 127
-		SET FLAG 6 = 0
 	END
-	
-	IF FLAG 8 = 0
+
+	IF FLAG 8 != 2
 	THEN
 		SET TILE (0, 3) = 31
+	END IF
+	
+	IF FLAG 8 != 1
+	THEN
+		SET TILE (3, 7) = 30
 	END
 	
 	IF FLAG 8 = 1
 	THEN
-		SET TILE (3, 7) = 30
+		SET TILE (3, 7) = 29
 	END
 END
 
 PRESS_FIRE AT SCREEN 15
 	IF PLAYER_TOUCHES 3, 7
-	IF FLAG 8 = 0
+	IF FLAG 8 = 1
 	THEN
-		SET FLAG 8 = 1
+		SET FLAG 8 = 2
 		SET TILE (3, 7) = 30
 		SET TILE (0, 3) = 0
 		#TEXT "_________CRYPT_OPEN___________"
@@ -159,12 +166,14 @@ PRESS_FIRE AT SCREEN 15
 	END
 	
 	IF PLAYER_TOUCHES 2, 7
-	IF FLAG 6 = 0
+	IF FLAG 8 = 0
 	THEN
-		SET FLAG 6 = 1
+		SET FLAG 8 = 1
 		#TEXT "_________GO_NINJA_GO!_________"
 		#TEXT "_________DALE_FRAN!!!_________"
-		SHOW
+		EXTERN 2
+		EXTERN 3
+		SET TILE (3, 7) = 29
 		SOUND 11
 	END
 END
@@ -217,27 +226,29 @@ ENTERING SCREEN 21
 		#TEXT "_________MORT_THE_TORT__________"
 		#TEXT "_______ALBERTO_EL_TUERTO________"
 		SET TILE (3, 2) = 19
-		SET TILE (4, 2) = 29
-		SET_FIRE_ZONE 48, 16, 89, 47
-		SET FLAG 6 = 0
 	END
 	
-	IF FLAG 10 = 0
+	IF FLAG 10 != 2
 	THEN
 		SET TILE (0, 7) = 31
 	END
 	
-	IF FLAG 10 = 1
+	IF FLAG 10 != 1
 	THEN
 		SET TILE (4, 2) = 30
+	END
+
+	IF FLAG 10 = 1
+	THEN
+		SET TILE (4, 2) = 29
 	END
 END
 
 PRESS_FIRE AT SCREEN 21
 	IF PLAYER_TOUCHES 4, 2
-	IF FLAG 10 = 0
+	IF FLAG 10 = 1
 	THEN
-		SET FLAG 10 = 1
+		SET FLAG 10 = 2
 		SET TILE (4, 2) = 30
 		SET TILE (0, 7) = 0
 		#TEXT "_________CRYPT_OPEN___________"
@@ -246,12 +257,14 @@ PRESS_FIRE AT SCREEN 21
 	END
 	
 	IF PLAYER_TOUCHES 3, 2
-	IF FLAG 6 = 0
+	IF FLAG 10 = 0
 	THEN
-		SET FLAG 6 = 1
+		SET FLAG 10 = 1
 		#TEXT "ARE_YOU_FAR_AWAY_OR_JUST_SMALL"
 		#TEXT "ESTAS_LEJOS_O_ERES_MUY_CHICO?_"
-		SHOW
+		EXTERN 4
+		EXTERN 5
+		SET TILE (4, 2) = 29
 		SOUND 7
 	END
 END

@@ -72,7 +72,7 @@ Sub stringToArray (in As String)
 	Dim index as Integer
 	Dim character as String * 1
 	Dim As Integer comillas, hadComillas
-	
+'Print in	
 	for m = 1 to LIST_WORDS_SIZE: lP (m) = "": Next m
 	
 	index = 0
@@ -88,7 +88,7 @@ Sub stringToArray (in As String)
 			hadComillas = -1
 		ElseIf comillas Then 
 			lP (index) = lP (index) + character
-		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Or character = "@" Then
+		ElseIf (character >= "A" and character <= "Z") or (character >= "0" and character <="9") or character = "#" or character = "_" or character = "'" or character="<" or character=">" Or character = "@" Or character = "!" Or Character = "=" Then
 			lP (index) = lP (index) + character
 		Else
 			If Not hadComillas Then lP (index) = Ltrim (Rtrim (lP (index)))
@@ -100,9 +100,11 @@ Sub stringToArray (in As String)
 				lP (index) = character
 				index = index + 1
 			End If
+
 			lP (index) = ""
 		End If
 	Next m
+	'For m = 0 To index - 1: Print m,lP(m):next m
 End Sub
 
 Sub displayMe (clausula As String) 

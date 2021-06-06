@@ -22,7 +22,7 @@ echo Making %game%
 ..\utils\apack.exe ending.bin endingc.bin > nul
 
 echo Making script
-..\utils\msc.exe ..\script\script.spt msc.h 24 cpc flipflops > nul
+..\utils\msc.exe ..\script\script.spt msc.h 24 cpc shortsettile > nul 
 
 rem luts
 ..\utils\pasmo.exe system\cpc_TrPixLutM0.asm trpixlut.bin

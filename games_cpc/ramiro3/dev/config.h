@@ -19,7 +19,7 @@
 #define MAP_W						6		//
 #define MAP_H						4		// Map dimmensions in screens
 #define TOTAL_SCREENS				24		// 
-#define SCR_INICIO					5		// Initial screen
+#define SCR_INICIO					21//5		// Initial screen
 #define PLAYER_INI_X				10		//
 #define PLAYER_INI_Y				7		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
@@ -228,9 +228,9 @@
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define SHORT_PLAYER 						// Bounding box 12x16
-//#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
+//#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
-//#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+#define BOTH_KEYS_JUMP						// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 #define RAMIRO_HOP 							// press jump when reaching a type 4 platform to jump again 
 #define RAMIRO_HOVER 						// press down to hover
 //#define HOVER_WITH_JUMP_ALSO 				// use jump to hover as well
