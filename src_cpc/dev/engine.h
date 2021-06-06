@@ -237,6 +237,7 @@ void render_all_sprites (void) {
 		// 0   2   4      6   7   8  9  10 11 12      14
 		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 		#asm
+			.render_player
 				ld  ix, #(BASE_SPRITES + (SP_PLAYER*16))
 
 				// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
@@ -294,7 +295,7 @@ void render_all_sprites (void) {
 	#endif
 }
 
-#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+#if !defined SHORT_PLAYER
 	#define BOUNDING_WIDTH 12
 #else
 	#define BOUNDING_WIDTH 8
@@ -739,10 +740,9 @@ void step (void) {
 		player.next_frame = sprite_17_a;
 		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
 		player.current_frame = player.next_frame;
-		#asm 
-			call SPUpdateNow
-		#endasm
 		play_sfx (10);	
+		cpc_UpdateNow (1);
+		cpc_HardPause (50);
 	}
 #endif
 
@@ -809,9 +809,6 @@ void adjust_to_tile_y (void) {
 				b_y [gpit] = _y;
 				b_f [gpit] = MAX_BREAKABLE_FRAMES;
 				set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_BREAKING_TILE, comportamiento_tiles [BREAKABLE_BREAKING_TILE]);
-				#asm 
-					call SPUpdateNow
-				#endasm
 				play_sfx (9);
 				process_breakable = 1;
 				break;
@@ -1446,6 +1443,7 @@ void move (void) {
 	// Cool
 
 	/*
+	wall = 0;
 	player.possee = 0;
 	player.ceiling = 0;
 	rdj = (player.vy + ptgmy);
@@ -1482,7 +1480,9 @@ void move (void) {
 			xor a
 			ld  (_player + 26), a 			// possee
 			ld  (_player + 37), a 			// ceiling
-			
+			ld  (_wall), a
+
+
 			ld  de, (_player + 8)
 			ld  hl, (_ptgmy)
 			add hl, de
@@ -1500,7 +1500,7 @@ void move (void) {
 		.vert_collision_negative
 			// rdj < 0
 
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				// if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 					ld  a, (_gpxx)
 					ld  c, a
@@ -1536,6 +1536,10 @@ void move (void) {
 
 					ld  a, 1
 					ld  (_player + 37), a 	// player.ceiling
+
+					ld  a, WALL_UP
+					ld  (_wall), a 
+
 					jp  vert_collision_done
 			#else
 				// if ((gpy & 15) < 12)
@@ -1603,6 +1607,10 @@ void move (void) {
 
 					ld  a, 1
 					ld  (_player + 37), a 	// player.ceiling
+
+					ld  a, WALL_UP
+					ld  (_wall), a 
+					
 					jr  vert_collision_done
 			#endif
 
@@ -1625,7 +1633,7 @@ void move (void) {
 			cp  c
 			jr  c, vert_collision_done
 
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				// if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 					ld  a, (_gpxx)
 					ld  c, a
@@ -2498,7 +2506,6 @@ void move (void) {
 	#endasm
 
 	/*
-	wall = 0;	
 	rdj = player.vx + ptgmx;
 	if (rdj) {
 		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
@@ -2528,10 +2535,6 @@ void move (void) {
 	*/
 
 	#asm
-		
-			xor a 
-			ld  (_wall), a
-
 			ld  hl, (_player + 6)		// player.vx
 			ld  de, (_ptgmx)
 			add hl, de
@@ -2546,7 +2549,7 @@ void move (void) {
 			bit 7, h
 			jp  z, horz_collision_positive
 
-		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+		#if !defined SHORT_PLAYER
 
 			.horz_collision_negative
 				// rdj < 0
@@ -2799,7 +2802,7 @@ void move (void) {
 
 	#ifndef DEACTIVATE_KEYS
 		if (
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				(gpx & 15) == 0 
 			#else
 				wall
@@ -2816,7 +2819,7 @@ void move (void) {
 				player.keys --;
 				play_sfx (8);
 			} else 
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				if (qtile (gpxx - 1, gpyy) == 15) {
 					clear_cerrojo (gpxx - 1, gpyy);
 					player.keys --;
@@ -2868,11 +2871,17 @@ void move (void) {
 					#asm	
 						.push_box_vert				
 		
-						// Vertically, only when player.y is tile-aligned.
 
-							ld  a, (_gpy)
-							and 15
-							jp  nz, push_box_vert_done
+						#ifdef SHORT_PLAYER
+								ld  a, (_wall)
+								cp  WALL_UP
+								jr  nz, push_box_vert_up_done	
+						#else
+						// Vertically, only when player.y is tile-aligned.
+								ld  a, (_gpy)
+								and 15
+								jp  nz, push_box_vert_done
+						#endif
 
 						.push_box_vert_do
 
@@ -2889,7 +2898,9 @@ void move (void) {
 							jr  c, push_box_vert_up_done
 
 							ld  a, (_gpyy)
-							dec a
+						#ifndef SHORT_PLAYER
+								dec a
+						#endif
 							ld  (_y0), a
 							dec a 
 							ld  (_y1), a
@@ -2923,6 +2934,12 @@ void move (void) {
 							jr  push_box_vert_done
 
 						.push_box_vert_up_done
+
+							#ifdef SHORT_PLAYER
+								ld  a, (_gpy)
+								and 15
+								jp  nz, push_box_vert_done
+							#endif
 
 							ld  a, (_pad0) 
 							and sp_DOWN
@@ -2968,7 +2985,7 @@ void move (void) {
 					#endasm					
 				#endif
 
-				#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER	
+				#if !defined SHORT_PLAYER	
 					/*		
 					if ((gpx & 15) == 0) {
 						y0 = y1 = gpyy; 
@@ -3278,10 +3295,11 @@ void move (void) {
 				if (player.killingzone_framecount > EVIL_ZONE_FRAME_COUNT) {
 					player.killingzone_framecount = 0;
 					player.killingzone_beepcount ++;
-					sp_Border (2);
+					cpc_Border (0x4C);
 					play_sfx (4);
 				} else {
 					player.killingzone_framecount ++;
+					cpc_Border (0x54);
 				}
 			}
 		} else {
@@ -4334,9 +4352,8 @@ void draw_scr (void) {
 			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, 71, cad_level);
 			draw_2_digits (VIEWPORT_X + 17, VIEWPORT_Y + 10, (n_pant+1));
 		#endif
-		#asm 
-			call SPUpdateNow
-		#endasm
+		cpc_UpdScr ();
+		cpc_ShowTileMap (1);
 		play_sfx (6);
 		espera_activa (1000);
 	#endif
@@ -4495,12 +4512,14 @@ void draw_scr (void) {
 	}
 		
 	#ifdef ACTIVATE_SCRIPTING
-		// Delete line of text
-		#asm
-				xor a
-				ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
-		#endasm
-		draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+		#ifdef LINE_OF_TEXT
+			// Delete line of text
+			#asm
+					xor a
+					ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
+			#endasm
+			draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+		#endif
 
 		// Run "ENTERING ANY" script (if available)
 		script = e_scripts [MAP_W * MAP_H + 1];
@@ -4597,10 +4616,10 @@ void platform_get_player (void) {
 				call _render_this_enemy
 		#endasm
 
-		#asm 
-			call SPUpdateNow
-		#endasm
 		play_sfx (10);
+		cpc_UpdateNow (1);
+		cpc_HardPause (50);
+
 		en_an_next_frame [enit] = sprite_18_a;
 
 		_en_t |= 16;			// dead
@@ -4962,10 +4981,16 @@ void mueve_bicharracos (void) {
 									
 						en_an_x [enit] += en_an_vx [enit];
 						en_an_y [enit] += en_an_vy [enit];
+						/*
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
 						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						*/
+						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
+						if (en_an_x [enit] < 0) en_an_x [enit] = 0;
+						if (en_an_y [enit] > (144*64)) en_an_y [enit] = (144*64);
+						if (en_an_y [enit] < 0) en_an_y [enit] = 0;
 					} 
 				#endif
 
@@ -5039,10 +5064,16 @@ void mueve_bicharracos (void) {
 							en_an_x [enit] += en_an_vx [enit];
 							en_an_y [enit] += en_an_vy [enit];
 						}
+						/*
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
 						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						*/
+						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
+						if (en_an_x [enit] < 0) en_an_x [enit] = 0;
+						if (en_an_y [enit] > (144*64)) en_an_y [enit] = (144*64);
+						if (en_an_y [enit] < 0) en_an_y [enit] = 0;
 					} 
 				#endif
 

@@ -73,7 +73,7 @@
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED	 		// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
-#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
+//#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 #define ENEMIES_COLLIDE_MASK 		8
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
 

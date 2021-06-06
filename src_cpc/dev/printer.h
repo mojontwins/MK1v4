@@ -797,33 +797,8 @@ void espera_activa (int espera) {
 	}
 
 	void print_hex (unsigned char x, unsigned char y, unsigned char h) {
-		#asm
-				ld  hl, 6
-				add hl, sp
-				ld  a, (hl)
-				ld  (__x), a
-				dec hl
-				dec hl
-				ld  a, (hl)
-				ld  (__y), a
-		#endasm
 		drda = hex_code (h >> 4); drdb = hex_code (h & 15);
-		#asm
-				call __tile_address	; DE = buffer address
-				ld  a, (_drda)
-				ld  (de), a
-				inc de
-				ld  a, (_drdb)
-				ld  (de), a
-
-				ld  a, (__x)
-				ld  e, a
-				ld  a, (__y)
-				ld  d, a
-				call cpc_UpdTileTable
-				inc e
-				call cpc_UpdTileTable
-		#endasm		
+		// TODO
 	}
 #endif
 
@@ -983,6 +958,15 @@ void cpc_UpdateNow (unsigned char sprites) {
 	#endasm
 }
 
+void __FASTCALL__ cpc_Border (unsigned char b) {
+	#asm
+			ld 	a, l
+			ld  bc, 0x7F11
+			out (c), c
+			out (c), a
+	#endasm
+}
+
 void pal_set (unsigned char *pal) {
 	#if CPC_GFX_MODE == 0
 		gpit = 16;
@@ -992,3 +976,15 @@ void pal_set (unsigned char *pal) {
 	while (gpit --) cpc_SetColour (gpit, pal[gpit]);
 }
 
+void __FASTCALL__ cpc_HardPause (unsigned char n) {
+	#asm
+			ld  a, l
+		.cpc_HardPause_outer
+			ld  b, 6
+		.cpc_HardPause_inner
+			halt
+			djnz cpc_HardPause_inner
+			dec a
+			jr  nz, cpc_HardPause_outer
+	#endasm
+}

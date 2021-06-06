@@ -455,6 +455,11 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			ld  h, a
 
 		.draw_text_loop
+			ld  a, (__x)
+			ld  c, a
+			inc a
+			ld  (__x), a
+
 			ld  a, (__n)
 			ld  d, a
 			

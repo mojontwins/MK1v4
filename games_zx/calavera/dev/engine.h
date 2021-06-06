@@ -1679,6 +1679,7 @@ void move (void) {
 	// Cool
 
 	/*
+	wall = 0;
 	player.possee = 0;
 	player.ceiling = 0;
 	rdj = (player.vy + ptgmy);
@@ -1715,7 +1716,9 @@ void move (void) {
 			xor a
 			ld  (_player + 26), a 			// possee
 			ld  (_player + 37), a 			// ceiling
-			
+			ld  (_wall), a
+
+
 			ld  de, (_player + 8)
 			ld  hl, (_ptgmy)
 			add hl, de
@@ -1733,7 +1736,7 @@ void move (void) {
 		.vert_collision_negative
 			// rdj < 0
 
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				// if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 					ld  a, (_gpxx)
 					ld  c, a
@@ -1769,6 +1772,10 @@ void move (void) {
 
 					ld  a, 1
 					ld  (_player + 37), a 	// player.ceiling
+
+					ld  a, WALL_UP
+					ld  (_wall), a 
+
 					jp  vert_collision_done
 			#else
 				// if ((gpy & 15) < 12)
@@ -1836,6 +1843,10 @@ void move (void) {
 
 					ld  a, 1
 					ld  (_player + 37), a 	// player.ceiling
+
+					ld  a, WALL_UP
+					ld  (_wall), a 
+					
 					jr  vert_collision_done
 			#endif
 
@@ -1858,7 +1869,7 @@ void move (void) {
 			cp  c
 			jr  c, vert_collision_done
 
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				// if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 					ld  a, (_gpxx)
 					ld  c, a
@@ -2731,7 +2742,6 @@ void move (void) {
 	#endasm
 
 	/*
-	wall = 0;	
 	rdj = player.vx + ptgmx;
 	if (rdj) {
 		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
@@ -2761,10 +2771,6 @@ void move (void) {
 	*/
 
 	#asm
-		
-			xor a 
-			ld  (_wall), a
-
 			ld  hl, (_player + 6)		// player.vx
 			ld  de, (_ptgmx)
 			add hl, de
@@ -2779,7 +2785,7 @@ void move (void) {
 			bit 7, h
 			jp  z, horz_collision_positive
 
-		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+		#if !defined SHORT_PLAYER
 
 			.horz_collision_negative
 				// rdj < 0
@@ -3032,7 +3038,7 @@ void move (void) {
 
 	#ifndef DEACTIVATE_KEYS
 		if (
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				(gpx & 15) == 0 
 			#else
 				wall
@@ -3049,7 +3055,7 @@ void move (void) {
 				player.keys --;
 				play_sfx (8);
 			} else 
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if !defined SHORT_PLAYER
 				if (qtile (gpxx - 1, gpyy) == 15) {
 					clear_cerrojo (gpxx - 1, gpyy);
 					player.keys --;
@@ -3101,11 +3107,17 @@ void move (void) {
 					#asm	
 						.push_box_vert				
 		
-						// Vertically, only when player.y is tile-aligned.
 
-							ld  a, (_gpy)
-							and 15
-							jp  nz, push_box_vert_done
+						#ifdef SHORT_PLAYER
+								ld  a, (_wall)
+								cp  WALL_UP
+								jr  nz, push_box_vert_up_done	
+						#else
+						// Vertically, only when player.y is tile-aligned.
+								ld  a, (_gpy)
+								and 15
+								jp  nz, push_box_vert_done
+						#endif
 
 						.push_box_vert_do
 
@@ -3122,7 +3134,9 @@ void move (void) {
 							jr  c, push_box_vert_up_done
 
 							ld  a, (_gpyy)
-							dec a
+						#ifndef SHORT_PLAYER
+								dec a
+						#endif
 							ld  (_y0), a
 							dec a 
 							ld  (_y1), a
@@ -3156,6 +3170,12 @@ void move (void) {
 							jr  push_box_vert_done
 
 						.push_box_vert_up_done
+
+							#ifdef SHORT_PLAYER
+								ld  a, (_gpy)
+								and 15
+								jp  nz, push_box_vert_done
+							#endif
 
 							ld  a, (_pad0) 
 							and sp_DOWN
@@ -3201,7 +3221,7 @@ void move (void) {
 					#endasm					
 				#endif
 
-				#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER	
+				#if !defined SHORT_PLAYER	
 					/*		
 					if ((gpx & 15) == 0) {
 						y0 = y1 = gpyy; 
@@ -4720,12 +4740,14 @@ void draw_scr (void) {
 	}
 		
 	#ifdef ACTIVATE_SCRIPTING
-		// Delete line of text
-		#asm
-				xor a
-				ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
-		#endasm
-		draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+		#ifdef LINE_OF_TEXT
+			// Delete line of text
+			#asm
+					xor a
+					ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
+			#endasm
+			draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+		#endif
 
 		// Run "ENTERING ANY" script (if available)
 		script = e_scripts [MAP_W * MAP_H + 1];
