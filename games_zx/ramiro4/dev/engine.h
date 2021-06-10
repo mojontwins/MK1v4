@@ -4261,6 +4261,8 @@ void draw_scr_background (void) {
 
 						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
 						or  a
+
+						ld  a, COIN_TILE
 						ret nz
 
 						ld  a, COIN_TILE_DEACT_SUBS				
@@ -4351,6 +4353,8 @@ void draw_scr_background (void) {
 
 						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
 						or  a
+
+						ld  a, COIN_TILE
 						ret nz
 
 						ld  a, COIN_TILE_DEACT_SUBS				

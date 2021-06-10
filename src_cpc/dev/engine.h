@@ -405,24 +405,6 @@ unsigned int __FASTCALL__ abs (int n) {
 	#endasm
 }
 
-void step (void) {
-	#asm
-			ld a, 16
-			out (254), a
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			xor 16
-			out (254), a
-	#endasm	
-}
-
 // Game
 
 #ifndef DEACTIVATE_KEYS
@@ -712,15 +694,14 @@ void step (void) {
 #endif
 
 #ifdef USE_COINS
-	void get_coin(unsigned char xx, unsigned char yy) {
-		#ifdef ENABLE_PERSISTENCE
-			_x = xx; _y = yy;
+	void get_coin (void) {
+		#ifdef ENABLE_PERSISTENCE			
 			persist ();
 		#endif
 
 		flags [COIN_FLAG] ++;
 		
-		set_map_tile (xx, yy, 0, 0);
+		set_map_tile (_x, _y, 0, 0);
 		play_sfx (5);
 
 		#if defined ACTIVATE_SCRIPTING && defined COINS_SCRIPTING
@@ -3310,26 +3291,39 @@ void move (void) {
 
 	#ifdef USE_COINS
 		// Coins interaction
+		#asm
+			.player_get_coin
+		#endasm
 		
 		#ifdef COIN_BEH
-			if (attr (gpxx, gpyy) & COIN_BEH)
-				get_coin (gpxx, gpyy);
-			if ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & COIN_BEH)
-				get_coin (gpxx + 1, gpyy);
-			if ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & COIN_BEH) 
-				get_coin (gpxx, gpyy + 1);
-			if ((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & COIN_BEH)
-				get_coin (gpxx + 1, gpyy + 1);
+			_x = gpxx; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+
+			if (gpx & 15) {
+				_x = gpxx + 1; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			} 
+
+			if (gpy & 15) {
+				_x = gpxx; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			}
+
+			if ((gpx & 15) && (gpy & 15)) {
+				_x = gpxx + 1; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			}
 		#else
-		if (qtile (gpxx, gpyy) == COIN_TILE)
-			get_coin (gpxx, gpyy);
-		if ((gpx & 15) != 0 && qtile (gpxx + 1, gpyy) == COIN_TILE)
-			get_coin (gpxx + 1, gpyy);
-		if ((gpy & 15) != 0 && qtile (gpxx, gpyy + 1) == COIN_TILE) 
-			get_coin (gpxx, gpyy + 1);
-		if ((gpx & 15) != 0 && (gpy & 15) != 0 && qtile (gpxx + 1, gpyy + 1) == COIN_TILE)
-			get_coin (gpxx + 1, gpyy + 1);			
-	#endif
+			_x = gpxx; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+
+			if (gpx & 15) {
+				_x = gpxx + 1; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			} 
+
+			if (gpy & 15) {
+				_x = gpxx; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			}
+
+			if ((gpx & 15) && (gpy & 15)) {
+				_x = gpxx + 1; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			}		
+		#endif
 	#endif
 
 	// Select next frame to paint...
@@ -3413,8 +3407,7 @@ void move (void) {
 						player.subframe ++;
 						if (player.subframe == 4) {
 							player.subframe = 0;
-							player.frame = !player.frame;
-							step (); 
+							player.frame = !player.frame;							
 						}
 					}
 					
@@ -4026,6 +4019,8 @@ void draw_scr_background (void) {
 
 						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
 						or  a
+
+						ld  a, COIN_TILE
 						ret nz
 
 						ld  a, COIN_TILE_DEACT_SUBS				
@@ -4116,6 +4111,8 @@ void draw_scr_background (void) {
 
 						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
 						or  a
+
+						ld  a, COIN_TILE
 						ret nz
 
 						ld  a, COIN_TILE_DEACT_SUBS				
