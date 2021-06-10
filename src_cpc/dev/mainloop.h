@@ -81,12 +81,7 @@ void main (void) {
 	
 	// Border 0
 
-	#asm
-		ld 	a, 0x54
-		ld  bc, 0x7F11
-		out (c), c
-		out (c), a
-	#endasm
+	cpc_Border (0x54);
 
 	// Decompress LUT in place
 

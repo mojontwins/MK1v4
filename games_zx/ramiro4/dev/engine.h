@@ -3859,6 +3859,106 @@ void init_hotspots (void) {
 	}
 #endif
 
+#ifdef TWO_SETS
+	void draw_and_advance (void) {
+		/*
+		map_attr [rdi] = comportamiento_tiles [_n];
+		map_buff [rdi] = _t;
+		draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, _n);
+		rdx += 2;
+		if (rdx == 30) {
+			rdx = 0;
+			rdy += 2;
+		}
+		rdi ++;
+		*/
+
+		#asm
+			#ifdef ENABLE_ANIMATED_TILES
+					ld  a, (__n)
+					cp  ANIMATED_TILE
+					jr  nz, _animated_tiles_add_done
+
+					ld  hl, (_animated_ptr)
+					
+					// Encode Y, X in nibbles
+					ld  a, (_rdx)
+					srl a 				
+					ld  b, a 			// b = X / 2 = 0000XXXX
+					ld  a, (_rdy)
+					;and 0xfe            // xxxYYYY0
+					sla a
+					sla a
+					sla a 				// YYYY0000
+					or  b 				// YYYYXXXX
+
+					ld  (hl), a
+					inc hl
+					ld  (_animated_ptr), hl
+
+				._animated_tiles_add_done
+			#endif
+
+				ld  bc, (__n)
+				ld  b, 0
+				ld  hl, _comportamiento_tiles
+				add hl, bc
+				ld  a, (hl)
+
+				ld  bc, (_rdi)
+				ld  b, 0
+
+				ld  hl, _map_attr
+				add hl, bc
+				ld  (hl), a
+
+				ld  hl, _map_buff
+				add hl, bc
+				ld  a, (__t)
+				ld  (hl), a
+
+				ld  a, (_rdx)
+				add VIEWPORT_X
+				ld  h, 0
+				ld  l, a
+				push hl
+
+				ld  a, (_rdy)
+				add VIEWPORT_Y
+				ld  h, 0
+				ld  l, a
+				push hl
+
+				ld  hl, (__n)
+				ld  h, 0
+				push hl
+
+				call _draw_coloured_tile
+
+				pop bc
+				pop bc
+				pop bc
+
+				ld  a, (_rdx)
+				add 2
+				cp  30
+				jr  nz, draw_and_advance_x_set
+
+				ld  a, (_rdy)
+				add 2
+				ld  (_rdy), a
+
+				xor a
+			
+			.draw_and_advance_x_set
+				ld  (_rdx), a
+
+				ld  hl, _rdi
+				inc (hl)
+		#endasm
+	}
+#endif
+
 void calc_hotspot_ptr (void) {
 	#asm
 			ld  hl, (_n_pant)
@@ -4079,6 +4179,7 @@ void draw_scr_background (void) {
 	#elif defined TWO_SETS
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
+		/*
 		rdi = 0; 
 		for (gpit = 0; gpit < 75; gpit ++) {
 			rdd = *gp_gen ++;
@@ -4090,25 +4191,85 @@ void draw_scr_background (void) {
 			#if defined(USE_COINS) && defined(COINS_DEACTIVABLE)
 				if (rdt2 == COIN_TILE && 0 == scenery_info.show_coins) rdt2 = COIN_TILE_DEACT_SUBS;
 			#endif
-			map_attr [rdi] = comportamiento_tiles [tileoffset + rdt1];
-			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, tileoffset + rdt1);
-			map_buff [rdi] = rdt1;
-			rdx += 2;
-			if (rdx == 30) {
-				rdx = 0;
-				rdy += 2;
-			}
-			rdi ++;
-			map_attr [rdi] = comportamiento_tiles [tileoffset + rdt2];
-			draw_coloured_tile (VIEWPORT_X + rdx, VIEWPORT_Y + rdy, tileoffset + rdt2);
-			map_buff [rdi] = rdt2;
-			rdx += 2;
-			if (rdx == 30) {
-				rdx = 0;
-				rdy += 2;
-			}
-			rdi ++;
+
+			_t = rdt1; _n = tileoffset + rdt1; draw_and_advance ();
+			_t = rdt2; _n = tileoffset + rdt2; draw_and_advance ();
 		}
+		*/
+
+		#asm
+				xor a
+				ld  (_rdi), a
+				ld  (_gpit), a
+
+			.draw_scr_bg_loop
+				
+				ld  hl, (_gp_gen)
+				ld  a, (hl)
+				inc hl
+				ld  (_gp_gen), hl
+				ld  b, a
+
+				srl a
+				srl a
+				srl a
+				srl a
+				
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt1), a
+
+				ld  a, b
+				and 15
+				
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						call coins_check
+				#endif
+
+				ld  (_rdt2), a
+
+				ld  a, (_tileoffset)
+				ld  c, a
+				ld  a, (_rdt1)
+				ld  (__t), a
+				add c
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  a, (_tileoffset)
+				ld  c, a
+				ld  a, (_rdt2)
+				ld  (__t), a
+				add c
+				ld  (__n), a
+				call _draw_and_advance
+
+				ld  a, (_gpit)
+				inc a
+				ld  (_gpit), a
+				cp  75
+				jr  nz, draw_scr_bg_loop
+
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+						jr  draw_scr_bg_loop_end
+					.coins_check
+						cp  COIN_TILE
+						ret nz
+
+						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
+						or  a
+						ret nz
+
+						ld  a, COIN_TILE_DEACT_SUBS				
+						ret
+
+					.draw_scr_bg_loop_end
+				#endif
+		#endasm	
+
 	#elif defined TWO_SETS_REAL
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets

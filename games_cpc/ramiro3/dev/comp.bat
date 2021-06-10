@@ -3,7 +3,7 @@
 set game=ramiro3
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 4 15 10 15 packed > nul
+..\utils\mapcnv.exe ..\map\mapa.map mapa.h 7 4 15 10 15 packed > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=chars in=..\gfx\font.png out=font.bin silent > nul
@@ -22,7 +22,7 @@ echo Making %game%
 ..\utils\apack.exe ending.bin endingc.bin > nul
 
 echo Making script
-..\utils\msc.exe ..\script\script.spt msc.h 24 cpc shortsettile > nul 
+..\utils\msc.exe ..\script\script.spt msc.h 28 cpc shortsettile > nul 
 
 rem luts
 ..\utils\pasmo.exe system\cpc_TrPixLutM0.asm trpixlut.bin

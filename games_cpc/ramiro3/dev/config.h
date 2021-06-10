@@ -16,10 +16,10 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						6		//
+#define MAP_W						7		//
 #define MAP_H						4		// Map dimmensions in screens
-#define TOTAL_SCREENS				24		// 
-#define SCR_INICIO					21//5		// Initial screen
+#define TOTAL_SCREENS				28		// 
+#define SCR_INICIO					6		// Initial screen
 #define PLAYER_INI_X				10		//
 #define PLAYER_INI_Y				7		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
@@ -316,7 +316,7 @@
 //#define PLAYER_ALTERNATE_ANIMATION		// If defined, animation is 1,2,3,1,2,3... 
 #define TWO_SETS							// If defined, two sets of tiles. Old < 4.8 version
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
-#define TWO_SETS_CONDITION		tileset_offset_calc() 	// Must return 32 if second tileset is active, 0 otherwise.
+#define TWO_SETS_CONDITION			((map_behaviours [n_pant] & 1) ? 32 : 0)	// Must return 32 if second tileset is active, 0 otherwise.
 //#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
 //#define RLE_MAP 					62 		// Use RLE compression (values 44, 54, 62; see docs)
 

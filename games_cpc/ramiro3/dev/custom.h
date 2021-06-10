@@ -3,6 +3,17 @@
 
 // Add here your custom routines & vars
 
+// Two sets
+
+unsigned char map_behaviours [] = {
+	0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 1, 1,
+	0, 0, 0, 1, 1, 1, 1,
+	0, 1, 1, 1, 1, 1, 1
+};
+
+// Texts
+
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
 unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]^";
@@ -44,24 +55,37 @@ unsigned char text5 [] = "(RAMIRO EL VAMPIRO)%"
 						 "AUNQUE YO SEA BAJITO%"
 						 "TU TAMPOCO ERES ROMAY!";
 
+unsigned char text6 [] = "(DONOSO EL SEBOSO)%"
+						 "COMO HABRAS NOTADO%"
+						 "SOY UN TIPO MUY FINO%"
+						 "ME GUSTA COMER HELADO%"
+						 "CUBIERTO DE TOCINO!";
 
+unsigned char text7 [] = "(RAMIRO EL VAMPIRO)%"
+						 "VAYA MEZCLA SIN PAR%"
+						 "BAJA POR TUS CONDUCTOS%"
+						 "NI ME QUIERO IMAGINAR%"
+						 "EL OLOR DE TUS ERUCTOS";
 
+unsigned char text8 [] = "(CAMILA LA WILA)%"
+						 "ME GUSTA CAZAR VARONES%"
+						 "COMO A BRUJAS Y MAGAS%"
+						 "PERO NO HAGO POCIONES%"
+						 "YO ME BAJO LAS BRAGAS";
+
+unsigned char text9 [] = "(RAMIRO EL VAMPIRO)%"
+						 "APARTA DE MI, SIRENA%"
+						 "QUE ANDO DE MISION%"
+						 "AY, VAYA UNA CONDENA%"
+						 "SER VAMPIRO GUAPETON!";
 
 unsigned char *texts [] = {
-	text0, text1,
-	text2, text3,
-	text4, text5
+	text0, text1, 			// Dotty y Pepi Caraortiga
+	text2, text3, 			// Tamara la tía rara
+	text4, text5, 			// Alberto el tuerto
+	text6, text7, 			// Donoso el seboso
+	text8, text9, 			// Camila la Wila
 };
-
-// This is a dirty hack
-unsigned char tileset_offset_calc () {
-	if (
-		n_pant < 10 ||
-		n_pant == 12 || 
-		n_pant == 13
-	) return 0;
-	return 32;
-}
 
 void redraw_from_buffer (void) {
 	#asm
