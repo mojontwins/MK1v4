@@ -3545,25 +3545,202 @@ void move (void) {
 
 	#ifdef USE_COINS
 		// Coins interaction
+		#asm
+			.player_get_coin
+		#endasm
 		
 		#ifdef COIN_BEH
-			if (attr (gpxx, gpyy) & COIN_BEH)
-				get_coin (gpxx, gpyy);
-			if ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & COIN_BEH)
-				get_coin (gpxx + 1, gpyy);
-			if ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & COIN_BEH) 
-				get_coin (gpxx, gpyy + 1);
-			if ((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & COIN_BEH)
-				get_coin (gpxx + 1, gpyy + 1);
+			/*
+			_x = gpxx; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+
+			if (gpx & 15) {
+				_x = gpxx + 1; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			} 
+
+			if (gpy & 15) {
+				_x = gpxx; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			}
+
+			if ((gpx & 15) && (gpy & 15)) {
+				_x = gpxx + 1; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			}
+			*/
+			#asm
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_A_done
+
+					call _get_coin
+				.player_get_coin_A_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_B_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_B_done
+
+					call _get_coin
+				.player_get_coin_B_done
+
+
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_C_done
+
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_C_done
+
+					call _get_coin
+				.player_get_coin_C_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_D_done
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_D_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_D_done
+
+					call _get_coin
+				.player_get_coin_D_done
+
+			#endasm
 		#else
-		if (qtile (gpxx, gpyy) == COIN_TILE)
-			get_coin (gpxx, gpyy);
-		if ((gpx & 15) != 0 && qtile (gpxx + 1, gpyy) == COIN_TILE)
-			get_coin (gpxx + 1, gpyy);
-		if ((gpy & 15) != 0 && qtile (gpxx, gpyy + 1) == COIN_TILE) 
-			get_coin (gpxx, gpyy + 1);
-		if ((gpx & 15) != 0 && (gpy & 15) != 0 && qtile (gpxx + 1, gpyy + 1) == COIN_TILE)
-			get_coin (gpxx + 1, gpyy + 1);			
+			/*
+			_x = gpxx; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+
+			if (gpx & 15) {
+				_x = gpxx + 1; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			} 
+
+			if (gpy & 15) {
+				_x = gpxx; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			}
+
+			if ((gpx & 15) && (gpy & 15)) {
+				_x = gpxx + 1; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			}
+			*/
+			#asm
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_A_done
+
+					call _get_coin
+				.player_get_coin_A_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_B_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_B_done
+
+					call _get_coin
+				.player_get_coin_B_done
+
+
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_C_done
+
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_C_done
+
+					call _get_coin
+				.player_get_coin_C_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_D_done
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_D_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_D_done
+
+					call _get_coin
+				.player_get_coin_D_done
+
+			#endasm
 	#endif
 	#endif
 
