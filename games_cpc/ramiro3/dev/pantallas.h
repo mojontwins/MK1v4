@@ -54,8 +54,16 @@ void title_screen (void) {
 			ld  de, BASE_SUPERBUFF
 			call depack
 	#endasm
-	draw_text (11, 17, 7, "1 KEYBOARD");
-	draw_text (11, 18, 7, "2 JOYSTICK");
+	draw_text (11, 14, 7, "1 KEYBOARD");
+	draw_text (11, 15, 7, "2 JOYSTICK");
+
+	draw_text (7, 4, 71, "RAMIRO, EL VAMPIRO");
+	draw_text (10, 7, 7, "EN EL BOSQUE");
+	draw_text (10, 8, 7, "DEL SUSPIRO!");
+	
+	draw_text (8, 19, 71, "MOJON TWINS 2021");
+	draw_text (10, 20, 7, "MTE MK1 V4.8");
+	
 	cpc_UpdScr ();
 	cpc_ShowTileMap (1);
 

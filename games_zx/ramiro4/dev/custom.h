@@ -112,196 +112,393 @@
 
 	unsigned char temp_string [] = "                        ";
 
-	//                        XXXXXXXXXXXXXXXXXXXXXX
-	unsigned char text0 [] = "POR OSIRIS Y POR APIS%"
-							 "MIRADME BIEN: SOY EL%"
-							 "ALTAR DE LAS OFRENDAS.%"
-							 "TE DARE COSAS SI TRAES%"
-							 "MONEDAS AL MENDA.";
+	#ifdef LANG_EN
+		//                        XXXXXXXXXXXXXXXXXXXXXX
+		unsigned char text0 [] = "VISITOR, LOOK AT ME,%"
+								 "I AM THE MIGHTY SHRINE%"
+								 "I'LL GIVE YOU THINGS%"
+								 "IF YOU BRING ME A DIME";
 
-	unsigned char text1 [] = "UN ROLLO DE PAPEL DEL%"
-							 "CULO DOBLE CAPA, QUE%"
-							 "TE DEJA SUAVITO Y TE%"
-							 "QUITA LA ZURRAPA.";				 
+		unsigned char text1 [] = "A ROLL OF TOILET PAPER%"
+								 "IT'S NONE THE COARSE%"
+								 "MAKES YOU FEEL BETTER%"
+								 "AND CLEANS YOU ARSE%";
 
-	unsigned char text2 [] = "UNA FLAUTA DE FAKIR%"
-							 "IMPORTADA DE ORIENTE%"
-							 "QUE TE DUERME CON SU%"
-							 "MUSICA O SI TE DA EN%"
-							 "LOS DIENTES.";
+		unsigned char text2 [] = "I GIVE YOU THIS FLUTE%"
+								 "IF YOU PLAY IT FAST%"
+								 "IT'LL MAKE YOU MUTE%"
+								 "YOU'LL SLEEP AT LAST%";
 
-	unsigned char text3 [] = "UNAS BRAGAS PRINCESA%"
-							 "ROBADAS DE UN CAJON%"
-							 "DE LA LETIZIA ESA.";
+		unsigned char text3 [] = "WHAT CAN I DO?%"
+								 "PLEASE DO NO WRONG%"
+								 "I'M TRUSTING YOU!%"
+								 "I GIVE YOU A THONG%";
 
-	unsigned char text4 [] = "UN TARRO DE GRASA DE%"
-							 "CABALLO. PARA QUE%"
-							 "QUERRIAS ESTO? LOCO%"
-							 "ME HALLO.";
+		unsigned char text4 [] = "GREASE FOR LEATHER%"
+								 "MAKES IT ALL SHINY%"
+								 "DESPITHE THE WEATHER%"
+								 "YOU WILL LUCK SWINEY";
 
-	unsigned char text5 [] = "TES KI YA CARAJAULA,%"
-							 "LLEVATE ESO!";
+		unsigned char text5 [] = "GET LOST!%"
+								 "I DON'T NEED THIS%"
+								 "RUBBISH, COCKALORUM!";
 
-	unsigned char text6 [] = "Y ESTO QUE ES? BEBE-%"
-							 "CHARCOS, ESCUCHAPEOS";
+		unsigned char text6 [] = "WHAT'S THIS?%"
+								 "TAKE IT AWAY,%"
+								 "CUMDUMPSTER!";
 
-	unsigned char text7 [] = "PARA QUE QUIERO ESTO,%"
-							 "BOQUIMUELLE?";
+		unsigned char text7 [] = "C'MON, DON'T BE A%"
+								 "PILLOCK! I DON'T NEED%"
+								 "THIS CRAP!";
 
-	unsigned char text8 [] = "PERO QUE ME TRAES?%"
-							 "BOTARATE TALLOCEBOLLA!";
+		unsigned char text8 [] = "AND AM I SUPPOSED TO%"
+								 "WANT THIS, SNOLLY-%"
+								 "GOSTER?";
 
-	unsigned char text9 [] = "Y AY, QUE POCAS LUCES%"
-							 "ME DUELE LA PETACA.%"
-							 "COMI MUCHAS CHUCHES%"
-							 "Y ME HAGO MUCHA CACA.";
+		unsigned char text9 [] = "I ATE TOO MUCH CANDY%"
+								 "TO FILL THIS BUMP%"
+								 "I ALSO DRANK BRANDY%"
+								 "NOW I NEED A DUMP.";
 
-	unsigned char text10 [] = "AUNQUE SEA DENOCHES%"
-							  "NO CONSIGO DORMIR.%"
-							  "TENGO MUCHO INSOMNIO%"
-							  "ESTO ES UN SINVIVIR";
+		unsigned char text10 [] = "AUNQUE SEA DENOCHES%"
+								  "NO CONSIGO DORMIR.%"
+								  "TENGO MUCHO INSOMNIO%"
+								  "ESTO ES UN SINVIVIR";
 
-	unsigned char text11 [] = "QUE DESPISTE TENGO%"
-							  "AYER FUI LO PEOR. ME%"
-							  "DESMADRE EN UN CUMPLE%"
-							  "Y PERDI LA ROPA%"
-							  "INTERIOR.";
+		unsigned char text11 [] = "QUE DESPISTE TENGO%"
+								  "AYER FUI LO PEOR. ME%"
+								  "DESMADRE EN UN CUMPLE%"
+								  "Y PERDI LA ROPA%"
+								  "INTERIOR.";
 
-	unsigned char text12 [] = "ESTOY SIN RECATO%"
-							  "A SU SERVICIO.%"
-							  "TRABAJO MUY BARATO%"
-							  "PERO EL CUERO ES MI%"
-							  "VICIO...";
+		unsigned char text12 [] = "ESTOY SIN RECATO%"
+								  "A SU SERVICIO.%"
+								  "TRABAJO MUY BARATO%"
+								  "PERO EL CUERO ES MI%"
+								  "VICIO...";
 
-	unsigned char text13 [] = "RECUPERA LOS CUATRO%"
-							  "TROZOS DEL PAPIRO%"
-							  "Y VUELVE AQUI PARA%"
-							  "HACER EL HECHIZO";
+		unsigned char text13 [] = "RECUPERA LOS CUATRO%"
+								  "TROZOS DEL PAPIRO%"
+								  "Y VUELVE AQUI PARA%"
+								  "HACER EL HECHIZO";
 
-	unsigned char text14 [] = "VAYA INSISTENCIA, TE%"
-							  "ABRO MI PIRAMIDE,%"
-							  "MONTUNO! QUE CASI PA-%"
-							  "RECES EL REY DE LOS%"
-							  "HUNOS!";
+		unsigned char text14 [] = "VAYA INSISTENCIA, TE%"
+								  "ABRO MI PIRAMIDE,%"
+								  "MONTUNO! QUE CASI PA-%"
+								  "RECES EL REY DE LOS%"
+								  "HUNOS!";
 
-	unsigned char text15 [] = "LO CONSIGUIO AL FIN!%"
-							  "ENSAMBLADO EL PAPIRO%"
-							  "SE DISPONE A LEER EL%"
-							  "CONJURO NUESTRO BUEN%"
-							  "RAMIRO.";
+		unsigned char text15 [] = "LO CONSIGUIO AL FIN!%"
+								  "ENSAMBLADO EL PAPIRO%"
+								  "SE DISPONE A LEER EL%"
+								  "CONJURO NUESTRO BUEN%"
+								  "RAMIRO.";
 
-	unsigned char text16 [] = "DICE ASI:%"
-							  "- 2 CEBOLLAS%"
-							  "- PAPEL DEL CULO%"
-							  "- PAN%"
-							  "- FAIRY";
+		unsigned char text16 [] = "DICE ASI:%"
+								  "- 2 CEBOLLAS%"
+								  "- PAPEL DEL CULO%"
+								  "- PAN%"
+								  "- FAIRY";
 
-	unsigned char text17 [] = "EL POBRE VAMPIRO SE%"
-							  "QUEDA CON CARA MONA:%"
-							  "NO ES UN CONJURO,%"
-							  "ES LA LISTA DEL%"
-							  "MERCADONA.";
+		unsigned char text17 [] = "EL POBRE VAMPIRO SE%"
+								  "QUEDA CON CARA MONA:%"
+								  "NO ES UN CONJURO,%"
+								  "ES LA LISTA DEL%"
+								  "MERCADONA.";
 
-	unsigned char text18 [] = "YA QUE ME TRAES UNA%"
-							  "OFRENDA, YO SOLTARE%"
-							  "PRENDA...";
+		unsigned char text18 [] = "YA QUE ME TRAES UNA%"
+								  "OFRENDA, YO SOLTARE%"
+								  "PRENDA...";
 
-	unsigned char text19 [] = "YA TIENES UN OBJETO!%"
-							  "USALO ANTES, CATETO.";
+		unsigned char text19 [] = "YA TIENES UN OBJETO!%"
+								  "USALO ANTES, CATETO.";
 
-	unsigned char text20 [] = "Y YA TE ABRI. AHORA%"
-							  "JUYE... JUYE!!";
+		unsigned char text20 [] = "Y YA TE ABRI. AHORA%"
+								  "JUYE... JUYE!!";
 
-	unsigned char text21 [] = "OH, QUE SUAVE ES!%"
-							  "Y AHORA, PORFA, VETE%"
-							  "QUE HARE CACA Y ME%"
-							  "LIMPIARE EL OJETE";
+		unsigned char text21 [] = "OH, QUE SUAVE ES!%"
+								  "Y AHORA, PORFA, VETE%"
+								  "QUE HARE CACA Y ME%"
+								  "LIMPIARE EL OJETE";
 
-	unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
-							  "CON FEO SU SONIDO%"
-							  "EN SOLO UNOS MITUTOS%"
-							  "YA ESTARE DORMIDO";
+		unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
+								  "CON FEO SU SONIDO%"
+								  "EN SOLO UNOS MITUTOS%"
+								  "YA ESTARE DORMIDO";
 
-	unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
-							  "RECIBO CON ALBOROTO%"
-							  "TU BELLO REGALO: UNAS%"
-							  "BRAGAS PA MI TOTO";
+		unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
+								  "RECIBO CON ALBOROTO%"
+								  "TU BELLO REGALO: UNAS%"
+								  "BRAGAS PA MI TOTO";
 
-	unsigned char text24 [] = "QUE LUSTROSO QUEDARA%"
-							  "EL CUERO DE MI ARNES%"
-							  "IRE VISITAR A MARISA%"
-							  "A CHUPARLE LOS PIES";
+		unsigned char text24 [] = "QUE LUSTROSO QUEDARA%"
+								  "EL CUERO DE MI ARNES%"
+								  "IRE VISITAR A MARISA%"
+								  "A CHUPARLE LOS PIES";
 
-	unsigned char text25 [] = "SI SACAS LA MONEDA%"
-							  "ENFADARAS A HORUS!%"
-							  "YA SOLO TE QUEDA%"
-							  "RASCARLE LOS OJUS!";
+		unsigned char text25 [] = "SI SACAS LA MONEDA%"
+								  "ENFADARAS A HORUS!%"
+								  "YA SOLO TE QUEDA%"
+								  "RASCARLE LOS OJUS!";
 
-	unsigned char text26 [] = "SOY SONIA LA MOMIA%"
-							  "GUARDIANA DE LA%"
-							  "TERCERA CRIPTA";
+		unsigned char text26 [] = "SOY SONIA LA MOMIA%"
+								  "GUARDIANA DE LA%"
+								  "TERCERA CRIPTA";
 
-	unsigned char text27 [] = "SOY CLEMENTE LA%"
-							  "SERPIENTE,%"
-							  "GUARDIAN DE LA%"
-							  "CUARTA CRIPTA";
+		unsigned char text27 [] = "SOY CLEMENTE LA%"
+								  "SERPIENTE,%"
+								  "GUARDIAN DE LA%"
+								  "CUARTA CRIPTA";
 
-	unsigned char text28 [] = "SOY MARISA LA%"
-							  "SACERDOTISA,%"
-							  "GUARDIANA DE LA%"
-							  "SEGUNDA CRIPTA";
+		unsigned char text28 [] = "SOY MARISA LA%"
+								  "SACERDOTISA,%"
+								  "GUARDIANA DE LA%"
+								  "SEGUNDA CRIPTA";
 
-	unsigned char text29 [] = "SOY GUSTAVO EL%"
-							  "ESCLAVO,%"
-							  "GUARDIAN DE LA%"
-							  "PRIMERA CRIPTA";
+		unsigned char text29 [] = "SOY GUSTAVO EL%"
+								  "ESCLAVO,%"
+								  "GUARDIAN DE LA%"
+								  "PRIMERA CRIPTA";
 
-	unsigned char text30 [] = "LOS TROZOS ESTAN%"
-							  "EN CRIPTAS CERRADAS,%"
-							  "TENDRAS QUE COMPLACER%"
-							  "A SUS GUARDIANES";
+		unsigned char text30 [] = "LOS TROZOS ESTAN%"
+								  "EN CRIPTAS CERRADAS,%"
+								  "TENDRAS QUE COMPLACER%"
+								  "A SUS GUARDIANES";
 
-	unsigned char text31 [] = "\"TE PILLE, LORITO!\",%"
-							  "OYES A ALGUIEN GRITAR%"
-							  "\"NO PIERDAS TU PORTE%"
-							  "Y VUELVE A EMPEZAR!\"";
+		unsigned char text31 [] = "\"TE PILLE, LORITO!\",%"
+								  "OYES A ALGUIEN GRITAR%"
+								  "\"NO PIERDAS TU PORTE%"
+								  "Y VUELVE A EMPEZAR!\"";
 
-	unsigned char text32 [] = "CUIDADO CON EL OJO!%"
-							  "SE HACE LA DORMIDA%"
-							  "PERO SI TE VE%"
-							  "TE CHUPA LA VIDA!";
+		unsigned char text32 [] = "CUIDADO CON EL OJO!%"
+								  "SE HACE LA DORMIDA%"
+								  "PERO SI TE VE%"
+								  "TE CHUPA LA VIDA!";
 
-	unsigned char text33 [] = "RAMON EL FARAON,%"
-							  "TE INVITO A SU KELI%"
-							  "Y ENTRE VINOS Y HUMO%"
-							  "TE CONTO SU PELI...";
+		unsigned char text33 [] = "RAMON EL FARAON,%"
+								  "TE INVITO A SU KELI%"
+								  "Y ENTRE VINOS Y HUMO%"
+								  "TE CONTO SU PELI...";
 
-	unsigned char text34 [] = "SI JUNTAS 4 PARTES%"
-							  "EL PODEWR DEL PAPIRO%"
-							  "OCULTO EN ESTE SITIO%"
-							  "SERA TUYO, RAMIRO";
+		unsigned char text34 [] = "SI JUNTAS 4 PARTES%"
+								  "EL PODEWR DEL PAPIRO%"
+								  "OCULTO EN ESTE SITIO%"
+								  "SERA TUYO, RAMIRO";
 
-	unsigned char text35 [] = "BUSCA A RAMON Y QUE%"
-							  "CON SU ABRACADABRA%"
-							  "NO SE HAGA EL REMOLON%"
-							  "Y LA PIRAMIDE TE ABRA";
+		unsigned char text35 [] = "BUSCA A RAMON Y QUE%"
+								  "CON SU ABRACADABRA%"
+								  "NO SE HAGA EL REMOLON%"
+								  "Y LA PIRAMIDE TE ABRA";
 
-	unsigned char text36 [] = "ESTE ES EL ALTAR ROTO%"
-							  "QUE NO TE DISCRIMINA%"
-							  "Y SI LE TOCAS EL TOTO%"
-							  "TE DA PAPEL DE COCINA";
+		unsigned char text36 [] = "ESTE ES EL ALTAR ROTO%"
+								  "QUE NO TE DISCRIMINA%"
+								  "Y SI LE TOCAS EL TOTO%"
+								  "TE DA PAPEL DE COCINA";
 
-	unsigned char text37 [] = "QUE HACES, ALOCADO?%"
-							  "ESE PAPEL DE COCINA%"
-							  "A MI CULO DELICADO%"
-							  "LO HARIA FOSFATINA!";
+		unsigned char text37 [] = "WHAT ARE YOU THINKING%"
+								  "YOU GODDAMNED NUT!%"
+								  "SUCH A ROUGH PAPER%"
+								  "WOULD SAND MY BUTT!";
 
-	unsigned char text38 [] = "EL ALTAR NO CONTESTA";
+		unsigned char text38 [] = "EL ALTAR NO CONTESTA";
 
-	unsigned char text39 [] = "NO HE VISTO NI POR%"
-							  "DONDE VENIAN,%"
-							  "JA JA JA JA JA%"
-							  "... CABRONI!";
+		unsigned char text39 [] = "NO HE VISTO NI POR%"
+								  "DONDE VENIAN,%"
+								  "JA JA JA JA JA%"
+								  "... CABRONI!";
+	#else
+		//                        XXXXXXXXXXXXXXXXXXXXXX
+		unsigned char text0 [] = "POR OSIRIS Y POR APIS%"
+								 "MIRADME BIEN: SOY EL%"
+								 "ALTAR DE LAS OFRENDAS.%"
+								 "TE DARE COSAS SI TRAES%"
+								 "MONEDAS AL MENDA.";
+
+		unsigned char text1 [] = "UN ROLLO DE PAPEL DEL%"
+								 "CULO DOBLE CAPA, QUE%"
+								 "TE DEJA SUAVITO Y TE%"
+								 "QUITA LA ZURRAPA.";				 
+
+		unsigned char text2 [] = "UNA FLAUTA DE FAKIR%"
+								 "IMPORTADA DE ORIENTE%"
+								 "QUE TE DUERME CON SU%"
+								 "MUSICA O SI TE DA EN%"
+								 "LOS DIENTES.";
+
+		unsigned char text3 [] = "TE SACO DEL TIRON%"
+								 "UNAS BRAGAS PRINCESA%"
+								 "ROBADAS DE UN CAJON%"
+								 "DE LA LETIZIA ESA.";
+
+		unsigned char text4 [] = "UN TARRO DE GRASA DE%"
+								 "CABALLO. PARA QUE%"
+								 "QUERRIAS ESTO? LOCO%"
+								 "ME HALLO.";
+
+		unsigned char text5 [] = "TES KI YA CARAJAULA,%"
+								 "LLEVATE ESO!";
+
+		unsigned char text6 [] = "Y ESTO QUE ES? BEBE-%"
+								 "CHARCOS, ESCUCHAPEOS";
+
+		unsigned char text7 [] = "PARA QUE QUIERO ESTO,%"
+								 "BOQUIMUELLE?";
+
+		unsigned char text8 [] = "PERO QUE ME TRAES?%"
+								 "BOTARATE TALLOCEBOLLA!";
+
+		unsigned char text9 [] = "Y AY, QUE POCAS LUCES%"
+								 "ME DUELE LA PETACA.%"
+								 "COMI MUCHAS CHUCHES%"
+								 "Y ME HAGO MUCHA CACA.";
+
+		unsigned char text10 [] = "AUNQUE SEA DENOCHES%"
+								  "NO CONSIGO DORMIR.%"
+								  "TENGO MUCHO INSOMNIO%"
+								  "ESTO ES UN SINVIVIR";
+
+		unsigned char text11 [] = "QUE DESPISTE TENGO%"
+								  "AYER FUI LO PEOR. ME%"
+								  "DESMADRE EN UN CUMPLE%"
+								  "Y PERDI LA ROPA%"
+								  "INTERIOR.";
+
+		unsigned char text12 [] = "ESTOY SIN RECATO%"
+								  "A SU SERVICIO.%"
+								  "TRABAJO MUY BARATO%"
+								  "PERO EL CUERO ES MI%"
+								  "VICIO...";
+
+		unsigned char text13 [] = "RECUPERA LOS CUATRO%"
+								  "TROZOS DEL PAPIRO%"
+								  "Y VUELVE AQUI PARA%"
+								  "HACER EL HECHIZO";
+
+		unsigned char text14 [] = "VAYA INSISTENCIA, TE%"
+								  "ABRO MI PIRAMIDE,%"
+								  "MONTUNO! QUE CASI PA-%"
+								  "RECES EL REY DE LOS%"
+								  "HUNOS!";
+
+		unsigned char text15 [] = "LO CONSIGUIO AL FIN!%"
+								  "ENSAMBLADO EL PAPIRO%"
+								  "SE DISPONE A LEER EL%"
+								  "CONJURO NUESTRO BUEN%"
+								  "RAMIRO.";
+
+		unsigned char text16 [] = "DICE ASI:%"
+								  "- 2 CEBOLLAS%"
+								  "- PAPEL DEL CULO%"
+								  "- PAN%"
+								  "- FAIRY";
+
+		unsigned char text17 [] = "EL POBRE VAMPIRO SE%"
+								  "QUEDA CON CARA MONA:%"
+								  "NO ES UN CONJURO,%"
+								  "ES LA LISTA DEL%"
+								  "MERCADONA.";
+
+		unsigned char text18 [] = "YA QUE ME TRAES UNA%"
+								  "OFRENDA, YO SOLTARE%"
+								  "PRENDA...";
+
+		unsigned char text19 [] = "YA TIENES UN OBJETO!%"
+								  "USALO ANTES, CATETO.";
+
+		unsigned char text20 [] = "Y YA TE ABRI. AHORA%"
+								  "JUYE... JUYE!!";
+
+		unsigned char text21 [] = "OH, QUE SUAVE ES!%"
+								  "Y AHORA, PORFA, VETE%"
+								  "QUE HARE CACA Y ME%"
+								  "LIMPIARE EL OJETE";
+
+		unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
+								  "CON FEO SU SONIDO%"
+								  "EN SOLO UNOS MITUTOS%"
+								  "YA ESTARE DORMIDO";
+
+		unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
+								  "RECIBO CON ALBOROTO%"
+								  "TU BELLO REGALO: UNAS%"
+								  "BRAGAS PA MI TOTO";
+
+		unsigned char text24 [] = "QUE LUSTROSO QUEDARA%"
+								  "EL CUERO DE MI ARNES%"
+								  "IRE VISITAR A MARISA%"
+								  "A CHUPARLE LOS PIES";
+
+		unsigned char text25 [] = "SI SACAS LA MONEDA%"
+								  "ENFADARAS A HORUS!%"
+								  "YA SOLO TE QUEDA%"
+								  "RASCARLE LOS OJUS!";
+
+		unsigned char text26 [] = "SOY SONIA LA MOMIA%"
+								  "GUARDIANA DE LA%"
+								  "TERCERA CRIPTA";
+
+		unsigned char text27 [] = "SOY CLEMENTE LA%"
+								  "SERPIENTE,%"
+								  "GUARDIAN DE LA%"
+								  "CUARTA CRIPTA";
+
+		unsigned char text28 [] = "SOY MARISA LA%"
+								  "SACERDOTISA,%"
+								  "GUARDIANA DE LA%"
+								  "SEGUNDA CRIPTA";
+
+		unsigned char text29 [] = "SOY GUSTAVO EL%"
+								  "ESCLAVO,%"
+								  "GUARDIAN DE LA%"
+								  "PRIMERA CRIPTA";
+
+		unsigned char text30 [] = "LOS TROZOS ESTAN%"
+								  "EN CRIPTAS CERRADAS,%"
+								  "TENDRAS QUE COMPLACER%"
+								  "A SUS GUARDIANES";
+
+		unsigned char text31 [] = "\"TE PILLE, LORITO!\",%"
+								  "OYES A ALGUIEN GRITAR%"
+								  "\"NO PIERDAS TU PORTE%"
+								  "Y VUELVE A EMPEZAR!\"";
+
+		unsigned char text32 [] = "CUIDADO CON EL OJO!%"
+								  "SE HACE LA DORMIDA%"
+								  "PERO SI TE VE%"
+								  "TE CHUPA LA VIDA!";
+
+		unsigned char text33 [] = "RAMON EL FARAON,%"
+								  "TE INVITO A SU KELI%"
+								  "Y ENTRE VINOS Y HUMO%"
+								  "TE CONTO SU PELI...";
+
+		unsigned char text34 [] = "SI JUNTAS 4 PARTES%"
+								  "EL PODEWR DEL PAPIRO%"
+								  "OCULTO EN ESTE SITIO%"
+								  "SERA TUYO, RAMIRO";
+
+		unsigned char text35 [] = "BUSCA A RAMON Y QUE%"
+								  "CON SU ABRACADABRA%"
+								  "NO SE HAGA EL REMOLON%"
+								  "Y LA PIRAMIDE TE ABRA";
+
+		unsigned char text36 [] = "ESTE ES EL ALTAR ROTO%"
+								  "QUE NO TE DISCRIMINA%"
+								  "Y SI LE TOCAS EL TOTO%"
+								  "TE DA PAPEL DE COCINA";
+
+		unsigned char text37 [] = "QUE HACES, ALOCADO?%"
+								  "ESE PAPEL DE COCINA%"
+								  "A MI CULO DELICADO%"
+								  "LO HARIA FOSFATINA!";
+
+		unsigned char text38 [] = "EL ALTAR NO CONTESTA";
+
+		unsigned char text39 [] = "NO HE VISTO NI POR%"
+								  "DONDE VENIAN,%"
+								  "JA JA JA JA JA%"
+								  "... CABRONI!";
+	#endif
 
 	unsigned char *texts [] = {
 		text0, 								// Bienvenida altar

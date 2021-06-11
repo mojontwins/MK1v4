@@ -18,15 +18,18 @@ unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
 unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]^";
 unsigned char redraw_after_text;
+unsigned char intro_text;
 unsigned char talk_sounds [] = { 7, 11 };
 
 //                        XXXXXXXXXXXXXXXXXXXXXX
-unsigned char text0 [] = "HAY SETAS A RAUDALES!%"
+unsigned char text0 [] = "(DOTTY)%"
+						 "HAY SETAS A RAUDALES!%"
 						 "PERO PAPI, YA LO PETAS%"
 						 "SI CON LAS NORMALES%"
 						 "TRAES SETAS CON TETAS!";
 
-unsigned char text1 [] = "SOY AMIGA DE TU HIJA,%"
+unsigned char text1 [] = "(PEPI CARAORTIGA)%"
+						 "SOY AMIGA DE TU HIJA,%"
 						 "NO SOY NADA MOJIGATA.%"
 						 "LUEGO, SI NO SE FIJA,%"
 						 "TE VOY A DAR, PIRATA!";
@@ -79,12 +82,45 @@ unsigned char text9 [] = "(RAMIRO EL VAMPIRO)%"
 						 "AY, VAYA UNA CONDENA%"
 						 "SER VAMPIRO GUAPETON!";
 
+unsigned char text10 [] = "(RAMIRO EL VAMPIRO)%"
+						  "VAYA, EL BOSQUE MOLA%"
+						  "PERO !AY, QUE OLVIDO!%"
+						  "NO TRAEMOS MERENDOLA%"
+						  "Y NO HEMOS COMIDO...";						  
+
+unsigned char text11 [] = "(RAMIRO EL VAMPIRO)%"
+						  "DOTTY ESTA COMO IDA%"
+						  "EL HAMBRE LE PIERDE!%"
+						  "SI NO TRAIGO COMIDA%"
+						  "SEGURO QUE ME MUERDE!";
+
+unsigned char text12 [] = "(RAMIRO EL VAMPIRO)%"
+						  "YA TENGO SUFICIENTES%"
+						  "CON TETAS O SIN TETAS%"
+						  "SON ESTUPEFACIENTES%"
+						  "Y LAS DEJAN MAJARETAS";
+
+unsigned char text13 [] = "(DOTTY)%"
+						  "AY, ERES EL MAS MEJOR%"
+						  "UN PAPI AZUL CIELO%"
+						  "CON CARITA DE ALFAJOR%"
+						  "Y GRASITA POR EL PELO";
+
+unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
+						  "DISFRUTAD LAS SETAS%"
+						  "COMED SIN DISMULO%"
+						  "ENTRAN POR LA BOCA%"
+						  "LUEGO VAN AL CULO!";
+
+
 unsigned char *texts [] = {
 	text0, text1, 			// Dotty y Pepi Caraortiga
 	text2, text3, 			// Tamara la tía rara
 	text4, text5, 			// Alberto el tuerto
 	text6, text7, 			// Donoso el seboso
 	text8, text9, 			// Camila la Wila
+	text10, text11,			// Intro
+	text12, 				// Ya tienes todas
 };
 
 void redraw_from_buffer (void) {
@@ -217,9 +253,18 @@ void show_text_box (unsigned char n) {
 	}
 
 	void hook_init_game (void) {
+		intro_text = 1;
 	}
 
 	void hook_init_mainloop (void) {
+
+		// Intro
+		if (intro_text && player.possee) {
+			intro_text = 0;
+			redraw_after_text = 1;
+			show_text_box (10);
+			show_text_box (11);
+		}
 	}
 
 	void hook_mainloop (void) {

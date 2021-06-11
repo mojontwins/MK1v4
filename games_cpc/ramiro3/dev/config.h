@@ -19,20 +19,20 @@
 #define MAP_W						7		//
 #define MAP_H						4		// Map dimmensions in screens
 #define TOTAL_SCREENS				28		// 
-#define SCR_INICIO					17//6		// Initial screen
+#define SCR_INICIO					6		// Initial screen
 #define PLAYER_INI_X				10		//
-#define PLAYER_INI_Y				7		// Initial tile coordinates
+#define PLAYER_INI_Y				5		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-//#define PLAYER_NUM_OBJETOS		99		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS			14		// Objects to get to finish game
 #define PLAYER_LIFE 				69		// Max and starting life gauge.
 #define PLAYER_REFILL				1		// Life recharge
 
 #define LINEAR_ENEMY_HIT			7		// Amount of life to substract when normal enemy hits
 #define FLYING_ENEMY_HIT			12		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
+#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 //#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
 
 // ============================================================================
@@ -270,7 +270,7 @@
 #define OBJECTS_Y					23		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-//#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
+#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
 //#define KEYS_X					28		//
 //#define KEYS_Y					21		// Keys counter character coordinates
