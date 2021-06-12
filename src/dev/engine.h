@@ -31,10 +31,14 @@ unsigned char line_of_text_clear [] = "                                ";
 	};
 #endif
 
-unsigned char *enem_cells [] = {
-	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
-};
+#ifdef ENEMS_CUSTOM_CELLS
+	#include "custom_enem_cells.h"
+#else
+	unsigned char *enem_cells [] = {
+		sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+		sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+	};
+#endif
 
 #ifdef ENABLE_SWORD
 	extern unsigned char *sword_cells [0];

@@ -33,12 +33,16 @@ unsigned char line_of_text_clear [] = "                                ";
 	#endasm
 #endif
 
-extern unsigned char *enem_cells [0];
-#asm
-		._enem_cells
-			defw SPRITE_08, SPRITE_09, SPRITE_0A, SPRITE_0B
-			defw SPRITE_0C, SPRITE_0D, SPRITE_0E, SPRITE_0F
-#endasm
+#ifdef ENEMS_CUSTOM_CELLS
+	#include "custom_enem_cells.h"
+#else
+	extern unsigned char *enem_cells [0];
+	#asm
+			._enem_cells
+				defw SPRITE_08, SPRITE_09, SPRITE_0A, SPRITE_0B
+				defw SPRITE_0C, SPRITE_0D, SPRITE_0E, SPRITE_0F
+	#endasm
+#endif
 
 #ifdef ENABLE_SWORD
 	extern unsigned char *sword_cells [0];

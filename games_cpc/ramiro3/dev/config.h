@@ -33,7 +33,9 @@
 #define FLYING_ENEMY_HIT			12		// Amount of life to substract when flying enemy hits
 
 #define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
-//#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
+#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
+
+#define ENEMS_CUSTOM_CELLS 					// Include custom_enem_cells.h
 
 // ============================================================================
 // II. Engine type
