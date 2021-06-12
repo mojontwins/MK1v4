@@ -29,8 +29,8 @@
 #define PLAYER_LIFE 				69		// Max and starting life gauge.
 #define PLAYER_REFILL				1		// Life recharge
 
-#define LINEAR_ENEMY_HIT			7		// Amount of life to substract when normal enemy hits
-#define FLYING_ENEMY_HIT			12		// Amount of life to substract when flying enemy hits
+#define LINEAR_ENEMY_HIT			5		// Amount of life to substract when normal enemy hits
+#define FLYING_ENEMY_HIT			10		// Amount of life to substract when flying enemy hits
 
 #define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 #define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
@@ -190,8 +190,8 @@
 #define USE_TYPE_6							// If defined, type 6 enemies are enabled.
 //#define USE_SIGHT_DISTANCE				// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE			120		
-#define FANTY_MAX_V 				256 	// Flying enemies max speed.
-#define FANTY_A 					16		// Flying enemies acceleration.
+#define FANTY_MAX_V 				192 	// Flying enemies max speed.
+#define FANTY_A 					12		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE			10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 

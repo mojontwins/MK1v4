@@ -3282,9 +3282,13 @@ void move (void) {
 					player.killingzone_beepcount ++;
 					cpc_Border (0x4C);
 					play_sfx (4);
+					#asm
+						halt
+					#endasm
+					cpc_Border (0x54);
 				} else {
 					player.killingzone_framecount ++;
-					cpc_Border (0x54);
+					
 				}
 			}
 		} else {

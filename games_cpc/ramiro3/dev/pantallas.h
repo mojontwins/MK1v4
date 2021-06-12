@@ -100,6 +100,7 @@ void game_ending (void) {
 }
 
 void game_over (void) {
+	AY_STOP_SOUND ();
 	//10, 11, 21, 13, GAME_OVER_ATTR
 	#asm
 			ld  a, 10
