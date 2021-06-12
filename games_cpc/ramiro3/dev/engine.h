@@ -4662,6 +4662,10 @@ void enems_en_an_calc (unsigned char n) {
 #endif
 
 void draw_scr (void) {
+	#ifndef DEACTIVATE_EVIL_ZONE
+		cpc_Border (0x54);
+	#endif
+
 	#ifdef SHOW_LEVEL_INFO
 		char *cad_level = "LEVEL";
 

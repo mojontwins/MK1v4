@@ -257,11 +257,11 @@ void show_text_box (unsigned char n) {
 
 	void hook_init_game (void) {
 		intro_text = 1;
-		n_pant = 21;
+		//n_pant = 21;
+		n_pant=15;
 	}
 
 	void hook_init_mainloop (void) {
-
 		// Intro
 		if (intro_text && n_pant == 6 && player.possee) {
 			intro_text = 0;
