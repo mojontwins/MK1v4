@@ -124,6 +124,15 @@ unsigned char *texts [] = {
 	text13, text14,			// Final
 };
 
+// Jumo
+extern unsigned char sprites_jumo [0];
+#asm
+	._sprite_jumo
+		BINARY "sprites_jumo.bin"
+#endasm
+
+// Functions & protos
+
 void enems_en_an_calc (unsigned char n);
 
 void redraw_from_buffer (void) {

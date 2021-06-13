@@ -51,7 +51,7 @@ PLAYER_GETS_COIN
 		HIDE_COINS
 		#TEXT _______TRAP_DEACTIVATED_______
 		#TEXT ______TRAMPA_DESACTIVADA______
-		EXTERN 254
+		EXTERN 253
 		REDRAW
 	END
 END
@@ -213,7 +213,7 @@ PRESS_FIRE AT SCREEN 17
 		SET TILE (2, 2) = 0
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
-		EXTERN 255
+		EXTERN 254
 		SOUND 6
 	END
 END
@@ -304,7 +304,7 @@ PRESS_FIRE AT SCREEN 24
 		SET TILE (6, 4) = 0
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
-		EXTERN 255
+		EXTERN 254
 		SOUND 6
 	END
 END
@@ -395,11 +395,28 @@ PRESS_FIRE AT SCREEN 27
 		SET TILE (13, 8) = 0
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
-		EXTERN 255
+		EXTERN 25
 		SOUND 6
 	END
 END
 
+# Woodys music off
+
+ENTERING SCREEN 21
+	IF TRUE
+	THEN
+		EXTERN 253
+	END
+END
+
+# Woodys music on
+
+ENTERING SCREEN 21
+	IF TRUE
+	THEN
+		EXTERN 255
+	END
+END
 
 ############
 # CRIPTA 4 #
@@ -487,7 +504,7 @@ PRESS_FIRE AT SCREEN 23
 		SET TILE (13, 8) = 0
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
-		EXTERN 255
+		EXTERN 254
 		SOUND 6
 	END
 END
