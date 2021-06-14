@@ -95,12 +95,12 @@ void render_this_enemy (void) {
 			push hl
 			pop ix
 
-			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 2;
+			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 1;
 			ld  a, (_rdx)
 			add #(VIEWPORT_X*8)
 			add (ix + 6)
 			srl a
-			srl a
+			;;srl a
 			ld  (ix + 8), a
 
 			// sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
@@ -240,12 +240,12 @@ void render_all_sprites (void) {
 			.render_player
 				ld  ix, #(BASE_SPRITES + (SP_PLAYER*16))
 
-				// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 2;
+				// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 1;
 				ld  a, (_gpx)
 				add #(VIEWPORT_X*8)
 				add (ix + 6)
 				srl a
-				srl a
+				;srl a
 				ld  (ix + 8), a
 
 				// sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
@@ -281,12 +281,12 @@ void render_all_sprites (void) {
 		bspr_it = SP_BULLETS_BASE;
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
-				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 1;
 				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
 				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
 			} else {
 				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
-				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 1;
 				sp_sw [bspr_it].cy = (VIEWPORT_Y * 8);
 				sp_sw [bspr_it].sp0 = (int) (SPRFR_EMPTY);
 			}

@@ -112,7 +112,6 @@ unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
 						  "ENTRAN POR LA BOCA%"
 						  "LUEGO VAN AL CULO!";
 
-
 unsigned char *texts [] = {
 	text0, text1, 			// Dotty y Pepi Caraortiga
 	text2, text3, 			// Tamara la tía rara
