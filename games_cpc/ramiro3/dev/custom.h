@@ -130,6 +130,8 @@ extern unsigned char sprites_jumo [0];
 		BINARY "sprites_jumo.bin"
 #endasm
 
+unsigned char jumo_x, jumo_y, jumo_ct;
+
 // Functions & protos
 
 void enems_en_an_calc (unsigned char n);
@@ -261,6 +263,29 @@ void show_text_box (unsigned char n) {
 	// Hooks
 
 	void hook_system_inits (void) {
+		// Create a custom 4x8 sprite for jumos
+		#asm
+				ld ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+				xor a
+				ld  (ix + 6), a 		// .cox
+				ld  (ix + 7), a 		// .coy
+
+				ld  hl, cpc_PutSpTileMap4x8Px			// .invfunc
+				ld  (ix + 13), h
+				ld  (ix + 12), l
+
+				ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// .updfunc
+				ld  (ix + 15), h
+				ld  (ix + 14), l
+
+				ld  hl, _sprite_18_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+
+				ld  (ix + 3), h
+				ld  (ix + 2), l	
+		#endasm
 	}
 
 	void hook_init_game (void) {
@@ -283,6 +308,12 @@ void show_text_box (unsigned char n) {
 	}
 
 	void hook_entering (void) {		
+		// Jumo off
+		#asm
+				xor a 
+				ld  (_jumo_ct), a
+		#endasm
+
 	}
 
 #endif
