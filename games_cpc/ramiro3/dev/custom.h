@@ -264,12 +264,25 @@ void show_text_box (unsigned char n) {
 
 	void hook_system_inits (void) {
 		// Create a custom 4x8 sprite for jumos
+		// 0   2   4      6   7   8  9  10 11 12      14
+		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 		#asm
-				ld ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+				ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
 
+				ld  hl, _sprite_18_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+
+				ld  (ix + 3), h
+				ld  (ix + 2), l	
+				
 				xor a
 				ld  (ix + 6), a 		// .cox
 				ld  (ix + 7), a 		// .coy
+				ld  (ix + 8), a 		// .cx
+				ld  (ix + 9), a 		// .cy
+				ld  (ix + 10), a 		// .ox
+				ld  (ix + 11), a 		// .oy
 
 				ld  hl, cpc_PutSpTileMap4x8Px			// .invfunc
 				ld  (ix + 13), h
@@ -278,14 +291,8 @@ void show_text_box (unsigned char n) {
 				ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// .updfunc
 				ld  (ix + 15), h
 				ld  (ix + 14), l
-
-				ld  hl, _sprite_18_a 					// sm_sprptr [0]
-				ld  (ix + 1), h
-				ld  (ix + 0), l
-
-				ld  (ix + 3), h
-				ld  (ix + 2), l	
 		#endasm
+
 	}
 
 	void hook_init_game (void) {
@@ -305,6 +312,55 @@ void show_text_box (unsigned char n) {
 	}
 
 	void hook_mainloop (void) {
+		if (player.killingzone_beepcount && jumo_ct == 0) {
+			#asm
+					ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+					ld  hl, _sprite_jumo
+					ld  (ix + 1), h
+					ld  (ix + 0), l
+
+					ld  a, 16
+					ld  (_jumo_ct), a
+					ld  a, (_gpx)
+					add #(4 + (VIEWPORT_X * 4))
+					srl a
+					ld  (_jumo_x), a
+					ld  a, (_gpy)
+					add #(VIEWPORT_Y * 8)
+					ld  (_jumo_y), a
+			#endasm
+		}
+
+		if (jumo_ct) {
+			#asm
+					ld  hl, _jumo_y
+					dec (hl)
+
+					ld  hl, _jumo_ct
+					dec (hl)
+			#endasm
+
+			if (jumo_y <= 16) jumo_ct = 0;
+
+			if (jumo_ct == 0) {
+				#asm				
+						ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+						ld  hl, _sprite_18_a 					// sm_sprptr [0]
+						ld  (ix + 1), h
+						ld  (ix + 0), l
+				#endasm
+			} else {
+				#asm
+						ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+						ld  a, (_jumo_x)
+						ld  (ix + 8), a 		// .cx
+						ld  a, (_jumo_y)
+						ld  (ix + 9), a 		// .cy
+				#endasm
+			}
+		}
 	}
 
 	void hook_entering (void) {		
@@ -312,6 +368,12 @@ void show_text_box (unsigned char n) {
 		#asm
 				xor a 
 				ld  (_jumo_ct), a
+
+				ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+				ld  hl, _sprite_18_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
 		#endasm
 
 	}
