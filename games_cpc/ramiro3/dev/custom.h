@@ -107,10 +107,10 @@ unsigned char text13 [] = "(DOTTY)%"
 						  "Y GRASITA POR EL PELO";
 
 unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
-						  "DISFRUTAD LAS SETAS%"
-						  "COMED SIN DISMULO%"
-						  "ENTRAN POR LA BOCA%"
-						  "LUEGO VAN AL CULO!";
+						  "COMEROS ESTAS SETAS,%"
+						  "QUE NO SON TONTERIAS%"
+						  "LO DICEN LAS RECETAS:%"
+						  "DE LO QUE COMES,CRIAS";
 
 unsigned char *texts [] = {
 	text0, text1, 			// Dotty y Pepi Caraortiga
@@ -120,7 +120,19 @@ unsigned char *texts [] = {
 	text8, text9, 			// Camila la Wila
 	text10, text11,			// Intro
 	text12, 				// Ya tienes todas
+	text13, text14,			// Final
 };
+
+// Jumo
+extern unsigned char sprites_jumo [0];
+#asm
+	._sprite_jumo
+		BINARY "sprites_jumo.bin"
+#endasm
+
+// Functions & protos
+
+void enems_en_an_calc (unsigned char n);
 
 void redraw_from_buffer (void) {
 	#asm
@@ -253,12 +265,13 @@ void show_text_box (unsigned char n) {
 
 	void hook_init_game (void) {
 		intro_text = 1;
+		//n_pant = 21;
+		//n_pant=15;
 	}
 
 	void hook_init_mainloop (void) {
-
 		// Intro
-		if (intro_text && player.possee) {
+		if (intro_text && n_pant == 6 && player.possee) {
 			intro_text = 0;
 			redraw_after_text = 1;
 			show_text_box (10);
@@ -277,9 +290,24 @@ void show_text_box (unsigned char n) {
 #ifdef ENABLE_CUSTOM_ENEMS
 
 	void extra_enems_init (void) {
+		
+		if (n_pant == 21) {
+			if (_en_t == 1) 
+				enems_en_an_calc (6); 
+			else
+				enems_en_an_calc (_en_t - 10);
+		}
+		
 	}
 
 	void extra_enems_move (void) {		
+		switch (_en_t) {
+			case 14:
+
+				break;
+			case 15:
+				break;
+		}
 	}
 
 	void extra_enems_checks (void) {

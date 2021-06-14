@@ -2580,6 +2580,26 @@ y crear un archivo `custom_player_cells.h` donde se defina este array, que debe 
     };
 ```
 
+## Array de cells de enemigos personalizado
+
+De la misma forma, añadiendo
+
+```c
+	#define ENEMS_CUSTOM_CELLS
+```
+
+y creando un archivo `custom_enem_cells.h` donde se defina este array, con punteros `sprite_N_a` o `extra_sprite_N_a`:
+
+```c
+    // custom_enem_cells.h
+
+    unsigned char *enem_cells [] = {
+        // una colección de sprite_N_a o extra_sprite_N_a
+    };
+```
+
+Podrás definir tu propio array de gráficos para sprites de enemigos. Con esto podrás usar la API de MK1v4 para calcular el frame (`enems_calc_frame ()` para la animación y `enems_en_an_calc ()` para inicializarlos) con más de 4 gráficos diferentes.
+
 ## Conexiones de pantalla personalizadas
 
 Para gestionar de una forma más personalizada los cambios de pantalla deberás añadir esta linea en `config.h` (no viene por defecto):

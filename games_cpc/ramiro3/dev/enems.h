@@ -16,7 +16,7 @@ typedef struct {
 
 MALOTE malotes [] = {
 	// Pantalla 0
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{160, 32, 160, 32, 160, 80, 0, 2, 3},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
@@ -51,7 +51,7 @@ MALOTE malotes [] = {
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 7
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{160, 48, 16, 48, 160, 64, -2, 2, 3},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
@@ -86,8 +86,8 @@ MALOTE malotes [] = {
  	{176, 16, 176, 16, 176, 64, 0, 1, 2},
 
 	// Pantalla 14
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{160, 112, 160, 16, 160, 112, 0, -2, 3},
+ 	{64, 16, 64, 16, 64, 64, 0, 2, 2},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 15
@@ -121,9 +121,9 @@ MALOTE malotes [] = {
  	{144, 16, 144, 16, 192, 128, 2, 2, 3},
 
 	// Pantalla 21
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{96, 112, 96, 96, 96, 112, 0, 0, 14},
+ 	{128, 112, 128, 96, 128, 112, 0, 0, 15},
+ 	{48, 112, 48, 112, 176, 112, 1, 0, 1},
 
 	// Pantalla 22
  	{80, 16, 80, 16, 80, 128, 0, 1, 4},
@@ -157,13 +157,15 @@ MALOTE malotes [] = {
 
 };
 
-#define N_ENEMS_TYPE_0 28
-#define N_ENEMS_TYPE_1 12
-#define N_ENEMS_TYPE_2 10
-#define N_ENEMS_TYPE_3 20
+#define N_ENEMS_TYPE_0 21
+#define N_ENEMS_TYPE_1 13
+#define N_ENEMS_TYPE_2 11
+#define N_ENEMS_TYPE_3 23
 #define N_ENEMS_TYPE_5 0
 #define N_ENEMS_TYPE_6 5
 #define N_ENEMS_TYPE_7 0
+#define N_ENEMS_TYPE_14 1
+#define N_ENEMS_TYPE_15 1
 
 // This is output the way it worked originally, please modify if you need
 // You may want to add type 5 or 6's below.
