@@ -82,7 +82,7 @@ void main (void) {
 	// Border 0
 
 	cpc_Border (0x54);
-	
+
 	// Decompress LUT in place
 
 	//unpack ((unsigned int) (trpixlutc), BASE_LUT);

@@ -1044,7 +1044,7 @@ void main (void) {
 				#ifdef ENABLE_CODE_HOOKS
 					|| game_loop_flag == 2
 				#endif
-			) {				
+			) {
 				saca_a_todo_el_mundo_de_aqui ();				
 				game_over ();
 				playing = 0;
