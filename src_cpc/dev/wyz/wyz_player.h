@@ -553,6 +553,11 @@ void wyz_stop_sound (void) {
 		LD (HL),0
 		
 	;INTERPRETA 
+		LD A, (_pattern_line_ct)
+		INC A
+		AND 63
+		LD (_pattern_line_ct), a
+
 		LD IY,PSG_REG
 		LD IX,PUNTERO_A
 		LD BC,PSG_REG+8
@@ -1133,7 +1138,7 @@ void wyz_stop_sound (void) {
 				;BIT 0 : FRECUENCIA CANAL ON/OFF
 				;BIT 1-2 : RATIO 
 				;BIT 3-3 : FORMA 
-	.ENVOLVENTE_BACK defb 0 ;.defb BACKUP DE LA FORMA DE LA ENVOLENTE
+	.ENVOLVENTE_BACK defb 0 ;.defb BACKUP DE LA FORMA DE LA ENVOLENTE	
 
 	.DATOS_NOTAS
 		defw 	0x0000, 0x0000

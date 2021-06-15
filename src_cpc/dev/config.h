@@ -324,8 +324,6 @@
 //#define ANIMATED_TILE 			11 		// Which tile. Alternates with N + 16
 //#define MAX_ANIMATED_TILES 		16 		// Must be a power of two
 
-//#define NO_MASKS 					sp_OR_SPRITE	// make it sp_XOR_SPRITE or sp_OR_SPRITE
-
 // ============================================================================
 // IV. Player movement configuration
 // ============================================================================
