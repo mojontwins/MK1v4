@@ -30,6 +30,7 @@
 
 #define WALL_LEFT 				1
 #define WALL_RIGHT 				2
+#define WALL_UP 				4
 
 #define GENITAL_FACING_RIGHT 	0
 #define GENITAL_FACING_LEFT		1

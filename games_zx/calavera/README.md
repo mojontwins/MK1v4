@@ -177,3 +177,18 @@ En nuestro código custom, detectamos que hemos tomado un hotspot tipo 33 y acti
 
 ```
 
+## Back to engine - enemigos compactos
+
+Ahora que puedo hacer que haya más de 3 enemigos por pantalla quiero subir a 4 o 5 y emplear un nuevo tipo de "enemigos compactos" en los que ahorro 2 bytes por enemigo empaquetando los límites de trayectoria en forma de XY1, XY2.
+
+Tengo que modificar el motor en tres sitios:
+
+- `calc_baddies_pointer` debería multiplicar por 7 u 8 en lugar de 9 o 10.
+- `init_malotes` tiene un par de inicializaciones usando `ix` donde habría que ajustar el offset.
+- `mueve_bicharracos` tiene que desempaquetar los valores al extraerlos a las variables globales y (opcionalmente) volverlos a empaquetar.
+
+```c
+	#define PACKED_ENEMS
+	#define FIXED_ENEMS_LIMITS 
+```
+

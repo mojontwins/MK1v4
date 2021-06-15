@@ -279,8 +279,8 @@ void set_hotspot (unsigned char hn) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 3;
-		phaskey = 1;
+		level = 1;
+		phaskey = 0;
 		openlocks = 0;
 	}
 
@@ -439,8 +439,8 @@ void set_hotspot (unsigned char hn) {
 		// Zombie 
 
 		if (_en_t == 15) {
-			malotes [enoffsmasi].x = malotes [enoffsmasi].x1;
-			malotes [enoffsmasi].y = malotes [enoffsmasi].y1;			
+			malotes [enoffsmasi].x = malotes [enoffsmasi].xy1 & 0xf0;
+			malotes [enoffsmasi].y = malotes [enoffsmasi].xy1 << 4;			
 			en_an_vy [enit] = 0;
 			// en_an_state [enit] is already set to 0 (Z_APPEARING).
 		}

@@ -31,10 +31,14 @@ unsigned char line_of_text_clear [] = "                                ";
 	};
 #endif
 
-unsigned char *enem_cells [] = {
-	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
-};
+#ifdef ENEMS_CUSTOM_CELLS
+	#include "custom_enem_cells.h"
+#else
+	unsigned char *enem_cells [] = {
+		sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+		sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+	};
+#endif
 
 #ifdef ENABLE_SWORD
 	extern unsigned char *sword_cells [0];
@@ -195,22 +199,38 @@ void render_this_enemy (void) {
 
 void calc_baddies_pointer (void) {
 	#asm
-		#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
-			add hl, hl 				// x2
-			ld  d, h
-			ld  e, l 				// DE = x2
-			add hl, hl 				// x4
-			add hl, hl 				// x8
-
-			add hl, de 				// HL = x8 + x2 = x10
+		#if defined PACKED_ENEMS
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD				
+				add hl, hl 				// x2
+				add hl, hl 				// x4
+				add hl, hl 				// HL = x8
+			#else
+				ld  d, h
+				ld  e, l 				// DE = x1
+				add hl, hl 				// x2		
+				add hl, hl 				// x4
+				add hl, hl 				// x8
+				or  a
+				sbc hl, de 				// HL = x8 - x1 = x7
+			#endif
 		#else
-			ld  d, h
-			ld  e, l 				// DE = x1
-			add hl, hl 				// x2
-			add hl, hl 				// x4
-			add hl, hl 				// x8
-
-			add hl, de 				// HL = x8 + x1 = x9
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+				add hl, hl 				// x2
+				ld  d, h
+				ld  e, l 				// DE = x2
+				add hl, hl 				// x4
+				add hl, hl 				// x8
+	
+				add hl, de 				// HL = x8 + x2 = x10
+			#else
+				ld  d, h
+				ld  e, l 				// DE = x1
+				add hl, hl 				// x2
+				add hl, hl 				// x4
+				add hl, hl 				// x8
+	
+				add hl, de 				// HL = x8 + x1 = x9
+			#endif
 		#endif
 
 		ld  de, _malotes
@@ -801,32 +821,55 @@ void cortina (void) {
 			// 0  1  2   3   4   5   6   7   8   9
 			// x, y, x1, y1, x2, y2, mx, my, t[, life]
 
+			// 0  1  2    3    4   5   6   7
+			// x, y, xy1, xy2, mx, my, t[, life]
+
 			ld  bc, MAP_W * MAP_H * MAX_ENEMS
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
-				ld  de, 10
+			#if defined PACKED_ENEMS
+				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+					ld  de, 8
+				#else
+					ld  de, 7
+				#endif
 			#else
-				ld  de, 9
+				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+					ld  de, 10
+				#else
+					ld  de, 9
+				#endif
 			#endif
 			ld  ix, _malotes
 			
 			.init_malotes_loop
 				//malotes [gpit].t = malotes [gpit].t & 15;
-				ld  a, (ix+8)
+			#if defined PACKED_ENEMS
+					ld  a, (ix+6) 	// .t
+			#else
+					ld  a, (ix+8) 	// .t
+			#endif
 				and 15
 				
 			#ifdef RANDOM_RESPAWN
 					cp  5
-					jr  nz, .init_malotes_not_5	
+					jr  nz, init_malotes_not_5	
 
 					or  16
 				.init_malotes_not_5
 			#endif
 
-				ld  (ix+8), a
+			#if defined PACKED_ENEMS
+					ld  (ix+6), a 	// .t
+			#else
+					ld  (ix+8), a 	// .t
+			#endif
 
 			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 					ld  a, ENEMIES_LIFE_GAUGE
-					ld  (ix+9), a
+				#if defined PACKED_ENEMS
+						ld  (ix+7), a 	// .life
+				#else
+						ld  (ix+9), a 	// .life
+				#endif
 			#endif
 
 				add ix, de
@@ -3545,25 +3588,202 @@ void move (void) {
 
 	#ifdef USE_COINS
 		// Coins interaction
+		#asm
+			.player_get_coin
+		#endasm
 		
 		#ifdef COIN_BEH
-			if (attr (gpxx, gpyy) & COIN_BEH)
-				get_coin (gpxx, gpyy);
-			if ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & COIN_BEH)
-				get_coin (gpxx + 1, gpyy);
-			if ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & COIN_BEH) 
-				get_coin (gpxx, gpyy + 1);
-			if ((gpx & 15) != 0 && (gpy & 15) != 0 && attr (gpxx + 1, gpyy + 1) & COIN_BEH)
-				get_coin (gpxx + 1, gpyy + 1);
+			/*
+			_x = gpxx; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+
+			if (gpx & 15) {
+				_x = gpxx + 1; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			} 
+
+			if (gpy & 15) {
+				_x = gpxx; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			}
+
+			if ((gpx & 15) && (gpy & 15)) {
+				_x = gpxx + 1; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+			}
+			*/
+			#asm
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_A_done
+
+					call _get_coin
+				.player_get_coin_A_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_B_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_B_done
+
+					call _get_coin
+				.player_get_coin_B_done
+
+
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_C_done
+
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_C_done
+
+					call _get_coin
+				.player_get_coin_C_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_D_done
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_D_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call _attr_2
+					ld  a, l
+					and COIN_BEH
+					jr  nz, player_get_coin_D_done
+
+					call _get_coin
+				.player_get_coin_D_done
+
+			#endasm
 		#else
-		if (qtile (gpxx, gpyy) == COIN_TILE)
-			get_coin (gpxx, gpyy);
-		if ((gpx & 15) != 0 && qtile (gpxx + 1, gpyy) == COIN_TILE)
-			get_coin (gpxx + 1, gpyy);
-		if ((gpy & 15) != 0 && qtile (gpxx, gpyy + 1) == COIN_TILE) 
-			get_coin (gpxx, gpyy + 1);
-		if ((gpx & 15) != 0 && (gpy & 15) != 0 && qtile (gpxx + 1, gpyy + 1) == COIN_TILE)
-			get_coin (gpxx + 1, gpyy + 1);			
+			/*
+			_x = gpxx; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+
+			if (gpx & 15) {
+				_x = gpxx + 1; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			} 
+
+			if (gpy & 15) {
+				_x = gpxx; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			}
+
+			if ((gpx & 15) && (gpy & 15)) {
+				_x = gpxx + 1; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			}
+			*/
+			#asm
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_A_done
+
+					call _get_coin
+				.player_get_coin_A_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_B_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_B_done
+
+					call _get_coin
+				.player_get_coin_B_done
+
+
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_C_done
+
+					ld  a, (_gpxx)
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_C_done
+
+					call _get_coin
+				.player_get_coin_C_done
+
+
+					ld  a, (_gpx)
+					and 15
+					jr  z, player_get_coin_D_done
+					ld  a, (_gpy)
+					and 15
+					jr  z, player_get_coin_D_done
+
+					ld  a, (_gpxx)
+					inc a
+					ld  (__x), a
+					ld  c, a
+					ld  a, (_gpyy)
+					inc a
+					ld  (__y), a
+
+					call qtile_do
+					ld  a, l
+					cp  COIN_TILE
+					jr  nz, player_get_coin_D_done
+
+					call _get_coin
+				.player_get_coin_D_done
+
+			#endasm
 	#endif
 	#endif
 
@@ -5066,21 +5286,53 @@ void mueve_bicharracos (void) {
 				ld  (__en_y), a
 				inc hl 
 
-				ld  a, (hl)
-				ld  (__en_x1), a
-				inc hl 
+			#ifdef PACKED_ENEMS
+					ld  a, (hl) 					// XY1
+					ld  b, a 						// save
 
-				ld  a, (hl)
-				ld  (__en_y1), a
-				inc hl 
+					and 0xf0 
+					ld  (__en_x1), a
 
-				ld  a, (hl)
-				ld  (__en_x2), a
-				inc hl 
+					ld  a, b
+					sla a
+					sla a
+					sla a
+					sla a
+					ld  (__en_y1), a
 
-				ld  a, (hl)
-				ld  (__en_y2), a
-				inc hl 
+					inc hl
+
+					ld  a, (hl) 					// XY2
+					ld  b, a 						// save
+
+					and 0xf0 
+					ld  (__en_x2), a
+
+					ld  a, b
+					sla a
+					sla a
+					sla a
+					sla a
+					ld  (__en_y2), a
+
+					inc hl
+			#else
+					ld  a, (hl)
+					ld  (__en_x1), a
+					inc hl 
+	
+					ld  a, (hl)
+					ld  (__en_y1), a
+					inc hl 
+	
+					ld  a, (hl)
+					ld  (__en_x2), a
+					inc hl 
+	
+					ld  a, (hl)
+					ld  (__en_y2), a
+					inc hl 
+			#endif
 
 				ld  a, (hl)
 				ld  (__en_mx), a
@@ -6218,22 +6470,55 @@ void mueve_bicharracos (void) {
 				ld  (hl), a
 				inc hl
 
-				ld  a, (__en_x1)
-				ld  (hl), a
-				inc hl
+			#ifdef PACKED_ENEMS
+				#ifdef FIXED_ENEMS_LIMITS
+					inc hl
+					inc hl
+				#else
+					ld  a, (__en_x1)
+					ld  b, a
+					ld  a, (__en_y1)
+					srl a
+					srl a
+					srl a
+					srl a
+					or  b
+					ld  (hl), a
+					inc hl
 
-				ld  a, (__en_y1)
-				ld  (hl), a
-				inc hl
-
-				ld  a, (__en_x2)
-				ld  (hl), a
-				inc hl
-
-				ld  a, (__en_y2)
-				ld  (hl), a
-				inc hl
-
+					ld  a, (__en_x2)
+					ld  b, a
+					ld  a, (__en_y2)
+					srl a
+					srl a
+					srl a
+					srl a
+					or  b
+					ld  (hl), a
+					inc hl					
+				#endif
+			#else
+				#ifdef FIXED_ENEMS_LIMITS
+					ld  bc, 4
+					add hl, bc
+				#else
+					ld  a, (__en_x1)
+					ld  (hl), a
+					inc hl
+	
+					ld  a, (__en_y1)
+					ld  (hl), a
+					inc hl
+	
+					ld  a, (__en_x2)
+					ld  (hl), a
+					inc hl
+	
+					ld  a, (__en_y2)
+					ld  (hl), a
+					inc hl
+				#endif
+			#endif
 				ld  a, (__en_mx)
 				ld  (hl), a
 				inc hl

@@ -25,7 +25,7 @@
 
 #include "config.h"
 
-#define MAX_ENEMS 		3
+#define MAX_ENEMS 		5
 #define STACK_SIZE 		64
 
 // This figure depends the amount of sprites.

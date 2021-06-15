@@ -1,4 +1,4 @@
-' enresizer v0.3
+' enresizer v0.4.20210615-v4
 ' fbc enresizer.bas cmdlineparser.bas mtparser.bas
 
 #include "cmdlineparser.bi"
@@ -7,12 +7,13 @@
 sub usage
 	Print "usage:"
 	Print 
-	Print "$ enresizer in=enems.old.ene out=enems.ene newsize=w,h [offset=x,y] [2bytes]"
+	Print "$ enresizer in=enems.old.ene out=enems.ene newsize=w,h [offset=x,y] [2bytes] [nenems=nenems]"
 	Print "           in is the input filename."
 	Print "           out is the output filename."
 	Print "           newsize is the new size."
 	Print "           offset is the offset to place the old map inside the new."
 	Print "           2bytes if this is a legacy ene file."
+	Print "           nenems is new # of enems per screen (optional)"
 end sub
 
 Dim As Integer fIn, fOut
@@ -29,8 +30,9 @@ Dim As String*3 hotspotsChunks (100,100)
 Dim As String*2 legacyHotspotsChunks (100,100)
 Dim As Integer coords (10)
 Dim As Integer legacyMode
+Dim As Integer newNEnems
 
-Print "enresizer v0.3 ";
+Print "enresizer v0.4.20210615-v4 ";
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End
 
@@ -45,6 +47,9 @@ Else
 End If
 
 legacyMode = (sclpGetValue ("2bytes") <> "")
+
+newNEnems = Val (sclpGetValue ("nenems"))
+If newNEnems = 0 Then newNEnems = nEnems
 
 fIn = FreeFile
 Open sclpGetValue ("in") For Binary As #fIn
@@ -65,7 +70,7 @@ d = mapWn: Put #fOut, , d
 d = mapHn: Put #fOut, , d
 d = scrW: Put #fOut, , d
 d = scrH: Put #fOut, , d
-d = nEnems: Put #fOut, , d
+d = newNEnems: Put #fOut, , d
 
 Print "> " & mapW & "x" & mapH & " -> " & mapWn & "x" & mapHn & " @ offs (" & ofsx & ", " & ofsy & ")"
 
@@ -93,9 +98,10 @@ For y = 0 To mapH-1
 Next y
 
 '' Now resize!
+
 For y = 0 To mapHn-1
 	For x = 0 To mapWn-1
-		For i = 0 To nEnems-1
+		For i = 0 To newNEnems-1
 			Put #fOut, , enemyChunks (y, x, i)
 		Next i 
 	Next x
