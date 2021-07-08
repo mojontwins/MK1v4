@@ -1,3 +1,0 @@
-Error at file 'cpc_PutSpTileMap8x24Px.asm' line 19: symbol 'bit_ancho' not defined
-Error at file 'cpc_PutSpTileMap8x24Px.asm' line 20: symbol 'bit_alto' not defined
-Error at file 'cpc_PutSpTileMap8x24Px.asm' line 21: symbol 'solo_coordenadas' not defined
