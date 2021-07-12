@@ -58,8 +58,8 @@ void title_screen (void) {
 	draw_text (11, 15, 7, "2 JOYSTICK");
 
 	draw_text (7, 4, 71, "RAMIRO, EL VAMPIRO");
-	draw_text (9, 7, 7, "EN EL MISTERIO");
-	draw_text (11, 8, 7, "DEL PAPIRO");
+	draw_text (10, 7, 7, "EN EL BOSQUE");
+	draw_text (10, 8, 7, "DEL SUSPIRO!");
 	
 	draw_text (8, 19, 71, "MOJON TWINS 2021");
 	draw_text (10, 20, 7, "MTE MK1 V4.8");
@@ -92,21 +92,7 @@ void game_ending (void) {
 			ld  de, BASE_SUPERBUFF
 			call depack
 	#endasm
-
-	// CUSTOM { 
-	draw_text (7, 15, 7, "EL VAMPIRO RAMIRO");
-	draw_text (8, 17, 7, "NUNCA GANA . . .");
-
-	if (flags [16] < 99) {
-		draw_text (9, 20, 5, "COMPLETADO   /");
-		draw_2_digits (20, 20, flags [16] + 1);
-	} else {
-		draw_text (9, 20, 5, "COMPLETADO 100/");
-	}
-
-	cpc_UpdScr ();
 	cpc_ShowTileMap (1);
-	// } END OF CUSTOM
 	
 	AY_PLAY_MUSIC (0);
 	espera_activa (500);

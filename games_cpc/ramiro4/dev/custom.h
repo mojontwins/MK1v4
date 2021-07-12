@@ -18,6 +18,16 @@ unsigned char map_behaviours [] = {
 	 0,  1,  1,  1,  1,  1
 }; 
 
+// Jumo
+#define SP_JUMO (SP_CUSTOM_BASE + 1)
+extern unsigned char sprites_jumo [0];
+#asm
+	._sprite_jumo
+		BINARY "sprites_jumo.bin"
+#endasm
+
+unsigned char jumo_x, jumo_y, jumo_ct;
+
 // Evil eye things
 
 #define EYE_X VIEWPORT_X+7*2
@@ -48,7 +58,6 @@ unsigned char _trap_bx;
 unsigned char _trap_by;
 unsigned char _trap_bt;
 
-
 // Coins trap extra stuff
 
 #define C_COINS_X 		9 		// Coins count character coordinates
@@ -57,13 +66,12 @@ unsigned char _trap_bt;
 
 // Carrying an object
 
-#define SP_INV_BASE SP_CUSTOM_BASE
+#define SP_INV SP_CUSTOM_BASE
 
 extern unsigned char *object_cells [0];
 #asm
 		._object_cells
-			defw SPRITE_10, SPRITE_11, SPRITE_12, SPRITE_13
-			defw SPRITE_14
+			defw _sprite_18_a, SPRITE_10, SPRITE_11, SPRITE_12, SPRITE_13, SPRITE_14
 #endasm
 unsigned char pinv;
 unsigned char *pinv_next_frame;
@@ -110,7 +118,7 @@ unsigned char opscore;
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
-unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]^";
+unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]?";
 unsigned char redraw_after_text;
 unsigned char intro_text;
 unsigned char talk_sounds [] = { 7, 11 };
@@ -872,11 +880,11 @@ void win_crypt (void) {
 
 	void hook_system_inits (void) {
 		
-		// Create a custom 4x8 sprite for jumos
+		// Create a custom 4x8 sprite for inventory
 		// 0   2   4      6   7   8  9  10 11 12      14
 		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 		#asm
-				ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+				ld  ix, #(BASE_SPRITES+(SP_INV*16))
 
 				ld  hl, _sprite_18_a 					// Empty sprite
 				ld  (ix + 1), h
@@ -888,6 +896,7 @@ void win_crypt (void) {
 				xor a
 				ld  (ix + 6), a 		// .cox
 				ld  (ix + 7), a 		// .coy
+				ld  a, 32
 				ld  (ix + 8), a 		// .cx
 				ld  (ix + 9), a 		// .cy
 				ld  (ix + 10), a 		// .ox
@@ -898,6 +907,37 @@ void win_crypt (void) {
 				ld  (ix + 12), l
 
 				ld  hl, cpc_PutTrSp8x16TileMap2bPx 		// .updfunc
+				ld  (ix + 15), h
+				ld  (ix + 14), l
+		#endasm
+
+		// Create a custom 4x8 sprite for jumos
+		// 0   2   4      6   7   8  9  10 11 12      14
+		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+		#asm
+				ld  ix, #(BASE_SPRITES+(SP_JUMO*16))
+
+				ld  hl, _sprite_18_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+
+				ld  (ix + 3), h
+				ld  (ix + 2), l	
+				
+				xor a
+				ld  (ix + 6), a 		// .cox
+				ld  (ix + 7), a 		// .coy
+				ld  a, 32
+				ld  (ix + 8), a 		// .cx
+				ld  (ix + 9), a 		// .cy
+				ld  (ix + 10), a 		// .ox
+				ld  (ix + 11), a 		// .oy
+
+				ld  hl, cpc_PutSpTileMap4x8Px			// .invfunc
+				ld  (ix + 13), h
+				ld  (ix + 12), l
+
+				ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// .updfunc
 				ld  (ix + 15), h
 				ld  (ix + 14), l
 		#endasm
@@ -931,8 +971,8 @@ void win_crypt (void) {
 		
 		/*
 		gpx = 160; player.x = 160<<6;
-		n_pant = 13;	
 		pinv = 4; pinv_next_frame = object_cells [pinv];
+		n_pant = 13;	
 		flags [6] = 1;
 		*/
 
@@ -1241,7 +1281,7 @@ void win_crypt (void) {
 
 		// Carrying object
 		if (pinv) {
-			rdy = gpy - 4;
+			rdy = gpy - 8;
 			if (player.facing) rdx = gpx - 4; else rdx = gpx + 4;
 		} else {
 			rdx = gpx; rdy = gpy;
@@ -1252,7 +1292,7 @@ void win_crypt (void) {
 		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 		#asm
 			.render_inventory
-				ld  ix, #(BASE_SPRITES + (SP_INV_BASE*16))
+				ld  ix, #(BASE_SPRITES + (SP_INV*16))
 
 				// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8) >> 1;
 				ld  a, (_rdx)
@@ -1361,6 +1401,55 @@ void win_crypt (void) {
 			//sp_UpdateNow ();
 		}
 
+		if (player.killingzone_beepcount && jumo_ct == 0) {
+			#asm
+					ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+					ld  hl, _sprite_jumo
+					ld  (ix + 1), h
+					ld  (ix + 0), l
+
+					ld  a, 16
+					ld  (_jumo_ct), a
+					ld  a, (_gpx)
+					add #(4 + (VIEWPORT_X * 4))
+					srl a
+					ld  (_jumo_x), a
+					ld  a, (_gpy)
+					add #(VIEWPORT_Y * 8)
+					ld  (_jumo_y), a
+			#endasm
+		}
+
+		if (jumo_ct) {
+			#asm
+					ld  hl, _jumo_y
+					dec (hl)
+
+					ld  hl, _jumo_ct
+					dec (hl)
+			#endasm
+
+			if (jumo_y <= 16) jumo_ct = 0;
+
+			if (jumo_ct == 0) {
+				#asm				
+						ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+						ld  hl, _sprite_18_a 					// sm_sprptr [0]
+						ld  (ix + 1), h
+						ld  (ix + 0), l
+				#endasm
+			} else {
+				#asm
+						ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+						ld  a, (_jumo_x)
+						ld  (ix + 8), a 		// .cx
+						ld  a, (_jumo_y)
+						ld  (ix + 9), a 		// .cy
+				#endasm
+			}
+		}
 	}
 
 	void hook_entering (void) {		

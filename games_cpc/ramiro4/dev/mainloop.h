@@ -791,7 +791,7 @@ void main (void) {
 
 			// Update to screen
 
-			cpc_UpdateNow (1);
+			if (n_pant == on_pant) cpc_UpdateNow (1);
 			
 			// Dead enemies
 
