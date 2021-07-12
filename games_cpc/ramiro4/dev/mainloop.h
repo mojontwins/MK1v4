@@ -309,7 +309,7 @@ void main (void) {
 	while (1) {
 		// Here the title screen
 		title_screen ();
-		
+	
 		#ifndef DIRECT_TO_PLAY
 			//unpack ((unsigned int) (s_marco), BASE_SUPERBUFF);
 			#asm
@@ -373,7 +373,7 @@ void main (void) {
 			game_loop_flag = 0;
 			hook_init_game ();
 		#endif
-		
+
 		#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 			#ifdef SHOW_TOTAL
 				// Show total of enemies next to the killed amount.
@@ -580,7 +580,7 @@ void main (void) {
 
 			// Render
 			render_all_sprites ();	
-			
+					
 			#if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 				/*
 				if (f_zone_ac == 1) {
