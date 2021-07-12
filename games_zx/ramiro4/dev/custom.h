@@ -894,8 +894,8 @@
 		pofrendas = 0;
 		pofrendas_old = 0xff;
 		opscore = 0xff;
-		*/
 		n_pant=0x12;
+		*/
 
 		#asm
 				xor a

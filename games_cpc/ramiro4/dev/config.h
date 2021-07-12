@@ -6,7 +6,7 @@
 // ============================================================================
 
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
-#define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
+#define MAX_CUSTOM_SW_SPRITES   	1 		// If you need to add some, do.
 #define BLACK_COLOUR_BYTE 			1		// Which pen is black?
 
 // Select sound engine
@@ -69,7 +69,7 @@
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED	 		// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
-#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
+//#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
 
 //#define PACKED_ENEMS 						// Packed XY1, XY2 format.
