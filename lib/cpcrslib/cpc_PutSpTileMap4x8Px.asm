@@ -16,10 +16,6 @@
 
 XLIB cpc_PutSpTileMap4x8Px
 
-XDEF bit_ancho
-XDEF bit_alto
-XDEF solo_coordenadas 
-
 XREF tiles_tocados
 XREF pantalla_juego
 XREF posiciones_super_buffer
