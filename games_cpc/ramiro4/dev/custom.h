@@ -1403,7 +1403,7 @@ void win_crypt (void) {
 
 		if (player.killingzone_beepcount && jumo_ct == 0) {
 			#asm
-					ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+					ld  ix, #(BASE_SPRITES+(SP_JUMO*16))
 
 					ld  hl, _sprite_jumo
 					ld  (ix + 1), h
@@ -1434,7 +1434,7 @@ void win_crypt (void) {
 
 			if (jumo_ct == 0) {
 				#asm				
-						ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+						ld  ix, #(BASE_SPRITES+(SP_JUMO*16))
 
 						ld  hl, _sprite_18_a 					// sm_sprptr [0]
 						ld  (ix + 1), h
@@ -1442,7 +1442,7 @@ void win_crypt (void) {
 				#endasm
 			} else {
 				#asm
-						ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+						ld  ix, #(BASE_SPRITES+(SP_JUMO*16))
 						ld  a, (_jumo_x)
 						ld  (ix + 8), a 		// .cx
 						ld  a, (_jumo_y)
@@ -1453,6 +1453,18 @@ void win_crypt (void) {
 	}
 
 	void hook_entering (void) {		
+		// Jumo off
+		#asm
+				xor a 
+				ld  (_jumo_ct), a
+
+				ld  ix, #(BASE_SPRITES+(SP_JUMO*16))
+
+				ld  hl, _sprite_18_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+		#endasm
+
 		/*
 		evil_eye_screen = map_behaviours [n_pant] & 2;
 		trap_screen = map_behaviours [n_pant] & 4;

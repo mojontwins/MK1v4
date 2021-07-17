@@ -47,7 +47,7 @@ void blackout (void) {
 }
 
 void title_screen (void) {
-	blackout ();
+	//blackout ();
 	//unpack ((unsigned int) (s_title), BASE_SUPERBUFF);
 	#asm
 			ld  hl, _s_title
