@@ -21,17 +21,27 @@
 
 #include <cpcrslib.h>
 
+#include "config.h"
+
 // We are using some stuff from CPCRSLIB directly
 #asm
+	// Imports
+
 		XREF _nametable
 		XREF tabla_teclas
 		LIB cpc_KeysData
 		LIB cpc_UpdTileTable
 		LIB cpc_InvalidateRect
 		LIB cpc_TestKeyboard
-#endasm
 
-#include "config.h"
+	// Exports
+
+		XDEF viewport_x
+		XDEF viewport_y
+
+		defc viewport_x = VIEWPORT_X
+		defc viewport_y = VIEWPORT_Y
+#endasm
 
 #define MAX_ENEMS 		3
 

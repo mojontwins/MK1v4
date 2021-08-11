@@ -298,7 +298,8 @@ void show_text_box (unsigned char n) {
 	void hook_init_game (void) {
 		intro_text = 1;
 		//n_pant = 21;
-		//n_pant=15;
+		//n_pant = 15;
+		n_pant = 18;
 	}
 
 	void hook_init_mainloop (void) {
