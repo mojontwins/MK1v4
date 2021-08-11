@@ -16,7 +16,11 @@
 
 ; Si CHURRERA_CLIPPING, se comprueba que el rectángulo que se quiere marcar esté en el area de juego.
 
-XLIB cpc_UpdTileTable		;marca un tile indicando las coordenadas del tile
+INCLUDE "CPCconfig.def"
+
+XLIB cpc_UpdTileTable		; marca un tile indicando las coordenadas del tile
+XDEF cpc_UpdTileTableClp	; con clipping (si se activa)
+
 LIB cpc_Bit2Mask, cpc_TblLookup
 XREF tiles_tocados
 
@@ -24,7 +28,7 @@ IF CHURRERA_CLIPPING
 	XREF viewport_x, viewport_y
 ENDIF 
 
-.cpc_UpdTileTable	
+.cpc_UpdTileTableClp	
 	; D = y
 	; E = x
 
@@ -46,6 +50,7 @@ ENDIF
 		
 	ENDIF
 
+.cpc_UpdTileTable
 	ld  b, d
 	ld  c, e
 
