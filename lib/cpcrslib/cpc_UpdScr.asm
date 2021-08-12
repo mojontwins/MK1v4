@@ -200,50 +200,80 @@ XREF ancho_pantalla_bytes
 	; DE -> Superbuffer
 
 .transferir_map_sbuffer	
-	ld bc,ancho_pantalla_bytes-2 ;63
+.transferir_map_sbuffer_grey
+	
+	; Thanks Augusto Ruiz, Syx, Fran Gallego for the hints
+
+	; Address is D        E
+	;            -------y yyxxxxxxx
+
+	; Gray order is 0 1 3 2 6 7 5 4
+
+	push af
+
+	; First row 0: DE = -------0 00xxxxxx
+	ldi 
+	ldi
+
+	;       row 1: DE = -------0 01xxxxxx, copy <-
+	set 6, e
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	inc hl
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	inc hl
+
+	;       row 3: DE = -------0 11xxxxxx,
+	set 7, e
 	ldi
 	ldi
-	ex de,hl
-	ld c,ancho_pantalla_bytes-2
-	add HL,BC	
-	ex de,hl
+
+	;       row 2: DE = -------0 10xxxxxx, copy <-
+	res 6, e
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	inc hl
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	inc hl
+
+	;       row 6: DE = -------1 10xxxxxx
+	set 0, d
+	ldi 
+	ldi
+
+	;       row 7: DE = -------1 11xxxxxx, copy <-
+	set 6, e
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	inc hl
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	inc hl
+
+	;       row 5: DE = -------1 01xxxxxx
+	res 7, e
 	ldi
 	ldi
-	ex de,hl
-	ld c,ancho_pantalla_bytes-2
-	add HL,BC	
-	ex de,hl
-	ldi
-	ldi
-	ex de,hl
-	ld c,ancho_pantalla_bytes-2
-	add HL,BC	
-	ex de,hl
-	ldi
-	ldi
-	ex de,hl
-	ld c,ancho_pantalla_bytes-2
-	add HL,BC	
-	ex de,hl
-	ldi
-	ldi
-	ex de,hl
-	ld c,ancho_pantalla_bytes-2
-	add HL,BC	
-	ex de,hl
-	ldi
-	ldi
-	ex de,hl
-	ld c,ancho_pantalla_bytes-2
-	add HL,BC	
-	ex de,hl
-	ldi
-	ldi
-	ex de,hl
-	ld c,ancho_pantalla_bytes-2
-	add HL,BC	
-	ex de,hl
-	ldi
-	ldi
+
+	;       row 4: DE = -------1 00xxxxxx, copy <-
+	res 6, e
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	inc hl
+	dec de
+	ld  a, (hl)
+	ld  (de), a
+	;inc hl
+
+	pop af
 
 	ret
