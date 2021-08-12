@@ -5389,9 +5389,18 @@ void mueve_bicharracos (void) {
 						
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 						
+						#if VIEWPORT_Y <= 2
+							if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+						#else
+							if (en_an_y [enit] > (10240-(VIEWPORT_Y-2)*8*64)) en_an_y [enit] = 10240;
+						#endif
+						#if VIEWPORT_Y >= 2
+							if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						#else
+							if (en_an_y [enit] < -(VIEWPORT_Y*8*64)) en_an_y [enit] = -1024;
+						#endif
+
 						/*
 						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
 						if (en_an_x [enit] < 0) en_an_x [enit] = 0;
@@ -5474,8 +5483,17 @@ void mueve_bicharracos (void) {
 
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						
+						#if VIEWPORT_Y <= 2
+							if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+						#else
+							if (en_an_y [enit] > (10240-(VIEWPORT_Y-2)*8*64)) en_an_y [enit] = 10240;
+						#endif
+						#if VIEWPORT_Y >= 2
+							if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						#else
+							if (en_an_y [enit] < -(VIEWPORT_Y*8*64)) en_an_y [enit] = -1024;
+						#endif
 						
 						/*
 						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
