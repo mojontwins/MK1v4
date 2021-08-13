@@ -216,12 +216,12 @@ XREF ancho_pantalla_bytes
 	ldi
 
 	;       row 1: DE = -------0 01xxxxxx, copy <-
+	dec e
 	set 6, e
-	dec de
 	ld  a, (hl)
 	ld  (de), a
 	inc hl
-	dec de
+	dec e
 	ld  a, (hl)
 	ld  (de), a
 	inc hl
@@ -232,12 +232,12 @@ XREF ancho_pantalla_bytes
 	ldi
 
 	;       row 2: DE = -------0 10xxxxxx, copy <-
-	res 6, e
 	dec de
+	res 6, e
 	ld  a, (hl)
 	ld  (de), a
 	inc hl
-	dec de
+	dec e
 	ld  a, (hl)
 	ld  (de), a
 	inc hl
@@ -248,12 +248,12 @@ XREF ancho_pantalla_bytes
 	ldi
 
 	;       row 7: DE = -------1 11xxxxxx, copy <-
+	dec e
 	set 6, e
-	dec de
 	ld  a, (hl)
 	ld  (de), a
 	inc hl
-	dec de
+	dec e
 	ld  a, (hl)
 	ld  (de), a
 	inc hl
@@ -264,12 +264,12 @@ XREF ancho_pantalla_bytes
 	ldi
 
 	;       row 4: DE = -------1 00xxxxxx, copy <-
+	dec e
 	res 6, e
-	dec de
 	ld  a, (hl)
 	ld  (de), a
 	inc hl
-	dec de
+	dec e
 	ld  a, (hl)
 	ld  (de), a
 	;inc hl

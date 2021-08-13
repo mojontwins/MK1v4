@@ -1,17 +1,17 @@
 ; ******************************************************
-; **       Librería de rutinas para Amstrad CPC       **
-; **	   Raúl Simarro, 	  Artaburu 2007       **
+; **       LibrerÃ­a de rutinas para Amstrad CPC       **
+; **	   RaÃºl Simarro, 	  Artaburu 2007       **
 ; ******************************************************
 
-; Cambio radical al tema de los tiles tocados marca ACME (Actualización de 
-; Código Mojona Eructo) by na_th_an
+; Cambio radical al tema de los tiles tocados marca ACME (ActualizaciÃ³n de 
+; CÃ³digo Mojona Eructo) by na_th_an
 
 ; Ahora en lugar de haber una lista de tiles tocados, tenemos un bitfield. El
 ; bitfield se ubica a partir de `tiles_tocados` y ocupa 96 bytes, con 1 bit 
 ; para cada uno de las 768 casillas.
 
-; Ahora no se recorrerá una lista de parejas X, Y, sino que debe recorrerse el
-; bitfield y ejecutarse la rutina de actualización para cada bit a 1.
+; Ahora no se recorrerÃ¡ una lista de parejas X, Y, sino que debe recorrerse el
+; bitfield y ejecutarse la rutina de actualizaciÃ³n para cada bit a 1.
 
 XLIB cpc_UpdScr	
 
@@ -146,7 +146,7 @@ XREF ancho_pantalla_bytes
 	SLA l
 	LD H,0		; HL -> Columna en bytes
 	
-	ADD HL,BC 	; HL -> Posición en superbuffer
+	ADD HL,BC 	; HL -> PosiciÃ³n en superbuffer
 
 	push hl 	; Lo guardamos.
 	
@@ -163,7 +163,7 @@ XREF ancho_pantalla_bytes
 	add hl, hl
 	add hl, hl
 
-	; Aquí HL = Y * 32
+	; AquÃ­ HL = Y * 32
 
 	LD D,0
 
@@ -171,18 +171,18 @@ XREF ancho_pantalla_bytes
 
 	ADD HL,DE
 
-	; Aquí HL = Y * 32 + X
+	; AquÃ­ HL = Y * 32 + X
 	
 	LD DE,pantalla_juego
 	ADD HL,DE
 
-	; Aquí HL apunta al tile correcto dentro
+	; AquÃ­ HL apunta al tile correcto dentro
 	; del nametable (pantalla_juego)
 	
 	LD L,(HL)
 	LD H,0
 
-	; Aquí HL contiene el número de tile en esa pos.
+	; AquÃ­ HL contiene el nÃºmero de tile en esa pos.
 
 	ADD HL,HL
 	ADD HL,HL
@@ -191,22 +191,24 @@ XREF ancho_pantalla_bytes
 	LD DE,tiles
 	ADD HL,DE
 
-	; Aquí HL apunta a los gráficos del tile.
+	; AquÃ­ HL apunta a los grÃ¡ficos del tile.
 	
-	pop de 		; Recuperamos la posición en el superbuffer
+	pop de 		; Recuperamos la posiciÃ³n en el superbuffer
 				; Que almacenamos antes.
 
-	; HL -> Gráfico del tile
+	; HL -> GrÃ¡fico del tile
 	; DE -> Superbuffer
 
 .transferir_map_sbuffer	
 	ld bc,ancho_pantalla_bytes-2 ;63
+	
 	ldi
 	ldi
 	ex de,hl
 	ld c,ancho_pantalla_bytes-2
 	add HL,BC	
 	ex de,hl
+	
 	ldi
 	ldi
 	ex de,hl

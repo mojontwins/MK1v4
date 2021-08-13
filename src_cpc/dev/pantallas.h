@@ -56,6 +56,7 @@ void title_screen (void) {
 	#endasm
 	draw_text (11, 17, 7, "1 KEYBOARD");
 	draw_text (11, 18, 7, "2 JOYSTICK");
+
 	cpc_UpdScr ();
 	cpc_ShowTileMap (1);
 
