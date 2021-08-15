@@ -116,9 +116,7 @@ ENDIF
 .copyTile
 	; copia el tile en (x, y) = E, D.
 
-IF PASARPORDETRAS
 	push af
-ENDIF
 	push de
 
 .posicionar_superbuffer
@@ -178,7 +176,6 @@ IF PASARPORDETRAS
 	add hl, bc
 
 	; Tiles are grey zigzag so . . .
-; Straight
 	; Gray order is 0 1 3 2 6 7 5 4
 	
 	; 0, forwards
@@ -371,9 +368,7 @@ ENDIF
 .copycell_done
 
 	pop de
-IF PASARPORDETRAS
 	pop af
-ENDIF
 
 .checkbit_done
 	inc e

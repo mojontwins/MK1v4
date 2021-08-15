@@ -3323,6 +3323,47 @@ Cuando carga el juego se ven bandas de dos colores en el fondo. Las puedes cambi
 
 El valor de la variable comprende los dos colores (2 dígitos hexadecimales cada uno), que no son más que los valores "Hardware" de la paleta del CPC que puedes consultar, entre otros lugares, [aquí](http://www.cpcwiki.eu/index.php/CPC_Palette).
 
+## Caracteres de primer plano
+
+Se puede definir que caracteres del tileset sean de primer plano, o sea, que los sprites pasen por detrás. Para conseguirlo hay que añadir un archivo con un array de 256 posiciones que indica qué caracteres del charset son de primer plano, modificar un archivo para incluirlo, y linkar contra una versión especial del backend. Veamoslo por pasos:
+
+### Crear `behindtilemasks.asm`
+
+Creamos el archivo `dev/system/behindtilemasks.asm` con un contenido parecido a este (que corresponde a **Ramiro 3**):
+
+```s
+	; TODO: generate this automaticly
+
+	defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1
+	defb 1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1
+	defb 1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	defb 0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1
+	defb 0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1
+	defb 1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1
+```
+
+Marca con un 0 los caracteres que son "de fondo" o normales (los sprites pasan por encima) y con 1 los de "primer plano" (los sprites pasan por detrás). Hay que tener en cuenta cómo funciona el charset: los 64 primeros caracteres contienen la fuente de sistema. A partir del sexagésimo quinto (tercera fila) está el tileset. Cada 4 caracteres hacen un tile. Si empezamos a contar por 0, el tile 0 estará formado por los cuatro primeros caracteres de la tercera fila, esto es, por los que tienen índice 64, 65, 66 y 67. 
+
+### Incluir `behindtilemasks.asm`
+
+Editamos `dev/system/tilemap_conf.asm` y añadimos al final:
+
+```s
+		XDEF behindtilemasks	
+	.behindtilemasks
+		INCLUDE "system/behindtilemasks.asm"
+```
+
+### Linkar contra `cpcrslib_fg.lib`
+
+Por último editamos `comp.bat` y cambiamos la linea que llama a `zcc` para que linke contra `cpcrslib_fg.lib` en lugar de `cpcrslib.lib`:
+
+```bat
+	zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg -o %game%.bin system\tilemap_conf.asm churromain.c > nul
+```
+
 ## ¡Y ya está!
 
 Ahora es el momento de abrir una ventana de linea de comandos, ejecutar `setenv.bat` y luego `compile.bat` para generar un archivo .SNA o `compile.bat andtape` para generar además un archivo .CDT
