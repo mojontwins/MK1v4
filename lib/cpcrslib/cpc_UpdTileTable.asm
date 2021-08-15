@@ -14,7 +14,8 @@
 ; que había, así que recibirá (x, y) en los registros E, D. Tendremos que 
 ; ubicar el byte en `tiles_tocados + y * 4 + x / 8` y levantar el bit `x & 7`.
 
-; Si CHURRERA_CLIPPING, se comprueba que el rectángulo que se quiere marcar esté en el area de juego.
+; Si CHURRERA_CLIPPING, se comprueba que el rectángulo que se quiere marcar
+; esté en el area de juego.
 
 INCLUDE "CPCconfig.def"
 
@@ -54,11 +55,10 @@ ENDIF
 	ld  b, d
 	ld  c, e
 
-	ld  a, d 			; Y
-	add a, a
-	add a, a
+	sla d 				; Y * 2
+	sla d 				; Y * 4
 
-	ld  l, a
+	ld  l, d
 	ld  h, 0 			; HL = Y*4
 
 	ld  a, e 			; X

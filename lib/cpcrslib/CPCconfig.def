@@ -5,8 +5,7 @@
 ; con info sobre cada tile de fondo. Un 1 lo marcará como "primer
 ; plano"
 
-; DEFC PASARPORDETRAS = 1
-; Not working for the time being...
+DEFC PASARPORDETRAS = 1
 
 ; Ponlo a 1 si quieres que se tome el area de juego de la churrera
 ; como rectángulo de clipping.
