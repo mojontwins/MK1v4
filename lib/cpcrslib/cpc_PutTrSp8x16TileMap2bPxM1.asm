@@ -122,7 +122,8 @@ XREF posicion_inicial_superbuffer
 	jp loop_alto_map_sbuffer
 
 .loop_alto_map_sbuffer_shift1
-
+	ld  h, $FE; 	; hl -> LUT
+	
 	; El ancho está desenrollado. Procesamos 4 bytes que copiamos en 5:
 	; 1: -> A'A; byte 1 = A'A AND 0x77 = 0A
 	; 2: -> B'B; byte 2 = (B'B AND 0x77) OR (A'A AND 0x88) = A'B
@@ -130,9 +131,160 @@ XREF posicion_inicial_superbuffer
 	; 4: -> D'D; byte 4 = (D'D AND 0x77) OR (C'C AND 0x88) = C'D
 	; 5:       ; byte 5 = D'D AND 0x88  
 
-	jp loop_alto_map_sbuffer
+	; 1: -> A'A; byte 1 = A'A AND 0x77 = 0A
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	and 0x77
+	ld  (lams1_b1+1), a
+	ld  a, b
+	rla
+	rla
+	rla
+	and 0x88
+.lams1_b1
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x77 		; Mask
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save bg + masked sprite
+	inc de
+	inc bc
+
+	; 2: -> B'B; byte 2 = (B'B AND 0x77) OR (A'A AND 0x88) = A'B
+
+	ld  a, ixl 		; A'A
+	and $88 		; A'
+	ld  iyl, a 		; IYL = A'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	and 0x77
+	ld  (lams1_b2+1), a
+	ld  a, b
+	rla
+	rla
+	rla
+	and 0x88
+.lams1_b2
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x77 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 3: -> C'C; byte 3 = (C'C AND 0x77) OR (B'B AND 0x88) = B'C
+
+	ld  a, ixl 		; B'B
+	and $88 		; B'
+	ld  iyl, a 		; IYL = B'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	and 0x77
+	ld  (lams1_b3+1), a
+	ld  a, b
+	rla
+	rla
+	rla
+	and 0x88
+.lams1_b3
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x77 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 4: -> D'D; byte 4 = (D'D AND 0x77) OR (C'C AND 0x88) = C'D
+
+	ld  a, ixl 		; C'C
+	and $88 		; C'
+	ld  iyl, a 		; IYL = C'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	and 0x77
+	ld  (lams1_b4+1), a
+	ld  a, b
+	rla
+	rla
+	rla
+	and 0x88
+.lams1_b4
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x77 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 5:       ; byte 5 = D'D AND 0x88  
+
+	ld  a, ixl 		; D'D
+	and $88 		; D'
+
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG	
+
+	dec ixh
+	ret z
+
+	; de += 60 (next line in bg)
+	ld hl, 60
+	add hl, de
+	ex de, hl
+
+	jp loop_alto_map_sbuffer_shift1
 
 .loop_alto_map_sbuffer_shift2
+	ld  h, $FE; 	; hl -> LUT
 
 	; El ancho está desenrollado. Procesamos 4 bytes que copiamos en 5:
 	; 1: -> A'A; byte 1 = A'A AND 0x33 = 0A
@@ -141,9 +293,161 @@ XREF posicion_inicial_superbuffer
 	; 4: -> D'D; byte 4 = (D'D AND 0x33) OR (C'C AND 0xCC) = C'D
 	; 5:       ; byte 5 = D'D AND 0xCC  
 
-	jp loop_alto_map_sbuffer
+	; 1: -> A'A; byte 1 = A'A AND 0x33 = 0A
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	rra
+	and 0x33
+	ld  (lams2_b1+1), a
+	ld  a, b
+	rla
+	rla
+	and 0xCC
+.lams2_b1
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x33 		; Mask
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save bg + masked sprite
+	inc de
+	inc bc
+
+	; 2: -> B'B; byte 2 = (B'B AND 0x33) OR (A'A AND 0xCC) = A'B
+	
+	ld  a, ixl 		; A'A
+	and $CC 		; A'
+	ld  iyl, a 		; IYL = A'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	rra
+	and 0x33
+	ld  (lams2_b2+1), a
+	ld  a, b
+	rla
+	rla
+	and 0xCC
+.lams2_b2
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x33 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 3: -> C'C; byte 3 = (C'C AND 0x33) OR (B'B AND 0xCC) = B'C
+	
+	ld  a, ixl 		; B'B
+	and $CC 		; B'
+	ld  iyl, a 		; IYL = B'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	rra
+	and 0x33
+	ld  (lams2_b3+1), a
+	ld  a, b
+	rla
+	rla
+	and 0xCC
+.lams2_b3
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x33 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 4: -> D'D; byte 4 = (D'D AND 0x33) OR (C'C AND 0xCC) = C'D
+
+	ld  a, ixl 		; C'C
+	and $CC 		; C'
+	ld  iyl, a 		; IYL = C'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	rra
+	and 0x33
+	ld  (lams2_b4+1), a
+	ld  a, b
+	rla
+	rla
+	and 0xCC
+.lams2_b4
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x33 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 5:       ; byte 5 = D'D AND 0xCC
+
+	ld  a, ixl 		; D'D
+	and $CC 		; D'
+
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG	
+
+	dec ixh
+	ret z
+
+	; de += 60 (next line in bg)
+	ld hl, 60
+	add hl, de
+	ex de, hl
+
+	jp loop_alto_map_sbuffer_shift2
+
 
 .loop_alto_map_sbuffer_shift3
+	ld  h, $FE; 	; hl -> LUT
 
 	; El ancho está desenrollado. Procesamos 4 bytes que copiamos en 5:
 	; 1: -> A'A; byte 1 = A'A AND 0x11 = 0A
@@ -152,9 +456,154 @@ XREF posicion_inicial_superbuffer
 	; 4: -> D'D; byte 4 = (D'D AND 0x11) OR (C'C AND 0xEE) = C'D
 	; 5:       ; byte 5 = D'D AND 0xEE  
 
-	jp loop_alto_map_sbuffer
+	; 1: -> A'A; byte 1 = A'A AND 0x11 = 0A
+	
+	ld  a, (bc) 	; Get Sprite byte in A
 
+	; Now rotate nibbles right once 76543210 -> 47650321
 
+	ld  l, a
+	rra
+	rra
+	rra
+	and 0x11
+	ld  (lams3_b1+1), a
+	ld  a, b
+	rla
+	and 0xEE
+.lams3_b1
+	or  0
 
-	jp loop_alto_map_sbuffer_shifted
+	ld  ixl, a 		; Save for next byte
 
+	and 0x11 		; Mask
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save bg + masked sprite
+	inc de
+	inc bc
+
+	; 2: -> B'B; byte 2 = (B'B AND 0x11) OR (A'A AND 0xEE) = A'B
+	
+	ld  a, ixl 		; A'A
+	and $EE 		; A'
+	ld  iyl, a 		; IYL = A'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	rra
+	rra
+	and 0x11
+	ld  (lams3_b2+1), a
+	ld  a, b
+	rla
+	and 0xEE
+.lams3_b2
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x11 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 3: -> C'C; byte 3 = (C'C AND 0x33) OR (B'B AND 0xCC) = B'C
+	
+	ld  a, ixl 		; B'B
+	and $EE 		; B'
+	ld  iyl, a 		; IYL = B'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	rra
+	rra
+	and 0x11
+	ld  (lams3_b3+1), a
+	ld  a, b
+	rla
+	and 0xEE
+.lams3_b3
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x11 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 4: -> D'D; byte 4 = (D'D AND 0x33) OR (C'C AND 0xCC) = C'D
+
+	ld  a, ixl 		; C'C
+	and $EE 		; C'
+	ld  iyl, a 		; IYL = C'0
+	
+	ld  a, (bc) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
+
+	ld  l, a
+	rra
+	rra
+	rra
+	and 0x11
+	ld  (lams3_b4+1), a
+	ld  a, b
+	rla
+	and 0xEE
+.lams3_b4
+	or  0
+
+	ld  ixl, a 		; Save for next byte
+
+	and 0x11 		; Mask
+	or  iyl 		; Combine
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG
+	inc de
+	inc bc
+
+	; 5:       ; byte 5 = D'D AND 0xCC
+
+	ld  a, ixl 		; D'D
+	and $EE 		; D'
+
+	ld l, a 		; copy to L to index LUT
+	ld a, (de) 		; Get bg
+	and (hl) 		; make a hole
+	or l  			; draw pixels
+	ld (de), a 		; save BG	
+
+	dec ixh
+	ret z
+
+	; de += 60 (next line in bg)
+	ld hl, 60
+	add hl, de
+	ex de, hl
+
+	jp loop_alto_map_sbuffer_shift3
