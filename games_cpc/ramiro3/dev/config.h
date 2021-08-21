@@ -25,7 +25,7 @@
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			14		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS			15		// Objects to get to finish game
 #define PLAYER_LIFE 				69		// Max and starting life gauge.
 #define PLAYER_REFILL				1		// Life recharge
 
@@ -216,7 +216,7 @@
 //#define COUNT_KILLABLE_ON			2		// Count killable enemies on flag #N (per screen basis)
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 //#define OBJECTS_ON_VAR			2		// If defined, only show objects if var # is set.
-#define OBJECT_COUNT				2		// Defines which FLAG will be used to store the object count.
+//#define OBJECT_COUNT				2		// Defines which FLAG will be used to store the object count.
 //#define REENTER_ON_ALL_OBJECTS			// If set, re-enter screen when all objects are got, instead of ending
 
 // Top view:

@@ -3,3 +3,4 @@
 ..\utils\apack.exe 01_ingame.mus 01_ingame.mus.bin
 ..\utils\apack.exe 02_time_attack.mus 02_time_attack.mus.bin
 ..\utils\apack.exe 03_woodys.mus 03_woodys.mus.bin
+..\utils\apack.exe 04_empty.mus 04_empty.mus.bin
