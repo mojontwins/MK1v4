@@ -8,7 +8,7 @@
 ; [na_th_an] Esta nueva vesión de la rutina imprime al pixel en m1
 ; Necesita una LUT en $FE00
 
-XLIB cpc_PutTrSp8x16TileMap2bPxM1
+XLIB cpc_PutTrSp16x16TileMap2bPxM1
 
 XREF tiles_tocados
 XREF pantalla_juego		
@@ -16,7 +16,7 @@ XREF posiciones_super_buffer
 XREF ancho_pantalla_bytes 
 XREF posicion_inicial_superbuffer
 
-.cpc_PutTrSp8x16TileMap2bPxM1
+.cpc_PutTrSp16x16TileMap2bPxM1
 
 	;según las coordenadas x,y que tenga el sprite, se dibuja en el buffer 
     ex de,hl	;4
@@ -137,17 +137,16 @@ XREF posicion_inicial_superbuffer
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
-	ld  l, a
-	rra
-	and 0x77
-	ld  (lams1_b1+1), a
-	ld  a, b
-	rla
-	rla
-	rla
-	and 0x88
-.lams1_b1
-	or  0
+	                ; A = 76543210
+	rrca            ; A = 07654321
+	ld  l, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor l           ; A = 47650321!
 
 	ld  ixl, a 		; Save for next byte
 
@@ -170,17 +169,16 @@ XREF posicion_inicial_superbuffer
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
-	ld  l, a
-	rra
-	and 0x77
-	ld  (lams1_b2+1), a
-	ld  a, b
-	rla
-	rla
-	rla
-	and 0x88
-.lams1_b2
-	or  0
+	                ; A = 76543210
+	rrca            ; A = 07654321
+	ld  l, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor l           ; A = 47650321!
 
 	ld  ixl, a 		; Save for next byte
 
@@ -204,17 +202,16 @@ XREF posicion_inicial_superbuffer
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
-	ld  l, a
-	rra
-	and 0x77
-	ld  (lams1_b3+1), a
-	ld  a, b
-	rla
-	rla
-	rla
-	and 0x88
-.lams1_b3
-	or  0
+	                ; A = 76543210
+	rrca            ; A = 07654321
+	ld  l, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor l           ; A = 47650321!
 
 	ld  ixl, a 		; Save for next byte
 
@@ -238,17 +235,16 @@ XREF posicion_inicial_superbuffer
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
-	ld  l, a
-	rra
-	and 0x77
-	ld  (lams1_b4+1), a
-	ld  a, b
-	rla
-	rla
-	rla
-	and 0x88
-.lams1_b4
-	or  0
+	                ; A = 76543210
+	rrca            ; A = 07654321
+	ld  l, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor l           ; A = 47650321!
 
 	ld  ixl, a 		; Save for next byte
 
@@ -297,20 +293,19 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
-	ld  l, a
-	rra
-	rra
-	and 0x33
-	ld  (lams2_b1+1), a
-	ld  a, b
-	rla
-	rla
-	and 0xCC
-.lams2_b1
-	or  0
-
+	                ; A = 76543210
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
+	ld  l, a        ; A = 10765432 C = 10765432
+	rrca
+	rrca
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor l           ; A = 54761032
 	ld  ixl, a 		; Save for next byte
 
 	and 0x33 		; Mask
@@ -330,20 +325,19 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
-	ld  l, a
-	rra
-	rra
-	and 0x33
-	ld  (lams2_b2+1), a
-	ld  a, b
-	rla
-	rla
-	and 0xCC
-.lams2_b2
-	or  0
-
+	                ; A = 76543210
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
+	ld  l, a        ; A = 10765432 C = 10765432
+	rrca
+	rrca
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor l           ; A = 54761032
 	ld  ixl, a 		; Save for next byte
 
 	and 0x33 		; Mask
@@ -364,20 +358,19 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
-	ld  l, a
-	rra
-	rra
-	and 0x33
-	ld  (lams2_b3+1), a
-	ld  a, b
-	rla
-	rla
-	and 0xCC
-.lams2_b3
-	or  0
-
+	                ; A = 76543210
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
+	ld  l, a        ; A = 10765432 C = 10765432
+	rrca
+	rrca
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor l           ; A = 54761032
 	ld  ixl, a 		; Save for next byte
 
 	and 0x33 		; Mask
@@ -398,20 +391,19 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
-	ld  l, a
-	rra
-	rra
-	and 0x33
-	ld  (lams2_b4+1), a
-	ld  a, b
-	rla
-	rla
-	and 0xCC
-.lams2_b4
-	or  0
-
+	                ; A = 76543210
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
+	ld  l, a        ; A = 10765432 C = 10765432
+	rrca
+	rrca
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor l           ; A = 54761032
 	ld  ixl, a 		; Save for next byte
 
 	and 0x33 		; Mask
@@ -460,20 +452,18 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
-	ld  l, a
-	rra
-	rra
-	rra
-	and 0x11
-	ld  (lams3_b1+1), a
-	ld  a, b
-	rla
-	and 0xEE
-.lams3_b1
-	or  0
-
+	                ; A = 76543210
+	rlca            ; A = 65432107     ___x___x
+	ld  l, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor l           ; A = 65472103
 	ld  ixl, a 		; Save for next byte
 
 	and 0x11 		; Mask
@@ -493,20 +483,18 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
-	ld  l, a
-	rra
-	rra
-	rra
-	and 0x11
-	ld  (lams3_b2+1), a
-	ld  a, b
-	rla
-	and 0xEE
-.lams3_b2
-	or  0
-
+	                ; A = 76543210
+	rlca            ; A = 65432107     ___x___x
+	ld  l, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor l           ; A = 65472103
 	ld  ixl, a 		; Save for next byte
 
 	and 0x11 		; Mask
@@ -527,20 +515,18 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
-	ld  l, a
-	rra
-	rra
-	rra
-	and 0x11
-	ld  (lams3_b3+1), a
-	ld  a, b
-	rla
-	and 0xEE
-.lams3_b3
-	or  0
-
+	                ; A = 76543210
+	rlca            ; A = 65432107     ___x___x
+	ld  l, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor l           ; A = 65472103
 	ld  ixl, a 		; Save for next byte
 
 	and 0x11 		; Mask
@@ -561,20 +547,18 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
-	ld  l, a
-	rra
-	rra
-	rra
-	and 0x11
-	ld  (lams3_b4+1), a
-	ld  a, b
-	rla
-	and 0xEE
-.lams3_b4
-	or  0
-
+	                ; A = 76543210
+	rlca            ; A = 65432107     ___x___x
+	ld  l, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor l           ; A = 65472103
 	ld  ixl, a 		; Save for next byte
 
 	and 0x11 		; Mask

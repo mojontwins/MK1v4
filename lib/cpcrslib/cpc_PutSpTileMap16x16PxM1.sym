@@ -1,0 +1,20 @@
+Z80 Module Assembler 1.1.19 (03.11.2012), (c) InterLogic 1993-2009, Paulo Custodio 2011-2012     Sun Aug 22 10:01:22 2021
+Page 001                                                                                  'cpc_PutSpTileMap16x16PxM1.sym'
+
+
+
+
+Local Module Symbols:
+
+ALTO				= 00000073
+ANCHO				= 00000072
+CPC_PUTSPTILEMAP16X16PX		= 00000000
+DO_UPDATE			= 0000001A
+FIN				= 00000071
+ORIGIN_LAST_ROW			= 00000058
+ORIGIN_NEXT_ROW			= 00000044
+
+
+Global Module Symbols:
+
+

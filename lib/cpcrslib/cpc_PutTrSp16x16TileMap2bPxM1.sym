@@ -1,0 +1,21 @@
+Z80 Module Assembler 1.1.19 (03.11.2012), (c) InterLogic 1993-2009, Paulo Custodio 2011-2012     Sun Aug 22 10:01:22 2021
+Page 001                                                                              'cpc_PutTrSp16x16TileMap2bPxM1.sym'
+
+
+
+
+Local Module Symbols:
+
+LOOP_ALTO_MAP_SBUFFER		= 0000003A
+LOOP_ALTO_MAP_SBUFFER_SHIFT1	= 00000067
+LOOP_ALTO_MAP_SBUFFER_SHIFT2	= 000000ED
+LOOP_ALTO_MAP_SBUFFER_SHIFT3	= 00000177
+PASA_BLOQUE_A_SBUFFER		= 0000000E
+SP_BUFFER_MASK			= 00000024
+TRANSFERIR_SPRITE		= 0000000E
+
+
+Global Module Symbols:
+
+CPC_PUTTRSP16X16TILEMAP2BPXM1	= 00000000
+
