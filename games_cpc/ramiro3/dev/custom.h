@@ -300,6 +300,7 @@ void show_text_box (unsigned char n) {
 		//n_pant = 1;
 		//n_pant = 15;
 		//n_pant = 17;
+		player.objs=14;
 	}
 
 	void hook_init_mainloop (void) {
@@ -361,6 +362,10 @@ void show_text_box (unsigned char n) {
 						ld  (ix + 9), a 		// .cy
 				#endasm
 			}
+		}
+
+		if (latest_hotspot == 1 && player.objs == 15) {
+			show_text_box (12);
 		}
 	}
 

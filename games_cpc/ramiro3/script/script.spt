@@ -6,6 +6,7 @@
 # 1	- Number of coins
 # 2 - Seta de los Woodys
 # 3 - Hechizo postizo
+# 4 - Change music flag
 # 6 - Onscreen check flag
 # 7 - Onscreen check flag 2
 # 8 - Cripta de Macaria la estrafalaria
@@ -31,12 +32,13 @@ ENTERING GAME
 	END
 END
 
-ENTERING ANY
-	IF OBJECT_COUNT = 15
-	THEN
-		EXTERN 12
-	END
-END
+# Move this to custom.h
+# ENTERING ANY
+#	IF OBJECT_COUNT = 15
+#	THEN
+#		EXTERN 12
+#	END
+# END
 
 PLAYER_GETS_COIN
 	IF TRUE
@@ -392,7 +394,7 @@ PRESS_FIRE AT SCREEN 27
 		SET TILE (13, 8) = 0
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
-		EXTERN 25
+		EXTERN 254
 		SOUND 6
 	END
 END

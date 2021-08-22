@@ -968,10 +968,10 @@ void __FASTCALL__ cpc_Border (unsigned char b) {
 }
 
 void pal_set (unsigned char *pal) {
-	#if CPC_GFX_MODE == 0
-		gpit = 16;
-	#else
+	#ifdef MODE_1
 		gpit = 4;
+	#else
+		gpit = 16;
 	#endif
 	while (gpit --) cpc_SetColour (gpit, pal[gpit]);
 }

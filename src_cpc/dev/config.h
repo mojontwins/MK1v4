@@ -7,7 +7,7 @@
 
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
-#define BLACK_COLOUR_BYTE 			1		// Which pen is black?
+#define BLACK_PEN		 			1		// Which pen is black?
 
 // Select sound engine
 //#define SOUND_NONE
@@ -34,6 +34,8 @@
 
 //#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 //#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
+
+//#define ENEMS_CUSTOM_CELLS 					// Include custom_enem_cells.h
 
 // ============================================================================
 // II. Engine type

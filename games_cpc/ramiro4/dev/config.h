@@ -7,7 +7,7 @@
 
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
 #define MAX_CUSTOM_SW_SPRITES   	2 		// If you need to add some, do.
-#define BLACK_COLOUR_BYTE 			1		// Which pen is black?
+#define BLACK_PEN		 			1		// Which pen is black?
 
 // Select sound engine
 //#define SOUND_NONE
@@ -232,7 +232,7 @@
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define SHORT_PLAYER 						// Bounding box 12x16
-//#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
+#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 #define BOTH_KEYS_JUMP						// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 #define RAMIRO_HOP 							// press jump when reaching a type 4 platform to jump again 

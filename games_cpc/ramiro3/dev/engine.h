@@ -243,7 +243,7 @@ void render_all_sprites (void) {
 	}
 
 	rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
-	#ifdef BETTER_VERTICAL_CONNECTIONS
+	//#ifdef BETTER_VERTICAL_CONNECTIONS
 		/*
 		if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
 		sp_MoveSprAbs (
@@ -252,7 +252,7 @@ void render_all_sprites (void) {
 		);
 		*/
 		// TODO
-	#else
+	//#else
 		// This ASSUMES SP_PLAYER = 0.
 		// 0   2   4      6   7   8  9  10 11 12      14
 		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
@@ -294,7 +294,7 @@ void render_all_sprites (void) {
 				ld  (ix + 0), l
 				ld  (ix + 1), h
 		#endasm
-	#endif
+	//#endif
 	player.current_frame = player.next_frame;
 	
 	#ifdef PLAYER_CAN_FIRE
