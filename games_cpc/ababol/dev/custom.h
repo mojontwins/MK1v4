@@ -3,6 +3,8 @@
 
 // Add here your custom routines & vars
 
+#include "pal1.h"
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -20,6 +22,11 @@
 	}
 
 	void hook_entering (void) {		
+		if (n_pant < 20) {
+			pal_set (my_inks_1);	
+		} else {
+			pal_set (my_inks);	
+		}
 	}
 
 #endif
