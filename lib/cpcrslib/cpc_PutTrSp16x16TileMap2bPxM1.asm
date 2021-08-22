@@ -26,6 +26,8 @@ XREF posicion_inicial_superbuffer
 	;lo cambio para la rutina de multiplicar 
     ld  e, (ix+8)		; X - Cuidado ! va a pixel (0-255)
     ld  a, e 			; Save for later!
+    srl e
+    srl e               ; X a bytes
     ld  h, (ix+9)		; Y
 
 .pasa_bloque_a_sbuffer
