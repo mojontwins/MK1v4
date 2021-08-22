@@ -54,8 +54,8 @@ void title_screen (void) {
 			ld  de, BASE_SUPERBUFF
 			call depack
 	#endasm
-	draw_text (11, 17, 7, "1 KEYBOARD");
-	draw_text (11, 18, 7, "2 JOYSTICK");
+	draw_text (11, 11, 7, "1 KEYBOARD");
+	draw_text (11, 12, 7, "2 JOYSTICK");
 
 	cpc_UpdScr ();
 	cpc_ShowTileMap (1);

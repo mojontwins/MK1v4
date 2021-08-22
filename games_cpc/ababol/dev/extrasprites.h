@@ -12,9 +12,7 @@
 	extern unsigned char sprite_17_a []; 
 #endif
 
-#if defined NO_MAX_ENEMS || defined ENEMIES_MAY_DIE
-	extern unsigned char sprite_18_a []; 
-#endif
+extern unsigned char sprite_18_a []; 
 
 #ifdef PLAYER_CAN_FIRE
 	extern unsigned char sprite_19_a [];
@@ -36,12 +34,10 @@
 	#endasm
 #endif
 			
-#if defined NO_MAX_ENEMS || defined ENEMIES_MAY_DIE
-	#asm	
-		._sprite_18_a
-			defs 96, 0
-	#endasm
-#endif
+#asm	
+	._sprite_18_a
+		defs 96, 0
+#endasm
 
 #ifdef PLAYER_CAN_FIRE
 	#asm

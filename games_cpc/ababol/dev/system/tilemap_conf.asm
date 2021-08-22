@@ -17,7 +17,7 @@
 	XDEF tiles_tocados_ptr
 	XDEF posiciones_pantalla
 	XDEF posiciones_super_buffer
-	
+
 	XDEF posicion_inicial_area_visible
 	XDEF posicion_inicial_superbuffer
 	XDEF ancho_pantalla_bytes
@@ -131,5 +131,7 @@
 	defw posicion_inicial_superbuffer+8*ancho_pantalla_bytes*21
 	defw posicion_inicial_superbuffer+8*ancho_pantalla_bytes*22
 	defw posicion_inicial_superbuffer+8*ancho_pantalla_bytes*23
-	
-;Rutinas para transferir bloques independientes a la pantalla
+
+	XDEF behindtilemasks	
+.behindtilemasks
+	INCLUDE "system/behindtilemasks.asm"

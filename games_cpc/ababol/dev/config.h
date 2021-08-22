@@ -5,9 +5,11 @@
 // I. General configuration
 // ============================================================================
 
+#define MODE_1
+
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
-#define BLACK_PEN		 			1		// Which pen is black?
+#define BLACK_PEN		 			0		// Which pen is black?
 
 // Select sound engine
 //#define SOUND_NONE
@@ -16,18 +18,18 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						5		//
-#define MAP_H						5		// Map dimmensions in screens
-#define TOTAL_SCREENS				25		// 
-#define SCR_INICIO					12		// Initial screen
-#define PLAYER_INI_X				8		//
-#define PLAYER_INI_Y				5		// Initial tile coordinates
+#define MAP_W						20		//
+#define MAP_H						2		// Map dimmensions in screens
+#define TOTAL_SCREENS				40		// 
+#define SCR_INICIO					0		// Initial screen
+#define PLAYER_INI_X				1		//
+#define PLAYER_INI_Y				1		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			13		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS			24		// Objects to get to finish game
 #define PLAYER_LIFE 				99		// Max and starting life gauge.
-#define PLAYER_REFILL				25		// Life recharge
+#define PLAYER_REFILL				10		// Life recharge
 
 #define LINEAR_ENEMY_HIT			1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT			1		// Amount of life to substract when flying enemy hits
@@ -49,19 +51,19 @@
 // General directives:
 // -------------------
 
-#define DIRECT_TO_PLAY						// If defined, title screen is also the game frame.
+//#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
 //#define DEACTIVATE_KEYS					// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS				// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
 //#define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
-//#define EVIL_TILE_SIMPLE					// For side view, only hit from below.
+#define EVIL_TILE_SIMPLE					// For side view, only hit from below.
 #define DEACTIVATE_EVIL_ZONE				// Zones kill you after a while. Read docs or ask na_th_an
 //#define EVIL_ZONE_FRAME_COUNT		8		// For countdown in an evil zone.
 //#define EVIL_ZONE_BEEPS_COUNT		32		// # of counts before killing
 //#define EVIL_ZONE_FREQ 			3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 //#define EVIL_ZONE_CONDITIONAL		 		// Active if scenery_info.evil_zone_active
 #define PLAYER_BOUNCES						// If defined, collisions make player bounce
-#define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
+//#define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
 //#define DEACTIVATE_REFILLS				// If defined, no refills.
 #define LEGACY_REFILLS 						// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS					1		// Number of flags. For scripting and stuff.
@@ -69,7 +71,7 @@
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED 			// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
-#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
+//#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
 
 //#define PACKED_ENEMS 						// Packed XY1, XY2 format.
@@ -103,7 +105,7 @@
 // Boxes engine
 // ------------
 
-#define PLAYER_PUSH_BOXES 					// If defined, tile #14 is pushable
+//#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 //#define PUSH_OVER_FLOOR 					// Must be on floor to push
 //#define PUSH_AND_PULL 					// Use fire+LEFT/RIGHT to push/pull in side view
 //#define PUSH_AND_PULL_PILES 				// Can push/pull piles of stacked boxes
@@ -200,12 +202,12 @@
 // Quadrators
 // ----------
 
-#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
+//#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
 
 // Patrulleros marrulleros genitales
 // ---------------------------------
 
-#define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
+//#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
 
 // Scripting
 // ---------
@@ -222,7 +224,7 @@
 // Top view:
 // ---------
 
-#define PLAYER_MOGGY_STYLE					// Enable top view.
+//#define PLAYER_MOGGY_STYLE				// Enable top view.
 //#define LOOK_AT_THE_CAMERA				// Use "walk down" cell if player is idle
 //#define PLAYER_NO_INERTIA					// Disable inertia
 //#define PLAYER_CONST_V			256		// Constant speed
@@ -230,7 +232,7 @@
 // Side view:
 // ----------
 
-//#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
+#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define SHORT_PLAYER 						// Bounding box 12x16
 //#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
@@ -261,23 +263,23 @@
 
 // This sections defines how stuff is rendered, where to show counters, etcetera
 
-#define VIEWPORT_X					0		//
+#define VIEWPORT_X					1		//
 #define VIEWPORT_Y					2		// Viewport character coordinates
 
-#define LIFE_X						30		//
-#define LIFE_Y						8		// Life gauge counter character coordinates
+#define LIFE_X						7		//
+#define LIFE_Y						1		// Life gauge counter character coordinates
 //#define DRAW_HI_DIGIT	
 //#define LIFE_H_X 					1
 //#define LIFE_H_Y					8
 
-#define OBJECTS_X					30		//
-#define OBJECTS_Y					12		// Objects counter character coordinates
+#define OBJECTS_X					18		//
+#define OBJECTS_Y					1		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 //#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
-#define KEYS_X						30		//
-#define KEYS_Y						16		// Keys counter character coordinates
+#define KEYS_X						28		//
+#define KEYS_Y						1		// Keys counter character coordinates
 
 //#define SHOW_KILLED
 //#define SHOW_TOTAL
@@ -355,9 +357,9 @@
 
 // IV.2. Horizontal (side view) or general (top view) movement.
 
-#define PLAYER_MAX_VX				256 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX					32		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX					24		// Friction (32/64 = 0,5 píxels/frame^2)
+#define PLAYER_MAX_VX				192 	// Max velocity (192/64 = 3 píxels/frame)
+#define PLAYER_AX					24		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX					32		// Friction (32/64 = 0,5 píxels/frame^2)
 
 #define PLAYER_AX_SLIPPERY 			8
 #define PLAYER_RX_SLIPPERY 			8
@@ -386,7 +388,7 @@
 // 64 = Quicksands
 
 unsigned char comportamiento_tiles [] = {
-	0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 8, 0, 8, 8, 8,
+	0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 8, 8, 1, 8, 8,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 

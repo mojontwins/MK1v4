@@ -23,7 +23,7 @@ XREF tiles
 
 LIB cpc_UpdTileTableClp
 
-.cpc_PutSpTileMap16x16Px
+.cpc_PutSpTileMap16x16PxM1
     ex  de, hl
     ld  ixh, d
     ld  ixl, e

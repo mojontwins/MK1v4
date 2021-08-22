@@ -97,7 +97,11 @@ void main (void) {
 	
 	// Set mode
 
-	cpc_SetMode (0);
+	#ifdef MODE_1
+		cpc_SetMode (1);
+	#else
+		cpc_SetMode (0);
+	#endif
 
 	// Set tweaked mode 
 	// (thanks Augusto Ruiz for the code & explanations!)

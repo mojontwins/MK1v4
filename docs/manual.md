@@ -3367,3 +3367,44 @@ Por último editamos `comp.bat` y cambiamos la linea que llama a `zcc` para que 
 ## ¡Y ya está!
 
 Ahora es el momento de abrir una ventana de linea de comandos, ejecutar `setenv.bat` y luego `compile.bat` para generar un archivo .SNA o `compile.bat andtape` para generar además un archivo .CDT
+
+## Modo 1
+
+De forma experimental y not officially supported hemos incluido un modo 1 y aquí damos unas breves nociones sobre cómo ponerlo en marcha.
+
+### Conversión de gráficos
+
+Lo primero será por supuesto tener los gráficos en modo 1 - esto no incluye la pantalla de carga, que deberá seguir siendo en modo 0 y tener su `pal_loading.png` de 16 colores. Obviamente puedes cambiar esto pero de eso tendrás que encargarte tú y de forma manual.
+
+`pal.png` contendrá la paleta principal. Puedes añadir más y ponerlas usando customs, por supuesto. El archivo `pal.png` deberá seguir siendo de 16x1 píxels, aunque sólo los 4 primeros deberán contener la paleta de 4 colores del juego.
+
+En `games_cpc/ababol` tienes una conversión del primer Sir Ababol para CPC que hicimos, que en su tiempo fue un port manual de la versión 2.1 de **MTE MK1**. Échale un vistazo a los archivos en `gfx` para saber cómo hay que preparar los gráficos.
+
+Lo siguiente será modificar la parte de `comp.bat` en la que se hacen las importaciones para que el conversor trabaje en modo 1.
+
+```cmd
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\font.png out=font.bin silent > nul
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal1.png mode=strait2x2 greyordered in=..\gfx\work.png out=work.bin silent > nul
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites.png out=sprites.bin mappings=spriteset_mappings.h max=16 pixelperfectm0 silent > nul
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
+	..\utils\mkts_om.exe platform=cpc mode=pals in=..\gfx\pal.png prefix=my_inks out=pal.h silent > nul
+	..\utils\mkts_om.exe platform=cpc mode=pals in=..\gfx\pal1.png prefix=my_inks_1 out=pal1.h silent > nul
+
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=marco.bin silent > nul
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
+	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
+	..\utils\apack.exe title.bin titlec.bin > nul
+	..\utils\apack.exe marco.bin marcoc.bin > nul
+	..\utils\apack.exe ending.bin endingc.bin > nul
+```
+
+### Modo 1 del motor
+
+En `config.h` añadimos este define (no aparece por defecto):
+
+```c
+	#define MODE_1 
+```
+
