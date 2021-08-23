@@ -269,11 +269,15 @@ void main (void) {
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+				#ifdef MODE_1
+					ld  hl, cpc_PutTrSp8x8TileMap2bPxM1		// sm_updfunc [0]
+				#else
+					ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+				#endif
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
 
-				ld  hl, _sprite_19_a 					// sm_sprptr [0]
+				ld  hl, _sprite_sword 					// sm_sprptr [0]
 				ld  (ix + 1), h
 				ld  (ix + 0), l
 

@@ -1,0 +1,29 @@
+Z80 Module Assembler 1.1.19 (03.11.2012), (c) InterLogic 1993-2009, Paulo Custodio 2011-2012     Mon Aug 23 14:05:39 2021
+Page 001                                                                                                 'cpc_UpdScr.sym'
+
+
+
+
+Local Module Symbols:
+
+BIT0_SKIP			= 00000036
+BIT1_SKIP			= 00000040
+BIT2_SKIP			= 0000004A
+BIT3_SKIP			= 00000054
+BIT4_SKIP			= 0000005E
+BIT5_SKIP			= 00000068
+BIT6_SKIP			= 00000072
+BIT7_SKIP			= 0000007C
+MAIN_LOOP			= 0000000E
+PASARPORDETRAS			= 00000001
+PROCESS_TOUCHED_BYTE		= 0000002D
+SKEEP				= 000000DA
+TRANSFERIR_MAP_SBUFFER_GREY	= 0000009D
+UCOPYTILE			= 00000080
+_TILES_TOCADOS_PTR		= 0000002B
+
+
+Global Module Symbols:
+
+CPC_UPDSCR			= 00000000
+
