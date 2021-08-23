@@ -1143,7 +1143,7 @@ void adjust_to_tile_y (void) {
 				add (ix + 7)
 				ld  (ix + 9), a 
 
-				ld  hl, _s_current_frame
+				ld  hl, (_s_next_frame)
 				ld  (ix + 0), l
 				ld  (ix + 1), h
 		#endasm

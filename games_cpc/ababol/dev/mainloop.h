@@ -262,7 +262,7 @@ void main (void) {
 				ld  (ix + 7), a
 
 				#ifdef MODE_1
-					ld hl, cpc_PutTrSp8x8TileMap2bPxM1 // sm_invfunc [0]
+					ld hl, cpc_PutSpTileMap8x8PxM1 // sm_invfunc [0]
 				#else
 					ld  hl, cpc_PutSpTileMap4x8Px		// sm_invfunc [0]
 				#endif
