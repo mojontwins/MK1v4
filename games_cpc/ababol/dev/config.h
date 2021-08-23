@@ -132,12 +132,12 @@
 // Sword
 // -----
 
-#define ENABLE_SWORD 						// Let the player swing a sword
-#define SWORD_UP 							// Can hit upwards
-#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
-#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
+//#define ENABLE_SWORD 						// Let the player swing a sword
+//#define SWORD_UP 							// Can hit upwards
+//#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
+//#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
 //#define SWORD_PARALYZES			32		// If defined, paralyze for N frames
-#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
+//#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
 //#define GENITAL_HIT_FRAMES 				// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 				5		// Rather than swing, stab at height N
 
@@ -317,8 +317,8 @@
 //#define UNPACKED_MAP						// Full, uncompressed maps. Shadows settings are ignored.
 //#define COLUMN_MAP 						// Do not check horizontal screen flicks
 //#define ROW_MAP 							// Do not check vertical screen flicks
-//#define NO_ALT_BG							// No alternative tile 19 for bg = 0
-#define NO_MAX_ENEMS						// Less than 3 enems in some screens
+#define NO_ALT_BG							// No alternative tile 19 for bg = 0
+//#define NO_MAX_ENEMS						// Less than 3 enems in some screens
 //#define PLAYER_ALTERNATE_ANIMATION		// If defined, animation is 1,2,3,1,2,3... 
 //#define TWO_SETS							// If defined, two sets of tiles. Second set is activated if
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
