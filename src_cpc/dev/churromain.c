@@ -61,6 +61,11 @@
 
 // Number of sprites and handy macros
 
+// Shortcuts
+#if defined PLAYER_KILLS_ENEMIES || defined PLAYER_CAN_FIRE || defined BOXES_KILL_ENEMIES || defined ENABLE_SWORD
+	#define ENEMIES_MAY_DIE
+#endif
+
 #ifndef PLAYER_CAN_FIRE
 	#ifdef MAX_BULLETS
 		#undef MAX_BULLETS

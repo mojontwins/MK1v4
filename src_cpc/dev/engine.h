@@ -103,8 +103,9 @@ void render_this_enemy (void) {
 			ld  a, (_rdx)
 			add #(VIEWPORT_X*8)
 			add (ix + 6)
-			srl a
-			;;srl a
+			#ifndef MODE_1
+				srl a
+			#endif
 			ld  (ix + 8), a
 
 			// sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
@@ -264,8 +265,9 @@ void render_all_sprites (void) {
 				ld  a, (_gpx)
 				add #(VIEWPORT_X*8)
 				add (ix + 6)
-				srl a
-				;srl a
+				#ifndef MODE_1
+					srl a
+				#endif
 				ld  (ix + 8), a
 
 				// sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
@@ -301,12 +303,12 @@ void render_all_sprites (void) {
 		bspr_it = SP_BULLETS_BASE;
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
-				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 1;
+				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
 				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
 				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
 			} else {
 				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
-				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 1;
+				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 2;
 				sp_sw [bspr_it].cy = (VIEWPORT_Y * 8);
 				sp_sw [bspr_it].sp0 = (int) (SPRFR_EMPTY);
 			}
@@ -762,7 +764,7 @@ unsigned int __FASTCALL__ abs (int n) {
 #if defined RESPAWN_REENTER || defined BOXES_KILL_PLAYER
 	void explode_player (void) {
 		player.next_frame = sprite_17_a;
-		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
+		//sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
 		player.current_frame = player.next_frame;
 		play_sfx (10);	
 		cpc_UpdateNow (1);
@@ -1123,8 +1125,28 @@ void adjust_to_tile_y (void) {
 				ld  (_rdx), a
 		#endasm
 
-		sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
-		s_current_frame = s_next_frame;		
+		//sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
+		//s_current_frame = s_next_frame;		
+		#asm
+				ld  ix, #(BASE_SPRITES + (SP_SWORD_BASE*16))
+
+				ld  a, (_rdx)
+				add #(VIEWPORT_X*8)
+				add (ix + 6)
+				#ifndef MODE_1
+					srl a 
+				#endif
+				ld  (ix + 8), a 
+
+				ld  a, (_s_y)
+				add #(VIEWPORT_Y*8)
+				add (ix + 7)
+				ld  (ix + 9), a 
+
+				ld  hl, (_s_next_frame)
+				ld  (ix + 0), l
+				ld  (ix + 1), h
+		#endasm
 	}
 #endif
 
@@ -1299,9 +1321,7 @@ void move (void) {
 				// If side view, get affected by gravity:
 				
 				#ifdef RAMIRO_HOVER
-					#ifdef MODE_128K_DUAL
-						rda = player.hovering;
-					#endif
+					rda = player.hovering;
 					player.hovering = 0;
 					if (((pad0 & sp_DOWN) == 0 
 						#ifdef HOVER_WITH_JUMP_ALSO
@@ -1314,9 +1334,7 @@ void move (void) {
 					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
-							#ifdef MODE_128K_DUAL
-								if (rda == 0 && is128k) play_sfx (12);
-							#endif
+							if (rda == 0 && is128k) play_sfx (12);
 							player.hovering = 1;
 							#asm
 								._player_hover
@@ -3309,9 +3327,7 @@ void move (void) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
 					if (
 						0 == player.killingzone_framecount
-						#ifdef MODE_128K_DUAL
 							|| is128k
-						#endif
 					) play_sfx (3);
 					player.life --;	
 				}
