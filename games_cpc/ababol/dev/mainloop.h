@@ -224,11 +224,11 @@ void main (void) {
 				ld  (ix + 6), a
 				ld  (ix + 7), a
 
-				ld  hl, cpc_PutSpTileMap4x8Px			// sm_invfunc [0]
+				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
 
@@ -261,7 +261,11 @@ void main (void) {
 				ld  (ix + 6), a
 				ld  (ix + 7), a
 
-				ld  hl, cpc_PutSpTileMap4x8Px				// sm_invfunc [0]
+				#ifdef MODE_1
+					ld hl, cpc_PutTrSp8x8TileMap2bPxM1 // sm_invfunc [0]
+				#else
+					ld  hl, cpc_PutSpTileMap4x8Px		// sm_invfunc [0]
+				#endif
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 

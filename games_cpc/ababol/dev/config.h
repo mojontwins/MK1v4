@@ -132,12 +132,12 @@
 // Sword
 // -----
 
-//#define ENABLE_SWORD 						// Let the player swing a sword
-//#define SWORD_UP 							// Can hit upwards
-//#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
-//#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
+#define ENABLE_SWORD 						// Let the player swing a sword
+#define SWORD_UP 							// Can hit upwards
+#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
+#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
 //#define SWORD_PARALYZES			32		// If defined, paralyze for N frames
-//#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
+#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
 //#define GENITAL_HIT_FRAMES 				// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 				5		// Rather than swing, stab at height N
 

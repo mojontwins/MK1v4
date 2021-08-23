@@ -7,15 +7,15 @@ TABLA_SONIDOS: DW SONIDO0,SONIDO1,SONIDO2,SONIDO3
 
 ;Pautas (instrumentos)
 ;Instrumento 'Piano'
-PAUTA_0:	DB	47,0,15,0,13,0,11,0,4,0,129
+PAUTA_0:	DB	47,0,15,0,10,0,9,0,8,0,8,0,7,0,7,0,7,0,6,0,6,0,6,0,6,0,0,0,129
 ;Instrumento 'PICC'
-PAUTA_1:	DB	77,0,6,0,8,0,13,0,8,0,6,0,12,0,7,0,3,0,129
+PAUTA_1:	DB	76,0,13,0,12,0,11,0,10,0,8,0,7,0,5,0,6,0,129
 ;Instrumento 'Flauta vol bajo'
 PAUTA_2:	DB	12,0,9,0,7,0,9,0,11,0,9,0,10,0,10,0,8,0,10,0,129
 ;Instrumento 'Flauta'
 PAUTA_3:	DB	10,0,12,0,13,0,13,0,13,0,12,0,11,0,11,0,11,0,10,0,10,0,10,0,10,0,10,0,9,0,9,0,9,0,9,0,9,0,138
 ;Instrumento 'Picc vol 2'
-PAUTA_4:	DB	71,0,6,0,7,0,6,0,5,0,129
+PAUTA_4:	DB	79,0,13,0,3,0,3,0,9,0,8,0,2,0,2,0,5,0,1,0,129
 ;Instrumento 'Eco'
 PAUTA_5:	DB	6,0,8,0,9,0,8,0,7,0,6,0,129
 

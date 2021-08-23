@@ -303,20 +303,12 @@ void render_all_sprites (void) {
 		bspr_it = SP_BULLETS_BASE;
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
-				#ifdef MODE_1
-					sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8);
-				#else
-					sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 1;
-				#endif
+				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
 				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
 				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
 			} else {
 				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
-				#ifdef MODE_1
-					sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 1;
-				#else
-					sp_sw [bspr_it].cx = (VIEWPORT_X * 8);
-				#endif
+				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 2;
 				sp_sw [bspr_it].cy = (VIEWPORT_Y * 8);
 				sp_sw [bspr_it].sp0 = (int) (SPRFR_EMPTY);
 			}
@@ -1134,7 +1126,27 @@ void adjust_to_tile_y (void) {
 		#endasm
 
 		//sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
-		s_current_frame = s_next_frame;		
+		//s_current_frame = s_next_frame;		
+		#asm
+				ld  ix, #(BASE_SPRITES + (SP_SWORD_BASE*16))
+
+				ld  a, (_rdx)
+				add #(VIEWPORT_X*8)
+				add (ix + 6)
+				#ifndef MODE_1
+					srl a 
+				#endif
+				ld  (ix + 8), a 
+
+				ld  a, (_s_y)
+				add #(VIEWPORT_Y*8)
+				add (ix + 7)
+				ld  (ix + 9), a 
+
+				ld  hl, _s_current_frame
+				ld  (ix + 0), l
+				ld  (ix + 1), h
+		#endasm
 	}
 #endif
 
