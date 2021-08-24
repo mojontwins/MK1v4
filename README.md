@@ -25,6 +25,33 @@ Os presentamos la última versión de la rama olvidada de **MTE MK1**, la **v4.8
 
 Puedes leer el manual de la v4 [aquí](https://github.com/mojontwins/MK1/blob/churrera_4/docs/manual.md). La v4 tiene un montón de cosas custom y divertidas. ¡Échale un ojel!
 
+# Créditos
+
+Esto sería imposible sin la colaboración de mucha gente (y la que se me olvida, sorry):
+
+* ZX Backend: versión modificada de **splib2**, por **Alvin Albrecht**.
+* Efectos de sonido y Phaser1 engine music player por **Shiru**.
+* Decompresor appack por **dwedit**, adaptado por **Utopian** y optimizado por **Metalbrain**.
+* Compresor para aplib [apultra](https://github.com/emmanuel-marty/apultra) por **Emmanuel Marty**.
+* ZX Spectrum **WYZ Player** por **WYZ**, modificado por **na_th_an** (compresión) y **thEpOpE** (FX con ruido).
+* ZX Spectrum WYZ Tracker 0.5.0.2 por **Augusto Ruiz**.
+* ZX Spectrum ARKOS Player 1.0 por **Targhan/Grim/Arkos**.
+* Integración ZX con ARKOS basada en el trabajo de **Syx**.
+* ZX ROM-based tape loader y Gentape por **Antonio Villena**.
+* ZX **bas2tap** por **Martijn Van Der Heide**.
+* ZX **bin2tap** por **mike/zeroteam**.
+* CPC Backend based on a modified **CPCRSLIB**, originally written by **Artaburu**
+* **Appack decompressor** by **dwedit**, adapted by **Utopian**, optimized by **Metalbrain**.
+* CPC **WYZ Player** by **WYZ**, adapted by **Augusto Ruiz**, integrated by **na_th_an**.
+* CPC **WYZ Tracker 2** by **Augusto Ruiz** - [link](https://github.com/AugustoRuiz/WYZTracker).
+* CPC **TinyTape** by **CNGsoft**.
+* **cpctbin2sna** and **cpc2cdt** from [CPCtelera](http://lronaldo.github.io/cpctelera/) by **Fran Gallego** & others.
+* **ZX7** by **Einar Saukas**.
+
+Very, very special thanks to many contributors over twitter, greets to **Néstor Sancho** (@NestorSancho), **
+Miloš Bazelides** (@baze3SC), **Peter Helcmanovsky** (@ped7g), **Jorge PM** (@TrueVideo99), 
+**Juan** (@reidrac).
+
 # Licencia
 
 La Churrera es _copyleft_ The Mojon Twins y se distribuye bajo una [licencia LGPL](./LICENSE). Puedes hacer juegos como quieras, pero acuérdate de añadir el logo en un lugar visible, que así salimos beneficiados todos:
