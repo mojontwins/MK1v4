@@ -4712,7 +4712,11 @@ void enems_calc_frame (void) {
 }
 
 void enems_en_an_calc (unsigned char n) {
-	rdb = en_an_base_frame [enit] = n << 1;
+	rdb = en_an_base_frame [enit] = 
+		#ifdef ENEMS_OFFSET
+			ENEMS_OFFSET +
+		#endif
+		n << 1;
 
 	rda = SP_ENEMS_BASE + enit;
 	sp_sw [rda].cox = sm_cox [rdb];

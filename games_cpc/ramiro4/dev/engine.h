@@ -12,6 +12,14 @@
 	#define RAMIRO_HOVER
 #endif
 
+#ifndef MIN_SWORD_HIT_FRAME
+	#define MIN_SWORD_HIT_FRAME 3
+#endif
+
+#ifndef MAX_SWORD_HIT_FRAME
+	#define MAX_SWORD_HIT_FRAME 6
+#endif
+
 unsigned char line_of_text_clear [] = "                                ";
 
 #ifdef PLAYER_CUSTOM_CELLS
@@ -1064,11 +1072,11 @@ void adjust_to_tile_y (void) {
 			#ifdef ENABLE_BREAKABLE
 				// if (s_frame > 2 -> >= 3
 					ld  a, (_s_frame)
-					cp  3
+					cp  MIN_SWORD_HIT_FRAME
 					jr  c, sword_breakable_done
 
 				// && s_frame < 6)
-					cp  6
+					cp  MAX_SWORD_HIT_FRAME
 					jr  nc, sword_breakable_done
 
 					ld  h, 0
@@ -4704,7 +4712,11 @@ void enems_calc_frame (void) {
 }
 
 void enems_en_an_calc (unsigned char n) {
-	rdb = en_an_base_frame [enit] = n << 1;
+	rdb = en_an_base_frame [enit] = 
+		#ifdef ENEMS_OFFSET
+			ENEMS_OFFSET +
+		#endif
+		n << 1;
 
 	rda = SP_ENEMS_BASE + enit;
 	sp_sw [rda].cox = sm_cox [rdb];
@@ -6002,7 +6014,9 @@ void mueve_bicharracos (void) {
 				// Swording
 
 				#ifdef ENABLE_SWORD
-					if (s_on && s_frame > 2 && s_frame < 6) {
+					if (s_on && 
+						s_frame >= MIN_SWORD_HIT_FRAME && s_frame < MAX_SWORD_HIT_FRAME
+					) {
 						//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
 						#asm
 								// s_hit_x >= en_ccx

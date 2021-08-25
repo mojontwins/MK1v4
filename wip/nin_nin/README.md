@@ -13,7 +13,7 @@ La idea es modificar la rutina de `RLE_MAP` para que, en última instancia, una 
 
 Una vez cambiado el orden sólo hay que atender a esta parte, que extrae el número de tile de la palabra *RLE*:
 
-```c
+```
     #if RLE_MAP == 44
         and 0x0f
     #elif RLE_MAP == 53
@@ -26,7 +26,7 @@ Una vez cambiado el orden sólo hay que atender a esta parte, que extrae el núm
 
 y pinchar ahí nuestro lookup, sin olvidar que `_tileset_mappings` es un *puntero*:
 
-```c
+```
     #if RLE_MAP == 44
         and 0x0f
     #elif RLE_MAP == 53
@@ -57,7 +57,7 @@ Tenemos las directivas `PACKED_ENEMS` y `FIXED_ENEMS_LIMITS` que ahorran histori
 Podría en principio usar el sword modo stab para simular el puñito de Ninjajar, pero es demasiado lento. Ahora mismo la espada de **MK1v4** está fija a 9 frames:
 
 ```c
-    unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
+    unsigned char swoffs_x [] = { 8, 10, 12, 14, 16, 16, 14, 13, 10 };
 ```
 
 Se me ocurre esta medida indolora (para dejar todo default y no tener que tocar nada en juegos ya hechos):
@@ -117,4 +117,22 @@ Con estos añadidos lo tengo guay y no hay que tocar ningún juego viejo.
 Antes de `.sword_check_done` está hardcodeado el tema de los frames para golpear a la pared (sólo si >= 3 y < 6). Aquí tendría que tocar.
 
 En los enemigos, tengo igualmente que >=3 y < 6; aquí también tocaría.
+
+## Un offset para más gráficos de enemigos diferentes.
+
+Ahora mismo tengo en `enems_en_an_calc` esta linea:
+
+```c
+    rdb = en_an_base_frame [enit] = n << 1;
+```
+
+Puedo expandir con un `#define ENEMS_OFFSET enems_offset` o algo así y usar un `enems_offset` como variable custom o lo que haga falta, quedando entonces:
+
+```c
+    rdb = 
+    #ifdef ENEMS_OFFSET
+        ENEMS_OFFSET + 
+    #endif
+        en_an_base_frame [enit] = n << 1;
+```
 
