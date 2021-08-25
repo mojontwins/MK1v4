@@ -1,177 +1,120 @@
-Diario - Portar MK1v4 a CPC
-===========================
+Diario - Nin Nin v4
+===================
 
-- ¿Por qué? ¡Ya tenemos la pestecera! 
-- Para portar Ramiros sin trabajar. 
-- ¿Sin trabajar? ¡Pero si tienes que portar ahora tod...! 
-- Shhhh! Let people enjoy things!
+Port o reversión o como quieras llamarlo del Nin Nin de NES para CPC en Modo 1 porque me apetecía. ¿Por qué me tengo que estar siempre justificando cuando tomo decisiones no comerciales, si este es mi rollo? Ni idea.
 
-## Remember - el sistema gráfico de la pestecera
+Quiero que sean muchas pantallas y meter las cosas customs del engine que movía Nin Nin en CPC (Agnes 0.1R), así que primero voy a ver qué herramientas tengo en MK1v4 para que mapa y enemigos ocupen menos. 
 
-Lo primero es adaptar el sistema gráfico de la pestecera a MK1v4, y antes de nada vamos a recordar en qué se basaba.
+## Mapa
 
-### Pantallas fijas
+Por suerte tuve a bien adaptar todas las rutinas de RLE a v4 y están incluidas. Definiendo `RLE_MAP` como `44` para usar los mapas de 16 tiles molaría, pero además necesito `MAPPED_TILESETS`, por lo que creo que va a tocar mirar cómo hacer para combinar ambas características, y obviamente portarlo a la versión de ZX. Ahora mismo se supone que `RLE_MAP` y `MAPPED_TILESETS` son excluyentes.
 
-Marco, ending y title se convierten y se comprimen en aplib (com `apack` o `apultra`):
+La idea es modificar la rutina de `RLE_MAP` para que, en última instancia, una vez extraído el tile que se quiere pintar, use ese número como índice de `_tileset_mappings` para obtener el número correcto. Para que funcione todo esto sin tener que cambiar mucho la estructura, tendré que modificar el orden de los `#ifdef / #else` para que entre por `RLE_MAP` *antes* y ahí dentro pueda detectar `MAPPED_TILESETS`, ya que ahora activando ambos se activaría la sección de código de `MAPPED_TILESETS`, que está antes.
 
-```
-	..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=marco.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
-	..\utils\apultra.exe title.bin titlec.bin > nul
-	..\utils\apultra.exe marco.bin marcoc.bin > nul
-	..\utils\apultra.exe ending.bin endingc.bin > nul
-```
-
-Luego se incluyen en tu código. El blackout lo repego de regalo:
+Una vez cambiado el orden sólo hay que atender a esta parte, que extrae el número de tile de la palabra *RLE*:
 
 ```c
-#ifndef MODE_128K
-	extern unsigned char s_title [];
-	extern unsigned char s_marco [];
-	extern unsigned char s_ending [];
-
-	#asm
-		._s_title
-			BINARY "titlec.bin"
-		._s_marco
-	#endasm
-	#ifndef DIRECT_TO_PLAY
-		#asm
-				BINARY "marcoc.bin"
-		#endasm
-	#endif
-	#asm
-		._s_ending
-			BINARY "endingc.bin"
-	#endasm
-#endif
-
-void blackout (void) {
-	rda = BLACK_COLOUR_BYTE;
-	#asm
-			ld  a, 0xc0
-		.bo_l1
-			ld  h, a
-			ld  l, 0
-			ld  b, a
-			ld  a, (_rda)
-			ld  (hl), a
-			ld  a, b
-			ld  d, a
-			ld  e, 1
-			ld  bc, 0x5ff
-			ldir
-
-			add 8
-			jr  nz, bo_l1
-	#endasm
-}
+    #if RLE_MAP == 44
+        and 0x0f
+    #elif RLE_MAP == 53
+        and 0x1f
+    #else
+        and 0x3f
+    #endif          
+    ld  (_rdc), a
 ```
 
-### Tileset
-
-Charset y tileset se recortan con `mkts_om`y se graban como binarios con estos nombres:
-
-```
-    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=chars in=..\gfx\font.png out=font.bin silent
-    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=strait2x2 in=..\gfx\work.png out=work.bin silent
-```
-
-Luego tienes tu `tileset.h` que los importa:
+y pinchar ahí nuestro lookup, sin olvidar que `_tileset_mappings` es un *puntero*:
 
 ```c
-	extern unsigned char tileset [0];
-	#asm
-			XDEF _ts
-			XDEF tiles
-		._tileset
-		.tiles
-		._font
-			BINARY "../bin/font.bin" 	// 1024 bytes for 64 patterns
-		._tspatterns
-			BINARY "../bin/work.bin"   // 3072 bytes for 192 patterns
-	#endasm
+    #if RLE_MAP == 44
+        and 0x0f
+    #elif RLE_MAP == 53
+        and 0x1f
+    #else
+        and 0x3f
+    #endif  
+
+    #ifdef MAPPED_TILESETS
+            ld  hl, (_tileset_mappings)
+            add a, l
+            ld  l, a
+            jr  nc, dsl_noinc
+            inc h
+        .dsl_noinc
+            ld  a, (hl)
+    #endif
+
+    ld  (_rdc), a
 ```
 
-Los `XDEF` son para exportarlos porque `CPCRSLIB` los necesita.
+## Enemigos
 
-### Sprites
+Tenemos las directivas `PACKED_ENEMS` y `FIXED_ENEMS_LIMITS` que ahorran historias y además hacen que los enemigos ocupen 2 bytes menos cada uno. Esto supone un ahorro de 576 bytes si tiro por la idea de ponerle 96 pantallas al juego.
 
-Los sprites generales van convertidos y el `mkts_om` genera las estructuras necesarias con salsita.
+## Stab
 
-```
-	..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites.png out=..\bin\sprites.bin mappings=assets\spriteset_mappings.h silent > nul
-```
-
-Los `spriteset_mappings.h` contienen `sm_sprptr` con punteros a todos los frames necesarios. De necesitar extras, irían ahí también. Para crear entidades sprite extra, además de los 4, para los customs, tendré que inventar algo, porque todo se procesa con la función mágica `cpc_UpdateNow`, que tendré que hacer de alguna manera extensible o parametrizable, aunque sea con macros de número de sprites.  Y optimizar, que seguro que me puedo fumar algún que otro interfaz C.
-
-El tema estará en los sprites extra, que tendré que meter como en v5: proyectil, espadita, explosión. Y el sprite vacío, que aquí es necesario sí o sí.
-
-## Remember sonido
-
-Para empezar, `play_sfx` será dummy y no llamará a nada. Luego los play_music habrá que sacarlos y quitar todas las mierdas de 128K dual y sus muelas. Así que aparcado por ahora.
-
-## Remember teclado
-
-Por suerte tuve a bien encapsularlo en una funcioncita.
-
-## Luts
-
-Hará falta meter las cosas de Wyz Player pero por ahora sólo tengo que recordar la lut que emplean los sprites, que debe ensamblarse, comprimirse, e incluirse en el binario (`trpixlutc.bin`) y descomprimirse durante la inicialización en su posición final.
-
-## Para empezar
-
-La idea es tener el cheril of the bosque v4 funcionando como hito número 1. Pero para ello necesitaré todos los assets. Tengo que hacer todos los gráficos antes de siquiera empezar. No me voy a rayar, va a ser drop-in con el mapa y los enemigos.
-
-## Montando, apuntes random para una posible documentación
-
-### El sistema de sprites
-
-El sistema de sprites está formado por `SW_SPRITES_ALL` *entidades* o *sprites software*. A cada uno podemos asignar un *cell* o *gráfico de sprite* del spriteset. Todas se almacenan en el array de sprites que se coloca en `BASE_SPRITES`, y se describen por esta `struct` y estos arrays:
+Podría en principio usar el sword modo stab para simular el puñito de Ninjajar, pero es demasiado lento. Ahora mismo la espada de **MK1v4** está fija a 9 frames:
 
 ```c
-	typedef struct sprite {
-		unsigned int sp0;			// 0
-		unsigned int sp1; 			// 2
-		unsigned int coord0;
-		signed char cox, coy;		// 6 7
-		unsigned char cx, cy; 		// 8 9
-		unsigned char ox, oy;		// 10 11
-		void *invfunc;				// 12
-		void *updfunc;				// 14
-	} SPR;
-
-	SPR sp_sw [SW_SPRITES_ALL] 					@ BASE_SPRITES;
-	unsigned char *spr_next [SW_SPRITES_ALL] 	@ BASE_SPRITES + (SW_SPRITES_ALL)*16;
-	unsigned char spr_on [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*18;
-	unsigned char spr_x [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*19;
-	unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
+    unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
 ```
 
-Por el momento `spr_on` no se utiliza, y ya veré qué hago con eso en el futuro (próximo). `spr_x` y `spr_y` son offsets que se calculan automáticamente (con los valores de `spriteset_mappings.h`). `spr_next` se emplea para asignar el próximo gráfico a cada sprite sin tener que liarla mucho.
+Se me ocurre esta medida indolora (para dejar todo default y no tener que tocar nada en juegos ya hechos):
 
-dentro de `sp_sw`, el jugador está en la posición 0 o `SP_PLAYER`, los enemigos a partir de `SP_ENEMS_BASE` (por defecto 1). Las balas a partir de `SP_BULLETS_BASE`, el sprite de la espada o lo que sea en `SP_SWORD_BASE`, y los custom que añada el programador a partir de `SP_CUSTOM_BASE`.
+```c
+    #define SWORD_CUSTOM_FRAMES     4
+```
 
-# 20210601
+Si añadimos esto al `config.h`, este es el número de frames que se maneja, y los arrays con los offsets se definen en `sword_custom_frames.h` que deberán definir los arrays `swoffs_x` y `swoffs_y` (este último si no se define `SWORD_STAB`).
 
-Ahora mismo tengo el motor funcionando, al menos con el proyecto por defecto (Cheril of the Bosque). Ahora viene el tema del player de la música y tó sus muertos. Y tengo que decidir:
+Hay que tener en cuenta que los offsets no aplican de una forma muy intuitiva que digamos.
 
-- WYZ está ya integrado, pero por alguna razón los cepeceros lo detestan, y Davidian también.
-- ARKOS 1 se puede beberciar, pero esto ocupaba un huevo de pato más.
-- ARKOS 2 es para RASM y otros ensambladores pijos e integrarlo puede ser un pequeño dolor. Adaptar el player a z88dk parece tarea imposible (aunque entendiese todas las mierdas RASM que usa). La otra idea es compilarlo externamente a una dirección fija que sea como un "blob" que englobe player y canciones y cargarlo como bloque aparte. El problema es que esto apesta a trabajo manual.
+* Hacia la derecha: s_x = gpx + offset.
+* Hacia la izquierda: s_x = gpx + 8 - offset.
 
-Lo he intentado con ARKOS 2 y he desistido porque tengo que liarla demasiado parda.
+Por ejemplo, tomemos que "offset" vale 16, esto daría:
 
-Voy a intentar una integración con ARKOS 1 parecida a la que tengo con Wyz, y que pasa por meter las rutinas de ARKOS en un `.h` o un `.asm` que pueda enganchar en z88dk directamente. Esto significa domar los fuentes, deshacer los defines y mil cosas pequeñas.
-
-Estas son las subrutinas que habrá que exportar:
-
-```asm
-	jp PLY_Init						;Call Player = Initialise song (DE = Song address).
-	jp PLY_Play						;Call Player + 3 = Play song.
-	jp PLY_Stop						;Call Player + 6 = Stop song.
-
+* Hacia la derecha: s_x = gpx + 16:
 
 ```
+    gpx
+    |   gpx+16
+    |   |
+    +--+
+    |  |XX
+    |  |XX
+    +--+
+```
+
+* Hacia la izquierda: s_x = gpx + 8 - 16 = gpx - 8
+
+```   
+    gpx - 8
+    | gpx
+    | |
+      +--+
+    XX|  |
+    XX|  |
+      +--+
+```
+
+Queremos un golpeo rápido y un recogimiento más lento, creo que nos podría valer con esto:
+
+```c
+    unsigned char swoffs_x [] = {8, 16, 16, 12, 8};
+```
+
+También me interesa que la espada sólo golpée entre dos frames. En este caso sólo entre los frames 1 y 2, y para eso tandré que añadir más `#defines`.
+
+```c 
+    #define MIN_SWORD_HIT_FRAME  1      // Hits if frame >= N
+    #define MAX_SWORD_HIT_FRAME  3      // Hits if frame < N
+```
+
+Con estos añadidos lo tengo guay y no hay que tocar ningún juego viejo.
+
+Antes de `.sword_check_done` está hardcodeado el tema de los frames para golpear a la pared (sólo si >= 3 y < 6). Aquí tendría que tocar.
+
+En los enemigos, tengo igualmente que >=3 y < 6; aquí también tocaría.
 

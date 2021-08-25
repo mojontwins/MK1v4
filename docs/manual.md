@@ -2670,6 +2670,12 @@ Es este juego, la fase 4 ocupa las dos últimas filas del mapa de 8x12 pantallas
 
 De forma parecida, las pantallas a los extremos de estas filas conectan con la del extremo opuesto, de forma cíclica.
 
+## Enemigos empaquetados
+
+Los enemigos empaquetados almacenan los pares (`x1`, `y1`) y (`x2`, `y2`) cada uno en un byte. Esto añade algo de overhead, sobre todo si no activamos `FIXED_ENEMS_LIMITS` (con lo que el motor asume que los limites no cambian y no tratará de reempaquetarlos tras cada vuelta de bucle), pero ahorra 2 bytes por cada enemigo del juego, algo que viene muy bien para juegos con muchas pantallas o si queremos subir el número de enemigos por pantalla. Por ejemplo, en un juego de 96 pantallas ahorraría 576 bytes (los enemigos pasarían de ocupar 2880 bytes a ocupar 2304 bytes).
+
+Obviamente tendremos que comunicarle nuestra decisión al conversor `ene2h` con el parámetro `compacted`.
+
 # Capítulo 9 - `MODE_128K_DUAL`
 
 La macro `MODE_128K_DUAL` prepara el motor para que añadamos un player en RAM1 para tocar música y efectos AY si el juego se carga en los modelos de Spectrum con 128K, mientras que si se carga en un modelo de 48K se toquen con el beeper, como siempre. Eso implica también modificar el loader para que se cargue le bloque extra si se detecta un modelo de 128K.

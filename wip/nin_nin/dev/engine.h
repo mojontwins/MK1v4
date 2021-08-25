@@ -12,6 +12,14 @@
 	#define RAMIRO_HOVER
 #endif
 
+#ifndef MIN_SWORD_HIT_FRAME
+	#define MIN_SWORD_HIT_FRAME 3
+#endif
+
+#ifndef MAX_SWORD_HIT_FRAME
+	#define MAX_SWORD_HIT_FRAME 6
+#endif
+
 unsigned char line_of_text_clear [] = "                                ";
 
 #ifdef PLAYER_CUSTOM_CELLS
@@ -1064,11 +1072,11 @@ void adjust_to_tile_y (void) {
 			#ifdef ENABLE_BREAKABLE
 				// if (s_frame > 2 -> >= 3
 					ld  a, (_s_frame)
-					cp  3
+					cp  MIN_SWORD_HIT_FRAME
 					jr  c, sword_breakable_done
 
 				// && s_frame < 6)
-					cp  6
+					cp  MAX_SWORD_HIT_FRAME
 					jr  nc, sword_breakable_done
 
 					ld  h, 0
@@ -4348,6 +4356,100 @@ void draw_scr_background (void) {
 					.draw_scr_bg_loop_end
 				#endif
 		#endasm				
+	#elif defined RLE_MAP
+		#asm
+			._draw_scr_rle
+				
+			._draw_scr_loop
+				ld  a, (_rdi)
+				cp  150
+				jr  z, _draw_scr_loop_done
+
+				ld  hl, (_gp_gen)
+				ld  a, (hl)
+				inc hl
+				ld  (_gp_gen), hl
+				
+				ld  (_rdn), a
+
+			#if RLE_MAP == 44
+				and 0x0f
+			#elif RLE_MAP == 53
+				and 0x1f
+			#else
+				and 0x3f
+			#endif			
+
+			#ifdef MAPPED_TILESETS
+				ld  hl, (_tileset_mappings)
+				add a, l
+				ld  l, a
+				jr  nc, dsl_noinc
+				inc h
+			.dsl_noinc
+				ld  a, (hl)
+			#endif
+
+				ld  (_rdc), a
+
+			._draw_scr_advance_loop
+				ld  a, (_rdn)
+			#if RLE_MAP == 44
+				cp  0x10
+			#elif RLE_MAP == 53			
+				cp  0x20
+			#else
+				cp  0x40
+			#endif
+
+				jr  c, _draw_scr_advance_loop_done
+
+			#if RLE_MAP == 44
+				sub 0x10
+			#elif RLE_MAP == 53
+				sub 0x20
+			#else
+				sub 0x40
+			#endif
+				ld  (_rdn), a
+
+				call _advance_worm
+
+				// That's it!
+
+				jr _draw_scr_advance_loop
+
+			._draw_scr_advance_loop_done
+				call _advance_worm
+
+				jr _draw_scr_loop
+
+			._advance_worm
+				ld  a, (_rdc)
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+					call coins_check
+				#endif
+
+				ld  (__n), a
+				call _draw_and_advance
+				ret
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+					.coins_check
+						cp  COIN_TILE
+						ret  nz
+
+						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
+						or  a
+						ret  nz
+
+						ld  a, COIN_TILE_DEACT_SUBS					
+						ret
+				#endif
+
+			._draw_scr_loop_done
+		#endasm
 	#elif defined MAPPED_TILESETS
 		// PACKED map, but tile N is in fact tileset_mappings [N].
 		// tileset_mappings is a pointer!
@@ -4426,90 +4528,7 @@ void draw_scr_background (void) {
 				#endif
 
 			.draw_scr_bg_loop_end	
-		#endasm	
-	#elif defined RLE_MAP
-		#asm
-			._draw_scr_rle
-				
-			._draw_scr_loop
-				ld  a, (_rdi)
-				cp  150
-				jr  z, _draw_scr_loop_done
-
-				ld  hl, (_gp_gen)
-				ld  a, (hl)
-				inc hl
-				ld  (_gp_gen), hl
-				
-				ld  (_rdn), a
-
-			#if RLE_MAP == 44
-				and 0x0f
-			#elif RLE_MAP == 53
-				and 0x1f
-			#else
-				and 0x3f
-			#endif			
-				ld  (_rdc), a
-
-			._draw_scr_advance_loop
-				ld  a, (_rdn)
-			#if RLE_MAP == 44
-				cp  0x10
-			#elif RLE_MAP == 53			
-				cp  0x20
-			#else
-				cp  0x40
-			#endif
-
-				jr  c, _draw_scr_advance_loop_done
-
-			#if RLE_MAP == 44
-				sub 0x10
-			#elif RLE_MAP == 53
-				sub 0x20
-			#else
-				sub 0x40
-			#endif
-				ld  (_rdn), a
-
-				call _advance_worm
-
-				// That's it!
-
-				jr _draw_scr_advance_loop
-
-			._draw_scr_advance_loop_done
-				call _advance_worm
-
-				jr _draw_scr_loop
-
-			._advance_worm
-				ld  a, (_rdc)
-
-				#if defined USE_COINS && defined COINS_DEACTIVABLE
-					call coins_check
-				#endif
-
-				ld  (__n), a
-				call _draw_and_advance
-				ret
-
-				#if defined USE_COINS && defined COINS_DEACTIVABLE
-					.coins_check
-						cp  COIN_TILE
-						ret  nz
-
-						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
-						or  a
-						ret  nz
-
-						ld  a, COIN_TILE_DEACT_SUBS					
-						ret
-				#endif
-
-			._draw_scr_loop_done
-		#endasm
+		#endasm				
 	#else
 		#asm
 				xor a
@@ -5991,7 +6010,9 @@ void mueve_bicharracos (void) {
 				// Swording
 
 				#ifdef ENABLE_SWORD
-					if (s_on && s_frame > 2 && s_frame < 6) {
+					if (s_on && 
+						s_frame >= MIN_SWORD_HIT_FRAME && s_frame < MAX_SWORD_HIT_FRAME
+					) {
 						//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
 						#asm
 								// s_hit_x >= en_ccx

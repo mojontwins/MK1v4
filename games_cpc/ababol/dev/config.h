@@ -28,8 +28,8 @@
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS			24		// Objects to get to finish game
-#define PLAYER_LIFE 				99		// Max and starting life gauge.
-#define PLAYER_REFILL				10		// Life recharge
+#define PLAYER_LIFE 				10		// Max and starting life gauge.
+#define PLAYER_REFILL				1		// Life recharge
 
 #define LINEAR_ENEMY_HIT			1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT			1		// Amount of life to substract when flying enemy hits
@@ -62,8 +62,8 @@
 //#define EVIL_ZONE_BEEPS_COUNT		32		// # of counts before killing
 //#define EVIL_ZONE_FREQ 			3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 //#define EVIL_ZONE_CONDITIONAL		 		// Active if scenery_info.evil_zone_active
-#define PLAYER_BOUNCES						// If defined, collisions make player bounce
-//#define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
+//#define PLAYER_BOUNCES					// If defined, collisions make player bounce
+#define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
 //#define DEACTIVATE_REFILLS				// If defined, no refills.
 #define LEGACY_REFILLS 						// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS					1		// Number of flags. For scripting and stuff.
@@ -132,12 +132,12 @@
 // Sword
 // -----
 
-//#define ENABLE_SWORD 						// Let the player swing a sword
+#define ENABLE_SWORD 						// Let the player swing a sword
 //#define SWORD_UP 							// Can hit upwards
-//#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
-//#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
+#define SWORD_LINEAL_DAMAGE			1		// Damage to linear.
+#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
 //#define SWORD_PARALYZES			32		// If defined, paralyze for N frames
-//#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
+#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
 //#define GENITAL_HIT_FRAMES 				// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 				5		// Rather than swing, stab at height N
 
