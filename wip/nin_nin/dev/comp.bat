@@ -1,6 +1,6 @@
 @echo off
 
-set game=ababol
+set game=ninnin
 
 echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 20 2 15 10 15 packed > nul

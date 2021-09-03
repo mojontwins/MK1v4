@@ -13,6 +13,7 @@
 // C600 room buffers
 // CE00 dirty cells (tiles_tocados)
 // D600 arrays
+// DE00 dynamic bolts
 // DF80 buffers WYZ
 // E600 sprite structures
 // FE00 LUT
@@ -50,6 +51,7 @@
 #define BASE_ROOM_BUFFERS	0xC000 + 0x600
 #define BASE_DIRTY_CELLS 	0xC800 + 0x600
 #define BASE_ARRAYS 		0xD000 + 0x600
+#define BASE_BOLTS 			0xDE00
 #define BASE_WYZ 			0xDF80
 #define BASE_SPRITES 		0xE000 + 0x600
 #define BASE_LUT			0xF800 + 0x600

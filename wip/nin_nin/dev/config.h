@@ -74,8 +74,10 @@
 //#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
 
-//#define PACKED_ENEMS 						// Packed XY1, XY2 format.
-//#define FIXED_ENEMS_LIMITS 				// x1, x2, y1, y2 won't change.
+#define PACKED_ENEMS 						// Packed XY1, XY2 format.
+#define FIXED_ENEMS_LIMITS 					// x1, x2, y1, y2 won't change.
+
+#define DYNAMIC_BOLTS 						// No bolts structure in mapa.h!
 
 // Coins engine
 // ------------
@@ -140,6 +142,7 @@
 //#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
 //#define GENITAL_HIT_FRAMES 				// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 				5		// Rather than swing, stab at height N
+#define SWORD_CUSTOM_FRAMES 		5		// Use `sword_custom_frames.h` with N frames.
 
 // Breakable
 // ---------
@@ -323,8 +326,8 @@
 //#define TWO_SETS							// If defined, two sets of tiles. Second set is activated if
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
-//#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
-//#define RLE_MAP 					62 		// Use RLE compression (values 44, 54, 62; see docs)
+#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
+#define RLE_MAP 					44 		// Use RLE compression (values 44, 54, 62; see docs)
 
 // Stupid animated tiles
 //#define ENABLE_ANIMATED_TILES 			// Enables them

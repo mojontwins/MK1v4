@@ -2672,7 +2672,7 @@ De forma parecida, las pantallas a los extremos de estas filas conectan con la d
 
 ## Enemigos empaquetados
 
-Los enemigos empaquetados almacenan los pares (`x1`, `y1`) y (`x2`, `y2`) cada uno en un byte. Esto añade algo de overhead, sobre todo si no activamos `FIXED_ENEMS_LIMITS` (con lo que el motor asume que los limites no cambian y no tratará de reempaquetarlos tras cada vuelta de bucle), pero ahorra 2 bytes por cada enemigo del juego, algo que viene muy bien para juegos con muchas pantallas o si queremos subir el número de enemigos por pantalla. Por ejemplo, en un juego de 96 pantallas ahorraría 576 bytes (los enemigos pasarían de ocupar 2880 bytes a ocupar 2304 bytes).
+Los enemigos empaquetados se activan con `#define PACKED_ENEMS` en `config.h` y almacenan los pares (`x1`, `y1`) y (`x2`, `y2`) cada uno en un byte. Esto añade algo de overhead, sobre todo si no activamos `FIXED_ENEMS_LIMITS` (con lo que el motor asume que los limites no cambian y no tratará de reempaquetarlos tras cada vuelta de bucle), pero ahorra 2 bytes por cada enemigo del juego, algo que viene muy bien para juegos con muchas pantallas o si queremos subir el número de enemigos por pantalla. Por ejemplo, en un juego de 96 pantallas ahorraría 576 bytes (los enemigos pasarían de ocupar 2880 bytes a ocupar 2304 bytes).
 
 Obviamente tendremos que comunicarle nuestra decisión al conversor `ene2h` con el parámetro `compacted`.
 
