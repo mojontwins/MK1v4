@@ -1,4 +1,4 @@
-COLORES_CARGA equ $445f
+COLORES_CARGA equ $5456
 
 ; This is the real loader which will be used once the CPC is set up
 
@@ -30,13 +30,13 @@ org $BA00
 
 ; Load binary
 
-	ld      ix, $BA00 - 18305
-	ld      de, 18305
+	ld      ix, $BA00 - 18317
+	ld      de, 18317
 	call    cpct_miniload_asm
 
 ; Depack binary
 
-	ld      hl, $BA00 - 18305
+	ld      hl, $BA00 - 18317
 	ld      de, $0400
 	call    dzx7_standard
 

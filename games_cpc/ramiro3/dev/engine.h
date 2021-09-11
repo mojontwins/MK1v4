@@ -1342,7 +1342,7 @@ void move (void) {
 					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
-							if (rda == 0 && is128k) play_sfx (12);
+							if (rda == 0) play_sfx (12);
 							player.hovering = 1;
 							#asm
 								._player_hover
@@ -3334,8 +3334,7 @@ void move (void) {
 				) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
 					if (
-						0 == player.killingzone_framecount
-							|| is128k
+						0 == player.killingzone_framecount							
 					) play_sfx (3);
 					player.life --;	
 				}

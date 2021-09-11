@@ -129,10 +129,18 @@ Ahora mismo tengo en `enems_en_an_calc` esta linea:
 Puedo expandir con un `#define ENEMS_OFFSET enems_offset` o algo así y usar un `enems_offset` como variable custom o lo que haga falta, quedando entonces:
 
 ```c
-    rdb = 
+    rdb = en_an_base_frame [enit] = 
     #ifdef ENEMS_OFFSET
         ENEMS_OFFSET + 
     #endif
-        en_an_base_frame [enit] = n << 1;
+        n << 1;
 ```
+
+## Cerrojos dinámicos
+
+El diseño de los cerrojos lleva sin tocar desde 1.0, más que nada porque medio funciona medio bien. Básicamente, al convertir el mapa se detecta el tile 15 y se crea un array con una lista. Cuando se detecta una colisión con cerrojo y llevamos llave, se busca en la lista el que sea y se marca.
+
+El problema aflora en estos nuevos juegos de v4 en los que tengo un mapa grande subdividido en "pseudoniveles" donde voy cambiando el tileset. En Helmet, donde no cambiaba el tileset, o en Perils, donde había cerrojos en todos los tilesets, esto seguía funcionando bien. El tema llega en este Nin Nin donde tengo tilesets con cerrojos y tilsets sin cerrojos. Si dejo al conversor hacer su trabajo normal y corriente, en las fases donde se utilice el tile 15 para otras cosas que no sean cerrojos se estará añadiendo entradas al array de cerrojos a saco.
+
+Por tanto, lo que planteo es lo siguiente: el conversor NO crea un array de cerrojos, sino que lo que hago es reservar un buffer que iré rellenando. Si en el juego se colisiona con un cerrojo con una llave, se creará una entrada nueva en este buffer dinámico y se incrementará un índice. Al entrar en las pantallas, se recorrerá desde 0 al índice para ver si hay que eliminar algún cerrojo abierto. Esto implica pocos cambios y funcionará muy bien.
 

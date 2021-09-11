@@ -1,4 +1,4 @@
-COLORES_CARGA equ $445f
+COLORES_CARGA equ $5456
 
 ; Minimally set up the CPC to remove FW
 

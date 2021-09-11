@@ -469,65 +469,92 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (__y), a
 		#endasm
 
-		/*	
-		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) 
-			if (cerrojos [gpit].x == x && cerrojos [gpit].y == y && cerrojos [gpit].np == n_pant)
-				cerrojos [gpit].st = 0;
-		*/
-		#asm
-				// The cerrojos struct is db np, x, y st
-				ld  b, MAX_CERROJOS
-				ld  hl, _cerrojos
-			.clear_cerrojo_loop
-				ld  c, (hl) 		// np
-				inc hl
-				ld  d, (hl) 		// x
-				inc hl 
-				ld  e, (hl) 		// y
-				inc hl
+		#ifdef DYNAMIC_BOLTS
+			// Add to dynamic array
+			#asm
+					ld  hl, (_bolts_ptr)
+					ld  a, (_n_pant)
+					ld  (hl), a 
+					inc hl 
+					ld  a, (__x)
+					ld  (hl), a 
+					inc hl 
+					ld  a, (__y)
+					inc (hl), a 
+					inc hl
+					ld  (_bolts_ptr), hl
+			#endasm
 
-				ld  a, (_n_pant)
-				cp  c
-				jr  nz, clear_cerrojo_loop_continue
+		#else
+			// Find in array and mark as open
 
-				ld  a, (__x)
-				cp  d 
-				jr  nz, clear_cerrojo_loop_continue
+			/*	
+			for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) 
+				if (cerrojos [gpit].x == x && cerrojos [gpit].y == y && cerrojos [gpit].np == n_pant)
+					cerrojos [gpit].st = 0;
+			*/
+			#asm
+					// The cerrojos struct is db np, x, y st
+					ld  b, MAX_CERROJOS
+					ld  hl, _cerrojos
+				.clear_cerrojo_loop
+					ld  c, (hl) 		// np
+					inc hl
+					ld  d, (hl) 		// x
+					inc hl 
+					ld  e, (hl) 		// y
+					inc hl
 
-				ld  a, (__y)
-				cp  e 
-				jr  nz, clear_cerrojo_loop_continue
+					ld  a, (_n_pant)
+					cp  c
+					jr  nz, clear_cerrojo_loop_continue
 
-				xor a 
-				ld  (hl), a
-				ret
+					ld  a, (__x)
+					cp  d 
+					jr  nz, clear_cerrojo_loop_continue
 
-			.clear_cerrojo_loop_continue
-				inc hl
-				djnz clear_cerrojo_loop
+					ld  a, (__y)
+					cp  e 
+					jr  nz, clear_cerrojo_loop_continue
+
+					xor a 
+					ld  (hl), a
+					ret
+
+				.clear_cerrojo_loop_continue
+					inc hl
+					djnz clear_cerrojo_loop
+			#endif
 		#endasm
 	}
 
 	void init_cerrojos (void) {
 		// Activate all bolts.
 		
-		/*
-		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++)
-			cerrojos [gpit].st = 1;	
-		*/
-		#asm
-				// Iterate MAX_CERROJOS time
-				// Start with _cerrojos + 3
-				// Set to 1 and add 4
-				ld  b, MAX_CERROJOS
-				ld  hl, _cerrojos + 3
-				ld  de, 4
-				ld  a, 1
-			.init_cerrojos_loop
-				ld  (hl), a
-				add hl, de
-				djnz init_cerrojos_loop
-		#endasm	
+		#ifdef DYNAMIC_BOLTS
+			// Reset the pointer
+
+			bolts_ptr = BASE_BOLTS;
+		#else
+			// Clear the structure
+			/*
+			for (gpit = 0; gpit < MAX_CERROJOS; gpit ++)
+				cerrojos [gpit].st = 1;	
+			*/
+			#asm
+					// Iterate MAX_CERROJOS time
+					// Start with _cerrojos + 3
+					// Set to 1 and add 4
+					ld  b, MAX_CERROJOS
+					ld  hl, _cerrojos + 3
+					ld  de, 4
+					ld  a, 1
+				.init_cerrojos_loop
+					ld  (hl), a
+					add hl, de
+					djnz init_cerrojos_loop
+			#endasm	
+		#endif
 	}
 #endif
 
@@ -1116,7 +1143,11 @@ void adjust_to_tile_y (void) {
 				ld  a, (_s_frame)
 				inc a
 				ld  (_s_frame), a
-				cp  9
+				#ifdef SWORD_CUSTOM_FRAMES
+					cp  SWORD_CUSTOM_FRAMES
+				#else
+					cp  9
+				#endif
 				jr  nz, swing_sword_goon
 
 				xor a
@@ -1342,7 +1373,7 @@ void move (void) {
 					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
-							if (rda == 0 && is128k) play_sfx (12);
+							if (rda == 0) play_sfx (12);
 							player.hovering = 1;
 							#asm
 								._player_hover
@@ -3335,7 +3366,6 @@ void move (void) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
 					if (
 						0 == player.killingzone_framecount
-							|| is128k
 					) play_sfx (3);
 					player.life --;	
 				}
@@ -4631,49 +4661,96 @@ void draw_scr_background (void) {
 		// Is there a bolt which has been already opened in this screen?
 		// If so, delete it:
 
-		#asm
-				ld  hl, _cerrojos
-				ld  b, MAX_CERROJOS
+		#ifdef DYNAMIC_BOLTS
+			// Find entries in dynamic array & clear
+			// Assume not aligned so I can port this to ZX
 
-			.draw_scr_bolts_loop
-				; Cerrojos structure is np, x, y, st
-				ld  c, (hl)		; np
-				inc hl
-				ld  d, (hl) 	; x
-				inc hl
-				ld  e, (hl)		; y 
-				inc hl 
-				ld  a, (hl) 	; st
-				inc hl
+			#asm
+					ld  hl, BASE_BOLTS
 
-				; Open lock? (st == 0)
-				or  a 
-				jr  nz, draw_scr_bolts_continue
+				.draw_scr_bolts_loop	
+					ld  c, (hl) 	; np
+					inc hl 
+					ld  d, (hl) 	; x
+					inc hl
+					ld  e, (hl) 	; y
+					inc hl 
 
-				; Current screen? 
-				ld  a, (_n_pant)
-				cp  c
-				jr  nz, draw_scr_bolts_continue
+					ld  a, (_n_pant)
+					cp  c 
+					jr  nz, draw_scr_bolts_continue 
 
-				; Clear bolt
-				push bc
+					; Clear bolt
 
-				ld  a, d
-				ld  c, d 				;; Call directly needs C
-				ld  (__x), a
-				ld  a, e
-				ld  (__y), a
-				xor a
-				ld  (__t), a
-				ld  (__n), a
+					ld  a, d
+					ld  c, d 						// Call directly needs C
+					ld  (__x), a
+					ld  a, e
+					ld  (__y), a
+					xor a
+					ld  (__t), a
+					ld  (__n), a
 
-				call set_map_tile_do
+					call set_map_tile_do
 
-				pop bc
+				.draw_scr_bolts_continue
 
-			.draw_scr_bolts_continue
-				djnz draw_scr_bolts_loop
-		#endasm
+					ld  de, (_bolts_ptr)
+					ex  de, hl 
+					or  a 							// Clear carry
+					sbc hl, de 						// Will zero if equal
+					ex  de, hl
+
+					jr  nz, draw_scr_bolts_loop		// Keep on truckin'
+			#endasm
+
+		#else
+			// Find bolts in array & clear
+
+			#asm
+					ld  hl, _cerrojos
+					ld  b, MAX_CERROJOS
+
+				.draw_scr_bolts_loop
+					; Cerrojos structure is np, x, y, st
+					ld  c, (hl)		; np
+					inc hl
+					ld  d, (hl) 	; x
+					inc hl
+					ld  e, (hl)		; y 
+					inc hl 
+					ld  a, (hl) 	; st
+					inc hl
+
+					; Open lock? (st == 0)
+					or  a 
+					jr  nz, draw_scr_bolts_continue
+
+					; Current screen? 
+					ld  a, (_n_pant)
+					cp  c
+					jr  nz, draw_scr_bolts_continue
+
+					; Clear bolt
+					push bc
+
+					ld  a, d
+					ld  c, d 				;; Call directly needs C
+					ld  (__x), a
+					ld  a, e
+					ld  (__y), a
+					xor a
+					ld  (__t), a
+					ld  (__n), a
+
+					call set_map_tile_do
+
+					pop bc
+
+				.draw_scr_bolts_continue
+					djnz draw_scr_bolts_loop
+			#endasm
+		#endif
 	#endif	
 }
 

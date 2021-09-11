@@ -296,9 +296,13 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_x, s_y, s_frame;
 	unsigned char s_hit_x, s_hit_y;
 
-	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
-	#ifndef SWORD_STAB
-		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
+	#ifdef SWORD_CUSTOM_FRAMES
+		#include "sword_custom_frames.h"
+	#else
+		unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
+		#ifndef SWORD_STAB
+			unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
+		#endif
 	#endif
 #endif
 
@@ -389,6 +393,10 @@ unsigned char bitmask [] = {
 
 #ifdef DISABLE_SLIPPERY_ON_VAR
 	unsigned char disable_slippery;
+#endif
+
+#ifdef DYNAMIC_BOLTS
+	unsigned char *bolts_ptr;
 #endif
 
 // Prototypes
