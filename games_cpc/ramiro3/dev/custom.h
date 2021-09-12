@@ -297,10 +297,12 @@ void show_text_box (unsigned char n) {
 
 	void hook_init_game (void) {
 		intro_text = 1;
+		player.possee = 0;
+
 		//n_pant = 1;
 		//n_pant = 15;
 		//n_pant = 17;
-		player.objs=14;
+		//player.objs=14;
 	}
 
 	void hook_init_mainloop (void) {
