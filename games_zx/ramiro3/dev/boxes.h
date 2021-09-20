@@ -213,7 +213,7 @@
 											player.killed ++;
 
 											#ifdef ACTIVATE_SCRIPTING
-												script = f_scripts [max_screens + 2];
+												script = f_scripts [MAX_SCREENS + 2];
 												run_script ();
 											#endif
 

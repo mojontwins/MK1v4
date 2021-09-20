@@ -3,6 +3,15 @@
 
 // Add here your custom routines & vars
 
+// Two sets
+
+unsigned char map_behaviours [] = {
+	0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 1, 1,
+	0, 0, 0, 1, 1, 1, 1,
+	0, 1, 1, 1, 1, 1, 1
+};
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks

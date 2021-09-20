@@ -51,6 +51,30 @@ extern unsigned char sprite_15_c [];
 extern unsigned char sprite_16_a []; 
 extern unsigned char sprite_16_b []; 
 extern unsigned char sprite_16_c []; 
+extern unsigned char extra_sprite_17_a []; 
+extern unsigned char extra_sprite_17_b []; 
+extern unsigned char extra_sprite_17_c []; 
+extern unsigned char extra_sprite_18_a []; 
+extern unsigned char extra_sprite_18_b []; 
+extern unsigned char extra_sprite_18_c []; 
+extern unsigned char extra_sprite_19_a []; 
+extern unsigned char extra_sprite_19_b []; 
+extern unsigned char extra_sprite_19_c []; 
+extern unsigned char extra_sprite_20_a []; 
+extern unsigned char extra_sprite_20_b []; 
+extern unsigned char extra_sprite_20_c []; 
+extern unsigned char extra_sprite_21_a []; 
+extern unsigned char extra_sprite_21_b []; 
+extern unsigned char extra_sprite_21_c []; 
+extern unsigned char extra_sprite_22_a []; 
+extern unsigned char extra_sprite_22_b []; 
+extern unsigned char extra_sprite_22_c []; 
+extern unsigned char extra_sprite_23_a []; 
+extern unsigned char extra_sprite_23_b []; 
+extern unsigned char extra_sprite_23_c []; 
+extern unsigned char extra_sprite_24_a []; 
+extern unsigned char extra_sprite_24_b []; 
+extern unsigned char extra_sprite_24_c []; 
  
 #asm
         defb 0, 255
@@ -62,6 +86,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #0 y máscara
+; Primera columna
     ._sprite_1_a
         defb 1, 254
         defb 2, 252
@@ -88,6 +114,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_1_b
         defb 160, 31
         defb 0, 15
@@ -114,6 +141,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_1_c
         defb 0, 255
         defb 0, 255
@@ -140,6 +168,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #1 y máscara
+; Primera columna
     ._sprite_2_a
         defb 0, 255
         defb 1, 254
@@ -166,6 +196,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_2_b
         defb 0, 255
         defb 160, 31
@@ -192,6 +223,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_2_c
         defb 0, 255
         defb 0, 255
@@ -218,6 +250,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #2 y máscara
+; Primera columna
     ._sprite_3_a
         defb 0, 255
         defb 1, 254
@@ -244,6 +278,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_3_b
         defb 208, 15
         defb 0, 7
@@ -270,6 +305,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_3_c
         defb 0, 255
         defb 0, 255
@@ -296,6 +332,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #3 y máscara
+; Primera columna
     ._sprite_4_a
         defb 0, 255
         defb 1, 254
@@ -322,6 +360,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_4_b
         defb 208, 15
         defb 0, 7
@@ -348,6 +387,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_4_c
         defb 0, 255
         defb 0, 255
@@ -374,6 +414,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #4 y máscara
+; Primera columna
     ._sprite_5_a
         defb 5, 248
         defb 0, 240
@@ -400,6 +442,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_5_b
         defb 128, 127
         defb 64, 63
@@ -426,6 +469,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_5_c
         defb 0, 255
         defb 0, 255
@@ -452,6 +496,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #5 y máscara
+; Primera columna
     ._sprite_6_a
         defb 0, 255
         defb 5, 248
@@ -478,6 +524,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_6_b
         defb 0, 255
         defb 128, 127
@@ -504,6 +551,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_6_c
         defb 0, 255
         defb 0, 255
@@ -530,6 +578,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #6 y máscara
+; Primera columna
     ._sprite_7_a
         defb 11, 240
         defb 0, 224
@@ -556,6 +606,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_7_b
         defb 0, 255
         defb 128, 127
@@ -582,6 +633,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_7_c
         defb 0, 255
         defb 0, 255
@@ -608,6 +660,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #7 y máscara
+; Primera columna
     ._sprite_8_a
         defb 11, 240
         defb 0, 224
@@ -634,6 +688,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_8_b
         defb 0, 255
         defb 128, 127
@@ -660,6 +715,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_8_c
         defb 0, 255
         defb 0, 255
@@ -686,6 +742,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #8 y máscara
+; Primera columna
     ._sprite_9_a
         defb 1, 248
         defb 3, 24
@@ -712,6 +770,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_9_b
         defb 128, 31
         defb 192, 8
@@ -738,6 +797,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_9_c
         defb 0, 255
         defb 0, 255
@@ -764,6 +824,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #9 y máscara
+; Primera columna
     ._sprite_10_a
         defb 1, 248
         defb 3, 16
@@ -790,6 +852,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_10_b
         defb 128, 31
         defb 192, 24
@@ -816,6 +879,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_10_c
         defb 0, 255
         defb 0, 255
@@ -842,6 +906,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #10 y máscara
+; Primera columna
     ._sprite_11_a
         defb 1, 240
         defb 7, 224
@@ -868,6 +934,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_11_b
         defb 192, 15
         defb 192, 15
@@ -894,6 +961,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_11_c
         defb 0, 255
         defb 0, 255
@@ -920,6 +988,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #11 y máscara
+; Primera columna
     ._sprite_12_a
         defb 3, 240
         defb 3, 240
@@ -946,6 +1016,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_12_b
         defb 128, 15
         defb 224, 7
@@ -972,6 +1043,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_12_c
         defb 0, 255
         defb 0, 255
@@ -998,6 +1070,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #12 y máscara
+; Primera columna
     ._sprite_13_a
         defb 0, 195
         defb 60, 129
@@ -1024,6 +1098,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_13_b
         defb 0, 195
         defb 60, 129
@@ -1050,6 +1125,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_13_c
         defb 0, 255
         defb 0, 255
@@ -1076,6 +1152,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #13 y máscara
+; Primera columna
     ._sprite_14_a
         defb 0, 255
         defb 0, 223
@@ -1102,6 +1180,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_14_b
         defb 0, 255
         defb 0, 251
@@ -1128,6 +1207,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_14_c
         defb 0, 255
         defb 0, 255
@@ -1154,6 +1234,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #14 y máscara
+; Primera columna
     ._sprite_15_a
         defb 255, 0
         defb 255, 0
@@ -1180,6 +1262,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_15_b
         defb 255, 0
         defb 255, 0
@@ -1206,6 +1289,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_15_c
         defb 0, 255
         defb 0, 255
@@ -1232,6 +1316,8 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Sprite #15 y máscara
+; Primera columna
     ._sprite_16_a
         defb 255, 0
         defb 255, 0
@@ -1258,6 +1344,7 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; Segunda columna
     ._sprite_16_b
         defb 255, 0
         defb 255, 0
@@ -1284,7 +1371,664 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
         defb 0, 255
  
+; tercera columna
     ._sprite_16_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #16 y máscara
+; Primera columna
+    ._extra_sprite_17_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_17_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_17_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #17 y máscara
+; Primera columna
+    ._extra_sprite_18_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_18_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_18_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #18 y máscara
+; Primera columna
+    ._extra_sprite_19_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_19_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_19_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #19 y máscara
+; Primera columna
+    ._extra_sprite_20_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_20_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_20_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #20 y máscara
+; Primera columna
+    ._extra_sprite_21_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_21_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_21_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #21 y máscara
+; Primera columna
+    ._extra_sprite_22_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_22_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_22_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #22 y máscara
+; Primera columna
+    ._extra_sprite_23_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_23_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_23_c
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Sprite #23 y máscara
+; Primera columna
+    ._extra_sprite_24_a
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; Segunda columna
+    ._extra_sprite_24_b
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 255, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
+ 
+; tercera columna
+    ._extra_sprite_24_c
         defb 0, 255
         defb 0, 255
         defb 0, 255

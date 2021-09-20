@@ -724,10 +724,10 @@ void main (void) {
 					#endif
 					{
 
-						//#ifdef BETTER_VERTICAL_CONNECTIONS
+						#ifdef BETTER_VERTICAL_CONNECTIONS
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
 							player.cont_salto = 0;
-						//#endif
+						#endif
 
 						#asm
 							#ifdef CUSTOM_SCREEN_CONNECTIONS

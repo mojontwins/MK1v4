@@ -6,7 +6,7 @@
 // ============================================================================
 
 //#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
-//#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
+#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
 
 // Arkos support. Get the addresses from ogt/RAM1.map.txt after compiling RAM1.bin
 
@@ -22,24 +22,26 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						6		//
+#define MAP_W						7		//
 #define MAP_H						4		// Map dimmensions in screens
-#define TOTAL_SCREENS				24		// 
-#define SCR_INICIO					5		// Initial screen
+#define TOTAL_SCREENS				28		// 
+#define SCR_INICIO					6		// Initial screen
 #define PLAYER_INI_X				10		//
-#define PLAYER_INI_Y				7		// Initial tile coordinates
+#define PLAYER_INI_Y				5		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-//#define PLAYER_NUM_OBJETOS		99		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS			15		// Objects to get to finish game
 #define PLAYER_LIFE 				69		// Max and starting life gauge.
 #define PLAYER_REFILL				1		// Life recharge
 
-#define LINEAR_ENEMY_HIT			7		// Amount of life to substract when normal enemy hits
-#define FLYING_ENEMY_HIT			12		// Amount of life to substract when flying enemy hits
+#define LINEAR_ENEMY_HIT			5		// Amount of life to substract when normal enemy hits
+#define FLYING_ENEMY_HIT			10		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS				// Hooks @ init, entering game, screen & loop @ custom.h
-//#define ENABLE_CUSTOM_ENEMS 			// Hooks for custom enemies @ custom.h
+#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
+#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
+
+#define ENEMS_CUSTOM_CELLS 					// Include custom_enem_cells.h
 
 // ============================================================================
 // II. Engine type
@@ -137,7 +139,7 @@
 
 //#define ENABLE_SWORD 						// Let the player swing a sword
 //#define SWORD_UP 							// Can hit upwards
-//#define SWORD_LINEAL_DAMAGE		0		// Damage to linear.
+//#define SWORD_LINEAL_DAMAGE		1		// Damage to linear.
 //#define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
 //#define SWORD_PARALYZES			32		// If defined, paralyze for N frames
 //#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
@@ -197,8 +199,8 @@
 #define USE_TYPE_6							// If defined, type 6 enemies are enabled.
 //#define USE_SIGHT_DISTANCE				// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE			120		
-#define FANTY_MAX_V 				256 	// Flying enemies max speed.
-#define FANTY_A 					16		// Flying enemies acceleration.
+#define FANTY_MAX_V 				192 	// Flying enemies max speed.
+#define FANTY_A 					12		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE			10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 
@@ -221,7 +223,7 @@
 //#define COUNT_KILLABLE_ON			2		// Count killable enemies on flag #N (per screen basis)
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 //#define OBJECTS_ON_VAR			2		// If defined, only show objects if var # is set.
-#define OBJECT_COUNT				2		// Defines which FLAG will be used to store the object count.
+//#define OBJECT_COUNT				2		// Defines which FLAG will be used to store the object count.
 //#define REENTER_ON_ALL_OBJECTS			// If set, re-enter screen when all objects are got, instead of ending
 
 // Top view:
@@ -239,7 +241,7 @@
 #define SHORT_PLAYER 						// Bounding box 12x16
 #define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
-//#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+#define BOTH_KEYS_JUMP						// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 #define RAMIRO_HOP 							// press jump when reaching a type 4 platform to jump again 
 #define RAMIRO_HOVER 						// press down to hover
 //#define HOVER_WITH_JUMP_ALSO 				// use jump to hover as well
@@ -279,7 +281,7 @@
 #define OBJECTS_Y					23		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-//#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
+#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
 //#define KEYS_X					28		//
 //#define KEYS_Y					21		// Keys counter character coordinates
@@ -306,10 +308,10 @@
 
 // Line of text
 
-#define LINE_OF_TEXT				22
-#define LINE_OF_TEXT_X				1
-#define LINE_OF_TEXT_SUBSTR			2
-#define LINE_OF_TEXT_ATTR 			32		
+//#define LINE_OF_TEXT				22
+//#define LINE_OF_TEXT_X			1
+//#define LINE_OF_TEXT_SUBSTR		2
+//#define LINE_OF_TEXT_ATTR 		32		
 
 #define GAME_OVER_ATTR				96
 
@@ -325,7 +327,7 @@
 //#define PLAYER_ALTERNATE_ANIMATION		// If defined, animation is 1,2,3,1,2,3... 
 #define TWO_SETS							// If defined, two sets of tiles. Old < 4.8 version
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
-#define TWO_SETS_CONDITION		tileset_offset_calc() 	// Must return 32 if second tileset is active, 0 otherwise.
+#define TWO_SETS_CONDITION			((map_behaviours [n_pant] & 1) ? 32 : 0)	// Must return 32 if second tileset is active, 0 otherwise.
 //#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
 //#define RLE_MAP 					62 		// Use RLE compression (values 44, 54, 62; see docs)
 
@@ -395,3 +397,6 @@ unsigned char comportamiento_tiles [] = {
 	8, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0, 0, 0, 8,
 	0, 0, 8, 0, 1, 4, 8, 8, 8, 8, 0, 0, 4, 0, 0, 0	
 };
+
+#define PLAYER_CUSTOM_ANIMATION
+#define PLAYER_CUSTOM_CELLS

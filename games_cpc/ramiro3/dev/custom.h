@@ -16,6 +16,7 @@ unsigned char map_behaviours [] = {
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
+unsigned char room_name [] = "XXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]^";
 unsigned char redraw_after_text;
 unsigned char intro_text;
@@ -122,6 +123,40 @@ unsigned char *texts [] = {
 	text12, 				// Ya tienes todas
 	text13, text14,			// Final
 };
+
+
+//                        		 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+unsigned char room_names [] = 	"    INTERESANTE DESCENSO    "
+								"    LA CASITA DE AMADOR     "
+								"  EL MIRADOR DE MIRAR CULOS "
+								"      UN RECODO COMODO      "
+								"  EL BARRANCO DEL TIO CANCO "
+								"     EL CERRO DEL PERRO     "
+								"     FIESTA DE PIJAMAS      "
+
+								"     LA VERTICAL ANORMAL    "
+								"   AQUI HUELE COMO A PIPI   "
+								"    UN DESCENSO PELIGROSO   "
+								"     NIDOS DE MONDRULLOS    "
+								"    LA GRUTA DEL HIJOPUTA   "
+								"    AFILADOS MONDADIENTES   "
+								"  DESCENDIENDO MUY PROFUNDO "
+
+								"     SE OYE UN MURMULLO     "
+								"    EL POZO DEL ALBOROZO    "
+								" EN EL TRONCO DUERMO Y RONCO"
+								"     LA CRIPTA DE TAMARA    "
+								"     TAMARA LA TIA RARA     "
+								"   LA DISYUNTIVA NEGATIVA   "
+								"    VENDO MOTO SEMINUEVA    "
+
+								" HALLO ICH BIN'S DER FICHTL "
+								"       CAMILA LA WILA       "
+								"   UNA CRIPTA O UNA BODEGA  "
+								"    LA CRIPTA DE ALBERTO    "
+								"      ALBERTO EL TUERTO     "
+								"      DONOSO EL SEBOSO      "
+								"     LA CRIPTA DE DONOSO    ";
 
 // Jumo
 extern unsigned char sprites_jumo [0];
@@ -384,6 +419,15 @@ void show_text_box (unsigned char n) {
 				ld  (ix + 0), l
 		#endasm
 
+		// Screen title
+		gp_gen = room_names + (n_pant * 28);
+		#asm
+				ld  hl, (_gp_gen)
+				ld  de, _room_name
+				ld  bc, 28
+				ldir
+		#endasm
+		draw_text (2, 22, 71, room_name);
 	}
 
 #endif

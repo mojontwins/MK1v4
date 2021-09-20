@@ -1,11 +1,12 @@
 # El Vampiro Ramiro en el bosque del suspiro
-# Copyleft 2013 by The Mojon Twins.
-# MTE MK1 4.6
+# Copyleft 2013, 2021 by The Mojon Twins.
+# MTE MK1v4.CPC
 
 # flags:
 # 1	- Number of coins
-# 2 - Number of setas
+# 2 - Seta de los Woodys
 # 3 - Hechizo postizo
+# 4 - Change music flag
 # 6 - Onscreen check flag
 # 7 - Onscreen check flag 2
 # 8 - Cripta de Macaria la estrafalaria
@@ -17,6 +18,11 @@
 # 14 - Cripta de Aitor el leñador
 # 15 - Seta de Aitor el leñador
 
+## Estado de las criptas:
+# 0 - botón off
+# 1 - botón on
+# 2 - cripta abierta
+
 ENTERING GAME
 	IF TRUE
 	THEN
@@ -26,11 +32,13 @@ ENTERING GAME
 	END
 END
 
-ENTERING ANY
-	IF FLAG 2 = 4
-	THEN
-	END
-END
+# Move this to custom.h
+# ENTERING ANY
+#	IF OBJECT_COUNT = 15
+#	THEN
+#		EXTERN 12
+#	END
+# END
 
 PLAYER_GETS_COIN
 	IF TRUE
@@ -43,31 +51,34 @@ PLAYER_GETS_COIN
 		SOUND 8
 		DISABLE_TYPE_6
 		HIDE_COINS
-		REDRAW
 		#TEXT _______TRAP_DEACTIVATED_______
-		TEXT ______TRAMPA_DESACTIVADA______
+		#TEXT ______TRAMPA_DESACTIVADA______
+		EXTERN 253
+		REDRAW
 	END
 END
 
 # Pantalla inicial
 
-ENTERING SCREEN 5
+ENTERING SCREEN 6
 	IF TRUE
 	THEN
 		SET TILE (12, 7) = 23
 		SET TILE (13, 6) = 24
 		SET FLAG 6 = 0
 		SET FLAG 7 = 0
-		SET_FIRE_ZONE 180, 84, 223, 127
+		#SET_FIRE_ZONE 180, 84, 223, 127
 	END
 END
 
-PRESS_FIRE AT SCREEN 5
+PRESS_FIRE AT SCREEN 6
 	#The end
-	IF PLAYER_IN_X 192, 223
-	IF PLAYER_IN_Y 96, 127
-	IF OBJECT_COUNT = 14
+	IF PLAYER_IN_X 177, 223
+	IF PLAYER_IN_Y 81, 127
+	IF OBJECT_COUNT = 15
 	THEN
+		EXTERN 13
+		EXTERN 14
 		WIN GAME
 	END
 
@@ -75,8 +86,8 @@ PRESS_FIRE AT SCREEN 5
 	IF FLAG 6 = 0
 	THEN
 		#TEXT "__SHROOMS!_BREASTED_SHROOMS!__"
-		TEXT "__SETAS!_SETAS_CON_TETAS!!!___"
-		SHOW
+		#TEXT "__SETAS!_SETAS_CON_TETAS!!!___"
+		EXTERN 0
 		SOUND 7
 		SET FLAG 6 = 1
 	END
@@ -85,8 +96,8 @@ PRESS_FIRE AT SCREEN 5
 	IF FLAG 7 = 0
 	THEN
 		#TEXT "_________HIYA_CUTIE...________"
-		TEXT "________HOLA_PIRATA...________"
-		SHOW
+		#TEXT "________HOLA_PIRATA...________"
+		EXTERN 1
 		SOUND 11
 		SET FLAG 7 = 1
 	END
@@ -96,17 +107,17 @@ END
 # DECORACIONES #
 ################
 
-ENTERING SCREEN 9
+ENTERING SCREEN 11
 	IF TRUE
 	THEN
 		SET TILE (7, 2) = 25
 		SET TILE (7, 3) = 26
 		#TEXT "AN_ENTRANCE_TO_THE_UNDERGROUND"
-		TEXT "__UNA_ENTRADA_AL_SUBTERRANEO__"
+		#TEXT "__UNA_ENTRADA_AL_SUBTERRANEO__"
 	END
 END
 
-ENTERING SCREEN 12
+ENTERING SCREEN 15
 	IF TRUE
 	THEN
 		SET TILE (4, 6) = 27
@@ -114,7 +125,7 @@ ENTERING SCREEN 12
 		SET TILE (7, 6) = 25
 		SET TILE (7, 7) = 26
 		#TEXT "AN_ENTRANCE_TO_THE_UNDERGROUND"
-		TEXT "__UNA_ENTRADA_AL_SUBTERRANEO__"
+		#TEXT "__UNA_ENTRADA_AL_SUBTERRANEO__"
 	END
 END
 
@@ -124,74 +135,77 @@ END
 
 # Macaria la Estrafalaria (flag 8)
 
-ENTERING SCREEN 15
+ENTERING SCREEN 18
 	IF TRUE
 	THEN
 		#TEXT "________MARGOT_MAGGOT_________"
-		TEXT "___MACARIA_LA_ESTRAFALARIA____"
+		#TEXT "___MACARIA_LA_ESTRAFALARIA____"
 		SET TILE (2, 7) = 21
-		SET TILE (3, 7) = 29
-		SET_FIRE_ZONE 24, 100, 76, 127
-		SET FLAG 6 = 0
 	END
-	
-	IF FLAG 8 = 0
+
+	IF FLAG 8 != 2
 	THEN
 		SET TILE (0, 3) = 31
+	END IF
+	
+	IF FLAG 8 != 1
+	THEN
+		SET TILE (3, 7) = 30
 	END
 	
 	IF FLAG 8 = 1
 	THEN
-		SET TILE (3, 7) = 30
+		SET TILE (3, 7) = 29
 	END
 END
 
-PRESS_FIRE AT SCREEN 15
+PRESS_FIRE AT SCREEN 18
 	IF PLAYER_TOUCHES 3, 7
-	IF FLAG 8 = 0
+	IF FLAG 8 = 1
 	THEN
-		SET FLAG 8 = 1
+		SET FLAG 8 = 2
 		SET TILE (3, 7) = 30
 		SET TILE (0, 3) = 0
 		#TEXT "_________CRYPT_OPEN___________"
-		TEXT "________CRIPTA_ABIERTA________"
+		#TEXT "________CRIPTA_ABIERTA________"
 		SOUND 8
 	END
 	
 	IF PLAYER_TOUCHES 2, 7
-	IF FLAG 6 = 0
+	IF FLAG 8 = 0
 	THEN
-		SET FLAG 6 = 1
+		SET FLAG 8 = 1
 		#TEXT "_________GO_NINJA_GO!_________"
-		TEXT "_________DALE_FRAN!!!_________"
-		SHOW
+		#TEXT "_________DALE_FRAN!!!_________"
+		EXTERN 2
+		EXTERN 3
+		SET TILE (3, 7) = 29
 		SOUND 11
 	END
 END
 
 # Seta de macaria (flag 9)
 
-ENTERING SCREEN 14
+ENTERING SCREEN 17
 	IF FLAG 9 = 0
 	THEN
 		HIDE_COINS
 		SET FLAG 6 = 0
 		SET TILE (2, 2) = 18
 		#TEXT "____A_BREASTED_MUSHROOM!!!____"
-		TEXT "_____UNA_SETA_CON_TETAS!!_____"
+		#TEXT "_____UNA_SETA_CON_TETAS!!_____"
 		SET_FIRE_ZONE 32, 32, 47, 47
 	END
 END
 
-PRESS_FIRE AT SCREEN 14
+PRESS_FIRE AT SCREEN 17
 	IF FLAG 9 = 0
 	IF FLAG 6 = 0
 	IF PLAYER_TOUCHES 2, 2
 	THEN
 		SET FLAG 1 = 0
 		SET FLAG 6 = 1
-		SET FLAG 9 = 1
-		INC FLAG 2, 1
+		SET FLAG 9 = 1		
 		INC OBJECTS 1
 		SHOW_COINS
 		ENABLE_TYPE_6
@@ -199,8 +213,8 @@ PRESS_FIRE AT SCREEN 14
 		SET TILE (14, 3) = 16
 		SET TILE (2, 2) = 0
 		#TEXT "__________TRAPPED!!___________"
-		TEXT "__________ATRAPADO!!__________"
-		SHOW
+		#TEXT "__________ATRAPADO!!__________"
+		EXTERN 254
 		SOUND 6
 	END
 END
@@ -211,74 +225,77 @@ END
 
 # Alberto el tuerto (flag 10)
 
-ENTERING SCREEN 21
+ENTERING SCREEN 25
 	IF TRUE
 	THEN
 		#TEXT "_________MORT_THE_TORT__________"
-		TEXT "_______ALBERTO_EL_TUERTO________"
+		#TEXT "_______ALBERTO_EL_TUERTO________"
 		SET TILE (3, 2) = 19
-		SET TILE (4, 2) = 29
-		SET_FIRE_ZONE 48, 16, 89, 47
-		SET FLAG 6 = 0
 	END
 	
-	IF FLAG 10 = 0
+	IF FLAG 10 != 2
 	THEN
 		SET TILE (0, 7) = 31
 	END
 	
-	IF FLAG 10 = 1
+	IF FLAG 10 != 1
 	THEN
 		SET TILE (4, 2) = 30
 	END
+
+	IF FLAG 10 = 1
+	THEN
+		SET TILE (4, 2) = 29
+	END
 END
 
-PRESS_FIRE AT SCREEN 21
+PRESS_FIRE AT SCREEN 25
 	IF PLAYER_TOUCHES 4, 2
-	IF FLAG 10 = 0
+	IF FLAG 10 = 1
 	THEN
-		SET FLAG 10 = 1
+		SET FLAG 10 = 2
 		SET TILE (4, 2) = 30
 		SET TILE (0, 7) = 0
 		#TEXT "_________CRYPT_OPEN___________"
-		TEXT "________CRIPTA_ABIERTA________"
+		#TEXT "________CRIPTA_ABIERTA________"
 		SOUND 8
 	END
 	
 	IF PLAYER_TOUCHES 3, 2
-	IF FLAG 6 = 0
+	IF FLAG 10 = 0
 	THEN
-		SET FLAG 6 = 1
+		SET FLAG 10 = 1
 		#TEXT "ARE_YOU_FAR_AWAY_OR_JUST_SMALL"
-		TEXT "ESTAS_LEJOS_O_ERES_MUY_CHICO?_"
-		SHOW
+		#TEXT "ESTAS_LEJOS_O_ERES_MUY_CHICO?_"
+		EXTERN 4
+		EXTERN 5
+		SET TILE (4, 2) = 29
 		SOUND 7
 	END
 END
 
 # Seta de Alberto (flag 11)
 
-ENTERING SCREEN 20
+ENTERING SCREEN 24
 	IF FLAG 11 = 0
 	THEN
 		HIDE_COINS
 		SET FLAG 6 = 0
 		SET TILE (6, 4) = 18
 		#TEXT "____A_BREASTED_MUSHROOM!!!____"
-		TEXT "_____UNA_SETA_CON_TETAS!!_____"
+		#TEXT "_____UNA_SETA_CON_TETAS!!_____"
 		SET_FIRE_ZONE 96, 64, 111, 79
 	END
 END
 
-PRESS_FIRE AT SCREEN 20
+PRESS_FIRE AT SCREEN 24
 	IF FLAG 11 = 0
 	IF FLAG 6 = 0
 	IF PLAYER_TOUCHES 6, 4
 	THEN
 		SET FLAG 1 = 0
 		SET FLAG 6 = 1
-		SET FLAG 11 = 1
-		INC FLAG 2, 1
+		SET FLAG 11 = 1		
 		INC OBJECTS 1
 		SHOW_COINS
 		ENABLE_TYPE_6
@@ -286,8 +303,8 @@ PRESS_FIRE AT SCREEN 20
 		SET TILE (14, 7) = 16
 		SET TILE (6, 4) = 0
 		#TEXT "__________TRAPPED!!___________"
-		TEXT "__________ATRAPADO!!__________"
-		SHOW
+		#TEXT "__________ATRAPADO!!__________"
+		EXTERN 254
 		SOUND 6
 	END
 END
@@ -298,66 +315,70 @@ END
 
 # Donoso el Seboso (flag 12)
 
-ENTERING SCREEN 22
+ENTERING SCREEN 26
 	IF TRUE
 	THEN
 		#TEXT "_________DALE_THE_WHALE_________"
-		TEXT "________DONOSO_EL_SEBOSO________"
-		SET TILE (12, 2) = 29
-		SET TILE (13, 2) = 20
-		SET_FIRE_ZONE 182, 16, 223, 47
-		SET FLAG 6 = 0
+		#TEXT "________DONOSO_EL_SEBOSO________"
+		SET TILE (13, 2) = 20		
 	END
 	
-	IF FLAG 12 = 0
+	IF FLAG 12 != 2
 	THEN
 		SET TILE (14, 7) = 31
 	END
 	
-	IF FLAG 12 = 1
+	IF FLAG 12 != 1
 	THEN
 		SET TILE (12, 2) = 30
 	END
+
+	IF FLAG 12 = 1
+	THEN
+		SET TILE (12, 2) = 29
+	END
 END
 
-PRESS_FIRE AT SCREEN 22
+PRESS_FIRE AT SCREEN 26
 	IF PLAYER_TOUCHES 12, 2
-	IF FLAG 12 = 0
+	IF FLAG 12 = 1
 	THEN
-		SET FLAG 12 = 1
+		SET FLAG 12 = 2
 		SET TILE (12, 2) = 30
 		SET TILE (14, 7) = 0
 		#TEXT "_________CRYPT_OPEN___________"
-		TEXT "________CRIPTA_ABIERTA________"
+		#TEXT "________CRIPTA_ABIERTA________"
 		SOUND 8
 	END
 	
 	IF PLAYER_TOUCHES 13, 2
-	IF FLAG 6 = 0
+	IF FLAG 12 = 0
 	THEN
-		SET FLAG 6 = 1
+		SET FLAG 12 = 1
 		#TEXT "WOULD_EAT_ICE_CREAM_AND_BACON!"
-		TEXT "ME_COMERIA_UN_HELAO_EN_MANTECA"
-		SHOW
+		#TEXT "ME_COMERIA_UN_HELAO_EN_MANTECA"
+		EXTERN 6
+		EXTERN 7
+		SET TILE (12, 2) = 29
 		SOUND 7
 	END
 END
 
 # Seta de Donoso (flag 13)
 
-ENTERING SCREEN 23
+ENTERING SCREEN 27
 	IF FLAG 13 = 0
 	THEN
 		HIDE_COINS
 		SET FLAG 6 = 0
 		SET TILE (13, 8) = 18
 		#TEXT "____A_BREASTED_MUSHROOM!!!____"
-		TEXT "_____UNA_SETA_CON_TETAS!!_____"
+		#TEXT "_____UNA_SETA_CON_TETAS!!_____"
 		SET_FIRE_ZONE 208, 128, 223, 143
 	END
 END
 
-PRESS_FIRE AT SCREEN 23
+PRESS_FIRE AT SCREEN 27
 	IF FLAG 13 = 0
 	IF FLAG 6 = 0
 	IF PLAYER_TOUCHES 13, 8
@@ -365,7 +386,6 @@ PRESS_FIRE AT SCREEN 23
 		SET FLAG 1 = 0
 		SET FLAG 6 = 1
 		SET FLAG 13 = 1
-		INC FLAG 2, 1
 		INC OBJECTS 1
 		SHOW_COINS
 		ENABLE_TYPE_6
@@ -373,12 +393,48 @@ PRESS_FIRE AT SCREEN 23
 		SET TILE (0, 7) = 16
 		SET TILE (13, 8) = 0
 		#TEXT "__________TRAPPED!!___________"
-		TEXT "__________ATRAPADO!!__________"
-		SHOW
+		#TEXT "__________ATRAPADO!!__________"
+		EXTERN 254
 		SOUND 6
 	END
 END
 
+# Woodys music off
+
+ENTERING SCREEN 14
+	IF FLAG 4 = 1
+	THEN
+		EXTERN 253
+		SET FLAG 4 = 0
+	END
+END
+
+# Woodys music on
+
+ENTERING SCREEN 21
+	IF TRUE
+	THEN
+		SET FLAG 4 = 1
+		EXTERN 255
+	END IF
+
+	IF FLAG 2 = 0
+	THEN
+		SET TILE (12, 2) = 18
+		SET_FIRE_ZONE_TILES 12, 2, 12, 2
+	END
+END
+
+PRESS_FIRE AT SCREEN 21
+	IF PLAYER_TOUCHES 12, 2
+	IF FLAG 2 = 0
+	THEN
+		SET FLAG 2 = 1
+		INC OBJECTS 1
+		SET TILE (12, 2) = 0
+		SOUND 0
+	END
+END
 
 ############
 # CRIPTA 4 #
@@ -386,66 +442,70 @@ END
 
 # Aitor el leñador (flag 14)
 
-ENTERING SCREEN 18
+ENTERING SCREEN 22
 	IF TRUE
 	THEN
 		#TEXT "________LUMBERJACK_JACK_________"
-		TEXT "________AITOR_EL_LENADOR________"
-		SET TILE (12, 8) = 29
-		SET TILE (13, 8) = 22
-		SET_FIRE_ZONE 182, 128, 223, 143
-		SET FLAG 6 = 0
+		#TEXT "________AITOR_EL_LENADOR________"
+		SET TILE (13, 8) = 22		
 	END
 	
-	IF FLAG 14 = 0
+	IF FLAG 14 != 2
 	THEN
 		SET TILE (14, 3) = 31
 	END
 	
-	IF FLAG 14 = 1
+	IF FLAG 14 != 1
 	THEN
 		SET TILE (12, 8) = 30
 	END
+
+	IF FLAG 14 = 1
+	THEN
+		SET TILE (12, 8) = 29
+	END
 END
 
-PRESS_FIRE AT SCREEN 18
+PRESS_FIRE AT SCREEN 22
 	IF PLAYER_TOUCHES 12, 8
-	IF FLAG 14 = 0
+	IF FLAG 14 = 1
 	THEN
-		SET FLAG 14 = 1
+		SET FLAG 14 = 2
 		SET TILE (12, 8) = 30
 		SET TILE (14, 3) = 0
 		#TEXT "_________CRYPT_OPEN___________"
-		TEXT "________CRIPTA_ABIERTA________"
+		#TEXT "________CRIPTA_ABIERTA________"
 		SOUND 8
 	END
 	
 	IF PLAYER_TOUCHES 13, 8
-	IF FLAG 6 = 0
+	IF FLAG 14 = 0
 	THEN
-		SET FLAG 6 = 1
+		SET FLAG 14 = 1
 		#TEXT "_ON_WEDNESDAYS_I_GO_SHOPPING!_" 
-		TEXT "_VOY_DE_COMPRAS_LOS_MIERCOLES_"
-		SHOW
+		#TEXT "_VOY_DE_COMPRAS_LOS_MIERCOLES_"
+		EXTERN 8
+		EXTERN 9
+		SET TILE (12, 8) = 29
 		SOUND 7
 	END
 END
 
 # Seta de Aitor (flag 15)
 
-ENTERING SCREEN 19
+ENTERING SCREEN 23
 	IF FLAG 15 = 0
 	THEN
 		HIDE_COINS
 		SET FLAG 6 = 0
 		SET TILE (13, 8) = 18
 		#TEXT "____A_BREASTED_MUSHROOM!!!____"
-		TEXT "_____UNA_SETA_CON_TETAS!!_____"
+		#TEXT "_____UNA_SETA_CON_TETAS!!_____"
 		SET_FIRE_ZONE 208, 128, 223, 143
 	END
 END
 
-PRESS_FIRE AT SCREEN 19
+PRESS_FIRE AT SCREEN 23
 	IF FLAG 15 = 0
 	IF FLAG 6 = 0
 	IF PLAYER_TOUCHES 13, 8
@@ -453,7 +513,6 @@ PRESS_FIRE AT SCREEN 19
 		SET FLAG 1 = 0
 		SET FLAG 6 = 1
 		SET FLAG 15 = 1
-		INC FLAG 2, 1
 		INC OBJECTS 1
 		SHOW_COINS
 		ENABLE_TYPE_6
@@ -461,8 +520,8 @@ PRESS_FIRE AT SCREEN 19
 		SET TILE (0, 3) = 16
 		SET TILE (13, 8) = 0
 		#TEXT "__________TRAPPED!!___________"
-		TEXT "__________ATRAPADO!!__________"
-		SHOW
+		#TEXT "__________ATRAPADO!!__________"
+		EXTERN 254
 		SOUND 6
 	END
 END
