@@ -13,18 +13,34 @@ void ISR (void) {
 		#asm
 				ld  hl, _isrc
 				inc (hl)
-			#if defined MODE_128K_DUAL && defined ENABLE_ARKOS
-					ld  a, (_ay_player_on)
-					or  a
-					jr  z, skip_arkos
-					
-					ld  b, ARKOS_RAM
-					call SetRAMBank
-					call ARKOS_ADDRESS_ATPLAY
-					ld  b, 0
-					call SetRAMBank
+			#if defined MODE_128K_DUAL 
+				#if defined ENABLE_ARKOS
+						ld  a, (_ay_player_on)
+						or  a
+						jr  z, skip_arkos
+						
+						ld  b, ARKOS_RAM
+						call SetRAMBank
+						call ARKOS_ADDRESS_ATPLAY
+						ld  b, 0
+						call SetRAMBank
 
-				.skip_arkos
+					.skip_arkos
+				#endif
+
+				#if defined ENABLE_WYZ
+						ld  a, (_ay_player_on)
+						or  a
+						jr  z, skip_wyz
+
+						ld  b, WYZ_RAM
+						call SetRAMBank
+						call WYZ_ADDRESS_PLAYERISR
+						ld  b, 0
+						call SetRAMBank
+
+					.skip_wyz
+				#endif
 			#endif
 		#endasm
 	#endif

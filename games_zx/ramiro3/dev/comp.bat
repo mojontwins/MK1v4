@@ -16,6 +16,12 @@ echo Making %game%
 ..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
 
+echo Making music
+cd ..\ogt
+..\utils\pasmo WYZproPlay47aZXc.ASM ..\dev\RAM1.bin RAM1.map > nul
+cd ..\dev
+..\utils\printsize.exe RAM1.bin
+
 echo Making script
 ..\utils\msc.exe ..\script\script.spt msc.h 28 flipflops > nul
 

@@ -31,6 +31,15 @@
 				ld b, 0
 				jp SetRAMBank					
 		#endif
+
+		#ifdef ENABLE_WYZ
+			.wyz_address_call
+				ld b, WYZ_RAM
+				call SetRAMBank
+				call WYZ_ADDRESS_PLAYERINIT				
+				ld b, 0
+				jp SetRAMBank
+		#endif
 	#endif
 
 	.HLshr6_A

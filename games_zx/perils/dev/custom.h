@@ -584,7 +584,7 @@ void select_power (void) {
 		level = 4; 
 
 		update_bellotas ();
-		level=3;
+		//level=3;
 	}
 
 	void hook_init_mainloop (void) {
