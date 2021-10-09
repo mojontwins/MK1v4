@@ -159,7 +159,20 @@ unsigned char room_names [] = 	"    INTERESANTE DESCENSO    "
 								"     LA CRIPTA DE DONOSO    ";
 
 // Jumo
-// TODO: IMPORT SPRITE BINARY
+
+struct sp_SS *sp_jumo;
+extern unsigned char sprite_jumo [];
+#asm
+		defb 0, 255 	
+		defb 0, 255 	
+		defb 0, 255 	
+		defb 0, 255 	
+		defb 0, 255 	
+		defb 0, 255 	
+		defb 0, 255 	
+	._sprite_jumo
+		BINARY "sprite_jumo.bin"
+#endasm
 
 unsigned char jumo_x, jumo_y, jumo_ct;
 
@@ -207,9 +220,9 @@ void redraw_from_buffer (void) {
 
 void clear_temp_string (void) {
 	#asm
-			ld  hl, _temp_string
-			ld  de, _temp_string+1
-			ld  bc, 23
+			ld  hl, _temp_string+1
+			ld  de, _temp_string+2
+			ld  bc, 21
 			ld  a, 32
 			ld  (hl), a
 			ldir
@@ -242,10 +255,13 @@ void show_text_box (unsigned char n) {
 	// build substrings for draw_text.
 
 	//clear_temp_string ();
-	draw_text (4, 6, 40, temp_string);
+	draw_text (4, 6, 32+64, top_string);
 	rdy = 7;
 
 	while (1) {
+		clear_temp_string ();
+		if (rdy > 7) draw_text (4, rdy - 1, 32+64, temp_string);
+
 		#asm
 				// Fill buffer
 				ld  de, _temp_string + 1
@@ -268,9 +284,8 @@ void show_text_box (unsigned char n) {
 				ld  (_gp_gen), hl
 		#endasm
 
-		draw_text (4, rdy ++, 40, temp_string);
-		clear_temp_string ();
-		draw_text (4, rdy ++, 40, temp_string);
+		draw_text (4, rdy ++, 32+64, temp_string);
+		draw_text (4, rdy ++, 32+64, bottom_string);
 
 		sp_UpdateNow ();
 		play_sfx (talk_sounds [rand () & 1]);
@@ -295,6 +310,7 @@ void show_text_box (unsigned char n) {
 		redraw_from_buffer ();
 		hotspot_paint ();
 		render_all_sprites ();
+		sp_UpdateNow  ();
 	}
 	redraw_after_text = 1;
 }
@@ -304,12 +320,16 @@ void show_text_box (unsigned char n) {
 	// Hooks
 
 	void hook_system_inits (void) {
-		// Todo - create custom 8x8 sprite for jumos
+		sp_jumo = sp_CreateSpr (sp_MASK_SPRITE, 2, sprite_jumo, 3);
+		sp_AddColSpr (sp_jumo, sprite_jumo + 32);
 	}
 
 	void hook_init_game (void) {
 		intro_text = 1;
 		player.possee = 0;
+		scenery_info.evil_kills_slowly = 1;
+
+		n_pant=14;
 	}
 
 	void hook_init_mainloop (void) {
@@ -324,7 +344,15 @@ void show_text_box (unsigned char n) {
 
 	void hook_mainloop (void) {
 		if (player.killingzone_beepcount && jumo_ct == 0) {
-			// TODO: Sprite jumo on
+			#asm
+					ld  a, 16
+					ld  (_jumo_ct), a
+					ld  a, (_gpx)
+					add 4
+					ld  (_jumo_x), a
+					ld  a, (_gpy)
+					ld  (_jumo_y), a
+			#endasm
 		}
 
 		if (jumo_ct) {
@@ -336,13 +364,22 @@ void show_text_box (unsigned char n) {
 					dec (hl)
 			#endasm
 
-			if (jumo_y <= 16) jumo_ct = 0;
+			sp_MoveSprAbs (
+				sp_jumo, 
+				spritesClip, 
+				0, 
+				VIEWPORT_Y + (jumo_y >> 3), VIEWPORT_X + (jumo_x >> 3), 
+				jumo_x & 7, jumo_y & 7
+			);
 
-			if (jumo_ct == 0) {
-				// TODO: Sprite jumo off
-			} else {
-				// TODO: Sprite jumo update
-			}
+			if (jumo_y <= 16) jumo_ct = 0;
+		} else {
+			sp_MoveSprAbs (
+				sp_jumo, 
+				spritesClip, 
+				0, 
+				-2, -2, 0, 0
+			);
 		}
 
 		if (latest_hotspot == 1 && player.objs == 15) {
@@ -355,8 +392,6 @@ void show_text_box (unsigned char n) {
 		#asm
 				xor a 
 				ld  (_jumo_ct), a
-
-				// TODO: Sprite jumo off ?
 		#endasm
 
 		// Screen title
@@ -367,7 +402,7 @@ void show_text_box (unsigned char n) {
 				ld  bc, 28
 				ldir
 		#endasm
-		draw_text (2, 22, 87, room_name);		
+		draw_text (2, 22, 32+64, room_name);		
 	}
 
 #endif
