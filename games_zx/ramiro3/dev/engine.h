@@ -3584,6 +3584,12 @@ void move (void) {
 					player.killingzone_beepcount ++;
 					sp_Border (2);
 					play_sfx (4);
+					#ifdef MODE_128K_DUAL
+						#asm
+								halt
+						#endasm
+						sp_Border (0);
+					#endif
 				} else {
 					player.killingzone_framecount ++;
 				}
