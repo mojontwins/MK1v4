@@ -328,7 +328,7 @@ void show_text_box (unsigned char n) {
 		intro_text = 1;
 		player.possee = 0;
 		scenery_info.evil_kills_slowly = 1;
-		if (is128k) arkos_play_music (1);
+		if (is128k) wyz_play_music (1);
 
 		n_pant=14;
 	}
