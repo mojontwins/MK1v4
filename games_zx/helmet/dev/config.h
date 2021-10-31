@@ -20,6 +20,14 @@
 //#define ARKOS_ADDRESS_MT_LOAD_SONG	0xC7FC
 //#define ARKOS_ADDRESS_MT_INIT 		0xC81C
 
+//#define ENABLE_WYZ
+//#define WYZ_RAM 						1
+//#define WYZ_ADDRESS_PLAYERINIT		0xC018	// INIT_BUFFERS		EQU 0C018H
+//#define WYZ_ADDRESS_PLAYERISR			0xC000	// INICIO			EQU 0C000H
+//#define WYZ_ADDRESS_SFX_PLAY			0xC47E	// INICIA_EFECTO	EQU 0C46BH
+//#define WYZ_ADDRESS_MT_LOAD_SONG		0xC087	// CARGA_CANCION	EQU 0C087H
+//#define WYZ_ADDRESS_PLAYER_OFF		0xC062	// PLAYER_OFF		EQU 0C062H
+
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W						8		//

@@ -995,15 +995,14 @@ void cortina (void) {
 #endif
 
 #ifdef USE_COINS
-	void get_coin(unsigned char xx, unsigned char yy) {
+	void get_coin (void) {
 		#ifdef ENABLE_PERSISTENCE
-			_x = xx; _y = yy;
 			persist ();
 		#endif
 
 		flags [COIN_FLAG] ++;
 		
-		set_map_tile (xx, yy, 0, 0);
+		set_map_tile (_x, _y, 0, 0);
 		play_sfx (5);
 
 		#if defined ACTIVATE_SCRIPTING && defined COINS_SCRIPTING
@@ -3584,6 +3583,12 @@ void move (void) {
 					player.killingzone_beepcount ++;
 					sp_Border (2);
 					play_sfx (4);
+					#ifdef MODE_128K_DUAL
+						#asm
+								halt
+						#endasm
+						sp_Border (0);
+					#endif
 				} else {
 					player.killingzone_framecount ++;
 				}

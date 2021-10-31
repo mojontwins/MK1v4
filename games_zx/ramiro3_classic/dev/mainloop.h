@@ -36,6 +36,10 @@ void main (void) {
 				call arkos_address_call
 			#endif
 
+			#ifdef ENABLE_WYZ
+				call wyz_address_call
+			#endif
+
 				ld  a, 1			
 				jr  detectionDone
 
@@ -44,6 +48,11 @@ void main (void) {
 			
 			.detectionDone
 				ld  (_is128k), a
+
+			#ifdef ENABLE_WYZ
+					ld  a, 1
+					ld  (_ay_player_on), a
+			#endif
 		#endif
 	#endasm
 
@@ -724,10 +733,10 @@ void main (void) {
 					#endif
 					{
 
-						//#ifdef BETTER_VERTICAL_CONNECTIONS
+						#ifdef BETTER_VERTICAL_CONNECTIONS
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
 							player.cont_salto = 0;
-						//#endif
+						#endif
 
 						#asm
 							#ifdef CUSTOM_SCREEN_CONNECTIONS

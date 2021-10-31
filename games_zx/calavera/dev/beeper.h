@@ -254,7 +254,7 @@
 	11	talk 2	
 	12  ramiro hover (only AY)
 */
-	
+
 void __FASTCALL__ play_sfx (unsigned char n) {
 
 	#asm
@@ -277,6 +277,21 @@ void __FASTCALL__ play_sfx (unsigned char n) {
 					call ARKOS_ADDRESS_ATSFXPLAY
 					
 					ld b,0
+					call SetRAMBank
+					ei
+					ret
+			#endif
+
+			#ifdef ENABLE_WYZ
+					di
+					ld  b, WYZ_RAM
+					call SetRAMBank
+		
+					; __FASTCALL__ -> fx_number is in l!
+					ld  b, l
+					call WYZ_ADDRESS_SFX_PLAY
+			
+					ld  b, 0
 					call SetRAMBank
 					ei
 					ret

@@ -279,6 +279,7 @@ unsigned char coins_old;
 unsigned char success;
 unsigned char rdi;
 signed int rdj;
+unsigned char rda;
 unsigned char rdx, rdy;
 unsigned char gpit, enit, pad0, pad1, pad_this_frame;
 unsigned char gpx, gpy, gpxx, gpyy;

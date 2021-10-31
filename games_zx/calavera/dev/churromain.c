@@ -74,6 +74,9 @@
 	#ifdef ENABLE_ARKOS
 		#include "arkos.h"
 	#endif
+	#ifdef ENABLE_WYZ
+		#include "wyz.h"
+	#endif
 #endif
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h"

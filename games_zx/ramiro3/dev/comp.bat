@@ -31,7 +31,7 @@ zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
 ..\utils\imanol.exe ^
     in=loader_128.asm-orig ^
     out=loader.asm ^
-    ram1_length=?..\ogt\RAM1.bin ^
+    ram1_length=?RAM1.bin ^
     mb_length=?%game%.bin  > nul
 
 ..\utils\pasmo.exe loader.asm loader.bin
@@ -40,7 +40,7 @@ zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
     basic '%game%' 10 loader.bin ^
     data              loading.bin ^
     data              %game%.bin ^
-    data              ..\ogt\RAM1.bin > nul
+    data              RAM1.bin > nul
 
 echo Output: %game%.tap
 

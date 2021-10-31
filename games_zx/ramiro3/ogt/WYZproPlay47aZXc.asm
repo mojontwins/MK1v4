@@ -1121,6 +1121,10 @@ BUFFER_DEC:     DB      $00
 
 INCLUDE "instrumentos.asm"
 
+;; INCLUIR LOS EFECTOS DE SONIDO:
+
+INCLUDE "efectos.asm"
+
 ;; Las canciones tienen que estar comprimidas con aplib
 
 SONG_0:
@@ -1133,10 +1137,6 @@ SONG_3:
 	INCBIN "03_woodys.mus.bin"
 SONG_4:
 	INCBIN "04_empty.mus.bin"
-
-;; INCLUIR LOS EFECTOS DE SONIDO:
-
-INCLUDE "efectos.asm"
 
 ;; Añadir entradas para cada canción
 				
