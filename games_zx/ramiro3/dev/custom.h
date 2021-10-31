@@ -22,42 +22,43 @@ unsigned char redraw_after_text;
 unsigned char intro_text;
 unsigned char talk_sounds [] = { 7, 11 };
 
+#ifdef LANG_EN
 //                        XXXXXXXXXXXXXXXXXXXXXX
 unsigned char text0 [] = "(DOTTY)%"
-						 "HAY SETAS A RAUDALES!%"
-						 "PERO PAPI, YA LO PETAS%"
-						 "SI CON LAS NORMALES%"
-						 "TRAES SETAS CON TETAS!";
+						 "WOAH! SHROOMS APLENTY!%"
+						 "IT'D GREAT IF YOU ADD%"
+						 "FOR OUR TUMMIES EMPTY%"
+						 "BREASTED SHROOMS, DAD";
 
 unsigned char text1 [] = "(PEPI CARAORTIGA)%"
-						 "SOY AMIGA DE TU HIJA,%"
-						 "NO SOY NADA MOJIGATA.%"
-						 "LUEGO, SI NO SE FIJA,%"
-						 "TE VOY A DAR, PIRATA!";
+						 "I'M DOTTY'S FRIEND%"
+						 "YET NONE THE PRUDISH%"
+						 "JUST FETCH US A BED%"
+						 "'N GET DOWN TO IT!'";
 
 unsigned char text2 [] = "(TAMARA LA TIA RARA)%"
-						 "BUSCO NOVIO VERSADO%"
-						 "EN TEMAS DEL QUERER%"
-						 "ERES ALGO ESMIRRIADO%"
-						 "PERO ME PUEDES VALER";
+						 "I'M LOOKIN' FOR A MAN%"
+						 "WHO DOES GOOD LOVIN'%"
+						 "YOU SURELY NEED A TAN%"
+						 "BUT WE COULD GET GOIN'"
 
 unsigned char text3 [] = "(RAMIRO EL VAMPIRO)%"
-						 "YO ESTARIA INTERESADO%"
-						 "EN BUSCAR UN CAMASTRO%"
-						 "PERO ANDO MUY CANSADO%"
-						 "Y TENGO UN PADRASTRO";
+						 "I'D BE SO INTERESTED%"
+						 "'N BE YER HAMMER DRILL%"
+						 "BUT I'M NOT SO HEATED%"
+						 "NOR I HAVE THE SKILL";
 
 unsigned char text4 [] = "(ALBERTO EL TUERTO)%"
-						 "TE MIRO SIN COMPLEJOS%"
-						 "DESDE HACE UN RATITO%"
-						 "NO SE SI ESTAS LEJOS%"
-						 "O ERES MUY BAJITO.";
+						 "FROM THAT DOOR AJAR%"
+						 "SAW YOU COMMIN' FORTH%"
+						 "DUNNO IF YOU'RE FAR%"
+						 "OR YOU ARE VERY SHORT";
 
 unsigned char text5 [] = "(RAMIRO EL VAMPIRO)%"
-						 "PERDONA SI TE GRITO%"
-						 "ESTO ES LO QUE HAY.%"
-						 "AUNQUE YO SEA BAJITO%"
-						 "TU TAMPOCO ERES ROMAY!";
+						 "SORRY IF I GET MAD!%"
+						 "SO ODD, IF I DIDN'T.%"
+						 "I MAY BE SHORT-MY BAD,%"
+						 "BUT YOU AIN'T PIPPEN!";
 
 unsigned char text6 [] = "(DONOSO EL SEBOSO)%"
 						 "COMO HABRAS NOTADO%"
@@ -112,6 +113,99 @@ unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
 						  "QUE NO SON TONTERIAS%"
 						  "LO DICEN LAS RECETAS:%"
 						  "DE LO QUE COMES,CRIAS";
+
+#else
+	//                        XXXXXXXXXXXXXXXXXXXXXX
+	unsigned char text0 [] = "(DOTTY)%"
+							 "HAY SETAS A RAUDALES!%"
+							 "PERO PAPI, YA LO PETAS%"
+							 "SI CON LAS NORMALES%"
+							 "TRAES SETAS CON TETAS!";
+
+	unsigned char text1 [] = "(PEPI CARAORTIGA)%"
+							 "SOY AMIGA DE TU HIJA,%"
+							 "NO SOY NADA MOJIGATA.%"
+							 "LUEGO, SI NO SE FIJA,%"
+							 "TE VOY A DAR, PIRATA!";
+
+	unsigned char text2 [] = "(TAMARA LA TIA RARA)%"
+							 "BUSCO NOVIO VERSADO%"
+							 "EN TEMAS DEL QUERER%"
+							 "ERES ALGO ESMIRRIADO%"
+							 "PERO ME PUEDES VALER";
+
+	unsigned char text3 [] = "(RAMIRO EL VAMPIRO)%"
+							 "YO ESTARIA INTERESADO%"
+							 "EN BUSCAR UN CAMASTRO%"
+							 "PERO ANDO MUY CANSADO%"
+							 "Y TENGO UN PADRASTRO";
+
+	unsigned char text4 [] = "(ALBERTO EL TUERTO)%"
+							 "TE MIRO SIN COMPLEJOS%"
+							 "DESDE HACE UN RATITO%"
+							 "NO SE SI ESTAS LEJOS%"
+							 "O ERES MUY BAJITO.";
+
+	unsigned char text5 [] = "(RAMIRO EL VAMPIRO)%"
+							 "PERDONA SI TE GRITO%"
+							 "ESTO ES LO QUE HAY.%"
+							 "AUNQUE YO SEA BAJITO%"
+							 "TU TAMPOCO ERES ROMAY!";
+
+	unsigned char text6 [] = "(DONOSO EL SEBOSO)%"
+							 "COMO HABRAS NOTADO%"
+							 "SOY UN TIPO MUY FINO%"
+							 "ME GUSTA COMER HELADO%"
+							 "CUBIERTO DE TOCINO!";
+
+	unsigned char text7 [] = "(RAMIRO EL VAMPIRO)%"
+							 "VAYA MEZCLA SIN PAR%"
+							 "BAJA POR TUS CONDUCTOS%"
+							 "NI ME QUIERO IMAGINAR%"
+							 "EL OLOR DE TUS ERUCTOS";
+
+	unsigned char text8 [] = "(CAMILA LA WILA)%"
+							 "ME GUSTA CAZAR VARONES%"
+							 "COMO A BRUJAS Y MAGAS%"
+							 "PERO NO HAGO POCIONES%"
+							 "YO ME BAJO LAS BRAGAS";
+
+	unsigned char text9 [] = "(RAMIRO EL VAMPIRO)%"
+							 "APARTA DE MI, SIRENA%"
+							 "QUE ANDO DE MISION%"
+							 "AY, VAYA UNA CONDENA%"
+							 "SER VAMPIRO GUAPETON!";
+
+	unsigned char text10 [] = "(RAMIRO EL VAMPIRO)%"
+							  "VAYA, EL BOSQUE MOLA%"
+							  "PERO !AY, QUE OLVIDO!%"
+							  "NO TRAEMOS MERENDOLA%"
+							  "Y NO HEMOS COMIDO...";						  
+
+	unsigned char text11 [] = "(RAMIRO EL VAMPIRO)%"
+							  "DOTTY ESTA COMO IDA%"
+							  "EL HAMBRE LE PIERDE!%"
+							  "SI NO TRAIGO COMIDA%"
+							  "SEGURO QUE ME MUERDE!";
+
+	unsigned char text12 [] = "(RAMIRO EL VAMPIRO)%"
+							  "YA TENGO SUFICIENTES%"
+							  "CON TETAS O SIN TETAS%"
+							  "SON ESTUPEFACIENTES%"
+							  "Y LAS DEJAN MAJARETAS";
+
+	unsigned char text13 [] = "(DOTTY)%"
+							  "AY, ERES EL MAS MEJOR%"
+							  "UN PAPI AZUL CIELO%"
+							  "CON CARITA DE ALFAJOR%"
+							  "Y GRASITA POR EL PELO";
+
+	unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
+							  "COMEROS ESTAS SETAS,%"
+							  "QUE NO SON TONTERIAS%"
+							  "LO DICEN LAS RECETAS:%"
+							  "DE LO QUE COMES,CRIAS";
+#endif
 
 unsigned char *texts [] = {
 	text0, text1, 			// Dotty y Pepi Caraortiga
