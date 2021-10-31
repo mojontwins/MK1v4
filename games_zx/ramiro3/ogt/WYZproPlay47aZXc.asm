@@ -1141,6 +1141,10 @@ INCLUDE "efectos.asm"
 ;; Añadir entradas para cada canción
 				
 TABLA_SONG:     DW      SONG_0
+				DW      SONG_1
+				DW      SONG_2
+				DW      SONG_3
+				DW      SONG_4
 
 ;; Añadir entradas para cada efecto
 
