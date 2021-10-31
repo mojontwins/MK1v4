@@ -23,96 +23,96 @@ unsigned char intro_text;
 unsigned char talk_sounds [] = { 7, 11 };
 
 #ifdef LANG_EN
-//                        XXXXXXXXXXXXXXXXXXXXXX
-unsigned char text0 [] = "(DOTTY)%"
-						 "WOAH! SHROOMS APLENTY!%"
-						 "IT'D GREAT IF YOU ADD%"
-						 "FOR OUR TUMMIES EMPTY%"
-						 "BREASTED SHROOMS, DAD";
+	//                        XXXXXXXXXXXXXXXXXXXXXX
+	unsigned char text0 [] = "(DOTTY)%"
+							 "WOAH! SHROOMS APLENTY!%"
+							 "IT'D GREAT IF YOU ADD%"
+							 "FOR OUR TUMMIES EMPTY%"
+							 "BREASTED SHROOMS, DAD";
 
-unsigned char text1 [] = "(PEPI CARAORTIGA)%"
-						 "I'M DOTTY'S FRIEND%"
-						 "YET NONE THE PRUDISH%"
-						 "JUST FETCH US A BED%"
-						 "'N GET DOWN TO IT!'";
+	unsigned char text1 [] = "(PEPI CARAORTIGA)%"
+							 "I'M DOTTY'S FRIEND%"
+							 "YET NONE THE PRUDISH%"
+							 "JUST FETCH US A BED%"
+							 "'N GET DOWN TO IT!'";
 
-unsigned char text2 [] = "(TAMARA LA TIA RARA)%"
-						 "I'M LOOKIN' FOR A MAN%"
-						 "WHO DOES GOOD LOVIN'%"
-						 "YOU SURELY NEED A TAN%"
-						 "BUT WE COULD GET GOIN'"
+	unsigned char text2 [] = "(TAMARA LA TIA RARA)%"
+							 "I'M LOOKIN' FOR A MAN%"
+							 "WHO DOES GOOD LOVIN'%"
+							 "YOU SURELY NEED A TAN%"
+							 "BUT WE COULD GET GOIN'"
 
-unsigned char text3 [] = "(RAMIRO EL VAMPIRO)%"
-						 "I'D BE SO INTERESTED%"
-						 "'N BE YER HAMMER DRILL%"
-						 "BUT I'M NOT SO HEATED%"
-						 "NOR I HAVE THE SKILL";
+	unsigned char text3 [] = "(RAMIRO EL VAMPIRO)%"
+							 "I'D BE SO INTERESTED%"
+							 "'N BE YER HAMMER DRILL%"
+							 "BUT I'M NOT SO HEATED%"
+							 "NOR I HAVE THE SKILL";
 
-unsigned char text4 [] = "(ALBERTO EL TUERTO)%"
-						 "FROM THAT DOOR AJAR%"
-						 "SAW YOU COMMIN' FORTH%"
-						 "DUNNO IF YOU'RE FAR%"
-						 "OR YOU ARE VERY SHORT";
+	unsigned char text4 [] = "(ALBERTO EL TUERTO)%"
+							 "FROM THAT DOOR AJAR%"
+							 "SAW YOU COMMIN' FORTH%"
+							 "DUNNO IF YOU'RE FAR%"
+							 "OR YOU ARE VERY SHORT";
 
-unsigned char text5 [] = "(RAMIRO EL VAMPIRO)%"
-						 "SORRY IF I GET MAD!%"
-						 "SO ODD, IF I DIDN'T.%"
-						 "I MAY BE SHORT-MY BAD,%"
-						 "BUT YOU AIN'T PIPPEN!";
+	unsigned char text5 [] = "(RAMIRO EL VAMPIRO)%"
+							 "SORRY IF I GET MAD!%"
+							 "SO ODD, IF I DIDN'T.%"
+							 "I MAY BE SHORT-MY BAD,%"
+							 "BUT YOU AIN'T PIPPEN!";
 
-unsigned char text6 [] = "(DONOSO EL SEBOSO)%"
-						 "COMO HABRAS NOTADO%"
-						 "SOY UN TIPO MUY FINO%"
-						 "ME GUSTA COMER HELADO%"
-						 "CUBIERTO DE TOCINO!";
+	unsigned char text6 [] = "(DONOSO EL SEBOSO)%"
+							 "COMO HABRAS NOTADO%"
+							 "SOY UN TIPO MUY FINO%"
+							 "ME GUSTA COMER HELADO%"
+							 "CUBIERTO DE TOCINO!";
 
-unsigned char text7 [] = "(RAMIRO EL VAMPIRO)%"
-						 "VAYA MEZCLA SIN PAR%"
-						 "BAJA POR TUS CONDUCTOS%"
-						 "NI ME QUIERO IMAGINAR%"
-						 "EL OLOR DE TUS ERUCTOS";
+	unsigned char text7 [] = "(RAMIRO EL VAMPIRO)%"
+							 "VAYA MEZCLA SIN PAR%"
+							 "BAJA POR TUS CONDUCTOS%"
+							 "NI ME QUIERO IMAGINAR%"
+							 "EL OLOR DE TUS ERUCTOS";
 
-unsigned char text8 [] = "(CAMILA LA WILA)%"
-						 "ME GUSTA CAZAR VARONES%"
-						 "COMO A BRUJAS Y MAGAS%"
-						 "PERO NO HAGO POCIONES%"
-						 "YO ME BAJO LAS BRAGAS";
+	unsigned char text8 [] = "(CAMILA LA WILA)%"
+							 "ME GUSTA CAZAR VARONES%"
+							 "COMO A BRUJAS Y MAGAS%"
+							 "PERO NO HAGO POCIONES%"
+							 "YO ME BAJO LAS BRAGAS";
 
-unsigned char text9 [] = "(RAMIRO EL VAMPIRO)%"
-						 "APARTA DE MI, SIRENA%"
-						 "QUE ANDO DE MISION%"
-						 "AY, VAYA UNA CONDENA%"
-						 "SER VAMPIRO GUAPETON!";
+	unsigned char text9 [] = "(RAMIRO EL VAMPIRO)%"
+							 "APARTA DE MI, SIRENA%"
+							 "QUE ANDO DE MISION%"
+							 "AY, VAYA UNA CONDENA%"
+							 "SER VAMPIRO GUAPETON!";
 
-unsigned char text10 [] = "(RAMIRO EL VAMPIRO)%"
-						  "VAYA, EL BOSQUE MOLA%"
-						  "PERO !AY, QUE OLVIDO!%"
-						  "NO TRAEMOS MERENDOLA%"
-						  "Y NO HEMOS COMIDO...";						  
+	unsigned char text10 [] = "(RAMIRO EL VAMPIRO)%"
+							  "VAYA, EL BOSQUE MOLA%"
+							  "PERO !AY, QUE OLVIDO!%"
+							  "NO TRAEMOS MERENDOLA%"
+							  "Y NO HEMOS COMIDO...";						  
 
-unsigned char text11 [] = "(RAMIRO EL VAMPIRO)%"
-						  "DOTTY ESTA COMO IDA%"
-						  "EL HAMBRE LE PIERDE!%"
-						  "SI NO TRAIGO COMIDA%"
-						  "SEGURO QUE ME MUERDE!";
+	unsigned char text11 [] = "(RAMIRO EL VAMPIRO)%"
+							  "DOTTY ESTA COMO IDA%"
+							  "EL HAMBRE LE PIERDE!%"
+							  "SI NO TRAIGO COMIDA%"
+							  "SEGURO QUE ME MUERDE!";
 
-unsigned char text12 [] = "(RAMIRO EL VAMPIRO)%"
-						  "YA TENGO SUFICIENTES%"
-						  "CON TETAS O SIN TETAS%"
-						  "SON ESTUPEFACIENTES%"
-						  "Y LAS DEJAN MAJARETAS";
+	unsigned char text12 [] = "(RAMIRO EL VAMPIRO)%"
+							  "YA TENGO SUFICIENTES%"
+							  "CON TETAS O SIN TETAS%"
+							  "SON ESTUPEFACIENTES%"
+							  "Y LAS DEJAN MAJARETAS";
 
-unsigned char text13 [] = "(DOTTY)%"
-						  "AY, ERES EL MAS MEJOR%"
-						  "UN PAPI AZUL CIELO%"
-						  "CON CARITA DE ALFAJOR%"
-						  "Y GRASITA POR EL PELO";
+	unsigned char text13 [] = "(DOTTY)%"
+							  "AY, ERES EL MAS MEJOR%"
+							  "UN PAPI AZUL CIELO%"
+							  "CON CARITA DE ALFAJOR%"
+							  "Y GRASITA POR EL PELO";
 
-unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
-						  "COMEROS ESTAS SETAS,%"
-						  "QUE NO SON TONTERIAS%"
-						  "LO DICEN LAS RECETAS:%"
-						  "DE LO QUE COMES,CRIAS";
+	unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
+							  "COMEROS ESTAS SETAS,%"
+							  "QUE NO SON TONTERIAS%"
+							  "LO DICEN LAS RECETAS:%"
+							  "DE LO QUE COMES,CRIAS";
 
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -431,7 +431,7 @@ void show_text_box (unsigned char n) {
 		scenery_info.evil_kills_slowly = 1;
 		if (is128k) wyz_play_music (1);
 
-		n_pant=23;
+		//n_pant=23;
 	}
 
 	void hook_init_mainloop (void) {
