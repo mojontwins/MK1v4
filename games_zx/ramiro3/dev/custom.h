@@ -3,6 +3,16 @@
 
 // Add here your custom routines & vars
 
+#define FULL_COLOUR
+
+#ifdef FULL_COLOUR
+	#define ATTR_TEXTBOX   56
+	#define ATTR_ROOMNAME  71
+#else
+	#define ATTR_TEXTBOX   (32+64)
+	#define ATTR_ROOMNAME  32
+#endif
+
 // Two sets
 
 unsigned char map_behaviours [] = {
@@ -356,12 +366,12 @@ void show_text_box (unsigned char n) {
 	// build substrings for draw_text.
 
 	//clear_temp_string ();
-	draw_text (4, 6, 32+64, top_string);
+	draw_text (4, 6, ATTR_TEXTBOX, top_string);
 	rdy = 7;
 
 	while (1) {
 		clear_temp_string ();
-		if (rdy > 7) draw_text (4, rdy - 1, 32+64, temp_string);
+		if (rdy > 7) draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
 
 		#asm
 				// Fill buffer
@@ -385,8 +395,8 @@ void show_text_box (unsigned char n) {
 				ld  (_gp_gen), hl
 		#endasm
 
-		draw_text (4, rdy ++, 32+64, temp_string);
-		draw_text (4, rdy ++, 32+64, bottom_string);
+		draw_text (4, rdy ++, ATTR_TEXTBOX, temp_string);
+		draw_text (4, rdy ++, ATTR_TEXTBOX, bottom_string);
 
 		sp_UpdateNow ();
 		play_sfx (talk_sounds [rand () & 1]);
@@ -504,7 +514,7 @@ void show_text_box (unsigned char n) {
 				ld  bc, 28
 				ldir
 		#endasm
-		draw_text (2, 22, 32+64, room_name);		
+		draw_text (2, 22, ATTR_ROOMNAME, room_name);		
 	}
 
 #endif
