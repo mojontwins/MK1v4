@@ -441,7 +441,7 @@ void show_text_box (unsigned char n) {
 		scenery_info.evil_kills_slowly = 1;
 		if (is128k) wyz_play_music (1);
 
-		//n_pant=23;
+		// n_pant=18;
 	}
 
 	void hook_init_mainloop (void) {

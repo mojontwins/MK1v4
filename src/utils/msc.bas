@@ -369,6 +369,13 @@ Function procesaClausulas (f As integer, nPant As Integer) As String
 						Case "BEH":
 							clausula = clausula + mChr (&H21) + mChr (pval (lP (3))) + mChr (pval (lP (5))) + mChr (pval (lP (8)))
 							actionsUsed (&H21) = -1
+						Case "BG":
+							If useShortSetTile then
+								clausula = clausula + mChr (&H23) + mChr (16*(Val (lP (3)) And 15) + (Val (lP (5)) And 15))
+							Else
+								clausula = clausula + mChr (&H23) + mChr (pval (lP (3))) + mChr (pval (lP (5))) 
+							End If
+							actionsUsed (&H23) = -1
 					End Select
 				Case "INC":
 					Select Case lP (1)
@@ -1092,6 +1099,24 @@ if actionsUsed (&H21) Then
 	print #f, "                        map_attr [sc_x + (sc_y << 4) - sc_y] = read_vbyte ();"
 	print #f, "                        break;"
 End If
+
+if actionsUsed (&H23) Then
+	print #f, "                    case 0x23:"
+	print #f, "                        // SET BG (x, y)"
+	If useShortSetTile Then
+		print #f, "                        // Opcode: 20 XY n"
+		print #f, "                        read_byte ();  // fills sc_i = X0, sc_m = Y"
+		print #f, "                        sc_n = (sc_i = (sc_i >> 4)) + (sc_m << 4) - sc_m;"
+		print #f, "                        set_map_tile (sc_i, sc_m, map_buff [sc_n], map_attr [sc_n]);"
+	Else
+		print #f, "                        // Opcode: 20 x y n"
+		print #f, "                        read_x_y ();"
+		print #f, "                        sc_n = sc_x + (sc_y << 4) - sc_y;"
+		print #f, "                        set_map_tile (sc_i >> 4, sc_m, map_buff [sc_n], map_attr [sc_n]);"
+	End If
+	print #f, "                        break;"
+End If
+
 
 if actionsUsed (&H30) Then
 	print #f, "                    case 0x30:"

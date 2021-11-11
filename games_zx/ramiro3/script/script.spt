@@ -209,7 +209,8 @@ PRESS_FIRE AT SCREEN 17
 		ENABLE_TYPE_6
 		REDRAW
 		SET TILE (14, 3) = 16
-		SET TILE (2, 2) = 0
+		# SET TILE (2, 2) = 0
+		#### (2, 2)
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
 		EXTERN 254
@@ -298,7 +299,8 @@ PRESS_FIRE AT SCREEN 24
 		ENABLE_TYPE_6
 		REDRAW
 		SET TILE (14, 7) = 16
-		SET TILE (6, 4) = 0
+		# SET TILE (6, 4) = 0
+		#### (6, 4)
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
 		EXTERN 254
@@ -387,7 +389,8 @@ PRESS_FIRE AT SCREEN 27
 		ENABLE_TYPE_6
 		REDRAW
 		SET TILE (0, 7) = 16
-		SET TILE (13, 8) = 0
+		# SET TILE (13, 8) = 0
+		#### (13, 8)
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
 		EXTERN 254
@@ -513,7 +516,8 @@ PRESS_FIRE AT SCREEN 23
 		ENABLE_TYPE_6
 		REDRAW
 		SET TILE (0, 3) = 16
-		SET TILE (13, 8) = 0
+		# SET TILE (13, 8) = 0
+		#### (13, 8)
 		#TEXT "__________TRAPPED!!___________"
 		#TEXT "__________ATRAPADO!!__________"
 		EXTERN 254

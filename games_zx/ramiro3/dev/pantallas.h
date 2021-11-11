@@ -98,6 +98,8 @@ void title_screen (void) {
 }
 
 void game_ending (void) {
+	if (is128k) wyz_stop_sound ();
+
 	#asm 
 		call SPUpdateNow
 	#endasm
@@ -116,6 +118,8 @@ void game_ending (void) {
 }
 
 void game_over (void) {
+	if (is128k) wyz_stop_sound ();
+
 	//10, 11, 21, 13, GAME_OVER_ATTR
 	#asm
 			ld  a, 10
