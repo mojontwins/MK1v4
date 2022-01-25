@@ -71,58 +71,58 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "BUT YOU AIN'T PIPPEN!";
 
 	unsigned char text6 [] = "(DONOSO EL SEBOSO)%"
-							 "COMO HABRAS NOTADO%"
-							 "SOY UN TIPO MUY FINO%"
-							 "ME GUSTA COMER HELADO%"
-							 "CUBIERTO DE TOCINO!";
+							 "SO CRUDE I MAY SEEM%"
+							 "I OPEN MY MOUTH & GLOP%"
+							 "I JUST ATE ICECREAM%"
+							 "WITH BACON ON TOP!%";
 
 	unsigned char text7 [] = "(RAMIRO EL VAMPIRO)%"
-							 "VAYA MEZCLA SIN PAR%"
-							 "BAJA POR TUS CONDUCTOS%"
-							 "NI ME QUIERO IMAGINAR%"
-							 "EL OLOR DE TUS ERUCTOS";
+							 "WOW, QUITE A MIXTURE!%"
+							 "WILD IS THE STENCH%"
+							 "IT'S LIKE AN ADVENTURE%"
+							 "EVERY TIME YOU BELCH";
 
 	unsigned char text8 [] = "(CAMILA LA WILA)%"
-							 "ME GUSTA CAZAR VARONES%"
-							 "COMO A BRUJAS Y MAGAS%"
-							 "PERO NO HAGO POCIONES%"
-							 "YO ME BAJO LAS BRAGAS";
+							 "I LOVE CHASING MALES%"
+							 "LIKE YOU NICE AUNTIES%"
+							 "BUT I DON'T TELL TALES%"
+							 "I JUST DROP MY PANTIES";
 
 	unsigned char text9 [] = "(RAMIRO EL VAMPIRO)%"
-							 "APARTA DE MI, SIRENA%"
-							 "QUE ANDO DE MISION%"
-							 "AY, VAYA UNA CONDENA%"
-							 "SER VAMPIRO GUAPETON!";
+							 "LET GO OF ME, SIREN!%"
+							 "CUT YER DEADLY CHORUS%"
+							 "OH, IT'S SUCH A BURDEN%"
+							 "TO BE SO DAMN GORGEOUS";
 
 	unsigned char text10 [] = "(RAMIRO EL VAMPIRO)%"
-							  "VAYA, EL BOSQUE MOLA%"
-							  "PERO !AY, QUE OLVIDO!%"
-							  "NO TRAEMOS MERENDOLA%"
-							  "Y NO HEMOS COMIDO...";						  
+							  "HOW I LOVE THIS WOOD%"
+							  "BUT ALAS I FORGOT!%"
+							  "I DIDN'T BRING FOOD%"
+							  "TO FIND SOME I OUGHT!";
 
 	unsigned char text11 [] = "(RAMIRO EL VAMPIRO)%"
-							  "DOTTY ESTA COMO IDA%"
-							  "EL HAMBRE LE PIERDE!%"
-							  "SI NO TRAIGO COMIDA%"
-							  "SEGURO QUE ME MUERDE!";
+							  "DOTTY IS SO SCREWED%"
+							  "SHE IS NOT ALRIGHT!%"
+							  "IF I DON'T GET FOOD%"
+							  "I'M SURE SHE'LL BITE";
 
 	unsigned char text12 [] = "(RAMIRO EL VAMPIRO)%"
-							  "YA TENGO SUFICIENTES%"
-							  "CON TETAS O SIN TETAS%"
-							  "SON ESTUPEFACIENTES%"
-							  "Y LAS DEJAN MAJARETAS";
+							  "MORE THAN ENOUGH!%"
+							  "SHROOMS I'M SHIPPING%"
+							  "THOSE ARE SO ROUGH%"
+							  "THEY'LL BE TRIPPIN'!"
 
 	unsigned char text13 [] = "(DOTTY)%"
-							  "AY, ERES EL MAS MEJOR%"
-							  "UN PAPI AZUL CIELO%"
-							  "CON CARITA DE ALFAJOR%"
-							  "Y GRASITA POR EL PELO";
+							  "I LOVE YOU LIL' PUG!%"
+							  "DADDY, YO' SO FAIR!%"
+							  "YOUR FACE LIKE A MUG%"
+							  "AND SUCH GREASY HAIR";
 
 	unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
-							  "COMEROS ESTAS SETAS,%"
-							  "QUE NO SON TONTERIAS%"
-							  "LO DICEN LAS RECETAS:%"
-							  "DE LO QUE COMES,CRIAS";
+							  "MUSHROOMS YOU MAY EAT%"
+							  "MY DEAREST LADIES,%"
+							  "FEEL HOW THEY BEAT%"
+							  "YOUR ROUND BELLIES!";
 
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -229,38 +229,74 @@ unsigned char *texts [] = {
 };
 
 
-//                        		 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-unsigned char room_names [] = 	"    INTERESANTE DESCENSO    "
-								"    LA CASITA DE AMADOR     "
-								"  EL MIRADOR DE MIRAR CULOS "
-								"      UN RECODO COMODO      "
-								"  EL BARRANCO DEL TIO CANCO "
-								"     EL CERRO DEL PERRO     "
-								"     FIESTA DE PIJAMAS      "
+#ifdef LANG_EN
+	//                        		 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	unsigned char room_names [] = 	"    INTERESANTE DESCENSO    "
+									"    LA CASITA DE AMADOR     "
+									"  EL MIRADOR DE MIRAR CULOS "
+									"      UN RECODO COMODO      "
+									"  EL BARRANCO DEL TIO CANCO "
+									"     EL CERRO DEL PERRO     "
+									"     FIESTA DE PIJAMAS      "
 
-								"     LA VERTICAL ANORMAL    "
-								"   AQUI HUELE COMO A PIPI   "
-								"    UN DESCENSO PELIGROSO   "
-								"     NIDOS DE MONDRULLOS    "
-								"    LA GRUTA DEL HIJOPUTA   "
-								"    AFILADOS MONDADIENTES   "
-								"  DESCENDIENDO MUY PROFUNDO "
+									"     LA VERTICAL ANORMAL    "
+									"   AQUI HUELE COMO A PIPI   "
+									"    UN DESCENSO PELIGROSO   "
+									"     NIDOS DE MONDRULLOS    "
+									"    LA GRUTA DEL HIJOPUTA   "
+									"    AFILADOS MONDADIENTES   "
+									"  DESCENDIENDO MUY PROFUNDO "
 
-								"     SE OYE UN MURMULLO     "
-								"    EL POZO DEL ALBOROZO    "
-								" EN EL TRONCO DUERMO Y RONCO"
-								"     LA CRIPTA DE TAMARA    "
-								"     TAMARA LA TIA RARA     "
-								"   LA DISYUNTIVA NEGATIVA   "
-								"    VENDO MOTO SEMINUEVA    "
+									"     SE OYE UN MURMULLO     "
+									"    EL POZO DEL ALBOROZO    "
+									" EN EL TRONCO DUERMO Y RONCO"
+									"     LA CRIPTA DE TAMARA    "
+									"     TAMARA LA TIA RARA     "
+									"   LA DISYUNTIVA NEGATIVA   "
+									"    VENDO MOTO SEMINUEVA    "
 
-								" HALLO ICH BIN'S DER FICHTL "
-								"       CAMILA LA WILA       "
-								"   UNA CRIPTA O UNA BODEGA  "
-								"    LA CRIPTA DE ALBERTO    "
-								"      ALBERTO EL TUERTO     "
-								"      DONOSO EL SEBOSO      "
-								"     LA CRIPTA DE DONOSO    ";
+									" HALLO ICH BIN'S, DER FICHTL"
+									"       CAMILA LA WILA       "
+									"   UNA CRIPTA O UNA BODEGA  "
+									"    LA CRIPTA DE ALBERTO    "
+									"      ALBERTO EL TUERTO     "
+									"      DONOSO EL SEBOSO      "
+									"     LA CRIPTA DE DONOSO    ";
+#else
+	//                        		 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	unsigned char room_names [] = 	"    INTERESANTE DESCENSO    "
+									"    LA CASITA DE AMADOR     "
+									"  EL MIRADOR DE MIRAR CULOS "
+									"      UN RECODO COMODO      "
+									"  EL BARRANCO DEL TIO CANCO "
+									"     EL CERRO DEL PERRO     "
+									"     FIESTA DE PIJAMAS      "
+
+									"     LA VERTICAL ANORMAL    "
+									"   AQUI HUELE COMO A PIPI   "
+									"    UN DESCENSO PELIGROSO   "
+									"     NIDOS DE MONDRULLOS    "
+									"    LA GRUTA DEL HIJOPUTA   "
+									"    AFILADOS MONDADIENTES   "
+									"  DESCENDIENDO MUY PROFUNDO "
+
+									"     SE OYE UN MURMULLO     "
+									"    EL POZO DEL ALBOROZO    "
+									" EN EL TRONCO DUERMO Y RONCO"
+									"     LA CRIPTA DE TAMARA    "
+									"     TAMARA LA TIA RARA     "
+									"   LA DISYUNTIVA NEGATIVA   "
+									"    VENDO MOTO SEMINUEVA    "
+
+									" HALLO ICH BIN'S, DER FICHTL"
+									"       CAMILA LA WILA       "
+									"   UNA CRIPTA O UNA BODEGA  "
+									"    LA CRIPTA DE ALBERTO    "
+									"      ALBERTO EL TUERTO     "
+									"      DONOSO EL SEBOSO      "
+									"     LA CRIPTA DE DONOSO    ";
+#endif
+									
 
 // Jumo
 
