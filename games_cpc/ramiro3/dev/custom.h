@@ -36,37 +36,37 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "JUST FETCH US A BED%"
 							 "'N GET DOWN TO IT!'";
 
-	unsigned char text2 [] = "(TAMARA LA TIA RARA)%"
+	unsigned char text2 [] = "(AUNTIE TAMARA)%"
 							 "I'M LOOKIN' FOR A MAN%"
 							 "WHO DOES GOOD LOVIN'%"
 							 "YOU SURELY NEED A TAN%"
 							 "BUT WE COULD GET GOIN'"
 
-	unsigned char text3 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text3 [] = "(RAMIRE THE VAMPIRE)%"
 							 "I'D BE SO INTERESTED%"
 							 "'N BE YER HAMMER DRILL%"
 							 "BUT I'M NOT SO HEATED%"
 							 "NOR I HAVE THE SKILL";
 
-	unsigned char text4 [] = "(ALBERTO EL TUERTO)%"
+	unsigned char text4 [] = "(ONE-EYED ALBERT)%"
 							 "FROM THAT DOOR AJAR%"
 							 "SAW YOU COMMIN' FORTH%"
 							 "DUNNO IF YOU'RE FAR%"
 							 "OR YOU ARE VERY SHORT";
 
-	unsigned char text5 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text5 [] = "(RAMIRE THE VAMPIRE)%"
 							 "SORRY IF I GET MAD!%"
 							 "SO ODD, IF I DIDN'T.%"
 							 "I MAY BE SHORT-MY BAD,%"
 							 "BUT YOU AIN'T PIPPEN!";
 
-	unsigned char text6 [] = "(DONOSO EL SEBOSO)%"
+	unsigned char text6 [] = "(FAT PAT)%"
 							 "SO CRUDE I MAY SEEM%"
 							 "I OPEN MY MOUTH & GLOP%"
 							 "I JUST ATE ICECREAM%"
 							 "WITH BACON ON TOP!%";
 
-	unsigned char text7 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text7 [] = "(RAMIRE THE VAMPIRE)%"
 							 "WOW, QUITE A MIXTURE!%"
 							 "WILD IS THE STENCH%"
 							 "IT'S LIKE AN ADVENTURE%"
@@ -78,25 +78,25 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "BUT I DON'T TELL TALES%"
 							 "I JUST DROP MY PANTIES";
 
-	unsigned char text9 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text9 [] = "(RAMIRE THE VAMPIRE)%"
 							 "LET GO OF ME, SIREN!%"
 							 "CUT YER DEADLY CHORUS%"
 							 "OH, IT'S SUCH A BURDEN%"
 							 "TO BE SO DAMN GORGEOUS";
 
-	unsigned char text10 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text10 [] = "(RAMIRE THE VAMPIRE)%"
 							  "HOW I LOVE THIS WOOD%"
 							  "BUT ALAS I FORGOT!%"
 							  "I DIDN'T BRING FOOD%"
 							  "TO FIND SOME I OUGHT!";
 
-	unsigned char text11 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text11 [] = "(RAMIRE THE VAMPIRE)%"
 							  "DOTTY IS SO SCREWED%"
 							  "SHE IS NOT ALRIGHT!%"
 							  "IF I DON'T GET FOOD%"
 							  "I'M SURE SHE'LL BITE";
 
-	unsigned char text12 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text12 [] = "(RAMIRE THE VAMPIRE)%"
 							  "MORE THAN ENOUGH!%"
 							  "SHROOMS I'M SHIPPING%"
 							  "THOSE ARE SO ROUGH%"
@@ -108,7 +108,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "YOUR FACE LIKE A MUG%"
 							  "AND SUCH GREASY HAIR";
 
-	unsigned char text14 [] = "(RAMIRO EL VAMPIRO)%"
+	unsigned char text14 [] = "(RAMIRE THE VAMPIRE)%"
 							  "MUSHROOMS YOU MAY EAT%"
 							  "MY DEAREST LADIES,%"
 							  "FEEL HOW THEY BEAT%"
@@ -222,37 +222,37 @@ unsigned char *texts [] = {
 
 #ifdef LANG_EN
 	//                        		 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	unsigned char room_names [] = 	"    INTERESANTE DESCENSO    "
-									"    LA CASITA DE AMADOR     "
-									"  EL MIRADOR DE MIRAR CULOS "
-									"      UN RECODO COMODO      "
-									"  EL BARRANCO DEL TIO CANCO "
-									"     EL CERRO DEL PERRO     "
-									"     FIESTA DE PIJAMAS      "
+	unsigned char room_names [] = 	"     INTERESTING DESCENT    "
+									"       AMADOR'S HOUSE       "
+									"     THE ASS VIEWPOINT      "
+									"   A COMFORTABLE PATHWAY    "
+									"   UNCLE CANCO'S BARRANCO   "
+									"       THE DOG'S HILL       "
+									"         PYJAMARAMA         "
 
-									"     LA VERTICAL ANORMAL    "
-									"   AQUI HUELE COMO A PIPI   "
-									"    UN DESCENSO PELIGROSO   "
-									"     NIDOS DE MONDRULLOS    "
-									"    LA GRUTA DEL HIJOPUTA   "
-									"    AFILADOS MONDADIENTES   "
-									"  DESCENDIENDO MUY PROFUNDO "
+									"    THE ABNORMAL VERTICAL   "
+									"    SMELLS LIKE TEEN PEE    "
+									"     A DANGEROUS DESCENT    "
+									"       MONDRULLO NESTS      "
+									"     THE FUCKING GROTTO     "
+									"      SHARP TOOTHPICKS      "
+									"     DEEPER UNDERGROUND     "
 
-									"     SE OYE UN MURMULLO     "
-									"    EL POZO DEL ALBOROZO    "
-									" EN EL TRONCO DUERMO Y RONCO"
-									"     LA CRIPTA DE TAMARA    "
-									"     TAMARA LA TIA RARA     "
-									"   LA DISYUNTIVA NEGATIVA   "
-									"    VENDO MOTO SEMINUEVA    "
+									"      A MURMUR IS HEARD     "
+									"       THE WELL OF JOY      "
+									"    SLEEPIN' AND SNORIN'    "
+									"       TAMARA'S CRYPT       "
+									"        AUNTIE TAMARA       "
+									"  THE NEGATIVE DISJUNCTIVE  "
+									"HALF NEW MOTORCYCLE FOR SALE"
 
-									" HALLO ICH BIN'S, DER FICHTL"
-									"       CAMILA LA WILA       "
-									"   UNA CRIPTA O UNA BODEGA  "
-									"    LA CRIPTA DE ALBERTO    "
-									"      ALBERTO EL TUERTO     "
-									"      DONOSO EL SEBOSO      "
-									"     LA CRIPTA DE DONOSO    ";
+									" HALLO ICH BIN'S,DER FICHTL "
+									"       CAMILA THE WILA      "
+									"     A CRYPT OR A CELLAR    "
+									"       ALBERT'S CRYPT       "
+									"       ONE-EYED ALBERT      "
+									"           FAT PAT          "
+									"         PAT'S CRYPT        ";
 #else
 	//                        		 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	unsigned char room_names [] = 	"    INTERESANTE DESCENSO    "
