@@ -23,7 +23,7 @@ cd ..\dev
 ..\utils\printsize.exe RAM1.bin
 
 echo Making script
-..\utils\msc.exe ..\script\script.spt msc.h 28 flipflops > nul
+..\utils\msc.exe ..\script\script.spt msc.h 28 shortsettile > nul
 
 zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
