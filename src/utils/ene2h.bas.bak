@@ -163,6 +163,9 @@ For i = 1 To mapPants
 
 		enTypeCounters (t) = enTypeCounters (t) + 1
 
+		Print #fOut, " 	{";
+		Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x y
+
 		' New logic to ensure x1 < x2, y1 < y2
 		sx = Sgn (xx - x)
 		sy = Sgn (yy - y)
@@ -174,47 +177,16 @@ For i = 1 To mapPants
 			If y > yy Then Swap y, yy
 		End If
 
-		outX1 = 16*x: outY1 = 16*y
-		outX2 = 16*xx: outY2 = 16*yy
-		outMX = mn*sx: outMY = mn*sy
-		outT = t
-
-		' Run commands
-		For k = 0 To cmdIndex - 1
-			If cmds (k).t = t Then 
-				Select Case cmds (k).cmd
-					Case "S":
-						' Setter
-						Select Case cmds (k).o
-							Case "X": outX = cmds (k).v
-							Case "Y": outY = cmds (k).v
-							Case "X1": outX1 = cmds (k).v: x = cmds (k).v
-							Case "Y1": outY1 = cmds (k).v: y = cmds (k).v
-							Case "X2": outX2 = cmds (k).v: xx = cmds (k).v
-							Case "Y2": outY2 = cmds (k).v: yy = cmds (k).v
-							Case "MX": outMX = cmds (k).v
-							Case "MY": outMY = cmds (k).v
-							Case "T": outT = cmds (k).v
-						End Select
-				End Select
-			End If
-		Next k
-
-		Print #fOut, " 	{";
-		Print #fOut, "" & (outX) & ", " & (outY) & ", ";		' x y
-		
 		If compacted Then
 			Print #fOut, "0x" & Hex (16*x + y, 2) & ", ";		' xy1
 			Print #fOut, "0x" & Hex (16*xx + yy, 2) & ", ";		' xy2
 		Else
-			Print #fOut, "" & (outX1) & ", " & (outY1) & ", ";		' x1 y1
-			Print #fOut, "" & (outX2) & ", " & (outY2) & ", ";		' x2 y2
+			Print #fOut, "" & (16*x) & ", " & (16*y) & ", ";		' x1 y1
+			Print #fOut, "" & (16*xx) & ", " & (16*yy) & ", ";		' x2 y2
 		End If
-		
-		Print #fOut, "" & (outMX) &  ", "; 		' mx
-		Print #fOut, "" & (outMY) & ", "; 		' my
-		
-		Print #fOut, "" & (outT); 								' t
+		Print #fOut, "" & (mn * sx) &  ", "; 		' mx
+		Print #fOut, "" & (mn * sy) & ", "; 		' my
+		Print #fOut, "" & t; 								' t
 		Print #fOut, "}";
 
 		If i < mapPants Or j < nEnems Then Print #fOut, "," Else Print #fOut, ""

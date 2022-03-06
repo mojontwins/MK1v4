@@ -11,6 +11,7 @@
 unsigned char resonators_on, resonators_ct, resonators_frames;
 unsigned char player_min_killable;
 unsigned char resct_old;
+unsigned char enem_may_be_paralyzed [3];
 
 unsigned char level, new_level;
 unsigned char new_level_string [] = "LEVEL 00";
@@ -90,8 +91,8 @@ unsigned char hotspots_semaphore;
 // Pezons
 
 signed char pezon_incs [] = {
-    -12, -10, -9, -8, -8, -6, -5, -4, -4, -2, -1, 0,
-    0, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10, 11
+	-12, -10, -9, -8, -8, -6, -5, -4, -4, -2, -1, 0,
+	0, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10, 11
 };
 
 #define PEZON_SPRITE_CELL 		extra_sprite_18_a
@@ -129,6 +130,7 @@ void paralyze_everyone (void) {
 			xor a							// Killable is all
 			ld  (_player_min_killable), a 
 
+		/*
 			ld  hl, _en_an_count
 			ld  de, _en_an_state
 			ld  b, 3
@@ -141,6 +143,32 @@ void paralyze_everyone (void) {
 			inc de
 
 			djnz paralyze_do
+		*/
+
+			ld  bc, 3
+		.paralyze_do
+			dec c
+
+			ld  hl, _enem_may_be_paralyzed
+			add hl, bc
+			ld  a, (hl)
+			or  a
+			jr  z, paralyze_next
+
+			ld  a, 0xff
+			ld  hl, _en_an_count
+			add hl, bc
+			ld  (hl), a
+
+			ld  a, ENEM_PARALYZED
+			ld  hl, _en_an_state
+			add hl, bc
+			ld  (hl), a
+
+		.paralyze_next
+			xor a
+			or  c
+			jr  nz, paralyze_do
 	#endasm
 }
 
@@ -954,7 +982,8 @@ void select_power (void) {
 		malotes [enoffsmasi].mx = 0;
 		malotes [enoffsmasi].my = (malotes [enoffsmasi].x1 < malotes [enoffsmasi].x2);
 		*/
-		
+		enem_may_be_paralyzed [enit] = 1;
+
 		#asm
 				ld  hl, (_enoffsmasi)
 				call _calc_baddies_pointer
@@ -988,6 +1017,7 @@ void select_power (void) {
 				ld  (ix+7), a
 		#endasm
 		en_an_next_frame [enit] = GYROSAW_SPRITE_CELL;
+		enem_may_be_paralyzed [enit] = 0;
 		#asm
 				ret
 

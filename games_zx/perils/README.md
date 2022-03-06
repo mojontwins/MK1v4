@@ -301,3 +301,38 @@ En C, para plantear, con mx el contador:
 
 Los zurullis deberían poder matarse, así que los colocaré como tipo 5 y modificaré el paralyzed.
 
+## No paralizar sierras
+
+Para no paralizar las sierras tengo que saber el tipo de los enemigos en la rutina que paraliza, y ese cálculo puede ser complejo fuera del bucle de enemigos: hay que tomar el puntero a los enemigos de la pantalla, sumar 10 por cada enemigo, y luego el offset de t. Creo que es más sencillo que meta un sencillo array de 3 entradas que diga si cada enmigo es paralizable y que se establezca en la inicialización de los enemigos.
+
+La rutina que paraliza se complica bastante, con lo simple que era antes... pero así es la vida.
+
+```
+    #asm
+            ld  bc, 3
+        .paralyze_do
+            dec c
+
+            ld  hl, _enem_may_be_paralyzed
+            add hl, bc
+            ld  a, (hl)
+            or  a
+            jr  z, paralyze_next
+
+            ld  a, 0xff
+            ld  hl, _en_an_count
+            add hl, bc
+            ld  (hl), a
+
+            ld  a, ENEM_PARALYZED
+            ld  hl, _en_an_state
+            add hl, bc
+            ld  (hl), a
+
+        .paralyze_next
+            xor a
+            or  c
+            jr  nz, paralyze_do
+    #endasm
+```
+
