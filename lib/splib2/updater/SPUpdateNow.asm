@@ -573,7 +573,6 @@ ENDIF
 
    push hl                       ; save char struct + 9
 
-
    ;; na_th_an
 IF FLASHASFG
    ; Check if we must skip sprite rendering based upon cell attribute (bit 7 set = no sprites)

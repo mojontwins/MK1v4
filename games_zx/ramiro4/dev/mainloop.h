@@ -622,7 +622,13 @@ void main (void) {
 			// Update to screen
 
 			#asm 
+					ld  a, (_n_pant)
+					ld  c, a
+					ld  a, (_on_pant)
+					cp  c
+					jr  nz, skipupd
 				call SPUpdateNow
+				.skipupd
 			#endasm
 			
 			// Dead enemies

@@ -279,7 +279,7 @@ void set_hotspot (unsigned char hn) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 1;
+		level = 3;
 		phaskey = 0;
 		openlocks = 0;
 	}

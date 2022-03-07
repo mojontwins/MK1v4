@@ -89,4 +89,3 @@
 ; Extra stuff
 ; use attr bit 7 for fg cells (sprites not drawn on them)
     DEFC FLASHASFG = 1
-    

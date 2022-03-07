@@ -779,6 +779,7 @@ void select_power (void) {
 			update_bellotas ();
 		} else if (latest_hotspot == 34) {
 			if (hotspots_semaphore == 0) {
+				saca_a_todo_el_mundo_de_aqui ();
 				select_power ();
 				hotspots [n_pant].act = 1;
 				on_pant = 0xff;
