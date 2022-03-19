@@ -119,6 +119,7 @@
 #define PUSH_OVER_FLOOR 					// Must be on floor to push
 #define PUSH_AND_PULL 						// Use fire+LEFT/RIGHT to push/pull in side view
 #define PUSH_AND_PULL_PILES 				// Can push/pull piles of stacked boxes
+//#define PUSH_ON_FLOOR 					// Player MUST be on floor to push/pull
 #define PLAYER_GRAB_FRAME 			2		// Use with PUSH_AND_PULL, which frame 0-3.
 //#define FALLING_BOXES						// If defined, boxes can fall off ledges.
 //#define FALLING_BOXES_SPEED 		4		// Boxes fall every nth frame.
@@ -274,22 +275,22 @@
 // This sections defines how stuff is rendered, where to show counters, etcetera
 
 #define VIEWPORT_X					1		//
-#define VIEWPORT_Y					1		// Viewport character coordinates
+#define VIEWPORT_Y					0		// Viewport character coordinates
 
-#define LIFE_X						3		//
-#define LIFE_Y						23		// Life gauge counter character coordinates
+#define LIFE_X						13		//
+#define LIFE_Y						22		// Life gauge counter character coordinates
 //#define DRAW_HI_DIGIT	
 //#define LIFE_H_X 					1
 //#define LIFE_H_Y					8
 
-#define OBJECTS_X					27		//
-#define OBJECTS_Y					23		// Objects counter character coordinates
+#define OBJECTS_X					20		//
+#define OBJECTS_Y					22		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 #define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
-#define KEYS_X						22		//
-#define KEYS_Y						23		// Keys counter character coordinates
+#define KEYS_X						27		//
+#define KEYS_Y						22		// Keys counter character coordinates
 
 //#define SHOW_KILLED
 //#define SHOW_TOTAL

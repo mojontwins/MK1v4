@@ -110,26 +110,31 @@ void todos_rescatados_check (void) {
 		// New level screen 
 
 		if (new_level) {
-			new_level = 0;
-			sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
-			sp_Invalidate (spritesClip, spritesClip);
-			new_level_string [7] = level + '1';
-			draw_text (12, 11, 71, new_level_string);
-			draw_text (11, 13, 71, "GET READY!");
-			#asm 
-				call SPUpdateNow
-			#endasm
-			play_sfx (10);
-			espera_activa (150);
-			n_pant = scr_ini [level];
-			init_player_values ();
-			for (gpit = 0; gpit < MAP_W*MAP_H; gpit ++) {
-				if (hotspots [n_pant].tipo == 1) hotspots [n_pant].act = 1;
+			#ifdef DEMO
+				if (level == 2) game_loop_flag = 1; else
+			#endif
+			{
+				new_level = 0;
+				sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
+				sp_Invalidate (spritesClip, spritesClip);
+				new_level_string [7] = level + '1';
+				draw_text (12, 11, 71, new_level_string);
+				draw_text (11, 13, 71, "GET READY!");
+				#asm 
+					call SPUpdateNow
+				#endasm
+				play_sfx (10);
+				espera_activa (150);
+				n_pant = scr_ini [level];
+				init_player_values ();
+				for (gpit = 0; gpit < MAP_W*MAP_H; gpit ++) {
+					if (hotspots [n_pant].tipo == 1) hotspots [n_pant].act = 1;
+				}
+				player.objs = 0; 
+				enemy_killer = 0xff;
+				on_pant = 0xff;
+				flags [PLATFORMS_ON_FLAG] = (level == 2) ? 0 : 1;
 			}
-			player.objs = 0; 
-			enemy_killer = 0xff;
-			on_pant = 0xff;
-			flags [PLATFORMS_ON_FLAG] = (level == 2) ? 0 : 1;
 		}
 	}
 
@@ -225,8 +230,8 @@ void todos_rescatados_check (void) {
 			set_map_tile (ini_x [level], ini_y [level], 30, 0);
 			set_map_tile (ini_x [level], ini_y [level] + 1, 31, 8);
 			gp_gen = "RESCATALOS Y REGRESA AQUI!";
-		} else gp_gen = "                          ";
-		draw_text (3, 0, 7, gp_gen);
+			draw_text (3, 0, 7, gp_gen);
+		} 
 
 		todos_rescatados_check ();
 	}
