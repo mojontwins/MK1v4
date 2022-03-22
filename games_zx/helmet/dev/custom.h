@@ -20,6 +20,7 @@ unsigned char ini_y [] = { 8, 8 };
 unsigned char hostages [] = { 1, 3 };
 unsigned char new_level;
 unsigned char level;
+unsigned char first_time;
 
 unsigned char new_level_string [] = "LEVEL 00";
 
@@ -55,9 +56,53 @@ extern unsigned char sprite_alarm [];
 
 // Add here your custom routines & vars
 
+void text_prepare (void) {
+	saca_a_todo_el_mundo_de_aqui ();
+	
+	#asm
+			ld  ix, (_sp_alarm)
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+			call SPMoveSprAbs
+	#endasm
+	
+	// Validate whole screen so sprites stay on next update
+	#asm
+			LIB SPValidate
+			ld  c, VIEWPORT_X
+			ld  b, VIEWPORT_Y
+			ld  d, VIEWPORT_Y+19
+			ld  e, VIEWPORT_X+29
+			ld  iy, fsClipStruct
+			call SPValidate
+	#endasm	
+
+	#asm
+			ld  a, 4
+			ld  (__x), a
+			ld  a, 11
+			ld  (__y), a
+			ld  a, 27
+			ld  (__x2), a
+			ld  a, 13
+			ld  (__y2), a
+			ld  a, GAME_OVER_ATTR
+			ld  (__t), a
+	#endasm					
+	draw_rectangle ();
+}
+
 void todos_rescatados_check (void) {
 	if (player.objs == hostages [level]) {
-		draw_text (3, 0, 7, "TODOS RESCATADOS! REGRESA!");
+		text_prepare ();		
+		draw_text (6, 12, GAME_OVER_ATTR, "RESCATADOS, REGRESA!");
+		#asm 
+			call SPUpdateNow
+		#endasm
+		play_sfx (10);
+		on_pant = 0x99;
 	}
 }
 
@@ -83,19 +128,7 @@ void todos_rescatados_check (void) {
 		if (n_pant == scr_ini [level] && player.objs == hostages [level]) {
 			if (((gpx + 8) >> 4) == ini_x [level] &&
 				((gpy + 8) >> 4) == ini_y [level]) {
-				#asm
-						ld  a, 7
-						ld  (__x), a
-						ld  a, 11
-						ld  (__y), a
-						ld  a, 24
-						ld  (__x2), a
-						ld  a, 13
-						ld  (__y2), a
-						ld  a, GAME_OVER_ATTR
-						ld  (__t), a
-				#endasm
-				draw_rectangle ();	
+				text_prepare ();
 				draw_text (8, 12, GAME_OVER_ATTR, "MISION CUMPLIDA!");
 				#asm 
 					call SPUpdateNow
@@ -134,6 +167,7 @@ void todos_rescatados_check (void) {
 				enemy_killer = 0xff;
 				on_pant = 0xff;
 				flags [PLATFORMS_ON_FLAG] = (level == 2) ? 0 : 1;
+				first_time = 1;
 			}
 		}
 	}
@@ -167,41 +201,7 @@ void todos_rescatados_check (void) {
 			play_sfx (3);
 			play_sfx (10);
 
-			saca_a_todo_el_mundo_de_aqui ();
-			// sp_MoveSprAbs (sp_alarm, spritesClip, 0, 20+VIEWPORT_Y, 30+VIEWPORT_X, 0, 0);
-			#asm
-					ld  ix, (_sp_alarm)
-					ld  iy, vpClipStruct
-					ld  bc, 0
-					ld  hl, 0xfefe	// -2, -2
-					ld  de, 0
-					call SPMoveSprAbs
-			#endasm
-			
-			// Validate whole screen so sprites stay on next update
-			#asm
-					LIB SPValidate
-					ld  c, VIEWPORT_X
-					ld  b, VIEWPORT_Y
-					ld  d, VIEWPORT_Y+19
-					ld  e, VIEWPORT_X+29
-					ld  iy, fsClipStruct
-					call SPValidate
-			#endasm	
-
-			#asm
-					ld  a, 7
-					ld  (__x), a
-					ld  a, 11
-					ld  (__y), a
-					ld  a, 24
-					ld  (__x2), a
-					ld  a, 13
-					ld  (__y2), a
-					ld  a, GAME_OVER_ATTR
-					ld  (__t), a
-			#endasm					
-			draw_rectangle ();
+			text_prepare ();
 			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
 			
 			#asm 
@@ -221,6 +221,20 @@ void todos_rescatados_check (void) {
 		if (latest_hotspot == 1) {
 			todos_rescatados_check ();
 		}
+
+		// First time message
+		if (first_time == 1) {
+			first_time = 2; // Make sure screen has been rendered!
+		} else if (first_time == 2) {
+			first_time = 0;
+			text_prepare ();		
+			draw_text (6, 12, GAME_OVER_ATTR, "RESCATALOS Y REGRESA");
+			#asm 
+				call SPUpdateNow
+			#endasm
+			play_sfx (10);
+			on_pant = 0x99;
+		}
 	}
 
 	void hook_entering (void) {	
@@ -229,8 +243,6 @@ void todos_rescatados_check (void) {
 		if (n_pant == scr_ini [level]) {
 			set_map_tile (ini_x [level], ini_y [level], 30, 0);
 			set_map_tile (ini_x [level], ini_y [level] + 1, 31, 8);
-			gp_gen = "RESCATALOS Y REGRESA AQUI!";
-			draw_text (3, 0, 7, gp_gen);
 		} 
 
 		todos_rescatados_check ();

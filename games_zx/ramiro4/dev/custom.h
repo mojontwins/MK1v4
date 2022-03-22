@@ -228,8 +228,8 @@
 
 		unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
 								  "RECIBO CON ALBOROTO%"
-								  "TU BELLO REGALO: UNAS%"
-								  "BRAGAS PA MI TOTO";
+								  "TU BELLO REGALO PILLO%"
+								  "!BRAGAS PA MI TOTO!";
 
 		unsigned char text24 [] = "QUE LUSTROSO QUEDARA%"
 								  "EL CUERO DE MI ARNES%"
