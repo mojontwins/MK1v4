@@ -311,7 +311,7 @@ void todos_rescatados_check (void) {
 
 			#asm
 					ld  bc, (_enit)
-					ld  bc, 0 							// bc will be our index
+					ld  b, 0 							// bc will be our index
 
 					ld  hl, _en_an_facing
 					add hl, bc							// hl -> en_an_facing [enit]
@@ -412,17 +412,17 @@ void todos_rescatados_check (void) {
 
 					ld  a, (__en_x)
 					ld  d, a
-					sla a
-					sla a
-					sla a
-					sla a
+					srl a
+					srl a
+					srl a
+					srl a
 					ld  (_en_xx), a
 					
 					ld  a, (__en_y)
-					sla a
-					sla a
-					sla a
-					sla a
+					srl a
+					srl a
+					srl a
+					srl a
 					ld  (_en_yy), a
 
 					// Tile aligned horizontally?
@@ -452,10 +452,9 @@ void todos_rescatados_check (void) {
 					jr  nz, _patroller_turn_around
 
 				._patroller_advance
-					ld  a, (__en_mx)
-					ld  c, a
+					ld  hl, __en_mx					
 					ld  a, (__en_x)
-					add c
+					add (hl)
 					ld  (__en_x), a
 					jr  _patroller_bg_collision_done
 
