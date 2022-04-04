@@ -407,26 +407,28 @@ void todos_rescatados_check (void) {
 					push bc
 
 					ld  a, (__en_mx)
+					ld  e, a
 					or  a
 					jr  z, _patroller_bg_collision_done
 
 					ld  a, (__en_x)
 					ld  d, a
-					srl a
-					srl a
-					srl a
-					srl a
+					sla a
+					sla a
+					sla a
+					sla a
+					add e 								// + _en_mx
 					ld  (_en_xx), a
 					
 					ld  a, (__en_y)
-					srl a
-					srl a
-					srl a
-					srl a
+					sla a
+					sla a
+					sla a
+					sla a
 					ld  (_en_yy), a
 
 					// Tile aligned horizontally?
-					ld  a, d 
+					ld  a, d  							// _en_x
 					and 15
 					jr  nz, _patroller_advance
 
