@@ -5633,6 +5633,11 @@ void mueve_bicharracos (void) {
 							ld  (hl), a
 
 						._cuadrators_update_done
+
+						#ifdef ENEMIES_COLLIDE
+								// Cuadrators don't like collisions with BG!
+								jp _en_bg_collision_end
+						#endif
 					#endasm						
 					}
 				#endif
@@ -5774,7 +5779,6 @@ void mueve_bicharracos (void) {
 							call en_xx_calc
 							call en_yy_calc
 
-
 							ld  a, (__en_mx)
 							or  a
 							jr  z, _en_bg_collision_horz_done
@@ -5836,6 +5840,8 @@ void mueve_bicharracos (void) {
 							ld  (__en_mx), a
 						
 						._en_bg_collision_horz_done
+
+							call en_xx_calc
 
 							ld  a, (__en_my)
 							or  a

@@ -735,7 +735,7 @@ unsigned int __FASTCALL__ abs (int n) {
 #if defined PLAYER_CAN_HIDE
 	unsigned char player_hidden (void) {
 		#ifndef HIDDEN_CAN_MOVE
-			if ( (gpy & 15) == 0 && player.vx == 0 )
+			if ( player.possee && player.vx == 0 )
 		#endif
 		{
 			//if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
@@ -1188,6 +1188,7 @@ void adjust_to_tile_y (void) {
 	}
 #endif
 
+// player_move
 void move (void) {
 	gpcx = player.x;
 	gpcy = player.y;
@@ -1980,9 +1981,11 @@ void move (void) {
 					and sp_FIRE
 					jp  nz, push_pull_done
 
-					ld  a, (_player + 26) 	// player.possee
-					or  a
-					jp  z, push_pull_done
+					#ifdef PUSH_ON_FLOOR
+						ld  a, (_player + 26) 	// player.possee
+						or  a
+						jp  z, push_pull_done
+					#endif
 
 				.push_pull_do 
 
@@ -2187,6 +2190,7 @@ void move (void) {
 					//  gpxx = rdx >> 4; gpx = rdx; player.x = gpx << 6; 
 				
 					ld  a, (_rdx)
+					ld  c, a
 					ld  (_gpx), a
 					srl a
 					srl a
@@ -2201,6 +2205,7 @@ void move (void) {
 					ld  l, 6
 					call l_asl
 					*/
+					ld  a, c
 					call Ashl16_HL
 					ld  (_player), hl 		// player.x
 
@@ -2249,9 +2254,11 @@ void move (void) {
 					and sp_FIRE
 					jp  nz, push_pull_done
 
-					ld  a, (_player + 26) 	// player.possee
-					or  a
-					jp  z, push_pull_done
+					#ifdef PUSH_ON_FLOOR
+						ld  a, (_player + 26) 	// player.possee
+						or  a
+						jp  z, push_pull_done
+					#endif
 
 				.push_pull_do 
 
@@ -2452,9 +2459,9 @@ void move (void) {
 
 				.push_pull_undo
 					//  gpxx = rdx >> 4; gpx = rdx; player.x = gpx << 6; 
-				
 					ld  a, (_rdx)
 					ld  (_gpx), a
+					ld  c, a
 					srl a
 					srl a
 					srl a
@@ -2468,6 +2475,7 @@ void move (void) {
 					ld  l, 6
 					call l_asl
 					*/
+					ld  a, c
 					call Ashl16_HL
 					ld  (_player), hl 		// player.x
 
@@ -3349,8 +3357,7 @@ void move (void) {
 					#endasm
 					cpc_Border (0x54);
 				} else {
-					player.killingzone_framecount ++;
-					
+					player.killingzone_framecount ++;				
 				}
 			}
 		} else {
@@ -4664,6 +4671,7 @@ void draw_scr_background (void) {
 				ld  (__y), a
 				xor a
 				ld  (__t), a
+				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
@@ -4904,20 +4912,19 @@ void draw_scr (void) {
 
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
-				#ifdef BOXES_ONLY_KILL_TYPE
-					if (_en_t == BOXES_ONLY_KILL_TYPE) {
-						flags [COUNT_KILLABLE_ON] ++;
-						continue;
-					}
-				#endif
-				#ifdef PLAYER_MIN_KILLABLE
-					if (_en_t >= PLAYER_MIN_KILLABLE) {
-						flags [COUNT_KILLABLE_ON] ++;
-					}
-				#endif
-				#if !defined(BOXES_ONLY_KILL_TYPE) && !defined (PLAYER_MIN_KILLABLE)
+				if (1
+					#ifdef BOXES_ONLY_KILL_TYPE
+						&& _en_t == BOXES_ONLY_KILL_TYPE
+					#endif
+					#ifdef PLAYER_MIN_KILLABLE
+						&& _en_t >= PLAYER_MIN_KILLABLE
+					#endif
+					#ifdef PLAYER_MAX_KILLABLE
+						&& _en_t <= PLAYER_MAX_KILLABLE
+					#endif
+				) {
 					flags [COUNT_KILLABLE_ON] ++;
-				#endif
+				}
 			#endif
 		#endif
 	}
@@ -5027,10 +5034,10 @@ void platform_get_player (void) {
 				call _render_this_enemy
 		#endasm
 
-		play_sfx (10);
 		cpc_UpdateNow (1);
 		cpc_HardPause (50);
 
+		play_sfx (10);
 		en_an_next_frame [enit] = sprite_18_a;
 
 		_en_t |= 16;			// dead
