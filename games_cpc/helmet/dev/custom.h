@@ -29,9 +29,11 @@ unsigned char new_level_string [] = "LEVEL 00";
 signed char en_directions [] = {-1, 0, 1, -1, 0, 1, -1, 1};
 unsigned char en_an_facing [3];
 unsigned char en_an_walk_ct [3];
-unsigned char *patrullero_cells [] = {
-	extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a
-};
+extern unsigned char *patrullero_cells [0];
+#asm
+	._patrullero_cells
+		defw SPRITE_18, SPRITE_19, SPRITE_1A, SPRITE_1B
+#endasm
 unsigned char patrullero_touch;
 
 // Alarm counter & state
@@ -46,12 +48,10 @@ unsigned char alarm_max_time;
 
 // Sprite "alarm"
 
-struct sp_SS *sp_alarm;
 extern unsigned char sprite_alarm [];
-#asm
-		defb 0, 255 	// Nifty splib2 shortcuts
+#asm		
 	._sprite_alarm
-		BINARY "sprite_alarm.bin"
+		BINARY "sprites_alarm.bin"
 #endasm
 
 // Add here your custom routines & vars
@@ -59,6 +59,7 @@ extern unsigned char sprite_alarm [];
 void text_prepare (void) {
 	saca_a_todo_el_mundo_de_aqui ();
 	
+	/*
 	#asm
 			ld  ix, (_sp_alarm)
 			ld  iy, vpClipStruct
@@ -67,17 +68,7 @@ void text_prepare (void) {
 			ld  de, 0
 			call SPMoveSprAbs
 	#endasm
-	
-	// Validate whole screen so sprites stay on next update
-	#asm
-			LIB SPValidate
-			ld  c, VIEWPORT_X
-			ld  b, VIEWPORT_Y
-			ld  d, VIEWPORT_Y+19
-			ld  e, VIEWPORT_X+29
-			ld  iy, fsClipStruct
-			call SPValidate
-	#endasm	
+	*/
 
 	#asm
 			ld  a, 4
@@ -98,9 +89,7 @@ void todos_rescatados_check (void) {
 	if (player.objs == hostages [level]) {
 		text_prepare ();		
 		draw_text (6, 12, GAME_OVER_ATTR, "RESCATADOS, REGRESA!");
-		#asm 
-			call SPUpdateNow
-		#endasm
+		cpc_UpdateNow (0);
 		play_sfx (10);
 		on_pant = 0x99;
 	}
@@ -111,8 +100,10 @@ void todos_rescatados_check (void) {
 	// Hooks
 
 	void hook_system_inits (void) {
+		/*
 		sp_alarm = sp_CreateSpr (sp_MASK_SPRITE, 2, sprite_alarm, 3);
 		sp_AddColSpr (sp_alarm, sprite_alarm + 32);
+		*/
 	}
 
 	void hook_init_game (void) {
@@ -130,9 +121,7 @@ void todos_rescatados_check (void) {
 				((gpy + 8) >> 4) == ini_y [level]) {
 				text_prepare ();
 				draw_text (8, 12, GAME_OVER_ATTR, "MISION CUMPLIDA!");
-				#asm 
-					call SPUpdateNow
-				#endasm
+				cpc_UpdateNow (0);
 				beepet ();
 				espera_activa (100);
 				level ++;
@@ -148,14 +137,10 @@ void todos_rescatados_check (void) {
 			#endif
 			{
 				new_level = 0;
-				sp_ClearRect (spritesClip, 0, 0, sp_CR_TILES);
-				sp_Invalidate (spritesClip, spritesClip);
 				new_level_string [7] = level + '1';
 				draw_text (12, 11, 71, new_level_string);
 				draw_text (11, 13, 71, "GET READY!");
-				#asm 
-					call SPUpdateNow
-				#endasm
+				cpc_UpdateNow (0);
 				play_sfx (10);
 				espera_activa (150);
 				n_pant = scr_ini [level];
@@ -173,7 +158,7 @@ void todos_rescatados_check (void) {
 	}
 
 	void hook_mainloop (void) {
-		sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, half_life + (alarm_y & 7));
+		//sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, half_life + (alarm_y & 7));
 		alarm_x = 240;
 
 		// Alarm counter
@@ -195,18 +180,14 @@ void todos_rescatados_check (void) {
 			alarm >= (player.objs == hostages [level] ? MAX_ALARM_TIME_COSCAO : MAX_ALARM_TIME_NORMAL)
 			|| patrullero_touch
 		) {
-			#asm 
-				call SPUpdateNow
-			#endasm
+			cpc_UpdateNow (1);
 			play_sfx (3);
 			play_sfx (10);
 
 			text_prepare ();
 			draw_text (8, 12, GAME_OVER_ATTR, "TE COGIMO PRIMO!");
 			
-			#asm 
-				call SPUpdateNow
-			#endasm
+			cpc_UpdateNow (0);
 			play_sfx (10); play_sfx (8);
 			espera_activa (100);
 			player.is_dead = 1;
@@ -229,9 +210,7 @@ void todos_rescatados_check (void) {
 			first_time = 0;
 			text_prepare ();		
 			draw_text (6, 12, GAME_OVER_ATTR, "RESCATALOS Y REGRESA");
-			#asm 
-				call SPUpdateNow
-			#endasm
+			cpc_UpdateNow (0);
 			play_sfx (10);
 			on_pant = 0x99;
 		}
@@ -489,9 +468,42 @@ void todos_rescatados_check (void) {
 				._patroller_set_frame 
 					ld  (_rdd), a 
 					push bc
+			/*
 			#endasm
 			en_an_next_frame [enit] = patrullero_cells [en_an_facing [enit] + rdd];
 			#asm
+			*/
+					ld  d, a 		// D = rdd
+					
+					ld  hl, _en_an_facing
+					add hl, bc 
+					ld  a, (hl)		// A = en_an_facing [enit]
+
+					add d  			// A = en_an_facing [enit] + rdd
+
+					sla a 			// x2 (patrullero_cells is 16bit array)
+
+					ld  d, 0 
+					ld  e, a 
+					ld  hl, _patrullero_cells
+					add hl, de  	// HL -> patrullero_cells [en_an_facing [enit] + rdd];
+
+					ld  c, (hl) 	// LSB
+					inc hl 
+					ld  b, (hl) 	// MSB
+									// BC = patrullero_cells [en_an_facing [enit] + rdd];
+
+					ld  a, (_enit)
+					sla a 			// x2 (en_an_next_frame is 16bit array)
+
+					ld  d, 0
+					ld  e, a 					
+					ld  hl, _en_an_next_frame 
+					add hl, de 		// HL -> en_an_next_frame [enit]
+
+					ld  (hl), c  	// LSB
+					inc hl 
+					ld  (hl), b 	// MSB
 
 					// I can see you!
 
