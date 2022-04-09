@@ -906,7 +906,7 @@ void main (void) {
 				#endif
 
 				#ifndef ROW_MAP
-					#ifdef BETTER_VERTICAL_CONNECTIONS
+					#if defined BETTER_VERTICAL_CONNECTIONS && (VIEWPORT_Y > 0)
 						if (player.y == -512 && player.vy < 0 && n_pant >= MAP_W) 
 					#else
 						if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) 
