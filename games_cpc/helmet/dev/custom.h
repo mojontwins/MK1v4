@@ -21,6 +21,7 @@ unsigned char hostages [] = { 1, 3 };
 unsigned char new_level;
 unsigned char level;
 unsigned char first_time;
+unsigned char inside;
 
 unsigned char new_level_string [] = "LEVEL 00";
 
@@ -91,6 +92,7 @@ void todos_rescatados_check (void) {
 		draw_text (6, 12, GAME_OVER_ATTR, "RESCATADOS, REGRESA!");
 		cpc_UpdateNow (0);
 		play_sfx (10);
+		espera_activa (50);
 		on_pant = 0x99;
 	}
 }
@@ -136,11 +138,20 @@ void todos_rescatados_check (void) {
 				if (level == 2) game_loop_flag = 1; else
 			#endif
 			{
+				#asm
+						ld  hl, _s_title
+						ld  de, BASE_SUPERBUFF
+						call depack
+						call cpc_ResetTouchedTiles
+				#endasm
 				new_level = 0;
 				new_level_string [7] = level + '1';
 				draw_text (12, 11, 71, new_level_string);
 				draw_text (11, 13, 71, "GET READY!");
-				cpc_UpdateNow (0);
+				
+				cpc_UpdScr ();
+				cpc_ShowTileMap (1);
+				
 				play_sfx (10);
 				espera_activa (150);
 				n_pant = scr_ini [level];
@@ -212,11 +223,14 @@ void todos_rescatados_check (void) {
 			draw_text (6, 12, GAME_OVER_ATTR, "RESCATALOS Y REGRESA");
 			cpc_UpdateNow (0);
 			play_sfx (10);
+			espera_activa (50);
 			on_pant = 0x99;
 		}
 	}
 
 	void hook_entering (void) {	
+		inside = 1 - map_behaviours [n_pant];
+
 		// Draw extraction point
 
 		if (n_pant == scr_ini [level]) {

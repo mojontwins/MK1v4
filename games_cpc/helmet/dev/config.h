@@ -392,4 +392,7 @@ unsigned char comportamiento_tiles [] = {
 	0, 0, 0, 0, 4, 4, 4, 4, 0, 4, 0, 0, 0, 8, 8, 2,
 };
 
+#define PLAYER_CUSTOM_ANIMATION
+#define PLAYER_CUSTOM_CELLS
+
 

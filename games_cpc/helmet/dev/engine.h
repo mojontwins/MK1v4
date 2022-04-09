@@ -459,6 +459,7 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (_rdy), a
 				xor a
 				ld  (__t), a
+				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
@@ -1448,7 +1449,7 @@ void move (void) {
 	player.y += player.vy;
 
 	// Safe
-	#ifdef BETTER_VERTICAL_CONNECTIONS
+	#if defined BETTER_VERTICAL_CONNECTIONS && (VIEWPORT_Y > 0)
 		if (player.y < -512)
 			player.y = -512;
 	#else	
