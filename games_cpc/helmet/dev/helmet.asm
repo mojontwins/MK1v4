@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Apr 05 12:53:15 2022
+;	Module compile time: Sat Apr 09 09:20:58 2022
 
 
 
@@ -266,49 +266,49 @@
 	defb	24
 
 	defm	""
-	defb	21
-
-	defm	""
-	defb	4
-
-	defm	""
-	defb	6
+	defb	10
 
 	defm	""
 	defb	19
 
 	defm	""
-	defb	11
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	18
-
-	defm	""
-	defb	22
-
-	defm	""
 	defb	26
-
-	defm	""
-	defb	10
-
-	defm	""
-	defb	0
 
 	defm	""
 	defb	14
 
 	defm	""
+	defb	2
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	20
+
+	defm	""
 	defb	12
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	21
 
 	defm	""
 	defb	28
 
 	defm	""
-	defb	20
+	defb	22
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	11
 
 ;	SECTION	code
 
@@ -19108,9 +19108,6 @@
 	ld a, (_pad0)
 	and 0x10
 	jp nz, push_pull_done
-	ld a, (_player + 26)
-	or a
-	jp z, push_pull_done
 	.push_pull_do
 	ld a, (_gpx)
 	ld (_rdx), a
@@ -19256,11 +19253,13 @@
 	.push_pull_undo
 	ld a, (_rdx)
 	ld (_gpx), a
+	ld c, a
 	srl a
 	srl a
 	srl a
 	srl a
 	ld (_gpxx), a
+	ld a, c
 	call Ashl16_HL
 	ld (_player), hl
 	.push_pull_done
@@ -20117,6 +20116,7 @@
 	ld (__y), a
 	xor a
 	ld (__t), a
+	ld a, (_comportamiento_tiles) ;; beh [0]
 	ld (__n), a
 	call set_map_tile_do
 	pop bc
@@ -20424,14 +20424,14 @@
 	ld a, (_en_ccy)
 	ld (_rdy), a
 	call _render_this_enemy
-	ld	hl,10	;const
-	call	_wyz_play_sound
 	ld	hl,1	;const
 	push	hl
 	call	_cpc_UpdateNow
 	pop	bc
 	ld	hl,50	;const
 	call	_cpc_HardPause
+	ld	hl,10	;const
+	call	_wyz_play_sound
 	ld	hl,_en_an_next_frame
 	push	hl
 	ld	hl,(_enit)
@@ -21876,8 +21876,6 @@
 	XDEF	_malotes
 	XDEF	_en_yy
 	XDEF	_draw_text
-	LIB	cpc_PutSpTileMap8x8PxM1
-	LIB	cpc_PutSpTileMap16x16PxM1
 	LIB	cpc_CollSp
 	XDEF	_beepet
 	LIB	cpc_PutMaskSp4x16
@@ -21903,8 +21901,6 @@
 	LIB	cpc_PutTile2x8
 	XDEF	_pad_read
 	XDEF	_t_alt
-	LIB	cpc_PutTrSp8x8TileMap2bPxM1
-	LIB	cpc_PutTrSp16x16TileMap2bPxM1
 	LIB	cpc_ShowScrTileMap2
 	LIB	cpc_Uncrunch
 	XDEF	_cpc_UpdateNow
