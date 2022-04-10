@@ -6063,6 +6063,9 @@ void mueve_bicharracos (void) {
 							#ifdef PLAYER_MAX_KILLABLE
 								&& _en_t <= PLAYER_MAX_KILLABLE
 							#endif
+							#ifndef PLAYER_MOGGY_STYLE
+								&& _en_t != 4
+							#endif
 							) {
 								// Hit!
 								play_sfx (2);

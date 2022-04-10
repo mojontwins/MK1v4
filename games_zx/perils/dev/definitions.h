@@ -41,6 +41,11 @@
 #define HOTSPOT_TYPE_KEY 		2
 #define HOTSPOT_TYPE_REFILL 	3
 
+#define PLAYER_KILLED_BY_BG 	1
+#define PLAYER_KILLED_BY_ENEM 	2
+#define PLAYER_KILLED_BY_EZ 	4
+#define PLAYER_KILLED_BY_SELF 	8
+
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
 	int vx, vy; 										// 6, 8
@@ -141,6 +146,7 @@ INERCIA player;
 	unsigned char bullets_estado [MAX_BULLETS];
 #endif
 signed int ptgmx, ptgmy;
+unsigned char player_just_died;
 
 // Enemies
 

@@ -2676,6 +2676,19 @@ Los enemigos empaquetados se activan con `#define PACKED_ENEMS` en `config.h` y 
 
 Obviamente tendremos que comunicarle nuestra decisión al conversor `ene2h` con el parámetro `compacted`.
 
+## Detectando la muerte del jugador
+
+En cada bucle del juego, al llegar a nuestra rutina de código custom, y si el jugador acaba de perdir vida, la variable `player_just_died` habrá tomado uno de estos valores:
+
+```c
+	#define PLAYER_KILLED_BY_BG 	1 	// Murió por el escenario (pinchos)
+	#define PLAYER_KILLED_BY_ENEM 	2	// Le hostió un enemigo
+	#define PLAYER_KILLED_BY_EZ 	4 	// Perdió vida por Evil Zone
+	#define PLAYER_KILLED_BY_SELF 	8 	// Se hirió a si mismo (*_DRAINS_LIFE)
+```
+
+En la siguiente vuelta del bucle de juego, `player_just_died` volverá a 0.
+
 # Capítulo 9 - `MODE_128K_DUAL`
 
 La macro `MODE_128K_DUAL` prepara el motor para que añadamos un player en RAM1 para tocar música y efectos AY si el juego se carga en los modelos de Spectrum con 128K, mientras que si se carga en un modelo de 48K se toquen con el beeper, como siempre. Eso implica también modificar el loader para que se cargue le bloque extra si se detecta un modelo de 128K.

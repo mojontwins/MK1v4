@@ -724,6 +724,7 @@ unsigned int __FASTCALL__ abs (int n) {
 		play_sfx (9);
 		#ifdef FIRING_DRAINS_LIFE
 			player.life -= FIRING_DRAIN_AMOUNT;
+			player_just_died = PLAYER_KILLED_BY_SELF;
 		#endif
 
 		#ifdef PLAYER_AX_RECOIL
@@ -1314,6 +1315,7 @@ void move (void) {
 					if (jetpac_frame_counter == JETPAC_DRAIN_OFFSET + JETPAC_DRAIN_RATIO) {
 						jetpac_frame_counter = JETPAC_DRAIN_OFFSET;
 						player.life --;
+						player_just_died = PLAYER_KILLED_BY_SELF;
 					}
 				#endif
 			} else {
@@ -3306,6 +3308,7 @@ void move (void) {
 					// Flickers. People seem to like this more than the bouncing behaviour.
 					player_flicker ();
 				#endif
+				player_just_died = PLAYER_KILLED_BY_BG;
 			}			
 			player.x = gpcx;
 			player.y = gpcy;
@@ -3345,6 +3348,7 @@ void move (void) {
 						0 == player.killingzone_framecount
 					) play_sfx (3);
 					player.life --;	
+					player_just_died = PLAYER_KILLED_BY_EZ;
 				}
 			} else {
 				if (player.killingzone_framecount > EVIL_ZONE_FRAME_COUNT) {
@@ -6156,6 +6160,7 @@ void mueve_bicharracos (void) {
 						{
 							player.life -= LINEAR_ENEMY_HIT;
 						}
+						player_just_died = PLAYER_KILLED_BY_ENEM;
 						
 						#ifdef PLAYER_BOUNCES
 							#ifndef PLAYER_MOGGY_STYLE	
