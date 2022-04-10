@@ -25,34 +25,38 @@ unsigned char line_of_text_clear [] = "                                ";
 #ifdef PLAYER_CUSTOM_CELLS
 	#include "custom_player_cells.h"
 #else
-	unsigned char *player_cells [] = {
-		sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
-		sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
-		#ifdef ENABLE_FRIGOABABOL
-			sprite_frigo,
-		#else 
-			0,
-		#endif
-		#if defined ENABLE_SWORD && defined PLAYER_MOGGY_STYLE && defined GENITAL_HIT_FRAMES
-			extra_sprite_17_a, extra_sprite_18_a, extra_sprite_19_a, extra_sprite_20_a,
-		#endif
-	};
+	extern unsigned char *player_cells [0];
+	#asm
+		._player_cells 
+			defw SPRITE_00, SPRITE_01, SPRITE_02, SPRITE_03
+			defw SPRITE_04, SPRITE_05, SPRITE_06, SPRITE_07
+			#ifdef ENABLE_FRIGOABABOL
+				defw _sprite_frigo
+			#else
+				defw 0
+			#endif
+			#if defined ENABLE_SWORD && defined PLAYER_MOGGY_STYLE && defined GENITAL_HIT_FRAMES
+				defw SPRITE_10, SPRITE_11, SPRITE_12, SPRITE_13
+			#endif
+	#endasm
 #endif
 
 #ifdef ENEMS_CUSTOM_CELLS
 	#include "custom_enem_cells.h"
 #else
-	unsigned char *enem_cells [] = {
-		sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-		sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
-	};
+	extern unsigned char *enem_cells [0];
+	#asm
+			._enem_cells
+				defw SPRITE_08, SPRITE_09, SPRITE_0A, SPRITE_0B
+				defw SPRITE_0C, SPRITE_0D, SPRITE_0E, SPRITE_0F
+	#endasm
 #endif
 
 #ifdef ENABLE_SWORD
 	extern unsigned char *sword_cells [0];
 	#asm 
 		._sword_cells
-			defw _sprite_sword, _sprite_sword + 64, _sprite_sword + 128, _sprite_sword + 192
+			defw _sprite_sword, _sprite_sword + 16, _sprite_sword + 32, _sprite_sword + 48
 	#endasm
 #endif
 
@@ -65,143 +69,73 @@ void abs_a (void) {
 }
 
 void saca_a_todo_el_mundo_de_aqui (void) {
-	// ¡Saca a todo el mundo de aquí!
+	/*
+	for (gpit = 0; gpit < SW_SPRITES_ALL; gpit ++) {
+		sp_sw [gpit].sp0 = (int) (SPRFR_EMPTY);
+	}
+	*/
 	#asm
-			ld  ix, (_sp_player)
-			ld  iy, vpClipStruct
-			ld  bc, 0
-			ld  hl, 0xfefe	// -2, -2
-			ld  de, 0
-			call SPMoveSprAbs
-	
-			xor a
-		.hide_sprites_enems_loop
-			ld  (_gpit), a
-
-			sla a
-			ld  c, a
-			ld  b, 0
-			ld  hl, _sp_moviles
-			add hl, bc
-			ld  e, (hl)
+			ld  de, 15
+			ld  b, SW_SPRITES_ALL
+		.clear_sprites_loop
+			ld  hl, BASE_SPRITES
+			ld  a, #(_sprite_18_a%256)
+			ld  (hl), a
 			inc hl
-			ld  d, (hl)
-			push de
-			pop ix
-
-			ld  iy, vpClipStruct
-			ld  bc, 0
-			ld  hl, 0xfefe	// -2, -2
-			ld  de, 0
-
-			call SPMoveSprAbs
-
-			ld  a, (_gpit)
-			inc a
-			cp  MAX_ENEMS
-			jr  nz, hide_sprites_enems_loop
-
-		#ifdef ENABLE_SWORD
-			ld  ix, (_sp_sword)
-			ld  iy, vpClipStruct
-			ld  bc, 0
-			ld  hl, 0xfefe	// -2, -2
-			ld  de, 0
-			call SPMoveSprAbs			
-		#endif
+			ld  a, #(_sprite_18_a/256)
+			ld  (hl), a 
+			add hl, de
+			djnz clear_sprites_loop
 	#endasm
 }
 
 void render_this_enemy (void) {
-	/*
-	sp_MoveSprAbs (
-		sp_moviles [enit], 
-		spritesClip, 
-		en_an_next_frame [enit] - en_an_current_frame [enit], 
-		VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3),rdx & 7, rdy & 7
-	);
-
-	en_an_current_frame [enit] = en_an_next_frame [enit];
-	*/
+	// sp_sw struct is 16 bytes wide. This is easy
+	// 0   2   4      6   7   8  9  10 11 12      14
+	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 	#asm
-			// sp_moviles [enit] = sp_moviles + enit*2
 			ld  a, (_enit)
-			sla a
-			ld  c, a
-			ld  b, 0 				// BC = offset to [enit] in 16bit arrays
-			ld  hl, _sp_moviles
-			add hl, bc
-			ld  e, (hl)
-			inc hl 
-			ld  d, (hl)
-			push de						
+			add SP_ENEMS_BASE
+			ld  h, 0
+			ld  l, a
+			add hl, hl
+			add hl, hl
+			add hl, hl
+			add hl, hl 		// x16
+			ld  de, BASE_SPRITES
+			add hl, de
+			push hl
 			pop ix
 
-			// Clipping rectangle
-			ld  iy, vpClipStruct
+			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 1;
+			ld  a, (_rdx)
+			add #(VIEWPORT_X*8)
+			add (ix + 6)
+			#ifndef MODE_1
+				srl a
+			#endif
+			ld  (ix + 8), a
 
-			// Animation
-			// en_an_next_frame [enit] - en_an_current_frame [enit]
-			ld  hl, _en_an_current_frame
-			add hl, bc 				// HL -> en_an_current_frame [enit]
-			ld  e, (hl)
-			inc hl 
-			ld  d, (hl) 			// DE = en_an_current_frame [enit]
+			// sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
+			ld  a, (_rdy) 
+			add #(VIEWPORT_Y*8)
+			add (ix + 7)
+			ld  (ix + 9), a
 
-			ld  hl, _en_an_next_frame
-			add hl, bc 				// HL -> en_an_next_frame [enit]
+			// sp_sw [rda].sp0 = (int) (en_an_next_frame [enit]);
+			ld  a, (_enit)
+			sla a
+			ld  b, 0
+			ld  c, a
+			ld  hl, _en_an_next_frame			
+			add hl, bc
 			ld  a, (hl)
 			inc hl
 			ld  h, (hl)
-			ld  l, a 				// HL = en_an_next_frame [enit]
-
-			or  a 					// clear carry
-			sbc hl, de 				// en_an_next_frame [enit] - en_an_current_frame [enit]
-
-			push bc 				// Save for later
-
-			ld  b, h
-			ld  c, l 				// ** BC = animate bitdef **	
-
-			//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
-			ld  a, (_rdy)					
-			srl a
-			srl a
-			srl a
-			add VIEWPORT_Y
-			ld h, a
-
-			ld  a, (_rdx)
-			srl a
-			srl a
-			srl a
-			add VIEWPORT_X
 			ld  l, a
 
-			// rdx & 7, rdy & 7
-			ld  a, (_rdx)
-			and 7
-			ld  d, a
-
-			ld  a, (_rdy)
-			and 7
-			ld  e, a
-
-			call SPMoveSprAbs
-
-			// en_an_current_frame [enit] = en_an_next_frame [enit];
-
-			pop bc 					// Retrieve index
-
-			ld  hl, _en_an_current_frame
-			add hl, bc
-			ex  de, hl 				// DE -> en_an_current_frame [enit]	
-
-			ld  hl, _en_an_next_frame
-			add hl, bc 				// HL -> en_an_next_frame [enit]
-
-			ldi
-			ldi
+			ld (ix + 0), l
+			ld (ix + 1), h
 	#endasm
 }
 
@@ -318,7 +252,7 @@ void render_all_sprites (void) {
 	}
 
 	rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
-	#ifdef BETTER_VERTICAL_CONNECTIONS
+	//#ifdef BETTER_VERTICAL_CONNECTIONS
 		/*
 		if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
 		sp_MoveSprAbs (
@@ -326,175 +260,72 @@ void render_all_sprites (void) {
 			rdi, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
 		);
 		*/
+		// TODO
+	//#else
+		// This ASSUMES SP_PLAYER = 0.
+		// 0   2   4      6   7   8  9  10 11 12      14
+		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
 		#asm
-				ld  ix, (_sp_player)
-				ld  iy, vpClipStruct
+			.render_player
+				ld  ix, #(BASE_SPRITES + (SP_PLAYER*16))
 
-				ld  hl, (_player + 17)			// player.next_frame
-				ld  de, (_player + 15) 			// player.current_frame
+				// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 1;
+				ld  a, (_gpx)
+				add #(VIEWPORT_X*8)
+				add (ix + 6)
+				#ifndef MODE_1
+					srl a
+				#endif
+				ld  (ix + 8), a
+
+				// sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
+				ld  a, (_gpy)
+				add #(VIEWPORT_Y*8)
+				add (ix + 7)
+				ld  (ix + 9), a
+
+				// if ( (player.estado & EST_PARP) && half_life ) 
+				ld  a, (_player + 23) 		// player.estado
+				and EST_PARP
+				jr  z, player_render_graphic
+
+				ld  a, (_half_life)
 				or  a
-				sbc hl, de
-				ld  b, h
-				ld  c, l
+				jr  z, player_render_graphic
 
-				ld  a, (_rdy)
-				cp  248
-				jr  c, ras_player_on_screen
+			.player_render_empty
+				ld  hl, _sprite_18_a
+				jr  player_render_set_sp0
 
-				ld  a, VIEWPORT_Y-1
-				jr  ras_rdi_calc_done
+			.player_render_graphic
+				ld  hl, (_player + 17)		// player.next_frame
 
-			.ras_player_on_screen
-				ld  a, (_rdy)
-				srl a 
-				srl a 
-				srl a 
-				add VIEWPORT_Y
-
-			.ras_rdi_calc_done
-				ld  h, a 
-
-				ld  a, (_rdx)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_X
-				ld  l, a 
-				
-				ld  a, (_rdx)
-				and 7
-				ld  d, a
-
-				ld  a, (_rdy)
-				and 7
-				ld  e, a
-
-				call SPMoveSprAbs
-		#endasm		
-	#else
-		/*
-		sp_MoveSprAbs (
-			sp_player, spritesClip, player.next_frame - player.current_frame, 
-			VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
-		);
-		*/
-		#asm
-				ld  ix, (_sp_player)
-				ld  iy, vpClipStruct
-
-				ld  hl, (_player + 17)			// player.next_frame
-				ld  de, (_player + 15) 			// player.current_frame
-				or  a
-				sbc hl, de
-				ld  b, h
-				ld  c, l
-
-				ld  a, (_rdy)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_Y
-				ld  h, a 
-
-				ld  a, (_rdx)
-				srl a
-				srl a
-				srl a
-				add VIEWPORT_X
-				ld  l, a 
-				
-				ld  a, (_rdx)
-				and 7
-				ld  d, a
-
-				ld  a, (_rdy)
-				and 7
-				ld  e, a
-
-				call SPMoveSprAbs
+			.player_render_set_sp0
+				ld  (ix + 0), l
+				ld  (ix + 1), h
 		#endasm
-	#endif
+	//#endif
 	player.current_frame = player.next_frame;
 	
 	#ifdef PLAYER_CAN_FIRE
+		bspr_it = SP_BULLETS_BASE;
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
-				rdx = bullets_x [rdi]; rdy = bullets_y [rdi];
-				/*
-				sp_MoveSprAbs (
-					sp_bullets [rdi], spritesClip, 0, 
-					VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7
-				);
-				*/
-				#asm
-						ld  a, (_rdi)
-						sla a
-						ld  c, a
-						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
-						ld  hl, _sp_bullets
-						add hl, bc
-						ld  e, (hl)
-						inc hl 
-						ld  d, (hl)
-						push de						
-						pop ix
-
-						ld  iy, vpClipStruct
-						ld  bc, 0
-
-						ld  a, (_rdy)
-						srl a
-						srl a
-						srl a
-						add VIEWPORT_Y
-						ld  h, a
-
-						ld  a, (_rdx)
-						srl a
-						srl a
-						srl a
-						add VIEWPORT_X
-						ld  l, a
-
-						ld  a, (_rdx)
-						and 7
-						ld  d, a 
-
-						ld  a, (_rdy)
-						and 7
-						ld  e, a 
-						
-						call SPMoveSprAbs
-				#endasm				
+				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
+				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
 			} else {
 				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
-				#asm
-						ld  a, (_rdi)
-						sla a
-						ld  c, a
-						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
-						ld  hl, _sp_bullets
-						add hl, bc
-						ld  e, (hl)
-						inc hl 
-						ld  d, (hl)
-						push de						
-						pop ix
-
-						ld  iy, vpClipStruct
-						ld  bc, 0
-
-						ld  hl, 0xfefe
-						ld  de, 0 
-						
-						call SPMoveSprAbs
-				#endasm
+				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cy = (VIEWPORT_Y * 8);
+				sp_sw [bspr_it].sp0 = (int) (SPRFR_EMPTY);
 			}
+			bspr_it ++;
 		}
 	#endif
 }
 
-#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+#if !defined SHORT_PLAYER
 	#define BOUNDING_WIDTH 12
 #else
 	#define BOUNDING_WIDTH 8
@@ -601,85 +432,6 @@ unsigned int __FASTCALL__ abs (int n) {
 
 		// neg HL
 		call l_neg
-	#endasm
-}
-
-void step (void) {
-	#asm
-			ld a, 16
-			out (254), a
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			nop
-			xor 16
-			out (254), a
-	#endasm	
-}
-
-void cortina (void) {
-	#asm
-			;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
-			;; para que no queden artefactos feos
-			
-			ld	de, 22528			; Apuntamos con DE a la zona de atributos
-			ld	b,	3				; Procesamos 3 tercios
-		.clearb1
-			push bc
-			
-			ld	b, 255				; Procesamos los 256 atributos de cada tercio
-		.clearb2
-		
-			ld	a, (de)				; Nos traemos un atributo
-			and	199					; Le hacemos la máscara 11000111 y dejamos PAPER a 0
-			ld	(de), a				; Y lo volvemos a poner
-			
-			inc de					; Siguiente atributo
-		
-			djnz clearb2
-			
-			pop bc
-			djnz clearb1
-			
-			;; Y ahora el código original que escribí para UWOL:	
-		
-			ld	a,	8
-		
-		.repitatodo
-			ld	c,	a			; Salvamos el contador de "repitatodo" en 'c'
-		
-			ld	hl, 16384
-			ld	a,	12
-		
-		.bucle
-			ld	b,	a			; Salvamos el contador de "bucle" en 'b'
-			xor a ; ld	a,	255
-		
-		.bucle1
-			sla (hl)
-			inc hl
-			dec a
-			jr	nz, bucle1
-				
-			xor a ; ld	a,	255
-		.bucle2
-			srl (hl)
-			inc hl
-			dec a
-			jr	nz, bucle2
-				
-			ld	a,	b			; Restituimos el contador de "bucle" a 'a'
-			dec a
-			jr	nz, bucle
-		
-			ld	a,	c			; Restituimos el contador de "repitatodo" a 'a'
-			dec a
-			jr	nz, repitatodo
 	#endasm
 }
 
@@ -996,7 +748,7 @@ void cortina (void) {
 
 #ifdef USE_COINS
 	void get_coin (void) {
-		#ifdef ENABLE_PERSISTENCE
+		#ifdef ENABLE_PERSISTENCE			
 			persist ();
 		#endif
 
@@ -1020,12 +772,11 @@ void cortina (void) {
 #if defined RESPAWN_REENTER || defined BOXES_KILL_PLAYER
 	void explode_player (void) {
 		player.next_frame = sprite_17_a;
-		sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
+		//sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (gpy >> 3), VIEWPORT_X + (gpx >> 3), gpx & 7, gpy & 7);
 		player.current_frame = player.next_frame;
-		#asm 
-			call SPUpdateNow
-		#endasm
 		play_sfx (10);	
+		cpc_UpdateNow (1);
+		cpc_HardPause (50);
 	}
 #endif
 
@@ -1092,9 +843,6 @@ void adjust_to_tile_y (void) {
 				b_y [gpit] = _y;
 				b_f [gpit] = MAX_BREAKABLE_FRAMES;
 				set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_BREAKING_TILE, comportamiento_tiles [BREAKABLE_BREAKING_TILE]);
-				#asm 
-					call SPUpdateNow
-				#endasm
 				play_sfx (9);
 				process_breakable = 1;
 				break;
@@ -1385,8 +1133,28 @@ void adjust_to_tile_y (void) {
 				ld  (_rdx), a
 		#endasm
 
-		sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
-		s_current_frame = s_next_frame;		
+		//sp_MoveSprAbs (sp_sword, spritesClip, s_next_frame - s_current_frame, VIEWPORT_Y + (s_y >> 3), VIEWPORT_X + (rdx >> 3), rdx & 7, s_y & 7);
+		//s_current_frame = s_next_frame;		
+		#asm
+				ld  ix, #(BASE_SPRITES + (SP_SWORD_BASE*16))
+
+				ld  a, (_rdx)
+				add #(VIEWPORT_X*8)
+				add (ix + 6)
+				#ifndef MODE_1
+					srl a 
+				#endif
+				ld  (ix + 8), a 
+
+				ld  a, (_s_y)
+				add #(VIEWPORT_Y*8)
+				add (ix + 7)
+				ld  (ix + 9), a 
+
+				ld  hl, (_s_next_frame)
+				ld  (ix + 0), l
+				ld  (ix + 1), h
+		#endasm
 	}
 #endif
 
@@ -1562,9 +1330,7 @@ void move (void) {
 				// If side view, get affected by gravity:
 				
 				#ifdef RAMIRO_HOVER
-					#ifdef MODE_128K_DUAL
-						rda = player.hovering;
-					#endif
+					rda = player.hovering;
 					player.hovering = 0;
 					if (((pad0 & sp_DOWN) == 0 
 						#ifdef HOVER_WITH_JUMP_ALSO
@@ -1577,9 +1343,7 @@ void move (void) {
 					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
-							#ifdef MODE_128K_DUAL
-								if (rda == 0 && is128k) play_sfx (12);
-							#endif
+							if (rda == 0) play_sfx (12);
 							player.hovering = 1;
 							#asm
 								._player_hover
@@ -2218,9 +1982,9 @@ void move (void) {
 					jp  nz, push_pull_done
 
 					#ifdef PUSH_ON_FLOOR
-					ld  a, (_player + 26) 	// player.possee
-					or  a
-					jp  z, push_pull_done
+						ld  a, (_player + 26) 	// player.possee
+						or  a
+						jp  z, push_pull_done
 					#endif
 
 				.push_pull_do 
@@ -3579,9 +3343,6 @@ void move (void) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
 					if (
 						0 == player.killingzone_framecount
-						#ifdef MODE_128K_DUAL
-							|| is128k
-						#endif
 					) play_sfx (3);
 					player.life --;	
 				}
@@ -3589,14 +3350,12 @@ void move (void) {
 				if (player.killingzone_framecount > EVIL_ZONE_FRAME_COUNT) {
 					player.killingzone_framecount = 0;
 					player.killingzone_beepcount ++;
-					sp_Border (2);
+					cpc_Border (0x4C);
 					play_sfx (4);
-					#ifdef MODE_128K_DUAL
-						#asm
-								halt
-						#endasm
-						sp_Border (0);
-					#endif
+					#asm
+						halt
+					#endasm
+					cpc_Border (0x54);
 				} else {
 					player.killingzone_framecount ++;
 				}
@@ -3805,7 +3564,7 @@ void move (void) {
 				.player_get_coin_D_done
 
 			#endasm
-	#endif
+		#endif
 	#endif
 
 	// Select next frame to paint...
@@ -3889,8 +3648,7 @@ void move (void) {
 						player.subframe ++;
 						if (player.subframe == 4) {
 							player.subframe = 0;
-							player.frame = !player.frame;
-							step (); 
+							player.frame = !player.frame;							
 						}
 					}
 					
@@ -4961,11 +4719,18 @@ void enems_calc_frame (void) {
 }
 
 void enems_en_an_calc (unsigned char n) {
-	en_an_base_frame [enit] = 
+	rdb = en_an_base_frame [enit] = 
 		#ifdef ENEMS_OFFSET
 			ENEMS_OFFSET +
 		#endif
-		n << 1;	
+		n << 1;
+
+	rda = SP_ENEMS_BASE + enit;
+	sp_sw [rda].cox = sm_cox [rdb];
+	sp_sw [rda].coy = sm_coy [rdb];
+	sp_sw [rda].invfunc = sm_invfunc [rdb];
+	sp_sw [rda].updfunc = sm_updfunc [rdb];
+		
 	enems_calc_frame ();
 }
 
@@ -4986,6 +4751,10 @@ void enems_en_an_calc (unsigned char n) {
 #endif
 
 void draw_scr (void) {
+	#ifndef DEACTIVATE_EVIL_ZONE
+		cpc_Border (0x54);
+	#endif
+
 	#ifdef SHOW_LEVEL_INFO
 		char *cad_level = "LEVEL";
 
@@ -5002,9 +4771,8 @@ void draw_scr (void) {
 			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, 71, cad_level);
 			draw_2_digits (VIEWPORT_X + 17, VIEWPORT_Y + 10, (n_pant+1));
 		#endif
-		#asm 
-			call SPUpdateNow
-		#endasm
+		cpc_UpdScr ();
+		cpc_ShowTileMap (1);
 		play_sfx (6);
 		espera_activa (1000);
 	#endif
@@ -5134,7 +4902,7 @@ void draw_scr (void) {
 
 			#if defined (ENEMIES_MAY_DIE)
 				default:
-					en_an_next_frame [enit] = sprite_18_a;
+					en_an_next_frame [enit] = SPRFR_EMPTY;
 			#endif
 		}
 		
@@ -5145,19 +4913,19 @@ void draw_scr (void) {
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
 				if (1
-					#ifdef BOXES_ONLY_KILL_TYPE
+				#ifdef BOXES_ONLY_KILL_TYPE
 						&& _en_t == BOXES_ONLY_KILL_TYPE
-					#endif
-					#ifdef PLAYER_MIN_KILLABLE
+				#endif
+				#ifdef PLAYER_MIN_KILLABLE
 						&& _en_t >= PLAYER_MIN_KILLABLE
 					#endif
 					#ifdef PLAYER_MAX_KILLABLE
 						&& _en_t <= PLAYER_MAX_KILLABLE
 					#endif
 				) {
-					flags [COUNT_KILLABLE_ON] ++;
-				}
-			#endif
+						flags [COUNT_KILLABLE_ON] ++;
+					}
+				#endif
 		#endif
 	}
 		
@@ -5266,9 +5034,9 @@ void platform_get_player (void) {
 				call _render_this_enemy
 		#endasm
 
-		#asm 
-			call SPUpdateNow
-		#endasm
+		cpc_UpdateNow (1);
+		cpc_HardPause (50);
+
 		play_sfx (10);
 		en_an_next_frame [enit] = sprite_18_a;
 
@@ -5663,10 +5431,27 @@ void mueve_bicharracos (void) {
 									
 						en_an_x [enit] += en_an_vx [enit];
 						en_an_y [enit] += en_an_vy [enit];
+						
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						
+						#if VIEWPORT_Y <= 2
+							if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+						#else
+							if (en_an_y [enit] > (10240-(VIEWPORT_Y-2)*8*64)) en_an_y [enit] = 10240;
+						#endif
+						#if VIEWPORT_Y >= 2
+							if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						#else
+							if (en_an_y [enit] < -(VIEWPORT_Y*8*64)) en_an_y [enit] = -1024;
+						#endif
+
+						/*
+						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
+						if (en_an_x [enit] < 0) en_an_x [enit] = 0;
+						if (en_an_y [enit] > (144*64)) en_an_y [enit] = (144*64);
+						if (en_an_y [enit] < 0) en_an_y [enit] = 0;
+						*/
 					} 
 				#endif
 
@@ -5740,10 +5525,27 @@ void mueve_bicharracos (void) {
 							en_an_x [enit] += en_an_vx [enit];
 							en_an_y [enit] += en_an_vy [enit];
 						}
+
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						
+						#if VIEWPORT_Y <= 2
+							if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+						#else
+							if (en_an_y [enit] > (10240-(VIEWPORT_Y-2)*8*64)) en_an_y [enit] = 10240;
+						#endif
+						#if VIEWPORT_Y >= 2
+							if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+						#else
+							if (en_an_y [enit] < -(VIEWPORT_Y*8*64)) en_an_y [enit] = -1024;
+						#endif
+						
+						/*
+						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
+						if (en_an_x [enit] < 0) en_an_x [enit] = 0;
+						if (en_an_y [enit] > (144*64)) en_an_y [enit] = (144*64);
+						if (en_an_y [enit] < 0) en_an_y [enit] = 0;
+						*/
 					} 
 				#endif
 
@@ -5778,8 +5580,7 @@ void mueve_bicharracos (void) {
 						._en_bg_collision
 							call en_xx_calc
 							call en_yy_calc
-
-
+							
 							ld  a, (__en_mx)
 							or  a
 							jr  z, _en_bg_collision_horz_done
@@ -6261,9 +6062,6 @@ void mueve_bicharracos (void) {
 							#endif
 							#ifdef PLAYER_MAX_KILLABLE
 								&& _en_t <= PLAYER_MAX_KILLABLE
-							#endif
-							#ifndef PLAYER_MOGGY_STYLE
-								&& _en_t != 4
 							#endif
 							) {
 								// Hit!

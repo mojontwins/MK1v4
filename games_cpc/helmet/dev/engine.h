@@ -459,7 +459,6 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (_rdy), a
 				xor a
 				ld  (__t), a
-				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
@@ -1449,7 +1448,7 @@ void move (void) {
 	player.y += player.vy;
 
 	// Safe
-	#if defined BETTER_VERTICAL_CONNECTIONS && (VIEWPORT_Y > 0)
+	#ifdef BETTER_VERTICAL_CONNECTIONS
 		if (player.y < -512)
 			player.y = -512;
 	#else	
@@ -3358,7 +3357,7 @@ void move (void) {
 					#endasm
 					cpc_Border (0x54);
 				} else {
-					player.killingzone_framecount ++;				
+					player.killingzone_framecount ++;
 				}
 			}
 		} else {
@@ -4914,19 +4913,19 @@ void draw_scr (void) {
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
 				if (1
-					#ifdef BOXES_ONLY_KILL_TYPE
+				#ifdef BOXES_ONLY_KILL_TYPE
 						&& _en_t == BOXES_ONLY_KILL_TYPE
-					#endif
-					#ifdef PLAYER_MIN_KILLABLE
+				#endif
+				#ifdef PLAYER_MIN_KILLABLE
 						&& _en_t >= PLAYER_MIN_KILLABLE
 					#endif
 					#ifdef PLAYER_MAX_KILLABLE
 						&& _en_t <= PLAYER_MAX_KILLABLE
 					#endif
 				) {
-					flags [COUNT_KILLABLE_ON] ++;
-				}
-			#endif
+						flags [COUNT_KILLABLE_ON] ++;
+					}
+				#endif
 		#endif
 	}
 		
@@ -6063,6 +6062,9 @@ void mueve_bicharracos (void) {
 							#endif
 							#ifdef PLAYER_MAX_KILLABLE
 								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
+							#ifndef PLAYER_MOGGY_STYLE
+								&& _en_t != 4
 							#endif
 							) {
 								// Hit!

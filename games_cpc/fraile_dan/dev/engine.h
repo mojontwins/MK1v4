@@ -735,7 +735,7 @@ unsigned int __FASTCALL__ abs (int n) {
 #if defined PLAYER_CAN_HIDE
 	unsigned char player_hidden (void) {
 		#ifndef HIDDEN_CAN_MOVE
-			if ( (gpy & 15) == 0 && player.vx == 0 )
+			if ( player.possee && player.vx == 0 )
 		#endif
 		{
 			//if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
@@ -1188,6 +1188,7 @@ void adjust_to_tile_y (void) {
 	}
 #endif
 
+// player_move
 void move (void) {
 	gpcx = player.x;
 	gpcy = player.y;
@@ -1342,7 +1343,7 @@ void move (void) {
 					) {
 						player.just_hovered = 1;
 						if (player.vy > 0) {
-							if (rda == 0 && is128k) play_sfx (12);
+							if (rda == 0) play_sfx (12);
 							player.hovering = 1;
 							#asm
 								._player_hover
@@ -1980,9 +1981,11 @@ void move (void) {
 					and sp_FIRE
 					jp  nz, push_pull_done
 
-					ld  a, (_player + 26) 	// player.possee
-					or  a
-					jp  z, push_pull_done
+					#ifdef PUSH_ON_FLOOR
+						ld  a, (_player + 26) 	// player.possee
+						or  a
+						jp  z, push_pull_done
+					#endif
 
 				.push_pull_do 
 
@@ -2187,6 +2190,7 @@ void move (void) {
 					//  gpxx = rdx >> 4; gpx = rdx; player.x = gpx << 6; 
 				
 					ld  a, (_rdx)
+					ld  c, a
 					ld  (_gpx), a
 					srl a
 					srl a
@@ -2201,6 +2205,7 @@ void move (void) {
 					ld  l, 6
 					call l_asl
 					*/
+					ld  a, c
 					call Ashl16_HL
 					ld  (_player), hl 		// player.x
 
@@ -2249,9 +2254,11 @@ void move (void) {
 					and sp_FIRE
 					jp  nz, push_pull_done
 
-					ld  a, (_player + 26) 	// player.possee
-					or  a
-					jp  z, push_pull_done
+					#ifdef PUSH_ON_FLOOR
+						ld  a, (_player + 26) 	// player.possee
+						or  a
+						jp  z, push_pull_done
+					#endif
 
 				.push_pull_do 
 
@@ -2452,9 +2459,9 @@ void move (void) {
 
 				.push_pull_undo
 					//  gpxx = rdx >> 4; gpx = rdx; player.x = gpx << 6; 
-				
 					ld  a, (_rdx)
 					ld  (_gpx), a
+					ld  c, a
 					srl a
 					srl a
 					srl a
@@ -2468,6 +2475,7 @@ void move (void) {
 					ld  l, 6
 					call l_asl
 					*/
+					ld  a, c
 					call Ashl16_HL
 					ld  (_player), hl 		// player.x
 
@@ -2835,24 +2843,16 @@ void move (void) {
 	// Sword
 	#ifdef ENABLE_SWORD
 		if (s_on == 0 && (pad_this_frame & sp_FIRE) == 0) {
-			#if defined SWORD_DEPLETES
-				if (player.sword_g)
+			#if !defined PLAYER_MOGGY_STYLE && defined SWORD_UP
+				if ((pad0 & sp_UP) == 0) {
+					s_type = SWORD_TYPE_UP;
+				} else 
 			#endif
-			{
-				#if !defined PLAYER_MOGGY_STYLE && defined SWORD_UP
-					if ((pad0 & sp_UP) == 0) {
-						s_type = SWORD_TYPE_UP;
-					} else 
-				#endif
-				s_type = player.facing;
+			s_type = player.facing;
 
-				s_on = 1;
-				s_frame = 0;
-				s_next_frame = sword_cells [s_type];
-				#if defined SWORD_DEPLETES
-					player.sword_g --;
-				#endif
-			}
+			s_on = 1;
+			s_frame = 0;
+			s_next_frame = sword_cells [s_type];
 		}
 	#endif
 	
@@ -3343,7 +3343,6 @@ void move (void) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
 					if (
 						0 == player.killingzone_framecount
-							|| is128k
 					) play_sfx (3);
 					player.life --;	
 				}
@@ -3359,7 +3358,6 @@ void move (void) {
 					cpc_Border (0x54);
 				} else {
 					player.killingzone_framecount ++;
-					
 				}
 			}
 		} else {
@@ -4673,6 +4671,7 @@ void draw_scr_background (void) {
 				ld  (__y), a
 				xor a
 				ld  (__t), a
+				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
@@ -4913,21 +4912,20 @@ void draw_scr (void) {
 
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
+				if (1
 				#ifdef BOXES_ONLY_KILL_TYPE
-					if (_en_t == BOXES_ONLY_KILL_TYPE) {
-						flags [COUNT_KILLABLE_ON] ++;
-						continue;
-					}
+						&& _en_t == BOXES_ONLY_KILL_TYPE
 				#endif
 				#ifdef PLAYER_MIN_KILLABLE
-					if (_en_t >= PLAYER_MIN_KILLABLE) {
+						&& _en_t >= PLAYER_MIN_KILLABLE
+					#endif
+					#ifdef PLAYER_MAX_KILLABLE
+						&& _en_t <= PLAYER_MAX_KILLABLE
+					#endif
+				) {
 						flags [COUNT_KILLABLE_ON] ++;
 					}
 				#endif
-				#if !defined(BOXES_ONLY_KILL_TYPE) && !defined (PLAYER_MIN_KILLABLE)
-					flags [COUNT_KILLABLE_ON] ++;
-				#endif
-			#endif
 		#endif
 	}
 		
@@ -5036,10 +5034,10 @@ void platform_get_player (void) {
 				call _render_this_enemy
 		#endasm
 
-		play_sfx (10);
 		cpc_UpdateNow (1);
 		cpc_HardPause (50);
 
+		play_sfx (10);
 		en_an_next_frame [enit] = sprite_18_a;
 
 		_en_t |= 16;			// dead
@@ -6058,45 +6056,44 @@ void mueve_bicharracos (void) {
 								jp  c, _enems_hit_sword_done
 						#endasm
 						{	
-							#ifdef SWORD_CUSTOM_HIT
-								#include "sword_custom_hit.h"
-							#else	
-								if (1
-								#ifdef PLAYER_MIN_KILLABLE
-									&& _en_t >= PLAYER_MIN_KILLABLE
-								#endif
-								#ifdef PLAYER_MAX_KILLABLE
-									&& _en_t <= PLAYER_MAX_KILLABLE
-								#endif
-								) {
-									// Hit!
-									play_sfx (2);
-									s_on = 0;
-
-									#ifdef SWORD_PARALYZES
-										en_an_state [enit] = ENEM_PARALYZED;
-										en_an_count [enit] = SWORD_PARALYZES;
-									#endif
-
-									// Kill?
-									#if SWORD_LINEAL_DAMAGE > 0
-										if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
-									#endif
-
-									#if SWORD_FLYING_DAMAGE > 0
-										if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-									#endif
-
-									#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-										if (_en_life == 0) {
-											en_an_next_frame [enit] = sprite_17_a;
-											enems_kill ();
-										}
-									#endif
-
-									goto enems_loop_continue;
-								}
+							if (1
+							#ifdef PLAYER_MIN_KILLABLE
+								&& _en_t >= PLAYER_MIN_KILLABLE
 							#endif
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
+							#ifndef PLAYER_MOGGY_STYLE
+								&& _en_t != 4
+							#endif
+							) {
+								// Hit!
+								play_sfx (2);
+								s_on = 0;
+
+								#ifdef SWORD_PARALYZES
+									en_an_state [enit] = ENEM_PARALYZED;
+									en_an_count [enit] = SWORD_PARALYZES;
+								#endif
+
+								// Kill?
+								#if SWORD_LINEAL_DAMAGE > 0
+									if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+								#endif
+
+								#if SWORD_FLYING_DAMAGE > 0
+									if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
+								#endif
+
+								#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
+									if (_en_life == 0) {
+										en_an_next_frame [enit] = sprite_17_a;
+										enems_kill ();
+									}
+								#endif
+
+								goto enems_loop_continue;
+							}
 						}
 						#asm
 							._enems_hit_sword_done

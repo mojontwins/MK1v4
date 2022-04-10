@@ -2218,9 +2218,9 @@ void move (void) {
 					jp  nz, push_pull_done
 
 					#ifdef PUSH_ON_FLOOR
-						ld  a, (_player + 26) 	// player.possee
-						or  a
-						jp  z, push_pull_done
+					ld  a, (_player + 26) 	// player.possee
+					or  a
+					jp  z, push_pull_done
 					#endif
 
 				.push_pull_do 
@@ -4915,7 +4915,7 @@ void draw_scr_background (void) {
 				ld  (__t), a
 				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
-				
+
 				call set_map_tile_do
 
 				pop bc
@@ -5779,6 +5779,7 @@ void mueve_bicharracos (void) {
 							call en_xx_calc
 							call en_yy_calc
 
+
 							ld  a, (__en_mx)
 							or  a
 							jr  z, _en_bg_collision_horz_done
@@ -6260,6 +6261,9 @@ void mueve_bicharracos (void) {
 							#endif
 							#ifdef PLAYER_MAX_KILLABLE
 								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
+							#ifndef PLAYER_MOGGY_STYLE
+								&& _en_t != 4
 							#endif
 							) {
 								// Hit!
