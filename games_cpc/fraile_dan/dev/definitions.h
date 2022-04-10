@@ -41,6 +41,11 @@
 #define HOTSPOT_TYPE_KEY 		2
 #define HOTSPOT_TYPE_REFILL 	3
 
+#define PLAYER_KILLED_BY_BG 	1
+#define PLAYER_KILLED_BY_ENEM 	2
+#define PLAYER_KILLED_BY_EZ 	4
+#define PLAYER_KILLED_BY_SELF 	8
+
 typedef struct {
 	signed int x, y, cx;								// 0, 2, 4
 	signed int vx, vy; 									// 6, 8
@@ -67,7 +72,6 @@ typedef struct {
 	unsigned char hovering; 							// 41
 	unsigned char just_hovered; 						// 42
 	unsigned char just_jumped;							// 43
-	unsigned char sword_g; 								// 44
 } INERCIA;
 
 typedef struct {
@@ -194,6 +198,7 @@ INERCIA player;
 	unsigned char bspr_it;
 #endif
 signed int ptgmx, ptgmy;
+unsigned char player_just_died;
 
 // Enemies
 
@@ -258,10 +263,6 @@ unsigned char pattern_line_ct;
 	#endif
 #endif
 unsigned char n_pant, on_pant;
-
-#if defined USE_AUTO_SHADOWS || defined USE_AUTO_TILE_SHADOWS
-	unsigned char nocast, xx, yy, _ta;
-#endif
 
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 	unsigned char f_zone_ac;

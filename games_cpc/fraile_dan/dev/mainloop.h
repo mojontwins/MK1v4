@@ -428,6 +428,8 @@ void main (void) {
 				hook_init_mainloop ();
 			#endif
 
+			player_just_died = 0;
+
 			// Update SCR
 
 			/*
