@@ -19,7 +19,7 @@ unsigned char ini_x [] = { 2, 7 };
 unsigned char ini_y [] = { 8, 8 };
 unsigned char hostages [] = { 1, 3 };
 unsigned char new_level;
-unsigned char level;
+unsigned char level, previous_level;
 unsigned char first_time;
 unsigned char inside;
 
@@ -143,6 +143,7 @@ void todos_rescatados_check (void) {
 
 	void hook_init_game (void) {
 		new_level = 1;
+		previous_level = 0xff;
 		level = 0;		
 		player.keys = 0;
 	}
@@ -190,11 +191,17 @@ void todos_rescatados_check (void) {
 				for (gpit = 0; gpit < MAP_W*MAP_H; gpit ++) {
 					if (hotspots [n_pant].tipo == 1) hotspots [n_pant].act = 1;
 				}
-				player.objs = 0; 
 				enemy_killer = 0xff;
 				on_pant = 0xff;
-				flags [PLATFORMS_ON_FLAG] = (level == 2) ? 0 : 1;
-				first_time = 1;
+				
+				// some stuff must be initialized when a new level starts ONLY
+				if (previous_level != level) {
+					flags [PLATFORMS_ON_FLAG] = (level == 2) ? 0 : 1;
+					player.objs = 0; 
+					first_time = 1;
+				}
+
+				previous_level = level;
 			}
 		}
 	}
