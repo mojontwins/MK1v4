@@ -117,8 +117,8 @@ void todos_rescatados_check (void) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 0;		
-		player.keys = 0;
+		//level = 1;		
+		//player.keys = 1;
 	}
 
 	void hook_init_mainloop (void) {
@@ -215,6 +215,16 @@ void todos_rescatados_check (void) {
 			alarm = 0;	
 		}
 		enemy_killer = 0xff;
+
+		// Suicide / spikes:
+
+		if (player_just_died == PLAYER_KILLED_BY_BG) {
+			espera_activa (50);
+			player.is_dead = 1;
+			player.life --;
+			new_level = 1;
+			alarm = 0;
+		}
 
 		// Got hostage
 

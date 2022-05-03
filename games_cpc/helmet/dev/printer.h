@@ -108,7 +108,7 @@ void attr (char x, char y) {
 			cp  10
 			jr  c, _attr_1
 
-		#ifdef BETTER_VERTICAL_CONNECTIONS
+		#if defined BETTER_VERTICAL_CONNECTIONS && VIEWPORT_Y > 0
 				cp  11
 				jr  nc, _attr3
 				ld  hl, 0

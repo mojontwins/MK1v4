@@ -22,9 +22,28 @@ rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
 zcc +zx -vn -O3 churromain.c -o %game%.bin -lsplib2f -zorg=24200 -DDEMO  > nul
 ..\utils\printsize.exe %game%.bin
-..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
-..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
-..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
+
+rem ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
+rem ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
+rem ..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
+
+del tape\scrc.bin > nul
+..\utils\zx7.exe loading.bin tape\scrc.bin
+del tape\gamec.bin > nul
+..\utils\zx7.exe %game%.bin tape\gamec.bin
+
+..\utils\imanol.exe ^
+    in=tape\loaderzx48_zx7.asm-orig ^
+    out=tape\loader.asm ^
+    loadingcomplength=?tape\scrc.bin ^
+    mainbincomplength=?tape\gamec.bin
+
+..\utils\pasmo.exe tape\loader.asm tape\loader.bin tape\loader.txt
+
+..\utils\GenTape.exe %game%.tap ^
+    basic 'S.HELMET_2' 10 .\tape\loader.bin ^
+    data              .\tape\scrc.bin ^
+    data              .\tape\gamec.bin
 
 echo Output: %game%.tap
 

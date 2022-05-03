@@ -459,6 +459,7 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (_rdy), a
 				xor a
 				ld  (__t), a
+				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
@@ -740,7 +741,7 @@ unsigned int __FASTCALL__ abs (int n) {
 		#endif
 		{
 			//if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-			if (attr ((gpx + 8) >> 4, gpyy) & 2)
+			if (attr ((gpx + 8) >> 4, (gpy + 8) >> 4) & 2)
 				return 1;
 		}
 		return 0;
@@ -1450,7 +1451,7 @@ void move (void) {
 	player.y += player.vy;
 
 	// Safe
-	#ifdef BETTER_VERTICAL_CONNECTIONS
+	#if defined BETTER_VERTICAL_CONNECTIONS && VIEWPORT_Y > 0
 		if (player.y < -512)
 			player.y = -512;
 	#else	

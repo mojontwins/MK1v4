@@ -57,6 +57,39 @@ extern unsigned char sprite_alarm [];
 
 // Add here your custom routines & vars
 
+void fancy_delete (void) {
+	/*
+	rdx = 0; rdy = 0; _en_mx = 1; 
+	gpit = 150; while (gpit --) {
+		set_map_tile (rdx, rdy, 0, 0);
+
+		#asm
+			call cpc_UpdScr 
+			call cpc_ShowTouchedTiles
+			call cpc_ResetTouchedTiles
+		#endasm
+		
+		rdx += _en_mx;
+		if (rdx == 0xff) { rdx = 0; rdy ++; _en_mx = -_en_mx; }
+		if (rdx == 15) { rdx = 14; rdy ++; _en_mx = -_en_mx; }
+	}
+	*/
+	for (_x = 1; _x < 31; _x += 2) {
+		for (_y = 0; _y < 20; _y += 2) {
+			_t = 0;
+			#asm 	
+				call _draw_coloured_tile_do
+			#endasm
+		}
+
+		#asm
+			call cpc_UpdScr 
+			call cpc_ShowTouchedTiles
+			call cpc_ResetTouchedTiles
+		#endasm		
+	}
+}
+
 void text_prepare (void) {
 	saca_a_todo_el_mundo_de_aqui ();
 	
@@ -138,19 +171,17 @@ void todos_rescatados_check (void) {
 				if (level == 2) game_loop_flag = 1; else
 			#endif
 			{
-				#asm
-						ld  hl, _s_title
-						ld  de, BASE_SUPERBUFF
-						call depack
-						call cpc_ResetTouchedTiles
-				#endasm
+				fancy_delete ();
 				new_level = 0;
 				new_level_string [7] = level + '1';
-				draw_text (12, 11, 71, new_level_string);
-				draw_text (11, 13, 71, "GET READY!");
+				draw_text (12, 10, 71, new_level_string);
+				draw_text (11, 12, 71, "GET READY!");
 				
-				cpc_UpdScr ();
-				cpc_ShowTileMap (1);
+				#asm
+					call cpc_UpdScr 
+					call cpc_ShowTouchedTiles
+					call cpc_ResetTouchedTiles
+				#endasm	
 				
 				play_sfx (10);
 				espera_activa (150);
@@ -207,6 +238,16 @@ void todos_rescatados_check (void) {
 			alarm = 0;	
 		}
 		enemy_killer = 0xff;
+
+		// Suicide / spikes:
+
+		if (player_just_died == PLAYER_KILLED_BY_BG) {
+			espera_activa (50);
+			player.is_dead = 1;
+			player.life --;
+			new_level = 1;
+			alarm = 0;
+		}
 
 		// Got hostage
 

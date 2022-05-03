@@ -707,6 +707,7 @@ void cortina (void) {
 				ld  (_rdy), a
 				xor a
 				ld  (__t), a
+				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
