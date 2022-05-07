@@ -145,7 +145,9 @@ void todos_rescatados_check (void) {
 
 		if (new_level) {
 			#ifdef DEMO
-				if (level == 2) game_loop_flag = 1; else
+				if (level == 2) {
+					game_loop_flag = 1; 
+				} else
 			#endif
 			{
 				new_level = 0;
@@ -173,6 +175,8 @@ void todos_rescatados_check (void) {
 					player.objs = 0; 
 					first_time = 1;
 				}
+
+				previous_level = level;
 			}
 		}
 	}
@@ -250,6 +254,13 @@ void todos_rescatados_check (void) {
 			play_sfx (10);
 			on_pant = 0x99;
 		}
+
+		// Cheat
+		#ifdef ENABLE_CHEAT
+			if (sp_KeyPressed (key_1) && sp_KeyPressed (key_3)) {
+				player.objs = hostages [level];
+			}
+		#endif
 	}
 
 	void hook_entering (void) {	

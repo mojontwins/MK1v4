@@ -9,12 +9,12 @@
 ;   y los tiles "actuales" (cx, cy).
 ; - Intenta "podar" los casos en los que los rectángulos 
 ;   sean iguales.
-; - Intenta "afinar" y marcar solo 2 de long. en vez de 3
+; - Intenta "afinar" y marcar solo 2/3 de long. en vez de 3/4
 ;   cuando sea posible.
 ; - Prescinde de bucles y otros cálculos al ser un caso muy concreto
-; [na_th_an] Esta rutina funciona con X en pixels modo 1 (0-255) 
+; [na_th_an] Esta rutina funciona con X en pixels modo 0 (0-127) 
 
-XLIB cpc_PutSpTileMap16x16PxM1
+XLIB cpc_PutSpTileMap16x24PxM1
 
 XREF tiles_tocados
 XREF pantalla_juego
@@ -23,12 +23,12 @@ XREF tiles
 
 LIB cpc_UpdTileTableClp
 
-.cpc_PutSpTileMap16x16PxM1
+.cpc_PutSpTileMap16x24PxM1
     ex  de, hl
     ld  ixh, d
     ld  ixl, e
 
-    ; Tendré que marcar 4, 6, o 9 cuadros dependiendo de las alineaciones.
+    ; Tendré que marcar 6, 8, 9 o 12 cuadros dependiendo de las alineaciones.
 
     ld e, (ix + 10) ; ox
     ld d, (ix + 11) ; oy
@@ -98,10 +98,30 @@ origin_next_row:
     ; Marcar el siguiente?
     ld a, (ancho)
     or a
-    jr z, origin_last_row
+    jr z, origin_next_row2
 
     inc e
     call cpc_UpdTileTableClp   ; Marca el tile en DE
+
+origin_next_row2:
+    pop de                  ; Recuperamos   
+    inc d                   ; Y = Y + 1
+    push de                 ; Guardamos
+
+    ; Marco el primer tile
+    call cpc_UpdTileTableClp   ; Marca el tile en DE
+
+    ; Y el de su derecha
+    inc e
+    call cpc_UpdTileTableClp   ; Marca el tile en DE
+
+    ; Marcar el siguiente?
+    ld a, (ancho)
+    or a
+    jr z, origin_last_row
+
+    inc e
+    call cpc_UpdTileTableClp   ; Marca el tile en DE    
 
 origin_last_row:
     pop de                  ; Recuperamos   

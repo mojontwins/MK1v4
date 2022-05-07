@@ -135,6 +135,35 @@ void todos_rescatados_check (void) {
 	// Hooks
 
 	void hook_system_inits (void) {
+		// Create a custom 4x8 sprite for alarms
+		// 0   2   4      6   7   8  9  10 11 12      14
+		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+		#asm
+				ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+				ld  hl, _sprite_18_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+
+				ld  (ix + 3), h
+				ld  (ix + 2), l	
+				
+				xor a
+				ld  (ix + 6), a 		// .cox
+				ld  (ix + 7), a 		// .coy
+				ld  (ix + 8), a 		// .cx
+				ld  (ix + 9), a 		// .cy
+				ld  (ix + 10), a 		// .ox
+				ld  (ix + 11), a 		// .oy
+
+				ld  hl, cpc_PutSpTileMap4x8Px			// .invfunc
+				ld  (ix + 13), h
+				ld  (ix + 12), l
+
+				ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// .updfunc
+				ld  (ix + 15), h
+				ld  (ix + 14), l
+		#endasm
 	}
 
 	void hook_init_game (void) {
@@ -204,7 +233,17 @@ void todos_rescatados_check (void) {
 
 	void hook_mainloop (void) {
 		//sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, half_life + (alarm_y & 7));
-		alarm_x = 240;
+		#asm
+				ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+				ld  a, (_alarm_x)
+				add #(4 + (VIEWPORT_X * 4))
+				srl a
+				ld  (ix + 8), a 		// .cx
+				ld  a, (_alarm_y)
+				add #(VIEWPORT_Y * 8)
+				ld  (ix + 9), a 		// .cy
+		#endasm
 
 		// Alarm counter
 
@@ -676,6 +715,12 @@ void todos_rescatados_check (void) {
 					ld  a, (__en_y)
 					sub 8 
 					ld  (_alarm_y), a 
+
+					ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+					ld  hl, _sprite_alarm
+					ld  (ix + 1), h
+					ld  (ix + 0), l
 
 					ld  a, 1
 					ld  (_noticed), a
