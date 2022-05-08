@@ -149,6 +149,7 @@ void todos_rescatados_check (void) {
 				ld  (ix + 2), l	
 				
 				xor a
+
 				ld  (ix + 6), a 		// .cox
 				ld  (ix + 7), a 		// .coy
 				ld  (ix + 8), a 		// .cx
@@ -229,9 +230,18 @@ void todos_rescatados_check (void) {
 				previous_level = level;
 			}
 		}
+
+		#asm
+				ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
+
+				ld  hl, _sprite_18_a
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+		#endasm
 	}
 
 	void hook_mainloop (void) {
+
 		//sp_MoveSprAbs (sp_alarm, spritesClip, 0, VIEWPORT_Y + (alarm_y >> 3), VIEWPORT_X + (alarm_x >> 3), alarm_x & 7, half_life + (alarm_y & 7));
 		#asm
 				ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
@@ -716,14 +726,18 @@ void todos_rescatados_check (void) {
 					sub 8 
 					ld  (_alarm_y), a 
 
+					ld  a, 1
+					ld  (_noticed), a
+
+					ld  a, (_half_life)
+					or  a 
+					jr  z, _patroller_not_alarm
+
 					ld  ix, #(BASE_SPRITES+(SP_CUSTOM_BASE*16))
 
 					ld  hl, _sprite_alarm
 					ld  (ix + 1), h
 					ld  (ix + 0), l
-
-					ld  a, 1
-					ld  (_noticed), a
 
 				._patroller_not_alarm
 

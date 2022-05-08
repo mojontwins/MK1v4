@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 07 10:13:46 2022
+;	Module compile time: Sun May 08 09:23:12 2022
 
 
 
@@ -9502,7 +9502,7 @@
 	defb	160
 
 	defm	""
-	defb	10
+	defb	0
 
 	defm	""
 	defb	0
@@ -9516,13 +9516,22 @@
 	defm	""
 	defb	2
 
-	defm	"VugDC"
+	defm	"Vp"
+	defb	0
+
+	defm	"DC"
 	defb	5
 
-	defm	"d&ffg"
-	defb	161
+	defm	"d&fp"
+	defb	0
 
-	defm	"5frDDDf"
+	defm	""
+	defb	1
+
+	defm	"5frDDD"
+	defb	10
+
+	defm	""
 	defb	19
 
 	defm	""
@@ -9534,13 +9543,19 @@
 	defm	""
 	defb	0
 
-	defm	"Va6fb"
+	defm	""
+	defb	5
+
+	defm	"a6fb"
 	defb	0
 
 	defm	""
 	defb	0
 
-	defm	"Vf"
+	defm	""
+	defb	5
+
+	defm	"f"
 	defb	19
 
 	defm	""
@@ -16969,7 +16984,7 @@
 	pop bc
 	inc b
 	ld a, b
-	cp 1 + 3 + 0 + 1 + 0
+	cp 1 + 3 + 0 + 1 + 1
 	jr nz, _cpc_screen_update_inv_loop
 .i_22
 	._cpc_screen_update_upd_buffer
@@ -16981,7 +16996,7 @@
 	ld	a,h
 	or	l
 	jp	z,i_23
-	ld b, 1 + 3 + 0 + 1 + 0
+	ld b, 1 + 3 + 0 + 1 + 1
 	._cpc_screen_update_upd_loop
 	dec b
 	push bc
@@ -17779,6 +17794,10 @@
 	ld	(_previous_level),a
 .i_48
 .i_46
+	ld ix, #(0xE000 + 0x600+((((1 + 3) + 0) + 1)*16))
+	ld hl, _sprite_18_a
+	ld (ix + 1), h
+	ld (ix + 0), l
 	ret
 
 
@@ -18337,12 +18356,15 @@
 	ld a, (__en_y)
 	sub 8
 	ld (_alarm_y), a
+	ld a, 1
+	ld (_noticed), a
+	ld a, (_half_life)
+	or a
+	jr z, _patroller_not_alarm
 	ld ix, #(0xE000 + 0x600+((((1 + 3) + 0) + 1)*16))
 	ld hl, _sprite_alarm
 	ld (ix + 1), h
 	ld (ix + 0), l
-	ld a, 1
-	ld (_noticed), a
 	._patroller_not_alarm
 .i_71
 	ret
@@ -18543,7 +18565,7 @@
 
 ._saca_a_todo_el_mundo_de_aqui
 	ld de, 15
-	ld b, 1 + 3 + 0 + 1 + 0
+	ld b, 1 + 3 + 0 + 1 + 1
 	.clear_sprites_loop
 	ld hl, 0xE000 + 0x600
 	ld a, #(_sprite_18_a%256)
@@ -21305,7 +21327,7 @@
 	ld (ix + 2), l
 	ld ix, 0xE000 + 0x600
 	ld de, 16
-	ld b, 1 + 3 + 0 + 1 + 0
+	ld b, 1 + 3 + 0 + 1 + 1
 	.sp_sw_init_turnoff_loop
 	ld a, #((1*8)/4)
 	ld (ix + 10), a
@@ -21986,7 +22008,7 @@
 	XDEF	_abs_a
 	XDEF	_draw_scr
 	XDEF	_spr_next
-	defc	_spr_next	=	58960
+	defc	_spr_next	=	58976
 	XDEF	_wyz_play_music
 	XDEF	_trpixlutc
 	LIB	cpc_PrintGphStrXY
@@ -22138,9 +22160,9 @@
 	XDEF	_init_player
 	XDEF	_gp_gen
 	XDEF	_spr_x
-	defc	_spr_x	=	58975
+	defc	_spr_x	=	58994
 	XDEF	_spr_y
-	defc	_spr_y	=	58980
+	defc	_spr_y	=	59000
 	XDEF	_swoffs_x
 	XDEF	_first_time
 	XDEF	_on_pant
@@ -22346,7 +22368,7 @@
 	LIB	cpc_GetTiles
 	XDEF	_render_all_sprites
 	XDEF	_spr_on
-	defc	_spr_on	=	58970
+	defc	_spr_on	=	58988
 	LIB	cpc_PutSpXOR
 	LIB	cpc_PrintStr
 	XDEF	_draw_scr_background
