@@ -25,8 +25,8 @@
 ; Main binary
 	scf
 	ld	a, $ff
-	ld	ix, 65368 - 14169
-	ld	de, 14169
+	ld	ix, 65368 - 14200
+	ld	de, 14200
 	call $0556
 	di
 
@@ -34,7 +34,7 @@
 	out (254), a
 
 ; Decompress
-	ld  hl, 65368 - 14169
+	ld  hl, 65368 - 14200
 	ld  de, 24200
 	call depack	
 	

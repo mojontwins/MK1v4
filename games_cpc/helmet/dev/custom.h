@@ -135,10 +135,6 @@ void todos_rescatados_check (void) {
 	// Hooks
 
 	void hook_system_inits (void) {
-		/*
-		sp_alarm = sp_CreateSpr (sp_MASK_SPRITE, 2, sprite_alarm, 3);
-		sp_AddColSpr (sp_alarm, sprite_alarm + 32);
-		*/
 	}
 
 	void hook_init_game (void) {
