@@ -88,7 +88,7 @@ void game_ending (void) {
 	cpc_ShowTileMap (1);
 	
 	AY_PLAY_MUSIC (0);
-	espera_activa (500);
+	espera_activa (32767);
 	AY_STOP_SOUND ();
 }
 

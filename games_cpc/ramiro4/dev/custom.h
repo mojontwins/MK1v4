@@ -247,64 +247,65 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "IRE VISITAR A MARISA%"
 							  "A CHUPARLE LOS PIES";
 
-	unsigned char text25 [] = "SI SACAS LA MONEDA%"
-							  "ENFADARAS A HORUS!%"
-							  "YA SOLO TE QUEDA%"
-							  "RASCARLE LOS OJUS!";
+	unsigned char text25 [] = "IF YOU TAKE THE COIN%"
+							  "YOU'LL ANGER HORUS%"
+							  "TO EXIT THE TRAP%"
+							  "TOUCH THE SEALS!";
 
-	unsigned char text26 [] = "SOY SONIA LA MOMIA%"
-							  "GUARDIANA DE LA%"
-							  "TERCERA CRIPTA";
+	unsigned char text26 [] = "I'M SONIA,%"
+							  "THE MUMMY,%"
+							  "GUARDIAN OF THE%"
+							  "THIRD CRYPT";
 
-	unsigned char text27 [] = "SOY CLEMENTE LA%"
-							  "SERPIENTE,%"
-							  "GUARDIAN DE LA%"
-							  "CUARTA CRIPTA";
+	unsigned char text27 [] = "I'M CLEMENTE,%"
+							  "THE SNAKE,%"
+							  "GUARDIAN OF THE%"
+							  "FOURTH CRYPT";
 
-	unsigned char text28 [] = "SOY MARISA LA%"
-							  "SACERDOTISA,%"
-							  "GUARDIANA DE LA%"
-							  "SEGUNDA CRIPTA";
+	unsigned char text28 [] = "I'M MARISA,%"
+							  "THE PRIESTESS,%"
+							  "GUARDIAN OF THE%"
+							  "SECOND CRYPT";
 
-	unsigned char text29 [] = "SOY GUSTAVO EL%"
-							  "ESCLAVO,%"
-							  "GUARDIAN DE LA%"
-							  "PRIMERA CRIPTA";
+	unsigned char text29 [] = "I'M GUSTAVE,%"
+							  "THE SLAVE%"
+							  "GUARDIAN OF THE%"
+							  "FIRST CRYPT";
 
-	unsigned char text30 [] = "LOS TROZOS ESTAN%"
-							  "EN CRIPTAS CERRADAS,%"
-							  "TENDRAS QUE COMPLACER%"
-							  "A SUS GUARDIANES";
+	unsigned char text30 [] = "THE PAPIRE PARTS ARE%"
+							  "IN THE PYRAMID CRYPTS%"
+							  "TALK TO THE GUARDIANS%"
+							  "THEY MAY LET YOU IN!%";
 
-	unsigned char text31 [] = "\"TE PILLE, LORITO!\",%"
-							  "OYES A ALGUIEN GRITAR%"
-							  "\"NO PIERDAS TU PORTE%"
-							  "Y VUELVE A EMPEZAR!\"";
+	unsigned char text31 [] = "\"GOTCHA, INTRUDER!\"%"
+							  "YE HEAR SOMEONE CLAIM%"
+							  "\"NOW START OVER,FIEND%"
+							  "OR WALK OUT IN SHAME!\"";
 
-	unsigned char text32 [] = "CUIDADO CON EL OJO!%"
-							  "SE HACE LA DORMIDA%"
-							  "PERO SI TE VE%"
-							  "TE CHUPA LA VIDA!";
+	unsigned char text32 [] = "BEWARE WITH THE EYE!%"
+							  "IF CLOSED YE MAY PASS%"
+							  "BUT ONCE IT'S OPEN%"
+							  "IT WILL BURN YER ASS!";
 
-	unsigned char text33 [] = "RAMON EL FARAON,%"
-							  "TE INVITO A SU KELI%"
-							  "Y ENTRE VINOS Y HUMO%"
-							  "TE CONTO SU PELI...";
+	unsigned char text33 [] = "RAMON THE PHARAOH%"
+							  "TOOK HIM TO HIS PLACE%"
+							  "HE TOLD YOU THE STORY%"
+							  "OF HIS OWN DISGRACE";
 
-	unsigned char text34 [] = "SI JUNTAS 4 PARTES%"
-							  "EL PODEWR DEL PAPIRO%"
-							  "OCULTO EN ESTE SITIO%"
-							  "SERA TUYO, RAMIRO";
+	unsigned char text34 [] = "\"GATHER FOUR PARTS%"
+							  "OF THE ANCIENT PAPIRE%"
+							  "AND CLAIM ITS POWER%"
+							  "FOR YER OWN, RAMIRO!\""
 
-	unsigned char text35 [] = "BUSCA A RAMON Y QUE%"
-							  "CON SU ABRACADABRA%"
-							  "NO SE HAGA EL REMOLON%"
-							  "Y LA PIRAMIDE TE ABRA";
+	unsigned char text35 [] = "SO GET RIGHT TO IT!%"
+							  "LOOK FOR YOUR FRIEND%"
+							  "THE PYRAMID WILL OPEN%"
+							  "NO TIME TO SPEND!";
 
-	unsigned char text36 [] = "ESTE ES EL ALTAR ROTO%"
-							  "QUE NO TE DISCRIMINA%"
-							  "Y SI LE TOCAS EL TOTO%"
-							  "TE DA PAPEL DE COCINA";
+	unsigned char text36 [] = "THIS BROKEN SHRINE%"
+							  "WONT LET YOU DOWN%"
+							  "GIVES YOU PAPER TOWEL%"
+							  "THE ROUGHEST IN TOWN!%";
 
 	unsigned char text37 [] = "WHAT ARE YOU THINKING%"
 							  "YOU GODDAMNED NUT!%"
@@ -426,7 +427,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 
 	unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
 							  "CON FEO SU SONIDO%"
-							  "EN SOLO UNOS MITUTOS%"
+							  "EN SOLO UNOS MINUTOS%"
 							  "YA ESTARE DORMIDO";
 
 	unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
@@ -483,10 +484,10 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "Y ENTRE VINOS Y HUMO%"
 							  "TE CONTO SU PELI...";
 
-	unsigned char text34 [] = "SI JUNTAS 4 PARTES%"
+	unsigned char text34 [] = "\"SI JUNTAS 4 PARTES%"
 							  "EL PODEWR DEL PAPIRO%"
 							  "OCULTO EN ESTE SITIO%"
-							  "SERA TUYO, RAMIRO";
+							  "SERA TUYO, RAMIRO\"";
 
 	unsigned char text35 [] = "BUSCA A RAMON Y QUE%"
 							  "CON SU ABRACADABRA%"

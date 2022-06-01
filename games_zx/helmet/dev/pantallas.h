@@ -79,7 +79,7 @@ void game_ending (void) {
 	#endasm
 	asm_int = (unsigned int) (s_ending); unpack ();
 	beepet (); play_sfx (11);
-	espera_activa (500);
+	espera_activa (32767);
 }
 
 void game_over (void) {

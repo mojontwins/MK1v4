@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun May 08 09:23:12 2022
+;	Module compile time: Thu May 12 12:19:31 2022
 
 
 
@@ -18484,7 +18484,7 @@
 	call	cpc_ShowTileMap
 	ld	hl,0	;const
 	call	_wyz_play_music
-	ld	hl,500	;const
+	ld	hl,32767	;const
 	push	hl
 	call	_espera_activa
 	pop	bc
@@ -22067,7 +22067,6 @@
 	XDEF	_draw_text
 	LIB	cpc_PutSpTileMap8x8PxM1
 	LIB	cpc_PutSpTileMap16x16PxM1
-	LIB	cpc_PutSpTileMap16x24PxM1
 	LIB	cpc_CollSp
 	XDEF	_beepet
 	LIB	cpc_PutMaskSp4x16
@@ -22095,7 +22094,6 @@
 	XDEF	_t_alt
 	LIB	cpc_PutTrSp8x8TileMap2bPxM1
 	LIB	cpc_PutTrSp16x16TileMap2bPxM1
-	LIB	cpc_PutTrSp16x24TileMap2bPxM1
 	LIB	cpc_ShowScrTileMap2
 	LIB	cpc_Uncrunch
 	XDEF	_cpc_UpdateNow
