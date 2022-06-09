@@ -5511,18 +5511,27 @@ void mueve_bicharracos (void) {
 									break;	
 							}
 						#else
-							// Always pursue
+							#ifdef FANTIES_EXIT_STATE_V
+								if (en_an_state [enit] == 1) {
+									if (en_an_x [enit] > FANTIES_EXIT_STATE_V) en_an_x [enit] -= FANTIES_EXIT_STATE_V; else en_an_x [enit] = 0;
+									if (en_an_y [enit] > FANTIES_EXIT_STATE_V) en_an_y [enit] -= FANTIES_EXIT_STATE_V; else en_an_y [enit] = 0;
+								} else 
+							#else
+								{
+									// Always pursue
 
-							if ((rand () & 7) > 1) {
-								if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-									en_an_vx [enit] += FANTY_A;
-								else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-									en_an_vx [enit] -= FANTY_A;
-								if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-									en_an_vy [enit] += FANTY_A;
-								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-									en_an_vy [enit] -= FANTY_A;
-							}
+									if ((rand () & 7) > 1) {
+										if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+											en_an_vx [enit] += FANTY_A;
+										else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+											en_an_vx [enit] -= FANTY_A;
+										if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+											en_an_vy [enit] += FANTY_A;
+										else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+											en_an_vy [enit] -= FANTY_A;
+									}
+								}
+							#endif
 						#endif
 
 						if (scenery_info.allow_type_6) {

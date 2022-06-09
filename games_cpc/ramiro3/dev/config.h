@@ -196,7 +196,7 @@
 #define FANTY_A 					12		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE			10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
-
+#define FANTIES_EXIT_STATE_V		16		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
 // Quadrators
 // ----------
 

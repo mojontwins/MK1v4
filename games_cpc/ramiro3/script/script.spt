@@ -49,12 +49,23 @@ PLAYER_GETS_COIN
 	IF FLAG 1 = 20
 	THEN
 		SOUND 8
-		DISABLE_TYPE_6
+		#DISABLE_TYPE_6
+		# Instead of just freezing the fanty, we send it off screen
+		EXTERN 252
 		HIDE_COINS
 		#TEXT _______TRAP_DEACTIVATED_______
 		#TEXT ______TRAMPA_DESACTIVADA______
 		EXTERN 253
 		REDRAW
+	END
+END
+
+# Fix fanty
+
+ENTERING ANY
+	IF TRUE
+	THEN
+		DISABLE_TYPE_6
 	END
 END
 
