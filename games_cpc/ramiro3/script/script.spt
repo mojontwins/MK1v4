@@ -52,6 +52,7 @@ PLAYER_GETS_COIN
 		SOUND 8
 		#DISABLE_TYPE_6
 		# Instead of just freezing the fanty, we send it off screen
+		# This extern also checks the amount of collected mushrooms to show a message!
 		EXTERN 252
 		HIDE_COINS
 		#TEXT _______TRAP_DEACTIVATED_______
