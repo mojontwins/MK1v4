@@ -5727,6 +5727,10 @@ void mueve_bicharracos (void) {
 									break;	
 							}
 						#else
+							#ifdef FANTIES_EXIT_STATE_V
+								if (en_an_state [enit] != 1) 
+							#endif
+							{
 							// Always pursue
 
 							if ((rand () & 7) > 1) {
@@ -5738,6 +5742,7 @@ void mueve_bicharracos (void) {
 									en_an_vy [enit] += FANTY_A;
 								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
 									en_an_vy [enit] -= FANTY_A;
+								}
 							}
 						#endif
 

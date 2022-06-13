@@ -50,7 +50,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "I'M LOOKIN' FOR A MAN%"
 							 "WHO DOES GOOD LOVIN'%"
 							 "YOU SURELY NEED A TAN%"
-							 "BUT WE COULD GET GOIN'"
+							 "BUT WE COULD GET GOIN'";
 
 	unsigned char text3 [] = "(RAMIRE THE VAMPIRE)%"
 							 "I'D BE SO INTERESTED%"
@@ -110,7 +110,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "MORE THAN ENOUGH!%"
 							  "SHROOMS I'M SHIPPING%"
 							  "THOSE ARE SO ROUGH%"
-							  "THEY'LL BE TRIPPIN'!"
+							  "THEY'LL BE TRIPPIN'!";
 
 	unsigned char text13 [] = "(DOTTY)%"
 							  "I LOVE YOU LIL' PUG!%"
