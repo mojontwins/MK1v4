@@ -61,8 +61,8 @@ void title_screen (void) {
 	draw_text (11, 8, 7, "THE ZAPHIRE");
 	*/
 	
-	draw_text (8, 19, 71, "MOJON TWINS 2013");
-	draw_text (10, 20, 7, "CHURRERA 4.7");
+	draw_text (8, 19, 71, "MOJON TWINS 2022");
+	draw_text (10, 20, 7, "CHURRERA 4.8");
 	
 	sp_UpdateNow ();
 	// } END_OF_CUSTOM

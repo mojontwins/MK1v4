@@ -61,7 +61,7 @@ void title_screen (void) {
 	draw_text (10, 7, 7, "EN EL BOSQUE");
 	draw_text (10, 8, 7, "DEL SUSPIRO!");
 	
-	draw_text (8, 19, 71, "MOJON TWINS 2021");
+	draw_text (8, 19, 71, "MOJON TWINS 2022");
 	draw_text (10, 20, 7, "MTE MK1 V4.8");
 	
 	cpc_UpdScr ();
