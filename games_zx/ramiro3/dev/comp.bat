@@ -25,7 +25,7 @@ cd ..\dev
 echo Making script
 ..\utils\msc.exe ..\script\script.spt msc.h 28 shortsettile > nul
 
-zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
+zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200 -DLANG_EN  > nul
 ..\utils\printsize.exe %game%.bin
 
 ..\utils\imanol.exe ^
