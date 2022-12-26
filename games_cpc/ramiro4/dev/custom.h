@@ -835,6 +835,7 @@ void trap_kill (void) {
 	#endasm
 	
 	// TODO // if (is128k) arkos_play_music (5);
+	AY_STOP_SOUND ();
 	show_text_box (31);
 	cpc_UpdateNow (0);
 	
@@ -871,6 +872,7 @@ void water_trap_setup (void) {
 
 void win_crypt (void) {
 	// TODO // if (is128k) arkos_play_music (1);
+	AY_PLAY_MUSIC (1);
 	PSCORE += SCORE_WIN_CRYPT;
 	player.life += 10;
 }
@@ -1107,6 +1109,7 @@ void win_crypt (void) {
 		// To make trap active, we detect the player got a new obj.
 		if (trap_screen && player.objs != objs_old) {
 			// TODO // if (is128k) arkos_stop_sound ();
+			AY_STOP_SOUND ();
 			flags [10 + flags [15]] = 1;
 			trap_active = 1;
 			seed = n_pant + 1;
@@ -1127,6 +1130,7 @@ void win_crypt (void) {
 				play_sfx (10);
 			}
 			// TODO // if (is128k) arkos_play_music (2);
+			AY_PLAY_MUSIC(2);
 		}
 
 		if (trap_active) {			
@@ -1271,6 +1275,7 @@ void win_crypt (void) {
 							play_sfx (8);
 							trap_active = 0;
 							// TODO // if (is128k) arkos_stop_sound ();
+							AY_STOP_SOUND ();
 							draw_scr_background ();
 							win_crypt ();
 							if (n_pant == 0x12) cabroni = 1;
@@ -1322,6 +1327,7 @@ void win_crypt (void) {
 				water_level = 25;
 				water_trap_setup ();
 				// TODO // if (is128k) arkos_play_music (2);
+				AY_PLAY_MUSIC (2);
 			}
 
 			PSCORE += SCORE_GET_COIN;
@@ -1365,7 +1371,8 @@ void win_crypt (void) {
 				n_pant = 5;
 				gpy = player.y = 0;
 				gpx = 120; player.x = 120<<6;
-				// TODO // if (is128k) arkos_play_music (1);				
+				// TODO // if (is128k) arkos_play_music (1);			
+				AY_PLAY_MUSIC (1);	
 			}
 
 			// Detect horus tiles
@@ -1522,6 +1529,7 @@ void win_crypt (void) {
 			if (n_pant == 5) {
 				water_level = 0;
 				// TODO // if (is128k) arkos_play_music (1);
+				AY_PLAY_MUSIC (1);
 			} else water_level = 25;
 		}
 	}
