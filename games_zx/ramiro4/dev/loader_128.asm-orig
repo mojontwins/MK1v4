@@ -3,7 +3,7 @@
 ; by na_th_an - Thanks to Antonio Villena for his tutorials and utilities.
 
 	org $5ccb
-	ld  sp, 24199
+	ld  sp, 24149
 	di
 	db	$de, $c0, $37, $0e, $8f, $39, $96 ;OVER USR 7 ($5ccb)
 	
@@ -24,7 +24,7 @@
 ; Main binary
 	scf
 	ld	a, $ff
-	ld	ix, 24200
+	ld	ix, 24150
 	ld	de, %%%mb_length%%%
 	call $0556
 	di
@@ -59,4 +59,4 @@
 	
 ; run game!
 launch_exe:
-	jp 24200
+	jp 24150

@@ -13,6 +13,8 @@ void main (void) {
 			di 
 			ld  sp, STACK_ADDR
 
+			call musicstart
+
 		#ifdef MODE_128K_DUAL
 				xor a
 				ld  (_ay_player_on), a
@@ -744,7 +746,7 @@ void main (void) {
 						#ifdef BETTER_VERTICAL_CONNECTIONS
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
 							player.cont_salto = 0;
-						#endif
+					#endif
 
 						#asm
 							#ifdef CUSTOM_SCREEN_CONNECTIONS

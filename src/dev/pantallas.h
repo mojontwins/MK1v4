@@ -31,7 +31,11 @@ void unpack (void) {
 
 			ld hl, (_asm_int)
 			ld de, 16384
+		#ifdef DECOMPRESSOR_ZX0
+			jp dzx0_standard
+		#else
 			jp depack
+		#endif
 
 		.blackout
 			ld hl, 22528

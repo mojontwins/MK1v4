@@ -11,14 +11,14 @@ echo Making %game%
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
 ..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
-..\utils\apack.exe ..\gfx\title.scr title.bin  > nul
-..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
-..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
+..\utils\zx0.exe ..\gfx\title.scr title.bin  > nul
+..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul
+..\utils\zx0.exe ..\gfx\ending.scr ending.bin  > nul
 
 echo Making script
 ..\utils\msc.exe ..\script\script.spt msc.h 36 flipflops shortsettile > nul
 
-zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2f -zorg=24200  > nul
+zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2f -zorg=24150  > nul
 ..\utils\printsize.exe %game%.bin
 
 ..\utils\imanol.exe ^

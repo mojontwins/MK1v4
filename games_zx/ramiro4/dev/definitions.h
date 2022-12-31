@@ -217,8 +217,8 @@ unsigned char ay_player_on   @ 23297;
 unsigned char n_pant, on_pant;
 
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
-	unsigned char f_zone_ac;
-	unsigned char fzx1, fzx2, fzy1, fzy2;
+unsigned char f_zone_ac;
+unsigned char fzx1, fzx2, fzy1, fzy2;
 #endif
 
 // Scenery status

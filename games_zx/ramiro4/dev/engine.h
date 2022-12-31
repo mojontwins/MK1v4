@@ -42,10 +42,10 @@ unsigned char line_of_text_clear [] = "                                ";
 #ifdef ENEMS_CUSTOM_CELLS
 	#include "custom_enem_cells.h"
 #else
-	unsigned char *enem_cells [] = {
-		sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-		sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
-	};
+unsigned char *enem_cells [] = {
+	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+};
 #endif
 
 #ifdef ENABLE_SWORD
@@ -288,24 +288,24 @@ void render_all_sprites (void) {
 			} else 
 		#endif
 		{
-			/*
+		/*
 			rdx = malotes [enoffs + enit].x;
 			rdy = malotes [enoffs + enit].y;
-			*/
-			#asm
+		*/
+		#asm
 					ld  hl, (_enoffs)
 					ld  bc, (_enit)
 					ld  b, 0
-					add hl, bc
-					
+				add hl, bc
+
 					call _calc_baddies_pointer
 
 					// malotes struct is:
 					// x, y, x1, y1, x2, y2, mx, my, t[, life]
 
-					ld  a, (hl)
+				ld  a, (hl)
 					ld  (_rdx), a 
-					inc hl 
+				inc hl
 
 					ld  a, (hl)
 					ld  (_rdy), a 
@@ -707,6 +707,7 @@ void cortina (void) {
 				ld  (_rdy), a
 				xor a
 				ld  (__t), a
+				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
@@ -5032,7 +5033,7 @@ void draw_scr (void) {
 	#endif
 			
 	#if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
-		f_zone_ac = 0;
+	f_zone_ac = 0;
 	#endif
 
 	// Set up enemies.
@@ -5149,15 +5150,15 @@ void draw_scr (void) {
 		#ifdef COUNT_KILLABLE_ON			
 			#if defined (ENEMIES_MAY_DIE)
 				if (1
-					#ifdef BOXES_ONLY_KILL_TYPE
+				#ifdef BOXES_ONLY_KILL_TYPE
 						&& _en_t == BOXES_ONLY_KILL_TYPE
-					#endif
-					#ifdef PLAYER_MIN_KILLABLE
+				#endif
+				#ifdef PLAYER_MIN_KILLABLE
 						&& _en_t >= PLAYER_MIN_KILLABLE
-					#endif
+				#endif
 					#ifdef PLAYER_MAX_KILLABLE
 						&& _en_t <= PLAYER_MAX_KILLABLE
-					#endif
+				#endif
 				) {
 					flags [COUNT_KILLABLE_ON] ++;
 				}
@@ -5167,12 +5168,12 @@ void draw_scr (void) {
 		
 	#ifdef ACTIVATE_SCRIPTING
 		#ifdef LINE_OF_TEXT
-			// Delete line of text
-			#asm
-					xor a
-					ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
-			#endasm
-			draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+		// Delete line of text
+		#asm
+				xor a
+				ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
+		#endasm
+		draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
 		#endif
 
 		// Run "ENTERING ANY" script (if available)
@@ -5726,6 +5727,10 @@ void mueve_bicharracos (void) {
 									break;	
 							}
 						#else
+							#ifdef FANTIES_EXIT_STATE_V
+								if (en_an_state [enit] != 1) 
+							#endif
+							{
 							// Always pursue
 
 							if ((rand () & 7) > 1) {
@@ -5737,6 +5742,7 @@ void mueve_bicharracos (void) {
 									en_an_vy [enit] += FANTY_A;
 								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
 									en_an_vy [enit] -= FANTY_A;
+							}
 							}
 						#endif
 
@@ -6214,7 +6220,7 @@ void mueve_bicharracos (void) {
 							ld  (_ptgmx), hl
 
 						.moving_platforms_done
-
+				
 					#endasm
 				} else
 			#endif			
