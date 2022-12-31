@@ -134,4 +134,4 @@
 	defw posicion_inicial_superbuffer+8*ancho_pantalla_bytes*23
 	
 .behindtilemasks
-	;INCLUDE "system/behindtilemasks.asm"
+	INCLUDE "system/behindtilemasks.asm"

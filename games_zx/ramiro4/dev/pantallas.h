@@ -61,7 +61,7 @@ void title_screen (void) {
 	draw_text (11, 8, 7, "THE ZAPHIRE");
 	*/
 	
-	draw_text (8, 19, 71, "MOJON TWINS 2020");
+	draw_text (8, 19, 71, "MOJON TWINS 2023");
 	draw_text (10, 20, 7, "CHURRERA 4.8");
 	
 	sp_UpdateNow ();

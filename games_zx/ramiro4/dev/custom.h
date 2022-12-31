@@ -53,7 +53,7 @@
 	unsigned char _trap_bx;
 	unsigned char _trap_by;
 	unsigned char _trap_bt;
-	unsigned char rda, rdb;
+	unsigned char rdb;
 
 	// Coins trap extra stuff
 

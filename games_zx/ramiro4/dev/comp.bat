@@ -18,7 +18,7 @@ echo Making %game%
 echo Making script
 ..\utils\msc.exe ..\script\script.spt msc.h 36 flipflops shortsettile > nul
 
-zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2 -zorg=24200  > nul
+zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2f -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
 
 ..\utils\imanol.exe ^

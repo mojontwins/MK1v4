@@ -46,7 +46,7 @@
 #define MAX_ENEMS 		3
 
 #define BASE_TILEMAP 		0x0100
-#define WYZ_SONG_BUFFER 	0x8800
+#define WYZ_SONG_BUFFER 	0x8B00 	// Modified!
 #define BASE_ROOM_BUFFERS	0xC000 + 0x600
 #define BASE_DIRTY_CELLS 	0xC800 + 0x600
 #define BASE_ARRAYS 		0xD000 + 0x600
