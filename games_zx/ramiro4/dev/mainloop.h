@@ -31,7 +31,9 @@ void main (void) {
 				jr  z, no128K
 
 			// 128K mode: set the stack in low RAM
-				ld  sp, 24199
+				// CUSTOM :: THIS GAME LOADS 50 BYTES LOWER!"
+				ld  sp, 24149
+				//ld  sp, 24199
 
 			#ifdef ENABLE_ARKOS
 				// We need to page in so make sure this is LOW in RAM

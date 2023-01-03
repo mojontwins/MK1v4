@@ -118,7 +118,7 @@ unsigned char opscore;
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
-unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]?";
+unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]:";
 unsigned char redraw_after_text;
 unsigned char intro_text;
 unsigned char talk_sounds [] = { 7, 11 };
@@ -171,82 +171,80 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "I ALSO DRANK BRANDY%"
 							 "NOW I NEED A DUMP.";
 
-	unsigned char text10 [] = "AUNQUE SEA DENOCHES%"
-							  "NO CONSIGO DORMIR.%"
-							  "TENGO MUCHO INSOMNIO%"
-							  "ESTO ES UN SINVIVIR";
+	unsigned char text10 [] = "THE NIGHT HAS COME%"	
+	                          "BUT I CAN'T SLEEP%
+	                          "I'M A BIT INSOMNIAC%"
+	                          "DON'T BE VERY CHEAP!";
 
-	unsigned char text11 [] = "QUE DESPISTE TENGO%"
-							  "AYER FUI LO PEOR. ME%"
-							  "DESMADRE EN UN CUMPLE%"
-							  "Y PERDI LA ROPA%"
-							  "INTERIOR.";
+	unsigned char text11 [] = "GOSH I'M SO CLUELESS%"
+							  "JUST WENT TO A FAIR%"
+							  "GOSH IT WAS MADNESS!%"
+							  "I LOST MY UNDERWEAR";
 
-	unsigned char text12 [] = "ESTOY SIN RECATO%"
-							  "A SU SERVICIO.%"
-							  "TRABAJO MUY BARATO%"
-							  "PERO EL CUERO ES MI%"
-							  "VICIO...";
+	unsigned char text12 [] = "I'M THE BEST SLAVE%"
+							  "EVEN IN BAD WEATHER%"
+							  "BUT EVEN IN A GRAVE%"
+							  "I THRIVE FOR LEATHER";
 
-	unsigned char text13 [] = "RECUPERA LOS CUATRO%"
-							  "TROZOS DEL PAPIRO%"
-							  "Y VUELVE AQUI PARA%"
-							  "HACER EL HECHIZO";
+	unsigned char text13 [] = "RETRIEVE 4 PIECES%"
+							  "OF MAGIC PAPYRUS%"
+							  "AND RETURN HERE...%"
+							  "TO CAST THE SPELL!";
 
-	unsigned char text14 [] = "VAYA INSISTENCIA, TE%"
-							  "ABRO MI PIRAMIDE,%"
-							  "MONTUNO! QUE CASI PA-%"
-							  "RECES EL REY DE LOS%"
-							  "HUNOS!";
+	unsigned char text14 [] = "I'LL OPEN THE PYRAMID%"
+							  "GO GET SOME BUNS!%"
+							  "YOU'RE PESKIER THAN%"
+							  "THE KING OF THE HUNS!";
 
-	unsigned char text15 [] = "LO CONSIGUIO AL FIN!%"
-							  "ENSAMBLADO EL PAPIRO%"
-							  "SE DISPONE A LEER EL%"
-							  "CONJURO NUESTRO BUEN%"
-							  "RAMIRO.";
+	unsigned char text15 [] = "WHAT A SUCCESS!%"
+							  "PAPYRUS ASSEMBLED!%"
+							  "RAMIRO READ THE SPELL%"
+							  "YET HIS FACE TREMBLED";
 
-	unsigned char text16 [] = "DICE ASI:%"
-							  "- 2 CEBOLLAS%"
-							  "- PAPEL DEL CULO%"
-							  "- PAN%"
-							  "- FAIRY";
+	unsigned char text16 [] = "SO IT READS:%"
+							  "- 2 ONIONS%"
+							  "- TOILET PAPER%"
+							  "- BREAD%"
+							  "- DETERGENT";
 
-	unsigned char text17 [] = "EL POBRE VAMPIRO SE%"
-							  "QUEDA CON CARA MONA:%"
-							  "NO ES UN CONJURO,%"
-							  "ES LA LISTA DEL%"
-							  "MERCADONA.";
+	unsigned char text17 [] = "OH MY POOR VAMPIRE,%"
+							  "IT HIT LIKE A FIST!%"
+							  "IT'S NOT A SPELL!,%"
+							  "IT'S A SHOPPING LIST!"
 
-	unsigned char text18 [] = "YA QUE ME TRAES UNA%"
-							  "OFRENDA, YO SOLTARE%"
-							  "PRENDA...";
+	unsigned char text18 [] = "NICE IT'S A COIN!%"
+							  "SURELY YO'WERE SWIFT%"
+							  "NO NEED TO PURLOIN%"
+	                          "'ERE! GET YOUR GIFT!";
 
-	unsigned char text19 [] = "YA TIENES UN OBJETO!%"
-							  "USALO ANTES, CATETO.";
+	unsigned char text19 [] = "YOU GOT AN OBJECT!%"
+							  "DON'T BE A BORE!%";
+							  "FULFILL YER PROJECT!%"
+							  "USE IT BEFORE!%";
 
-	unsigned char text20 [] = "Y YA TE ABRI. AHORA%"
-							  "JUYE... JUYE!!";
+	unsigned char text20 [] = "I OPENED THE PYRAMID%"
+							  "SO OFF YOU GO! GO!!";
 
-	unsigned char text21 [] = "OH, QUE SUAVE ES!%"
-							  "Y AHORA, PORFA, VETE%"
-							  "QUE HARE CACA Y ME%"
-							  "LIMPIARE EL OJETE";
+	unsigned char text21 [] = "OH, IT'S SO SOFT!%"
+							  "FOR IT ISN'T A FARCE%"
+							  "THAT I'LL TAKE A POO%"
+							  "AND WIPE MY ARSE";
 
-	unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
-							  "CON FEO SU SONIDO%"
-							  "EN SOLO UNOS MITUTOS%"
-							  "YA ESTARE DORMIDO";
+	unsigned char text22 [] = "A FAKIR'S FLUTE%"
+							  "WITH A DREADED SOUND%"
+							  "IN JUST A MINUTE%"
+							  "I'LL HIT THE GROUND!";
 
-	unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
-							  "RECIBO CON ALBOROTO%"
-							  "TU BELLO REGALO: UNAS%"
-							  "BRAGAS PA MI TOTO";
+	unsigned char text23 [] = "DEAR HANDSOME VAMPIRE%"
+							  "YOU KNOW WHAT'S WHAT!%"
+							  "I GOT WHAT I REQUIRE!%"
+							  "KNICKERS FOR MY TWAT!";
 
-	unsigned char text24 [] = "QUE LUSTROSO QUEDARA%"
-							  "EL CUERO DE MI ARNES%"
-							  "IRE VISITAR A MARISA%"
-							  "A CHUPARLE LOS PIES";
-
+	unsigned char text24 [] = "FINALLY GOT MY LOOT!%"
+							  "VAMPIRES KNOW BETTER!%"
+							  "NOW I CAN KISS A BOOT%"
+							  "OF SHINY SHINY LEATHER";
+							  
 	unsigned char text25 [] = "IF YOU TAKE THE COIN%"
 							  "YOU'LL ANGER HORUS%"
 							  "TO EXIT THE TRAP%"
@@ -312,16 +310,15 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "SUCH A ROUGH PAPER%"
 							  "WOULD SAND MY BUTT!";
 
-	unsigned char text38 [] = "EL ALTAR NO CONTESTA";
+	unsigned char text38 [] = "THE SHRINE IS SILENT";
 
-	unsigned char text39 [] = "NO HE VISTO NI POR%"
-							  "DONDE VENIAN,%"
-							  "JA JA JA JA JA%"
+	unsigned char text39 [] = "I DIDN\"T SEE THEM%"
+							  "COMMING! HA HA HA HA,%"
 							  "... CABRONI!";
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "POR OSIRIS Y POR APIS%"
-							 "MIRADME BIEN: SOY EL%"
+							 "MIRADME BIEN. SOY EL%"
 							 "ALTAR DE LAS OFRENDAS.%"
 							 "TE DARE COSAS SI TRAES%"
 							 "MONEDAS AL MENDA.";
@@ -398,14 +395,14 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "CONJURO NUESTRO BUEN%"
 							  "RAMIRO.";
 
-	unsigned char text16 [] = "DICE ASI:%"
+	unsigned char text16 [] = "DICE ASI%"
 							  "- 2 CEBOLLAS%"
 							  "- PAPEL DEL CULO%"
 							  "- PAN%"
 							  "- FAIRY";
 
 	unsigned char text17 [] = "EL POBRE VAMPIRO SE%"
-							  "QUEDA CON CARA MONA:%"
+							  "QUEDA CON CARA MONA.%"
 							  "NO ES UN CONJURO,%"
 							  "ES LA LISTA DEL%"
 							  "MERCADONA.";
@@ -426,18 +423,18 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "LIMPIARE EL OJETE";
 
 	unsigned char text22 [] = "UNA FLAUTA DE FAKIR!%"
-							  "CON FEO SU SONIDO%"
+							  "CON SU FEO SONIDO%"
 							  "EN SOLO UNOS MINUTOS%"
 							  "YA ESTARE DORMIDO";
 
 	unsigned char text23 [] = "OH, GUAPO VAMPIRILLO,%"
 							  "RECIBO CON ALBOROTO%"
-							  "TU BELLO REGALO: UNAS%"
+							  "TU BELLO REGALO. UNAS%"
 							  "BRAGAS PA MI TOTO";
 
 	unsigned char text24 [] = "QUE LUSTROSO QUEDARA%"
 							  "EL CUERO DE MI ARNES%"
-							  "IRE VISITAR A MARISA%"
+							  "IRE A VISITAR A MARISA%"
 							  "A CHUPARLE LOS PIES";
 
 	unsigned char text25 [] = "SI SACAS LA MONEDA%"
@@ -1102,7 +1099,11 @@ void win_crypt (void) {
 			.eoh_done
 		#endasm		
 
-		cpc_Border ((scenery_info.evil_zone_active & half_life) ? 0x4c : 0x54);
+		cpc_Border ((scenery_info.evil_zone_active & half_life) ? 
+				0x5c 
+			: 
+				(player_just_died == PLAYER_KILLED_BY_EZ ? 0x4c : 0x54)
+			);
 
 		// Block trap
 

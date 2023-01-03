@@ -91,6 +91,7 @@ void game_ending (void) {
 			ld  hl, _s_ending
 			ld  de, BASE_SUPERBUFF
 			call depack
+			call cpc_ResetTouchedTiles
 	#endasm
 
 	// CUSTOM { 
@@ -108,8 +109,8 @@ void game_ending (void) {
 	cpc_ShowTileMap (1);
 	// } END OF CUSTOM
 	
-	AY_PLAY_MUSIC (0);
-	espera_activa (500);
+	AY_PLAY_MUSIC (3);
+	espera_activa (28888);
 	AY_STOP_SOUND ();
 }
 
