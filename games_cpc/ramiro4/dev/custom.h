@@ -127,22 +127,22 @@ unsigned char talk_sounds [] = { 7, 11 };
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "VISITOR, LOOK AT ME,%"
 							 "I AM THE MIGHTY SHRINE%"
-							 "I'LL GIVE YOU THINGS%"
+							 "I\"LL GIVE YOU THINGS%"
 							 "IF YOU BRING ME A DIME";
 
 	unsigned char text1 [] = "A ROLL OF TOILET PAPER%"
-							 "IT'S NONE THE COARSE%"
+							 "IT\"S NONE THE COARSE%"
 							 "MAKES YOU FEEL BETTER%"
 							 "AND CLEANS YOU ARSE%";
 
 	unsigned char text2 [] = "I GIVE YOU THIS FLUTE%"
 							 "IF YOU PLAY IT FAST%"
-							 "IT'LL MAKE YOU MUTE%"
-							 "YOU'LL SLEEP AT LAST%";
+							 "IT\"LL MAKE YOU MUTE%"
+							 "YOU\"LL SLEEP AT LAST%";
 
 	unsigned char text3 [] = "WHAT CAN I DO?%"
 							 "PLEASE DO NO WRONG%"
-							 "I'M TRUSTING YOU!%"
+							 "I\"M TRUSTING YOU!%"
 							 "I GIVE YOU A THONG%";
 
 	unsigned char text4 [] = "GREASE FOR LEATHER%"
@@ -151,15 +151,15 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "YOU WILL LUCK SWINEY";
 
 	unsigned char text5 [] = "GET LOST!%"
-							 "I DON'T NEED THIS%"
+							 "I DON\"T NEED THIS%"
 							 "RUBBISH, COCKALORUM!";
 
-	unsigned char text6 [] = "WHAT'S THIS?%"
+	unsigned char text6 [] = "WHAT\"S THIS?%"
 							 "TAKE IT AWAY,%"
 							 "CUMDUMPSTER!";
 
-	unsigned char text7 [] = "C'MON, DON'T BE A%"
-							 "PILLOCK! I DON'T NEED%"
+	unsigned char text7 [] = "C\"MON, DON\"T BE A%"
+							 "PILLOCK! I DON\"T NEED%"
 							 "THIS CRAP!";
 
 	unsigned char text8 [] = "AND AM I SUPPOSED TO%"
@@ -172,16 +172,16 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "NOW I NEED A DUMP.";
 
 	unsigned char text10 [] = "THE NIGHT HAS COME%"	
-	                          "BUT I CAN'T SLEEP%
-	                          "I'M A BIT INSOMNIAC%"
-	                          "DON'T BE VERY CHEAP!";
+	                          "BUT I CAN\"T SLEEP%"
+	                          "I\"M A BIT INSOMNIAC%"
+	                          "DON\"T BE VERY CHEAP!";
 
-	unsigned char text11 [] = "GOSH I'M SO CLUELESS%"
+	unsigned char text11 [] = "GOSH I\"M SO CLUELESS%"
 							  "JUST WENT TO A FAIR%"
 							  "GOSH IT WAS MADNESS!%"
 							  "I LOST MY UNDERWEAR";
 
-	unsigned char text12 [] = "I'M THE BEST SLAVE%"
+	unsigned char text12 [] = "I\"M THE BEST SLAVE%"
 							  "EVEN IN BAD WEATHER%"
 							  "BUT EVEN IN A GRAVE%"
 							  "I THRIVE FOR LEATHER";
@@ -191,9 +191,9 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "AND RETURN HERE...%"
 							  "TO CAST THE SPELL!";
 
-	unsigned char text14 [] = "I'LL OPEN THE PYRAMID%"
+	unsigned char text14 [] = "I\"LL OPEN THE PYRAMID%"
 							  "GO GET SOME BUNS!%"
-							  "YOU'RE PESKIER THAN%"
+							  "YOU\"RE PESKIER THAN%"
 							  "THE KING OF THE HUNS!";
 
 	unsigned char text15 [] = "WHAT A SUCCESS!%"
@@ -209,34 +209,34 @@ unsigned char talk_sounds [] = { 7, 11 };
 
 	unsigned char text17 [] = "OH MY POOR VAMPIRE,%"
 							  "IT HIT LIKE A FIST!%"
-							  "IT'S NOT A SPELL!,%"
-							  "IT'S A SHOPPING LIST!"
+							  "IT\"S NOT A SPELL!,%"
+							  "IT\"S A SHOPPING LIST!";
 
-	unsigned char text18 [] = "NICE IT'S A COIN!%"
-							  "SURELY YO'WERE SWIFT%"
+	unsigned char text18 [] = "NICE IT\"S A COIN!%"
+							  "SURELY YO\"WERE SWIFT%"
 							  "NO NEED TO PURLOIN%"
-	                          "'ERE! GET YOUR GIFT!";
+	                          "\"ERE! GET YOUR GIFT!";
 
 	unsigned char text19 [] = "YOU GOT AN OBJECT!%"
-							  "DON'T BE A BORE!%";
+							  "DON\"T BE A BORE!%"
 							  "FULFILL YER PROJECT!%"
 							  "USE IT BEFORE!%";
 
 	unsigned char text20 [] = "I OPENED THE PYRAMID%"
 							  "SO OFF YOU GO! GO!!";
 
-	unsigned char text21 [] = "OH, IT'S SO SOFT!%"
-							  "FOR IT ISN'T A FARCE%"
-							  "THAT I'LL TAKE A POO%"
+	unsigned char text21 [] = "OH, IT\"S SO SOFT!%"
+							  "FOR IT ISN\"T A FARCE%"
+							  "THAT I\"LL TAKE A POO%"
 							  "AND WIPE MY ARSE";
 
-	unsigned char text22 [] = "A FAKIR'S FLUTE%"
+	unsigned char text22 [] = "A FAKIR\"S FLUTE%"
 							  "WITH A DREADED SOUND%"
 							  "IN JUST A MINUTE%"
-							  "I'LL HIT THE GROUND!";
+							  "I\"LL HIT THE GROUND!";
 
 	unsigned char text23 [] = "DEAR HANDSOME VAMPIRE%"
-							  "YOU KNOW WHAT'S WHAT!%"
+							  "YOU KNOW WHAT\"S WHAT!%"
 							  "I GOT WHAT I REQUIRE!%"
 							  "KNICKERS FOR MY TWAT!";
 
@@ -246,26 +246,26 @@ unsigned char talk_sounds [] = { 7, 11 };
 							  "OF SHINY SHINY LEATHER";
 							  
 	unsigned char text25 [] = "IF YOU TAKE THE COIN%"
-							  "YOU'LL ANGER HORUS%"
+							  "YOU\"LL ANGER HORUS%"
 							  "TO EXIT THE TRAP%"
 							  "TOUCH THE SEALS!";
 
-	unsigned char text26 [] = "I'M SONIA,%"
+	unsigned char text26 [] = "I\"M SONIA,%"
 							  "THE MUMMY,%"
 							  "GUARDIAN OF THE%"
 							  "THIRD CRYPT";
 
-	unsigned char text27 [] = "I'M CLEMENTE,%"
+	unsigned char text27 [] = "I\"M CLEMENTE,%"
 							  "THE SNAKE,%"
 							  "GUARDIAN OF THE%"
 							  "FOURTH CRYPT";
 
-	unsigned char text28 [] = "I'M MARISA,%"
+	unsigned char text28 [] = "I\"M MARISA,%"
 							  "THE PRIESTESS,%"
 							  "GUARDIAN OF THE%"
 							  "SECOND CRYPT";
 
-	unsigned char text29 [] = "I'M GUSTAVE,%"
+	unsigned char text29 [] = "I\"M GUSTAVE,%"
 							  "THE SLAVE%"
 							  "GUARDIAN OF THE%"
 							  "FIRST CRYPT";
@@ -282,7 +282,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 
 	unsigned char text32 [] = "BEWARE WITH THE EYE!%"
 							  "IF CLOSED YE MAY PASS%"
-							  "BUT ONCE IT'S OPEN%"
+							  "BUT ONCE IT\"S OPEN%"
 							  "IT WILL BURN YER ASS!";
 
 	unsigned char text33 [] = "RAMON THE PHARAOH%"
@@ -293,7 +293,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 	unsigned char text34 [] = "\"GATHER FOUR PARTS%"
 							  "OF THE ANCIENT PAPIRE%"
 							  "AND CLAIM ITS POWER%"
-							  "FOR YER OWN, RAMIRO!\""
+							  "FOR YER OWN, RAMIRO!\"";
 
 	unsigned char text35 [] = "SO GET RIGHT TO IT!%"
 							  "LOOK FOR YOUR FRIEND%"
@@ -1396,8 +1396,7 @@ void win_crypt (void) {
 		// Intro 
 		if (n_pant == 12 && flags [5] == 0 && player.possee) {
 			flags [5] = 1;
-			// render_all_sprites (); 
-			// sp_UpdateNow ();
+			cpc_UpdateNow (1);
 			do_extern_action (2);
 		}
 
