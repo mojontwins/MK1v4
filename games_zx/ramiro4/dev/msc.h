@@ -240,7 +240,9 @@ void run_script (void) {
                     case 0xE1:
                         // SHOW
                         // Opcode: E1
-                        sp_UpdateNow ();
+                        #asm
+                            call SPUpdateNow
+                        #endasm
                         break;
                     case 0xE3:
                         sc_n = read_byte ();

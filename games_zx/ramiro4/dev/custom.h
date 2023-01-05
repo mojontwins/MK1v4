@@ -740,7 +740,10 @@
 			clear_temp_string ();
 			draw_text (4, rdy ++, 40, temp_string);
 
-			sp_UpdateNow ();
+			#asm
+				call SPUpdateNow
+			#endasm
+
 			play_sfx (talk_sounds [rand () & 1]);
 
 			#ifdef MODE_128K_DUAL
@@ -820,13 +823,16 @@
 			}
 			#asm
 				halt
+				call SPUpdateNow
 			#endasm
-			sp_UpdateNow (0);
 		}
 	}
 
 	void trap_kill (void) {
-		sp_UpdateNow ();
+		#asm
+			call SPUpdateNow
+		#endasm
+
 		play_sfx (10);
 
 		#ifdef MODE_128K_DUAL
@@ -842,7 +848,10 @@
 		
 		if (is128k) arkos_play_music (5);
 		show_text_box (31);
-		sp_UpdateNow ();
+		
+		#asm
+			call SPUpdateNow
+		#endasm
 		
 		//player.life -= BLOCK_HIT; 
 		player.estado = EST_PARP;
@@ -1046,7 +1055,11 @@
 			.eoh_done
 		#endasm		
 
-		sp_Border ((scenery_info.evil_zone_active & half_life) ? 2 : 0);
+		sp_Border ((scenery_info.evil_zone_active & half_life) ? 
+				2 
+			: 
+				(player_just_died == PLAYER_KILLED_BY_EZ ? 3 : 0)
+			);
 
 		// Block trap
 
@@ -1069,7 +1082,11 @@
 			#endasm
 			if (trap_coins) {
 				set_map_tile (13, 5, 0, 0);
-				sp_UpdateNow ();
+				
+				#asm
+					call SPUpdateNow
+				#endasm
+
 				play_sfx (10);
 			}
 			if (is128k) arkos_play_music (2);
@@ -1339,13 +1356,20 @@
 			if (player.ceiling && qtile (rdx, rdy) == 19) {
 				water_locks ++;
 				set_map_tile (rdx, rdy, 11, 8);
-				sp_UpdateNow ();
+				
+				#asm
+					call SPUpdateNow
+				#endasm
+
 				play_sfx (5);
 				if (water_locks == 2) {
 					// Open trap!
 					set_map_tile (water_top_door_x, 0, 0, 0);
 					set_map_tile (water_top_door_x + 1, 0, 0, 0);
-					sp_UpdateNow ();
+					
+					#asm
+						call SPUpdateNow
+					#endasm
 					play_sfx (8);
 				}
 			}
@@ -1355,17 +1379,23 @@
 		if (n_pant == 12 && flags [5] == 0 && player.possee) {
 			flags [5] = 1;
 			render_all_sprites (); 
-			sp_UpdateNow ();
+			#asm
+				call SPUpdateNow
+			#endasm
 			do_extern_action (2);
 		}
 
 		// Cabroni
 		if (cabroni && n_pant == 0x13) {
-			sp_UpdateNow ();
+			#asm
+				call SPUpdateNow
+			#endasm
 			cabroni = 0;
 			redraw_after_text = 1;
 			show_text_box (39);
-			sp_UpdateNow ();
+			#asm
+				call SPUpdateNow
+			#endasm
 		}
 	}
 

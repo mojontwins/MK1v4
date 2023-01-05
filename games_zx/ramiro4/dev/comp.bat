@@ -27,7 +27,7 @@ echo Making fullery
 ..\utils\zx0.exe attrs1.bin attrs1c.bin
 ..\utils\zx0.exe attrs2.bin attrs2c.bin
 
-zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2f -zorg=24150 -DLANG_EN  > nul
+zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2f -zorg=24150 -DLANG_ES  > nul
 ..\utils\printsize.exe %game%.bin
 
 ..\utils\imanol.exe ^

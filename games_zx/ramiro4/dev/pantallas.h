@@ -107,7 +107,10 @@ void title_screen (void) {
 	draw_text (8, 19, 71, "MOJON TWINS 2023");
 	draw_text (10, 20, 7, "CHURRERA 4.8");
 	
-	sp_UpdateNow ();
+	#asm
+		call SPUpdateNow
+	#endasm
+	
 	// } END_OF_CUSTOM
 
 	if (is128k) {
@@ -145,6 +148,14 @@ void title_screen (void) {
 	after_title:
 }
 
+void sound_or_beepet() {
+	if (is128k) {
+		arkos_play_music (rda);
+	} else {
+		beepet (); play_sfx (11);
+	}
+}
+
 void game_ending (void) {
 	#asm 
 		call SPUpdateNow
@@ -162,15 +173,13 @@ void game_ending (void) {
 		draw_text (9, 20, 5, "COMPLETADO 100/");
 	}
 
-	sp_UpdateNow ();
+	#asm
+		call SPUpdateNow
+	#endasm
 	// } END OF CUSTOM
 
-	if (is128k) {
-		arkos_play_music (4);
-	} else {
-		beepet (); play_sfx (11);
-	}
-	espera_activa (500);
+	rda = 4; sound_or_beepet ();
+	espera_activa (30000);
 
 	if (is128k) arkos_stop_sound ();
 }
@@ -195,11 +204,7 @@ void game_over (void) {
 		call SPUpdateNow
 	#endasm
 
-	if (is128k) {
-		arkos_play_music (3);
-	} else {
-		beepet (); play_sfx (10);
-	}
+	rda = 3; sound_or_beepet ();
 	espera_activa (500);
 	
 	if (is128k) arkos_stop_sound ();

@@ -1332,7 +1332,9 @@ If actionsUsed (&HE1) Then
 	If isCpc Then
 		print #f, "                        cpc_UpdateNow (1);"
 	Else
-		print #f, "                        sp_UpdateNow ();"
+		print #f, "                        #asm"
+		print #f, "                            call SPUpdateNow"
+		print #f, "                        #endasm"
 	End If
 	print #f, "                        break;"
 End If

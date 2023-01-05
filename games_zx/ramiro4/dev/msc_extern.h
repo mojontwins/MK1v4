@@ -5,9 +5,21 @@
 unsigned char which_character;
 
 void speech (unsigned char a, unsigned char b, unsigned char c) {
-	show_text_box (a); sp_UpdateNow ();
-	show_text_box (b); sp_UpdateNow ();
-	show_text_box (c); sp_UpdateNow ();
+	show_text_box (a); 
+	#asm
+		call SPUpdateNow
+	#endasm
+
+	show_text_box (b);
+	#asm
+		call SPUpdateNow
+	#endasm
+
+	show_text_box (c); 
+	#asm
+		call SPUpdateNow
+	#endasm
+
 }
 
 void do_extern_action (unsigned char n) {
@@ -37,7 +49,9 @@ void do_extern_action (unsigned char n) {
 	} else if (n == 64) {
 		// Final sequence (call before win game)
 		for (rdi = 15; rdi < 18; rdi ++) {
-			sp_UpdateNow ();
+			#asm
+				call SPUpdateNow
+			#endasm
 			clear_gamearea ();
 			redraw_after_text = 0; show_text_box (rdi);
 		}
@@ -52,8 +66,10 @@ void do_extern_action (unsigned char n) {
 		// Work with characters n-64:
 		which_character = n - 64;
 		show_text_box (25 + which_character);
-		sp_UpdateNow ();
-
+		#asm
+			call SPUpdateNow
+		#endasm
+		
 		if (pinv == 5 && which_character == 1) {
 			show_text_box (37);
 			pinv = 0;
@@ -69,7 +85,10 @@ void do_extern_action (unsigned char n) {
 				flags [which_character] = 1;
 				PSCORE += SCORE_CHARACTER_TALK;
 			}
-			sp_UpdateNow ();
+			#asm
+				call SPUpdateNow
+			#endasm
+			
 		} else if (pinv != which_character) {
 			show_text_box (4 + which_character);
 		} 
