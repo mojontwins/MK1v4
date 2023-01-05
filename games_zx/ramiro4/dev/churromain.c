@@ -13,6 +13,8 @@
 		LIB SPTileArray	
 		LIB SPPrintAtInv
 		LIB SPUpdateNow
+		LIB SPInitialize
+		XREF SProtatetblInitialize
 #endasm
 
 /* splib2 memory map

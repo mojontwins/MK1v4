@@ -49,16 +49,55 @@ void unpack (void) {
 }
 
 void title_screen (void) {
+	if (color_selected == 0) {
+		color_selected = 1;
+
+		#ifdef LANG_EN
+			draw_text (11, 11, 70, "1 ORIGINAL");
+			draw_text (11, 13, 70, "2 COLOURED");
+		#else
+			draw_text (11, 11, 70, "1 ORIGINAL");
+			draw_text (11, 13, 70, "2 COLORIN");
+		#endif
+		#asm 
+			call SPUpdateNow
+		#endasm
+		
+		while (1) {
+			if (sp_KeyPressed (key_1)) {
+				#asm
+					ld  hl, attrs1
+					ld  de, _tileset + 2048
+					call dzx0_standard
+				#endasm
+				break;
+			} else if (sp_KeyPressed (key_2)) {
+				#asm
+					ld  hl, attrs2
+					ld  de, _tileset + 2048
+					call dzx0_standard
+				#endasm
+				break;
+			}
+		}
+	}
+
 	#asm 
 		call SPUpdateNow
 	#endasm
 	asm_int = (unsigned int) (s_title); unpack ();
 
 	// CUSTOM {
-	draw_text (7, 4, 71, "RAMIRO, EL VAMPIRO");
-	draw_text (9, 7, 7, "EN EL MISTERIO");
-	draw_text (11, 8, 7, "DEL PAPIRO");
-	
+	#ifdef LANG_EN
+		draw_text (7, 4, 71, "RAMIRO, EL VAMPIRO");
+		draw_text (9, 7, 7,  "AND THE MYSTERY");
+		draw_text (9, 8, 7, "OF THE PAPYRUS");
+	#else
+		draw_text (7, 4, 71, "RAMIRO, EL VAMPIRO");
+		draw_text (9, 7, 7, "EN EL MISTERIO");
+		draw_text (11, 8, 7, "DEL PAPIRO");
+	#endif
+
 	/*
 	draw_text (6, 4, 71, "RAMIRE, THE VAMPIRE");
 	draw_text (12, 7, 7, "PUTS BACK");
@@ -79,7 +118,6 @@ void title_screen (void) {
 
 			di
 			call musicstart
-			ei 
 
 		#endasm
 	}
@@ -95,8 +133,15 @@ void title_screen (void) {
 		}			
 	}
 
-	if (is128k) arkos_stop_sound ();
+	if (is128k) {
+		arkos_stop_sound ();
+	} 
 
+	#asm
+		; Recalculate tables!
+		call SProtatetblInitialize 
+		ei
+	#endasm 
 	after_title:
 }
 

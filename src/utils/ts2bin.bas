@@ -186,7 +186,8 @@ If Len (Command (3)) = 0 Then
 End If
 
 switchToInverted = 0
-If Len (Command (4)) = 0 Then 
+switchToDefaultInk = -1 
+If Len (Command (4)) < 3 Then 
 	switchToDefaultInk = -1 
 Else 
 	If Len (Command (4)) > 9 And Left (Command (4), 9) = "inverted:" Then

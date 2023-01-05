@@ -18,7 +18,16 @@ echo Making %game%
 echo Making script
 ..\utils\msc.exe ..\script\script.spt msc.h 36 flipflops shortsettile > nul
 
-zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2f -zorg=24150  > nul
+echo Making fullery
+..\utils\pasmo.exe ..\ogt\buzz.asm buzz.bin
+..\utils\zx0.exe buzz.bin buzzc.bin
+
+..\utils\ts2bin.exe font.png ..\gfx\work.png attrs1.bin -1 onlyattrs
+..\utils\ts2bin.exe font.png ..\gfx\work_color.png attrs2.bin -1 onlyattrs
+..\utils\zx0.exe attrs1.bin attrs1c.bin
+..\utils\zx0.exe attrs2.bin attrs2c.bin
+
+zcc +zx -vn churromain.c -m -o %game%.bin -lsplib2f -zorg=24150 -DLANG_EN  > nul
 ..\utils\printsize.exe %game%.bin
 
 ..\utils\imanol.exe ^

@@ -5,6 +5,7 @@
 
 INCLUDE "SPconfig.def"
 XLIB SPInitialize
+XDEF SProtatetblInitialize
 LIB SPDisplayList, SPDirtyChars, SPTileArray
 
 ; Initialize
@@ -55,6 +56,8 @@ ENDIF
    ldir
 
    ; set up horizontal rotate table
+
+.SProtatetblInitialize
 
    ld c,7              ; rotate by C
 .rottbllp

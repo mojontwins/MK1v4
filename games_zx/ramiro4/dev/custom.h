@@ -107,6 +107,15 @@
 	#define SCORE_Y 		23
 
 	unsigned char opscore;
+	unsigned char color_selected = 0;
+
+	// Attribute sets
+	#asm
+		.attrs1
+			BINARY "attrs1c.bin"
+		.attrs2
+			BINARY "attrs2c.bin"
+	#endasm
 
 	// Text
 
@@ -116,22 +125,22 @@
 		//                        XXXXXXXXXXXXXXXXXXXXXX
 		unsigned char text0 [] = "VISITOR, LOOK AT ME,%"
 								 "I AM THE MIGHTY SHRINE%"
-								 "I'LL GIVE YOU THINGS%"
+								 "I\"LL GIVE YOU THINGS%"
 								 "IF YOU BRING ME A DIME";
 
 		unsigned char text1 [] = "A ROLL OF TOILET PAPER%"
-								 "IT'S NONE THE COARSE%"
+								 "IT\"S NONE THE COARSE%"
 								 "MAKES YOU FEEL BETTER%"
 								 "AND CLEANS YOU ARSE%";
 
 		unsigned char text2 [] = "I GIVE YOU THIS FLUTE%"
 								 "IF YOU PLAY IT FAST%"
-								 "IT'LL MAKE YOU MUTE%"
-								 "YOU'LL SLEEP AT LAST%";
+								 "IT\"LL MAKE YOU MUTE%"
+								 "YOU\"LL SLEEP AT LAST%";
 
 		unsigned char text3 [] = "WHAT CAN I DO?%"
 								 "PLEASE DO NO WRONG%"
-								 "I'M TRUSTING YOU!%"
+								 "I\"M TRUSTING YOU!%"
 								 "I GIVE YOU A THONG%";
 
 		unsigned char text4 [] = "GREASE FOR LEATHER%"
@@ -139,21 +148,18 @@
 								 "DESPITHE THE WEATHER%"
 								 "YOU WILL LUCK SWINEY";
 
-		unsigned char text5 [] = "GET LOST!%"
-								 "I DON'T NEED THIS%"
+		unsigned char text5 [] = "I DON\"T NEED THIS%"
 								 "RUBBISH, COCKALORUM!";
 
-		unsigned char text6 [] = "WHAT'S THIS?%"
-								 "TAKE IT AWAY,%"
-								 "CUMDUMPSTER!";
+		unsigned char text6 [] = "WHAT\"S THIS?%"
+								 "TAKE IT AWAY!";
 
-		unsigned char text7 [] = "C'MON, DON'T BE A%"
-								 "PILLOCK! I DON'T NEED%"
-								 "THIS CRAP!";
+		unsigned char text7 [] = "C\"MON, DON\"T BE A%"
+								 "PILLOCK! I DON\"T NEED%"
+								 "THIS CRAP";
 
 		unsigned char text8 [] = "AND AM I SUPPOSED TO%"
-								 "WANT THIS, SNOLLY-%"
-								 "GOSTER?";
+								 "WANT THIS, SILLY";
 
 		unsigned char text9 [] = "I ATE TOO MUCH CANDY%"
 								 "TO FILL THIS BUMP%"
@@ -161,149 +167,149 @@
 								 "NOW I NEED A DUMP.";
 
 		unsigned char text10 [] = "THE NIGHT HAS COME%"	
-		                          "BUT I CAN'T SLEEP%
-		                          "I'M A BIT INSOMNIAC%"
-		                          "DON'T BE VERY CHEAP!";
-	
-		unsigned char text11 [] = "GOSH I'M SO CLUELESS%"
+								  "BUT I CAN\"T SLEEP%"
+								  "I\"M A BIT INSOMNIAC%"
+								  "DON\"T BE VERY CHEAP!";
+
+		unsigned char text11 [] = "GOSH I\"M SO CLUELESS%"
 								  "JUST WENT TO A FAIR%"
 								  "GOSH IT WAS MADNESS!%"
 								  "I LOST MY UNDERWEAR";
-	
-		unsigned char text12 [] = "I'M THE BEST SLAVE%"
+
+		unsigned char text12 [] = "I\"M THE BEST SLAVE%"
 								  "EVEN IN BAD WEATHER%"
 								  "BUT EVEN IN A GRAVE%"
 								  "I THRIVE FOR LEATHER";
-	
+
 		unsigned char text13 [] = "RETRIEVE 4 PIECES%"
 								  "OF MAGIC PAPYRUS%"
-								  "AND RETURN HERE...%"
+								  "AND RETURN HERE%"
 								  "TO CAST THE SPELL!";
-	
-		unsigned char text14 [] = "I'LL OPEN THE PYRAMID%"
+
+		unsigned char text14 [] = "I\"LL OPEN THE PYRAMID%"
 								  "GO GET SOME BUNS!%"
-								  "YOU'RE PESKIER THAN%"
+								  "YOU\"RE PESKIER THAN%"
 								  "THE KING OF THE HUNS!";
-	
+
 		unsigned char text15 [] = "WHAT A SUCCESS!%"
 								  "PAPYRUS ASSEMBLED!%"
 								  "RAMIRO READ THE SPELL%"
 								  "YET HIS FACE TREMBLED";
-	
+
 		unsigned char text16 [] = "SO IT READS:%"
 								  "- 2 ONIONS%"
 								  "- TOILET PAPER%"
 								  "- BREAD%"
 								  "- DETERGENT";
-	
+
 		unsigned char text17 [] = "OH MY POOR VAMPIRE,%"
 								  "IT HIT LIKE A FIST!%"
-								  "IT'S NOT A SPELL!,%"
-								  "IT'S A SHOPPING LIST!"
-	
-		unsigned char text18 [] = "NICE IT'S A COIN!%"
-								  "SURELY YO'WERE SWIFT%"
+								  "IT\"S NOT A SPELL!,%"
+								  "IT\"S A SHOPPING LIST!";
+
+		unsigned char text18 [] = "NICE IT\"S A COIN!%"
+								  "SURELY YO\"WERE SWIFT%"
 								  "NO NEED TO PURLOIN%"
-		                          "'ERE! GET YOUR GIFT!";
-	
+								 "\"ERE! GET YOUR GIFT!";
+
 		unsigned char text19 [] = "YOU GOT AN OBJECT!%"
-								  "DON'T BE A BORE!%";
+								  "DON\"T BE A BORE!%"
 								  "FULFILL YER PROJECT!%"
 								  "USE IT BEFORE!%";
-	
+
 		unsigned char text20 [] = "I OPENED THE PYRAMID%"
 								  "SO OFF YOU GO! GO!!";
-	
-		unsigned char text21 [] = "OH, IT'S SO SOFT!%"
-								  "FOR IT ISN'T A FARCE%"
-								  "THAT I'LL TAKE A POO%"
+
+		unsigned char text21 [] = "OH, IT\"S SO SOFT!%"
+								  "FOR IT ISN\"T A FARCE%"
+								  "THAT I\"LL TAKE A POO%"
 								  "AND WIPE MY ARSE";
-	
-		unsigned char text22 [] = "A FAKIR'S FLUTE%"
+
+		unsigned char text22 [] = "A FAKIR\"S FLUTE%"
 								  "WITH A DREADED SOUND%"
 								  "IN JUST A MINUTE%"
-								  "I'LL HIT THE GROUND!";
-	
+								  "I\"LL HIT THE GROUND!";
+
 		unsigned char text23 [] = "DEAR HANDSOME VAMPIRE%"
-								  "YOU KNOW WHAT'S WHAT!%"
+								  "YOU KNOW WHAT\"S WHAT!%"
 								  "I GOT WHAT I REQUIRE!%"
 								  "KNICKERS FOR MY TWAT!";
-	
+
 		unsigned char text24 [] = "FINALLY GOT MY LOOT!%"
 								  "VAMPIRES KNOW BETTER!%"
 								  "NOW I CAN KISS A BOOT%"
 								  "OF SHINY SHINY LEATHER";
-	
+
 		unsigned char text25 [] = "IF YOU TAKE THE COIN%"
-								  "YOU'LL ANGER HORUS%"
+								  "YOU\"LL ANGER HORUS%"
 								  "TO EXIT THE TRAP%"
 								  "TOUCH THE SEALS!";
-	
-		unsigned char text26 [] = "I'M SONIA,%"
+
+		unsigned char text26 [] = "I\"M SONIA,%"
 								  "THE MUMMY,%"
 								  "GUARDIAN OF THE%"
 								  "THIRD CRYPT";
-	
-		unsigned char text27 [] = "I'M CLEMENTE,%"
+
+		unsigned char text27 [] = "I\"M CLEMENTE,%"
 								  "THE SNAKE,%"
 								  "GUARDIAN OF THE%"
 								  "FOURTH CRYPT";
-	
-		unsigned char text28 [] = "I'M MARISA,%"
+
+		unsigned char text28 [] = "I\"M MARISA,%"
 								  "THE PRIESTESS,%"
 								  "GUARDIAN OF THE%"
 								  "SECOND CRYPT";
-	
-		unsigned char text29 [] = "I'M GUSTAVE,%"
+
+		unsigned char text29 [] = "I\"M GUSTAVE,%"
 								  "THE SLAVE%"
 								  "GUARDIAN OF THE%"
 								  "FIRST CRYPT";
-	
+
 		unsigned char text30 [] = "THE PAPIRE PARTS ARE%"
 								  "IN THE PYRAMID CRYPTS%"
 								  "TALK TO THE GUARDIANS%"
 								  "THEY MAY LET YOU IN!%";
-	
+
 		unsigned char text31 [] = "\"GOTCHA, INTRUDER!\"%"
 								  "YE HEAR SOMEONE CLAIM%"
 								  "\"NOW START OVER,FIEND%"
 								  "OR WALK OUT IN SHAME!\"";
-	
+
 		unsigned char text32 [] = "BEWARE WITH THE EYE!%"
 								  "IF CLOSED YE MAY PASS%"
-								  "BUT ONCE IT'S OPEN%"
+								  "BUT ONCE IT\"S OPEN%"
 								  "IT WILL BURN YER ASS!";
-	
+
 		unsigned char text33 [] = "RAMON THE PHARAOH%"
 								  "TOOK HIM TO HIS PLACE%"
 								  "HE TOLD YOU THE STORY%"
 								  "OF HIS OWN DISGRACE";
-	
+
 		unsigned char text34 [] = "\"GATHER FOUR PARTS%"
 								  "OF THE ANCIENT PAPIRE%"
 								  "AND CLAIM ITS POWER%"
-								  "FOR YER OWN, RAMIRO!\""
-	
+								  "FOR YER OWN, RAMIRO!\"";
+
 		unsigned char text35 [] = "SO GET RIGHT TO IT!%"
 								  "LOOK FOR YOUR FRIEND%"
 								  "THE PYRAMID WILL OPEN%"
 								  "NO TIME TO SPEND!";
-	
+
 		unsigned char text36 [] = "THIS BROKEN SHRINE%"
 								  "WONT LET YOU DOWN%"
 								  "GIVES YOU PAPER TOWEL%"
 								  "THE ROUGHEST IN TOWN!%";
-	
+
 		unsigned char text37 [] = "WHAT ARE YOU THINKING%"
 								  "YOU GODDAMNED NUT!%"
 								  "SUCH A ROUGH PAPER%"
 								  "WOULD SAND MY BUTT!";
-	
+
 		unsigned char text38 [] = "THE SHRINE IS SILENT";
-	
+
 		unsigned char text39 [] = "I DIDN\"T SEE THEM%"
 								  "COMMING! HA HA HA HA,%"
-									  "... CABRONI!";
+								  "... CABRONI!";
 	#else
 		//                        XXXXXXXXXXXXXXXXXXXXXX
 		unsigned char text0 [] = "POR OSIRIS Y POR APIS%"
@@ -325,8 +331,8 @@
 
 		unsigned char text3 [] = "TE SACO DEL TIRON%"
 								 "UNAS BRAGAS PRINCESA%"
-							 "ROBADAS DE UN CAJON%"
-							 "DE LA LETIZIA ESA.";
+								 "ROBADAS DE UN CAJON%"
+								 "DE LA LETIZIA ESA.";
 
 		unsigned char text4 [] = "UN TARRO DE GRASA DE%"
 								 "CABALLO. PARA QUE%"
@@ -351,8 +357,8 @@
 								 "Y ME HAGO MUCHA CACA.";
 	
 		unsigned char text10 [] = "AUNQUE SEA DENOCHES%"
-							  "NO CONSIGO DORMIR.%"
-							  "TENGO MUCHO INSOMNIO%"
+								  "NO CONSIGO DORMIR.%"
+								  "TENGO MUCHO INSOMNIO%"
 								  "ESTO ES UN SINVIVIR";
 	
 		unsigned char text11 [] = "QUE DESPISTE TENGO%"
@@ -1207,7 +1213,11 @@
 						// Finally
 						if (flags [COIN_FLAG] == TRAP_COINS_MAX) {
 							// Deativate trap!
-							scenery_info.allow_type_6 = 0;
+							// Make fanties retreat
+							for (gpit = 0; gpit < 3; gpit ++) {
+								en_an_state [gpit] = 1;
+							}
+
 							play_sfx (8);
 							trap_active = 0;
 							if (is128k) arkos_stop_sound ();
