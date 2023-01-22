@@ -84,7 +84,7 @@
 #ifdef DECOMPRESSOR_ZX0
 	#include "zx0.h"
 #else
-#include "aplib.h"
+	#include "aplib.h"
 #endif
 #include "mapa.h"
 #include "tileset.h"

@@ -279,7 +279,7 @@ void set_hotspot (unsigned char hn) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 3;
+		level = 2;
 		phaskey = 0;
 		openlocks = 0;
 	}
@@ -385,7 +385,7 @@ void set_hotspot (unsigned char hn) {
 				ld  ix, (_sp_pinv)
 				ld  iy, vpClipStruct
 
-				ld  hl, (_pinv_next_frame)			// player.next_frame
+				ld  hl, (_pinv_next_frame)				// player.next_frame
 				ld  de, (_pinv_current_frame) 			// player.current_frame
 				or  a
 				sbc hl, de
