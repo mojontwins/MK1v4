@@ -13,6 +13,8 @@ void main (void) {
 			di 
 			ld  sp, STACK_ADDR
 
+			call musicstart
+
 		#ifdef MODE_128K_DUAL
 				xor a
 				ld  (_ay_player_on), a

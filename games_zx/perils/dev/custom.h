@@ -6,6 +6,15 @@
 // Comment this to remove the "next level" cheat
 #define ENABLE_CHEAT
 
+// Arkos OGT
+#define MUS_TITLE           0
+#define MUS_CUTS            1
+#define MUS_STAGE_BASE      2
+#define MUS_STAGE_CLEAR     6
+#define MUS_STAGE_CLEAR_L   7
+#define MUS_GAME_OVER       8
+
+// Resonators
 #define RESONATORS_FRAMES 25
 
 unsigned char resonators_on, resonators_ct, resonators_frames;
@@ -13,6 +22,7 @@ unsigned char player_min_killable;
 unsigned char resct_old;
 unsigned char enem_may_be_paralyzed [3];
 
+// Level fiddle
 unsigned char level, new_level;
 unsigned char new_level_string [] = "LEVEL 00";
 
@@ -29,12 +39,13 @@ unsigned char tilemaps [] = {
 };
 
 // Those are ordered by level!
-// Note that most routines are optimized as leftmost signs have X==2.
+// Note that most routines are optimized as left pointing signs have X==2.
 // if coordinates are changed, supporting routines should be adapted.
 unsigned char hub_signs_x [] = { 2, 2, 13, 12 };
 unsigned char hub_signs_y [] = { 5, 2, 5, 2 };
 
 unsigned char level_finished [] = { 0, 0, 0, 0 };
+unsigned char levels_finished;	// This will make my life easier
 
 unsigned char continue_on;
 unsigned char ls;
@@ -343,6 +354,7 @@ void reset_game (void) {
 		// Clears level_finished array
 			
 			xor a
+			ld  (_levels_finished), a
 		
 			ld  hl, _level_finished
 			ld  de, _level_finished + 1
@@ -641,7 +653,13 @@ void select_power (void) {
 			#asm 
 				call SPUpdateNow
 			#endasm
-			beepet (); play_sfx (10);
+
+			if (is128k) {
+				arkos_play_music (MUS_STAGE_CLEAR + (levels_finished == 3));
+			} else {
+				beepet (); play_sfx (10);
+			}
+
 			espera_activa (500);
 
 			#asm
@@ -653,18 +671,13 @@ void select_power (void) {
 					ld  a, 1
 					ld  (hl), a
 
-					// Check all levels are finished
-				.win_game_check
-					ld  b, 4
-					xor a
-					ld  hl, _level_finished
-				.win_game_check_loop
-					add (hl)
-					inc hl
-					djnz win_game_check_loop
+					ld  a, (_levels_finished)
+					inc a 
+					ld  (_levels_finished), a
 
-					cp 4
-					jr z, win_game_check_won
+					// Check all levels are finished
+					cp  4
+					jr  z, win_game_check_won
 
 					// Not won, back to hub
 					ld  a, 4
@@ -763,6 +776,8 @@ void select_power (void) {
 				add hl, bc
 				ld  (_tileset_mappings), hl
 		#endasm
+		if (is128k) arkos_play_music (level == 4 ? MUS_CUTS : (level + MUS_STAGE_BASE));
+
 		// Nothing else below this or you have to change the assembly!
 	}
 

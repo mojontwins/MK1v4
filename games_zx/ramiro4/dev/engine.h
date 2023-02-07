@@ -5731,18 +5731,18 @@ void mueve_bicharracos (void) {
 								if (en_an_state [enit] != 1) 
 							#endif
 							{
-							// Always pursue
-
-							if ((rand () & 7) > 1) {
-								if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-									en_an_vx [enit] += FANTY_A;
-								else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-									en_an_vx [enit] -= FANTY_A;
-								if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-									en_an_vy [enit] += FANTY_A;
-								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-									en_an_vy [enit] -= FANTY_A;
-							}
+								// Always pursue
+	
+								if ((rand () & 7) > 1) {
+									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+										en_an_vx [enit] += FANTY_A;
+									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+										en_an_vx [enit] -= FANTY_A;
+									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+										en_an_vy [enit] += FANTY_A;
+									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+										en_an_vy [enit] -= FANTY_A;
+								}
 							}
 						#endif
 

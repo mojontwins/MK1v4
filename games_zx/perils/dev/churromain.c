@@ -13,6 +13,8 @@
 		LIB SPTileArray	
 		LIB SPPrintAtInv
 		LIB SPUpdateNow
+		LIB SPInitialize
+		XREF SProtatetblInitialize
 #endasm
 
 /* splib2 memory map
@@ -81,7 +83,11 @@
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h"
 #endif
-#include "aplib.h"
+#ifdef DECOMPRESSOR_ZX0
+	#include "zx0.h"
+#else
+	#include "aplib.h"
+#endif
 #include "mapa.h"
 #include "tileset.h"
 #include "sprites.h"

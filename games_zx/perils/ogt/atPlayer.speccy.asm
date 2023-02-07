@@ -1664,13 +1664,19 @@ mt_init:
 		call depack
 		ret 
 
-song_00: INCBIN "00_title_c.bin" 
-song_01: INCBIN "01_ingame_c.bin" 
-song_02: INCBIN "02_hurry_c.bin" 
-song_03: INCBIN "03_gover_c.bin" 
-song_04: INCBIN "04_ending_c.bin" 
+song_00: INCBIN "bin/00_title_c.bin" 
+song_01: INCBIN "bin/01_cuts_c.bin"
+song_02: INCBIN "bin/02_stage_1_c.bin"
+song_03: INCBIN "bin/03_stage_2_c.bin"
+song_04: INCBIN "bin/04_stage_3_c.bin"
+song_05: INCBIN "bin/05_stage_4_c.bin"
+song_06: INCBIN "bin/06_stage_clear_c.bin"
+song_07: INCBIN "bin/07_final_stage_clear_c.bin"
+song_08: INCBIN "bin/08_game_over_c.bin"
 
-song_sfx: INCBIN "sfx_c.bin"
+
+song_sfx: INCBIN "bin/sfx_c.bin"
 
 compressed_song_index:
 		defw  song_00, song_01, song_02, song_03, song_04
+		defw  song_05, song_06, song_07, song_08
