@@ -7,7 +7,7 @@ if [%1]==[justassemble] goto :assemble
 if [%1]==[justcompress] goto :compress 
 
 echo Convirtiendo . . .
-..\utils\AKSToBIN.exe -a %base% "aks\01 - ZX Perils - Title_03.aks" bin\00_title.bin 
+..\utils\AKSToBIN.exe -a %base% "aks\01 - ZX Perils - Title_04.aks" bin\00_title.bin 
 ..\utils\AKSToBIN.exe -a %base% "aks\02 - ZX Perils - Cut Scenes-Ending_01.aks" bin\01_cuts.bin 
 ..\utils\AKSToBIN.exe -a %base% "aks\04 - ZX Perils - Stage 1_00.aks" bin\02_stage_1.bin
 ..\utils\AKSToBIN.exe -a %base% "aks\04 - ZX Perils - Stage 2_00.aks" bin\03_stage_2.bin

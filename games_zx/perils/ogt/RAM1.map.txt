@@ -186,7 +186,7 @@ atSfxPlay	EQU 0C704H
 atSfxStop	EQU 0C745H
 atSfxStopAll	EQU 0C6F7H
 atStop		EQU 0C6E1H
-compressed_song_index EQU 0DCA6H
+compressed_song_index EQU 0DC80H
 depack		EQU 0C759H
 mt_init		EQU 0C81CH
 mt_load_song	EQU 0C7FCH
@@ -194,9 +194,9 @@ song_00		EQU 0C826H
 song_01		EQU 0CAE1H
 song_02		EQU 0CCE1H
 song_03		EQU 0CE2AH
-song_04		EQU 0D0C5H
-song_05		EQU 0D390H
-song_06		EQU 0D72AH
-song_07		EQU 0D843H
-song_08		EQU 0D98BH
-song_sfx	EQU 0DA99H
+song_04		EQU 0D0C9H
+song_05		EQU 0D395H
+song_06		EQU 0D701H
+song_07		EQU 0D81BH
+song_08		EQU 0D965H
+song_sfx	EQU 0DA73H
