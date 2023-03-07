@@ -317,8 +317,14 @@ void render_all_sprites (void) {
 		#endasm
 	}
 
-	rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
-	#ifdef BETTER_VERTICAL_CONNECTIONS
+	#ifdef TALL_PLAYER
+		rdy = gpy - 8;
+	#else
+		rdy = gpy; 
+	#endif
+
+	if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
+	#if defined BETTER_VERTICAL_CONNECTIONS || defined TALL_PLAYER
 		/*
 		if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
 		sp_MoveSprAbs (
@@ -494,7 +500,7 @@ void render_all_sprites (void) {
 	#endif
 }
 
-#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 	#define BOUNDING_WIDTH 12
 #else
 	#define BOUNDING_WIDTH 8
@@ -1498,7 +1504,7 @@ void move (void) {
 
 		#ifdef PLAYER_HAS_JUMP
 			#ifdef RAMIRO_HOP
-				#ifdef SHORT_PLAYER
+				#ifdef TIGHT_BOUNDING_BOX
 					rdi = ((attr ((gpx + 4) >> 4, gpyy + 1) & 12) || (attr ((gpx + 11) >> 4, gpyy + 1) & 12));
 				#else
 					rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
@@ -1739,7 +1745,7 @@ void move (void) {
 	rdj = (player.vy + ptgmy);
 	if (rdj) {
 		if (rdj < 0) { 			// Going up
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 				if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 					player.vy = 0; gpyy ++;	adjust_to_tile_y ();
 					player.ceiling = 1;
@@ -1752,7 +1758,7 @@ void move (void) {
 					}
 			#endif
 		} else if ((gpy & 15) <= (player.vy >> 6)) { 	// Going down
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 				if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			#else
 				if (((gpx & 15) < 12 && (attr (gpxx, gpyy + 1) & 12)) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy + 1) & 12))
@@ -1790,7 +1796,7 @@ void move (void) {
 		.vert_collision_negative
 			// rdj < 0
 
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				// if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 					ld  a, (_gpxx)
 					ld  c, a
@@ -1832,11 +1838,13 @@ void move (void) {
 
 					jp  vert_collision_done
 			#else
+				#ifndef TALL_PLAYER
 				// if ((gpy & 15) < 12)
 					ld  a, (_gpy)
 					and 15
 					cp  12
 					jp  nc, vert_collision_done
+				#endif
 
 				// if (((gpx & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy) & 8)) {
 
@@ -1872,28 +1880,39 @@ void move (void) {
 					jp  z, vert_collision_done
 
 				.vert_collision_up
-					// player.vy = 0; gpy = (gpyy << 4) + 12; player.y = gpy << 6;
-					// player.ceiling = 1;
+					// player.vy = 0;
 					ld  hl, 0
 					ld  (_player + 8), hl	// player.vy
 
-					ld  a, (_gpyy)
-					sla a
-					sla a
-					sla a
-					sla a
-					add 12
-					ld  (_gpy), a
+				#ifdef TALL_PLAYER
+						// gpyy ++; adjust_to_tile_y ();
 
-					/*
-					ld  a, (_gpy)
-					ld  e, a
-					ld  d, 0
-					ld  l, 6
-					call l_asl
-					*/
-					call Ashl16_HL
-					ld  (_player + 2), hl 	// player.y
+						ld  hl, _gpyy
+						inc (hl)
+
+						call _adjust_to_tile_y
+				#else
+						// gpy = (gpyy << 4) + 12; player.y = gpy << 6;
+
+						ld  a, (_gpyy)
+						sla a
+						sla a
+						sla a
+						sla a
+						add 12
+						ld  (_gpy), a
+
+						/*
+						ld  a, (_gpy)
+						ld  e, a
+						ld  d, 0
+						ld  l, 6
+						call l_asl
+						*/
+						call Ashl16_HL
+						ld  (_player + 2), hl 	// player.y
+				#endif
+					// player.ceiling = 1;
 
 					ld  a, 1
 					ld  (_player + 37), a 	// player.ceiling
@@ -1923,7 +1942,7 @@ void move (void) {
 			cp  c
 			jr  c, vert_collision_done
 
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				// if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 					ld  a, (_gpxx)
 					ld  c, a
@@ -2180,7 +2199,7 @@ void move (void) {
 	#if defined PLAYER_PUSH_BOXES && defined PUSH_AND_PULL && !defined PLAYER_MOGGY_STYLE
 		player.grab_block = 0;
 
-		#if !defined SHORT_PLAYER
+		#if !defined TIGHT_BOUNDING_BOX
 			/*
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {
 				rdx = gpxx;	x0 = x1 = gpxx;	y0 = y1 = gpyy;
@@ -2805,7 +2824,7 @@ void move (void) {
 	/*
 	rdj = player.vx + ptgmx;
 	if (rdj) {
-		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+		#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 			if (rdj < 0) {
 				if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
 					player.vx = 0; gpxx ++; adjust_to_tile_x ();
@@ -2846,7 +2865,7 @@ void move (void) {
 			bit 7, h
 			jp  z, horz_collision_positive
 
-		#if !defined SHORT_PLAYER
+		#if !defined TIGHT_BOUNDING_BOX
 
 			.horz_collision_negative
 				// rdj < 0
@@ -2932,10 +2951,12 @@ void move (void) {
 				// ((gpy & 15) && attr (gpxx, gpyy + 1) & 8))
 
 			.horz_collision_if1
-				ld  a, (_gpy)
-				and 15
-				cp  12
-				jp  nc, horz_collision_if2
+				#ifndef TALL_PLAYER
+					ld  a, (_gpy)
+					and 15
+					cp  12
+					jp  nc, horz_collision_if2
+				#endif
 
 				ld  a, (_gpxx)
 				ld  c, a
@@ -3099,7 +3120,7 @@ void move (void) {
 
 	#ifndef DEACTIVATE_KEYS
 		if (
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				(gpx & 15) == 0 
 			#else
 				wall
@@ -3116,7 +3137,7 @@ void move (void) {
 				player.keys --;
 				play_sfx (8);
 			} else 
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				if (qtile (gpxx - 1, gpyy) == 15) {
 					clear_cerrojo (gpxx - 1, gpyy);
 					player.keys --;
@@ -3169,7 +3190,7 @@ void move (void) {
 						.push_box_vert				
 		
 
-						#ifdef SHORT_PLAYER
+						#ifdef TIGHT_BOUNDING_BOX
 								ld  a, (_wall)
 								cp  WALL_UP
 								jr  nz, push_box_vert_up_done	
@@ -3195,7 +3216,7 @@ void move (void) {
 							jr  c, push_box_vert_up_done
 
 							ld  a, (_gpyy)
-						#ifndef SHORT_PLAYER
+						#ifndef TIGHT_BOUNDING_BOX
 								dec a
 						#endif
 							ld  (_y0), a
@@ -3232,7 +3253,7 @@ void move (void) {
 
 						.push_box_vert_up_done
 
-							#ifdef SHORT_PLAYER
+							#ifdef TIGHT_BOUNDING_BOX
 								ld  a, (_gpy)
 								and 15
 								jp  nz, push_box_vert_done
@@ -3282,7 +3303,7 @@ void move (void) {
 					#endasm					
 				#endif
 
-				#if !defined SHORT_PLAYER	
+				#if !defined TIGHT_BOUNDING_BOX	
 					/*		
 					if ((gpx & 15) == 0) {
 						y0 = y1 = gpyy; 
@@ -6323,7 +6344,7 @@ void mueve_bicharracos (void) {
 				) {
 					#ifdef PLAYER_KILLS_ENEMIES
 						if (
-							#ifdef SHORT_PLAYER
+							#ifdef TIGHT_BOUNDING_BOX
 								gpy < en_ccy
 							#else
 								gpy <= en_ccy - 8 

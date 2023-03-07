@@ -23,16 +23,21 @@ XLIB SPIterateSprChar
 
 .SPIterateSprChar
    ld a,6
+   
    defb $dd
-   add a,l
+   add a,l           ;; add a, ixl
+
    ld l,a
+   
    defb $dd
-   ld a,h
-   ld h,a
+   ld a,h            ;; ld  a, ixh
+   
+   ld h,a            
    jp nc, noinc1
    inc h
 
-.noinc1
+.noinc1              ;; HL = IX+6  (sp_SS.first)
+
 .iterlp
    ld a,(hl)
    or a

@@ -11,6 +11,8 @@
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
 #define DECOMPRESSOR_ZX0					// User Einar Saukas' ZX0 rather than aplib
 
+#define TALL_PLAYER					// Main character is 16x24
+
 // Arkos support. Get the addresses from ogt/RAM1.map.txt after compiling RAM1.bin
 
 #define ENABLE_ARKOS
@@ -247,7 +249,7 @@
 // ----------
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
-#define SHORT_PLAYER 						// Bounding box 12x16
+#define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
 #define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 #define BOTH_KEYS_JUMP						// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!

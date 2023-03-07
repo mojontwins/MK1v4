@@ -14,6 +14,7 @@
 		LIB SPPrintAtInv
 		LIB SPUpdateNow
 		LIB SPInitialize
+		LIB SPNullSprPtr
 		XREF SProtatetblInitialize
 #endasm
 

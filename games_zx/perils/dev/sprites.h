@@ -5,58 +5,40 @@
  
 extern unsigned char sprite_1_a []; 
 extern unsigned char sprite_1_b []; 
-extern unsigned char sprite_1_c []; 
 extern unsigned char sprite_2_a []; 
 extern unsigned char sprite_2_b []; 
-extern unsigned char sprite_2_c []; 
 extern unsigned char sprite_3_a []; 
 extern unsigned char sprite_3_b []; 
-extern unsigned char sprite_3_c []; 
 extern unsigned char sprite_4_a []; 
 extern unsigned char sprite_4_b []; 
-extern unsigned char sprite_4_c []; 
 extern unsigned char sprite_5_a []; 
 extern unsigned char sprite_5_b []; 
-extern unsigned char sprite_5_c []; 
 extern unsigned char sprite_6_a []; 
 extern unsigned char sprite_6_b []; 
-extern unsigned char sprite_6_c []; 
 extern unsigned char sprite_7_a []; 
 extern unsigned char sprite_7_b []; 
-extern unsigned char sprite_7_c []; 
 extern unsigned char sprite_8_a []; 
 extern unsigned char sprite_8_b []; 
-extern unsigned char sprite_8_c []; 
 extern unsigned char sprite_9_a []; 
 extern unsigned char sprite_9_b []; 
-extern unsigned char sprite_9_c []; 
 extern unsigned char sprite_10_a []; 
 extern unsigned char sprite_10_b []; 
-extern unsigned char sprite_10_c []; 
 extern unsigned char sprite_11_a []; 
 extern unsigned char sprite_11_b []; 
-extern unsigned char sprite_11_c []; 
 extern unsigned char sprite_12_a []; 
 extern unsigned char sprite_12_b []; 
-extern unsigned char sprite_12_c []; 
 extern unsigned char sprite_13_a []; 
 extern unsigned char sprite_13_b []; 
-extern unsigned char sprite_13_c []; 
 extern unsigned char sprite_14_a []; 
 extern unsigned char sprite_14_b []; 
-extern unsigned char sprite_14_c []; 
 extern unsigned char sprite_15_a []; 
 extern unsigned char sprite_15_b []; 
-extern unsigned char sprite_15_c []; 
 extern unsigned char sprite_16_a []; 
 extern unsigned char sprite_16_b []; 
-extern unsigned char sprite_16_c []; 
 extern unsigned char extra_sprite_17_a []; 
 extern unsigned char extra_sprite_17_b []; 
-extern unsigned char extra_sprite_17_c []; 
 extern unsigned char extra_sprite_18_a []; 
 extern unsigned char extra_sprite_18_b []; 
-extern unsigned char extra_sprite_18_c []; 
  
 #asm
         defb 0, 255
@@ -68,1481 +50,1123 @@ extern unsigned char extra_sprite_18_c [];
         defb 0, 255
         defb 0, 255
  
-; Sprite #0 y máscara
+; Sprite #0 y mÃ¡scara
 ; Primera columna
     ._sprite_1_a
-        defb 0, 255
-        defb 7, 248
-        defb 8, 240
-        defb 16, 224
-        defb 16, 224
-        defb 96, 128
-        defb 144, 0
-        defb 144, 0
-        defb 161, 0
-        defb 129, 0
-        defb 96, 128
-        defb 27, 224
-        defb 3, 240
-        defb 7, 224
-        defb 23, 192
-        defb 30, 192
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0x07, 0xF8
+        defb 0x08, 0xF0
+        defb 0x10, 0xE0
+        defb 0x10, 0xE0
+        defb 0x60, 0x80
+        defb 0x90, 0x00
+        defb 0x90, 0x00
+        defb 0xA1, 0x00
+        defb 0x81, 0x00
+        defb 0x61, 0x80
+        defb 0x19, 0xE0
+        defb 0x00, 0xF8
+        defb 0x00, 0xF8
+        defb 0x03, 0xF8
+        defb 0x03, 0xF8
+        defb 0x03, 0xF0
+        defb 0x03, 0xF0
+        defb 0x07, 0xE0
+        defb 0x07, 0xE0
+        defb 0x17, 0xC0
+        defb 0x17, 0xC0
+        defb 0x1E, 0xC0
+        defb 0x1E, 0xC0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_1_b
-        defb 0, 255
-        defb 224, 31
-        defb 24, 7
-        defb 4, 3
-        defb 4, 3
-        defb 104, 7
-        defb 160, 15
-        defb 160, 15
-        defb 96, 15
-        defb 128, 15
-        defb 192, 15
-        defb 96, 15
-        defb 128, 7
-        defb 176, 3
-        defb 120, 1
-        defb 28, 1
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0xE0, 0x1F
+        defb 0x18, 0x07
+        defb 0x04, 0x03
+        defb 0x04, 0x03
+        defb 0x68, 0x07
+        defb 0xA0, 0x0F
+        defb 0xA0, 0x0F
+        defb 0x60, 0x0F
+        defb 0x00, 0x0F
+        defb 0x80, 0x0F
+        defb 0x80, 0x0F
+        defb 0xC0, 0x0F
+        defb 0xC0, 0x0F
+        defb 0x60, 0x0F
+        defb 0x60, 0x0F
+        defb 0x80, 0x07
+        defb 0x80, 0x07
+        defb 0xB0, 0x03
+        defb 0xB0, 0x03
+        defb 0x78, 0x01
+        defb 0x78, 0x01
+        defb 0x1C, 0x01
+        defb 0x1C, 0x01
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_1_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #1 y máscara
+; Sprite #1 y mÃ¡scara
 ; Primera columna
     ._sprite_2_a
-        defb 7, 248
-        defb 8, 240
-        defb 16, 224
-        defb 16, 224
-        defb 96, 128
-        defb 144, 0
-        defb 144, 0
-        defb 161, 0
-        defb 131, 0
-        defb 98, 128
-        defb 27, 224
-        defb 5, 240
-        defb 6, 240
-        defb 3, 240
-        defb 3, 248
-        defb 3, 248
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x07, 0xF8
+        defb 0x08, 0xF0
+        defb 0x10, 0xE0
+        defb 0x10, 0xE0
+        defb 0x60, 0x80
+        defb 0x90, 0x00
+        defb 0x90, 0x00
+        defb 0xA0, 0x00
+        defb 0x83, 0x00
+        defb 0x63, 0x80
+        defb 0x1A, 0xE0
+        defb 0x02, 0xF8
+        defb 0x03, 0xF8
+        defb 0x03, 0xF8
+        defb 0x05, 0xF0
+        defb 0x05, 0xF0
+        defb 0x06, 0xF0
+        defb 0x06, 0xF0
+        defb 0x03, 0xF0
+        defb 0x03, 0xF0
+        defb 0x03, 0xF8
+        defb 0x03, 0xF8
+        defb 0x03, 0xF8
+        defb 0x03, 0xF8
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_2_b
-        defb 224, 31
-        defb 16, 15
-        defb 8, 7
-        defb 4, 3
-        defb 68, 3
-        defb 168, 7
-        defb 160, 15
-        defb 96, 15
-        defb 128, 15
-        defb 224, 15
-        defb 96, 15
-        defb 64, 15
-        defb 128, 31
-        defb 128, 63
-        defb 128, 63
-        defb 192, 31
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xE0, 0x1F
+        defb 0x10, 0x0F
+        defb 0x08, 0x07
+        defb 0x04, 0x03
+        defb 0x44, 0x03
+        defb 0xA8, 0x07
+        defb 0xA0, 0x0F
+        defb 0x60, 0x0F
+        defb 0x80, 0x0F
+        defb 0x80, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xE0, 0x0F
+        defb 0x60, 0x0F
+        defb 0x60, 0x0F
+        defb 0x40, 0x0F
+        defb 0x40, 0x0F
+        defb 0x80, 0x1F
+        defb 0x80, 0x1F
+        defb 0x80, 0x3F
+        defb 0x80, 0x3F
+        defb 0x80, 0x3F
+        defb 0x80, 0x3F
+        defb 0xC0, 0x1F
+        defb 0xC0, 0x1F
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_2_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #2 y máscara
+; Sprite #2 y mÃ¡scara
 ; Primera columna
     ._sprite_3_a
-        defb 0, 255
-        defb 7, 248
-        defb 8, 240
-        defb 16, 224
-        defb 16, 224
-        defb 96, 128
-        defb 144, 0
-        defb 144, 0
-        defb 161, 0
-        defb 131, 0
-        defb 98, 128
-        defb 20, 224
-        defb 1, 240
-        defb 1, 224
-        defb 26, 192
-        defb 28, 192
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0x07, 0xF8
+        defb 0x08, 0xF0
+        defb 0x10, 0xE0
+        defb 0x10, 0xE0
+        defb 0x60, 0x80
+        defb 0x90, 0x00
+        defb 0x90, 0x00
+        defb 0xA1, 0x00
+        defb 0x81, 0x00
+        defb 0x63, 0x80
+        defb 0x13, 0xE0
+        defb 0x02, 0xF0
+        defb 0x02, 0xF0
+        defb 0x04, 0xF0
+        defb 0x04, 0xF0
+        defb 0x01, 0xF0
+        defb 0x01, 0xF0
+        defb 0x01, 0xE0
+        defb 0x01, 0xE0
+        defb 0x1A, 0xC0
+        defb 0x1A, 0xC0
+        defb 0x1C, 0xC0
+        defb 0x1C, 0xC0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_3_b
-        defb 0, 255
-        defb 224, 31
-        defb 24, 7
-        defb 4, 3
-        defb 4, 3
-        defb 104, 7
-        defb 160, 15
-        defb 160, 15
-        defb 96, 15
-        defb 128, 15
-        defb 224, 15
-        defb 224, 15
-        defb 192, 7
-        defb 240, 3
-        defb 248, 1
-        defb 28, 1
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0xE0, 0x1F
+        defb 0x18, 0x07
+        defb 0x04, 0x03
+        defb 0x04, 0x03
+        defb 0x68, 0x07
+        defb 0xA0, 0x0F
+        defb 0xA0, 0x0F
+        defb 0x60, 0x0F
+        defb 0x00, 0x0F
+        defb 0x80, 0x1F
+        defb 0x80, 0x1F
+        defb 0xE0, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xC0, 0x07
+        defb 0xC0, 0x07
+        defb 0xF0, 0x03
+        defb 0xF0, 0x03
+        defb 0xF8, 0x01
+        defb 0xF8, 0x01
+        defb 0x1C, 0x01
+        defb 0x1C, 0x01
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_3_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #3 y máscara
+; Sprite #3 y mÃ¡scara
 ; Primera columna
     ._sprite_4_a
-        defb 7, 248
-        defb 8, 240
-        defb 16, 224
-        defb 16, 224
-        defb 112, 128
-        defb 144, 0
-        defb 144, 0
-        defb 160, 0
-        defb 135, 0
-        defb 64, 128
-        defb 56, 192
-        defb 1, 248
-        defb 5, 240
-        defb 6, 224
-        defb 12, 192
-        defb 24, 193
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x07, 0x78
+        defb 0x08, 0xF0
+        defb 0x10, 0xE0
+        defb 0x10, 0xE0
+        defb 0x70, 0x80
+        defb 0x90, 0x00
+        defb 0x90, 0x00
+        defb 0xA0, 0x00
+        defb 0x87, 0x00
+        defb 0x47, 0x80
+        defb 0x38, 0xC0
+        defb 0x00, 0xF8
+        defb 0x00, 0xF8
+        defb 0x00, 0xF8
+        defb 0x01, 0xF8
+        defb 0x01, 0xF8
+        defb 0x05, 0xF8
+        defb 0x05, 0xF0
+        defb 0x06, 0xE0
+        defb 0x06, 0xE0
+        defb 0x0C, 0xC0
+        defb 0x0C, 0xC0
+        defb 0x18, 0xC1
+        defb 0x18, 0xC1
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_4_b
-        defb 224, 31
-        defb 16, 15
-        defb 8, 7
-        defb 4, 3
-        defb 68, 3
-        defb 168, 7
-        defb 160, 15
-        defb 96, 15
-        defb 128, 15
-        defb 224, 15
-        defb 224, 15
-        defb 192, 7
-        defb 240, 3
-        defb 248, 1
-        defb 28, 1
-        defb 0, 193
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xE0, 0x1F
+        defb 0x10, 0x0F
+        defb 0x08, 0x07
+        defb 0x04, 0x03
+        defb 0x44, 0x03
+        defb 0xA8, 0x07
+        defb 0xA0, 0x0F
+        defb 0x60, 0x0F
+        defb 0x80, 0x0F
+        defb 0x80, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xE0, 0x0F
+        defb 0xC0, 0x07
+        defb 0xC0, 0x07
+        defb 0xF0, 0x03
+        defb 0xF0, 0x03
+        defb 0xF8, 0x01
+        defb 0xF8, 0x01
+        defb 0x1C, 0x01
+        defb 0x1C, 0x01
+        defb 0x00, 0xC1
+        defb 0x00, 0xC1
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_4_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #4 y máscara
+; Sprite #4 y mÃ¡scara
 ; Primera columna
     ._sprite_5_a
-        defb 0, 255
-        defb 7, 248
-        defb 24, 224
-        defb 32, 192
-        defb 32, 192
-        defb 22, 224
-        defb 5, 240
-        defb 5, 240
-        defb 6, 240
-        defb 1, 240
-        defb 7, 240
-        defb 7, 240
-        defb 3, 224
-        defb 15, 192
-        defb 31, 128
-        defb 56, 128
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0x07, 0xF8
+        defb 0x18, 0xE0
+        defb 0x20, 0xC0
+        defb 0x20, 0xC0
+        defb 0x16, 0xE0
+        defb 0x05, 0xF0
+        defb 0x05, 0xF0
+        defb 0x06, 0xF0
+        defb 0x00, 0xF0
+        defb 0x01, 0xF8
+        defb 0x01, 0xF8
+        defb 0x07, 0xF0
+        defb 0x07, 0xF0
+        defb 0x07, 0xF0
+        defb 0x07, 0xF0
+        defb 0x03, 0xE0
+        defb 0x03, 0xE0
+        defb 0x0F, 0xC0
+        defb 0x0F, 0xC0
+        defb 0x1F, 0x80
+        defb 0x1F, 0x80
+        defb 0x38, 0x80
+        defb 0x38, 0x80
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_5_b
-        defb 0, 255
-        defb 224, 31
-        defb 16, 15
-        defb 8, 7
-        defb 8, 7
-        defb 6, 1
-        defb 9, 0
-        defb 9, 0
-        defb 133, 0
-        defb 193, 0
-        defb 70, 1
-        defb 40, 7
-        defb 128, 15
-        defb 128, 7
-        defb 88, 3
-        defb 56, 3
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0xE0, 0x1F
+        defb 0x10, 0x0F
+        defb 0x08, 0x07
+        defb 0x08, 0x07
+        defb 0x06, 0x01
+        defb 0x09, 0x00
+        defb 0x09, 0x00
+        defb 0x85, 0x00
+        defb 0x81, 0x00
+        defb 0xC6, 0x01
+        defb 0xC8, 0x07
+        defb 0x40, 0x0F
+        defb 0x40, 0x0F
+        defb 0x20, 0x0F
+        defb 0x20, 0x0F
+        defb 0x80, 0x0F
+        defb 0x80, 0x0F
+        defb 0x80, 0x07
+        defb 0x80, 0x07
+        defb 0x58, 0x03
+        defb 0x58, 0x03
+        defb 0x38, 0x03
+        defb 0x38, 0x03
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_5_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #5 y máscara
+; Sprite #5 y mÃ¡scara
 ; Primera columna
     ._sprite_6_a
-        defb 7, 248
-        defb 8, 240
-        defb 16, 224
-        defb 32, 192
-        defb 34, 192
-        defb 21, 224
-        defb 5, 240
-        defb 6, 240
-        defb 1, 240
-        defb 7, 240
-        defb 6, 240
-        defb 2, 240
-        defb 1, 248
-        defb 1, 252
-        defb 1, 252
-        defb 3, 248
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x07, 0xF8
+        defb 0x08, 0xF0
+        defb 0x10, 0xE0
+        defb 0x20, 0xC0
+        defb 0x22, 0xC0
+        defb 0x15, 0xE0
+        defb 0x05, 0xF0
+        defb 0x06, 0xF0
+        defb 0x01, 0xF0
+        defb 0x01, 0xF0
+        defb 0x07, 0xF0
+        defb 0x07, 0xF0
+        defb 0x06, 0xF0
+        defb 0x06, 0xF0
+        defb 0x02, 0xF0
+        defb 0x02, 0xF0
+        defb 0x01, 0xF8
+        defb 0x01, 0xF8
+        defb 0x01, 0xFC
+        defb 0x01, 0xFC
+        defb 0x01, 0xFC
+        defb 0x01, 0xFC
+        defb 0x03, 0xF8
+        defb 0x03, 0xF8
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_6_b
-        defb 224, 31
-        defb 16, 15
-        defb 8, 7
-        defb 8, 7
-        defb 6, 1
-        defb 9, 0
-        defb 9, 0
-        defb 133, 0
-        defb 193, 0
-        defb 70, 1
-        defb 216, 7
-        defb 160, 15
-        defb 96, 15
-        defb 192, 15
-        defb 192, 31
-        defb 192, 31
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xE0, 0x1F
+        defb 0x10, 0x0F
+        defb 0x08, 0x07
+        defb 0x08, 0x07
+        defb 0x06, 0x01
+        defb 0x09, 0x00
+        defb 0x09, 0x00
+        defb 0x05, 0x00
+        defb 0xC1, 0x00
+        defb 0xC6, 0x01
+        defb 0x58, 0x07
+        defb 0x40, 0x1F
+        defb 0xC0, 0x1F
+        defb 0xC0, 0x1F
+        defb 0xA0, 0x0F
+        defb 0xA0, 0x0F
+        defb 0x60, 0x0F
+        defb 0x60, 0x0F
+        defb 0xC0, 0x0F
+        defb 0xC0, 0x0F
+        defb 0xC0, 0x1F
+        defb 0xC0, 0x1F
+        defb 0xC0, 0x1F
+        defb 0xC0, 0x1F
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_6_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #6 y máscara
+; Sprite #6 y mÃ¡scara
 ; Primera columna
     ._sprite_7_a
-        defb 0, 255
-        defb 7, 248
-        defb 24, 224
-        defb 32, 192
-        defb 32, 192
-        defb 22, 224
-        defb 5, 240
-        defb 5, 240
-        defb 6, 240
-        defb 1, 240
-        defb 3, 240
-        defb 6, 240
-        defb 1, 224
-        defb 13, 192
-        defb 30, 128
-        defb 56, 128
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0x07, 0xF8
+        defb 0x18, 0xE0
+        defb 0x20, 0xC0
+        defb 0x20, 0xC0
+        defb 0x16, 0xE0
+        defb 0x05, 0xF0
+        defb 0x05, 0xF0
+        defb 0x06, 0xF0
+        defb 0x00, 0xF0
+        defb 0x01, 0xF0
+        defb 0x01, 0xF0
+        defb 0x03, 0xF0
+        defb 0x03, 0xF0
+        defb 0x06, 0xF0
+        defb 0x06, 0xF0
+        defb 0x01, 0xE0
+        defb 0x01, 0xE0
+        defb 0x0D, 0xC0
+        defb 0x0D, 0xC0
+        defb 0x1E, 0x80
+        defb 0x1E, 0x80
+        defb 0x38, 0x80
+        defb 0x38, 0x80
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_7_b
-        defb 0, 255
-        defb 224, 31
-        defb 16, 15
-        defb 8, 7
-        defb 8, 7
-        defb 6, 1
-        defb 9, 0
-        defb 9, 0
-        defb 133, 0
-        defb 129, 0
-        defb 6, 1
-        defb 216, 7
-        defb 192, 15
-        defb 224, 7
-        defb 232, 3
-        defb 120, 3
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0xE0, 0x1F
+        defb 0x10, 0x0F
+        defb 0x08, 0x07
+        defb 0x08, 0x07
+        defb 0x06, 0x01
+        defb 0x09, 0x00
+        defb 0x09, 0x00
+        defb 0x85, 0x00
+        defb 0x81, 0x00
+        defb 0x86, 0x01
+        defb 0x98, 0x07
+        defb 0x00, 0x1F
+        defb 0x00, 0x1F
+        defb 0xC0, 0x1F
+        defb 0xC0, 0x1F
+        defb 0xC0, 0x0F
+        defb 0xC0, 0x0F
+        defb 0xE0, 0x07
+        defb 0xE0, 0x07
+        defb 0xE8, 0x03
+        defb 0xE8, 0x03
+        defb 0x78, 0x03
+        defb 0x78, 0x03
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_7_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #7 y máscara
+; Sprite #7 y mÃ¡scara
 ; Primera columna
     ._sprite_8_a
-        defb 7, 248
-        defb 8, 240
-        defb 16, 224
-        defb 32, 192
-        defb 34, 192
-        defb 21, 224
-        defb 5, 240
-        defb 6, 240
-        defb 1, 240
-        defb 7, 240
-        defb 7, 240
-        defb 3, 224
-        defb 15, 192
-        defb 31, 128
-        defb 56, 128
-        defb 0, 131
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x07, 0xF8
+        defb 0x08, 0xF0
+        defb 0x10, 0xE0
+        defb 0x20, 0xC0
+        defb 0x22, 0xC0
+        defb 0x15, 0xE0
+        defb 0x05, 0xF0
+        defb 0x06, 0xF0
+        defb 0x01, 0xF0
+        defb 0x01, 0xF0
+        defb 0x07, 0xF0
+        defb 0x07, 0xF0
+        defb 0x07, 0xF0
+        defb 0x07, 0xF0
+        defb 0x03, 0xE0
+        defb 0x03, 0xE0
+        defb 0x0F, 0xC0
+        defb 0x0F, 0xC0
+        defb 0x1F, 0x80
+        defb 0x1F, 0x80
+        defb 0x38, 0x80
+        defb 0x38, 0x80
+        defb 0x00, 0x83
+        defb 0x00, 0x83
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_8_b
-        defb 224, 31
-        defb 16, 15
-        defb 8, 7
-        defb 8, 7
-        defb 14, 1
-        defb 9, 0
-        defb 9, 0
-        defb 5, 0
-        defb 225, 0
-        defb 2, 1
-        defb 28, 3
-        defb 128, 31
-        defb 160, 15
-        defb 96, 7
-        defb 48, 3
-        defb 24, 131
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xE0, 0x1F
+        defb 0x10, 0x0F
+        defb 0x08, 0x07
+        defb 0x08, 0x07
+        defb 0x0E, 0x01
+        defb 0x09, 0x00
+        defb 0x09, 0x00
+        defb 0x05, 0x00
+        defb 0xE1, 0x00
+        defb 0xE2, 0x01
+        defb 0x1C, 0x03
+        defb 0x00, 0x1F
+        defb 0x00, 0x1F
+        defb 0x00, 0x1F
+        defb 0x80, 0x1F
+        defb 0x80, 0x1F
+        defb 0xA0, 0x1F
+        defb 0xA0, 0x0F
+        defb 0x60, 0x07
+        defb 0x60, 0x07
+        defb 0x30, 0x03
+        defb 0x30, 0x03
+        defb 0x18, 0x83
+        defb 0x18, 0x83
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_8_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #8 y máscara
+; Sprite #8 y mÃ¡scara
 ; Primera columna
     ._sprite_9_a
-        defb 1, 248
-        defb 3, 24
-        defb 66, 8
-        defb 162, 0
-        defb 34, 0
-        defb 35, 0
-        defb 27, 128
-        defb 1, 192
-        defb 0, 248
-        defb 1, 248
-        defb 0, 248
-        defb 1, 224
-        defb 12, 192
-        defb 19, 192
-        defb 16, 0
-        defb 112, 7
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x01, 0xF8
+        defb 0x03, 0x18
+        defb 0x42, 0x08
+        defb 0xA2, 0x00
+        defb 0x22, 0x00
+        defb 0x23, 0x00
+        defb 0x1B, 0x80
+        defb 0x01, 0xC0
+        defb 0x00, 0xF8
+        defb 0x01, 0xF8
+        defb 0x00, 0xF8
+        defb 0x01, 0xE0
+        defb 0x0C, 0xC0
+        defb 0x13, 0xC0
+        defb 0x10, 0x00
+        defb 0x70, 0x07
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_9_b
-        defb 128, 31
-        defb 192, 8
-        defb 163, 0
-        defb 165, 0
-        defb 164, 0
-        defb 229, 0
-        defb 104, 0
-        defb 32, 3
-        defb 0, 7
-        defb 240, 0
-        defb 70, 0
-        defb 234, 0
-        defb 82, 0
-        defb 227, 0
-        defb 0, 8
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x80, 0x1F
+        defb 0xC0, 0x08
+        defb 0xA3, 0x00
+        defb 0xA5, 0x00
+        defb 0xA4, 0x00
+        defb 0xE5, 0x00
+        defb 0x68, 0x00
+        defb 0x20, 0x03
+        defb 0x00, 0x07
+        defb 0xF0, 0x00
+        defb 0x46, 0x00
+        defb 0xEA, 0x00
+        defb 0x52, 0x00
+        defb 0xE3, 0x00
+        defb 0x00, 0x08
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_9_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #9 y máscara
+; Sprite #9 y mÃ¡scara
 ; Primera columna
     ._sprite_10_a
-        defb 1, 248
-        defb 3, 16
-        defb 197, 0
-        defb 165, 0
-        defb 37, 0
-        defb 167, 0
-        defb 22, 0
-        defb 4, 192
-        defb 0, 224
-        defb 15, 0
-        defb 98, 0
-        defb 87, 0
-        defb 74, 0
-        defb 199, 0
-        defb 0, 16
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x01, 0xF8
+        defb 0x03, 0x10
+        defb 0xC5, 0x00
+        defb 0xA5, 0x00
+        defb 0x25, 0x00
+        defb 0xA7, 0x00
+        defb 0x16, 0x00
+        defb 0x04, 0xC0
+        defb 0x00, 0xE0
+        defb 0x0F, 0x00
+        defb 0x62, 0x00
+        defb 0x57, 0x00
+        defb 0x4A, 0x00
+        defb 0xC7, 0x00
+        defb 0x00, 0x10
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_10_b
-        defb 128, 31
-        defb 192, 24
-        defb 66, 16
-        defb 69, 0
-        defb 68, 0
-        defb 196, 0
-        defb 216, 1
-        defb 128, 3
-        defb 0, 31
-        defb 128, 31
-        defb 0, 31
-        defb 128, 7
-        defb 48, 3
-        defb 200, 3
-        defb 8, 0
-        defb 14, 224
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x80, 0x1F
+        defb 0xC0, 0x18
+        defb 0x42, 0x10
+        defb 0x45, 0x00
+        defb 0x44, 0x00
+        defb 0xC4, 0x00
+        defb 0xD8, 0x01
+        defb 0x80, 0x03
+        defb 0x00, 0x1F
+        defb 0x80, 0x1F
+        defb 0x00, 0x1F
+        defb 0x80, 0x07
+        defb 0x30, 0x03
+        defb 0xC8, 0x03
+        defb 0x08, 0x00
+        defb 0x0E, 0xE0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_10_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #10 y máscara
+; Sprite #10 y mÃ¡scara
 ; Primera columna
     ._sprite_11_a
-        defb 2, 252
-        defb 52, 200
-        defb 72, 128
-        defb 139, 0
-        defb 133, 0
-        defb 133, 0
-        defb 135, 0
-        defb 131, 0
-        defb 128, 0
-        defb 140, 0
-        defb 140, 0
-        defb 131, 0
-        defb 74, 128
-        defb 80, 128
-        defb 34, 216
-        defb 6, 240
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x02, 0xFC
+        defb 0x34, 0xC8
+        defb 0x48, 0x80
+        defb 0x8B, 0x00
+        defb 0x85, 0x00
+        defb 0x85, 0x00
+        defb 0x87, 0x00
+        defb 0x83, 0x00
+        defb 0x80, 0x00
+        defb 0x8C, 0x00
+        defb 0x8C, 0x00
+        defb 0x83, 0x00
+        defb 0x4A, 0x80
+        defb 0x50, 0x80
+        defb 0x22, 0xD8
+        defb 0x06, 0xF0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_11_b
-        defb 160, 31
-        defb 28, 3
-        defb 82, 1
-        defb 209, 0
-        defb 65, 0
-        defb 65, 0
-        defb 193, 0
-        defb 129, 0
-        defb 1, 0
-        defb 49, 0
-        defb 49, 0
-        defb 193, 0
-        defb 82, 1
-        defb 10, 1
-        defb 68, 11
-        defb 96, 15
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xA0, 0x1F
+        defb 0x1C, 0x03
+        defb 0x52, 0x01
+        defb 0xD1, 0x00
+        defb 0x41, 0x00
+        defb 0x41, 0x00
+        defb 0xC1, 0x00
+        defb 0x81, 0x00
+        defb 0x01, 0x00
+        defb 0x31, 0x00
+        defb 0x31, 0x00
+        defb 0xC1, 0x00
+        defb 0x52, 0x01
+        defb 0x0A, 0x01
+        defb 0x44, 0x0B
+        defb 0x60, 0x0F
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_11_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #11 y máscara
+; Sprite #11 y mÃ¡scara
 ; Primera columna
     ._sprite_12_a
-        defb 0, 255
-        defb 5, 248
-        defb 56, 192
-        defb 74, 128
-        defb 131, 0
-        defb 130, 0
-        defb 130, 0
-        defb 131, 0
-        defb 129, 0
-        defb 152, 0
-        defb 152, 0
-        defb 128, 0
-        defb 135, 0
-        defb 68, 128
-        defb 80, 129
-        defb 44, 209
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0x05, 0xF8
+        defb 0x38, 0xC0
+        defb 0x4A, 0x80
+        defb 0x83, 0x00
+        defb 0x82, 0x00
+        defb 0x82, 0x00
+        defb 0x83, 0x00
+        defb 0x81, 0x00
+        defb 0x98, 0x00
+        defb 0x98, 0x00
+        defb 0x80, 0x00
+        defb 0x87, 0x00
+        defb 0x44, 0x80
+        defb 0x50, 0x81
+        defb 0x2C, 0xD1
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_12_b
-        defb 0, 255
-        defb 64, 63
-        defb 44, 19
-        defb 18, 1
-        defb 193, 0
-        defb 161, 0
-        defb 161, 0
-        defb 225, 0
-        defb 193, 0
-        defb 25, 0
-        defb 25, 0
-        defb 1, 0
-        defb 225, 0
-        defb 34, 1
-        defb 10, 129
-        defb 52, 139
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0x40, 0x3F
+        defb 0x2C, 0x13
+        defb 0x12, 0x01
+        defb 0xC1, 0x00
+        defb 0xA1, 0x00
+        defb 0xA1, 0x00
+        defb 0xE1, 0x00
+        defb 0xC1, 0x00
+        defb 0x19, 0x00
+        defb 0x19, 0x00
+        defb 0x01, 0x00
+        defb 0xE1, 0x00
+        defb 0x22, 0x01
+        defb 0x0A, 0x81
+        defb 0x34, 0x8B
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_12_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #12 y máscara
+; Sprite #12 y mÃ¡scara
 ; Primera columna
     ._sprite_13_a
-        defb 0, 255
-        defb 15, 192
-        defb 25, 128
-        defb 54, 128
-        defb 51, 128
-        defb 54, 128
-        defb 25, 128
-        defb 15, 192
-        defb 0, 128
-        defb 53, 0
-        defb 77, 0
-        defb 65, 0
-        defb 33, 8
-        defb 2, 128
-        defb 4, 240
-        defb 2, 240
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0x0F, 0xC0
+        defb 0x19, 0x80
+        defb 0x36, 0x80
+        defb 0x33, 0x80
+        defb 0x36, 0x80
+        defb 0x19, 0x80
+        defb 0x0F, 0xC0
+        defb 0x00, 0x80
+        defb 0x35, 0x00
+        defb 0x4D, 0x00
+        defb 0x41, 0x00
+        defb 0x21, 0x08
+        defb 0x02, 0x80
+        defb 0x04, 0xF0
+        defb 0x02, 0xF0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_13_b
-        defb 0, 255
-        defb 240, 3
-        defb 56, 1
-        defb 220, 1
-        defb 92, 1
-        defb 216, 1
-        defb 56, 1
-        defb 240, 3
-        defb 0, 1
-        defb 72, 1
-        defb 36, 1
-        defb 36, 1
-        defb 24, 1
-        defb 0, 67
-        defb 0, 127
-        defb 0, 127
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x00, 0xFF
+        defb 0xF0, 0x03
+        defb 0x38, 0x01
+        defb 0xDC, 0x01
+        defb 0x5C, 0x01
+        defb 0xD8, 0x01
+        defb 0x38, 0x01
+        defb 0xF0, 0x03
+        defb 0x00, 0x01
+        defb 0x48, 0x01
+        defb 0x24, 0x01
+        defb 0x24, 0x01
+        defb 0x18, 0x01
+        defb 0x00, 0x43
+        defb 0x00, 0x7F
+        defb 0x00, 0x7F
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_13_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #13 y máscara
+; Sprite #13 y mÃ¡scara
 ; Primera columna
     ._sprite_14_a
-        defb 15, 192
-        defb 25, 128
-        defb 54, 128
-        defb 53, 128
-        defb 54, 128
-        defb 25, 128
-        defb 15, 192
-        defb 0, 192
-        defb 5, 224
-        defb 9, 224
-        defb 9, 224
-        defb 9, 224
-        defb 5, 224
-        defb 5, 224
-        defb 9, 224
-        defb 0, 240
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x0F, 0xC0
+        defb 0x19, 0x80
+        defb 0x36, 0x80
+        defb 0x35, 0x80
+        defb 0x36, 0x80
+        defb 0x19, 0x80
+        defb 0x0F, 0xC0
+        defb 0x00, 0xC0
+        defb 0x05, 0xE0
+        defb 0x09, 0xE0
+        defb 0x09, 0xE0
+        defb 0x09, 0xE0
+        defb 0x05, 0xE0
+        defb 0x05, 0xE0
+        defb 0x09, 0xE0
+        defb 0x00, 0xF0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_14_b
-        defb 240, 3
-        defb 56, 1
-        defb 220, 1
-        defb 156, 1
-        defb 216, 1
-        defb 56, 1
-        defb 240, 3
-        defb 0, 7
-        defb 64, 15
-        defb 32, 15
-        defb 32, 15
-        defb 64, 15
-        defb 64, 15
-        defb 64, 15
-        defb 32, 15
-        defb 0, 31
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xF0, 0x03
+        defb 0x38, 0x01
+        defb 0xDC, 0x01
+        defb 0x9C, 0x01
+        defb 0xD8, 0x01
+        defb 0x38, 0x01
+        defb 0xF0, 0x03
+        defb 0x00, 0x07
+        defb 0x40, 0x0F
+        defb 0x20, 0x0F
+        defb 0x20, 0x0F
+        defb 0x40, 0x0F
+        defb 0x40, 0x0F
+        defb 0x40, 0x0F
+        defb 0x20, 0x0F
+        defb 0x00, 0x1F
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_14_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #14 y máscara
+; Sprite #14 y mÃ¡scara
 ; Primera columna
     ._sprite_15_a
-        defb 255, 0
-        defb 255, 0
-        defb 170, 0
-        defb 0, 0
-        defb 7, 224
-        defb 7, 224
-        defb 0, 240
-        defb 3, 240
-        defb 3, 240
-        defb 0, 224
-        defb 3, 224
-        defb 4, 224
-        defb 4, 224
-        defb 2, 224
-        defb 1, 240
-        defb 0, 248
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xFF, 0x00
+        defb 0xFF, 0x00
+        defb 0xAA, 0x00
+        defb 0x00, 0x00
+        defb 0x07, 0xE0
+        defb 0x07, 0xE0
+        defb 0x00, 0xF0
+        defb 0x03, 0xF0
+        defb 0x03, 0xF0
+        defb 0x00, 0xE0
+        defb 0x03, 0xE0
+        defb 0x04, 0xE0
+        defb 0x04, 0xE0
+        defb 0x02, 0xE0
+        defb 0x01, 0xF0
+        defb 0x00, 0xF8
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_15_b
-        defb 255, 0
-        defb 255, 0
-        defb 171, 0
-        defb 0, 0
-        defb 224, 7
-        defb 224, 7
-        defb 0, 15
-        defb 192, 15
-        defb 192, 15
-        defb 0, 7
-        defb 192, 7
-        defb 32, 7
-        defb 32, 7
-        defb 64, 7
-        defb 0, 15
-        defb 0, 31
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xFF, 0x00
+        defb 0xFF, 0x00
+        defb 0xAB, 0x00
+        defb 0x00, 0x00
+        defb 0xE0, 0x07
+        defb 0xE0, 0x07
+        defb 0x00, 0x0F
+        defb 0xC0, 0x0F
+        defb 0xC0, 0x0F
+        defb 0x00, 0x07
+        defb 0xC0, 0x07
+        defb 0x20, 0x07
+        defb 0x20, 0x07
+        defb 0x40, 0x07
+        defb 0x00, 0x0F
+        defb 0x00, 0x1F
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_15_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #15 y máscara
+; Sprite #15 y mÃ¡scara
 ; Primera columna
     ._sprite_16_a
-        defb 255, 0
-        defb 255, 0
-        defb 170, 0
-        defb 0, 0
-        defb 7, 224
-        defb 7, 224
-        defb 0, 240
-        defb 3, 240
-        defb 3, 240
-        defb 0, 240
-        defb 1, 248
-        defb 1, 248
-        defb 0, 248
-        defb 0, 252
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xFF, 0x00
+        defb 0xFF, 0x00
+        defb 0xAA, 0x00
+        defb 0x00, 0x00
+        defb 0x07, 0xE0
+        defb 0x07, 0xE0
+        defb 0x00, 0xF0
+        defb 0x03, 0xF0
+        defb 0x03, 0xF0
+        defb 0x00, 0xF0
+        defb 0x01, 0xF8
+        defb 0x01, 0xF8
+        defb 0x00, 0xF8
+        defb 0x00, 0xFC
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._sprite_16_b
-        defb 255, 0
-        defb 255, 0
-        defb 171, 0
-        defb 0, 0
-        defb 224, 7
-        defb 224, 7
-        defb 0, 15
-        defb 192, 15
-        defb 192, 15
-        defb 0, 15
-        defb 128, 31
-        defb 0, 31
-        defb 128, 31
-        defb 0, 63
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0xFF, 0x00
+        defb 0xFF, 0x00
+        defb 0xAB, 0x00
+        defb 0x00, 0x00
+        defb 0xE0, 0x07
+        defb 0xE0, 0x07
+        defb 0x00, 0x0F
+        defb 0xC0, 0x0F
+        defb 0xC0, 0x0F
+        defb 0x00, 0x0F
+        defb 0x80, 0x1F
+        defb 0x00, 0x1F
+        defb 0x80, 0x1F
+        defb 0x00, 0x3F
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._sprite_16_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #16 y máscara
+; Sprite #16 y mÃ¡scara
 ; Primera columna
     ._extra_sprite_17_a
-        defb 5, 224
-        defb 23, 192
-        defb 31, 128
-        defb 63, 0
-        defb 124, 0
-        defb 121, 0
-        defb 242, 0
-        defb 116, 1
-        defb 244, 1
-        defb 114, 0
-        defb 249, 0
-        defb 60, 0
-        defb 95, 0
-        defb 31, 128
-        defb 11, 192
-        defb 2, 224
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x05, 0xE0
+        defb 0x17, 0xC0
+        defb 0x1F, 0x80
+        defb 0x3F, 0x00
+        defb 0x7C, 0x00
+        defb 0x79, 0x00
+        defb 0xF2, 0x00
+        defb 0x74, 0x01
+        defb 0xF4, 0x01
+        defb 0x72, 0x00
+        defb 0xF9, 0x00
+        defb 0x3C, 0x00
+        defb 0x5F, 0x00
+        defb 0x1F, 0x80
+        defb 0x0B, 0xC0
+        defb 0x02, 0xE0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._extra_sprite_17_b
-        defb 64, 7
-        defb 240, 3
-        defb 248, 1
-        defb 254, 0
-        defb 60, 0
-        defb 159, 0
-        defb 78, 0
-        defb 47, 128
-        defb 46, 128
-        defb 79, 0
-        defb 158, 0
-        defb 62, 0
-        defb 252, 0
-        defb 248, 1
-        defb 232, 3
-        defb 160, 7
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x40, 0x07
+        defb 0xF0, 0x03
+        defb 0xF8, 0x01
+        defb 0xFE, 0x00
+        defb 0x3C, 0x00
+        defb 0x9F, 0x00
+        defb 0x4E, 0x00
+        defb 0x2F, 0x80
+        defb 0x2E, 0x80
+        defb 0x4F, 0x00
+        defb 0x9E, 0x00
+        defb 0x3E, 0x00
+        defb 0xFC, 0x00
+        defb 0xF8, 0x01
+        defb 0xE8, 0x03
+        defb 0xA0, 0x07
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
-; tercera columna
-    ._extra_sprite_17_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; Sprite #17 y máscara
+; Sprite #17 y mÃ¡scara
 ; Primera columna
     ._extra_sprite_18_a
-        defb 3, 252
-        defb 12, 240
-        defb 20, 232
-        defb 7, 248
-        defb 8, 240
-        defb 16, 224
-        defb 28, 224
-        defb 50, 192
-        defb 64, 128
-        defb 66, 128
-        defb 34, 192
-        defb 125, 128
-        defb 128, 0
-        defb 128, 0
-        defb 64, 128
-        defb 63, 192
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x03, 0xFC
+        defb 0x0C, 0xF0
+        defb 0x14, 0xE8
+        defb 0x07, 0xF8
+        defb 0x08, 0xF0
+        defb 0x10, 0xE0
+        defb 0x1C, 0xE0
+        defb 0x32, 0xC0
+        defb 0x40, 0x80
+        defb 0x42, 0x80
+        defb 0x22, 0xC0
+        defb 0x7D, 0x80
+        defb 0x80, 0x00
+        defb 0x80, 0x00
+        defb 0x40, 0x80
+        defb 0x3F, 0xC0
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 ; Segunda columna
     ._extra_sprite_18_b
-        defb 128, 127
-        defb 64, 63
-        defb 32, 31
-        defb 32, 31
-        defb 16, 15
-        defb 8, 7
-        defb 56, 7
-        defb 76, 3
-        defb 2, 1
-        defb 66, 1
-        defb 68, 3
-        defb 190, 1
-        defb 1, 0
-        defb 1, 0
-        defb 2, 1
-        defb 252, 3
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
- 
-; tercera columna
-    ._extra_sprite_18_c
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
-        defb 0, 255
+        defb 0x80, 0x7F
+        defb 0x40, 0x3F
+        defb 0x20, 0x1F
+        defb 0x20, 0x1F
+        defb 0x10, 0x0F
+        defb 0x08, 0x07
+        defb 0x38, 0x07
+        defb 0x4C, 0x03
+        defb 0x02, 0x01
+        defb 0x42, 0x01
+        defb 0x44, 0x03
+        defb 0xBE, 0x01
+        defb 0x01, 0x00
+        defb 0x01, 0x00
+        defb 0x02, 0x01
+        defb 0xFC, 0x03
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
+        defb 0x00, 0xFF
  
 #endasm
  
