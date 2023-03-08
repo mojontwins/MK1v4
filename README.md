@@ -53,7 +53,7 @@ Very, very special thanks to many contributors over twitter, greets to **Néstor
 
 # Licencia
 
-**¡Cuidado! La licencia de MK1v4 es *diferente* a las licencias de MK1 y MK1_Pestecera**. Si no estás de acuerdo con las restricciones de esta versión, puedes emplear **MK1** o **MK1_Pestecera v5+.
+**¡Cuidado! La licencia de MK1v4 es *diferente* a las licencias de MK1 y MK1_Pestecera**. Si no estás de acuerdo con las restricciones de esta versión, puedes emplear **MK1** o **MK1_Pestecera** v5+.
 
 La Churrera es _copyleft_ The Mojon Twins y se distribuye bajo una [licencia CC-BY-NC-SA](./LICENSE). Debes añadir el logo en un lugar visible, que así salimos beneficiados todos.
 
