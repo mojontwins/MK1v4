@@ -53,11 +53,13 @@ Very, very special thanks to many contributors over twitter, greets to **Néstor
 
 # Licencia
 
-La Churrera es _copyleft_ The Mojon Twins y se distribuye bajo una [licencia LGPL](./LICENSE). Puedes hacer juegos como quieras, pero acuérdate de añadir el logo en un lugar visible, que así salimos beneficiados todos:
+**¡Cuidado! La licencia de MK1v4 es *diferente* a las licencias de MK1 y MK1_Pestecera**. Si no estás de acuerdo con las restricciones de esta versión, puedes emplear **MK1** o **MK1_Pestecera v5+.
+
+La Churrera es _copyleft_ The Mojon Twins y se distribuye bajo una [licencia CC-BY-NC-SA](./LICENSE). Debes añadir el logo en un lugar visible, que así salimos beneficiados todos.
 
 ![Logo MTE MK1](https://github.com/mojontwins/MK1/blob/master/logo.png)
 
-*Pero* si quieres hacer un juego con el motor entenderemos que quieras hacer copias físicas en cinta o en cualquier otro medio. En ese caso **sólo tienes que avisarnos**, que nos gusta saber estas cosas.
+Si pretendes publicar un juego realizado com **MK1v4** de cualquier forma comercial (incluyendo *sólamente cubrir costes*), ya sea de manera digital o física, **ponte en contacto con nosotros antes**. En este caso de querer realizar copias físicas, **debes incluir el logo de MK1 en la portada**.
 
 Los **juegos de ejemplo** contenidos en [/examples](./examples) son propiedad de **Mojon Twins** y no pueden ser reproducidos en formato físico sin llegar a un acuerdo con nosotros.
 
