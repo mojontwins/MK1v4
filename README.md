@@ -48,8 +48,7 @@ Esto sería imposible sin la colaboración de mucha gente (y la que se me olvida
 * **cpctbin2sna** and **cpc2cdt** from [CPCtelera](http://lronaldo.github.io/cpctelera/) by **Fran Gallego** & others.
 * **ZX7** & **ZX0** by **Einar Saukas**.
 
-Very, very special thanks to many contributors over twitter, greets to **Néstor Sancho** (@NestorSancho), **
-Miloš Bazelides** (@baze3SC), **Peter Helcmanovsky** (@ped7g), **Jorge PM** (@TrueVideo99), 
+Very, very special thanks to many contributors over twitter, greets to **Néstor Sancho** (@NestorSancho), **Miloš Bazelides** (@baze3SC), **Peter Helcmanovsky** (@ped7g), **Jorge PM** (@TrueVideo99), 
 **Juan** (@reidrac).
 
 # Licencia
