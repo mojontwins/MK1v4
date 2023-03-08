@@ -17,7 +17,7 @@ Finalmente, a principios de 2020 retomamos MK1 v3.99 (nueva vuelta atrás), y se
 
 La v4.7 se quedó ahí en un limbo congelado con algunos juegos sin terminar. 
 
-La idea era conservarla congelada en ambar, pero nah, eso es de cobardes. Así que hemos rescatado el proyecto perdido de Ramiro 4 (que en 2013 quedó a medias por destrucción de pendrive) y con ese pretexto hemos corregido bugs, mejorado la modularidad (originalmente había muchas cosas pertenecientes a funcionalidades que se quedaban en el código sin tener la funcionalidad activada, o había combinaciones que directamente no funcionaban), traducido funciones auxiliares a ensamble y ordenado un poco mejor todo.
+La idea era conservarla congelada en ambar, pero nah, eso es de cobardes. Así que hemos rescatado el proyecto perdido de Ramiro 4 (que en 2013 quedó a medias por destrucción de pendrive) y con ese pretexto hemos corregido bugs, mejorado la modularidad (originalmente había muchas cosas pertenecientes a funcionalidades que se quedaban en el código sin tener la funcionalidad activada, o había combinaciones que directamente no funcionaban), traducido la mayor parte a ensamble, portado a CPC y ordenado un poco mejor todo.
 
 Os presentamos la última versión de la rama olvidada de **MTE MK1**, la **v4.8 codename "zombie"**.
 
@@ -46,7 +46,7 @@ Esto sería imposible sin la colaboración de mucha gente (y la que se me olvida
 * CPC **WYZ Tracker 2** by **Augusto Ruiz** - [link](https://github.com/AugustoRuiz/WYZTracker).
 * CPC **TinyTape** by **CNGsoft**.
 * **cpctbin2sna** and **cpc2cdt** from [CPCtelera](http://lronaldo.github.io/cpctelera/) by **Fran Gallego** & others.
-* **ZX7** by **Einar Saukas**.
+* **ZX7** & **ZX0** by **Einar Saukas**.
 
 Very, very special thanks to many contributors over twitter, greets to **Néstor Sancho** (@NestorSancho), **
 Miloš Bazelides** (@baze3SC), **Peter Helcmanovsky** (@ped7g), **Jorge PM** (@TrueVideo99), 
