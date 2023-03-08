@@ -77,7 +77,7 @@ El tileset es la colección de archivos de 16x16 que se emplea para dibujar las 
 
 Los tilesets se dibujan siguiendo las restricciones del ZX Spectrum en un archivo .png de 256x48 que, por orden, guardaremos en `gfx/` con el nombre `work.png` y que tendrá un aspecto parecido a:
 
-![Tileset](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-001.png)
+![Tileset](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c01-001.png)
 
 Vayas a utilizar 16 o 48 tiles para el mapa, hay algunos tiles especiales, a saber, y contando los tiles de 0 a 47:
 
@@ -104,7 +104,7 @@ La forma de detectar los colores del Spectrum tiene ciertas particularidades. Lo
 
 Para guiarte puedes usar esta plantilla. Los colores de arriba representan a los colores del Spectrum sin y con BRIGHT. Las dos filas de abajo representan esos mismos colores pero harán que el conversor levante el bit 7.
 
-![Colores para el conversor](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/colours.png)
+![Colores para el conversor](https://github.com/mojontwins/MK1v4/blob/master/docs/images/colours.png)
 
 Por último, si vas a usar esta funcionalidad tendrás que linkar contra `splib2f` en lugar de `splib2` modificando la linea que llama a `zcc` en `comp.bat`:
 
@@ -116,17 +116,17 @@ Por último, si vas a usar esta funcionalidad tendrás que linkar contra `splib2
 
 Mappy tiene su historia y necesita que el primer tile sea completamente negro. En esta versión de **MTE MK1** tendrás que generar un segundo tileset específico para Mappy con el primer tile negro si el primer tile no lo es. Puedes grabarlo como `mappy.png` en `gfx`.
 
-![Tileset para Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-002.png)
+![Tileset para Mappy](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c01-002.png)
 
 ## Sombras automáticas
 
 Si utilizas el modo de mapeado que sólo emplea los primeros 16 tiles, puedes activar un modo de "autosombreado", en el que el motor calcula sombras automáticamente.  Básicamente, el motor sombrea automáticamente los tiles de tipo “fondo” que haya al lado de los tiles de tipo “obstáculo”, creándose así más sensación de 3D, como en Cheril Perils:
 
-![Cheril Perils](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-003.png)
+![Cheril Perils](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c01-003.png)
 
 Para esto, el motor necesita que la última fila de tiles contenga una réplica de los tiles “fondo” del tileset, pero sombreados, así:
 
-![Tileset de Cheril Perils](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c01-004.png)
+![Tileset de Cheril Perils](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c01-004.png)
 
 Por cierto, si activas esta opción el render será mucho más lento y el binario final mucho más pesado, ya que no está optimizado en ensamble en esta versión (aunque sí a partir de v5).
 
@@ -150,19 +150,19 @@ Los enemigos, que ya veremos más adelante, ocupan 30 bytes por pantalla (27 si 
 
 Vamos a `File->New Map`, y rellenaremos el cuadro de diálogo que aparece con los datos de nuestro mapa. En el ejemplo, el mapa es de 5 pantallas de ancho y 5 de alto. Como cada pantalla tiene 15x10 tiles, eso significa que mi mapa será de 5 * 15 = 75 tiles de ancho y 5 * 10 = 50 tiles de alto. Además, nuestros tiles serán de 16 x 16 píxels. Por tanto, rellenamos estos datos sobre nuestro mapa en el cuadro de diálogo, dejando todo lo demás como estaba.
 
-![Nuevo proyecto de Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-001.png)
+![Nuevo proyecto de Mappy](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c02-001.png)
 
 Pulsamos OK y el programa nos dirá que deberíamos cargar un tileset. Aceptamos y vamos a hacerle caso. Vamos a `File->Import`, lo que nos abrirá un cuadro de diálogo de selección de archivo. Buscamos nuestro tileset preparado para Mappy (el `mappy.png` que preparamos en el primer paso) y lo cargamos. La ventana de Mappy debería mostrarse así:
 
-![Tileset cargado en Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-002.png)
+![Tileset cargado en Mappy](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c02-002.png)
 
 Por último, vamos a colocar unas guías que nos ayuden a saber dónde empieza y acaba cada pantalla. Para ello, nos vamos a `Maptools->Dividers`, marcamos la casilla Enable dividers y rellenamos en `Pixel gap X` y `Pixel gap Y` los valores 240 y 160, que son las dimensiones en pixels de cada pantalla. Pulsamos OK, y con esto estamos preparados para trabajar. Para empezar, grabamos el mapa en nuestro directorio `map` con el nombre `mapa.fmp`. Ahora sólo hay que ponerse a colocar tiles... Y acordarnos de grabar como `mapa.fmp` de cuando en cuando, por si las moscas.
 
-![Un mapa en Mappy](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-003.png)
+![Un mapa en Mappy](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c02-003.png)
 
 La forma de colocar cerrojos (para ser abiertos con llaves) es sencilla: símplemente poned el tile del cerrojo en el mapa, y el conversor los detectará y los almacenará aparte. Hay que tener cuidado con una cosa: **en esta versión los cerrojos deberían ir a ras de suelo (sobre una plataforma sobre la que podamos caminar), ya que el motor puede no detectarlos si el muñeco no está posado y con una coordenada "justa"**. Incluso en los juegos de vista genital:
 
-![Un cerrojo](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c02-004.png)
+![Un cerrojo](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c02-004.png)
 
 ## Exportando nuestro mapa
 
@@ -228,9 +228,9 @@ Para crear nuestro *spriteset*, partiremos de una imagen vacía de 256 x 32 píx
 
 Aquí vemos dos *spritesets*, uno de vista genital y otro de vista lateral:
 
-![Spriteset de vista genital (cheril)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-001.png)
+![Spriteset de vista genital (cheril)](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c03-001.png)
 
-![Spriteset de vista lateral (lala)](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c03-002.png)
+![Spriteset de vista lateral (lala)](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c03-002.png)
 
 Grabaremos nuestro *spriteset* en `gfx` con nombre `sprites.png`.
 
@@ -258,7 +258,7 @@ Si no modificas el paquete, la pantalla de carga se almacena como un archivo bin
 
 La pantalla de título se presentará a modo de menú y sobre ella sonará la música de presentación. Deberían salir título, créditos y un menú con tres opciones 1: Keyboard, 2: Kempston, 3: Sinclair. Con algo sencillo nos vale, por ejemplo:
 
-![Pantalla de título](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-001.png)
+![Pantalla de título](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c04-001.png)
 
 Esta pantalla debe guardarse en `gfx` como `title.png`.
 
@@ -268,7 +268,7 @@ El marco se mostrará alrededor del área de juego mientras jugamos. Se utiliza 
 
 También tiene que haber espacio para la ventana de juego, igualmente alineado a carácter. Esta ventana ocupa 240x160 píxels (o 15x10 tiles). 
 
-![Marco de juego](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-002.png)
+![Marco de juego](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c04-002.png)
 
 Esta pantalla deber guardarse en `gfx` como `marco.png`.
 
@@ -276,7 +276,7 @@ Esta pantalla deber guardarse en `gfx` como `marco.png`.
 
 Para ahorrar memoria, **MTE MK1** permite juntar título y marco en una sola pantalla. El título y el menú se dibujarán dentro del area de juego, como se muestra.
 
-![Título con marco](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c04-003.png)
+![Título con marco](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c04-003.png)
 
 Si eliges esta configuración, graba la pantalla de combinada de título y marco en `gfx` como `title.png` y deja `marco.png` en negro.
 
@@ -304,11 +304,11 @@ Cuando hablamos de trayectorias lineales tenemos dos posibles casos:
 
 * **Horizontales y Verticales**: los enemigos van de un punto de inicio a un punto final describiendo una linea recta vertical u horizontal. El enemigo sigue esa línea imaginaria yendo y viniendo ad infinitum.
 
-![Horizontal y vertical](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-001.png)
+![Horizontal y vertical](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c05-001.png)
 
 * **Diagonales**: los enemigos parecen rebotar en el rectángulo definido entre los puntos inicial y final si estos no están alineados vertical u horizontalmente:
 
-![Horizontal y vertical](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-002.png)
+![Horizontal y vertical](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c05-002.png)
 
 ### Voladores
 
@@ -385,7 +385,7 @@ Ponedor era originalmente una aplicación que, aunque tiene su interfaz gráfica
 
 Cuando ejecutas el Ponedor sin parámetros (por ejemplo, haciendo doble click sobre `ponedor.bat` en `/enems`) aparecerá la pantalla principal en la que podemos cargar un proyecto existente o configurar uno nuevo. Como no tenemos un proyecto existente, crearemos uno nuevo rellenando las casillas del recuadro superior:
 
-![Nuevo proyecto del "Ponedor"](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-003.png)
+![Nuevo proyecto del "Ponedor"](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c05-003.png)
 
 1. `Map W` y `Map H` son el **ancho** y el **alto** de nuestro mapa **en pantallas**, o sea, las **dimensiones del mapa**. 
 
@@ -434,7 +434,7 @@ Aunque no hayas puesto nada todavía, graba tu proyecto pulsando `Save`. Verás 
 
 Esta vez, en lugar de rellenar los valores, escribe `enems.ene` en el cuadro `Input` situado en el recuadro inferior que está etiquetado `Open existing` y haz click sobre el botón que pone `Load Existing`. Si todo sale bien, te debería volver a salir la primera pantalla del mapa.
 
-![Cargando un proyecto existente](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-004.png)
+![Cargando un proyecto existente](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c05-004.png)
 
 Como mencionamos antes, sólo tenemos que preocuparnos de poner las cosas en el Ponedor y grabar el archivo `enems.ene` a menudo. `comp.bat` se encargará de hacer las conversiones necesarias y de meter los numeritos en el juego.
 
@@ -444,7 +444,7 @@ Para empezar veremos como colocar **enemigos lineales**. Empezaremos haciendo cl
 
 Ahora el programa espera que marquemos el final la trayectoria. Haremos click en la casilla correspondiente. Veremos como se nos muestra gráficamente la trayectoria y aparece un nuevo cuadro de diálogo algo más complejo:
 
-![El atributo sirve para la velocidad de los enemigos lineales](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c05-005.png)
+![El atributo sirve para la velocidad de los enemigos lineales](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c05-005.png)
 
 En **MTE MK1** sólo tendremos que rellenar el recuadro `Attr`. El valor introducido en `Attr` será el número de píxeles que avanzará el enemigo o plataforma por cada cuadro de juego. Estos valores, para que no haya problemas, deberían ser potencias de dos:  1, 2 o 4.
 
@@ -892,11 +892,11 @@ Para poder usar la espada necesitaremos añadir los gráficos para pintarla. Par
 
 * **Vista lateral**: 3 (izquierda, derecha, arriba) en el caso de que la espada pueda lanzarse hacia arriba (`SWORD UP`) o 2 en el caso de que no (izquierda, derecha). El punto que "golpea" de la espada es (0, 4) a la izquierda, (7, 4) a la derecha, y (4, 0) arriba. Algo así:
 
-![La espada lateral](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c06-001.png)
+![La espada lateral](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c06-001.png)
 
 * **Vista genital**: 4 (derecha, izquierda, arriba, abajo). El punto que "golpea" de la espada es, respectivamente, (7, 4), (0, 3), (4, 0), (7, 3), así:
 
-![La espada genital](https://github.com/mojontwins/MK1/blob/churrera_4/docs/images/c06-002.png)
+![La espada genital](https://github.com/mojontwins/MK1v4/blob/master/docs/images/c06-002.png)
 
 Además, habrá que llamar a `sprcnv8bin.exe` desde `comp.bat` para que lo convierta y genere un archivo llamado `sprite_sword.bin` con una linea parecida a :
 
