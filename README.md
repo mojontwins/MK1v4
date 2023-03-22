@@ -5,7 +5,7 @@ Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 Esta versión se conserva aquí por motivos históricos.
 
-**MK1** empezó a evolucionar de forma desvocada en 2012. Se nos ocurrían ideas loquísimas para los juegos y todo lo hacíamos formar parte del motor sin preocuparnos mucho de no romper nada, con lo que el tema iba creeciendo a lo alto, ancho y profundo como un engendro.
+**MK1** empezó a evolucionar de forma desbocada en 2012. Se nos ocurrían ideas loquísimas para los juegos y todo lo hacíamos formar parte del motor sin preocuparnos mucho de no romper nada, con lo que el tema iba creeciendo a lo alto, ancho y profundo como un engendro.
 
 Tras publicar Ramiro y con Sir Ababol 2 bastante avanzado surgió la idea de compartir por fin el framework con el universo. Se planteó escribir el famoso tutorial y de colaborar con [El mundo del Spectrum](http://www.elmundodelspectrum.com/) para distribuirlo y hacerlo notar. Sin embargo nuestro pequeño engendro estaba impracticable.
 
