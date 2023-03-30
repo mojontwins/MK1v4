@@ -4,8 +4,8 @@
 ; ******************************************************
 
 ; [na_th_an] Modificada por Mojon Twins - eliminamos la "cabecera" de los sprites.
-; [na_th_an] Gracias a Fran Gallego y al código de la CPCTelera, rescrito para usar LUTs
-; Necesita una LUT en $FE00
+; [na_th_an] Modificada por Mojon Twins - eliminamos la "cabecera" de los sprites.
+; [na_th_an] Esta versión utiliza OR para mezclar con lo que ya haya. No necesita LUT.
 
 XLIB cpc_PutTrSp4x8TileMap2bG
 
