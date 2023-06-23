@@ -4,9 +4,9 @@
 ; ******************************************************
 
 ; [na_th_an] Modificada por Mojon Twins - eliminamos la "cabecera" de los sprites.
-; [na_th_an] Gracias a Fran Gallego y al código de la CPCTelera, rescrito para usar LUTs
+; [na_th_an] Modificada por Mojon Twins - eliminamos la "cabecera" de los sprites.
+; [na_th_an] Esta versión utiliza OR para mezclar con lo que ya haya. No necesita LUT.
 ; [na_th_an] Esta nueva vesión de la rutina imprime al pixel en m0
-; Necesita una LUT en $FE00
 
 XLIB cpc_PutTrSp8x24TileMap2bGPx
 
