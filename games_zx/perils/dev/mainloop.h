@@ -137,6 +137,7 @@ void main (void) {
 	#endif
 
 	// Create a virtual, non existent third column for sprites.
+	
 	#asm
 		.fix_sprites
 			#ifdef TALL_PLAYER

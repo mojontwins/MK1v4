@@ -118,7 +118,13 @@ void game_ending (void) {
 		call SPUpdateNow
 	#endasm
 	asm_int = (unsigned int) (s_ending); unpack ();
-	beepet (); play_sfx (11);
+	
+	if (is128k) {
+		arkos_play_music (MUS_ENDING);
+	} else {
+		beepet (); play_sfx (11);
+	}
+	
 	espera_activa (500);
 }
 
