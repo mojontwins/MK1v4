@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu Jul 13 11:18:51 2023
+;	Module compile time: Fri Jul 14 10:37:12 2023
 
 
 
@@ -18334,10 +18334,24 @@
 	defb	0
 	defb	0
 	defb	5
+	defb	96
+	defb	48
+	defb	96
+	defb	48
+	defb	160
+	defb	48
+	defb	2
 	defb	0
+	defb	1
+	defb	32
 	defb	0
+	defb	32
 	defb	0
+	defb	32
+	defb	80
 	defb	0
+	defb	2
+	defb	2
 	defb	0
 	defb	0
 	defb	0
@@ -18347,9 +18361,15 @@
 	defb	0
 	defb	0
 	defb	0
+	defb	80
 	defb	0
+	defb	80
 	defb	0
+	defb	80
+	defb	80
 	defb	0
+	defb	1
+	defb	2
 	defb	0
 	defb	0
 	defb	0
@@ -18368,161 +18388,141 @@
 	defb	0
 	defb	0
 	defb	0
+	defb	96
+	defb	80
+	defb	96
+	defb	80
+	defb	64
 	defb	0
 	defb	0
 	defb	0
+	defb	15
+	defb	32
+	defb	80
+	defb	32
+	defb	80
+	defb	64
 	defb	0
 	defb	0
 	defb	0
+	defb	15
+	defb	96
+	defb	128
+	defb	32
+	defb	128
+	defb	96
+	defb	128
+	defb	-1
 	defb	0
+	defb	2
+	defb	16
+	defb	32
+	defb	16
+	defb	32
+	defb	96
+	defb	48
+	defb	1
+	defb	1
+	defb	2
+	defb	48
+	defb	48
+	defb	48
+	defb	48
+	defb	80
 	defb	0
 	defb	0
 	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
+	defb	15
+	defb	176
+	defb	96
+	defb	48
+	defb	96
+	defb	176
+	defb	96
+	defb	-2
+	defb	0
+	defb	4
+	defb	16
+	defb	112
+	defb	16
+	defb	112
+	defb	208
+	defb	112
+	defb	2
+	defb	0
+	defb	4
+	defb	64
+	defb	0
+	defb	64
+	defb	0
+	defb	64
+	defb	80
+	defb	0
+	defb	2
+	defb	3
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	96
+	defb	112
+	defb	96
+	defb	112
+	defb	160
+	defb	112
+	defb	1
+	defb	0
+	defb	1
+	defb	208
+	defb	96
+	defb	176
+	defb	96
+	defb	208
+	defb	96
+	defb	-2
+	defb	0
+	defb	2
+	defb	144
+	defb	32
+	defb	144
+	defb	32
+	defb	144
+	defb	112
+	defb	0
+	defb	1
+	defb	4
+	defb	144
+	defb	112
+	defb	144
+	defb	112
+	defb	192
+	defb	112
+	defb	2
+	defb	0
+	defb	2
+	defb	112
+	defb	48
+	defb	112
+	defb	48
+	defb	112
+	defb	80
+	defb	0
+	defb	1
+	defb	3
+	defb	128
+	defb	128
+	defb	128
+	defb	48
+	defb	128
+	defb	128
+	defb	0
+	defb	-2
+	defb	1
 	defb	64
 	defb	48
 	defb	64
@@ -18667,15 +18667,15 @@
 	defb	-2
 	defb	0
 	defb	1
-	defb	80
 	defb	128
-	defb	80
+	defb	144
 	defb	128
-	defb	160
+	defb	144
 	defb	128
-	defb	2
+	defb	112
 	defb	0
-	defb	2
+	defb	0
+	defb	5
 	defb	192
 	defb	80
 	defb	64
@@ -18685,168 +18685,168 @@
 	defb	-2
 	defb	-2
 	defb	3
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
+	defb	112
+	defb	128
+	defb	112
+	defb	128
+	defb	192
+	defb	128
+	defb	2
+	defb	0
+	defb	4
+	defb	128
+	defb	48
+	defb	128
+	defb	48
+	defb	176
+	defb	80
+	defb	2
+	defb	2
+	defb	1
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	96
+	defb	80
+	defb	96
+	defb	80
+	defb	96
+	defb	128
+	defb	0
+	defb	1
+	defb	2
+	defb	128
+	defb	48
+	defb	128
+	defb	48
+	defb	128
+	defb	128
+	defb	0
+	defb	2
+	defb	4
+	defb	208
+	defb	128
+	defb	32
+	defb	128
+	defb	208
+	defb	128
+	defb	-1
+	defb	0
+	defb	3
+	defb	64
+	defb	32
+	defb	64
+	defb	32
+	defb	96
+	defb	96
+	defb	2
+	defb	2
+	defb	3
+	defb	160
+	defb	32
+	defb	128
+	defb	32
+	defb	160
+	defb	96
+	defb	-2
+	defb	2
+	defb	1
+	defb	128
+	defb	80
+	defb	128
+	defb	80
+	defb	96
+	defb	0
+	defb	0
+	defb	0
+	defb	15
+	defb	208
+	defb	128
+	defb	96
+	defb	128
+	defb	208
+	defb	128
+	defb	-2
+	defb	0
+	defb	4
+	defb	128
+	defb	32
+	defb	128
+	defb	32
+	defb	128
+	defb	48
+	defb	0
+	defb	0
+	defb	1
+	defb	32
+	defb	128
+	defb	32
+	defb	128
+	defb	32
+	defb	112
+	defb	0
+	defb	0
+	defb	5
+	defb	160
+	defb	16
+	defb	160
+	defb	16
+	defb	160
+	defb	48
+	defb	0
+	defb	1
+	defb	2
+	defb	80
+	defb	16
+	defb	80
+	defb	16
+	defb	80
+	defb	80
+	defb	0
+	defb	2
+	defb	3
+	defb	176
+	defb	128
+	defb	32
+	defb	128
+	defb	176
+	defb	128
+	defb	-2
+	defb	0
+	defb	1
+	defb	64
+	defb	64
+	defb	64
+	defb	64
+	defb	64
+	defb	128
+	defb	0
+	defb	1
+	defb	4
+	defb	128
+	defb	128
+	defb	48
+	defb	128
+	defb	128
+	defb	128
+	defb	-2
+	defb	0
+	defb	2
+	defb	32
+	defb	16
+	defb	32
+	defb	16
+	defb	32
+	defb	48
+	defb	0
+	defb	1
+	defb	3
 
 ;	SECTION	code
 
@@ -19081,29 +19081,29 @@
 	defb	0
 	defb	0
 	defb	0
-	defb	149
+	defb	198
 	defb	4
 	defb	0
 	defb	0
 	defb	0
 	defb	0
-	defb	0
-	defb	0
+	defb	167
+	defb	4
 	defb	0
 	defb	162
 	defb	2
 	defb	0
+	defb	38
+	defb	4
 	defb	0
 	defb	0
 	defb	0
 	defb	0
+	defb	161
+	defb	4
 	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
+	defb	85
+	defb	51
 	defb	0
 	defb	135
 	defb	4
@@ -19126,20 +19126,20 @@
 	defb	24
 	defb	2
 	defb	0
+	defb	88
+	defb	4
+	defb	0
+	defb	115
+	defb	4
 	defb	0
 	defb	0
 	defb	0
 	defb	0
+	defb	213
+	defb	4
 	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
+	defb	104
+	defb	4
 	defb	0
 
 ;	SECTION	code
@@ -21323,6 +21323,8 @@
 	push hl
 	pop ix
 	ld a, (__en_t)
+	cp 4
+	jr z, enems_init_platforms
 	cp 5
 	jr z, enems_init_zurulli
 	cp 15
@@ -21349,6 +21351,7 @@
 	ld	hl,_extra_sprite_17_a
 	pop	de
 	call	l_pint
+	.enems_init_platforms
 	ld	de,_enem_may_be_paralyzed
 	ld	hl,(_enit)
 	ld	h,0
@@ -21602,6 +21605,7 @@
 	; Music generated by beepola
 	di
 	call musicstart
+	ei
 .i_87
 .i_88
 	ld	hl,(_key_1)
@@ -21652,6 +21656,20 @@
 	ld	hl,_s_ending
 	ld	(_asm_int),hl
 	call	_unpack
+	ld	hl,5 % 256	;const
+	push	hl
+	ld	hl,15 % 256	;const
+	push	hl
+	ld	hl,71 % 256	;const
+	push	hl
+	ld	hl,i_1+120
+	push	hl
+	call	_draw_text
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	call SPUpdateNow
 	ld	a,(_is128k)
 	and	a
 	jp	z,i_96
@@ -21663,7 +21681,7 @@
 	ld	hl,11 % 256	;const
 	call	_play_sfx
 .i_97
-	ld	hl,500	;const
+	ld	hl,32767	;const
 	push	hl
 	call	_espera_activa
 	pop	bc
@@ -21689,7 +21707,7 @@
 	push	hl
 	ld	hl,15 % 256	;const
 	push	hl
-	ld	hl,i_1+120
+	ld	hl,i_1+187
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -25368,305 +25386,270 @@
 	DEFW DRUM_NOISE1,DRUM_NOISE2,DRUM_NOISE3
 	.MUSICDATA
 	DEFB 0 ; Pattern loop begin * 2
-	DEFB 16 ; Song length * 2
-	DEFW 4 ; Offset to start of song (length of instrument table)
+	DEFB 8 ; Song length * 2
+	DEFW 12 ; Offset to start of song (length of instrument table)
+	DEFB 1 ; Multiple
+	DEFW 10 ; Detune
+	DEFB 0 ; Phase
+	DEFB 1 ; Multiple
+	DEFW 5 ; Detune
+	DEFB 1 ; Phase
 	DEFB 0 ; Multiple
-	DEFW 17 ; Detune
-	DEFB 4 ; Phase
+	DEFW 20 ; Detune
+	DEFB 0 ; Phase
 	.PATTERNDATA DEFW PAT0
+	DEFW PAT0
 	DEFW PAT1
-	DEFW PAT2
-	DEFW PAT3
-	DEFW PAT4
-	DEFW PAT3
-	DEFW PAT2
-	DEFW PAT6
+	DEFW PAT1
 	; *** Pattern data - $00 marks the end of a pattern ***
-	.PAT0
-	defb $BD,0
-	defb 188
-	defb 135
-	defb 118
-	defb 9
-	defb 190
-	defb 139
-	defb 10
-	defb 190
-	defb 146
-	defb 119
-	defb 9
-	defb 190
-	defb 142
-	defb 118
-	defb 9
-	defb 190
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 19
-	defb 190
-	defb 137
-	defb 118
-	defb 9
-	defb 190
-	defb 141
-	defb 10
-	defb 190
-	defb 148
-	defb 119
-	defb 9
-	defb 190
-	defb 144
-	defb 118
-	defb 9
-	defb 190
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 19
-	defb $00
-	.PAT1
-	defb $BD,0
-	defb 190
-	defb 135
-	defb 118
-	defb 9
-	defb 190
-	defb 139
-	defb 10
-	defb 190
-	defb 146
-	defb 119
-	defb 9
-	defb 254
-	defb 142
-	defb 118
-	defb 9
-	defb 190
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 19
-	defb 190
-	defb 137
-	defb 118
-	defb 9
-	defb 190
-	defb 141
-	defb 10
-	defb 190
-	defb 148
-	defb 119
-	defb 9
-	defb 254
-	defb 144
-	defb 118
-	defb 9
-	defb 190
-	defb 118
-	defb 9
-	defb $BD,0
-	defb 156
-	defb 10
-	defb 161
-	defb 119
-	defb 9
-	defb 160
-	defb 10
-	defb $00
-	.PAT2
-	defb 163
-	defb 135
-	defb 118
-	defb 9
-	defb 190
-	defb 139
-	defb 10
-	defb 190
-	defb 146
-	defb 119
-	defb 9
-	defb 170
-	defb 142
-	defb 118
-	defb 9
-	defb 165
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 19
-	defb 190
-	defb 137
-	defb 118
-	defb 9
-	defb 190
-	defb 141
-	defb 10
-	defb 190
-	defb 148
-	defb 119
-	defb 9
-	defb 172
-	defb 144
-	defb 118
-	defb 9
-	defb 167
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 19
-	defb $00
-	.PAT3
-	defb 190
-	defb 135
-	defb 118
-	defb 9
-	defb 190
-	defb 139
-	defb 10
-	defb 190
-	defb 146
-	defb 119
-	defb 9
-	defb 156
-	defb 142
-	defb 118
-	defb 9
-	defb 161
-	defb 118
-	defb 19
-	defb 160
-	defb 119
-	defb 19
-	defb 163
-	defb 137
-	defb 118
-	defb 9
-	defb 190
-	defb 141
-	defb 10
-	defb 190
-	defb 148
-	defb 119
-	defb 9
-	defb 190
-	defb 144
-	defb 118
-	defb 9
-	defb 190
-	defb 118
-	defb 9
-	defb 156
-	defb 10
-	defb 161
-	defb 119
-	defb 9
-	defb 160
-	defb 10
-	defb $00
-	.PAT4
-	defb 163
-	defb 135
-	defb 118
-	defb 9
-	defb 190
-	defb 139
-	defb 10
-	defb 190
-	defb 146
-	defb 119
-	defb 9
-	defb 170
-	defb 142
-	defb 118
-	defb 9
-	defb 165
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 19
-	defb 190
-	defb 137
-	defb 118
-	defb 9
-	defb 156
-	defb 141
-	defb 10
-	defb 161
-	defb 148
-	defb 119
-	defb 9
-	defb 160
-	defb 144
-	defb 118
-	defb 9
-	defb 163
-	defb 118
-	defb 9
-	defb 161
-	defb 10
-	defb 172
-	defb 119
-	defb 9
-	defb 167
-	defb 10
-	defb $00
-	.PAT6
-	defb 190
-	defb 135
-	defb 118
-	defb 9
-	defb 190
-	defb 139
-	defb 10
-	defb 190
-	defb 146
-	defb 119
-	defb 9
-	defb 170
-	defb 142
-	defb 118
-	defb 9
-	defb 165
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 9
-	defb 165
-	defb 5
-	defb 165
-	defb 5
-	defb 167
-	defb 137
-	defb 118
-	defb 9
-	defb 172
-	defb 141
-	defb 5
-	defb 172
-	defb 5
-	defb 190
-	defb 148
-	defb 119
-	defb 9
-	defb 190
-	defb 144
-	defb 118
-	defb 9
-	defb 190
-	defb 118
-	defb 19
-	defb 190
-	defb 119
-	defb 19
-	defb $00
+	PAT0:
+	DEFB $BD,0
+	DEFB 154
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 154
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 154
+	DEFB 147
+	DEFB 124
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 154
+	DEFB 147
+	DEFB 126
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 154
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 154
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 124
+	DEFB 2
+	DEFB 152
+	DEFB 145
+	DEFB 3
+	DEFB 152
+	DEFB 145
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 152
+	DEFB 145
+	DEFB 126
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB $BD,2
+	DEFB 152
+	DEFB 145
+	DEFB 120
+	DEFB 2
+	DEFB 157
+	DEFB 150
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 124
+	DEFB 2
+	DEFB 157
+	DEFB 150
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 157
+	DEFB 150
+	DEFB 126
+	DEFB 2
+	DEFB 157
+	DEFB 150
+	DEFB 126
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 157
+	DEFB 150
+	DEFB 120
+	DEFB 2
+	DEFB 159
+	DEFB 152
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 120
+	DEFB 2
+	DEFB 159
+	DEFB 152
+	DEFB 3
+	DEFB $BD,0
+	DEFB 159
+	DEFB 152
+	DEFB 121
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 126
+	DEFB 2
+	DEFB 159
+	DEFB 152
+	DEFB 122
+	DEFB 2
+	DEFB 159
+	DEFB 152
+	DEFB 124
+	DEFB 2
+	DEFB 188
+	DEFB 152
+	DEFB 122
+	DEFB 2
+	DEFB 159
+	DEFB 152
+	DEFB 123
+	DEFB 2
+	DEFB $00
+	PAT1:
+	DEFB $BD,4
+	DEFB 166
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 166
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 166
+	DEFB 147
+	DEFB 124
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 166
+	DEFB 147
+	DEFB 126
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 166
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 166
+	DEFB 147
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 124
+	DEFB 2
+	DEFB 164
+	DEFB 145
+	DEFB 3
+	DEFB 164
+	DEFB 145
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 164
+	DEFB 145
+	DEFB 126
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 164
+	DEFB 145
+	DEFB 120
+	DEFB 2
+	DEFB 169
+	DEFB 150
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 124
+	DEFB 2
+	DEFB 169
+	DEFB 150
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 169
+	DEFB 150
+	DEFB 126
+	DEFB 2
+	DEFB 169
+	DEFB 150
+	DEFB 126
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 3
+	DEFB 169
+	DEFB 150
+	DEFB 120
+	DEFB 2
+	DEFB 171
+	DEFB 152
+	DEFB 120
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 120
+	DEFB 2
+	DEFB 171
+	DEFB 152
+	DEFB 3
+	DEFB 171
+	DEFB 152
+	DEFB 121
+	DEFB 2
+	DEFB 188
+	DEFB 188
+	DEFB 126
+	DEFB 2
+	DEFB 171
+	DEFB 152
+	DEFB 122
+	DEFB 2
+	DEFB 171
+	DEFB 152
+	DEFB 124
+	DEFB 2
+	DEFB 188
+	DEFB 152
+	DEFB 122
+	DEFB 2
+	DEFB 171
+	DEFB 152
+	DEFB 123
+	DEFB 2
+	DEFB $00
 ;	SECTION	text
 
 .i_1
@@ -25689,6 +25672,11 @@
 	defb	0
 
 	defm	"1 POAQ%2 KEMPSTON%3 SINCLAIR"
+	defb	0
+
+	defm	" OLE ESE TOTO RUMBOSO%LAS HORD"
+	defm	"AS MONSTRUOSAS% AHORA CHUPAN B"
+	defm	"ALDOSA"
 	defb	0
 
 	defm	"GAME OVER!"

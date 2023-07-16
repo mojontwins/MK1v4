@@ -96,6 +96,7 @@ void title_screen (void) {
 
 			di
 			call musicstart
+			ei
 
 		#endasm
 	}
@@ -118,6 +119,10 @@ void game_ending (void) {
 		call SPUpdateNow
 	#endasm
 	asm_int = (unsigned int) (s_ending); unpack ();
+	draw_text(5, 15, 71, " OLE ESE TOTO RUMBOSO%LAS HORDAS MONSTRUOSAS% AHORA CHUPAN BALDOSA");
+	#asm 
+		call SPUpdateNow
+	#endasm
 	
 	if (is128k) {
 		arkos_play_music (MUS_ENDING);
@@ -125,7 +130,7 @@ void game_ending (void) {
 		beepet (); play_sfx (11);
 	}
 	
-	espera_activa (500);
+	espera_activa (32767);
 }
 
 void game_over (void) {

@@ -1013,6 +1013,10 @@ void select_power (void) {
 				pop ix
 
 				ld  a, (__en_t)
+
+				cp  4
+				jr  z, enems_init_platforms
+
 				cp  5
 				jr  z, enems_init_zurulli
 
@@ -1037,6 +1041,9 @@ void select_power (void) {
 				ld  (ix+7), a
 		#endasm
 		en_an_next_frame [enit] = GYROSAW_SPRITE_CELL;
+		#asm
+			.enems_init_platforms
+		#endasm
 		enem_may_be_paralyzed [enit] = 0;
 		#asm
 				ret

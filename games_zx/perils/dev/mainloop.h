@@ -187,6 +187,7 @@ void main (void) {
 	while (1) {
 		// Here the title screen
 		cortina ();
+
 		title_screen ();
 		
 		#ifndef DIRECT_TO_PLAY
@@ -637,7 +638,7 @@ void main (void) {
 			#endif
 			
 			// Limit frame rate
-			
+		
 			#ifdef MIN_FAPS_PER_FRAME
 				/*
 				while (isrc < MIN_FAPS_PER_FRAME) {
@@ -671,7 +672,7 @@ void main (void) {
 				call SPUpdateNow
 				.skipupd
 			#endasm
-			
+
 			// Dead enemies
 
 			#ifdef PLAYER_CAN_FIRE
