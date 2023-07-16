@@ -878,11 +878,15 @@ void select_power (void) {
 				ld  hl, 3
 				call _play_sfx
 
+				call update_resonator_hud
+
 				call _restore_everyone
 
 				ld  a, (_hotspot_t)
 				cp  4
 				jr  c, resonators_done
+				cp  6
+				jr  nc, resonators_done
 
 				ld  a, 4
 				ld  (_hotspot_t), a
@@ -890,10 +894,7 @@ void select_power (void) {
 
 				jr resonators_done
 
-			.resonators_next_tick
-				ld  hl, 4
-				call _play_sfx
-
+			.update_resonator_hud
 				ld  hl, 22
 				push hl
 				ld  hl, 1
@@ -904,6 +905,13 @@ void select_power (void) {
 				pop bc
 				pop bc
 				pop bc
+				ret
+
+			.resonators_next_tick
+				ld  hl, 4
+				call _play_sfx
+
+				call update_resonator_hud
 
 				ld  a, (_resonators_frames)
 				ld  (_resonators_ct), a

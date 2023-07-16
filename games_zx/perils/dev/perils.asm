@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Jul 14 10:37:12 2023
+;	Module compile time: Sun Jul 16 09:14:24 2023
 
 
 
@@ -470,7 +470,7 @@
 	defb	34
 
 	defm	" "
-	defb	4
+	defb	0
 
 	defm	""
 	defb	226
@@ -481,13 +481,16 @@
 	defm	""
 	defb	34
 
-	defm	"U"
+	defm	""
+	defb	229
+
+	defm	""
 	defb	34
 
 	defm	""
 	defb	34
 
-	defm	" R-"
+	defm	" B-"
 	defb	220
 
 	defm	""
@@ -584,7 +587,7 @@
 	defb	0
 
 	defm	""
-	defb	2
+	defb	14
 
 	defm	""
 	defb	34
@@ -604,7 +607,10 @@
 	defm	""
 	defb	0
 
-	defm	"R"
+	defm	""
+	defb	34
+
+	defm	""
 	defb	34
 
 	defm	" "
@@ -908,7 +914,7 @@
 	defb	233
 
 	defm	""
-	defb	150
+	defb	144
 
 	defm	"h"
 	defb	136
@@ -926,7 +932,7 @@
 	defb	34
 
 	defm	"b"
-	defb	232
+	defb	152
 
 	defm	""
 	defb	137
@@ -970,14 +976,11 @@
 	defm	""
 	defb	238
 
-	defm	""
-	defb	34
-
-	defm	""
+	defm	"$"
 	defb	226
 
 	defm	""
-	defb	152
+	defb	136
 
 	defm	""
 	defb	136
@@ -994,7 +997,7 @@
 	defm	"i"
 	defb	226
 
-	defm	"&"
+	defm	"("
 	defb	150
 
 	defm	""
@@ -1045,7 +1048,7 @@
 	defm	""
 	defb	150
 
-	defm	"fiiwx"
+	defm	"f`iwx"
 	defb	137
 
 	defm	"DDDDDDDD."
@@ -2176,7 +2179,10 @@
 	defm	""
 	defb	0
 
-	defm	"U"
+	defm	""
+	defb	5
+
+	defm	""
 	defb	3
 
 	defm	""
@@ -2290,7 +2296,10 @@
 	defm	"R."
 	defb	34
 
-	defm	"P"
+	defm	""
+	defb	0
+
+	defm	""
 	defb	0
 
 	defm	""
@@ -2306,7 +2315,7 @@
 	defb	14
 
 	defm	"%"
-	defb	0
+	defb	208
 
 	defm	""
 	defb	13
@@ -2572,32 +2581,14 @@
 	defm	""
 	defb	0
 
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	217
-
-	defm	""
+	defm	"DDDDDI"
 	defb	150
 
 	defm	"i"
 	defb	153
 
 	defm	""
-	defb	153
+	defb	137
 
 	defm	"ii"
 	defb	136
@@ -4154,9 +4145,12 @@
 	defb	186
 
 	defm	""
-	defb	165
+	defb	170
 
-	defm	"J"
+	defm	""
+	defb	170
+
+	defm	""
 	defb	165
 
 	defm	"."
@@ -4262,24 +4256,9 @@
 	defb	4
 
 	defm	"`"
-	defb	13
+	defb	4
 
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
+	defm	"DDDDD"
 	defb	150
 
 	defm	"~0"
@@ -5911,7 +5890,10 @@
 	defm	"^>"
 	defb	0
 
-	defm	".P"
+	defm	"."
+	defb	0
+
+	defm	""
 	defb	0
 
 	defm	""
@@ -18862,7 +18844,7 @@
 	defb	147
 	defb	4
 	defb	0
-	defb	96
+	defb	97
 	defb	33
 	defb	0
 	defb	56
@@ -21211,17 +21193,18 @@
 	.resonators_last_tick
 	ld hl, 3
 	call _play_sfx
+	call update_resonator_hud
 	call _restore_everyone
 	ld a, (_hotspot_t)
 	cp 4
 	jr c, resonators_done
+	cp 6
+	jr nc, resonators_done
 	ld a, 4
 	ld (_hotspot_t), a
 	call _set_hotspot
 	jr resonators_done
-	.resonators_next_tick
-	ld hl, 4
-	call _play_sfx
+	.update_resonator_hud
 	ld hl, 22
 	push hl
 	ld hl, 1
@@ -21232,6 +21215,11 @@
 	pop bc
 	pop bc
 	pop bc
+	ret
+	.resonators_next_tick
+	ld hl, 4
+	call _play_sfx
+	call update_resonator_hud
 	ld a, (_resonators_frames)
 	ld (_resonators_ct), a
 	call _paralyze_everyone
