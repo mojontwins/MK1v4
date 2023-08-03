@@ -934,10 +934,10 @@ Hecho esto, la espada se configura con estas macros:
 
 * `SWORD_HIT_FRAME` usar este frame del jugador para la animación de golpear 0-3, **en modo de vista lateral**.
 
-* `GENITAL_HIT_FRAMES`: Si defines esta macro, **en modo genital**, tendrás que añadir 4 frames al spriteset como sprites 17 a 20 con nuevos cells de animación para que el muñeco golpée con la espada a la derecha, izquierda, arriba y abajo, respectivamente. Si haces esto tendrás que modificar `comp.bat` para convertir el spriteset (que ahora tendrá 20 cells más los que añadas por tu cuenta) con `sprcnv2.exe`:
+* `GENITAL_HIT_FRAMES`: Si defines esta macro, **en modo genital**, tendrás que añadir 4 frames al spriteset como sprites 17 a 20 con nuevos cells de animación para que el muñeco golpée con la espada a la derecha, izquierda, arriba y abajo, respectivamente. Si haces esto tendrás que modificar `comp.bat` para convertir el spriteset (que ahora tendrá 20 cells más los que añadas por tu cuenta) con `sprcnv_exp.exe`:
 
 ```cmd
-    ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra > nul
+    ..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 20 extra > nul
 ```
 
 * `SWORD_STAB` apuñalar en lugar de balancear la espada. La espada sale recta a una altura de N pixels desde la parte superior del sprite del jugador.
@@ -1184,7 +1184,7 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 ```c
     //#define PLAYER_HAS_JUMP               // If defined, player is able to jump.
-    //#define SHORT_PLAYER                  // Bounding box 12x16
+    //#define TIGHT_BOUNDING_BOX            // Bounding box 12x16
     //#define FIRE_TO_JUMP                  // Jump using the fire button, only if no PLAYER_CAN_FIRE
     //#define BOTH_KEYS_JUMP                // Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
     //#define RAMIRO_HOP                    // press jump when reaching a type 4 platform to jump again 
@@ -1200,7 +1200,7 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 * `PLAYER_HAS_JUMP`: el jugador puede saltar pulsando "arriba".
 
-* `SHORT_PLAYER`: El jugador colisiona con el escenario con una caja más pequeña, de 8x12 pixels. Esto permite tener un control más agradable en motores de vista lateral cuando el sprite no suele ocupar todo el ancho de la caja de 16x16. Además, permite entrar por huecos de un sólo tile más fácilmente.
+* `TIGHT_BOUNDING_BOX`: El jugador colisiona con el escenario con una caja más pequeña, de 8x12 pixels. Esto permite tener un control más agradable en motores de vista lateral cuando el sprite no suele ocupar todo el ancho de la caja de 16x16. Además, permite entrar por huecos de un sólo tile más fácilmente.
 
 * `FIRE_TO_JUMP`: se usa con `PLAYER_HAS_JUMP` para saltar pulsando el botón de disparo en vez de "arriba".
 
@@ -2124,10 +2124,10 @@ Las tareas de convertir, importar y definir sprites varían levemente dependiend
 
 Si son de 16x16, podemos añadirlos al final de nuestro spriteset básico de `sprites.png`, sencillamente poniéndolos a continuación en nuevas filas:
 
-Luego, modificaremos `comp.bat` para que, en lugar de convertir con `sprcnv.exe`, utilice `sprcnv2.exe` (nótese el 2), al que pasaremos además el número total de gráficos y el parámetro `extra` (esto último es obligatorio para que sean compatibles con **MTE MK1 v4**):
+Luego, modificaremos `comp.bat` para que, en lugar de convertir con `sprcnv.exe`, utilice `sprcnv_exp.exe` (nótese el 2), al que pasaremos además el número total de gráficos y el parámetro `extra` (esto último es obligatorio para que sean compatibles con **MTE MK1 v4**):
 
 ```cmd
-    ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra  > nul
+    ..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 20 extra  > nul
 ```
 
 Esto importará los 16 gráficos estándar normalmente, y los gráficos extra a partir del 17 en tres columnas como `extra_sprite_N_a`, `extra_sprite_N_b` y `extra_sprite_N_c`, con N el número de gráfico. Serán estos punteros los que necesitaremos posteriormente para definir los sprites.
@@ -2175,7 +2175,7 @@ Si queremos sacar el sprite de la pantalla haremos literalmente eso:
     sp_MoveSprAbs (sp_extra, spritesClip, 0, VIEWPORT_X + 30, VIEWPORT_Y + 20, 0, 0);
 ```
 
-### Sprites de 8x8
+#### Sprites de 8x8
 
 En el caso de los sprites de 8x8 la conversión e importación es más enrevesada, la definición muy parecida, y la utilización idéntica a la de los sprites de 16x16.
 
@@ -2220,6 +2220,20 @@ El manejo es igual que en los sprites de 16x16 que hemos visto antes, con el det
 `sprite_extra` + N * 64
 
 Donde N es el número de gráfico, empezando por 0.
+
+### Sprite principal de 16x24
+
+A partir de la v4.9, y en el caso de que sólo vayas a usar los 8 *cells* básicos para tu sprite, puedes hacer que estos sean de 16x24 en lugar de 16x16. Si haces esto, además, la colisión pasará a ser de 8x16 en el caso de haber activado (seguirá siendo de 16x16 en caso contrario) centrada enla parte inferior del cuadro.
+
+En esta iteración el tema es aún un poco hack, y por eso tenemos la restricción de que sólo puede usarse en los 8 primeros *cells* del spriteset. Tu spriteset debe tener, por tanto, este aspecto:
+
+Y debe convertirse indicando `tall` como parámetro extra en `sprcnv_exp`, por ejemplo:
+
+```cmd
+	..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 16 tall > nul
+```
+
+Una vez hecho esto, sólo hay que activar la directiva `TALL_PLAYER` en `config.h`.
 
 ### La estructura `scenery_info`
 
