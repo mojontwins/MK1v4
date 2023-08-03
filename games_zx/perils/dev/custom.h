@@ -8,11 +8,14 @@
 
 // Arkos OGT
 #define MUS_TITLE           0
-#define MUS_CUTS            1
-#define MUS_STAGE_BASE      2
-#define MUS_STAGE_CLEAR     6
-#define MUS_STAGE_CLEAR_L   7
-#define MUS_GAME_OVER       8
+#define MUS_SELECT          1
+#define MUS_STAGE_START     2
+#define MUS_STAGE_BASE      3
+#define MUS_STAGE_CLEAR     7
+#define MUS_STAGE_CLEAR_L   8
+#define MUS_GAME_OVER       9
+#define MUS_ENDING          10
+
 
 // Resonators
 #define RESONATORS_FRAMES 25
@@ -737,6 +740,7 @@ void select_power (void) {
 
 				call _clear_game_area
 		#endasm
+			if (is128k) arkos_play_music (MUS_STAGE_START);
 			draw_text (12, 11, 71, new_level_string);
 			draw_text (11, 13, 71, "KICK ASSES");
 		#asm
@@ -776,7 +780,7 @@ void select_power (void) {
 				add hl, bc
 				ld  (_tileset_mappings), hl
 		#endasm
-		if (is128k) arkos_play_music (level == 4 ? MUS_CUTS : (level + MUS_STAGE_BASE));
+		if (is128k) arkos_play_music (level == 4 ? MUS_SELECT : (level + MUS_STAGE_BASE));
 
 		// Nothing else below this or you have to change the assembly!
 	}
@@ -874,11 +878,15 @@ void select_power (void) {
 				ld  hl, 3
 				call _play_sfx
 
+				call update_resonator_hud
+
 				call _restore_everyone
 
 				ld  a, (_hotspot_t)
 				cp  4
 				jr  c, resonators_done
+				cp  6
+				jr  nc, resonators_done
 
 				ld  a, 4
 				ld  (_hotspot_t), a
@@ -886,10 +894,7 @@ void select_power (void) {
 
 				jr resonators_done
 
-			.resonators_next_tick
-				ld  hl, 4
-				call _play_sfx
-
+			.update_resonator_hud
 				ld  hl, 22
 				push hl
 				ld  hl, 1
@@ -900,6 +905,13 @@ void select_power (void) {
 				pop bc
 				pop bc
 				pop bc
+				ret
+
+			.resonators_next_tick
+				ld  hl, 4
+				call _play_sfx
+
+				call update_resonator_hud
 
 				ld  a, (_resonators_frames)
 				ld  (_resonators_ct), a
@@ -1009,6 +1021,10 @@ void select_power (void) {
 				pop ix
 
 				ld  a, (__en_t)
+
+				cp  4
+				jr  z, enems_init_platforms
+
 				cp  5
 				jr  z, enems_init_zurulli
 
@@ -1033,6 +1049,9 @@ void select_power (void) {
 				ld  (ix+7), a
 		#endasm
 		en_an_next_frame [enit] = GYROSAW_SPRITE_CELL;
+		#asm
+			.enems_init_platforms
+		#endasm
 		enem_may_be_paralyzed [enit] = 0;
 		#asm
 				ret

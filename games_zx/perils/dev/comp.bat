@@ -31,7 +31,7 @@ zcc +zx -vn -a churromain.c -o %game%.asm -lsplib2f -zorg=24200 -DLANG_%lang% > 
 
 ..\utils\pasmo.exe loader.asm loader.bin
 
-..\..\..\src\utils\GenTape.exe %game%_%lang%.tap ^
+..\utils\GenTape.exe %game%_%lang%.tap ^
     basic 'PERILS' 10 loader.bin ^
     data              loading.bin ^
     data              %game%.bin ^
