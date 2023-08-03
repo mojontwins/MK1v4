@@ -508,8 +508,14 @@ void render_all_sprites (void) {
 
 unsigned char collide_enem (void) {
 	#asm
-			ld  hl, 0
+			// Normal 16x16 player:
 			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 12 >= gpy && en_ccy <= gpy + 12)
+
+			// Tall 16x24 player: Remember tall players are rendered @ gpy - 8, thus:
+			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 16 >= gpy && en_ccy <= gpy + 12)
+			//                                                        \_ Change
+
+			ld  hl, 0
 
 			// en_ccx + 12 >= gpx
 			ld  a, (_gpx)
@@ -531,12 +537,16 @@ unsigned char collide_enem (void) {
 			cp  c
 			ret c
 
-			// en_ccy + 12 >= gpy
+			// en_ccy + 12 >= gpy or en_ccy + 16 >= gpy
 			ld  a, (_gpy)
 			ld  c, a
 			ld  a, (_en_ccy)
 			
-			add 12
+			#ifdef TALL_PLAYER
+				add 16
+			#else
+				add 12
+			#endif
 			
 			cp  c
 			ret c
