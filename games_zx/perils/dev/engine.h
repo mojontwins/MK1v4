@@ -3144,19 +3144,34 @@ void move (void) {
 		) {
 			if (qtile (gpxx + 1, gpyy) == 15) {
 				clear_cerrojo (gpxx + 1, gpyy);
-				player.keys --;
+				#ifdef MASTER_OF_KEYS
+					if (master_of_keys == 0)
+				#endif
+				{
+					player.keys --;
+				}
 				play_sfx (8);
 			} else 
 			#if !defined TIGHT_BOUNDING_BOX
 				if (qtile (gpxx - 1, gpyy) == 15) {
 					clear_cerrojo (gpxx - 1, gpyy);
-					player.keys --;
+					#ifdef MASTER_OF_KEYS
+						if (master_of_keys == 0)
+					#endif
+					{
+						player.keys --;
+					}
 					play_sfx (8);
 				}
 			#else
 				if (qtile (gpxx, gpyy) == 15) {
 					clear_cerrojo (gpxx, gpyy);
-					player.keys --;
+					#ifdef MASTER_OF_KEYS
+						if (master_of_keys == 0)
+					#endif
+					{
+						player.keys --;
+					}
 					play_sfx (8);
 				}
 			#endif

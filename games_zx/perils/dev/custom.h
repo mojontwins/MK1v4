@@ -33,6 +33,8 @@ unsigned char scr_ini [] = { 60, 64, 71, 84, 72 };
 unsigned char ini_x [] = { 1, 1, 11, 7, 7 };
 unsigned char ini_y [] = { 4, 4, 4, 4, 0 };
 
+unsigned char max_enems [] = { 60, 60, 60, 47, 99 };
+
 unsigned char tilemaps [] = {
 	 0,  1,  2,  3, 25,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 	// level 0
 	32, 33, 34, 11, 36, 37, 38, 39, 40, 41, 12, 23, 24, 45,  0, 15,		// level 1
@@ -139,6 +141,21 @@ void clear_game_area (void) {
 	#endasm
 }
 
+void sprite_remove_aid (void) {
+	saca_a_todo_el_mundo_de_aqui ();
+
+	// Validate whole screen so sprites stay on next update
+	#asm
+			LIB SPValidate
+			ld  c, VIEWPORT_X
+			ld  b, VIEWPORT_Y
+			ld  d, VIEWPORT_Y+19
+			ld  e, VIEWPORT_X+29
+			ld  iy, fsClipStruct
+			call SPValidate
+	#endasm				
+}
+
 void paralyze_everyone (void) {
 	#asm
 			xor a							// Killable is all
@@ -205,7 +222,7 @@ void restore_everyone (void) {
 	#endasm
 }
 
-void set_hotspot (void) {
+void setup_hotspot (void) {
 	// Hotspot structure is xy, tipo, act.
 
 	#asm
@@ -252,7 +269,13 @@ void set_hotspot (void) {
 			sla a
 			ld  (_hotspot_y), a
 	#endasm
+}
 
+void set_hotspot (void) {
+	// Set hotspot up...
+	setup_hotspot ();
+
+	// And paint it.
 	set_map_tile (rdx, rdy, 16 + hotspot_t, 0);
 }
 
@@ -581,6 +604,8 @@ void select_power (void) {
 				cp  5
 				ret z
 
+				ld  c, a 	// C = Selected item
+
 				ld  a, (_p_bellotas)
 				or  a
 				jr  nz, select_has_bellotas
@@ -591,9 +616,9 @@ void select_power (void) {
 
 			.select_has_bellotas
 				ld  hl, _power_on
-				ld  c, a
+				
 				ld  b, 0
-				add hl, bc
+				add hl, bc 	// HL = power_on[rdy]
 				ld  a, (hl)
 				or  a
 				jr  nz, select_power_continue
@@ -634,11 +659,11 @@ void select_power (void) {
 
 		#ifdef ENABLE_CHEAT
 			if (sp_KeyPressed (key_1) && sp_KeyPressed (key_3)) {
-				player.killed = 60;
+				player.killed = max_enems [level];
 			}
 		#endif
 
-		if (player.killed == 60) {
+		if (player.killed == max_enems [level]) {
 			#asm
 					ld  a, 9
 					ld  (__x), a
@@ -651,6 +676,7 @@ void select_power (void) {
 					ld  a, GAME_OVER_ATTR
 					ld  (__t), a
 			#endasm
+			sprite_remove_aid ();
 			draw_rectangle ();	
 			draw_text (10, 12, GAME_OVER_ATTR, "LEVEL CLEAR!");
 			#asm 
@@ -788,7 +814,7 @@ void select_power (void) {
 	void hook_mainloop (void) {
 		// Body count in hud is custom, so KILLED_X must be undefined in config.h!
 		if (player.killed != killed_old) {
-			draw_2_digits (16, 1, 60-player.killed);
+			draw_2_digits (16, 1, max_enems [level] - player.killed);
 			killed_old = player.killed;	
 		}
 
@@ -800,11 +826,18 @@ void select_power (void) {
 			if (hotspots_semaphore == 0) {
 				saca_a_todo_el_mundo_de_aqui ();
 				select_power ();
-				hotspots [n_pant].act = 1;
-				on_pant = 0xff;
+				on_pant = 0xff;				
 			}
+
+			// Make sure to restore hotspot...
+			#asm
+				//hotspot_t = latest_hotspot; set_hotspot ();
+					ld  a, 34
+					ld  (_hotspot_t), a
+					call _set_hotspot
+			#endasm
 			hotspots_semaphore = 1;
-		} if (latest_hotspot >= 4) {
+		} else if (latest_hotspot >= 4) {
 			// Activate resonator ? 
 			#asm
 					ld  a, (_latest_hotspot)
