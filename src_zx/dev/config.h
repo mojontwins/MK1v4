@@ -53,6 +53,8 @@
 
 //#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 //#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
+//#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS	// Call `custom.h/get_cell_n ()` for linear
+//#define ENEMS_CUSTOM_COLLISION 				// Normal code will only be ran if enems_custom_collision returns 0
 
 // ============================================================================
 // II. Engine type
@@ -156,6 +158,9 @@
 //#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
 //#define GENITAL_HIT_FRAMES 				// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 				5		// Rather than swing, stab at height N
+//#define SWORD_DEPLETES 					// Can only hit when player.sword_g > 0 & decs
+//#define SWORD_CUSTOM_HIT 					// use code @ sword_custom_hit.h before default
+//#define SWORD_DISABLE_HIT 				// Disable default hit code.
 
 // Breakable
 // ---------
@@ -214,7 +219,7 @@
 //#define FANTY_A 					16		// Flying enemies acceleration.
 //#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
-#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
+//#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
 
 // Quadrators
 // ----------

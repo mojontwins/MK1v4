@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
@@ -2852,9 +2852,14 @@ void move (void) {
 			#endif
 			s_type = player.facing;
 
-			s_on = 1;
-			s_frame = 0;
-			s_next_frame = sword_cells [s_type];
+			#ifdef SWORD_DEPLETES
+				if (player.sword_g)
+			#endif
+			{
+				s_on = 1;
+				s_frame = 0;
+				s_next_frame = sword_cells [s_type];
+			}
 		}
 	#endif
 	
@@ -5511,17 +5516,22 @@ void mueve_bicharracos (void) {
 									break;	
 							}
 						#else
-							// Always pursue
-
-							if ((rand () & 7) > 1) {
-								if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-									en_an_vx [enit] += FANTY_A;
-								else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-									en_an_vx [enit] -= FANTY_A;
-								if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-									en_an_vy [enit] += FANTY_A;
-								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-									en_an_vy [enit] -= FANTY_A;
+							#ifdef FANTIES_EXIT_STATE_V
+								if (en_an_state [enit] != 1) 
+							#endif
+							{
+								// Always pursue
+	
+								if ((rand () & 7) > 1) {
+									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+										en_an_vx [enit] += FANTY_A;
+									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+										en_an_vx [enit] -= FANTY_A;
+									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+										en_an_vy [enit] += FANTY_A;
+									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+										en_an_vy [enit] -= FANTY_A;
+								}
 							}
 						#endif
 
@@ -5543,13 +5553,6 @@ void mueve_bicharracos (void) {
 						#else
 							if (en_an_y [enit] < -(VIEWPORT_Y*8*64)) en_an_y [enit] = -1024;
 						#endif
-						
-						/*
-						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
-						if (en_an_x [enit] < 0) en_an_x [enit] = 0;
-						if (en_an_y [enit] > (144*64)) en_an_y [enit] = (144*64);
-						if (en_an_y [enit] < 0) en_an_y [enit] = 0;
-						*/
 					} 
 				#endif
 
@@ -6072,28 +6075,34 @@ void mueve_bicharracos (void) {
 							#endif
 							) {
 								// Hit!
-								play_sfx (2);
-								s_on = 0;
-
-								#ifdef SWORD_PARALYZES
-									en_an_state [enit] = ENEM_PARALYZED;
-									en_an_count [enit] = SWORD_PARALYZES;
+								#ifdef SWORD_CUSTOM_HIT
+									#include "sword_custom_hit.h"
 								#endif
 
-								// Kill?
-								#if SWORD_LINEAL_DAMAGE > 0
-									if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
-								#endif
+								#ifndef SWORD_DISABLE_HIT
+									play_sfx (2);
+									s_on = 0;
 
-								#if SWORD_FLYING_DAMAGE > 0
-									if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-								#endif
+									#ifdef SWORD_PARALYZES
+										en_an_state [enit] = ENEM_PARALYZED;
+										en_an_count [enit] = SWORD_PARALYZES;
+									#endif
 
-								#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-									if (_en_life == 0) {
-										en_an_next_frame [enit] = sprite_17_a;
-										enems_kill ();
-									}
+									// Kill?
+									#if SWORD_LINEAL_DAMAGE > 0
+										if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+									#endif
+
+									#if SWORD_FLYING_DAMAGE > 0
+										if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
+									#endif
+
+									#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
+										if (_en_life == 0) {
+											en_an_next_frame [enit] = sprite_17_a;
+											enems_kill ();
+										}
+									#endif
 								#endif
 
 								goto enems_loop_continue;
@@ -6146,66 +6155,71 @@ void mueve_bicharracos (void) {
 							&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
 						#endif
 					) {
-						en_tocado = 1; player.is_dead = 1; play_sfx (2);
-						#ifdef ENABLE_CODE_HOOKS
-							enemy_killer = enit;
-						#endif
-						
-						// We decide which kind of life drain we do:
-						#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-							if (_en_t > 4) {
-								player.life -= FLYING_ENEMY_HIT;
-							} else
+						#ifdef ENEMS_CUSTOM_COLLISION
+							if (enems_custom_collision () == 0)
 						#endif
 						{
-							player.life -= LINEAR_ENEMY_HIT;
-						}
-						player_just_died = PLAYER_KILLED_BY_ENEM;
-						
-						#ifdef PLAYER_BOUNCES
-							#ifndef PLAYER_MOGGY_STYLE	
-								#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-									if (0 == en_an_fanty_activo [enit]) {
-										// Bouncing!
-										if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
-										if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
-										if (_en_my > 0) player.vy = PLAYER_MAX_VX;
-										if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
-									} else {
-										player.vx = en_an_vx [enit] + en_an_vx [enit];
-										player.vy = en_an_vy [enit] + en_an_vy [enit];
-									}
-								#else
-									// Bouncing!
-									if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-								#endif
-							#else
-								// Bouncing:
-								
-								// x
-								if (_en_mx) {
-									if (gpx < en_ccx) player.vx = - (abs (_en_mx << 1) << 7);
-									else player.vx = abs (_en_mx + _en_mx) << 7;
-								}
-								
-								// y
-								if (_en_my) {
-									if (gpy < en_ccy) player.vy = - (abs (_en_my << 1) << 7);
-									else player.vy = abs (_en_my + _en_my) << 7;
-								}
+							en_tocado = 1; player.is_dead = 1; play_sfx (2);
+							#ifdef ENABLE_CODE_HOOKS
+								enemy_killer = enit;
 							#endif
-						#endif
+							
+							// We decide which kind of life drain we do:
+							#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
+								if (_en_t > 4) {
+									player.life -= FLYING_ENEMY_HIT;
+								} else
+							#endif
+							{
+								player.life -= LINEAR_ENEMY_HIT;
+							}
+							player_just_died = PLAYER_KILLED_BY_ENEM;
+							
+							#ifdef PLAYER_BOUNCES
+								#ifndef PLAYER_MOGGY_STYLE	
+									#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
+										if (0 == en_an_fanty_activo [enit]) {
+											// Bouncing!
+											if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
+											if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
+											if (_en_my > 0) player.vy = PLAYER_MAX_VX;
+											if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
+										} else {
+											player.vx = en_an_vx [enit] + en_an_vx [enit];
+											player.vy = en_an_vy [enit] + en_an_vy [enit];
+										}
+									#else
+										// Bouncing!
+										if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+										if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+										if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+										if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+									#endif
+								#else
+									// Bouncing:
+									
+									// x
+									if (_en_mx) {
+										if (gpx < en_ccx) player.vx = - (abs (_en_mx << 1) << 7);
+										else player.vx = abs (_en_mx + _en_mx) << 7;
+									}
+									
+									// y
+									if (_en_my) {
+										if (gpy < en_ccy) player.vy = - (abs (_en_my << 1) << 7);
+										else player.vy = abs (_en_my + _en_my) << 7;
+									}
+								#endif
+							#endif
 
-						#ifdef ENABLE_FRIGOABABOL
-							player.estado = EST_FRIGOABABOL;
-							player.ct_estado = FRIGO_MAX_FRAMES;
-						#elif defined PLAYER_FLICKERS
-							// Flickers. People seem to like this more than the bouncing behaviour.
-							player_flicker ();
-						#endif				
+							#ifdef ENABLE_FRIGOABABOL
+								player.estado = EST_FRIGOABABOL;
+								player.ct_estado = FRIGO_MAX_FRAMES;
+							#elif defined PLAYER_FLICKERS
+								// Flickers. People seem to like this more than the bouncing behaviour.
+								player_flicker ();
+							#endif				
+						}
 					}
 				}
 				

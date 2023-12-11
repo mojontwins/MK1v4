@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // definitions.h
 // Contains type definitions and global variables
@@ -72,6 +72,7 @@ typedef struct {
 	unsigned char hovering; 							// 41
 	unsigned char just_hovered; 						// 42
 	unsigned char just_jumped;							// 43
+	unsigned char sword_g;								// 44
 } INERCIA;
 
 typedef struct {

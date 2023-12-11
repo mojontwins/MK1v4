@@ -551,6 +551,7 @@ Estas dos directivas especifican cuánta vida restan los enemigos al colisionar 
 ```c
     //#define ENABLE_CODE_HOOKS             // Hooks @ init, entering game, screen & loop @ custom.h
     //#define ENABLE_CUSTOM_ENEMS           // Hooks for custom enemies @ custom.h
+	//#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS        // Call `custom.h/get_cell_n ()` for linear
 ```
 
 Estas dos directivas implican conocimientos más avanzados: sirven para activar los enganches generales y de enemigos custom en el archivo `custom.h`.
@@ -638,6 +639,14 @@ Aquí tenemos un ejemplo tonto de un enemigo que sólo "tirita" y cambia de fram
     }
 
 ```
+
+### Enganches de cells custom `ENABLE_CUSTOM_LINEAR_ENEM_CELLS`
+
+Normalmente los enemigos lineales son `_en_t` con valores 1-4, y llevan asignados por defecto las 4 primeras parejas de cells del spriteset. Si se activa esta directiva se llamará a una función `get_cell_n ()` que deberá devolver un número en base a `_en_t` que indique qué pareja de cells del spriteset debe usarse.
+
+Si se devuelve `n`, los cells del spriteset que se emplearán serán `ENEMS_OFFSET + n * 2` (si se define `ENEMS_OFFSET`). **Nótese que empezamos a contar en 0**.
+
+Esto puede usarse para tener más de 4 parejas de cells en el spriteset y poder combinarlos de diferentes maneras dependiendo de nivel o pantalla.
 
 ### Datos disponibles
 
@@ -943,6 +952,20 @@ Hecho esto, la espada se configura con estas macros:
 * `SWORD_STAB` apuñalar en lugar de balancear la espada. La espada sale recta a una altura de N pixels desde la parte superior del sprite del jugador.
 
 Si queremos controlar a qué enemigos afectará la espada, podemos usar `PLAYER_MIN_KILLABLE` (ver más adelante).
+
+A partir de `4.9` hay más todavía:
+
+```c
+	// #define SWORD_DEPLETES 				// Can only hit when player.sword_g > 0 & decs
+	// #define SWORD_CUSTOM_HIT 			// use code @ sword_custom_hit.h before default
+	// #define SWORD_DISABLE_HIT 			// Disable default hit code.
+```
+
+* `SWORD_DEPLETES` hará que la espada sólo funcione si `player.sword_g` no vale 0. Se entiende que mantener `player.sword_g` es responsabilidad del programador. El engine vanilla no hace NADA con esta variable salvo comprobar esto.
+
+* `SWORD_CUSTOM_HIT` hará que se elecute el código contenido en `sword_custom_hit.h` cuando la espada impacte contra un enemigo.
+
+* `SWORD_DISABLE_HIT` desactivará todo el código que se ejecuta normalmente cuando la espada impacta con un enemigo, por si quieres implementar toda la lógica por tu cuenta.
 
 ### Tiles que se rompen
 
@@ -2615,6 +2638,16 @@ y creando un archivo `custom_enem_cells.h` donde se defina este array, con punte
 ```
 
 Podrás definir tu propio array de gráficos para sprites de enemigos. Con esto podrás usar la API de MK1v4 para calcular el frame (`enems_calc_frame ()` para la animación y `enems_en_an_calc ()` para inicializarlos) con más de 4 gráficos diferentes.
+
+## Colisión con enemigos personalizada
+
+Si definimos
+
+```c
+	#define ENEMS_CUSTOM_COLLISION
+```
+
+al colisionar contra un enemigo se llamará a la función `enems_custom_collision` de `custom.h`. Sólo si esta función devuelve 0 se ejecutará el código normal al colisionar, con lo que puedes controlar esto fácilmente.
 
 ## Conexiones de pantalla personalizadas
 

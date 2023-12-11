@@ -5,6 +5,8 @@
 // I. General configuration
 // ============================================================================
 
+//#define MODE_1
+
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
 #define BLACK_PEN		 			1		// Which pen is black?
@@ -36,6 +38,7 @@
 //#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
 
 //#define ENEMS_CUSTOM_CELLS 					// Include custom_enem_cells.h
+//#define ENEMS_CUSTOM_COLLISION 				// Normal code will only be ran if enems_custom_collision returns 0
 
 // ============================================================================
 // II. Engine type
@@ -138,6 +141,9 @@
 //#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
 //#define GENITAL_HIT_FRAMES 				// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 				5		// Rather than swing, stab at height N
+//#define SWORD_DEPLETES 					// Can only hit when player.sword_g > 0 & decs
+//#define SWORD_CUSTOM_HIT 					// use code @ sword_custom_hit.h before default
+//#define SWORD_DISABLE_HIT 				// Disable default hit code.
 
 // Breakable
 // ---------

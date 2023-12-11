@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // pantallas.h
 // Includes the binary of the aplib-compressed static screens.
@@ -54,8 +54,8 @@ void title_screen (void) {
 			ld  de, BASE_SUPERBUFF
 			call depack
 	#endasm
-	draw_text (11, 11, 7, "1 KEYBOARD");
-	draw_text (11, 12, 7, "2 JOYSTICK");
+	draw_text (11, 17, 7, "1 KEYBOARD");
+	draw_text (11, 18, 7, "2 JOYSTICK");
 
 	cpc_UpdScr ();
 	cpc_ShowTileMap (1);

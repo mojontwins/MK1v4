@@ -39,3 +39,10 @@
 	}
 	
 #endif
+
+#ifdef ENABLE_CUSTOM_LINEAR_ENEM_CELLS
+	unsigned char get_cell_n (void) {
+		// Change this:
+		return _en_t - 1;
+	}
+#endif

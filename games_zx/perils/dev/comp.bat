@@ -7,7 +7,7 @@ echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 12 8 15 10 15 packed  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes dsall CMD=S,15,Y2,0 > nul
-..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 18 extra tall > nul
+..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 24 extra tall > nul
 ..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul

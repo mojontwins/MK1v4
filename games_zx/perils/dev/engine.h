@@ -5148,7 +5148,11 @@ void draw_scr (void) {
 			case 2:
 			case 3:
 			case 4:
-				enems_en_an_calc (_en_t - 1);
+				#ifdef ENABLE_CUSTOM_LINEAR_ENEM_CELLS
+					enems_en_an_calc (get_cell_n ());
+				#else
+					enems_en_an_calc (_en_t - 1);
+				#endif
 				break;
 
 			#ifdef USE_TYPE_6

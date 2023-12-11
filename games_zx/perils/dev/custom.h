@@ -52,6 +52,14 @@ unsigned char hub_signs_y [] = { 5, 2, 5, 2 };
 unsigned char level_finished [] = { 0, 0, 0, 0 };
 unsigned char levels_finished;	// This will make my life easier
 
+unsigned char level_linear_enem_cells [] = {
+	0, 1, 2, 3,
+	5, 6, 7, 3,
+	0, 1, 7, 3,
+	4, 2, 6, 3,
+	0, 1, 2, 3
+};
+
 unsigned char continue_on;
 unsigned char ls;
 
@@ -1234,4 +1242,10 @@ void select_power (void) {
 	void extra_enems_killed (void) {
 	}
 	
+#endif
+
+#ifdef ENABLE_CUSTOM_LINEAR_ENEM_CELLS
+	unsigned char get_cell_n (void) {
+		return level_linear_enem_cells[(level << 2) + (_en_t - 1)];
+	}
 #endif

@@ -82,7 +82,7 @@ void title_screen (void) {
 
 	// CUSTOM {
 	// Print options
-	draw_text (11, 15, 71, "1 POAQ%2 KEMPSTON%3 SINCLAIR");
+	draw_text (11, 15, 71, "1 POAQ    %2 KEMPSTON%3 SINCLAIR");
 	#asm 
 		call SPUpdateNow
 	#endasm
