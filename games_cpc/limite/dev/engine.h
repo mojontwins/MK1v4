@@ -4759,6 +4759,19 @@ void enems_en_an_calc (unsigned char n) {
 	}
 #endif
 
+#ifdef NEEDS_BLACKOUT_AREA
+	void blackout_area (void) {
+		#asm
+				xor a 
+				ld  hl, _nametable
+				ld  (hl), a
+				ld  de, _nametable+1
+				ld  bc, 767
+				ldir
+		#endasm
+	}
+#endif
+
 void draw_scr (void) {
 	#ifndef DEACTIVATE_EVIL_ZONE
 		cpc_Border (0x54);
@@ -4768,31 +4781,18 @@ void draw_scr (void) {
 		char *cad_level = "LEVEL";
 
 		saca_a_todo_el_mundo_de_aqui ();
-
-		#ifdef DIRECT_TO_PLAY
-			#asm
-					ld  hl, _s_title
-					ld  de, BASE_SUPERBUFF
-					call depack
-			#endasm
-		#else
-			#asm
-					ld  hl, _s_marco
-					ld  de, BASE_SUPERBUFF
-					call depack
-			#endasm
-			cpc_ShowTileMap (1);
-		#endif
+		blackout_area ();
+		invalidate_viewport();
 
 		#ifdef SHOW_LEVEL_SUBLEVEL
 			draw_text (VIEWPORT_X + 9, VIEWPORT_Y + 10, 71, cad_level);
 			draw_2_digits (VIEWPORT_X + 16, VIEWPORT_Y + 10, 1+(n_pant / MAP_W));
-			sp_PrintAtInv (VIEWPORT_Y + 10, VIEWPORT_X + 18, 71, 15);
 			draw_2_digits (VIEWPORT_X + 19, VIEWPORT_Y + 10, 1+(n_pant % MAP_W));
 		#else
 			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, 71, cad_level);
 			draw_2_digits (VIEWPORT_X + 17, VIEWPORT_Y + 10, (n_pant+1));
 		#endif
+
 		cpc_UpdScr ();
 		cpc_ShowTileMap (1);
 		play_sfx (6);

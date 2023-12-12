@@ -1,6 +1,6 @@
 # Los enemigos
 
-Si alguien (ja ja ja ja ) va a usar la v4 de la MTE MK1 para algo, debe asegurarse de que los archivos .ene se guardan con el formato *legacy* de 2 bytes por hotspot. 
+Si alguien (ja ja ja ja ) va a usar la v4 de MTE MK1 para algo, debe asegurarse de que los archivos .ene se guardan con el formato *legacy* de 2 bytes por hotspot. 
 
 El ponedor detectará automáticamente este setting en archivos .ene originales, pero si se crea un nuevo hay que especificarlo. 
 
