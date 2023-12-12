@@ -25,7 +25,7 @@ rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 cpc > nul
 
 rem luts
-..\utils\pasmo.exe system\cpc_TrPixLutM0.asm trpixlut.bin
+..\utils\pasmo.exe system\cpc_TrPixLutM1.asm trpixlut.bin
 ..\utils\apack.exe trpixlut.bin trpixlutc.bin > nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 

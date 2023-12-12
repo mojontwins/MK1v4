@@ -120,7 +120,7 @@
 
 			#ifdef PUSH_OVER_FLOOR
 				#ifndef PUSH_AND_PULL_PILES
-ç					if (attr (x1, y1 + 1) < 4) return 0;
+					if (attr (x1, y1 + 1) < 4) return 0;
 					if (qtile (x0, y0 - 1) == 14) return 0;
 				#endif
 			#endif
@@ -192,31 +192,9 @@
 										if (malotes [enoffsmasi].x >= boxx - 15 && malotes [enoffsmasi].x <= boxx + 15 &&
 											malotes [enoffsmasi].y >= boyy - 15 && malotes [enoffsmasi].y <= boyy + 15) {
 											
-											#ifdef ENABLE_CODE_HOOKS
-												enemy_died = malotes [enoffsmasi].t;
-											#endif
-
 											en_an_next_frame [enit] = sprite_17_a;											
-											sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffsmasi].y >> 3), VIEWPORT_X + (malotes [enoffsmasi].x >> 3), malotes [enoffsmasi].x & 7, malotes [enoffsmasi].y & 7);
-											en_an_current_frame [enit] = en_an_next_frame [enit];
-											
-											#asm 
-												call SPUpdateNow
-											#endasm
-												
-											play_sfx (10);
-											en_an_next_frame [enit] = sprite_18_a;
-											malotes [enoffsmasi].t |= 16;			// Marked as "dead"
-
-											// Count it
-											player.killed ++;
-
-											#ifdef ACTIVATE_SCRIPTING
-												script = f_scripts [max_screens + 2];
-												run_script ();
-											#endif
-
-											break;
+											player.vy = -PLAYER_MAX_VY_SALTANDO;
+											enems_kill ();
 										}
 									}						
 								}
