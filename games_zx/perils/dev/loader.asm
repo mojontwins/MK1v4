@@ -12,36 +12,36 @@
 ; load screen
 ;	scf
 ;	ld	a, $ff
-;	ld	ix, 65368 - %%%preloadingcomplength%%%
-;	ld	de, %%%preloadingcomplength%%%
+;	ld	ix, 65368 - 0
+;	ld	de, 0
 ;	call $0556
 ;	di
 
 ; Decompress
-;	ld  hl, 65368 - %%%preloadingcomplength%%%
+;	ld  hl, 65368 - 0
 ;	ld  de, 16384
 ;	call depack	
 
 ; load screen
 	scf
 	ld	a, $ff
-	ld	ix, 65368 - %%%loadingcomplength%%%
-	ld	de, %%%loadingcomplength%%%
+	ld	ix, 65368 - 70
+	ld	de, 70
 	call $0556
 	di
 
 	call blackout
 
 ; Decompress
-	ld  hl, 65368 - %%%loadingcomplength%%%
+	ld  hl, 65368 - 70
 	ld  de, 16384
 	call depack	
 
 ; Main binary
 	scf
 	ld	a, $ff
-	ld	ix, 65368 - %%%mainbincomplength%%%
-	ld	de, %%%mainbincomplength%%%
+	ld	ix, 65368 - 21602
+	ld	de, 21602
 	call $0556
 	di
 
@@ -49,7 +49,7 @@
 	out (254), a
 
 ; Decompress
-	ld  hl, 65368 - %%%mainbincomplength%%%
+	ld  hl, 65368 - 21602
 	ld  de, 24200
 	call depack	
 
@@ -73,7 +73,7 @@
 	scf
 	ld	a, $ff
 	ld	ix, $C000
-	ld	de, %%%ram1_length%%%
+	ld	de, 8102
 	call $0556
 	di
 

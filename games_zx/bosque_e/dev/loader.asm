@@ -6,42 +6,42 @@
 	ld  sp, 24199
 	di
 	db	$de, $c0, $37, $0e, $8f, $39, $96 ;OVER USR 7 ($5ccb)
-	
+
 	call blackout
 
 ; load screen
 ;	scf
 ;	ld	a, $ff
-;	ld	ix, 65368 - %%%preloadingcomplength%%%
-;	ld	de, %%%preloadingcomplength%%%
+;	ld	ix, 65368 - 0
+;	ld	de, 0
 ;	call $0556
 ;	di
 
 ; Decompress
-;	ld  hl, 65368 - %%%preloadingcomplength%%%
+;	ld  hl, 65368 - 0
 ;	ld  de, 16384
 ;	call depack	
 
 ; load screen
 	scf
 	ld	a, $ff
-	ld	ix, 65368 - %%%loadingcomplength%%%
-	ld	de, %%%loadingcomplength%%%
+	ld	ix, 65368 - 2482
+	ld	de, 2482
 	call $0556
 	di
 
 	call blackout
 
 ; Decompress
-	ld  hl, 65368 - %%%loadingcomplength%%%
+	ld  hl, 65368 - 2482
 	ld  de, 16384
 	call depack	
 
 ; Main binary
 	scf
 	ld	a, $ff
-	ld	ix, 65368 - %%%mainbincomplength%%%
-	ld	de, %%%mainbincomplength%%%
+	ld	ix, 65368 - 13741
+	ld	de, 13741
 	call $0556
 	di
 
@@ -49,37 +49,9 @@
 	out (254), a
 
 ; Decompress
-	ld  hl, 65368 - %%%mainbincomplength%%%
+	ld  hl, 65368 - 13741
 	ld  de, 24200
 	call depack	
-
-; Detect if it's a 128K model to load RAM1.
-	ld  bc, 0x7ffd
-	xor a
-	out (c), a
-	ld  a, (0x1)
-	ld  h, a
-	ld  a, 0x10
-	out (c), a
-	ld  a, (0x1)
-	cp  h
-	jr  z, launch_exe
-
-; RAM1
-	ld	a, $11 		; ROM 1, RAM 1
-	ld	bc, $7ffd
-	out (C), a
-
-	scf
-	ld	a, $ff
-	ld	ix, $C000
-	ld	de, %%%ram1_length%%%
-	call $0556
-	di
-
-	ld	a, $10 		; ROM 1, RAM 0
-	ld	bc, $7ffd
-	out (C), a
 	
 ; run game!
 launch_exe:
@@ -92,7 +64,7 @@ blackout:
 	ld	(hl), l
 	ldir
 	ret
-	
+
 ; -----------------------------------------------------------------------------
 ; ZX7 decoder by Einar Saukas, Antonio Villena & Metalbrain
 ; "Standard" version (69 bytes only)

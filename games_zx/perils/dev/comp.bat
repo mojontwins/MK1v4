@@ -20,21 +20,29 @@ rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
 zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200 -DLANG_%lang% > nul
-zcc +zx -vn -a churromain.c -o %game%.asm -lsplib2f -zorg=24200 -DLANG_%lang% > nul
+rem zcc +zx -vn -a churromain.c -o %game%.asm -lsplib2f -zorg=24200 -DLANG_%lang% > nul
 ..\utils\printsize.exe %game%.bin
+
+echo Preparing tape 
+del loadingc.bin > nul 2> nul
+..\utils\zx7 loading.bin loadingc.bin > nul
+del gamec.bin > nul 2> nul 
+..\utils\zx7 %game%.bin gamec.bin > nul 
 
 ..\utils\imanol.exe ^
     in=loader_128.asm-orig ^
     out=loader.asm ^
     ram1_length=?..\ogt\RAM1.bin ^
-    mb_length=?%game%.bin > nul
+    preloadingcomplength=?preloadingc.bin ^
+    loadingcomplength=?loadingc.bin ^
+    mainbincomplength=?gamec.bin > nul
 
 ..\utils\pasmo.exe loader.asm loader.bin
 
 ..\utils\GenTape.exe %game%_%lang%.tap ^
     basic 'PERILS' 10 loader.bin ^
-    data              loading.bin ^
-    data              %game%.bin ^
+    data              loadingc.bin ^
+    data              gamec.bin ^
     data              ..\ogt\RAM1.bin > nul
 
 echo Output: %game%_%lang%.tap
