@@ -12,6 +12,7 @@ echo Making %game%
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
 ..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
+..\utils\png2scr.exe ..\gfx\preloading.png preloading.bin  > nul
 ..\utils\apack.exe ..\gfx\title.scr title.bin  > nul
 ..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
@@ -25,6 +26,8 @@ zcc +zx -vn churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
 echo Preparing tape 
 del loadingc.bin > nul 2> nul
 ..\utils\zx7 loading.bin loadingc.bin > nul
+del preloadingc.bin > nul 2> nul
+..\utils\zx7 preloading.bin preloadingc.bin > nul
 del gamec.bin > nul 2> nul 
 ..\utils\zx7 %game%.bin gamec.bin > nul 
 
@@ -39,6 +42,7 @@ del gamec.bin > nul 2> nul
 
 ..\utils\GenTape.exe %game%.tap ^
     basic 'BOSQUE' 10 loader.bin ^
+    data              preloadingc.bin ^
     data              loadingc.bin ^
     data              gamec.bin > nul
 

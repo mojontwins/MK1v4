@@ -2045,6 +2045,9 @@ void move (void) {
 			ld  a, 1
 			ld  (_player + 26), a 	// player.possee
 
+			ld  a, WALL_DOWN
+			ld  (_wall), a 
+
 		.vert_collision_done
 	#endasm
 
@@ -3285,9 +3288,9 @@ void move (void) {
 							jr  c, push_box_vert_up_done
 
 							ld  a, (_gpyy)
-						#ifndef TIGHT_BOUNDING_BOX
+							#ifndef TIGHT_BOUNDING_BOX
 								dec a
-						#endif
+							#endif
 							ld  (_y0), a
 							dec a 
 							ld  (_y1), a
@@ -3323,9 +3326,12 @@ void move (void) {
 						.push_box_vert_up_done
 
 							#ifdef TIGHT_BOUNDING_BOX
-								ld  a, (_gpy)
-								and 15
-								jp  nz, push_box_vert_done
+								;ld  a, (_gpy)
+								;and 15
+								;jp  nz, push_box_vert_done
+								ld  a, (_wall)
+								cp  WALL_DOWN
+								jr  nz, push_box_vert_done	
 							#endif
 
 							ld  a, (_pad0) 
