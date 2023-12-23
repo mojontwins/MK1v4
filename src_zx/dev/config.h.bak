@@ -255,8 +255,7 @@
 // ----------
 
 //#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
-#define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
-#define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
+//#define SHORT_PLAYER 						// Bounding box 12x16
 //#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
@@ -337,7 +336,7 @@
 
 //#define USE_AUTO_SHADOWS					// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS				// Automatic shadows using specially defined tiles 32-47.
-#define UNPACKED_MAP						// Full, uncompressed maps. Shadows settings are ignored.
+//#define UNPACKED_MAP						// Full, uncompressed maps. Shadows settings are ignored.
 //#define COLUMN_MAP 						// Do not check horizontal screen flicks
 //#define ROW_MAP 							// Do not check vertical screen flicks
 //#define NO_ALT_BG							// No alternative tile 19 for bg = 0
@@ -413,7 +412,6 @@
 // 64 = Quicksands
 
 unsigned char comportamiento_tiles [] = {
-	0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 0, 0, 8, 8, 8,
-	0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 0, 8, 0, 8, 8,
-	8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 0, 0, 0, 8, 8
+	0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 8, 0, 8, 8, 8,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };

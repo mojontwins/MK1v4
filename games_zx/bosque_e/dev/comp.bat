@@ -3,7 +3,7 @@
 set game=bosquee
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 5 5 15 10 15 packed  > nul
+..\utils\mapcnv.exe ..\map\mapa.map mapa.h 5 5 15 10 15  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h > nul
@@ -19,7 +19,7 @@ echo Making %game%
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
-zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
+zcc +zx -vn churromain.c -o %game%.bin -lsplib2f -zorg=24200  > nul
 ..\utils\printsize.exe %game%.bin
 
 echo Preparing tape 

@@ -515,7 +515,7 @@ unsigned char collide_enem (void) {
 			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 16 >= gpy && en_ccy <= gpy + 12)
 			//                                                        \_ Change
 
-			ld  hl, 0			
+			ld  hl, 0
 
 			// en_ccx + 12 >= gpx
 			ld  a, (_gpx)
