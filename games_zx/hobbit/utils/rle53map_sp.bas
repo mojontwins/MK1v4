@@ -359,6 +359,15 @@ If sclpGetValue ("mk1h") <> "" Then
 	Print #fOut, "    #endif"
 	Print #fOut, "#endasm"
 	Print #fOut, ""
+	If sclpGetValue ("nodecos") = "" And decosAre Then
+		Print #fOut, "extern unsigned char* decos [0];"
+		Print #fOut, ""
+		Print #fOut, "#asm"
+		Print #fOut, "    ._decos"
+		Print #fOut, "        BINARY """ & makeFileName (fileName, "decos.bin") & """"
+		Print #fOut, "#endasm"
+		Print #fOut, ""
+	End If
 	Close #fOut
 End If
 

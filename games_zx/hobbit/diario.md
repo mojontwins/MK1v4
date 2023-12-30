@@ -7,6 +7,9 @@
 - [X] Alt tile 19 en modos RLE.
 - [X] PLAYER_NO_INERTIA to assembly.
 - [ ] PLAYER_DIZZY to assembly.
+- [X] Asegurarse de que las trayectorias de los enemigos no tocan obstaculos
+- [ ] Implementar decorations!
+
 
 # Los customs
 

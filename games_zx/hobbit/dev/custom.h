@@ -7,6 +7,7 @@
 
 unsigned char gandalf_talk;		// 0 - init, 1 - talk, 2 - open
 unsigned char dwarf_ct;
+unsigned char gandalf_flag;
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
@@ -33,6 +34,28 @@ unsigned char talk_sounds [] = { 7, 11 };
 	unsigned char text3 [] = "(BILBOS)%"
 							 "DO MANY DWARVES. MUST%"
 							 "BE A CIRCUS NEARBY";	
+
+	unsigned char text4 [] = "(GANDALF)%"
+							 "HELLOS. I'M AN OLD GUY%"
+							 "THAT DOES MAGIC. DO YA%"
+							 "WANNA WIN A TREASURE?";
+
+	unsigned char text5 [] = "(GANDALF)%"
+							 "TO WIN THE TREASURE%"
+							 "YOU MUST STEAL IT FROM%"
+							 "DRAGON SMAUG WHO LIVES%"
+							 "IN THAT MOUNTAIN";
+
+	unsigned char text6 [] = "(BILBOS)%"
+							 "THAT I KNOW BUT SUCH%"
+							 "MOUNTAIN IS AS CLOSED%"
+							 "AS BARBIE'S TWAT!";	
+
+	unsigned char text7 [] = "(GANDALF)%"
+							 "THE DWARVES FROM THE%"
+							 "FOREST KNOW HOW TO OPEN%"
+							 "THE MOUNTAIN. FIND ALL%"
+							 "13 AND COME BACK HERE";
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "(BILBOS)%"
@@ -60,21 +83,21 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "GANAR UN TESORO, JOVEN%"
 							 "Y APUESTO ZAGALETE?";
 
-	unsigned char text4 [] = "(GANDALF)%"
+	unsigned char text5 [] = "(GANDALF)%"
 							 "PARA GANAR EL TESORO%"
 							 "HAY QUE ROBARSELO AL%"
 							 "DRAGON SMAUG QUE VIVE%"
 							 "EN LA MONTA/A NOSEQUE";	
 
-	unsigned char text4 [] = "(BILBOS)%"
+	unsigned char text6 [] = "(BILBOS)%"
 							 "ESO YA LO SE PERO LA%"
 							 "MONTA/A ESTA CERRADA%"
 							 "CUAL TOTO DE NANCY";	
 
 
-	unsigned char text4 [] = "(GANDALF)%"
+	unsigned char text7 [] = "(GANDALF)%"
 							 "LOS ENANITOS DEL BOS-%"
-							 "QUE SABEN ABRIR LA%"
+							 "QUE SABRAN ABRIRTE LA%"
 							 "MONTA/A. ENCUENTRA LOS%"
 							 "13 Y VUELVE AQUIS!";						 		
 #endif
@@ -231,12 +254,34 @@ void show_text_box (unsigned char n) {
 	void hook_init_game (void) {
 		gandalf_talk = 0;
 		dwarf_ct = rand () & 3;
+		redraw_after_text = 1;
 	}
 
 	void hook_init_mainloop (void) {
 	}
 
 	void hook_mainloop (void) {
+		if(n_pant == 0) {
+			// Gandalf
+			if (gpx < 48 && gpy < 48) {
+				if (gandalf_flag == 0) {
+					if (gandalf_talk == 0) {
+						show_text_box (4);
+						show_text_box (5);
+						show_text_box (6);
+						show_text_box (7);
+
+						gandalf_talk = 1;
+					}
+				} else if (gandalf_talk == 1) {
+					if (player.objs < 13) {
+						show_text_box (7);
+					}
+				}
+			} else {
+				gandalf_flag = 0;
+			}
+		}
 	}
 
 	void hook_entering (void) {		
@@ -244,7 +289,6 @@ void show_text_box (unsigned char n) {
 
 	void hook_hotspots (void) {	
 		if (gandalf_talk == 0) {
-			redraw_after_text = 1;
 			show_text_box (dwarf_ct);
 			dwarf_ct = (dwarf_ct + 1) & 3;
 
