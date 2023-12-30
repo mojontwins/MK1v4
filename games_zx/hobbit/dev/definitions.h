@@ -197,6 +197,9 @@ unsigned char hotspot_x;
 unsigned char hotspot_y;
 unsigned char hotspot_t;
 unsigned char orig_tile;	// Original background tile
+#ifdef ENABLE_CODE_HOOKS
+	unsigned char hotspot_flag;
+#endif
 
 #ifdef ENABLE_CODE_HOOKS
 	unsigned char latest_hotspot;	

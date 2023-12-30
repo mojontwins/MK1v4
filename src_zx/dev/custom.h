@@ -49,3 +49,9 @@
 		return _en_t - 1;
 	}
 #endif
+
+#ifdef ENEMS_CUSTOM_COLLISION
+	unsigned char enems_custom_collision (void) {
+		return 0;
+	}
+#endif

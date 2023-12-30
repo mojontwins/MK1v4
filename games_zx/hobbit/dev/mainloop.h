@@ -503,7 +503,7 @@ void main (void) {
 					ld  a, (_gpx) 
 					add 12
 					cp  c
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 
 					// gpx <= hotspot_x + 15 -> hotspot_x + 15 >= gpx
 					ld  a, (_gpx)
@@ -511,7 +511,7 @@ void main (void) {
 					ld  a, (_hotspot_x)
 					add 12
 					cp  c
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 
 					// gpy >= hotspot_y - 15 -> gpy + 15 >= hotspot_y
 					ld  a, (_hotspot_y)
@@ -519,7 +519,7 @@ void main (void) {
 					ld  a, (_gpy)
 					add 12
 					cp  c 
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 
 					// gpy <= hotspot_y + 15 -> hotspot_y + 15 >= gpy
 					ld  a, (_gpy)
@@ -527,66 +527,92 @@ void main (void) {
 					ld  a, (_hotspot_y)
 					add 12
 					cp  c
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 			#endasm
 			{	
 				#ifdef ENABLE_CODE_HOOKS
-					latest_hotspot = hotspot_t;
+					if (hotspot_flag == 0) 
 				#endif
+				{
+					#ifdef ENABLE_CODE_HOOKS
+						hotspot_flag = 1;
+					#endif
+
+					#ifdef ENABLE_CODE_HOOKS
+						latest_hotspot = hotspot_t;
+					#endif
+
+					#ifdef ENABLE_CODE_HOOKS
+						// You may override hotspot_t or whatever:
+						hook_hotspots ();
+					#endif
+						
+					if(hotspot_t) {
+						rdi = 0;
+						#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
+							switch (hotspot_t) {
+								#ifndef DEACTIVATE_OBJECTS
+									case HOTSPOT_TYPE_OBJECT:
+										#ifdef ONLY_ONE_OBJECT
+											if (player.objs == 0) {
+												player.objs ++;
+												play_sfx (6);	
+											} else {
+												rdi = 1;
+												play_sfx (1);	
+											}
+										#else
+											player.objs ++;
+											play_sfx (6);
+											#ifdef OBJECT_COUNT
+												flags [OBJECT_COUNT] ++;
+											#endif
+										#endif
+										break;
+								#endif
+						
+								#ifndef DEACTIVATE_KEYS
+									case HOTSPOT_TYPE_KEY:
+										player.keys ++;
+										play_sfx (6);
+										break;
+								#endif
+
+								#ifndef DEACTIVATE_REFILLS
+									case HOTSPOT_TYPE_REFILL:
+										player.life += PLAYER_REFILL;
+										if (player.life > 99)
+											player.life = 99;
+										rdi = 2;
+										play_sfx (6);
+										break;
+								#endif								
+							}
+						#endif
+						
+						if (rdi != 1)  {
+							draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
+							hotspot_x = hotspot_y = 240;
+							hotspots [n_pant].act = rdi;
+						}
+					}
+				}
 
 				#ifdef ENABLE_CODE_HOOKS
-					// You may override hotspot_t or whatever:
-					hook_hotspots ();
+					#asm
+						jr _hotspots_done
+					#endasm
 				#endif
-					
-				rdi = 0;
-				#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
-					switch (hotspot_t) {
-						#ifndef DEACTIVATE_OBJECTS
-							case HOTSPOT_TYPE_OBJECT:
-								#ifdef ONLY_ONE_OBJECT
-									if (player.objs == 0) {
-										player.objs ++;
-										play_sfx (6);	
-									} else {
-										rdi = 1;
-										play_sfx (1);	
-									}
-								#else
-									player.objs ++;
-									play_sfx (6);
-									#ifdef OBJECT_COUNT
-										flags [OBJECT_COUNT] ++;
-									#endif
-								#endif
-								break;
-						#endif
-				
-						#ifndef DEACTIVATE_KEYS
-							case HOTSPOT_TYPE_KEY:
-								player.keys ++;
-								play_sfx (6);
-								break;
-						#endif
+			} 
 
-						#ifndef DEACTIVATE_REFILLS
-							case HOTSPOT_TYPE_REFILL:
-								player.life += PLAYER_REFILL;
-								if (player.life > 99)
-									player.life = 99;
-								rdi = 2;
-								play_sfx (6);
-								break;
-						#endif								
-					}
-				#endif
-				
-				if (rdi != 1)  {
-					draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
-					hotspot_x = hotspot_y = 240;
-					hotspots [n_pant].act = rdi;
-				}
-			}
+			#asm
+				._hotspots_else
+			#endasm
+
+			#ifdef ENABLE_CODE_HOOKS
+				hotspot_flag = 0;
+			#endif
+
 			#asm
 				._hotspots_done
 			#endasm
