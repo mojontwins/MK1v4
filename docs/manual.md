@@ -1390,11 +1390,12 @@ La diferencia entre `TWO_SETS` y `TWO_SETS_REAL` es que la primera sólo introdu
 ```c
     // Stupid animated tiles
     #define ENABLE_ANIMATED_TILES           // Enables them
-    #define ANIMATED_TILE           11      // Which tile. Alternates with N + 16
+    #define ANIMATED_TILE 			30 		// Which tile. Alternates with N + 16 / + 1 depending on:
+	#define ANIMATED_NEXT					// Alternate with N + 1 rather than N + 16
     #define MAX_ANIMATED_TILES      16      // Must be a power of two
 ```
 
-El soporte de tiles animados es muy rudimentario y se activa definiendo la macro `ENABLE_ANIMATED_TILES`. Se puede elegir un tile `ANIMATED_TILE` para ser el tile animado. Este tile puede aparecer hasta `MAX_ANIMATED_TILES` veces en pantalla (debe ser potencia de 2). Cada frame se selecciona uno de los tiles y se alterna entre `ANIMATED_TILE` y `ANIMATED_TILE + 16`.
+El soporte de tiles animados es muy rudimentario y se activa definiendo la macro `ENABLE_ANIMATED_TILES`. Se puede elegir un tile `ANIMATED_TILE` para ser el tile animado. Este tile puede aparecer hasta `MAX_ANIMATED_TILES` veces en pantalla (debe ser potencia de 2). Cada frame se selecciona uno de los tiles y se alterna entre `ANIMATED_TILE` y `ANIMATED_TILE + 16` o `ANIMATED_TILE` y `ANIMATED_TILE + 1` si se activó `ANIMATED_NEXT`.
 
 ### Modo sin máscaras
 

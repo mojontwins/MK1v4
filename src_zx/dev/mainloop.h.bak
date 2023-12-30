@@ -623,11 +623,7 @@ void main (void) {
 
 						call qtile_do
 						ld  a, l 	// HL 
-					#ifdef ANIMATED_NEXT
-							xor 0x01 	// Flip bit 1
-					#else	
-							xor 0x10 	// Flip bit 4
-					#endif
+						xor 0x10 	// Flip bit 4
 						ld  (__t), a
 						
 						ld  de, _comportamiento_tiles
