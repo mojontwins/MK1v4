@@ -16,6 +16,18 @@ unsigned char redraw_after_text;
 unsigned char intro_text;
 unsigned char talk_sounds [] = { 7, 11 };
 
+// Decos, screen 0
+unsigned char decos0 [] = { 0xae, 0x22, 0xff };
+
+// Decos, screen 1
+unsigned char decos1 [] = { 0xa8, 0x14, 0xa9, 0x15, 0xff };
+
+// Decos, screen 5
+unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B, 
+							0x04, 0x16, 0x23, 0x25, 0x34, 0x2C, 0x03, 0x17,
+							0x29, 0x44, 0xAD, 0x18, 0xA6, 0x36, 0xA7, 0x37, 
+							0xA4, 0x46, 0xA5, 0x47, 0xff };
+
 #ifdef LANG_EN
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "(BILBOS)%"
@@ -94,18 +106,80 @@ unsigned char talk_sounds [] = { 7, 11 };
 							 "MONTA/A ESTA CERRADA%"
 							 "CUAL TOTO DE NANCY";	
 
-
 	unsigned char text7 [] = "(GANDALF)%"
 							 "LOS ENANITOS DEL BOS-%"
 							 "QUE SABRAN ABRIRTE LA%"
 							 "MONTA/A. ENCUENTRA LOS%"
-							 "13 Y VUELVE AQUIS!";						 		
+							 "13 Y VUELVE AQUIS!";
+
+	unsigned char text8 [] = "(GANDALF)%"
+							 "LOS ENANOS SAN EMPA-%"
+							 "RANOIAO Y KIERE PELEA%"
+							 "PERO LA MONTA/A ESTA%"
+							 "ABIERTA. APROVECHA!";						 		
 #endif
 
 unsigned char *texts [] = {
 	text0, text1, text2, text3, 			// Dwarves are unknown to bilbos
 	text4, text5, text6, text7, 			// Gandalf - biblo talks
 };
+
+void draw_decos (void) {
+	// Draws decos @ gp_gen
+	#asm
+			// In this case we can shave some bytes assumming this
+			xor a 
+			ld  (__n), a
+
+			//
+			ld  hl, (_gp_gen)
+		.deco_loop
+			ld  a, (hl)
+			inc hl
+
+			cp  0xff 
+			jr  z, deco_done
+
+			// Single deco or run of decos?
+			bit 7, a 
+			jr  z, deco_run 
+
+			// Single deco
+			and 0x7f 
+			ld  (__t), a
+			ld  b, 1
+			jr  deco_run_do 
+
+		.deco_run
+			ld  (__t), a
+			ld  b, (hl)
+			inc hl 
+
+		.deco_run_do 
+			push bc 
+
+			ld  a, (hl)
+			inc hl
+
+			ld  c, a
+			and 0x0f
+			ld  (__x), a
+			ld  a, c
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (__y), a
+
+			call set_map_tile_do
+
+			pop bc 
+			djnz deco_run_do
+
+			jr  deco_loop
+		.deco_done
+	#endasm
+}
 
 void redraw_from_buffer (void) {
 	#asm
@@ -273,9 +347,14 @@ void show_text_box (unsigned char n) {
 
 						gandalf_talk = 1;
 					}
-				} else if (gandalf_talk == 1) {
-					if (player.objs < 13) {
+				
+					if (gandalf_talk == 1 && player.objs < 13) {
 						show_text_box (7);
+					} 
+
+					if (player.objs == 13 || gandalf_talk == 2) {
+						show_text_box (8);
+						gandalf_talk = 2;
 					}
 				}
 			} else {
@@ -284,7 +363,21 @@ void show_text_box (unsigned char n) {
 		}
 	}
 
-	void hook_entering (void) {		
+	void hook_entering (void) {	
+		switch (n_pant) {
+			case 0:
+				gp_gen = decos0; draw_decos (); break;
+			case 1:
+				gp_gen = decos1; draw_decos (); break;
+			case 5:
+				gp_gen = decos2; draw_decos (); break;
+			case 31:
+				// Cover the entrance to the mountain
+				if (gandalf_talk != 2) {
+					set_map_tile (9, 0, 31, 8);
+				}
+				break;
+		}	
 	}
 
 	void hook_hotspots (void) {	
