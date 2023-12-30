@@ -3,7 +3,7 @@
 set game=hobbit
 
 echo Making %game%
-..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=7,5 scrsize=15,10 tlock=99 mk1h=mapa.h  > nul
+..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=7,5 scrsize=15,10 tlock=15 mk1h=mapa.h  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h > nul

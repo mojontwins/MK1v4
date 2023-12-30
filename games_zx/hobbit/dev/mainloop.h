@@ -533,6 +533,11 @@ void main (void) {
 				#ifdef ENABLE_CODE_HOOKS
 					latest_hotspot = hotspot_t;
 				#endif
+
+				#ifdef ENABLE_CODE_HOOKS
+					// You may override hotspot_t or whatever:
+					hook_hotspots ();
+				#endif
 					
 				rdi = 0;
 				#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS

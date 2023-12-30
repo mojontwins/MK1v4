@@ -570,7 +570,9 @@ Si activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas 
 
 * `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los *hotspots*, pero antes de que nada sea visible.
 
-¡Ojo! Si activas `ENABLE_CODE_HOOKS`, puedes forzar *Game Over* poniendo `game_loop_flag` a 1, pero **el juego sólo terminará (pantalla de final) si pones `game_loop_flag` a 1**. La comprobación de "juego terminado" tendrás que ponerla tú, a menos que definas `WIN_ON_SCRIPTING`, en cuyo caso sólo se podrá "ganar" desde el script o haciendo `script_result = 1`. 
+* `void hook_hotspots (void);` se ejecuta justo tras tocar un hotspot. Puedes usarlo para hacer comprobaciones previas o meter los tuyos propios. Por ejemplo en **El Hobbit** lo usamos para que no se pueda coger objetos hasta que no se haya hablado con Gandalf poniendo `hotspot_t` a 0.
+
+¡Ojo! Si activas `ENABLE_CODE_HOOKS`, puedes forzar *Game Over* poniendo `player.life` a -1, pero **el juego sólo terminará (pantalla de final) si pones `game_loop_flag` a 1**. La comprobación de "juego terminado" tendrás que ponerla tú, **el engine no hará ninguna** a menos que definas `WIN_ON_SCRIPTING`, en cuyo caso sólo se podrá "ganar" desde el script o haciendo `script_result = 1`. 
 
 ### Enganches de enemigos custom `ENABLE_CUSTOM_ENEMS`
 

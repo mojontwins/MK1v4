@@ -22,6 +22,9 @@
 	void hook_entering (void) {		
 	}
 
+	void hook_hotspots (void) {	
+	}
+
 #endif
 
 #ifdef ENABLE_CUSTOM_ENEMS

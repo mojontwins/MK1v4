@@ -1573,9 +1573,31 @@ void move (void) {
 		#endif
 
 		#ifdef PLAYER_NO_INERTIA
-			if ((pad0 & sp_UP) == 0) { player.vy = -PLAYER_CONST_V; player.facing = GENITAL_FACING_UP; }
-			if ((pad0 & sp_DOWN) == 0) { player.vy = PLAYER_CONST_V; player.facing = GENITAL_FACING_DOWN; }
-			if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0)) player.vy = 0;
+			if ((pad0 & sp_UP) == 0) { 
+				// player.vy = -PLAYER_CONST_V; player.facing = GENITAL_FACING_UP; 
+				#asm
+					ld  hl, -PLAYER_CONST_V
+					ld  (_player + 8), hl 			// player.vy
+					ld  a, GENITAL_FACING_UP 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ((pad0 & sp_DOWN) == 0) { 
+				// player.vy = PLAYER_CONST_V; player.facing = GENITAL_FACING_DOWN; 
+				#asm
+					ld  hl, PLAYER_CONST_V
+					ld  (_player + 8), hl 			// player.vy
+					ld  a, GENITAL_FACING_DOWN 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0)) {
+				// player.vy = 0;
+				#asm
+					ld  hl, 0
+					ld  (_player + 8), hl 			// player.vy
+				#endasm
+			}
 		#else	
 			#ifndef PLAYER_MOGGY_STYLE
 				// If side view, get affected by gravity:
@@ -1782,7 +1804,7 @@ void move (void) {
 	*/
 
 	#asm
-			.vert_collision
+		.vert_collision
 			xor a
 			ld  (_player + 26), a 			// possee
 			ld  (_player + 37), a 			// ceiling
@@ -1861,7 +1883,7 @@ void move (void) {
 				.vert_collision_if1
 					ld  a, (_gpx)
 					and 15
-					cp  12
+					cp  TIGHT_UPPER
 					jr  nc, vert_collision_if2
 
 					ld  a, (_gpxx)
@@ -1877,7 +1899,7 @@ void move (void) {
 					// (gpx & 15) > 4 => (gpx & 15) >= 5
 					ld  a, (_gpx)
 					and 15
-					cp  5
+					cp  TIGHT_LOWER+1
 					jp  c, vert_collision_done
 
 					ld  a, (_gpxx)
@@ -1993,7 +2015,7 @@ void move (void) {
 				.vert_collision_if3
 					ld  a, (_gpx)
 					and 15
-					cp  12
+					cp  TIGHT_UPPER
 					jr  nc, vert_collision_if4
 
 					ld  a, (_gpxx)
@@ -2010,7 +2032,7 @@ void move (void) {
 					// (gpx & 15) > 4 => (gpx & 15) >= 5
 					ld  a, (_gpx)
 					and 15
-					cp  5
+					cp  TIGHT_LOWER + 1
 					jr  c, vert_collision_done
 
 					ld  a, (_gpxx)
@@ -2578,7 +2600,7 @@ void move (void) {
 					// if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
 					ld  a, (_gpx)
 					and 15
-					cp  12
+					cp  TIGHT_UPPER
 					jp  nz, push_pull_done
 
 					ld  hl, (_gpxx)
@@ -2652,7 +2674,7 @@ void move (void) {
 					// if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14)
 					ld  a, (_gpx)
 					and 15
-					cp  4
+					cp  TIGHT_LOWER
 					jp  nz, push_pull_done
 
 					ld  hl, (_gpxx)
@@ -2782,9 +2804,31 @@ void move (void) {
 		#include "custom_horz_axis.h"
 	#else
 		#ifdef PLAYER_NO_INERTIA
-			if ((pad0 & sp_LEFT) == 0) { player.vx = -PLAYER_CONST_V; player.facing = GENITAL_FACING_LEFT; }
-			if ((pad0 & sp_RIGHT) == 0) { player.vx = PLAYER_CONST_V; player.facing = GENITAL_FACING_RIGHT; }
-			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
+			if ((pad0 & sp_LEFT) == 0) { 
+				// player.vx = -PLAYER_CONST_V; player.facing = GENITAL_FACING_LEFT; 
+				#asm
+					ld  hl, -PLAYER_CONST_V
+					ld  (_player + 6), hl 			// player.vx
+					ld  a, GENITAL_FACING_LEFT 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ((pad0 & sp_RIGHT) == 0) { 
+				// player.vx = PLAYER_CONST_V; player.facing = GENITAL_FACING_RIGHT;
+				#asm
+					ld  hl, PLAYER_CONST_V
+					ld  (_player + 6), hl 			// player.vx
+					ld  a, GENITAL_FACING_RIGHT 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
+				// player.vx = 0;
+				#asm
+					ld  hl, 0
+					ld  (_player + 6), hl 			// player.vx
+				#endasm
+			}
 		#else
 			#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
 				if (player.estado != EST_FRIGOABABOL)
@@ -2980,7 +3024,7 @@ void move (void) {
 				// if (gpx & 15) < 12
 				ld  a, (_gpx)
 				and 15
-				cp  12
+				cp  TIGHT_UPPER
 				jp  nc, horz_collision_done
 
 				// ((gpy & 15) < 12 && attr (gpxx, gpyy) & 8) ||
@@ -3036,7 +3080,7 @@ void move (void) {
 				sla a 
 				sla a 
 				sla a 
-				add 12
+				add TIGHT_UPPER
 				ld  (_gpx), a
 
 				/*
@@ -3058,7 +3102,7 @@ void move (void) {
 				// if ((gpx & 15) >= 4)
 				ld  a, (_gpx)
 				and 15
-				cp  4
+				cp  TIGHT_LOWER
 				jp  c, horz_collision_done
 
 				// ((gpy & 15) < 12 && attr (gpxx + 1, gpyy) & 8) ||
@@ -3116,7 +3160,7 @@ void move (void) {
 				sla a 
 				sla a 
 				sla a 
-				add 4
+				add TIGHT_LOWER
 				ld  (_gpx), a
 
 				/*
@@ -4773,8 +4817,31 @@ void draw_scr_background (void) {
 
 				jr _draw_scr_loop
 
+				#ifndef NO_ALT_BG
+					.no_alt_bg_subst
+						or  a
+						ret  nz
+
+						call _rand
+						ld  a, l
+						and 15
+						cp  2
+						jr  nc, draw_scr_alt_no
+
+						ld  a, 19
+						ret
+
+					.draw_scr_alt_no
+						xor a
+						ret
+				#endif
+
 			._advance_worm
 				ld  a, (_rdc)
+
+				#ifndef NO_ALT_BG
+					call no_alt_bg_subst
+				#endif
 
 				#if defined USE_COINS && defined COINS_DEACTIVABLE
 					call coins_check

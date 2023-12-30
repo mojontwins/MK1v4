@@ -51,10 +51,10 @@
 #define LINEAR_ENEMY_HIT			1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT			1		// Amount of life to substract when flying enemy hits
 
-//#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
+#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 //#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
 //#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS	// Call `custom.h/get_cell_n ()` for linear
-//#define ENEMS_CUSTOM_COLLISION 				// Normal code will only be ran if enems_custom_collision returns 0
+#define ENEMS_CUSTOM_COLLISION 				// Normal code will only be ran if enems_custom_collision returns 0
 
 // ============================================================================
 // II. Engine type
@@ -84,7 +84,7 @@
 #define DEACTIVATE_REFILLS					// If defined, no refills.
 #define LEGACY_REFILLS 						// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS					1		// Number of flags. For scripting and stuff.
-//#define PLAYER_DIZZY 						// The Hobbit
+#define PLAYER_DIZZY 						// The Hobbit
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED 			// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
@@ -257,6 +257,8 @@
 
 //#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
+#define TIGHT_LOWER 				2
+#define TIGHT_UPPER 				14 		// For horizontal BB against BG, don't touch unless you know...
 #define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
 //#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
