@@ -30,99 +30,146 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 #ifdef LANG_EN
 	//                        XXXXXXXXXXXXXXXXXXXXXX
-	unsigned char text0 [] = "(BILBOS)%"
+	unsigned char text0 [] = "_BILBOS%"
 							 "DAMN, THAT STENCH!%"
 							 "PRETTY SURE THIS GUY'S%"
 							 "NOT A HOBBIT!";
 
-	unsigned char text1 [] = "(BILBOS)%"
+	unsigned char text1 [] = "_BILBOS%"
 							 "I WONDER WHY THERE'RE%"
 							 "SO MANY DWARVES AROUND";
 
-	unsigned char text2 [] = "(BILBOS)%"
+	unsigned char text2 [] = "_BILBOS%"
 							 "LOOK! ANOTHER TINY,%"
 							 "FILTHY DUDE!";
 
-	unsigned char text3 [] = "(BILBOS)%"
+	unsigned char text3 [] = "_BILBOS%"
 							 "DO MANY DWARVES. MUST%"
 							 "BE A CIRCUS NEARBY";	
 
-	unsigned char text4 [] = "(GANDALF)%"
+	unsigned char text4 [] = "_GANDALF%"
 							 "HELLOS. I'M AN OLD GUY%"
 							 "THAT DOES MAGIC. DO YA%"
 							 "WANNA WIN A TREASURE?";
 
-	unsigned char text5 [] = "(GANDALF)%"
+	unsigned char text5 [] = "_GANDALF%"
 							 "TO WIN THE TREASURE%"
 							 "YOU MUST STEAL IT FROM%"
 							 "DRAGON SMAUG WHO LIVES%"
 							 "IN THAT MOUNTAIN";
 
-	unsigned char text6 [] = "(BILBOS)%"
+	unsigned char text6 [] = "_BILBOS%"
 							 "THAT I KNOW BUT SUCH%"
 							 "MOUNTAIN IS AS CLOSED%"
 							 "AS BARBIE'S TWAT!";	
 
-	unsigned char text7 [] = "(GANDALF)%"
+	unsigned char text7 [] = "_GANDALF%"
 							 "THE DWARVES FROM THE%"
 							 "FOREST KNOW HOW TO OPEN%"
 							 "THE MOUNTAIN. FIND ALL%"
 							 "13 AND COME BACK HERE";
+
+	unsigned char text8 [] = "_GANDALF%"
+							 "DWARVES ARE CRAZY AND%"
+							 "STARTED A WAR, BUT THE%"
+							 "MOUNTAIN IS OPEN! GO%"
+							 "THERE ASAP!";
+
+	unsigned char text9 [] = "_DWARFIE%"
+							 "HIYA, I'M               %"
+							 "WANNA FIGHT?";
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
-	unsigned char text0 [] = "(BILBOS)%"
+	unsigned char text0 [] = "_BILBOS%"
 							 "UF, QUE PESTE ECHA...%"
 							 "LAVARSE NO DEBE SER SU%"
 							 "HOBBIT!";
 
-	unsigned char text1 [] = "(BILBOS)%"
+	unsigned char text1 [] = "_BILBOS%"
 							 "ME PREGUNTO QUE HARAN%"
 							 "TANTOS ENANOS EN HO-%"
 							 "BBITLANDIA";
 
-	unsigned char text2 [] = "(BILBOS)%"
+	unsigned char text2 [] = "_BILBOS%"
 							 "VAYA! OTRO SE/OR BAJI-%"
 							 "TO Y SUCIO!";
 
-	unsigned char text3 [] = "(BILBOS)%"
+	unsigned char text3 [] = "_BILBOS%"
 							 "CUANTO ENANO. DEBE HA-%"
 							 "BER UN CIRCOS CERCA";	
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
-	unsigned char text4 [] = "(GANDALF)%"
+	unsigned char text4 [] = "_GANDALF%"
 							 "HOLA, SOY UN SE/OR QUE%"
 							 "HACE MAGIAS. QUIERES%"
 							 "GANAR UN TESORO, JOVEN%"
 							 "Y APUESTO ZAGALETE?";
 
-	unsigned char text5 [] = "(GANDALF)%"
+	unsigned char text5 [] = "_GANDALF%"
 							 "PARA GANAR EL TESORO%"
 							 "HAY QUE ROBARSELO AL%"
 							 "DRAGON SMAUG QUE VIVE%"
 							 "EN LA MONTA/A NOSEQUE";	
 
-	unsigned char text6 [] = "(BILBOS)%"
+	unsigned char text6 [] = "_BILBOS%"
 							 "ESO YA LO SE PERO LA%"
 							 "MONTA/A ESTA CERRADA%"
 							 "CUAL TOTO DE NANCY";	
 
-	unsigned char text7 [] = "(GANDALF)%"
+	unsigned char text7 [] = "_GANDALF%"
 							 "LOS ENANITOS DEL BOS-%"
 							 "QUE SABRAN ABRIRTE LA%"
 							 "MONTA/A. ENCUENTRA LOS%"
 							 "13 Y VUELVE AQUIS!";
 
-	unsigned char text8 [] = "(GANDALF)%"
+	unsigned char text8 [] = "_GANDALF%"
 							 "LOS ENANOS SAN EMPA-%"
 							 "RANOIAO Y KIERE PELEA%"
 							 "PERO LA MONTA/A ESTA%"
-							 "ABIERTA. APROVECHA!";						 		
+							 "ABIERTA. APROVECHA!";	
+
+	unsigned char text9 [] = "_ENANITO%"
+							 "HOLA, SOY           %"
+							 "KIERE PELEA?";
 #endif
 
 unsigned char *texts [] = {
 	text0, text1, text2, text3, 			// Dwarves are unknown to bilbos
 	text4, text5, text6, text7, 			// Gandalf - biblo talks
+	text8, 									// Cave is open
+	text9, 									// I am dwarf... write from p+13
 };
+
+unsigned char dwarf_names [] = 
+	"TORREBRUNO"
+	"JAIMITO   "
+	"ESTESSO   "
+	"CARABIAS  "
+	"DABID NOMO"
+	"BELFI     "
+	"LILLIBIT  "
+	"MEMOLE    "
+	"GIMLI     "
+	"R2-D2     "
+	"ROMAYS    "
+	"TASSLEHOFF"
+	"GALLOFA   ";
+
+void insert_dwarf_name (void) {
+	// copy 10 bytes dwarf_ct -> text9 + 19; dwarf_ct += 10
+	#asm
+			ld  a, (_dwarf_ct)
+			ld  b, 0
+			ld  c, a 
+			add 10 
+			ld  (_dwarf_ct), a 
+			ld  hl, _dwarf_names
+			add hl, bc
+			ld  de, _text9 + 19
+			ld  bc, 10
+			ldir 
+	#endasm
+}
 
 void draw_decos (void) {
 	// Draws decos @ gp_gen
@@ -161,10 +208,11 @@ void draw_decos (void) {
 			ld  a, (hl)
 			inc hl
 
-			ld  c, a
+			ld  d, a
 			and 0x0f
 			ld  (__x), a
-			ld  a, c
+			ld  c, a
+			ld  a, d
 			srl a
 			srl a
 			srl a
@@ -179,6 +227,23 @@ void draw_decos (void) {
 			jr  deco_loop
 		.deco_done
 	#endasm
+}
+
+void draw_cur_screen_decos (void) {
+	switch (n_pant) {
+	case 0:
+		gp_gen = decos0; draw_decos (); break;
+	case 1:
+		gp_gen = decos1; draw_decos (); break;
+	case 5:
+		gp_gen = decos2; draw_decos (); break;
+	case 31:
+		// Cover the entrance to the mountain
+		if (gandalf_talk != 2) {
+			set_map_tile (9, 0, 31, 8);
+		}
+		break;
+}
 }
 
 void redraw_from_buffer (void) {
@@ -249,25 +314,31 @@ void sprite_remove_aid (void) {
 	#endasm				
 }
 
-void show_text_box (unsigned char n) {
+void show_text_box (void) {
 	sprite_remove_aid ();
 
-	gp_gen = texts [n];
+	gp_gen = texts [rda];
 
 	// Text renderer will read the string and
 	// build substrings for draw_text.
 
 	//clear_temp_string ();
-	draw_text (4, 6, ATTR_TEXTBOX, top_string);
+	draw_text (4, 5, ATTR_TEXTBOX, top_string);
 	rdy = 7;
 
 	while (1) {
 		clear_temp_string ();
-		if (rdy > 7) draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
+		draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
 
 		#asm
 				// Fill buffer
 				ld  de, _temp_string + 1
+				ld  a, (_rdy)
+				cp  7
+				jr  nz, fill_buffer_noinc
+				inc de 
+				inc de
+			.fill_buffer_noinc
 				ld  hl, (_gp_gen)
 
 			.fill_buffer_loop
@@ -289,28 +360,28 @@ void show_text_box (unsigned char n) {
 
 		draw_text (4, rdy ++, ATTR_TEXTBOX, temp_string);
 		draw_text (4, rdy ++, ATTR_TEXTBOX, bottom_string);
-
-		sp_UpdateNow ();
-		play_sfx (talk_sounds [rand () & 1]);
-
-		#ifdef MODE_128K_DUAL
-			if (is128k) {
-				#asm
-						ld  b, 20
-					.textbox_delay
-						halt
-						djnz textbox_delay
-				#endasm
-			}
-		#endif
 	
 		if (*gp_gen == 0) break;
 		gp_gen ++;
 	}
 
+	#asm
+			ld  a, 5
+			ld  (__x), a
+			ld  a, 6
+			ld  (__y), a 
+			ld  a, (_rdb)
+			ld  (__t), a
+			call _draw_coloured_tile_do
+	#endasm
+
+	sp_UpdateNow ();
+	play_sfx (talk_sounds [rand () & 1]);
+
 	while (any_key ()); while (!any_key ()); 
 	if (redraw_after_text) {
 		redraw_from_buffer ();
+		//draw_cur_screen_decos ();
 		hotspot_paint ();
 		render_all_sprites ();
 		sp_UpdateNow  ();
@@ -329,6 +400,9 @@ void show_text_box (unsigned char n) {
 		gandalf_talk = 0;
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
+
+		// Debug
+		gandalf_talk = 1; dwarf_ct = 0;
 	}
 
 	void hook_init_mainloop (void) {
@@ -339,24 +413,30 @@ void show_text_box (unsigned char n) {
 			// Gandalf
 			if (gpx < 48 && gpy < 48) {
 				if (gandalf_flag == 0) {
-					if (gandalf_talk == 0) {
-						show_text_box (4);
-						show_text_box (5);
-						show_text_box (6);
-						show_text_box (7);
-
-						gandalf_talk = 1;
-					}
-				
 					if (gandalf_talk == 1 && player.objs < 13) {
-						show_text_box (7);
+						rdb = 46; rda = 7; show_text_box ();
 					} 
 
+					if (gandalf_talk == 0) {
+						rdb = 46;
+						rda = 4; show_text_box ();
+						rda = 5; show_text_box ();
+						rdb = 47; rda = 6; show_text_box ();
+						rdb = 46; rda = 7; show_text_box ();
+
+						gandalf_talk = 1;
+
+						// Reset this to reuse as dwarf name pointer
+						dwarf_ct = 0;
+					}
+
 					if (player.objs == 13 || gandalf_talk == 2) {
-						show_text_box (8);
+						rdb = 46; rda = 7; show_text_box ();
 						gandalf_talk = 2;
 					}
 				}
+
+				gandalf_flag = 1;
 			} else {
 				gandalf_flag = 0;
 			}
@@ -364,29 +444,19 @@ void show_text_box (unsigned char n) {
 	}
 
 	void hook_entering (void) {	
-		switch (n_pant) {
-			case 0:
-				gp_gen = decos0; draw_decos (); break;
-			case 1:
-				gp_gen = decos1; draw_decos (); break;
-			case 5:
-				gp_gen = decos2; draw_decos (); break;
-			case 31:
-				// Cover the entrance to the mountain
-				if (gandalf_talk != 2) {
-					set_map_tile (9, 0, 31, 8);
-				}
-				break;
-		}	
+		draw_cur_screen_decos ();	
 	}
 
 	void hook_hotspots (void) {	
 		if (gandalf_talk == 0) {
-			show_text_box (dwarf_ct);
+			rda = dwarf_ct; rdb = 47; show_text_box ();
 			dwarf_ct = (dwarf_ct + 1) & 3;
 
 			// And invalidate hotspot
 			hotspot_t = 0;
+		} else {
+			insert_dwarf_name ();
+			rda = 9; rdb = 17; show_text_box ();
 		}
 	}
 

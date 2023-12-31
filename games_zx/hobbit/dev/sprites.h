@@ -182,7 +182,7 @@ extern unsigned char sprite_16_c [];
         defb 8, 1
         defb 92, 1
         defb 56, 1
-        defb 128, 131
+        defb 0, 131
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -312,7 +312,7 @@ extern unsigned char sprite_16_c [];
         defb 16, 128
         defb 58, 128
         defb 28, 128
-        defb 1, 193
+        defb 0, 193
         defb 0, 255
         defb 0, 255
         defb 0, 255
