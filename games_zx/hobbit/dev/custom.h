@@ -7,7 +7,7 @@
 
 unsigned char gandalf_talk;		// 0 - init, 1 - talk, 2 - open
 unsigned char dwarf_ct;
-unsigned char gandalf_flag;
+unsigned char interact_flag;
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
@@ -78,6 +78,9 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text9 [] = "_DWARFIE%"
 							 "HIYA, I'M               %"
 							 "WANNA FIGHT?";
+
+	unsigned char text10[] = "_%"
+							 "BIKE LIKE NEW FOR SALE";
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
@@ -131,6 +134,9 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text9 [] = "_ENANITO%"
 							 "HOLA, SOY           %"
 							 "KIERE PELEA?";
+
+	unsigned char text10[] = "_%"
+							 "VENDO MOTO SEMINUEVA"; 
 #endif
 
 unsigned char *texts [] = {
@@ -138,6 +144,7 @@ unsigned char *texts [] = {
 	text4, text5, text6, text7, 			// Gandalf - biblo talks
 	text8, 									// Cave is open
 	text9, 									// I am dwarf... write from p+13
+	text10, 								// Moto seminueva
 };
 
 unsigned char dwarf_names [] = 
@@ -175,7 +182,7 @@ void draw_decos (void) {
 	// Draws decos @ gp_gen
 	#asm
 			// In this case we can shave some bytes assumming this
-			xor a 
+			ld  a, 8 
 			ld  (__n), a
 
 			//
@@ -219,7 +226,9 @@ void draw_decos (void) {
 			srl a
 			ld  (__y), a
 
+			push hl
 			call set_map_tile_do
+			pop hl 
 
 			pop bc 
 			djnz deco_run_do
@@ -240,7 +249,7 @@ void draw_cur_screen_decos (void) {
 	case 31:
 		// Cover the entrance to the mountain
 		if (gandalf_talk != 2) {
-			set_map_tile (9, 0, 31, 8);
+			set_map_tile (9, 0, 15, 8);
 		}
 		break;
 }
@@ -381,7 +390,6 @@ void show_text_box (void) {
 	while (any_key ()); while (!any_key ()); 
 	if (redraw_after_text) {
 		redraw_from_buffer ();
-		//draw_cur_screen_decos ();
 		hotspot_paint ();
 		render_all_sprites ();
 		sp_UpdateNow  ();
@@ -402,44 +410,59 @@ void show_text_box (void) {
 		redraw_after_text = 1;
 
 		// Debug
-		gandalf_talk = 1; dwarf_ct = 0;
+		gandalf_talk = 1; dwarf_ct = 0; player.objs = 13; n_pant = 0;
 	}
 
 	void hook_init_mainloop (void) {
 	}
 
 	void hook_mainloop (void) {
-		if(n_pant == 0) {
-			// Gandalf
-			if (gpx < 48 && gpy < 48) {
-				if (gandalf_flag == 0) {
-					if (gandalf_talk == 1 && player.objs < 13) {
-						rdb = 46; rda = 7; show_text_box ();
-					} 
+		switch(n_pant) {
+			case 0:
+				// Gandalf
+				if (gpx < 48 && gpy < 48) {
+					if (interact_flag == 0) {
+						if (gandalf_talk == 1 && player.objs < 13) {
+							rdb = 46; rda = 7; show_text_box ();
+						} 
 
-					if (gandalf_talk == 0) {
-						rdb = 46;
-						rda = 4; show_text_box ();
-						rda = 5; show_text_box ();
-						rdb = 47; rda = 6; show_text_box ();
-						rdb = 46; rda = 7; show_text_box ();
+						if (gandalf_talk == 0) {
+							rdb = 46;
+							rda = 4; show_text_box ();
+							rda = 5; show_text_box ();
+							rdb = 47; rda = 6; show_text_box ();
+							rdb = 46; rda = 7; show_text_box ();
 
-						gandalf_talk = 1;
+							gandalf_talk = 1;
 
-						// Reset this to reuse as dwarf name pointer
-						dwarf_ct = 0;
+							// Reset this to reuse as dwarf name pointer
+							dwarf_ct = 0;
+						}
+
+						if (player.objs == 13 || gandalf_talk == 2) {
+							rdb = 46; rda = 8; show_text_box ();
+							gandalf_talk = 2;
+						}
 					}
 
-					if (player.objs == 13 || gandalf_talk == 2) {
-						rdb = 46; rda = 7; show_text_box ();
-						gandalf_talk = 2;
-					}
+					interact_flag = 1;
+				} else {
+					interact_flag = 0;
 				}
 
-				gandalf_flag = 1;
-			} else {
-				gandalf_flag = 0;
-			}
+				break;
+			case 1:
+				// Moto seminueva
+				if (gpx > 48 && gpx < 88 && gpy < 32) {
+					if (interact_flag == 0) {
+						rdb = 32; rda = 10; show_text_box ();
+						interact_flag = 1;
+					}
+				} else {
+					interact_flag = 0;
+				}
+				
+				break;
 		}
 	}
 
