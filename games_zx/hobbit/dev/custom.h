@@ -6,6 +6,7 @@
 #define ATTR_TEXTBOX   48
 
 unsigned char gandalf_talk;		// 0 - init, 1 - talk, 2 - open
+unsigned char dwarf_talk;
 unsigned char dwarf_ct;
 unsigned char interact_flag;
 
@@ -246,6 +247,13 @@ void draw_cur_screen_decos (void) {
 		gp_gen = decos1; draw_decos (); break;
 	case 5:
 		gp_gen = decos2; draw_decos (); break;
+	case 24:
+		// Dwarf at the entrance to the mountain / closed door
+		if (dwarf_talk == 0) {
+			set_map_tile (9, 7, 17, 8);
+		} else {
+			set_map_tile (9, 9, 15, 8);
+		}
 	case 31:
 		// Cover the entrance to the mountain
 		if (gandalf_talk != 2) {
@@ -406,11 +414,12 @@ void show_text_box (void) {
 
 	void hook_init_game (void) {
 		gandalf_talk = 0;
+		dwarf_talk = 0;
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
 
 		// Debug
-		gandalf_talk = 1; dwarf_ct = 0; player.objs = 13; n_pant = 0;
+		gandalf_talk = 2; dwarf_ct = 0; player.objs = 13; n_pant = 31;
 	}
 
 	void hook_init_mainloop (void) {

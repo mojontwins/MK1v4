@@ -71,10 +71,7 @@ void title_screen (void) {
 	
 	while (1) {
 		rand ();
-		#asm 
-			ld a, r 
-			out (254), a 
-		#endasm
+
 		if (sp_KeyPressed (key_1)) {
 			joyfunc = sp_JoyKeyboard; break;
 		} else if (sp_KeyPressed (key_2)) {
