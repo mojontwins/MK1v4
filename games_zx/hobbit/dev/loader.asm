@@ -10,17 +10,17 @@
 	call blackout
 
 ; load screen
-;	scf
-;	ld	a, $ff
-;	ld	ix, 65368 - 705
-;	ld	de, 705
-;	call $0556
-;	di
+	scf
+	ld	a, $ff
+	ld	ix, 65368 - 705
+	ld	de, 705
+	call $0556
+	di
 
 ; Decompress
-;	ld  hl, 65368 - 705
-;	ld  de, 16384
-;	call depack	
+	ld  hl, 65368 - 705
+	ld  de, 16384
+	call depack	
 
 ; load screen
 	scf
@@ -40,8 +40,8 @@
 ; Main binary
 	scf
 	ld	a, $ff
-	ld	ix, 65368 - 13695
-	ld	de, 13695
+	ld	ix, 65368 - 13864
+	ld	de, 13864
 	call $0556
 	di
 
@@ -49,7 +49,7 @@
 	out (254), a
 
 ; Decompress
-	ld  hl, 65368 - 13695
+	ld  hl, 65368 - 13864
 	ld  de, 24200
 	call depack	
 
@@ -73,7 +73,7 @@
 	scf
 	ld	a, $ff
 	ld	ix, $C000
-	ld	de, 3580
+	ld	de, 3796
 	call $0556
 	di
 

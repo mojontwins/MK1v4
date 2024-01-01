@@ -3,6 +3,8 @@
 set game=hobbit
 set lang=ES
 
+if [%1]==[justcompile] goto :compile
+
 echo Making %game%
 ..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=7,5 scrsize=15,10 tlock=15 mk1h=mapa.h  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
@@ -14,9 +16,11 @@ echo Making %game%
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
 ..\utils\png2scr.exe ..\gfx\preloading.png preloading.bin  > nul
 ..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
-..\utils\apack.exe ..\gfx\title.scr title.bin  > nul
-..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
-..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
+..\utils\zx0.exe ..\gfx\title.scr title.bin  > nul
+..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul
+..\utils\zx0.exe ..\gfx\ending.scr ending.bin  > nul
+
+:compile
 
 echo Making music
 cd ..\ogt

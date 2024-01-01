@@ -16,7 +16,7 @@ typedef struct {
 
 MALOTE malotes [] = {
 	// Pantalla 0
- 	{112, 16, 112, 16, 128, 16, 1, 0, 12},
+ 	{112, 16, 112, 16, 128, 16, 1, 0, 14},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
@@ -27,7 +27,7 @@ MALOTE malotes [] = {
 
 	// Pantalla 2
  	{144, 16, 144, 16, 192, 48, 2, 2, 8},
- 	{80, 16, 80, 16, 96, 16, 0, 0, 12},
+ 	{80, 16, 80, 16, 96, 16, 1, 0, 14},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 3
@@ -87,11 +87,11 @@ MALOTE malotes [] = {
 
 	// Pantalla 14
  	{176, 16, 176, 16, 176, 64, 0, 2, 1},
- 	{176, 64, 96, 64, 176, 64, -1, 0, 12},
+ 	{176, 64, 96, 64, 176, 64, -1, 0, 14},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 	// Pantalla 15
- 	{96, 96, 96, 96, 192, 96, 2, 0, 12},
+ 	{96, 96, 96, 96, 192, 96, 2, 0, 14},
  	{80, 16, 16, 16, 80, 48, -2, 2, 8},
  	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 
@@ -202,7 +202,8 @@ MALOTE malotes [] = {
 #define N_ENEMS_TYPE_8 14
 #define N_ENEMS_TYPE_9 1
 #define N_ENEMS_TYPE_11 9
-#define N_ENEMS_TYPE_12 13
+#define N_ENEMS_TYPE_12 9
+#define N_ENEMS_TYPE_14 4
 #define N_ENEMS_TYPE_18 2
 
 // This is output the way it worked originally, please modify if you need

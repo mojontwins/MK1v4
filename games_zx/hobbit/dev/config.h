@@ -7,9 +7,9 @@
 
 //#define CUSTOM_SCREEN_CONNECTIONS 			// Uses code in custom_screen_connections.h
 
-//#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
-//#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
-//#define DECOMPRESSOR_ZX0					// User Einar Saukas' ZX0 rather than aplib
+#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
+#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
+#define DECOMPRESSOR_ZX0				// User Einar Saukas' ZX0 rather than aplib
 
 //#define TALL_PLAYER					// Main character is 16x24
 
@@ -25,13 +25,13 @@
 //#define ARKOS_ADDRESS_MT_LOAD_SONG	0xC7FC
 //#define ARKOS_ADDRESS_MT_INIT 		0xC81C
 
-//#define ENABLE_WYZ
-//#define WYZ_RAM 						1
-//#define WYZ_ADDRESS_PLAYERINIT		0xC018	// INIT_BUFFERS		EQU 0C018H
-//#define WYZ_ADDRESS_PLAYERISR			0xC000	// INICIO			EQU 0C000H
-//#define WYZ_ADDRESS_SFX_PLAY			0xC47E	// INICIA_EFECTO	EQU 0C46BH
-//#define WYZ_ADDRESS_MT_LOAD_SONG		0xC087	// CARGA_CANCION	EQU 0C087H
-//#define WYZ_ADDRESS_PLAYER_OFF		0xC062	// PLAYER_OFF		EQU 0C062H
+#define ENABLE_WYZ
+#define WYZ_RAM 						1
+#define WYZ_ADDRESS_PLAYERINIT			0xC018	// INIT_BUFFERS		EQU 0C018H
+#define WYZ_ADDRESS_PLAYERISR			0xC000	// INICIO			EQU 0C000H
+#define WYZ_ADDRESS_SFX_PLAY			0xC47E	// INICIA_EFECTO	EQU 0C46BH
+#define WYZ_ADDRESS_MT_LOAD_SONG		0xC087	// CARGA_CANCION	EQU 0C087H
+#define WYZ_ADDRESS_PLAYER_OFF			0xC062	// PLAYER_OFF		EQU 0C062H
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
