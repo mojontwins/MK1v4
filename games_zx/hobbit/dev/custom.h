@@ -19,6 +19,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 
 unsigned char n_pant_was, xwas, ywas;
 unsigned char comecocos_on;
+unsigned char cocos_count;
 
 // Decos, screen 0
 unsigned char decos0 [] = { 0xae, 0x22, 0xff };
@@ -605,7 +606,7 @@ unsigned char touch_tile (void) {
 		redraw_after_text = 1;
 
 		// Debug
-		gandalf_talk = 2; dwarf_ct = 0; player.objs = 13; n_pant = 31;
+		gandalf_talk = 0; dwarf_ct = 0; player.objs = 0; n_pant = 1;
 	}
 
 	void hook_init_mainloop (void) {
@@ -633,6 +634,13 @@ unsigned char touch_tile (void) {
 
 							// Reset this to reuse as dwarf name pointer
 							dwarf_ct = 0;
+
+							// But first, fire up comecocos #0
+							rda = 0;
+							launch_comecocos_screen ();
+							cocos_count = 65;
+							comecocos_on = 1;
+							player.coins = 0;
 						}
 
 						if (player.objs == 13 || gandalf_talk == 2) {
@@ -662,6 +670,11 @@ unsigned char touch_tile (void) {
 			case 24:
 				// Enano en la cueva
 				break;
+		}
+
+		if (comecocos_on && player.coins == cocos_count) {
+			back_from_comecocos_screen ();
+			comecocos_on = 0;
 		}
 	}
 
