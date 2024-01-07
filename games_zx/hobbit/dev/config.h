@@ -107,6 +107,7 @@
 //#define COINS_DEACTIVABLE					// Coins can be hidden.
 //#define COINS_SCRIPTING 					// Run script when player gets coin
 //#define COINS_PERSISTENT	 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes
+#define COINS_SMALL_BB 						// Much smaller collision BB
 
 // Fixed screens engine
 // --------------------

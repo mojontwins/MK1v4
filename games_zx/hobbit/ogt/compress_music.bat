@@ -4,3 +4,4 @@
 ..\utils\apack.exe spc_ayjo.mus 02_ayjo.mus.bin
 ..\utils\apack.exe spc_cave.mus 03_cave.mus.bin
 ..\utils\apack.exe spc_invisible.mus 04_invisible.mus.bin
+..\utils\apack.exe spc_coca.mus 05_coca.mus.bin

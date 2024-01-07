@@ -370,6 +370,9 @@ void show_text_box (void) {
 		#asm
 				// Fill buffer
 				ld  de, _temp_string + 1
+				ld  a, (_rdb) 
+				or  a 
+				jr  z, fill_buffer_noinc
 				ld  a, (_rdy)
 				cp  7
 				jr  nz, fill_buffer_noinc
@@ -403,6 +406,9 @@ void show_text_box (void) {
 	}
 
 	#asm
+			ld  a, (_rdb) 
+			or  a 
+			jr  z, no_character
 			ld  a, 5
 			ld  (__x), a
 			ld  a, 6
@@ -410,6 +416,7 @@ void show_text_box (void) {
 			ld  a, (_rdb)
 			ld  (__t), a
 			call _draw_coloured_tile_do
+		.no_character
 	#endasm
 
 	sp_UpdateNow ();
@@ -527,7 +534,10 @@ void launch_comecocos_screen(void) {
 	n_pant = 35 + rda;
 
 	// Show text
+	redraw_after_text = 0;
 	rdb = 0; rda = 11 + rda; show_text_box ();
+
+	gpx = gpy = 16; player.x = player.y = 16 << 6;
 }
 
 void back_from_comecocos_screen(void) {

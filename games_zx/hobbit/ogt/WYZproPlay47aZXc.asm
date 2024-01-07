@@ -1137,6 +1137,8 @@ SONG_3:
 	INCBIN "03_cave.mus.bin"
 SONG_4:
 	INCBIN "04_invisible.mus.bin"
+SONG_5:
+	INCBIN "05_coca.mus.bin"
 
 ;; Añadir entradas para cada canción
 				
@@ -1145,6 +1147,7 @@ TABLA_SONG:     DW      SONG_0
 				DW      SONG_2
 				DW      SONG_3
 				DW      SONG_4
+				DW      SONG_5
 
 ;; Añadir entradas para cada efecto
 

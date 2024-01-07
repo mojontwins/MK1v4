@@ -31,6 +31,7 @@ Dim As String*2 legacyHotspotsChunks (100,100)
 Dim As Integer coords (10)
 Dim As Integer legacyMode
 Dim As Integer newNEnems
+Dim As Integer verbose
 
 Print "enresizer v0.4.20210615-v4 ";
 sclpParseAttrs
@@ -48,8 +49,9 @@ End If
 
 legacyMode = (sclpGetValue ("2bytes") <> "")
 
+verbose = (sclpGetValue("verbose") <> "")
+
 newNEnems = Val (sclpGetValue ("nenems"))
-If newNEnems = 0 Then newNEnems = nEnems
 
 fIn = FreeFile
 Open sclpGetValue ("in") For Binary As #fIn
@@ -64,6 +66,7 @@ Get #fIn, , d: scrH = d
 Get #fIn, , d: nEnems = d
 
 mapPants = mapW * mapH
+If newNEnems <= 0 Then newNEnems = nEnems
 
 Put #fOut, , dummy
 d = mapWn: Put #fOut, , d
@@ -72,7 +75,7 @@ d = scrW: Put #fOut, , d
 d = scrH: Put #fOut, , d
 d = newNEnems: Put #fOut, , d
 
-Print "> " & mapW & "x" & mapH & " -> " & mapWn & "x" & mapHn & " @ offs (" & ofsx & ", " & ofsy & ")"
+Print "> " & mapW & "x" & mapH & " -> " & mapWn & "x" & mapHn & " @ offs (" & ofsx & ", " & ofsy & ") - m = " & newNEnems
 
 '' One enemy chunk is exactly 8 bytes.
 For y = 0 To mapH-1
@@ -102,6 +105,7 @@ Next y
 For y = 0 To mapHn-1
 	For x = 0 To mapWn-1
 		For i = 0 To newNEnems-1
+			If verBose Then Print "Writing EN YP " & y & " XP " & x & " E " & i
 			Put #fOut, , enemyChunks (y, x, i)
 		Next i 
 	Next x
@@ -109,6 +113,7 @@ Next y
 
 For y = 0 To mapHn-1
 	For x = 0 To mapWn-1
+		If verBose Then Print "Writing HS YP " & y & " XP " & x
 		If legacyMode Then
 			Put #fOut, , legacyHotspotsChunks (y, x)
 		Else
