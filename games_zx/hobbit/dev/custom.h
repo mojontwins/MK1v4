@@ -21,6 +21,9 @@ unsigned char n_pant_was, xwas, ywas;
 unsigned char comecocos_on;
 unsigned char cocos_count;
 
+// Show a text box next frame:
+unsigned char tfn_a, tfn_b, delayed_ct;
+
 // Decos, screen 0
 unsigned char decos0 [] = { 0xae, 0x22, 0xff };
 
@@ -93,7 +96,11 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "THIS LEVEL REPRESENTS%"
 							 "BILBOS' THINKING...";
 
-	unsigned char text12[] = "PLACEHOLDER";
+	unsigned char text12[] = "THE DWARVES OPEN THE%"
+							 "COMPLICATED DOOR IN%"
+							 "THE MOUNTAIN. THIS LE-%"
+							 "VEL REPRESENTS THE%"
+							 "OPEN OF THE DOOR";
 
 	unsigned char text13[] = "PLACEHOLDER";
 
@@ -169,7 +176,11 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "PRESENTA EL PENSAMIEN-%"
 							 "TO DE BILBOS";
 
-	unsigned char text12[] = "PLACEHOLDER";
+	unsigned char text12[] = "LOS ENANITO ABREN LA%"
+							 "COMPLICADA PUERTA DE%"
+							 "LA MONTA/A. ESTA FASE%"
+							 "REPRESENTA LA ABRI-%"
+							 "SION DE LA PUERTA";
 
 	unsigned char text13[] = "PLACEHOLDER";
 
@@ -538,6 +549,11 @@ void launch_comecocos_screen(void) {
 	rdb = 0; rda = 11 + rda; show_text_box ();
 
 	gpx = gpy = 16; player.x = player.y = 16 << 6;
+
+	wyz_play_music (5);
+	comecocos_on = 1;
+	player.coins = 0;
+
 }
 
 void back_from_comecocos_screen(void) {
@@ -615,6 +631,8 @@ unsigned char touch_tile (void) {
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
 
+		wyz_play_music (1);
+
 		// Debug
 		gandalf_talk = 0; dwarf_ct = 0; player.objs = 0; n_pant = 1;
 	}
@@ -623,6 +641,28 @@ unsigned char touch_tile (void) {
 	}
 
 	void hook_mainloop (void) {
+		// Delayed text
+		if (delayed_ct > 0) {
+			delayed_ct --;
+		}
+
+		if (delayed_ct == 1) {
+			rdb = tfn_b; rda = tfn_a; show_text_box ();
+		}
+
+		// Comecocos shit
+		if (comecocos_on && player.coins == cocos_count) {
+			back_from_comecocos_screen ();
+			comecocos_on = 0;
+
+			if (gandalf_talk == 1) {
+				wyz_play_music (2); 	// AYJO
+				tfn_b = 46; tfn_a = 7;
+				delayed_ct = 3;
+			}
+		}
+
+		// Interactions
 		switch(n_pant) {
 			case 0:
 				// Gandalf
@@ -638,7 +678,6 @@ unsigned char touch_tile (void) {
 							rda = 4; show_text_box ();
 							rda = 5; show_text_box ();
 							rdb = 47; rda = 6; show_text_box ();
-							rdb = 46; rda = 7; show_text_box ();
 
 							gandalf_talk = 1;
 
@@ -649,13 +688,16 @@ unsigned char touch_tile (void) {
 							rda = 0;
 							launch_comecocos_screen ();
 							cocos_count = 65;
-							comecocos_on = 1;
-							player.coins = 0;
 						}
 
 						if (player.objs == 13 || gandalf_talk == 2) {
 							rdb = 46; rda = 8; show_text_box ();
 							gandalf_talk = 2;
+
+							// Fire up comecocos #1
+							rda = 1;
+							launch_comecocos_screen ();
+							cocos_count = 65;
 						}
 					}
 
@@ -682,10 +724,6 @@ unsigned char touch_tile (void) {
 				break;
 		}
 
-		if (comecocos_on && player.coins == cocos_count) {
-			back_from_comecocos_screen ();
-			comecocos_on = 0;
-		}
 	}
 
 	void hook_entering (void) {	
