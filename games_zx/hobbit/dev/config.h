@@ -36,7 +36,7 @@
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W						7		//
-#define MAP_H						5		// Map dimmensions in screens
+#define MAP_H						6		// Map dimmensions in screens
 #define TOTAL_SCREENS				35		// 
 #define SCR_INICIO					28		// Initial screen
 #define PLAYER_INI_X				8		//
@@ -98,8 +98,8 @@
 // Coins engine
 // ------------
 
-//#define USE_COINS							// Coin engine activated
-//#define COIN_TILE					13		// Coin is tile #X
+#define USE_COINS							// Coin engine activated
+#define COIN_TILE					29		// Coin is tile #X
 //#define COIN_BEH 					16 		// Detect coin by behaviour rather than tile nº
 //#define COIN_FLAG					1		// Coins are counted in flag #N
 //#define COINS_REFILL 				1		// If defined, add this to player.life

@@ -1018,7 +1018,11 @@ void cortina (void) {
 			persist ();
 		#endif
 
-		flags [COIN_FLAG] ++;
+		#ifdef COIN_FLAG
+			flags [COIN_FLAG] ++;
+		#else
+			player.coins ++;
+		#endif
 		
 		set_map_tile (_x, _y, 0, 0);
 		play_sfx (5);
@@ -3950,7 +3954,7 @@ void move (void) {
 				.player_get_coin_D_done
 
 			#endasm
-	#endif
+		#endif
 	#endif
 
 	// Select next frame to paint...

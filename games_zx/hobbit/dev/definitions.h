@@ -74,6 +74,7 @@ typedef struct {
 	unsigned char just_hovered; 						// 42
 	unsigned char just_jumped;							// 43
 	unsigned char sword_g;								// 44
+	unsigned char coins;								// 45
 } INERCIA;
 
 typedef struct {

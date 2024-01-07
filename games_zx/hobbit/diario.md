@@ -28,3 +28,10 @@ Cuando se coge un enano debe poner su nombre. Como paso de complicar el código,
 
 "HAS ENCONTRADO A ...".
 
+# Comecocos!
+
+Para implementar las fases de comecocos hay que resolver ciertas cosas con cosas del motor o implementar otras:
+
+- los coquitos que se comen son un tile y por tanto se pueden implementar con ENABLE_COINS. Para ahorrar código habrá que contar los cocos que hay en cada pantalla a mano para detectar que los cogimos todos.
+- los fantasmas serán tipo marrullers para que anden a su bola. Son muy tontos pero eso nos vale.
+- Si te comes la seta podrás matar a los marrullers. Esto hay que ponerlo en el motor, creo, aunque quizá lo suyo sería que embez de esto simplemente te diera inmunidad durante mucho rato.

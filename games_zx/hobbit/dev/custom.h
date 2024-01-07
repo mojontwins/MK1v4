@@ -17,6 +17,9 @@ unsigned char redraw_after_text;
 unsigned char intro_text;
 unsigned char talk_sounds [] = { 7, 11 };
 
+unsigned char n_pant_was, xwas, ywas;
+unsigned char comecocos_on;
+
 // Decos, screen 0
 unsigned char decos0 [] = { 0xae, 0x22, 0xff };
 
@@ -82,6 +85,24 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 	unsigned char text10[] = "_%"
 							 "BIKE LIKE NEW FOR SALE";
+	// Fases comecocas
+
+	unsigned char text11[] = "BILBOS THINKS ABOUT%"
+							 "THE FANTASTIC TREASURE%"
+							 "THIS LEVEL REPRESENTS%"
+							 "BILBOS' THINKING...";
+
+	unsigned char text12[] = "PLACEHOLDER";
+
+	unsigned char text13[] = "PLACEHOLDER";
+
+	unsigned char text14[] = "PLACEHOLDER";
+
+	unsigned char text15[] = "PLACEHOLDER";
+
+	unsigned char text16[] = "PLACEHOLDER";
+
+	unsigned char text17[] = "PLACEHOLDER";
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
@@ -136,8 +157,28 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "HOLA, SOY           %"
 							 "KIERE PELEA?";
 
-	unsigned char text10[] = "_%"
+	unsigned char text10[] = "_CHERIL%"
 							 "VENDO MOTO SEMINUEVA"; 
+
+	// Fases comecocas
+
+	unsigned char text11[] = "BILBOS PIENSA EN LO%"
+							 "QUE DICE GANDALF DEL%"
+							 "TESORO. ESTA FASE RE%"
+							 "PRESENTA EL PENSAMIEN-%"
+							 "TO DE BILBOS";
+
+	unsigned char text12[] = "PLACEHOLDER";
+
+	unsigned char text13[] = "PLACEHOLDER";
+
+	unsigned char text14[] = "PLACEHOLDER";
+
+	unsigned char text15[] = "PLACEHOLDER";
+
+	unsigned char text16[] = "PLACEHOLDER";
+
+	unsigned char text17[] = "PLACEHOLDER";
 #endif
 
 unsigned char *texts [] = {
@@ -146,6 +187,8 @@ unsigned char *texts [] = {
 	text8, 									// Cave is open
 	text9, 									// I am dwarf... write from p+13
 	text10, 								// Moto seminueva
+	text11, text12, text13, text14,
+	text15, text16, text17 					// Comecocos
 };
 
 unsigned char dwarf_names [] = 
@@ -237,30 +280,6 @@ void draw_decos (void) {
 			jr  deco_loop
 		.deco_done
 	#endasm
-}
-
-void draw_cur_screen_decos (void) {
-	switch (n_pant) {
-	case 0:
-		gp_gen = decos0; draw_decos (); break;
-	case 1:
-		gp_gen = decos1; draw_decos (); break;
-	case 5:
-		gp_gen = decos2; draw_decos (); break;
-	case 24:
-		// Dwarf at the entrance to the mountain / closed door
-		if (dwarf_talk == 0) {
-			set_map_tile (9, 7, 17, 8);
-		} else {
-			set_map_tile (9, 9, 15, 8);
-		}
-	case 31:
-		// Cover the entrance to the mountain
-		if (gandalf_talk != 2) {
-			set_map_tile (9, 0, 15, 8);
-		}
-		break;
-}
 }
 
 void redraw_from_buffer (void) {
@@ -405,6 +424,172 @@ void show_text_box (void) {
 	redraw_after_text = 1;
 }
 
+void recuadrius (void) {	
+	sprite_remove_aid ();			
+	for (rdi = 0; rdi < 10; rdi ++) {
+		for (rdx = rdi; rdx < 30 - rdi; rdx ++) {
+			#asm
+					// sp_PrintAtInv (VIEWPORT_Y + rdi, VIEWPORT_X + rdx, 71, 0);
+					ld  de, 0x4700
+					ld  a, (_rdx)
+					add VIEWPORT_X
+					ld  c, a
+					ld  a, (_rdi)
+					add VIEWPORT_Y
+					call SPPrintAtInv
+				
+					// sp_PrintAtInv (VIEWPORT_Y + 19 - rdi, VIEWPORT_X + rdx, 71, 0);
+					ld  de, 0x4700
+					ld  a, (_rdx)
+					add VIEWPORT_X
+					ld  c, a
+					ld  a, (_rdi)
+					ld  b, a
+					ld  a, VIEWPORT_Y + 19
+					sub b
+					call SPPrintAtInv
+			#endasm
+
+			if (rdx < 19 - rdi) {
+				#asm
+						// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + rdi, 71, 0);
+						ld  de, 0x4700
+						ld  a, (_rdi)
+						add VIEWPORT_X
+						ld  c, a
+						ld  a, (_rdx)
+						add VIEWPORT_Y
+						call SPPrintAtInv
+
+						// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + 29 - rdi, 71, 0);
+						ld  de, 0x4700
+						ld  a, (_rdi)
+						ld  b, a
+						ld  a, VIEWPORT_X + 29
+						sub b
+						ld  c, a
+						ld  a, (_rdx)
+						add VIEWPORT_Y							
+						call SPPrintAtInv
+				#endasm
+			}
+		}
+		#asm
+			halt
+			call SPUpdateNow
+		#endasm
+	}
+}
+
+void draw_cur_screen_decos (void) {
+	switch (n_pant) {
+		case 0:
+			gp_gen = decos0; draw_decos (); break;
+		case 1:
+			gp_gen = decos1; draw_decos (); break;
+		case 5:
+			gp_gen = decos2; draw_decos (); break;
+		case 24:
+			// Dwarf at the entrance to the mountain / closed door
+			if (dwarf_talk == 0) {
+				set_map_tile (9, 7, 17, 8);
+			} else {
+				set_map_tile (9, 9, 15, 8);
+			}
+		case 31:
+			// Cover the entrance to the mountain
+			if (gandalf_talk != 2) {
+				set_map_tile (9, 0, 15, 8);
+			}
+			break;
+	}
+}
+
+void launch_comecocos_screen(void) {
+	// Launches comecocos screen in rda
+	sprite_remove_aid ();
+
+	// to return
+	#asm
+			ld  a, (_n_pant)
+			ld  (_n_pant_was), a
+			ld  a, (_gpx)
+			ld  (_xwas), a
+			ld  a, (_gpy)
+			ld  (_ywas), a
+	#endasm
+
+	// Clear screen
+	recuadrius ();
+
+	// New n_pant
+	n_pant = 35 + rda;
+
+	// Show text
+	rdb = 0; rda = 11 + rda; show_text_box ();
+}
+
+void back_from_comecocos_screen(void) {
+	// Then return
+
+	#asm
+			ld  a, (_n_pant_was)
+			ld  (_n_pant), a
+			ld  a, (_xwas)
+			ld  (_gpx), a
+			call Ashl16_HL
+			ld  (_player), hl
+
+			ld  a, (_ywas)
+			ld  (_gpy), a
+			call Ashl16_HL
+			ld  (_player + 2), hl
+	#endasm
+}
+
+unsigned char touch_tile (void) {
+	// Player touches tile x, y, with pixel pos xx, yy if
+	// gpx >= xx - 15 && gpx < xx + 16
+	// gpy >= yy - 15 && gpy < yy + 16
+
+	// It's very easy for you to just precalc pixel coords!
+	#asm
+		// Result
+			ld  hl, 0
+
+		// Then check
+			ld  a, (__x)
+			sub 15
+			ld  c, a 
+			ld  a, (_gpx) 
+			cp  c 
+			ret c 
+
+			ld  a, (__x) 
+			add 16
+			ld  c, a 
+			ld  a, (_gpx) 
+			cp  c 
+			ret nc 
+
+			ld  a, (__y)
+			sub 15
+			ld  c, a 
+			ld  a, (_gpy) 
+			cp  c 
+			ret c 
+
+			ld  a, (__y) 
+			add 16
+			ld  c, a 
+			ld  a, (_gpy) 
+			cp  c 
+			ret nc
+
+			ld  hl, 1	
+	#endasm
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -415,6 +600,7 @@ void show_text_box (void) {
 	void hook_init_game (void) {
 		gandalf_talk = 0;
 		dwarf_talk = 0;
+		comecocos_on = 0;
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
 
@@ -429,7 +615,8 @@ void show_text_box (void) {
 		switch(n_pant) {
 			case 0:
 				// Gandalf
-				if (gpx < 48 && gpy < 48) {
+				_x = _y = 2 << 4; if (touch_tile ()) {
+				//if (gpx < 48 && gpy < 48) {
 					if (interact_flag == 0) {
 						if (gandalf_talk == 1 && player.objs < 13) {
 							rdb = 46; rda = 7; show_text_box ();
@@ -464,13 +651,16 @@ void show_text_box (void) {
 				// Moto seminueva
 				if (gpx > 48 && gpx < 88 && gpy < 32) {
 					if (interact_flag == 0) {
-						rdb = 32; rda = 10; show_text_box ();
+						rdb = 35; rda = 10; show_text_box ();
 						interact_flag = 1;
 					}
 				} else {
 					interact_flag = 0;
 				}
 				
+				break;
+			case 24:
+				// Enano en la cueva
 				break;
 		}
 	}
