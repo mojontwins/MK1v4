@@ -495,6 +495,10 @@ void main (void) {
 				latest_hotspot = 0;
 			#endif
 
+			// Copy stored hotspot for this screen to hotspot_t
+			// So hotspot_t can be tinkered with in the hook
+			hotspot_t = hotspot_t_r;
+
 			//if (gpx >= hotspot_x - 15 && gpx <= hotspot_x + 15 && gpy >= hotspot_y - 15 && gpy <= hotspot_y + 15) 
 			#asm
 					// gpx >= hotspot_x - 15 -> gpx + 15 >= hotspot_x

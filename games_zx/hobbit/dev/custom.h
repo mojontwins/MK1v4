@@ -8,6 +8,7 @@
 unsigned char gandalf_talk;		// 0 - init, 1 - talk, 2 - open
 unsigned char dwarf_talk;
 unsigned char dwarf_ct;
+unsigned char sonia_talk;
 unsigned char interact_flag;
 
 unsigned char top_string []    = "<======================>";
@@ -102,7 +103,10 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "VEL REPRESENTS THE%"
 							 "OPEN OF THE DOOR";
 
-	unsigned char text13[] = "PLACEHOLDER";
+	unsigned char text13[] = "SONIA THE MUMMY IS%"
+							 "VERY CONFUSED. THIS%"
+							 "LEVEL REPRESENTS THE%"
+							 "CONFUSION OF SONIA";
 
 	unsigned char text14[] = "PLACEHOLDER";
 
@@ -111,6 +115,47 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text16[] = "PLACEHOLDER";
 
 	unsigned char text17[] = "PLACEHOLDER";
+
+	unsigned char text18[] = "_GANDALF%"
+							 "THANK YOU FOR BRINGING%"
+							 "THE DWARVES. NOW I'LL%"
+							 "MAKE THEM OPEN THAT%"
+							 "MOUNTAIN...";
+
+	unsigned char text19[] = "_DWARFY%"
+							 "WE WERE GONNA GET THE%"
+							 "TREASURE AND BE GREAT%"
+							 "AGAIN BUT A NASTY PRO-%"
+							 "BLEM AROSE...";
+
+	unsigned char text20[] = "_DWARFY%"
+							 "GALLUMB JUST ARRIVED%"
+							 "FROM DA PLANET DAGOBAH%"
+							 "AND THE FORCE IS VERY%"
+							 "STRONG IN HIM";
+
+	unsigned char text21[] = "_ENANITO%"
+							 "TAKE A LOOK AT DA CAVE%"
+							 "IF YOU WILL BUT DON'T%"
+							 "LET GALLUMB SEE YOU OR%"
+							 "YOU'LL DIE!";
+
+	unsigned char text22[] = "_BILBOS%"
+							 "A ROLL OF TOILET PAPER%"
+							 "IT\"S NONE THE COARSE%"
+							 "MAKES YOU FEEL BETTER%"
+							 "AND CLEANS YOU ARSE%";
+
+	unsigned char text23[] = "_BILBOS%"
+							 "HEY WAIT A BIT,I THINK%"
+							 "YO'RE FROM A DIFFERENT%"
+							 "GAME!"
+
+	unsigned char text24[] = "_SONIA%"
+							 "DUNNO, MAYBE.THE MOJON%"
+							 "TWINS REUSE A LOT OF%"
+							 "CODE SO THEY PROBABLY%"
+							 "FORGOT TO REMOVE ME!";
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
@@ -182,7 +227,10 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "REPRESENTA LA ABRI-%"
 							 "SION DE LA PUERTA";
 
-	unsigned char text13[] = "PLACEHOLDER";
+	unsigned char text13[] = "SONIA LA MOMIA ESTA%"
+							 "MUY CONFUNDIDA. ESTA%"
+							 "FASE REPRESENTA LA%"
+							 "CONFUSION DE SONIA";
 
 	unsigned char text14[] = "PLACEHOLDER";
 
@@ -191,6 +239,49 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text16[] = "PLACEHOLDER";
 
 	unsigned char text17[] = "PLACEHOLDER";
+
+	unsigned char text18[] = "_GANDALF%"
+							 "GRACIAS POR LOS ENANOS%"
+							 "ESTOS, BILBOS. AHORA%"
+							 "JUNTARAN PICHA PARA%"
+							 "ABRIR LA MONTA/A...";
+
+	unsigned char text19[] = "_ENANITO%"
+							 "IBAMOS A COGER EL TE-%"
+							 "SORO Y SER GRANDES DE%"
+							 "NUEVO (EN SENTIDO ME-%"
+							 "TAFORICO) PERO HAY UN%"
+							 "PROBLEMA...";
+
+	unsigned char text20[] = "_ENANITO%"
+							 "GALLUMB HA LLEGADO DEL%"
+							 "PLANETA DAGOBAH Y RON-%"
+							 "DA LOS PASILLOS. DOMI-%"
+							 "NA LA FUERZA!";
+
+	unsigned char text21[] = "_ENANITO%"
+							 "PASEATE POR LA CUEVA%"
+							 "SI QUIERES, PERO PRO-%"
+							 "CURA QUE GALLUMB NO TE%"
+							 "VEA O MORIRAS!";
+
+	unsigned char text22[] = "_BILBOS%"
+							 "UN ROLLO DE PAPEL DEL%"
+							 "CULO DOBLE CAPA, QUE%"
+							 "TE DEJA SUAVITO Y TE%"
+							 "QUITA LA ZURRAPA.";
+
+	unsigned char text23[] = "_BILBOS%"
+							 "UN MOMENTO, PERO TU NO%"
+							 "ERAS DE OTRO JUEGO?";
+
+	unsigned char text24[] = "_SONIA%"
+							 "NO SE, IGUAL SI. COMO%"
+							 "LOS MOJON TWINS REUTI-%"
+							 "LIZAN TANTO CODIGO SE%"
+							 "LES HABRA PASADO QUI-%"
+							 "TARME...";
+
 #endif
 
 unsigned char *texts [] = {
@@ -200,7 +291,10 @@ unsigned char *texts [] = {
 	text9, 									// I am dwarf... write from p+13
 	text10, 								// Moto seminueva
 	text11, text12, text13, text14,
-	text15, text16, text17 					// Comecocos
+	text15, text16, text17, 				// Comecocos
+	text18, 								// Thanks for the dwarves
+	text19, text20, text21,					// Enanito speech
+	text22, text23, text24,					// Sonia	
 };
 
 unsigned char dwarf_names [] = 
@@ -371,12 +465,12 @@ void show_text_box (void) {
 	// build substrings for draw_text.
 
 	//clear_temp_string ();
-	draw_text (4, 5, ATTR_TEXTBOX, top_string);
+	draw_text (4, rdb ? 5 : 6, ATTR_TEXTBOX, top_string);
 	rdy = 7;
 
 	while (1) {
 		clear_temp_string ();
-		draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
+		if (rdy > 7 || rdb != 0) draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
 
 		#asm
 				// Fill buffer
@@ -508,13 +602,22 @@ void draw_cur_screen_decos (void) {
 			gp_gen = decos1; draw_decos (); break;
 		case 5:
 			gp_gen = decos2; draw_decos (); break;
+		case 17:
+			// Sonia
+			if (sonia_talk == 0) {
+				set_map_tile (12, 3, 34, 8);
+			}
+			break;
 		case 24:
 			// Dwarf at the entrance to the mountain / closed door
-			if (dwarf_talk == 0) {
-				set_map_tile (9, 7, 17, 8);
-			} else {
-				set_map_tile (9, 9, 15, 8);
+			if (gandalf_talk == 2) {
+				if (dwarf_talk == 0) {
+					set_map_tile (9, 7, 17, 8);
+				} else {
+					set_map_tile (9, 9, 15, 8);
+				}
 			}
+			break;
 		case 31:
 			// Cover the entrance to the mountain
 			if (gandalf_talk != 2) {
@@ -634,7 +737,7 @@ unsigned char touch_tile (void) {
 		wyz_play_music (1);
 
 		// Debug
-		gandalf_talk = 0; dwarf_ct = 0; player.objs = 0; n_pant = 1;
+		gandalf_talk = 2; dwarf_ct = 0; n_pant = 31;
 	}
 
 	void hook_init_mainloop (void) {
@@ -659,6 +762,12 @@ unsigned char touch_tile (void) {
 				wyz_play_music (2); 	// AYJO
 				tfn_b = 46; tfn_a = 7;
 				delayed_ct = 3;
+			} else if (gandalf_talk == 2) {
+				wyz_play_music (1); 	// NOMO
+				tfn_b = 46; tfn_a = 8;
+				delayed_ct = 3;
+			} else if (sonia_talk == 1) {
+				wyz_play_music (3); 	// CAVE
 			}
 		}
 
@@ -667,7 +776,6 @@ unsigned char touch_tile (void) {
 			case 0:
 				// Gandalf
 				_x = _y = 2 << 4; if (touch_tile ()) {
-				//if (gpx < 48 && gpy < 48) {
 					if (interact_flag == 0) {
 						if (gandalf_talk == 1 && player.objs < 13) {
 							rdb = 46; rda = 7; show_text_box ();
@@ -690,15 +798,21 @@ unsigned char touch_tile (void) {
 							cocos_count = 65;
 						}
 
-						if (player.objs == 13 || gandalf_talk == 2) {
+						if (gandalf_talk == 2) {
 							rdb = 46; rda = 8; show_text_box ();
+						}
+
+						if (player.objs == 13 && gandalf_talk == 1) {
+							rdb = 46; rda = 18; show_text_box ();
 							gandalf_talk = 2;
+							player.objs = 0;
 
 							// Fire up comecocos #1
 							rda = 1;
 							launch_comecocos_screen ();
 							cocos_count = 65;
 						}
+
 					}
 
 					interact_flag = 1;
@@ -707,6 +821,7 @@ unsigned char touch_tile (void) {
 				}
 
 				break;
+
 			case 1:
 				// Moto seminueva
 				if (gpx > 48 && gpx < 88 && gpy < 32) {
@@ -719,8 +834,54 @@ unsigned char touch_tile (void) {
 				}
 				
 				break;
+
+			case 17:
+				// Sonia
+				if (sonia_talk == 0) {
+					_x = 12 << 4; _y = 3 << 4; if (touch_tile ()) {
+						if (interact_flag == 0) {
+							interact_flag = 1;
+							rdb = 47;
+							rda = 22; show_text_box ();
+							rda = 23; show_text_box ();
+							rdb = 34;
+							rda = 24; show_text_box ();
+
+							// Fire up comecocos #1
+							rda = 2;
+							launch_comecocos_screen ();
+							cocos_count = 65;
+							sonia_talk = 1;
+						}
+					} else {
+						interact_flag = 0;
+					}
+				}
+				break;
+
 			case 24:
 				// Enano en la cueva
+				if (dwarf_talk == 0) {
+					gandalf_talk = 3;
+					
+					_x = 9 << 4; _y = 7 << 4; if (touch_tile ()) {
+						if (interact_flag == 0) {
+							interact_flag = 1;
+
+							rdb = 46;
+							rda = 19; show_text_box ();
+							rda = 20; show_text_box ();							
+							rda = 21; show_text_box ();							
+
+							dwarf_talk = 1; 
+							on_pant = 0xFF;
+
+							wyz_play_music (3);		// Cave music
+						}
+					} else {
+						interact_flag = 0;
+					}
+				}
 				break;
 		}
 
@@ -730,16 +891,34 @@ unsigned char touch_tile (void) {
 		draw_cur_screen_decos ();	
 	}
 
-	void hook_hotspots (void) {	
-		if (gandalf_talk == 0) {
-			rda = dwarf_ct; rdb = 47; show_text_box ();
-			dwarf_ct = (dwarf_ct + 1) & 3;
+	void hook_hotspots (void) {
+		switch (hotspot_t) {
+			case 1:	
+				// Hook for objects (dwarves)
+				if (gandalf_talk == 0) {
+					rda = dwarf_ct; rdb = 47; show_text_box ();
+					dwarf_ct = (dwarf_ct + 1) & 3;
 
-			// And invalidate hotspot
-			hotspot_t = 0;
-		} else {
-			insert_dwarf_name ();
-			rda = 9; rdb = 17; show_text_box ();
+					// And invalidate hotspot
+					hotspot_t = 0;
+				} else {
+					insert_dwarf_name ();
+					rda = 9; rdb = 17; show_text_box ();
+				}
+				break;
+
+			case 12:
+				// Special mushroom for pacman stages
+				if (player.estado == 0) {
+					player.estado = EST_PARP;
+					player.ct_estado = 150;
+				}
+
+				play_sfx (6);
+
+				// Make permanent
+				hotspot_t = 0;
+				break;
 		}
 	}
 

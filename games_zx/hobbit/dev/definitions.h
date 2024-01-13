@@ -196,6 +196,7 @@ unsigned char map_buff [150] @ 23450;
 
 unsigned char hotspot_x;
 unsigned char hotspot_y;
+unsigned char hotspot_t_r;
 unsigned char hotspot_t;
 unsigned char orig_tile;	// Original background tile
 #ifdef ENABLE_CODE_HOOKS

@@ -4419,7 +4419,7 @@ void hotspot_paint (void) {
 			ld  a, 240
 			ld  (_hotspot_y), a 
 			xor a
-			ld  (_hotspot_t), a
+			ld  (_hotspot_t_r), a
 
 			call _calc_hotspot_ptr
 			
@@ -4459,7 +4459,7 @@ void hotspot_paint (void) {
 			.hotspot_paint_mok_done
 		#endif
 
-			ld  (_hotspot_t), a
+			ld  (_hotspot_t_r), a
 
 		.hotspot_paint_act_skip
 
@@ -4475,12 +4475,12 @@ void hotspot_paint (void) {
 				jr  nz, hotspot_paint_noact_skip
 
 				ld  a, 3
-				ld  (_hotspot_t), a
+				ld  (_hotspot_t_r), a
 
 			.hotspot_paint_noact_skip
 		#endif		
 
-			ld  a, (_hotspot_t)
+			ld  a, (_hotspot_t_r)
 			or  a
 			ret z
 
@@ -4531,7 +4531,7 @@ void hotspot_paint (void) {
 			add VIEWPORT_Y
 			ld  (__y), a
 
-			ld  a, (_hotspot_t)
+			ld  a, (_hotspot_t_r)
 			ld  b, a
 			cp  3
 			

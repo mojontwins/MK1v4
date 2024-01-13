@@ -38,6 +38,6 @@ Para implementar las fases de comecocos hay que resolver ciertas cosas con cosas
 
 # Arregla
 
-- Enano de dentro de la cueva no debe aparecer hasta que se abrió la puerta.
-- Hace falta un minitexto para cuando se acaba el comecocos de abrir la puerta.
-- El comecocos de abrir la puerta se puede repetir mil veces, arreglar.
+[X] Enano de dentro de la cueva no debe aparecer hasta que se abrió la puerta.
+[ ] Hace falta un minitexto para cuando se acaba el comecocos de abrir la puerta.
+[ ] El comecocos de abrir la puerta se puede repetir mil veces, arreglar.

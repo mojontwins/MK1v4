@@ -81,8 +81,8 @@
 //#define EVIL_ZONE_CONDITIONAL		 		// Active if scenery_info.evil_zone_active
 #define PLAYER_BOUNCES						// If defined, collisions make player bounce
 #define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
-#define DEACTIVATE_REFILLS					// If defined, no refills.
-#define LEGACY_REFILLS 						// Legacy mode: refills appear in place of collected items/keys
+//#define DEACTIVATE_REFILLS				// If defined, no refills.
+//#define LEGACY_REFILLS 					// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS					1		// Number of flags. For scripting and stuff.
 #define PLAYER_DIZZY 						// The Hobbit
 #define ENEMIES_LIFE_GAUGE			1		// Amount of shots/hits needed to kill enemies.
