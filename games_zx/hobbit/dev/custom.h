@@ -10,6 +10,9 @@ unsigned char dwarf_talk;
 unsigned char dwarf_ct;
 unsigned char sonia_talk;
 unsigned char interact_flag;
+unsigned char anillo_flag;
+unsigned char anillo_ct;
+unsigned char last_estado;
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
@@ -21,6 +24,7 @@ unsigned char talk_sounds [] = { 7, 11 };
 unsigned char n_pant_was, xwas, ywas;
 unsigned char comecocos_on;
 unsigned char cocos_count;
+
 
 // Show a text box next frame:
 unsigned char tfn_a, tfn_b, delayed_ct;
@@ -108,7 +112,11 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "LEVEL REPRESENTS THE%"
 							 "CONFUSION OF SONIA";
 
-	unsigned char text14[] = "PLACEHOLDER";
+	unsigned char text14[] = "THE RING HAS PLENTY OF%"
+							 "MAGIC. BILBO NEEDS TO%"
+							 "DOMINATE IT!THIS LEVEL%"
+							 "IS BILBO DOMINATING%"
+							 "THE RING";
 
 	unsigned char text15[] = "PLACEHOLDER";
 
@@ -156,6 +164,17 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "TWINS REUSE A LOT OF%"
 							 "CODE SO THEY PROBABLY%"
 							 "FORGOT TO REMOVE ME!";
+
+
+	unsigned char text25[] = "_RING%"
+							 "I'M THE MAGIC RING!%"
+							 "PUT YOUR FINGER INSIDE%"
+							 "ME AND I'LL MAKE YOU%"
+							 "INIVISIBLE.";
+
+	unsigned char text26[] = "_RING%"
+							 "YOU WON! NOW I'LL OBEY%"
+							 "PUSH FIRE TO PUT ME ON";
 #else
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
@@ -232,7 +251,10 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "FASE REPRESENTA LA%"
 							 "CONFUSION DE SONIA";
 
-	unsigned char text14[] = "PLACEHOLDER";
+	unsigned char text14[] = "EL ANILLO TIENE MUCHA%"
+							 "MAGIA Y BILBOS TENDRA%"
+							 "QUE DOMINARLA. ESTA%"
+							 "FASE ES LA DOMINASION";
 
 	unsigned char text15[] = "PLACEHOLDER";
 
@@ -282,6 +304,16 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "LES HABRA PASADO QUI-%"
 							 "TARME...";
 
+	unsigned char text25[] = "_ANILLO%"
+							 "SOY EL ANILLO MAGICO.%"
+							 "METEME EL DEDO Y YO TE%"
+							 "HARE INVISIBLE POR UN%"
+							 "RATO!";
+
+	unsigned char text26[] = "_ANILLO%"
+							 "ME HAS DOMINADO. PULSA%"
+							 "FIRE PARA PONERTEME!";
+
 #endif
 
 unsigned char *texts [] = {
@@ -295,6 +327,7 @@ unsigned char *texts [] = {
 	text18, 								// Thanks for the dwarves
 	text19, text20, text21,					// Enanito speech
 	text22, text23, text24,					// Sonia	
+	text25, text26							// Anillo
 };
 
 unsigned char dwarf_names [] = 
@@ -663,8 +696,14 @@ void back_from_comecocos_screen(void) {
 	// Then return
 
 	#asm
+			ld  a, (_n_pant)
+			ld  c, a
 			ld  a, (_n_pant_was)
 			ld  (_n_pant), a
+			ld  a, c 
+			sub 35
+			ld  (_n_pant_was), a
+
 			ld  a, (_xwas)
 			ld  (_gpx), a
 			call Ashl16_HL
@@ -675,6 +714,8 @@ void back_from_comecocos_screen(void) {
 			call Ashl16_HL
 			ld  (_player + 2), hl
 	#endasm
+
+	// Now n_pant_was contains which comecocos screen just finished
 }
 
 unsigned char touch_tile (void) {
@@ -733,11 +774,15 @@ unsigned char touch_tile (void) {
 		comecocos_on = 0;
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
+		anillo_flag = 0;
+		draw_coloured_tile (19, 22, 0);		
 
 		wyz_play_music (1);
 
 		// Debug
-		gandalf_talk = 2; dwarf_ct = 0; n_pant = 31;
+		gandalf_talk = 3; dwarf_talk = 1; 
+		n_pant = 4;
+		anillo_flag = 1;
 	}
 
 	void hook_init_mainloop (void) {
@@ -745,29 +790,51 @@ unsigned char touch_tile (void) {
 
 	void hook_mainloop (void) {
 		// Delayed text
-		if (delayed_ct > 0) {
-			delayed_ct --;
-		}
+		#asm
+				ld  a, (_delayed_ct)
+				or  a 
+				jr  z, delayed_ct_dec_done
+				dec a 
+				ld  (_delayed_ct), a 
+			.delayed_ct_dec_done
 
-		if (delayed_ct == 1) {
-			rdb = tfn_b; rda = tfn_a; show_text_box ();
-		}
+				cp  1
+				jr  nz, delayed_text_done
+
+				ld  a, (_tfn_b)
+				ld  (_rdb), a 
+				ld  a, (_tfn_a)
+				ld  (_rda), a 
+				call _show_text_box
+
+			.delayed_text_done
+
+		#endasm
 
 		// Comecocos shit
 		if (comecocos_on && player.coins == cocos_count) {
 			back_from_comecocos_screen ();
 			comecocos_on = 0;
 
-			if (gandalf_talk == 1) {
-				wyz_play_music (2); 	// AYJO
-				tfn_b = 46; tfn_a = 7;
-				delayed_ct = 3;
-			} else if (gandalf_talk == 2) {
-				wyz_play_music (1); 	// NOMO
-				tfn_b = 46; tfn_a = 8;
-				delayed_ct = 3;
-			} else if (sonia_talk == 1) {
-				wyz_play_music (3); 	// CAVE
+			switch (n_pant_was) {
+				case 0:
+					wyz_play_music (2); 	// AYJO
+					tfn_b = 46; tfn_a = 7;
+					delayed_ct = 3;
+					break;
+				case 1:
+					wyz_play_music (1); 	// NOMO
+					tfn_b = 46; tfn_a = 8;
+					delayed_ct = 3;
+					break;
+				case 2:
+					wyz_play_music (3); 	// CAVE
+					break;
+				case 3:
+					wyz_play_music (3); 	// CAVE
+					tfn_b = 18; tfn_a = 26;
+					delayed_ct = 3;
+					break;
 			}
 		}
 
@@ -847,7 +914,7 @@ unsigned char touch_tile (void) {
 							rdb = 34;
 							rda = 24; show_text_box ();
 
-							// Fire up comecocos #1
+							// Fire up comecocos #2
 							rda = 2;
 							launch_comecocos_screen ();
 							cocos_count = 65;
@@ -863,7 +930,7 @@ unsigned char touch_tile (void) {
 				// Enano en la cueva
 				if (dwarf_talk == 0) {
 					gandalf_talk = 3;
-					
+
 					_x = 9 << 4; _y = 7 << 4; if (touch_tile ()) {
 						if (interact_flag == 0) {
 							interact_flag = 1;
@@ -885,6 +952,77 @@ unsigned char touch_tile (void) {
 				break;
 		}
 
+		// Anillo
+		if (anillo_flag) {
+			if (player.estado == 0) {
+				#asm
+						// if (player.estado == 0) 
+						ld  a, (_player + 23) 			// player.estado
+						or  a 
+						jr  nz, anillo_done
+
+						// if (player_estado != last_estado)
+
+						ld  c, a 
+						ld  a, (_last_estado)
+						cp  c 
+						jr  z, anillo_ct_check
+
+						ld  a, 25
+						ld  (_anillo_ct), a				// 1 sec cooldown	
+						ld  hl, 3
+						call _wyz_play_music			// Cave music	
+				
+						// Adjust to even 
+		
+						ld  a, (_gpx)
+						and 0xfe
+						ld  (_gpx), a
+						call Ashl16_HL
+						ld  (_player), hl
+
+						ld  a, (_gpy)
+						and 0xfe
+						ld  (_gpy), a
+						call Ashl16_HL
+						ld  (_player + 2), hl
+
+						jr  anillo_done
+
+					.anillo_ct_check
+						// if (anillo_ct < 0)
+						ld  a, (_anillo_ct)
+						or  a 
+						jr  z, anillo_ct_zero
+
+						// anillo_ct --;
+						dec a 
+						ld  (_anillo_ct), a
+						jr  anillo_done
+
+					.anillo_ct_zero
+						// if ((pad_this_frame & sp_FIRE) == 0 && anillo_ct == 0) {
+						ld  a, (_pad_this_frame)
+						and sp_FIRE
+						jr  nz, anillo_done
+
+						ld  a, EST_PARP | EST_DIZZY
+						ld  (_player + 23), a 			// player.estado
+						ld  a, 190
+						ld  (_player + 24), a 			// player.ct_estado
+
+						ld hl, 4
+						call _wyz_play_music
+						ld hl, 8 
+						call _play_sfx
+					.anillo_done
+				#endasm 
+			}
+
+		}
+
+		// Use this to detect if player.estado changed last frame
+		last_estado = player.estado;
 	}
 
 	void hook_entering (void) {	
@@ -907,6 +1045,27 @@ unsigned char touch_tile (void) {
 				}
 				break;
 
+			case 2:
+				// Anillo
+				anillo_flag = 1;
+				draw_coloured_tile (19, 22, 18);
+				rdb = 18; rda = 25; show_text_box ();
+
+				// We'll be changing current n_pant from a
+				// hotspot interaction so we have to do this
+				// manually!
+				hotspots [n_pant].act = 0;
+
+				// Disable normal interaction 
+				hotspot_t = 0;
+
+				// Fire up comecocos #3
+				rda = 3;
+				launch_comecocos_screen ();
+				cocos_count = 55;
+
+				break;
+
 			case 12:
 				// Special mushroom for pacman stages
 				if (player.estado == 0) {
@@ -918,6 +1077,7 @@ unsigned char touch_tile (void) {
 
 				// Make permanent
 				hotspot_t = 0;
+
 				break;
 		}
 	}

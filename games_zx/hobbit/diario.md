@@ -36,8 +36,22 @@ Para implementar las fases de comecocos hay que resolver ciertas cosas con cosas
 - los fantasmas serán tipo marrullers para que anden a su bola. Son muy tontos pero eso nos vale.
 - Si te comes la seta podrás matar a los marrullers. Esto hay que ponerlo en el motor, creo, aunque quizá lo suyo sería que embez de esto simplemente te diera inmunidad durante mucho rato.
 
+# El anillo
+
+El original hacía desde script `DIZZY: FLICKER`, y esto en el motor activaba lo siguiente:
+
+* `FLICKER` activa `EST_PARP` en `player.estado`.
+* `DIZZY` activa `EST_DIZZY` en `player.estado`.
+
+Al activar `EST_PARP`, el contador de parpadeo se lanza y al llegar a 0 pone el estado a 0, lo que desactiva ambas cosas.
+
+El contador se ponía a 32 que en el motor viejo equivalía a unos 2 segundos.
+
+Voy a probar algo parecido en esta versión: `estado |= (EST_PARP | EST_DIZZY)` y `ct_estado = 50`.
+
 # Arregla
 
 [X] Enano de dentro de la cueva no debe aparecer hasta que se abrió la puerta.
-[ ] Hace falta un minitexto para cuando se acaba el comecocos de abrir la puerta.
-[ ] El comecocos de abrir la puerta se puede repetir mil veces, arreglar.
+[X] Hace falta un minitexto para cuando se acaba el comecocos de abrir la puerta.
+[X] El comecocos de abrir la puerta se puede repetir mil veces, arreglar.
+

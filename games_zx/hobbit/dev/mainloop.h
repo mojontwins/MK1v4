@@ -721,12 +721,16 @@ void main (void) {
 					} 	
 			#endif
 
-			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER)
+			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER) || defined(PLAYER_DIZZY)
 				// Flickering
 				#asm
 					.player_flicker_done_check
 						ld  a, (_player + 23)		// player.estado
-						and EST_PARP
+						#ifdef PLAYER_DIZZY
+							and EST_PARP | EST_DIZZY
+						#else
+							and EST_PARP
+						#endif
 						jr  z, player_flicker_check_done
 
 						ld  a, (_player + 24) 		// player.ct_estado
