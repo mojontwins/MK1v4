@@ -143,11 +143,7 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "AND THE FORCE IS VERY%"
 							 "STRONG IN HIM";
 
-	unsigned char text21[] = "_ENANITO%"
-							 "TAKE A LOOK AT DA CAVE%"
-							 "IF YOU WILL BUT DON'T%"
-							 "LET GALLUMB SEE YOU OR%"
-							 "YOU'LL DIE!";
+	unsigned char text21[] = "PLACEHOLDER";
 
 	unsigned char text22[] = "_BILBOS%"
 							 "A ROLL OF TOILET PAPER%"
@@ -183,9 +179,25 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 	unsigned char text28[] = "_GALLUMB%"
 							 "THE WEDDING RING TO%"
-							 "MARRY MY BELOVED DWARR%"
+							 "MARRY MY BELOVED DWARF%"
 							 "ROMAYS. LOST SOMEWHERE%"
 							 "IN THIS CAVE";
+
+	unsigned char text29[] = "_GALLUMB%"
+							 "AH! TREASON! YOU HAVE%"
+							 "STOLEN MY PRECIOUS!%"
+							 "NEXT TIME WE SEE YOU%"
+							 "WE WILL EAT YOU ALIVE!";
+
+	unsigned char text30[] = "_TASSLEHOFF%"
+							 "SORRY, IS THIS YOURS?%"
+							 "I FOUND IT LAYING IN%"
+							 "THE GROUND...";
+
+	unsigned char text31[] = "_GALLUMB%"
+							 "NO! DAMNED DWARF, IT%"
+							 "AIN'T MY PRECIOUS!!%"
+							 "THIS IS A COCK RING!";
 
 #else
 
@@ -294,11 +306,7 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "DA LOS PASILLOS. DOMI-%"
 							 "NA LA FUERZA!";
 
-	unsigned char text21[] = "_ENANITO%"
-							 "PASEATE POR LA CUEVA%"
-							 "SI QUIERES, PERO PRO-%"
-							 "CURA QUE GALLUMB NO TE%"
-							 "VEA O MORIRAS!";
+	unsigned char text21[] = "PLACEHOLDER";
 
 	unsigned char text22[] = "_BILBOS%"
 							 "UN ROLLO DE PAPEL DEL%"
@@ -337,6 +345,25 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "CASARME CON EL ENANO%"
 							 "ROMAYS IBA... PERDIDO%"
 							 "EN LA CAVERNA ESTA!";
+
+	unsigned char text29[] = "_GALLUMB%"
+							 "AH! ME ENGA/ASTE Y ME%"
+							 "ROBASTE MI TESORO! LA%"
+							 "PROXIMA VEZ QUE TE VEA%"
+							 "TE DEVORARE, NOMO!";
+
+	unsigned char text30[] = "_TASSLEHOFF%"
+							 "PERDONA, ES ESTO TUYO?%"
+							 "LO ENCONTRE Y LO RECO-%"
+							 "GI PARA QUE NO SE PER-%"
+							 "DIERA";
+
+	unsigned char text31[] = "_GALLUMB%"
+							 "NO! MALDITO ENANO, MI%"
+							 "TESORO ESTO NO ES!%"
+							 "MI ANILLO DE PENE ES!";
+							 
+
 #endif
 
 unsigned char *texts [] = {
@@ -351,7 +378,8 @@ unsigned char *texts [] = {
 	text19, text20, text21,					// Enanito speech
 	text22, text23, text24,					// Sonia	
 	text25, text26,							// Anillo
-	text27, text28,							// Gallumb
+	text27, text28,	text29,					// Gallumb
+	text30, text31 							// Gallumb + tasslehoff
 };
 
 unsigned char dwarf_names [] = 
@@ -934,6 +962,20 @@ unsigned char touch_tile (void) {
 				
 				break;
 
+			case 12:
+				// Gallumb angers
+				if (gallumb_flag == 1) {
+					_x = _y = 7 << 4; if (touch_tile ()) {
+						if (interact_flag == 0) {
+							rdb = 33;
+							rda = 29; show_text_box ();
+							interact_flag = 1;
+							gallumb_flag = 2;
+						} 
+					} else interact_flag = 0;
+				}
+				break;
+
 			case 17:
 				// Sonia
 				if (sonia_talk == 0) {
@@ -1143,18 +1185,22 @@ unsigned char touch_tile (void) {
 	unsigned char enems_custom_collision (void) {
 		if(_en_t == 3) {
 			// Custom collision with Gallumb
-			if(gallumb_flag < 1) {
-				if (interact_flag == 0) {
-					interact_flag = 1;
+			if(gallumb_flag == 0) {
+				rdb = 33; 
+				rda = 27; show_text_box ();
+				rda = 28; show_text_box ();
+				rdb = 17; rda = 30; show_text_box ();
+				rdb = 33; rda = 31; show_text_box ();
 
-					rdb = 18; 
-					rda = 27; show_text_box ();
-					rda = 28; show_text_box ();
-				}
+				gallumb_flag = 1;
+			} 
+
+			if (gallumb_flag == 1) {
+				player.vx = -256;
+				
+				return 1;
 			}
-		} else {
-			interact_flag = 0;
-		}
+		} 
 
 		return 0;
 	}
