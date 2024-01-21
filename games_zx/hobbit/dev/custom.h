@@ -176,7 +176,19 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text26[] = "_RING%"
 							 "YOU WON! NOW I'LL OBEY%"
 							 "PUSH FIRE TO PUT ME ON";
+
+	unsigned char text27[] = "_GALLUMB%"
+							 "MAD, I AM! I... I LOST%"
+							 "MY PRECIOUS!";
+
+	unsigned char text28[] = "_GALLUMB%"
+							 "THE WEDDING RING TO%"
+							 "MARRY MY BELOVED DWARR%"
+							 "ROMAYS. LOST SOMEWHERE%"
+							 "IN THIS CAVE";
+
 #else
+
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
 							 "UF, QUE PESTE ECHA...%"
@@ -315,6 +327,16 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "ME HAS DOMINADO. PULSA%"
 							 "FIRE PARA PONERTEME!";
 
+	unsigned char text27[] = "_GALLUMB%"
+							 "FURIOSO ESTOY! PERDIDO%"
+							 "MI TESORO HE! Y LA IRA%"
+							 "AL LADO OSCURO CONDUCE";
+
+	unsigned char text28[] = "_GALLUMB%"
+							 "EL ANILLO CON EL QUE%"
+							 "CASARME CON EL ENANO%"
+							 "ROMAYS IBA... PERDIDO%"
+							 "EN LA CAVERNA ESTA!";
 #endif
 
 unsigned char *texts [] = {
@@ -328,7 +350,8 @@ unsigned char *texts [] = {
 	text18, 								// Thanks for the dwarves
 	text19, text20, text21,					// Enanito speech
 	text22, text23, text24,					// Sonia	
-	text25, text26							// Anillo
+	text25, text26,							// Anillo
+	text27, text28,							// Gallumb
 };
 
 unsigned char dwarf_names [] = 
@@ -1120,6 +1143,17 @@ unsigned char touch_tile (void) {
 	unsigned char enems_custom_collision (void) {
 		if(_en_t == 3) {
 			// Custom collision with Gallumb
+			if(gallumb_flag < 1) {
+				if (interact_flag == 0) {
+					interact_flag = 1;
+
+					rdb = 18; 
+					rda = 27; show_text_box ();
+					rda = 28; show_text_box ();
+				}
+			}
+		} else {
+			interact_flag = 0;
 		}
 
 		return 0;
