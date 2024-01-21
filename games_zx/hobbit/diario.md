@@ -55,3 +55,11 @@ Voy a probar algo parecido en esta versión: `estado |= (EST_PARP | EST_DIZZY)` 
 [X] Hace falta un minitexto para cuando se acaba el comecocos de abrir la puerta.
 [X] El comecocos de abrir la puerta se puede repetir mil veces, arreglar.
 
+# Rediseño del gameplay del anillo
+
+El anillo no debería aparecer de entrada. La primera aparición de gallumb debería ser bloqueando la entrada a la última zona de la cueva, puesto como lineal tipo 3 pero con velocidad 0. Si no tienes anillo y colisionas con gallumb rebotas y se lanza un texto: Ha perdido su tessoro y está enfadado. El tessoro es su anillo mágico que vuelve invisible. Quería usarlo de anillo de compromiso con romays.
+
+Esto activa la aparición del anillo. Cualquier enemigo es traspasable con el anillo puesto.
+
+Pero las próximas veces que aparezca gallumb será INSTAKILL.
+

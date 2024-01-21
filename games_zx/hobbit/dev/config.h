@@ -92,8 +92,8 @@
 //#define ENEMIES_COLLIDE_MASK 		8
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
 
-//#define PACKED_ENEMS 						// Packed XY1, XY2 format.
-//#define FIXED_ENEMS_LIMITS 				// x1, x2, y1, y2 won't change.
+#define PACKED_ENEMS 						// Packed XY1, XY2 format.
+#define FIXED_ENEMS_LIMITS 					// x1, x2, y1, y2 won't change.
 
 // Coins engine
 // ------------

@@ -12,6 +12,7 @@ unsigned char sonia_talk;
 unsigned char interact_flag;
 unsigned char anillo_flag;
 unsigned char anillo_ct;
+unsigned char gallumb_flag;
 unsigned char last_estado;
 
 unsigned char top_string []    = "<======================>";
@@ -633,6 +634,13 @@ void draw_cur_screen_decos (void) {
 			gp_gen = decos0; draw_decos (); break;
 		case 1:
 			gp_gen = decos1; draw_decos (); break;
+		case 4:
+			// Hide hotspot!
+			if (gallumb_flag < 1) {
+				set_map_tile (6, 4, 0, 0);
+				hotspot_y = 240;
+			}
+			break;
 		case 5:
 			gp_gen = decos2; draw_decos (); break;
 		case 17:
@@ -772,9 +780,11 @@ unsigned char touch_tile (void) {
 		gandalf_talk = 0;
 		dwarf_talk = 0;
 		comecocos_on = 0;
+		anillo_flag = 0;
+		gallumb_flag = 0;
+
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
-		anillo_flag = 0;
 		draw_coloured_tile (19, 22, 0);		
 
 		wyz_play_music (1);
@@ -782,7 +792,6 @@ unsigned char touch_tile (void) {
 		// Debug
 		gandalf_talk = 3; dwarf_talk = 1; 
 		n_pant = 4;
-		anillo_flag = 1;
 	}
 
 	void hook_init_mainloop (void) {
@@ -1109,6 +1118,10 @@ unsigned char touch_tile (void) {
 
 #ifdef ENEMS_CUSTOM_COLLISION
 	unsigned char enems_custom_collision (void) {
+		if(_en_t == 3) {
+			// Custom collision with Gallumb
+		}
+
 		return 0;
 	}
 #endif

@@ -596,7 +596,7 @@ void main (void) {
 						
 						if (rdi != 1)  {
 							draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
-							hotspot_x = hotspot_y = 240;
+							hotspot_y = 240;
 							hotspots [n_pant].act = rdi;
 						}
 					}
