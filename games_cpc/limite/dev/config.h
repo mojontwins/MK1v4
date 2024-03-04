@@ -5,7 +5,7 @@
 // I. General configuration
 // ============================================================================
 
-#define MODE_1
+//#define MODE_1
 
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
@@ -21,7 +21,7 @@
 #define MAP_W						6		//
 #define MAP_H						5		// Map dimmensions in screens
 #define TOTAL_SCREENS				30		// 
-#define SCR_INICIO					0		// Initial screen
+#define SCR_INICIO					6		// Initial screen
 #define PLAYER_INI_X				1		//
 #define PLAYER_INI_Y				1		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.

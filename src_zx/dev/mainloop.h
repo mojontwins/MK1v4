@@ -907,14 +907,14 @@ void main (void) {
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
-							draw_scr ();
-							init_player_values ();
 							#ifdef FIXED_SCREENS
 								player.killed = 0;
 								malotes [enoffs].t = malotes [enoffs].t & 15;
 								malotes [enoffs + 1].t = malotes [enoffs + 1].t & 15;
 								malotes [enoffs + 2].t = malotes [enoffs + 2].t & 15;
 							#endif
+							draw_scr ();
+							init_player_values ();
 						#else	
 							draw_scr_background ();
 							init_player_values ();

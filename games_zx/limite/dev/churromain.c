@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // churromain.c
 // Program skeleton. Rename to your game title.c
@@ -13,6 +13,9 @@
 		LIB SPTileArray	
 		LIB SPPrintAtInv
 		LIB SPUpdateNow
+		LIB SPInitialize
+		LIB SPNullSprPtr
+		XREF SProtatetblInitialize
 #endasm
 
 /* splib2 memory map
@@ -30,6 +33,7 @@
 
 // This figure depends the amount of sprites.
 // Add 10 for each 16x16 sprite.
+// Add 13 for each 16x24 sprite.
 // Add 5 for each 8x8 sprite (such as bullets or sword)
 #define NUMBLOCKS 		40
 
@@ -81,7 +85,11 @@
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h"
 #endif
+#ifdef DECOMPRESSOR_ZX0
+	#include "zx0.h"
+#else
 #include "aplib.h"
+#endif
 #include "mapa.h"
 #include "tileset.h"
 #include "sprites.h"

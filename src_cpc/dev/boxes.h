@@ -151,6 +151,7 @@
 			}
 		}
 
+		// TODO :: HEAVILY OPTIMIZE / PUT THIS INTO ASM FOR GOD'S SAKE
 		void animate_boxes () {
 			// Only at the right time...
 			fall_frame_counter ++;
@@ -182,21 +183,26 @@
 
 								for (enit = 0; enit < MAX_ENEMS; enit ++) {
 									enoffsmasi = enoffs + enit;
+									_en_t = malotes [enoffsmasi].t;
+									en_ccx = malotes [enoffsmasi].x;
+									en_ccy = malotes [enoffsmasi].y;
 									
 									#ifdef BOXES_ONLY_KILL_TYPE
-										if (malotes [enoffsmasi].t == BOXES_ONLY_KILL_TYPE)
+										if (_en_t == BOXES_ONLY_KILL_TYPE)
 									#else
-										if (malotes [enoffsmasi].t > 0 && malotes [enoffsmasi].t < 16)
+										if (_en_t > 0 && _en_t < 16)
 									#endif
 									{
-										if (malotes [enoffsmasi].x >= boxx - 15 && malotes [enoffsmasi].x <= boxx + 15 &&
-											malotes [enoffsmasi].y >= boyy - 15 && malotes [enoffsmasi].y <= boyy + 15) {
+										if (en_ccx >= boxx - 15 && en_ccx <= boxx + 15 &&
+											en_ccy >= boyy - 15 && en_ccy <= boyy + 15) {
 											
 											en_an_next_frame [enit] = sprite_17_a;											
 											player.vy = -PLAYER_MAX_VY_SALTANDO;
 											enems_kill ();
 										}
 									}						
+
+									malotes [enoffsmasi].t = _en_t;						
 								}
 							#endif
 

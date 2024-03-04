@@ -4936,14 +4936,14 @@ void draw_scr (void) {
 			#if defined (ENEMIES_MAY_DIE)
 				if (1
 				#ifdef BOXES_ONLY_KILL_TYPE
-						&& _en_t == BOXES_ONLY_KILL_TYPE
+					&& _en_t == BOXES_ONLY_KILL_TYPE
 				#endif
 				#ifdef PLAYER_MIN_KILLABLE
-						&& _en_t >= PLAYER_MIN_KILLABLE
-					#endif
-					#ifdef PLAYER_MAX_KILLABLE
-						&& _en_t <= PLAYER_MAX_KILLABLE
-					#endif
+					&& _en_t >= PLAYER_MIN_KILLABLE
+				#endif
+				#ifdef PLAYER_MAX_KILLABLE
+					&& _en_t <= PLAYER_MAX_KILLABLE
+				#endif
 				) {
 						flags [COUNT_KILLABLE_ON] ++;
 					}
@@ -6323,20 +6323,20 @@ void mueve_bicharracos (void) {
 
 		enems_loop_continue:
 
-			#ifdef RANDOM_RESPAWN
-				// Activate fanty
+		#ifdef RANDOM_RESPAWN
+			// Activate fanty
 
-			if ((_en_t & 16) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
-					en_an_fanty_activo [enit] = 1;
-					if (player.y > 5120)
-						en_an_y [enit] = -1024;
-					else
-						en_an_y [enit] = 10240;
-					en_an_x [enit] = (rand () % 240 - 8) << 6;
-					en_an_vx [enit] = en_an_vy [enit] = 0;
-				enems_en_an_calc (2);
-				}
-			#endif
+		if ((_en_t & 16) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
+				en_an_fanty_activo [enit] = 1;
+				if (player.y > 5120)
+					en_an_y [enit] = -1024;
+				else
+					en_an_y [enit] = 10240;
+				en_an_x [enit] = (rand () % 240 - 8) << 6;
+				en_an_vx [enit] = en_an_vy [enit] = 0;
+			enems_en_an_calc (2);
+			}
+		#endif
 
 		#asm		
 				// Those values are stored in this order:

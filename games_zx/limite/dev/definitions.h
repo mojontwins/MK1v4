@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // definitions.h
 // Contains type definitions and global variables
@@ -31,6 +31,7 @@
 #define WALL_LEFT 				1
 #define WALL_RIGHT 				2
 #define WALL_UP 				4
+#define WALL_DOWN 				8
 
 #define GENITAL_FACING_RIGHT 	0
 #define GENITAL_FACING_LEFT		1
@@ -72,6 +73,7 @@ typedef struct {
 	unsigned char hovering; 							// 41
 	unsigned char just_hovered; 						// 42
 	unsigned char just_jumped;							// 43
+	unsigned char sword_g;								// 44
 } INERCIA;
 
 typedef struct {

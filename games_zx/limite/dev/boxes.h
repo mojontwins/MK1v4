@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 #ifdef PLAYER_PUSH_BOXES
 	void __FASTCALL__ move_tile (unsigned char act) {
@@ -121,7 +121,7 @@
 
 			#ifdef PUSH_OVER_FLOOR
 				#ifndef PUSH_AND_PULL_PILES
-ç					if (attr (x1, y1 + 1) < 4) return 0;
+					if (attr (x1, y1 + 1) < 4) return 0;
 					if (qtile (x0, y0 - 1) == 14) return 0;
 				#endif
 			#endif
@@ -152,6 +152,7 @@
 			}
 		}
 
+		// TODO :: HEAVILY OPTIMIZE / PUT THIS INTO ASM FOR GOD'S SAKE
 		void animate_boxes () {
 			// Only at the right time...
 			fall_frame_counter ++;
@@ -183,43 +184,25 @@
 
 								for (enit = 0; enit < MAX_ENEMS; enit ++) {
 									enoffsmasi = enoffs + enit;
+									_en_t = malotes [enoffsmasi].t;
+									en_ccx = malotes [enoffsmasi].x;
+									en_ccy = malotes [enoffsmasi].y;
 									
 									#ifdef BOXES_ONLY_KILL_TYPE
-										if (malotes [enoffsmasi].t == BOXES_ONLY_KILL_TYPE)
+										if (_en_t == BOXES_ONLY_KILL_TYPE)
 									#else
-										if (malotes [enoffsmasi].t > 0 && malotes [enoffsmasi].t < 16)
+										if (_en_t > 0 && _en_t < 16)
 									#endif
 									{
-										if (malotes [enoffsmasi].x >= boxx - 15 && malotes [enoffsmasi].x <= boxx + 15 &&
-											malotes [enoffsmasi].y >= boyy - 15 && malotes [enoffsmasi].y <= boyy + 15) {
-											
-											#ifdef ENABLE_CODE_HOOKS
-												enemy_died = malotes [enoffsmasi].t;
-											#endif
+										if (en_ccx >= boxx - 15 && en_ccx <= boxx + 15 &&
+											en_ccy >= boyy - 15 && en_ccy <= boyy + 15) {
 
 											en_an_next_frame [enit] = sprite_17_a;											
-											sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (malotes [enoffsmasi].y >> 3), VIEWPORT_X + (malotes [enoffsmasi].x >> 3), malotes [enoffsmasi].x & 7, malotes [enoffsmasi].y & 7);
-											en_an_current_frame [enit] = en_an_next_frame [enit];
-											
-											#asm 
-												call SPUpdateNow
-											#endasm
-												
-											play_sfx (10);
-											en_an_next_frame [enit] = sprite_18_a;
-											malotes [enoffsmasi].t |= 16;			// Marked as "dead"
-
-											// Count it
-											player.killed ++;
-
-											#ifdef ACTIVATE_SCRIPTING
-												script = f_scripts [MAX_SCREENS + 2];
-												run_script ();
-											#endif
-
-											break;
+											enems_kill ();
 										}
 									}						
+
+									malotes [enoffsmasi].t = _en_t;						
 								}
 							#endif
 

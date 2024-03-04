@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // Add here your custom routines & vars
 
@@ -22,6 +22,9 @@
 	void hook_entering (void) {		
 	}
 
+	void hook_hotspots (void) {	
+	}
+
 #endif
 
 #ifdef ENABLE_CUSTOM_ENEMS
@@ -38,4 +41,17 @@
 	void extra_enems_killed (void) {
 	}
 	
+#endif
+
+#ifdef ENABLE_CUSTOM_LINEAR_ENEM_CELLS
+	unsigned char get_cell_n (void) {
+		// Change this:
+		return _en_t - 1;
+	}
+#endif
+
+#ifdef ENEMS_CUSTOM_COLLISION
+	unsigned char enems_custom_collision (void) {
+		return 0;
+	}
 #endif

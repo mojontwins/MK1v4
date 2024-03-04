@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
@@ -8,10 +8,18 @@
 	#include "custom_screen_connections.h"
 #endif
 
+#ifdef TALL_PLAYER
+	#define MAIN_SPRITE_HEIGHT 4
+#else
+	#define MAIN_SPRITE_HEIGHT 3
+#endif
+
 void main (void) {
 	#asm
 			di 
 			ld  sp, STACK_ADDR
+
+			call musicstart
 
 		#ifdef MODE_128K_DUAL
 				xor a
@@ -103,30 +111,61 @@ void main (void) {
 	
 	// Sprite creation
 	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (NO_MASKS, 3, sprite_2_a, 1);
+		sp_player = sp_CreateSpr (NO_MASKS, MAIN_SPRITE_HEIGHT, sprite_2_a, 1);
 		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
+		sp_AddColSpr (sp_player, sprite_2_b);	// This is a dummy and will be overwritten later
 		player.current_frame = player.next_frame = sprite_2_a;
 		
 		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 			sp_moviles [rdi] = sp_CreateSpr(NO_MASKS, 3, sprite_9_a, 1);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);	// This is a dummy and will be overwritten later	
 			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#else
-		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1);
+		sp_player = sp_CreateSpr (sp_MASK_SPRITE, MAIN_SPRITE_HEIGHT, sprite_2_a, 1);
 		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
+		sp_AddColSpr (sp_player, sprite_2_b);	// This is a dummy and will be overwritten later
 		player.current_frame = player.next_frame = sprite_2_a;
 		
 		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 			sp_moviles [rdi] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);	// This is a dummy and will be overwritten later	
 			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#endif
+
+	// Create a virtual, non existent third column for sprites.
+	
+	#asm
+		.fix_sprites
+			#ifdef TALL_PLAYER
+				ld  b, 8
+			#else
+				ld  b, 6
+			#endif
+			ld  hl, (_sp_player) 			// Sprite base pointer
+			call _fix_sprites
+
+			ld  de, _sp_moviles
+			ld  b, MAX_ENEMS 
+
+		.fix_sprites_rep1
+			push bc
+			ld  a, (de)
+			ld  l, a
+			inc de 
+			ld  a, (de)
+			ld  h, a
+			inc de 
+
+			ld  b, 6
+			call _fix_sprites
+
+			pop bc 
+			djnz fix_sprites_rep1
+	#endasm
 
 	#ifdef PLAYER_CAN_FIRE
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
@@ -495,6 +534,11 @@ void main (void) {
 					latest_hotspot = hotspot_t;
 				#endif
 					
+				#ifdef ENABLE_CODE_HOOKS
+					// You may override hotspot_t or whatever:
+					hook_hotspots ();
+				#endif
+					
 				rdi = 0;
 				#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
 					switch (hotspot_t) {
@@ -584,7 +628,11 @@ void main (void) {
 
 						call qtile_do
 						ld  a, l 	// HL 
+					#ifdef ANIMATED_NEXT
+							xor 0x01 	// Flip bit 1
+					#else	
 						xor 0x10 	// Flip bit 4
+					#endif
 						ld  (__t), a
 						
 						ld  de, _comportamiento_tiles
@@ -859,14 +907,14 @@ void main (void) {
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
-							draw_scr ();
-							init_player_values ();
 							#ifdef FIXED_SCREENS
 								player.killed = 0;
 								malotes [enoffs].t = malotes [enoffs].t & 15;
 								malotes [enoffs + 1].t = malotes [enoffs + 1].t & 15;
 								malotes [enoffs + 2].t = malotes [enoffs + 2].t & 15;
 							#endif
+							draw_scr ();
+							init_player_values ();
 						#else	
 							draw_scr_background ();
 							init_player_values ();

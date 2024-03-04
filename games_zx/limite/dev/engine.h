@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
@@ -317,8 +317,14 @@ void render_all_sprites (void) {
 		#endasm
 	}
 
-	rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
-	#ifdef BETTER_VERTICAL_CONNECTIONS
+	#ifdef TALL_PLAYER
+		rdy = gpy - 8;
+	#else
+		rdy = gpy; 
+	#endif
+
+	if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
+	#if defined BETTER_VERTICAL_CONNECTIONS || defined TALL_PLAYER
 		/*
 		if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
 		sp_MoveSprAbs (
@@ -494,7 +500,7 @@ void render_all_sprites (void) {
 	#endif
 }
 
-#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 	#define BOUNDING_WIDTH 12
 #else
 	#define BOUNDING_WIDTH 8
@@ -502,8 +508,14 @@ void render_all_sprites (void) {
 
 unsigned char collide_enem (void) {
 	#asm
-			ld  hl, 0
+			// Normal 16x16 player:
 			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 12 >= gpy && en_ccy <= gpy + 12)
+
+			// Tall 16x24 player: Remember tall players are rendered @ gpy - 8, thus:
+			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 16 >= gpy && en_ccy <= gpy + 12)
+			//                                                        \_ Change
+
+			ld  hl, 0
 
 			// en_ccx + 12 >= gpx
 			ld  a, (_gpx)
@@ -525,12 +537,16 @@ unsigned char collide_enem (void) {
 			cp  c
 			ret c
 
-			// en_ccy + 12 >= gpy
+			// en_ccy + 12 >= gpy or en_ccy + 16 >= gpy
 			ld  a, (_gpy)
 			ld  c, a
 			ld  a, (_en_ccy)
 			
+			#ifdef TALL_PLAYER
+				add 16
+			#else
 			add 12
+			#endif
 			
 			cp  c
 			ret c
@@ -707,6 +723,7 @@ void cortina (void) {
 				ld  (_rdy), a
 				xor a
 				ld  (__t), a
+				ld  a, (_comportamiento_tiles)	;; beh [0]
 				ld  (__n), a
 
 				call set_map_tile_do
@@ -1497,7 +1514,7 @@ void move (void) {
 
 		#ifdef PLAYER_HAS_JUMP
 			#ifdef RAMIRO_HOP
-				#ifdef SHORT_PLAYER
+				#ifdef TIGHT_BOUNDING_BOX
 					rdi = ((attr ((gpx + 4) >> 4, gpyy + 1) & 12) || (attr ((gpx + 11) >> 4, gpyy + 1) & 12));
 				#else
 					rdi = (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12));
@@ -1556,9 +1573,31 @@ void move (void) {
 		#endif
 
 		#ifdef PLAYER_NO_INERTIA
-			if ((pad0 & sp_UP) == 0) { player.vy = -PLAYER_CONST_V; player.facing = GENITAL_FACING_UP; }
-			if ((pad0 & sp_DOWN) == 0) { player.vy = PLAYER_CONST_V; player.facing = GENITAL_FACING_DOWN; }
-			if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0)) player.vy = 0;
+			if ((pad0 & sp_UP) == 0) { 
+				// player.vy = -PLAYER_CONST_V; player.facing = GENITAL_FACING_UP; 
+				#asm
+					ld  hl, -PLAYER_CONST_V
+					ld  (_player + 8), hl 			// player.vy
+					ld  a, GENITAL_FACING_UP 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ((pad0 & sp_DOWN) == 0) { 
+				// player.vy = PLAYER_CONST_V; player.facing = GENITAL_FACING_DOWN; 
+				#asm
+					ld  hl, PLAYER_CONST_V
+					ld  (_player + 8), hl 			// player.vy
+					ld  a, GENITAL_FACING_DOWN 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ( ! ((pad0 & sp_UP) == 0 || (pad0 & sp_DOWN) == 0)) {
+				// player.vy = 0;
+				#asm
+					ld  hl, 0
+					ld  (_player + 8), hl 			// player.vy
+				#endasm
+			}
 		#else	
 			#ifndef PLAYER_MOGGY_STYLE
 				// If side view, get affected by gravity:
@@ -1738,7 +1777,7 @@ void move (void) {
 	rdj = (player.vy + ptgmy);
 	if (rdj) {
 		if (rdj < 0) { 			// Going up
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 				if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 					player.vy = 0; gpyy ++;	adjust_to_tile_y ();
 					player.ceiling = 1;
@@ -1751,7 +1790,7 @@ void move (void) {
 					}
 			#endif
 		} else if ((gpy & 15) <= (player.vy >> 6)) { 	// Going down
-			#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+			#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 				if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			#else
 				if (((gpx & 15) < 12 && (attr (gpxx, gpyy + 1) & 12)) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy + 1) & 12))
@@ -1789,7 +1828,7 @@ void move (void) {
 		.vert_collision_negative
 			// rdj < 0
 
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				// if (attr (gpxx, gpyy) & 8 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy) & 8)) {
 					ld  a, (_gpxx)
 					ld  c, a
@@ -1831,18 +1870,20 @@ void move (void) {
 
 					jp  vert_collision_done
 			#else
+				#ifndef TALL_PLAYER
 				// if ((gpy & 15) < 12)
 					ld  a, (_gpy)
 					and 15
 					cp  12
 					jp  nc, vert_collision_done
+				#endif
 
 				// if (((gpx & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy) & 8)) {
 
 				.vert_collision_if1
 					ld  a, (_gpx)
 					and 15
-					cp  12
+					cp  TIGHT_UPPER
 					jr  nc, vert_collision_if2
 
 					ld  a, (_gpxx)
@@ -1858,7 +1899,7 @@ void move (void) {
 					// (gpx & 15) > 4 => (gpx & 15) >= 5
 					ld  a, (_gpx)
 					and 15
-					cp  5
+					cp  TIGHT_LOWER+1
 					jp  c, vert_collision_done
 
 					ld  a, (_gpxx)
@@ -1871,10 +1912,19 @@ void move (void) {
 					jp  z, vert_collision_done
 
 				.vert_collision_up
-					// player.vy = 0; gpy = (gpyy << 4) + 12; player.y = gpy << 6;
-					// player.ceiling = 1;
+					// player.vy = 0;
 					ld  hl, 0
 					ld  (_player + 8), hl	// player.vy
+
+				#ifdef TALL_PLAYER
+						// gpyy ++; adjust_to_tile_y ();
+
+						ld  hl, _gpyy
+						inc (hl)
+
+						call _adjust_to_tile_y
+				#else
+						// gpy = (gpyy << 4) + 12; player.y = gpy << 6;
 
 					ld  a, (_gpyy)
 					sla a
@@ -1893,6 +1943,8 @@ void move (void) {
 					*/
 					call Ashl16_HL
 					ld  (_player + 2), hl 	// player.y
+				#endif
+					// player.ceiling = 1;
 
 					ld  a, 1
 					ld  (_player + 37), a 	// player.ceiling
@@ -1906,6 +1958,7 @@ void move (void) {
 		.vert_collision_positive
 			// rdj > 0
 			// else if ((gpy & 15) <= (player.vy >> 6) -> (player.vy >> 6) >= (gpy & 16)
+			#ifndef PLAYER_MOGGY_STYLE
 			ld  a, (_gpy)
 			and 15
 			ld  c, a
@@ -1921,8 +1974,9 @@ void move (void) {
 
 			cp  c
 			jr  c, vert_collision_done
+			#endif
 
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				// if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 					ld  a, (_gpxx)
 					ld  c, a
@@ -1948,11 +2002,20 @@ void move (void) {
 					and 12
 					jr  z, vert_collision_done
 			#else
+				#if defined PLAYER_MOGGY_STYLE && defined PERSPECTIVE_GENITAL
+					// if ((gpy & 15) >= 5)
+					ld  a, (_gpy)
+					and 15
+					cp  5
+					jp  c, vert_collision_done
+					
+				#endif
+
 				// if (((gpx & 15) < 12 && (attr (gpxx, gpyy + 1) & 12)) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy + 1) & 12))
 				.vert_collision_if3
 					ld  a, (_gpx)
 					and 15
-					cp  12
+					cp  TIGHT_UPPER
 					jr  nc, vert_collision_if4
 
 					ld  a, (_gpxx)
@@ -1969,7 +2032,7 @@ void move (void) {
 					// (gpx & 15) > 4 => (gpx & 15) >= 5
 					ld  a, (_gpx)
 					and 15
-					cp  5
+					cp  TIGHT_LOWER + 1
 					jr  c, vert_collision_done
 
 					ld  a, (_gpxx)
@@ -1987,10 +2050,25 @@ void move (void) {
 			ld  hl, 0
 			ld  (_player + 8), hl	// player.vy
 			
+			#if defined PLAYER_MOGGY_STYLE && defined PERSPECTIVE_GENITAL
+				ld a, (_gpyy)
+				sla a
+				sla a
+				sla a
+				sla a
+				add 4
+				ld  (_gpy), a
+				call Ashl16_HL
+				ld  (_player+2), hl
+			#else
 			call _adjust_to_tile_y
+			#endif
 
 			ld  a, 1
 			ld  (_player + 26), a 	// player.possee
+
+			ld  a, WALL_DOWN
+			ld  (_wall), a 
 
 		.vert_collision_done
 	#endasm
@@ -2179,7 +2257,7 @@ void move (void) {
 	#if defined PLAYER_PUSH_BOXES && defined PUSH_AND_PULL && !defined PLAYER_MOGGY_STYLE
 		player.grab_block = 0;
 
-		#if !defined SHORT_PLAYER
+		#if !defined TIGHT_BOUNDING_BOX
 			/*
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {
 				rdx = gpxx;	x0 = x1 = gpxx;	y0 = y1 = gpyy;
@@ -2522,7 +2600,7 @@ void move (void) {
 					// if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
 					ld  a, (_gpx)
 					and 15
-					cp  12
+					cp  TIGHT_UPPER
 					jp  nz, push_pull_done
 
 					ld  hl, (_gpxx)
@@ -2596,7 +2674,7 @@ void move (void) {
 					// if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14)
 					ld  a, (_gpx)
 					and 15
-					cp  4
+					cp  TIGHT_LOWER
 					jp  nz, push_pull_done
 
 					ld  hl, (_gpxx)
@@ -2726,9 +2804,31 @@ void move (void) {
 		#include "custom_horz_axis.h"
 	#else
 		#ifdef PLAYER_NO_INERTIA
-			if ((pad0 & sp_LEFT) == 0) { player.vx = -PLAYER_CONST_V; player.facing = GENITAL_FACING_LEFT; }
-			if ((pad0 & sp_RIGHT) == 0) { player.vx = PLAYER_CONST_V; player.facing = GENITAL_FACING_RIGHT; }
-			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) player.vx = 0;
+			if ((pad0 & sp_LEFT) == 0) { 
+				// player.vx = -PLAYER_CONST_V; player.facing = GENITAL_FACING_LEFT; 
+				#asm
+					ld  hl, -PLAYER_CONST_V
+					ld  (_player + 6), hl 			// player.vx
+					ld  a, GENITAL_FACING_LEFT 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ((pad0 & sp_RIGHT) == 0) { 
+				// player.vx = PLAYER_CONST_V; player.facing = GENITAL_FACING_RIGHT;
+				#asm
+					ld  hl, PLAYER_CONST_V
+					ld  (_player + 6), hl 			// player.vx
+					ld  a, GENITAL_FACING_RIGHT 
+					ld  (_player + 22), a 			// player.facing
+				#endasm
+			}
+			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
+				// player.vx = 0;
+				#asm
+					ld  hl, 0
+					ld  (_player + 6), hl 			// player.vx
+				#endasm
+			}
 		#else
 			#if defined ENABLE_FRIGOABABOL && defined FRIGO_FROZEN_NO_RX
 				if (player.estado != EST_FRIGOABABOL)
@@ -2804,7 +2904,7 @@ void move (void) {
 	/*
 	rdj = player.vx + ptgmx;
 	if (rdj) {
-		#if defined PLAYER_MOGGY_STYLE || !defined SHORT_PLAYER
+		#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 			if (rdj < 0) {
 				if (attr (gpxx, gpyy) & 8 || ((gpy & 15) != 0 && attr (gpxx, gpyy + 1) & 8)) {
 					player.vx = 0; gpxx ++; adjust_to_tile_x ();
@@ -2845,7 +2945,7 @@ void move (void) {
 			bit 7, h
 			jp  z, horz_collision_positive
 
-		#if !defined SHORT_PLAYER
+		#if !defined TIGHT_BOUNDING_BOX
 
 			.horz_collision_negative
 				// rdj < 0
@@ -2924,17 +3024,19 @@ void move (void) {
 				// if (gpx & 15) < 12
 				ld  a, (_gpx)
 				and 15
-				cp  12
+				cp  TIGHT_UPPER
 				jp  nc, horz_collision_done
 
 				// ((gpy & 15) < 12 && attr (gpxx, gpyy) & 8) ||
 				// ((gpy & 15) && attr (gpxx, gpyy + 1) & 8))
 
 			.horz_collision_if1
+				#ifndef TALL_PLAYER
 				ld  a, (_gpy)
 				and 15
 				cp  12
 				jp  nc, horz_collision_if2
+				#endif
 
 				ld  a, (_gpxx)
 				ld  c, a
@@ -2946,9 +3048,16 @@ void move (void) {
 				jp  nz, horz_collision_left
 
 			.horz_collision_if2
+				#if defined PLAYER_MOGGY_STYLE && defined PERSPECTIVE_GENITAL
+					ld  a, (_gpy)
+					and 15
+					cp  5
+					jp  c, horz_collision_done
+				#else
 				ld  a, (_gpy)
 				and 15
 				jp  z, horz_collision_done
+				#endif
 
 				ld  a, (_gpxx)
 				ld  c, a
@@ -2971,7 +3080,7 @@ void move (void) {
 				sla a 
 				sla a 
 				sla a 
-				add 12
+				add TIGHT_UPPER
 				ld  (_gpx), a
 
 				/*
@@ -2993,17 +3102,19 @@ void move (void) {
 				// if ((gpx & 15) >= 4)
 				ld  a, (_gpx)
 				and 15
-				cp  4
+				cp  TIGHT_LOWER
 				jp  c, horz_collision_done
 
 				// ((gpy & 15) < 12 && attr (gpxx + 1, gpyy) & 8) ||
 				// ((gpy & 15) && attr (gpxx + 1, gpyy + 1) & 8))
 
 			.horz_collision_if3
+			 	#ifndef TALL_PLAYER
 				ld  a, (_gpy)
 				and 15
 				cp  12
 				jp  nc, horz_collision_if4
+				#endif
 
 				ld  a, (_gpxx)
 				inc a
@@ -3016,9 +3127,16 @@ void move (void) {
 				jp  nz, horz_collision_right				
 
 			.horz_collision_if4
+				#if defined PLAYER_MOGGY_STYLE && defined PERSPECTIVE_GENITAL
+					ld  a, (_gpy)
+					and 15
+					cp  5
+					jp  c, horz_collision_done
+				#else
 				ld  a, (_gpy)
 				and 15
 				jp  z, horz_collision_done
+				#endif
 
 				ld  a, (_gpxx)
 				inc a
@@ -3042,7 +3160,7 @@ void move (void) {
 				sla a 
 				sla a 
 				sla a 
-				add 4
+				add TIGHT_LOWER
 				ld  (_gpx), a
 
 				/*
@@ -3088,9 +3206,14 @@ void move (void) {
 			#endif
 			s_type = player.facing;
 
+			#ifdef SWORD_DEPLETES
+				if (player.sword_g)
+			#endif
+			{
 			s_on = 1;
 			s_frame = 0;
 			s_next_frame = sword_cells [s_type];
+		}
 		}
 	#endif
 	
@@ -3098,7 +3221,7 @@ void move (void) {
 
 	#ifndef DEACTIVATE_KEYS
 		if (
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				(gpx & 15) == 0 
 			#else
 				wall
@@ -3112,19 +3235,34 @@ void move (void) {
 		) {
 			if (qtile (gpxx + 1, gpyy) == 15) {
 				clear_cerrojo (gpxx + 1, gpyy);
+				#ifdef MASTER_OF_KEYS
+					if (master_of_keys == 0)
+				#endif
+				{
 				player.keys --;
+				}
 				play_sfx (8);
 			} else 
-			#if !defined SHORT_PLAYER
+			#if !defined TIGHT_BOUNDING_BOX
 				if (qtile (gpxx - 1, gpyy) == 15) {
 					clear_cerrojo (gpxx - 1, gpyy);
+					#ifdef MASTER_OF_KEYS
+						if (master_of_keys == 0)
+					#endif
+					{
 					player.keys --;
+					}
 					play_sfx (8);
 				}
 			#else
 				if (qtile (gpxx, gpyy) == 15) {
 					clear_cerrojo (gpxx, gpyy);
+					#ifdef MASTER_OF_KEYS
+						if (master_of_keys == 0)
+					#endif
+					{
 					player.keys --;
+					}
 					play_sfx (8);
 				}
 			#endif
@@ -3168,7 +3306,7 @@ void move (void) {
 						.push_box_vert				
 		
 
-						#ifdef SHORT_PLAYER
+						#ifdef TIGHT_BOUNDING_BOX
 								ld  a, (_wall)
 								cp  WALL_UP
 								jr  nz, push_box_vert_up_done	
@@ -3194,7 +3332,7 @@ void move (void) {
 							jr  c, push_box_vert_up_done
 
 							ld  a, (_gpyy)
-						#ifndef SHORT_PLAYER
+						#ifndef TIGHT_BOUNDING_BOX
 								dec a
 						#endif
 							ld  (_y0), a
@@ -3231,10 +3369,13 @@ void move (void) {
 
 						.push_box_vert_up_done
 
-							#ifdef SHORT_PLAYER
-								ld  a, (_gpy)
-								and 15
-								jp  nz, push_box_vert_done
+							#ifdef TIGHT_BOUNDING_BOX
+								;ld  a, (_gpy)
+								;and 15
+								;jp  nz, push_box_vert_done
+								ld  a, (_wall)
+								cp  WALL_DOWN
+								jr  nz, push_box_vert_done	
 							#endif
 
 							ld  a, (_pad0) 
@@ -3281,7 +3422,7 @@ void move (void) {
 					#endasm					
 				#endif
 
-				#if !defined SHORT_PLAYER	
+				#if !defined TIGHT_BOUNDING_BOX	
 					/*		
 					if ((gpx & 15) == 0) {
 						y0 = y1 = gpyy; 
@@ -4676,8 +4817,31 @@ void draw_scr_background (void) {
 
 				jr _draw_scr_loop
 
+				#ifndef NO_ALT_BG
+					.no_alt_bg_subst
+						or  a
+						ret  nz
+
+						call _rand
+						ld  a, l
+						and 15
+						cp  2
+						jr  nc, draw_scr_alt_no
+
+						ld  a, 19
+						ret
+
+					.draw_scr_alt_no
+						xor a
+						ret
+				#endif
+
 			._advance_worm
 				ld  a, (_rdc)
+
+				#ifndef NO_ALT_BG
+					call no_alt_bg_subst
+				#endif
 
 				#if defined USE_COINS && defined COINS_DEACTIVABLE
 					call coins_check
@@ -5101,7 +5265,11 @@ void draw_scr (void) {
 			case 2:
 			case 3:
 			case 4:
+				#ifdef ENABLE_CUSTOM_LINEAR_ENEM_CELLS
+					enems_en_an_calc (get_cell_n ());
+				#else
 				enems_en_an_calc (_en_t - 1);
+				#endif
 				break;
 
 			#ifdef USE_TYPE_6
@@ -5726,6 +5894,10 @@ void mueve_bicharracos (void) {
 									break;	
 							}
 						#else
+							#ifdef FANTIES_EXIT_STATE_V
+								if (en_an_state [enit] != 1) 
+							#endif
+							{
 							// Always pursue
 
 							if ((rand () & 7) > 1) {
@@ -5737,6 +5909,7 @@ void mueve_bicharracos (void) {
 									en_an_vy [enit] += FANTY_A;
 								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
 									en_an_vy [enit] -= FANTY_A;
+							}
 							}
 						#endif
 
@@ -6271,6 +6444,11 @@ void mueve_bicharracos (void) {
 							#endif
 							) {
 								// Hit!
+								#ifdef SWORD_CUSTOM_HIT
+									#include "sword_custom_hit.h"
+								#endif
+
+								#ifndef SWORD_DISABLE_HIT
 								play_sfx (2);
 								s_on = 0;
 
@@ -6293,6 +6471,7 @@ void mueve_bicharracos (void) {
 										en_an_next_frame [enit] = sprite_17_a;
 										enems_kill ();
 									}
+								#endif
 								#endif
 
 								goto enems_loop_continue;
@@ -6317,7 +6496,7 @@ void mueve_bicharracos (void) {
 				) {
 					#ifdef PLAYER_KILLS_ENEMIES
 						if (
-							#ifdef SHORT_PLAYER
+							#ifdef TIGHT_BOUNDING_BOX
 								gpy < en_ccy
 							#else
 								gpy <= en_ccy - 8 
@@ -6345,14 +6524,18 @@ void mueve_bicharracos (void) {
 							&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
 						#endif
 					) {
+						#ifdef ENEMS_CUSTOM_COLLISION
+							if (enems_custom_collision () == 0)
+						#endif
+						{
 						en_tocado = 1; player.is_dead = 1; play_sfx (2);
 						#ifdef ENABLE_CODE_HOOKS
 							enemy_killer = enit;
 						#endif
 						
 						// We decide which kind of life drain we do:
-						#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-							if (_en_t > 4) {
+							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT))
+								if (_en_t == 6) {
 								player.life -= FLYING_ENEMY_HIT;
 							} else
 						#endif
@@ -6405,6 +6588,7 @@ void mueve_bicharracos (void) {
 							// Flickers. People seem to like this more than the bouncing behaviour.
 							player_flicker ();
 						#endif				
+						}
 					}
 				}
 				

@@ -20,7 +20,6 @@ unsigned char temp_string []   = ";                      [";
 unsigned char bottom_string [] = "\\]]]]]]]]]]]]]]]]]]]]]]^";
 unsigned char redraw_after_text;
 unsigned char intro_text;
-unsigned char talk_sounds [] = { 7, 11 };
 
 unsigned char n_pant_was, xwas, ywas;
 unsigned char comecocos_on;
@@ -359,9 +358,9 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "DIERA";
 
 	unsigned char text31[] = "_GALLUMB%"
-							 "NO! MALDITO ENANO, MI%"
-							 "TESORO ESTO NO ES!%"
-							 "MI ANILLO DE PENE ES!";
+							 "ESTE NO ES MI TESORO,%"
+							 "MALDITO ENANO! ESTO ES%"
+							 "MI ANILLO DE PENE!";
 							 
 
 #endif
@@ -396,6 +395,48 @@ unsigned char dwarf_names [] =
 	"ROMAYS    "
 	"TASSLEHOFF"
 	"GALLOFA   ";
+
+// Encode multi-text box cutscenes with characters
+
+// Encoding
+// D = 1XXXXXXX -> rdb = D & 127
+// D = 0XXXXXXX -> rda = D; show_text_box ();
+// D = 11111111 -> BREAK
+
+#asm
+	.cuts0
+		defb 46|128, 4, 5, 47|128, 6, 255
+	.cuts1
+		defb 47|128, 22, 23, 34|128, 24, 255
+	.cuts2
+		defb 46|128, 29, 20, 21, 255
+	.cuts3
+		defb 33|128, 27, 28, 17|128, 30, 33|128, 31, 255
+#endasm
+
+#asm
+	// HL -> cutscene data
+	.run_cutscene
+		ld  a, (hl)
+		inc hl
+		cp  0xff 
+		ret z 
+
+		bit 7, a
+		jr  z, run_cutscene_tb
+
+		and 0x7f
+		ld  (_rdb), a 
+		jr  run_cutscene
+
+	.run_cutscene_tb
+		ld  (_rda), a 
+		push hl
+		call _show_text_box
+		pop hl
+		
+		jr  run_cutscene
+#endasm
 
 void insert_dwarf_name (void) {
 	// copy 10 bytes dwarf_ct -> text9 + 19; dwarf_ct += 10
@@ -555,9 +596,22 @@ void show_text_box (void) {
 
 	while (1) {
 		clear_temp_string ();
-		if (rdy > 7 || rdb != 0) draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
+		// if (rdy > 7 || rdb != 0) 
+		#asm
+				ld  a, (_rdy)
+				cp  8
+				jr  nc, stb_top
+
+				ld  a, (_rdb) 
+				or  a 
+				jr  z, stb_notop
+			.stb_top
+		#endasm 
+
+		draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
 
 		#asm
+			.stb_notop
 				// Fill buffer
 				ld  de, _temp_string + 1
 				ld  a, (_rdb) 
@@ -610,7 +664,7 @@ void show_text_box (void) {
 	#endasm
 
 	sp_UpdateNow ();
-	play_sfx (talk_sounds [rand () & 1]);
+	play_sfx (7);
 
 	while (any_key ()); while (!any_key ()); 
 	if (redraw_after_text) {
@@ -680,6 +734,7 @@ void recuadrius (void) {
 }
 
 void draw_cur_screen_decos (void) {
+	/*
 	switch (n_pant) {
 		case 0:
 			gp_gen = decos0; draw_decos (); break;
@@ -717,6 +772,127 @@ void draw_cur_screen_decos (void) {
 			}
 			break;
 	}
+	*/
+	#asm
+			ld  a, (_n_pant)
+			cp  0
+			jr  z, dcsd_0
+			cp  1
+			jr  z, dcsd_1
+			cp  4
+			jr  z, dcsd_4
+			cp  5
+			jr  z, dcsd_5
+			cp  17 
+			jr  z, dcsd_17
+			cp  24
+			jr  z, dcsd_24
+			cp  31
+			jp  z, dcsd_31
+			ret
+
+		.dcsd_0 
+			ld  hl, _decos0
+			ld  (_gp_gen), hl
+			call _draw_decos
+			ret
+
+		.dcsd_1
+			ld  hl, _decos1
+			ld  (_gp_gen), hl
+			call _draw_decos
+			ret
+
+		.dcsd_4
+			ld  a, (_gallumb_flag)
+			cp  1
+			ret nc
+
+			ld  a, 6
+			ld  c, a 
+			ld  (__x), a 
+			ld  a, 4
+			ld  (__y), a 
+			xor a 
+			ld  (__n), a 
+			ld  (__t), a
+			call set_map_tile_do
+			ld  a, 240
+			ld  (_hotspot_y), a 
+			ret
+
+		.dcsd_5 
+			ld  hl, _decos2
+			ld  (_gp_gen), hl
+			call _draw_decos
+			ret
+
+
+		.dcsd_17
+			// Sonia la momia
+			ld  a, (_sonia_talk)
+			ret nz
+			ld  a, 12
+			ld  c, a
+			ld  (__x), a
+			ld  a, 3 
+			ld  (__y), a
+			ld  a, 34
+			ld  (__t), a 
+			ld  a, 8
+			ld  (__n), a 
+			call set_map_tile_do
+			ret
+
+		.dcsd_24
+			// Dwarf at the entrance to the mountain / closed door
+			ld  a, (_gandalf_talk)
+			cp  2 
+			ret nz
+
+			ld  a, (_dwarf_talk)
+			or  a 
+			ld  a, 9
+			ld  c, a
+			ld  (__x), a
+			ld  a, 7 
+			jr  nz, dcsd_24_at
+
+			ld  (__y), a
+			ld  a, 17
+			ld  (__t), a 
+			jr  dcsd_24_end
+
+		.dcsd_24_at
+			ld  a, 9
+			ld  (__y), a
+			ld  a, 15
+			ld  (__t), a 
+			jr  dcsd_24_end
+
+		.dcsd_24_end
+			ld  a, 8
+			ld  (__n), a 
+			call set_map_tile_do
+			ret
+
+		.dcsd_31
+			ld  a, (_gandalf_talk)
+			cp  2 
+			ret z
+
+			ld  a, 9
+			ld  c, a
+			ld  (__x), a
+			xor a 
+			ld  (__y), a
+			ld  a, 15
+			ld  (__t), a 
+			ld  a, 8
+			ld  (__n), a 
+			call set_map_tile_do
+			ret		
+	#endasm
 }
 
 void launch_comecocos_screen(void) {
@@ -841,8 +1017,8 @@ unsigned char touch_tile (void) {
 		wyz_play_music (1);
 
 		// Debug
-		gandalf_talk = 3; dwarf_talk = 1; 
-		n_pant = 4;
+		//gandalf_talk = 3; dwarf_talk = 1; 
+		//n_pant = 11;
 	}
 
 	void hook_init_mainloop (void) {
@@ -872,31 +1048,80 @@ unsigned char touch_tile (void) {
 		#endasm
 
 		// Comecocos shit
-		if (comecocos_on && player.coins == cocos_count) {
-			back_from_comecocos_screen ();
-			comecocos_on = 0;
 
-			switch (n_pant_was) {
-				case 0:
-					wyz_play_music (2); 	// AYJO
-					tfn_b = 46; tfn_a = 7;
-					delayed_ct = 3;
-					break;
-				case 1:
-					wyz_play_music (1); 	// NOMO
-					tfn_b = 46; tfn_a = 8;
-					delayed_ct = 3;
-					break;
-				case 2:
-					wyz_play_music (3); 	// CAVE
-					break;
-				case 3:
-					wyz_play_music (3); 	// CAVE
-					tfn_b = 18; tfn_a = 26;
-					delayed_ct = 3;
-					break;
-			}
-		}
+		#asm
+			// if (comecocos_on && player.coins == cocos_count) {
+			.comecocos_shit
+				ld  a, (_comecocos_on) 
+				or  a 
+				jr  z, comecocos_shit_done
+
+				ld  a, (_player + 45) 		// player.coins 
+				ld  c, a 
+				ld  a, (_cocos_count) 
+				cp  c 
+				jr  nz, comecocos_shit_done
+
+			.comecocos_shit_do 
+				// back_from_comecocos_screen ();
+				// comecocos_on = 0;
+				call _back_from_comecocos_screen
+				xor a 
+				ld  (_comecocos_on), a 
+
+				// switch (n_pant_was) {
+				ld  a, (_n_pant_was)
+				cp  0
+				jr  z, after_comecocos_0
+				cp  1
+				jr  z, after_comecocos_1
+				cp  2
+				jr  z, after_comecocos_2
+				cp  3
+				jr  z, after_comecocos_3
+				jr  comecocos_shit_done
+
+			.after_comecocos_0
+				ld  hl, 2  					// Play "AYJO"
+				call _wyz_play_music 
+				ld  a, 46
+				ld  (_tfn_b), a 
+				ld  a, 7 
+				ld  (_tfn_a), a
+				ld  a, 3 
+				ld  (_delayed_ct), a 
+				jr  comecocos_shit_done
+
+			.after_comecocos_1
+				ld  hl, 1  					// Play "NOMO"
+				call _wyz_play_music 
+				ld  a, 46
+				ld  (_tfn_b), a 
+				ld  a, 8
+				ld  (_tfn_a), a
+				ld  a, 3 
+				ld  (_delayed_ct), a 
+				jr  comecocos_shit_done
+
+			.after_comecocos_2
+				ld  hl, 3  					// Play "CAVE"
+				call _wyz_play_music 				
+				jr  comecocos_shit_done
+
+			.after_comecocos_3
+				ld  hl, 3  					// Play "CAVE"
+				call _wyz_play_music 
+				ld  a, 18
+				ld  (_tfn_b), a 
+				ld  a, 26
+				ld  (_tfn_a), a
+				ld  a, 3 
+				ld  (_delayed_ct), a 
+				jr  comecocos_shit_done
+
+			.comecocos_shit_done
+		#endasm
+
 
 		// Interactions
 		switch(n_pant) {
@@ -909,10 +1134,16 @@ unsigned char touch_tile (void) {
 						} 
 
 						if (gandalf_talk == 0) {
+							/*
 							rdb = 46;
 							rda = 4; show_text_box ();
 							rda = 5; show_text_box ();
 							rdb = 47; rda = 6; show_text_box ();
+							*/
+							#asm
+									ld  hl, cuts0 
+									call run_cutscene
+							#endasm
 
 							gandalf_talk = 1;
 
@@ -982,11 +1213,17 @@ unsigned char touch_tile (void) {
 					_x = 12 << 4; _y = 3 << 4; if (touch_tile ()) {
 						if (interact_flag == 0) {
 							interact_flag = 1;
+							/*
 							rdb = 47;
 							rda = 22; show_text_box ();
 							rda = 23; show_text_box ();
 							rdb = 34;
 							rda = 24; show_text_box ();
+							*/
+							#asm
+									ld  hl, cuts1 
+									call run_cutscene
+							#endasm
 
 							// Fire up comecocos #2
 							rda = 2;
@@ -1009,10 +1246,16 @@ unsigned char touch_tile (void) {
 						if (interact_flag == 0) {
 							interact_flag = 1;
 
+							/*
 							rdb = 46;
 							rda = 19; show_text_box ();
 							rda = 20; show_text_box ();							
-							rda = 21; show_text_box ();							
+							rda = 21; show_text_box ();
+							*/
+							#asm
+									ld  hl, cuts2
+									call run_cutscene							
+							#endasm
 
 							dwarf_talk = 1; 
 							on_pant = 0xFF;
@@ -1186,17 +1429,23 @@ unsigned char touch_tile (void) {
 		if(_en_t == 3) {
 			// Custom collision with Gallumb
 			if(gallumb_flag == 0) {
+				/*
 				rdb = 33; 
 				rda = 27; show_text_box ();
 				rda = 28; show_text_box ();
 				rdb = 17; rda = 30; show_text_box ();
 				rdb = 33; rda = 31; show_text_box ();
+				*/
+				#asm
+						ld  hl, cuts3
+						call run_cutscene
+				#endasm
 
 				gallumb_flag = 1;
 			} 
 
 			if (gallumb_flag == 1) {
-				player.vx = -256;
+				player.x -= 256;
 				
 				return 1;
 			}

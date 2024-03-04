@@ -1081,8 +1081,17 @@ void adjust_to_tile_y (void) {
 
 #ifdef PLAYER_FLICKERS
 	void player_flicker (void) {
+		/*
 		player.estado = EST_PARP;
 		player.ct_estado = PLAYER_FLICKERS;
+		*/
+
+		#asm
+				ld  a, EST_PARP 
+				ld  (_player + 23), a 	// player.estado
+				ld  a, PLAYER_FLICKERS 
+				ld  (_player + 24), a 	// player.ct_estado
+		#endasm
 	}
 #endif
 
@@ -1722,7 +1731,38 @@ void move (void) {
 		#endif	
 
 		#ifdef PLAYER_DIZZY
-			if (player.estado & EST_DIZZY) { player.vy >>= 1; player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
+			/*
+			if (player.estado & EST_DIZZY) { 
+				player.vy >>= 1; 
+				player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); 
+			}
+			*/
+			#asm
+					ld  a, (_player + 23) 		// player.estado
+					and EST_DIZZY 
+					jr  z, pl_dizzy_vert_done
+
+					call _rand 
+					ld  a, l 
+					and #(PLAYER_CONST_V - 1)
+					ld  d, 0 
+					ld  e, a 					// DE = rand () & (PLAYER_CONST_V - 1)
+
+					// player.vy >>= 1
+					ld  hl, (_player + 8) 		// player.vy
+					sra h 
+					rr l 
+
+					// player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1)
+
+					add hl, de 
+					ld  de, #(-(PLAYER_CONST_V / 2)) 
+					add hl, de
+
+					ld  (_player + 8), hl
+
+				.pl_dizzy_vert_done
+			#endasm
 		#endif
 	#endif
 
@@ -2875,7 +2915,37 @@ void move (void) {
 		#endif
 
 		#ifdef PLAYER_DIZZY
-			if (player.estado & EST_DIZZY) { player.vx >>= 1; player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
+			/*
+			if (player.estado & EST_DIZZY) { 
+				player.vx >>= 1; player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); 
+			}
+			*/
+			#asm
+					ld  a, (_player + 23) 		// player.estado
+					and EST_DIZZY 
+					jr  z, pl_dizzy_horz_done
+
+					call _rand 
+					ld  a, l 
+					and #(PLAYER_CONST_V - 1)
+					ld  d, 0 
+					ld  e, a 					// DE = rand () & (PLAYER_CONST_V - 1)
+
+					// player.vx >>= 1
+					ld  hl, (_player + 6) 		// player.vx
+					sra h 
+					rr l 
+					
+					// player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1)
+
+					add hl, de 
+					ld  de, #(-(PLAYER_CONST_V / 2)) 
+					add hl, de
+
+					ld  (_player + 6), hl
+
+				.pl_dizzy_horz_done
+			#endasm
 		#endif
 	#endif
 
