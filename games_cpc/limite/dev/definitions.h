@@ -132,7 +132,7 @@ extern unsigned char def_keys [0];
 		defw $4804		; KEY_ESC	
 
 		defw $4880		; KEY_AUX1 Z
-		defw $4780 		; KEY_AUX2 X
+		defw $4710 		; KEY_AUX2 S
 		defw $4801 		; KEY_AUX3 1
 		defw $4802 		; KEY_AUX4 2
 #endasm
@@ -343,7 +343,7 @@ unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char _x2, _y2;
 unsigned char wall;
-unsigned char rda, rdb;
+unsigned char rda, rdb, rdmt;
 
 #if defined RLE_MAP
 	unsigned char rdc, rdn;

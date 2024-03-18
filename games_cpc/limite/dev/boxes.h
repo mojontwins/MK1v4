@@ -32,6 +32,17 @@
 				#endif
 
 			.move_tile_do
+
+				// The tile we are displacing is @ _x0, _y0.
+				// Save this first, then use it for re-placing
+				ld  a, (_x0)
+				ld  c, a
+				ld  a, (_y0)
+				call qtile_do
+				ld  a, l 
+				ld  (_rdmt), a
+
+
 				ld  hl, (_x0)
 				ld  h, 0
 				push hl
@@ -59,10 +70,13 @@
 			#endif
 				ld  h, 0
 				push hl
-				ld  hl, 14
-				push hl
-				ld  hl, (_comportamiento_tiles+14)
+				//ld  hl, 14 							// DEHHARDCODE THIS 14
+				ld  hl, (_rdmt) 						// Stored tile
 				ld  h, 0
+				push hl
+				//ld  hl, (_comportamiento_tiles+14) 	// it is 10!
+				//ld  h, 0
+				ld  hl, 10 								// BEH is 10.
 				push hl
 				call _set_map_tile
 				pop bc
@@ -79,10 +93,10 @@
 					ld  a, (_x0)
 					ld  c, a
 					ld  a, (_y0)
-					call qtile_do
+					call _attr_2
 
 					ld  a, l
-					cp  14
+					cp  10
 					jr  z, move_tile_do
 			#endif
 		#endasm
@@ -114,20 +128,20 @@
 			#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 				if (attr (x1, y0) & 0xd)
 			#else
-				if (qtile (x0, y0) != 14 || (attr (x1, y1) & 0xd))
+				if (attr (x0, y0) != 10 || (attr (x1, y1) & 0xd))
 			#endif
 				return 0;
 
 			#ifdef PUSH_OVER_FLOOR
 				#ifndef PUSH_AND_PULL_PILES
 					if (attr (x1, y1 + 1) < 4) return 0;
-					if (qtile (x0, y0 - 1) == 14) return 0;
+					if (attr (x0, y0 - 1) == 10) return 0;
 				#endif
 			#endif
 			
 			#if defined PUSH_AND_PULL && defined PUSH_AND_PULL_PILES
 				y0 --;
-				if (qtile (x0, y0) != 14) return 1;
+				if (attr (x0, y0) != 10) return 1;
 			#else
 				return 1;
 			#endif
@@ -164,9 +178,10 @@
 							x0 = fallingboxbuffer [rdi].x; y0 = fallingboxbuffer [rdi].y;
 							x1 = x0; y1 = y0 + 1;
 							move_tile (0);
+							rda = qtile (x1, y1);	// rda = falling tile #
 
 							// Check for cascades! (box above?)
-							if (qtile (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1) == 14) {
+							if (attr (fallingboxbuffer [rdi].x, fallingboxbuffer [rdi].y - 1) == 10) {
 								x1 = fallingboxbuffer [rdi].x; y1 = fallingboxbuffer [rdi].y - 1; 
 								fall_box ();
 							}
@@ -178,41 +193,46 @@
 								boyy = fallingboxbuffer [rdi].y << 4;
 							#endif
 
-							#ifdef BOXES_KILL_ENEMIES
-								// Check for enemy killed!
+							#if defined BOXES_ONLY_KILL_IF
+								if (rda == BOXES_ONLY_KILL_IF)
+							#endif
+							{
+								#ifdef BOXES_KILL_ENEMIES
+									// Check for enemy killed!
 
-								for (enit = 0; enit < MAX_ENEMS; enit ++) {
-									enoffsmasi = enoffs + enit;
-									_en_t = malotes [enoffsmasi].t;
-									en_ccx = malotes [enoffsmasi].x;
-									en_ccy = malotes [enoffsmasi].y;
-									
-									#ifdef BOXES_ONLY_KILL_TYPE
-										if (_en_t == BOXES_ONLY_KILL_TYPE)
-									#else
-										if (_en_t > 0 && _en_t < 16)
-									#endif
-									{
-										if (en_ccx >= boxx - 15 && en_ccx <= boxx + 15 &&
-											en_ccy >= boyy - 15 && en_ccy <= boyy + 15) {
-											
-											en_an_next_frame [enit] = sprite_17_a;
-											enems_kill ();
+									for (enit = 0; enit < MAX_ENEMS; enit ++) {
+										enoffsmasi = enoffs + enit;
+										_en_t = malotes [enoffsmasi].t;
+										en_ccx = malotes [enoffsmasi].x;
+										en_ccy = malotes [enoffsmasi].y;
+										
+										#ifdef BOXES_ONLY_KILL_TYPE
+											if (_en_t == BOXES_ONLY_KILL_TYPE)
+										#else
+											if (_en_t > 0 && _en_t < 16)
+										#endif
+										{
+											if (en_ccx >= boxx - 15 && en_ccx <= boxx + 15 &&
+												en_ccy >= boyy - 15 && en_ccy <= boyy + 15) {
+												
+												en_an_next_frame [enit] = sprite_17_a;
+												enems_kill ();
+											}
 										}
+
+										malotes [enoffsmasi].t = _en_t;						
 									}
+								#endif
 
-									malotes [enoffsmasi].t = _en_t;						
-								}
-							#endif
-
-							#ifdef BOXES_KILL_PLAYER
-								// Check for player killed!
-								if (gpx >= boxx - 15 && gpx <= boxx + 15 && gpy >= boyy - 15 && gpy <= boyy + 15) {
-									explode_player ();	
-									player.life --;
-									player.is_dead = 1;
-								}
-							#endif
+								#ifdef BOXES_KILL_PLAYER
+									// Check for player killed!
+									if (gpx >= boxx - 15 && gpx <= boxx + 15 && gpy >= boyy - 15 && gpy <= boyy + 15) {
+										explode_player ();	
+										player.life --;
+										player.is_dead = 1;
+									}
+								#endif
+							}
 						} else {
 							fallingboxbuffer [rdi].act = 0;
 						}

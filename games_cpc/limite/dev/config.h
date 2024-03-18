@@ -21,7 +21,7 @@
 #define MAP_W						6		//
 #define MAP_H						5		// Map dimmensions in screens
 #define TOTAL_SCREENS				30		// 
-#define SCR_INICIO					6		// Initial screen
+#define SCR_INICIO					0		// Initial screen
 #define PLAYER_INI_X				1		//
 #define PLAYER_INI_Y				1		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
@@ -117,6 +117,7 @@
 #define BOXES_KILL_ENEMIES					// If defined, falling boxes can kill enemies.
 #define BOXES_ONLY_KILL_TYPE 		1		// If defined, only enemies type N can be killed with boxes.
 #define BOXES_KILL_PLAYER					// If defined, falling boxes can kill the player.
+#define BOXES_ONLY_KILL_IF 			16 		// If defined, only this box kills (tile #).
 
 // Shooting behaviour (only side view!)
 // ------------------------------------
@@ -329,7 +330,7 @@
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
 //#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
-//#define RLE_MAP 					62 		// Use RLE compression (values 44, 54, 62; see docs)
+#define RLE_MAP 					53 		// Use RLE compression (values 44, 54, 62; see docs)
 
 // Stupid animated tiles
 //#define ENABLE_ANIMATED_TILES 			// Enables them
@@ -392,8 +393,11 @@
 // 32 = Breakable
 // 64 = Quicksands
 
+// NEW!
+// 10 = Pushable
+
 unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-	0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0
+	 0, 8, 8, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,10, 8,
+	10, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0
 };
 

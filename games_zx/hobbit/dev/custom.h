@@ -582,6 +582,38 @@ void sprite_remove_aid (void) {
 	#endasm				
 }
 
+void draw_text_cbc (void) {
+	#asm
+			// Text to draw in HL, 0 terminated
+		.dtcbc_loop
+			ld  a, (_rdx)
+			ld  c, a 
+			inc a 
+			ld  (_rdx), a
+			ld  a, (__n)
+			ld  d, a 
+			ld  a, (hl) 
+			or  a 
+			ret z  
+			inc hl 
+			sub 32 
+			halt 
+			halt 
+			jr z, dtcbc_loop
+
+			ld  e, a 
+			ld  a, (_rdy)
+
+			push hl 
+
+			call SPPrintAtInv 
+			call SPUpdateNow			
+			pop hl 
+
+			jr  dtcbc_loop
+	#endasm
+}
+
 void show_text_box (void) {
 	sprite_remove_aid ();
 
@@ -609,6 +641,22 @@ void show_text_box (void) {
 		#endasm 
 
 		draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
+		draw_text (4, rdy, ATTR_TEXTBOX, temp_string);
+		draw_text (4, rdy + 1, ATTR_TEXTBOX, bottom_string);
+
+		#asm
+				ld  a, (_rdb) 
+				or  a 
+				jr  z, no_character
+				ld  a, 5
+				ld  (__x), a
+				ld  a, 6
+				ld  (__y), a 
+				ld  a, (_rdb)
+				ld  (__t), a
+				call _draw_coloured_tile_do
+			.no_character
+		#endasm
 
 		#asm
 			.stb_notop
@@ -642,26 +690,17 @@ void show_text_box (void) {
 				ld  (_gp_gen), hl
 		#endasm
 
-		draw_text (4, rdy ++, ATTR_TEXTBOX, temp_string);
-		draw_text (4, rdy ++, ATTR_TEXTBOX, bottom_string);
+		rdx = 4; _n = ATTR_TEXTBOX; 
+		#asm 
+			ld  hl, _temp_string
+			call dtcbc_loop
+		#endasm
+
+		rdy += 2;
 	
 		if (*gp_gen == 0) break;
 		gp_gen ++;
 	}
-
-	#asm
-			ld  a, (_rdb) 
-			or  a 
-			jr  z, no_character
-			ld  a, 5
-			ld  (__x), a
-			ld  a, 6
-			ld  (__y), a 
-			ld  a, (_rdb)
-			ld  (__t), a
-			call _draw_coloured_tile_do
-		.no_character
-	#endasm
 
 	sp_UpdateNow ();
 	play_sfx (7);

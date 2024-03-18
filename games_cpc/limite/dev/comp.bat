@@ -3,7 +3,8 @@
 set game=limite
 
 echo Making %game%
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 15 packed  > nul
+rem ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 15 packed  > nul
+..\utils\rle53map_sp in=..\map\mapa.map out=mapa.bin size=6,5 scrsize=15,10 tlock=99 mk1h=mapa.h > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\font.png out=font.bin silent > nul

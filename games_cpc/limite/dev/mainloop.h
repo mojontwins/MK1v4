@@ -1065,7 +1065,7 @@ void main (void) {
 			}
 			
 			#ifdef USE_SUICIDE_KEY
-				if (cpc_TestKey (KEY_AUX4)) {
+				if (cpc_TestKey (KEY_AUX2)) {
 					player.is_dead = 1;
 					player.life --;
 				}
