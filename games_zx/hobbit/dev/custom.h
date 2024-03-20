@@ -374,14 +374,26 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 				
 	unsigned char text32[] = "_GALLUMB%"
 							 "AH, ERES TU, RUBIO!%"
-							 "KIERE PELEA EH, LADRON?M%"
+							 "KIERE PELEA, LADRON?%"
 							 "TE REBIENTO, PAIASO!";
 
 	unsigned char text33[] = "_BILBOS%"
 							 "AY! QUE SOPAPO! CON LO%"
 							 "BAJITO QUE ES Y COMO%"
 							 "LA SUERTA EL IOPUTA!%"
-							 "ME TIEMBLAN LOS PI/OS!";
+							 "ME TIEMBLAN LOS PI/OS";
+
+	unsigned char text34[] = "_BILBOS%"
+							 "YA ECHE LAS RABAS...%"
+							 "COMO MAREA ESTO... NO%"
+							 "CREO QUE LO AGUANTE%"
+							 "MUCHAS VECES...";
+
+	unsigned char text35[] = "_BILBOS%"
+							 "HOBBIT, HOBA... CADA%"
+							 "DIA TE QUIERO MA...%"
+							 "QUE MAREO... MI MAE%"
+							 "ME DESMAYO...";
 
 #endif
 
@@ -400,6 +412,7 @@ unsigned char *texts [] = {
 	text27, text28,	text29,					// Gallumb
 	text30, text31,							// Gallumb + tasslehoff
 	text32, text33, 						// Gallumb expels
+	text34, text35							// Anillo bad
 };
 
 unsigned char dwarf_names [] = 
@@ -652,7 +665,7 @@ void show_text_box (void) {
 		// if (rdy > 7 || rdb != 0) 
 		#asm
 				ld  a, (_rdy)
-				cp  8
+				cp  7
 				jr  nc, stb_top
 
 				ld  a, (_rdb) 
@@ -1080,6 +1093,7 @@ unsigned char touch_tile (void) {
 		// Debug
 		gandalf_talk = 3; dwarf_talk = 1; 
 		n_pant = 11;
+		anillo_flag = 1; gallumb_flag = 1;
 	}
 
 	void hook_init_mainloop (void) {
@@ -1264,7 +1278,7 @@ unsigned char touch_tile (void) {
 			case 12:
 				// Gallumb angers
 				if (gallumb_flag == 1) {
-					_x = _y = 7 << 4; if (touch_tile ()) {
+					_x = 7 << 4; _y = 9 << 4; if (touch_tile ()) {
 						if (interact_flag == 0) {
 							rdb = 33;
 							rda = 29; show_text_box ();
@@ -1343,7 +1357,7 @@ unsigned char touch_tile (void) {
 					// if (player.estado == 0) 
 					ld  a, (_player + 23) 			// player.estado
 					or  a 
-					jr  nz, anillo_done
+					jp  nz, anillo_done
 
 					// if (player_estado != last_estado)
 
@@ -1373,6 +1387,32 @@ unsigned char touch_tile (void) {
 
 					// Throw up!
 
+					ld  a, (_gpx)
+					add 8
+					srl a
+					srl a 
+					srl a
+					srl a 
+					ld  (__x), a 
+					ld  a, (_gpy)
+					add 8
+					srl a
+					srl a 
+					srl a
+					srl a 
+					ld  (__y), a 
+
+					ld  a, 32
+					ld  (__t), a 
+					xor a 
+					ld  (__n), a
+					call set_map_tile_do
+					call SPUpdateNow
+
+				#endasm
+				play_sfx (3);
+				espera_activa (20);
+				#asm
 
 
 					// First time with anillo: text
@@ -1384,7 +1424,11 @@ unsigned char touch_tile (void) {
 					ld  (_anillo_first_time), a
 
 					// Text!
-
+					ld  a, 34
+					ld  (_rda), a 
+					ld  a, 47
+					ld  (_rdb), a 
+					call _show_text_box
 
 					jr  anillo_done
 
@@ -1518,7 +1562,7 @@ unsigned char touch_tile (void) {
 				recuadrius ();				
 
 				// Back to the entrance
-				n_pant = 12;
+				n_pant = 12; on_pant = 0xff;
 				player.x = player.y = 2 << 10;
 
 				// on reenter, detect this & show text, then set it back to 2.
