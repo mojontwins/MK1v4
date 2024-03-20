@@ -230,7 +230,7 @@
 // Patrulleros marrulleros genitales
 // ---------------------------------
 
-//#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
+#define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
 
 // Scripting
 // ---------
@@ -416,7 +416,9 @@
 // 32 = Breakable
 // 64 = Quicksands
 
+// 10 = PUSHABLE!
+
 unsigned char comportamiento_tiles [] = {
-	0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 8, 0, 8, 8, 8,
+	0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 8, 0, 8,10, 8,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };

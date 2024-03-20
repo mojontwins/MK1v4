@@ -287,7 +287,6 @@ unsigned char coins_old;
 unsigned char success;
 unsigned char rdi;
 signed int rdj;
-unsigned char rda;
 unsigned char rdx, rdy;
 unsigned char gpit, enit, pad0, pad1, pad_this_frame;
 unsigned char gpx, gpy, gpxx, gpyy;
@@ -297,6 +296,7 @@ unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char _x2, _y2;
 unsigned char wall;
+unsigned char rda, rdb, rdmt;
 
 #if defined RLE_MAP
 	unsigned char rdc, rdn;

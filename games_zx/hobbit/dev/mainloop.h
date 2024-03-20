@@ -287,6 +287,7 @@ void main (void) {
 		while (playing) {
 			#ifdef ENABLE_CODE_HOOKS
 				hook_init_mainloop ();
+				pant_just_rendered = 0;
 			#endif
 
 			player_just_died = 0;
@@ -309,6 +310,11 @@ void main (void) {
 
 					ld  a, (_n_pant)
 					ld  (_on_pant), a
+
+					#ifdef ENABLE_CODE_HOOKS
+						ld  a, 1
+						ld  (_pant_just_rendered), a
+					#endif
 				.ml_ud_skip
 			#endasm
 

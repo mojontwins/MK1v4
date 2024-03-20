@@ -31,6 +31,7 @@
 #define WALL_LEFT 				1
 #define WALL_RIGHT 				2
 #define WALL_UP 				4
+#define WALL_DOWN 				8
 
 #define GENITAL_FACING_RIGHT 	0
 #define GENITAL_FACING_LEFT		1
@@ -73,6 +74,7 @@ typedef struct {
 	unsigned char just_hovered; 						// 42
 	unsigned char just_jumped;							// 43
 	unsigned char sword_g;								// 44
+	unsigned char coins;								// 45
 } INERCIA;
 
 typedef struct {
@@ -246,8 +248,12 @@ unsigned char map_buff [150] @ BASE_ROOM_BUFFERS+150;
 
 unsigned char hotspot_x;
 unsigned char hotspot_y;
+unsigned char hotspot_t_r;
 unsigned char hotspot_t;
 unsigned char orig_tile;	// Original background tile
+#ifdef ENABLE_CODE_HOOKS
+	unsigned char hotspot_flag;
+#endif
 
 #ifdef ENABLE_CODE_HOOKS
 	unsigned char latest_hotspot;	
@@ -264,6 +270,7 @@ unsigned char pattern_line_ct;
 	#endif
 #endif
 unsigned char n_pant, on_pant;
+unsigned char pant_just_rendered;	// Will be 1 for 1 frame if just entered a new screen in hook_init_mainloop
 
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 	unsigned char f_zone_ac;
@@ -343,7 +350,7 @@ unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char _x2, _y2;
 unsigned char wall;
-unsigned char rda, rdb;
+unsigned char rda, rdb, rdmt;
 
 #if defined RLE_MAP
 	unsigned char rdc, rdn;
@@ -415,5 +422,3 @@ unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
 void enems_kill (void);
-
-// CPC Stuff

@@ -74,6 +74,7 @@ typedef struct {
 	unsigned char just_hovered; 						// 42
 	unsigned char just_jumped;							// 43
 	unsigned char sword_g;								// 44
+	unsigned char coins;								// 45
 } INERCIA;
 
 typedef struct {
@@ -195,8 +196,12 @@ unsigned char map_buff [150] @ 23450;
 
 unsigned char hotspot_x;
 unsigned char hotspot_y;
+unsigned char hotspot_t_r;
 unsigned char hotspot_t;
 unsigned char orig_tile;	// Original background tile
+#ifdef ENABLE_CODE_HOOKS
+	unsigned char hotspot_flag;
+#endif
 
 #ifdef ENABLE_CODE_HOOKS
 	unsigned char latest_hotspot;	
@@ -217,6 +222,7 @@ unsigned char ay_player_on   @ 23297;
 	#endif
 #endif
 unsigned char n_pant, on_pant;
+unsigned char pant_just_rendered;	// Will be 1 for 1 frame if just entered a new screen in hook_init_mainloop
 
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 	unsigned char f_zone_ac;
@@ -287,7 +293,6 @@ unsigned char coins_old;
 unsigned char success;
 unsigned char rdi;
 signed int rdj;
-unsigned char rda;
 unsigned char rdx, rdy;
 unsigned char gpit, enit, pad0, pad1, pad_this_frame;
 unsigned char gpx, gpy, gpxx, gpyy;
@@ -297,6 +302,7 @@ unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char _x2, _y2;
 unsigned char wall;
+unsigned char rda, rdb, rdmt;
 
 #if defined RLE_MAP
 	unsigned char rdc, rdn;
@@ -367,3 +373,4 @@ void init_player_values (void);
 unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
+void enems_kill (void);

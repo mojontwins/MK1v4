@@ -12,8 +12,9 @@ unsigned char sonia_talk;
 unsigned char interact_flag;
 unsigned char anillo_flag;
 unsigned char anillo_ct;
-unsigned char gallumb_flag;
+unsigned char gallumb_flag; 	// 0 - init, 1 - talk, 2 - angered, 3 - teleport
 unsigned char last_estado;
+unsigned char anillo_first_time;
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
@@ -24,7 +25,6 @@ unsigned char intro_text;
 unsigned char n_pant_was, xwas, ywas;
 unsigned char comecocos_on;
 unsigned char cocos_count;
-
 
 // Show a text box next frame:
 unsigned char tfn_a, tfn_b, delayed_ct;
@@ -198,6 +198,16 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "AIN'T MY PRECIOUS!!%"
 							 "THIS IS A COCK RING!";
 
+	unsigned char text32[] = "_GALLUMB%"
+							 "AH! SO IT IS YOU!%"
+							 "FEEL THE WRATH OF THE%"
+							 "MIGHTLY GALLUMB!";
+
+	unsigned char text33[] = "_BILBOS%"
+							 "OUCH! THAT WAS A BLOW!%"
+							 "WHO WOULD'VE GUESSED?%"
+							 "HE'S SO TINY, BUT MY%"
+							 "HEAD IS SPINNING!";
 #else
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -361,7 +371,17 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "ESTE NO ES MI TESORO,%"
 							 "MALDITO ENANO! ESTO ES%"
 							 "MI ANILLO DE PENE!";
-							 
+				
+	unsigned char text32[] = "_GALLUMB%"
+							 "AH, ERES TU, RUBIO!%"
+							 "KIERE PELEA EH, LADRON?M%"
+							 "TE REBIENTO, PAIASO!";
+
+	unsigned char text33[] = "_BILBOS%"
+							 "AY! QUE SOPAPO! CON LO%"
+							 "BAJITO QUE ES Y COMO%"
+							 "LA SUERTA EL IOPUTA!%"
+							 "ME TIEMBLAN LOS PI/OS!";
 
 #endif
 
@@ -378,7 +398,8 @@ unsigned char *texts [] = {
 	text22, text23, text24,					// Sonia	
 	text25, text26,							// Anillo
 	text27, text28,	text29,					// Gallumb
-	text30, text31 							// Gallumb + tasslehoff
+	text30, text31,							// Gallumb + tasslehoff
+	text32, text33, 						// Gallumb expels
 };
 
 unsigned char dwarf_names [] = 
@@ -1048,6 +1069,7 @@ unsigned char touch_tile (void) {
 		comecocos_on = 0;
 		anillo_flag = 0;
 		gallumb_flag = 0;
+		anillo_first_time = 1;
 
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
@@ -1056,11 +1078,19 @@ unsigned char touch_tile (void) {
 		wyz_play_music (1);
 
 		// Debug
-		//gandalf_talk = 3; dwarf_talk = 1; 
-		//n_pant = 11;
+		gandalf_talk = 3; dwarf_talk = 1; 
+		n_pant = 11;
 	}
 
 	void hook_init_mainloop (void) {
+		if (n_pant == 12 && pant_just_rendered && gallumb_flag == 3) {
+			// Show text
+			// Text & fade
+			rdb = 47; rda = 33; show_text_box ();
+
+			// Reset flag
+			gallumb_flag = 2;
+		}
 	}
 
 	void hook_mainloop (void) {
@@ -1160,7 +1190,6 @@ unsigned char touch_tile (void) {
 
 			.comecocos_shit_done
 		#endasm
-
 
 		// Interactions
 		switch(n_pant) {
@@ -1310,70 +1339,83 @@ unsigned char touch_tile (void) {
 
 		// Anillo
 		if (anillo_flag) {
-			if (player.estado == 0) {
 				#asm
-						// if (player.estado == 0) 
-						ld  a, (_player + 23) 			// player.estado
-						or  a 
-						jr  nz, anillo_done
+					// if (player.estado == 0) 
+					ld  a, (_player + 23) 			// player.estado
+					or  a 
+					jr  nz, anillo_done
 
-						// if (player_estado != last_estado)
+					// if (player_estado != last_estado)
 
-						ld  c, a 
-						ld  a, (_last_estado)
-						cp  c 
-						jr  z, anillo_ct_check
+					ld  c, a 
+					ld  a, (_last_estado)
+					cp  c 
+					jr  z, anillo_ct_check
 
-						ld  a, 25
-						ld  (_anillo_ct), a				// 1 sec cooldown	
-						ld  hl, 3
-						call _wyz_play_music			// Cave music	
-				
-						// Adjust to even 
-		
-						ld  a, (_gpx)
-						and 0xfe
-						ld  (_gpx), a
-						call Ashl16_HL
-						ld  (_player), hl
+					ld  a, 25
+					ld  (_anillo_ct), a				// 1 sec cooldown	
+					ld  hl, 3
+					call _wyz_play_music			// Cave music	
+			
+					// Adjust to even 
+	
+					ld  a, (_gpx)
+					and 0xfe
+					ld  (_gpx), a
+					call Ashl16_HL
+					ld  (_player), hl
 
-						ld  a, (_gpy)
-						and 0xfe
-						ld  (_gpy), a
-						call Ashl16_HL
-						ld  (_player + 2), hl
+					ld  a, (_gpy)
+					and 0xfe
+					ld  (_gpy), a
+					call Ashl16_HL
+					ld  (_player + 2), hl
 
-						jr  anillo_done
+					// Throw up!
 
-					.anillo_ct_check
-						// if (anillo_ct < 0)
-						ld  a, (_anillo_ct)
-						or  a 
-						jr  z, anillo_ct_zero
 
-						// anillo_ct --;
-						dec a 
-						ld  (_anillo_ct), a
-						jr  anillo_done
 
-					.anillo_ct_zero
-						// if ((pad_this_frame & sp_FIRE) == 0 && anillo_ct == 0) {
-						ld  a, (_pad_this_frame)
-						and sp_FIRE
-						jr  nz, anillo_done
+					// First time with anillo: text
+					
+					ld  a, (_anillo_first_time) 
+					or  a
+					jr  z, anillo_done
+					xor a 
+					ld  (_anillo_first_time), a
 
-						ld  a, EST_PARP | EST_DIZZY
-						ld  (_player + 23), a 			// player.estado
-						ld  a, 190
-						ld  (_player + 24), a 			// player.ct_estado
+					// Text!
 
-						ld hl, 4
-						call _wyz_play_music
-						ld hl, 8 
-						call _play_sfx
-					.anillo_done
-				#endasm 
-			}
+
+					jr  anillo_done
+
+				.anillo_ct_check
+					// if (anillo_ct < 0)
+					ld  a, (_anillo_ct)
+					or  a 
+					jr  z, anillo_ct_zero
+
+					// anillo_ct --;
+					dec a 
+					ld  (_anillo_ct), a
+					jr  anillo_done
+
+				.anillo_ct_zero
+					// if ((pad_this_frame & sp_FIRE) == 0 && anillo_ct == 0) {
+					ld  a, (_pad_this_frame)
+					and sp_FIRE
+					jr  nz, anillo_done
+
+					ld  a, EST_PARP | EST_DIZZY
+					ld  (_player + 23), a 			// player.estado
+					ld  a, 190
+					ld  (_player + 24), a 			// player.ct_estado
+
+					ld hl, 4
+					call _wyz_play_music
+					ld hl, 8 
+					call _play_sfx
+				.anillo_done
+			#endasm 
 
 		}
 
@@ -1467,27 +1509,46 @@ unsigned char touch_tile (void) {
 	unsigned char enems_custom_collision (void) {
 		if(_en_t == 3) {
 			// Custom collision with Gallumb
-			if(gallumb_flag == 0) {
-				/*
-				rdb = 33; 
-				rda = 27; show_text_box ();
-				rda = 28; show_text_box ();
-				rdb = 17; rda = 30; show_text_box ();
-				rdb = 33; rda = 31; show_text_box ();
-				*/
-				#asm
-						ld  hl, cuts3
-						call run_cutscene
-				#endasm
+			
+			if (gallumb_flag == 2) {
+				// Gallumb is angered! on touch->text, fade, teleport, text2 <- "on enter"
 
-				gallumb_flag = 1;
-			} 
+				// Text & fade
+				rdb = 33; rda = 32; show_text_box ();
+				recuadrius ();				
 
-			if (gallumb_flag == 1) {
-				player.x -= 256;
-				
-				return 1;
+				// Back to the entrance
+				n_pant = 12;
+				player.x = player.y = 2 << 10;
+
+				// on reenter, detect this & show text, then set it back to 2.
+				gallumb_flag = 3;
+
+			} else {
+
+				if(gallumb_flag == 0) {
+					/*
+					rdb = 33; 
+					rda = 27; show_text_box ();
+					rda = 28; show_text_box ();
+					rdb = 17; rda = 30; show_text_box ();
+					rdb = 33; rda = 31; show_text_box ();
+					*/
+					#asm
+							ld  hl, cuts3
+							call run_cutscene
+					#endasm
+
+					gallumb_flag = 1;
+				} 
+
+				if (gallumb_flag == 1) {
+					player.x -= 256;
+					
+					return 1;
+				}
 			}
+
 		} 
 
 		return 0;

@@ -1018,7 +1018,11 @@ void cortina (void) {
 			persist ();
 		#endif
 
-		flags [COIN_FLAG] ++;
+		#ifdef COIN_FLAG
+			flags [COIN_FLAG] ++;
+		#else
+			player.coins ++;
+		#endif
 		
 		set_map_tile (_x, _y, 0, 0);
 		play_sfx (5);
@@ -1077,8 +1081,17 @@ void adjust_to_tile_y (void) {
 
 #ifdef PLAYER_FLICKERS
 	void player_flicker (void) {
+		/*
 		player.estado = EST_PARP;
 		player.ct_estado = PLAYER_FLICKERS;
+		*/
+
+		#asm
+				ld  a, EST_PARP 
+				ld  (_player + 23), a 	// player.estado
+				ld  a, PLAYER_FLICKERS 
+				ld  (_player + 24), a 	// player.ct_estado
+		#endasm
 	}
 #endif
 
@@ -1718,7 +1731,38 @@ void move (void) {
 		#endif	
 
 		#ifdef PLAYER_DIZZY
-			if (player.estado & EST_DIZZY) { player.vy >>= 1; player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
+			/*
+			if (player.estado & EST_DIZZY) { 
+				player.vy >>= 1; 
+				player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); 
+			}
+			*/
+			#asm
+					ld  a, (_player + 23) 		// player.estado
+					and EST_DIZZY 
+					jr  z, pl_dizzy_vert_done
+
+					call _rand 
+					ld  a, l 
+					and #(PLAYER_CONST_V - 1)
+					ld  d, 0 
+					ld  e, a 					// DE = rand () & (PLAYER_CONST_V - 1)
+
+					// player.vy >>= 1
+					ld  hl, (_player + 8) 		// player.vy
+					sra h 
+					rr l 
+
+					// player.vy += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1)
+
+					add hl, de 
+					ld  de, #(-(PLAYER_CONST_V / 2)) 
+					add hl, de
+
+					ld  (_player + 8), hl
+
+				.pl_dizzy_vert_done
+			#endasm
 		#endif
 	#endif
 
@@ -1871,11 +1915,11 @@ void move (void) {
 					jp  vert_collision_done
 			#else
 				#ifndef TALL_PLAYER
-				// if ((gpy & 15) < 12)
-					ld  a, (_gpy)
-					and 15
-					cp  12
-					jp  nc, vert_collision_done
+					// if ((gpy & 15) < 12)
+						ld  a, (_gpy)
+						and 15
+						cp  12
+						jp  nc, vert_collision_done
 				#endif
 
 				// if (((gpx & 15) < 12 && attr (gpxx, gpyy) & 8) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy) & 8)) {
@@ -2262,7 +2306,7 @@ void move (void) {
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {
 				rdx = gpxx;	x0 = x1 = gpxx;	y0 = y1 = gpyy;
 				if (player.facing) {				// Looking left
-					if ((gpx & 15) == 0 && qtile (gpxx - 1, gpyy) == 14) {
+					if ((gpx & 15) == 0 && attr (gpxx - 1, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0) {
 							x0 = gpxx - 1; x1 = gpxx - 2;
@@ -2273,7 +2317,7 @@ void move (void) {
 						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				} else {								// Looking right
-					if ((gpx & 15) == 0 && qtile (gpxx + 1, gpyy) == 14) {
+					if ((gpx & 15) == 0 && attr (gpxx + 1, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) < 0) {
 							x0 = gpxx + 1; x1 = gpxx;
@@ -2298,9 +2342,9 @@ void move (void) {
 					jp  nz, push_pull_done
 
 					#ifdef PUSH_ON_FLOOR
-					ld  a, (_player + 26) 	// player.possee
-					or  a
-					jp  z, push_pull_done
+						ld  a, (_player + 26) 	// player.possee
+						or  a
+						jp  z, push_pull_done
 					#endif
 
 				.push_pull_do 
@@ -2324,7 +2368,7 @@ void move (void) {
 				.push_pull_facing_left
 					// Facing left
 
-					//if ((gpx & 15) == 0 && qtile (gpxx - 1, gpyy) == 14) {
+					//if ((gpx & 15) == 0 && attr (gpxx - 1, gpyy) == 10) {
 					ld  a, (_gpx)
 					and 15
 					jp  nz, push_pull_done
@@ -2336,11 +2380,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_left_do
@@ -2401,7 +2445,7 @@ void move (void) {
 				.push_pull_facing_right
 					// Facing right
 
-					// if ((gpx & 15) == 0 && qtile (gpxx + 1, gpyy) == 14)
+					// if ((gpx & 15) == 0 && attr (gpxx + 1, gpyy) == 10)
 					ld  a, (_gpx)
 					and 15
 					
@@ -2414,11 +2458,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_right_do	
@@ -2534,7 +2578,7 @@ void move (void) {
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {				
 				rdx = gpx;	x0 = 0xff;	y0 = y1 = gpyy;
 				if (player.facing) {				// Looking left
-					if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
+					if ((gpx & 15) == 12 && attr (gpxx, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0) {
 							x0 = gpxx; x1 = gpxx - 1;
@@ -2545,7 +2589,7 @@ void move (void) {
 						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				} else {								// Looking right
-					if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14) {
+					if ((gpx & 15) == 4 && attr (gpxx + 1, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) < 4) {
 							x0 = gpxx + 1; x1 = gpxx;
@@ -2597,7 +2641,7 @@ void move (void) {
 				.push_pull_facing_left
 					// Facing left
 
-					// if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
+					// if ((gpx & 15) == 12 && attr (gpxx, gpyy) == 10) {
 					ld  a, (_gpx)
 					and 15
 					cp  TIGHT_UPPER
@@ -2609,11 +2653,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_left_do
@@ -2671,7 +2715,7 @@ void move (void) {
 				.push_pull_facing_right
 					// Facing right
 
-					// if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14)
+					// if ((gpx & 15) == 4 && attr (gpxx + 1, gpyy) == 10)
 					ld  a, (_gpx)
 					and 15
 					cp  TIGHT_LOWER
@@ -2684,11 +2728,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_right_do	
@@ -2871,7 +2915,37 @@ void move (void) {
 		#endif
 
 		#ifdef PLAYER_DIZZY
-			if (player.estado & EST_DIZZY) { player.vx >>= 1; player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); }
+			/*
+			if (player.estado & EST_DIZZY) { 
+				player.vx >>= 1; player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1); 
+			}
+			*/
+			#asm
+					ld  a, (_player + 23) 		// player.estado
+					and EST_DIZZY 
+					jr  z, pl_dizzy_horz_done
+
+					call _rand 
+					ld  a, l 
+					and #(PLAYER_CONST_V - 1)
+					ld  d, 0 
+					ld  e, a 					// DE = rand () & (PLAYER_CONST_V - 1)
+
+					// player.vx >>= 1
+					ld  hl, (_player + 6) 		// player.vx
+					sra h 
+					rr l 
+					
+					// player.vx += (rand () & (PLAYER_CONST_V - 1)) - (PLAYER_CONST_V >> 1)
+
+					add hl, de 
+					ld  de, #(-(PLAYER_CONST_V / 2)) 
+					add hl, de
+
+					ld  (_player + 6), hl
+
+				.pl_dizzy_horz_done
+			#endasm
 		#endif
 	#endif
 
@@ -3032,10 +3106,10 @@ void move (void) {
 
 			.horz_collision_if1
 				#ifndef TALL_PLAYER
-				ld  a, (_gpy)
-				and 15
-				cp  12
-				jp  nc, horz_collision_if2
+					ld  a, (_gpy)
+					and 15
+					cp  12
+					jp  nc, horz_collision_if2
 				#endif
 
 				ld  a, (_gpxx)
@@ -3239,7 +3313,7 @@ void move (void) {
 					if (master_of_keys == 0)
 				#endif
 				{
-				player.keys --;
+					player.keys --;
 				}
 				play_sfx (8);
 			} else 
@@ -3250,7 +3324,7 @@ void move (void) {
 						if (master_of_keys == 0)
 					#endif
 					{
-					player.keys --;
+						player.keys --;
 					}
 					play_sfx (8);
 				}
@@ -3261,7 +3335,7 @@ void move (void) {
 						if (master_of_keys == 0)
 					#endif
 					{
-					player.keys --;
+						player.keys --;
 					}
 					play_sfx (8);
 				}
@@ -3269,7 +3343,7 @@ void move (void) {
 		}
 	#endif
 	
-	// Pushing boxes (tile #14) engine
+	// Pushing boxes (tile attr #10) engine
 
 	#if defined PLAYER_PUSH_BOXES && !defined PUSH_AND_PULL
 		#ifdef PLAYER_MOGGY_STYLE
@@ -3758,199 +3832,250 @@ void move (void) {
 			.player_get_coin
 		#endasm
 		
-		#ifdef COIN_BEH
-			/*
-			_x = gpxx; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+		#ifdef COINS_SMALL_BB
+			// if (attr ((gpx + 8) >> 4, (gpy + 8) >> 4) & COIN_BEH) get_coin ();
+			// OR
+			// if (qtile ((gpx + 8) >> 4, (gpy + 8) >> 4) & COIN_TILE) get_coin ();
+			#asm 
+					ld  a, (_gpx) 
+					add 8 
+					srl a 
+					srl a 
+					srl a 
+					srl a 
+					ld  (__x), a 
+					ld  c, a 
 
-			if (gpx & 15) {
-				_x = gpxx + 1; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
-			} 
-
-			if (gpy & 15) {
-				_x = gpxx; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
-			}
-
-			if ((gpx & 15) && (gpy & 15)) {
-				_x = gpxx + 1; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
-			}
-			*/
-			#asm
-					ld  a, (_gpxx)
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					ld  (__y), a
-
-					call _attr_2
-					ld  a, l
-					and COIN_BEH
-					jr  nz, player_get_coin_A_done
-
-					call _get_coin
-				.player_get_coin_A_done
-
-
-					ld  a, (_gpx)
-					and 15
-					jr  z, player_get_coin_B_done
-
-					ld  a, (_gpxx)
-					inc a
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					ld  (__y), a
-
-					call _attr_2
-					ld  a, l
-					and COIN_BEH
-					jr  nz, player_get_coin_B_done
-
-					call _get_coin
-				.player_get_coin_B_done
-
-
-					ld  a, (_gpy)
-					and 15
-					jr  z, player_get_coin_C_done
-
-					ld  a, (_gpxx)
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					inc a
-					ld  (__y), a
-
-					call _attr_2
-					ld  a, l
-					and COIN_BEH
-					jr  nz, player_get_coin_C_done
-
-					call _get_coin
-				.player_get_coin_C_done
-
-
-					ld  a, (_gpx)
-					and 15
-					jr  z, player_get_coin_D_done
-					ld  a, (_gpy)
-					and 15
-					jr  z, player_get_coin_D_done
-
-					ld  a, (_gpxx)
-					inc a
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					inc a
-					ld  (__y), a
-
-					call _attr_2
-					ld  a, l
-					and COIN_BEH
-					jr  nz, player_get_coin_D_done
-
-					call _get_coin
-				.player_get_coin_D_done
-
+					ld  a, (_gpy) 
+					add 8 
+					srl a 
+					srl a 
+					srl a 
+					srl a 
+					ld  (__y), a 
 			#endasm
+
+			#ifdef COIN_BEH
+				#asm
+						call _attr_2
+
+						ld  a, l
+						and COIN_BEH
+
+						jr  z, player_get_coin_done
+				#endasm
+			#else
+				#asm
+						call qtile_do
+						
+						ld  a, l
+						cp  COIN_TILE
+						
+						jr  nz, player_get_coin_done						
+				#endasm
+			#endif
+
+			#asm
+					call _get_coin
+
+				.player_get_coin_done
+			#endasm
+
 		#else
-			/*
-			_x = gpxx; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+			#ifdef COIN_BEH
+				/*
+				_x = gpxx; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
 
-			if (gpx & 15) {
-				_x = gpxx + 1; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
-			} 
+				if (gpx & 15) {
+					_x = gpxx + 1; _y = gpyy; if (attr (_x, _y) & COIN_BEH) get_coin ();
+				} 
 
-			if (gpy & 15) {
-				_x = gpxx; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
-			}
+				if (gpy & 15) {
+					_x = gpxx; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+				}
 
-			if ((gpx & 15) && (gpy & 15)) {
-				_x = gpxx + 1; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
-			}
-			*/
-			#asm
-					ld  a, (_gpxx)
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					ld  (__y), a
+				if ((gpx & 15) && (gpy & 15)) {
+					_x = gpxx + 1; _y = gpyy + 1; if (attr (_x, _y) & COIN_BEH) get_coin ();
+				}
+				*/
+				#asm
+						ld  a, (_gpxx)
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						ld  (__y), a
 
-					call qtile_do
-					ld  a, l
-					cp  COIN_TILE
-					jr  nz, player_get_coin_A_done
+						call _attr_2
+						ld  a, l
+						and COIN_BEH
+						jr  nz, player_get_coin_A_done
 
-					call _get_coin
-				.player_get_coin_A_done
-
-
-					ld  a, (_gpx)
-					and 15
-					jr  z, player_get_coin_B_done
-
-					ld  a, (_gpxx)
-					inc a
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					ld  (__y), a
-
-					call qtile_do
-					ld  a, l
-					cp  COIN_TILE
-					jr  nz, player_get_coin_B_done
-
-					call _get_coin
-				.player_get_coin_B_done
+						call _get_coin
+					.player_get_coin_A_done
 
 
-					ld  a, (_gpy)
-					and 15
-					jr  z, player_get_coin_C_done
+						ld  a, (_gpx)
+						and 15
+						jr  z, player_get_coin_B_done
 
-					ld  a, (_gpxx)
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					inc a
-					ld  (__y), a
+						ld  a, (_gpxx)
+						inc a
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						ld  (__y), a
 
-					call qtile_do
-					ld  a, l
-					cp  COIN_TILE
-					jr  nz, player_get_coin_C_done
+						call _attr_2
+						ld  a, l
+						and COIN_BEH
+						jr  nz, player_get_coin_B_done
 
-					call _get_coin
-				.player_get_coin_C_done
+						call _get_coin
+					.player_get_coin_B_done
 
 
-					ld  a, (_gpx)
-					and 15
-					jr  z, player_get_coin_D_done
-					ld  a, (_gpy)
-					and 15
-					jr  z, player_get_coin_D_done
+						ld  a, (_gpy)
+						and 15
+						jr  z, player_get_coin_C_done
 
-					ld  a, (_gpxx)
-					inc a
-					ld  (__x), a
-					ld  c, a
-					ld  a, (_gpyy)
-					inc a
-					ld  (__y), a
+						ld  a, (_gpxx)
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						inc a
+						ld  (__y), a
 
-					call qtile_do
-					ld  a, l
-					cp  COIN_TILE
-					jr  nz, player_get_coin_D_done
+						call _attr_2
+						ld  a, l
+						and COIN_BEH
+						jr  nz, player_get_coin_C_done
 
-					call _get_coin
-				.player_get_coin_D_done
+						call _get_coin
+					.player_get_coin_C_done
 
-			#endasm
-	#endif
+
+						ld  a, (_gpx)
+						and 15
+						jr  z, player_get_coin_D_done
+						ld  a, (_gpy)
+						and 15
+						jr  z, player_get_coin_D_done
+
+						ld  a, (_gpxx)
+						inc a
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						inc a
+						ld  (__y), a
+
+						call _attr_2
+						ld  a, l
+						and COIN_BEH
+						jr  nz, player_get_coin_D_done
+
+						call _get_coin
+					.player_get_coin_D_done
+
+				#endasm
+			#else
+				/*
+				_x = gpxx; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+
+				if (gpx & 15) {
+					_x = gpxx + 1; _y = gpyy; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+				} 
+
+				if (gpy & 15) {
+					_x = gpxx; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+				}
+
+				if ((gpx & 15) && (gpy & 15)) {
+					_x = gpxx + 1; _y = gpyy + 1; if (qtile (_x, _y) == COIN_TILE) get_coin ();
+				}
+				*/
+				#asm
+						ld  a, (_gpxx)
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						ld  (__y), a
+
+						call qtile_do
+						ld  a, l
+						cp  COIN_TILE
+						jr  nz, player_get_coin_A_done
+
+						call _get_coin
+					.player_get_coin_A_done
+
+
+						ld  a, (_gpx)
+						and 15
+						jr  z, player_get_coin_B_done
+
+						ld  a, (_gpxx)
+						inc a
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						ld  (__y), a
+
+						call qtile_do
+						ld  a, l
+						cp  COIN_TILE
+						jr  nz, player_get_coin_B_done
+
+						call _get_coin
+					.player_get_coin_B_done
+
+
+						ld  a, (_gpy)
+						and 15
+						jr  z, player_get_coin_C_done
+
+						ld  a, (_gpxx)
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						inc a
+						ld  (__y), a
+
+						call qtile_do
+						ld  a, l
+						cp  COIN_TILE
+						jr  nz, player_get_coin_C_done
+
+						call _get_coin
+					.player_get_coin_C_done
+
+
+						ld  a, (_gpx)
+						and 15
+						jr  z, player_get_coin_D_done
+						ld  a, (_gpy)
+						and 15
+						jr  z, player_get_coin_D_done
+
+						ld  a, (_gpxx)
+						inc a
+						ld  (__x), a
+						ld  c, a
+						ld  a, (_gpyy)
+						inc a
+						ld  (__y), a
+
+						call qtile_do
+						ld  a, l
+						cp  COIN_TILE
+						jr  nz, player_get_coin_D_done
+
+						call _get_coin
+					.player_get_coin_D_done
+
+				#endasm
+			#endif
+		#endif
 	#endif
 
 	// Select next frame to paint...
@@ -4364,7 +4489,7 @@ void hotspot_paint (void) {
 			ld  a, 240
 			ld  (_hotspot_y), a 
 			xor a
-			ld  (_hotspot_t), a
+			ld  (_hotspot_t_r), a
 
 			call _calc_hotspot_ptr
 			
@@ -4404,7 +4529,7 @@ void hotspot_paint (void) {
 			.hotspot_paint_mok_done
 		#endif
 
-			ld  (_hotspot_t), a
+			ld  (_hotspot_t_r), a
 
 		.hotspot_paint_act_skip
 
@@ -4420,12 +4545,12 @@ void hotspot_paint (void) {
 				jr  nz, hotspot_paint_noact_skip
 
 				ld  a, 3
-				ld  (_hotspot_t), a
+				ld  (_hotspot_t_r), a
 
 			.hotspot_paint_noact_skip
 		#endif		
 
-			ld  a, (_hotspot_t)
+			ld  a, (_hotspot_t_r)
 			or  a
 			ret z
 
@@ -4476,7 +4601,7 @@ void hotspot_paint (void) {
 			add VIEWPORT_Y
 			ld  (__y), a
 
-			ld  a, (_hotspot_t)
+			ld  a, (_hotspot_t_r)
 			ld  b, a
 			cp  3
 			
@@ -5268,7 +5393,7 @@ void draw_scr (void) {
 				#ifdef ENABLE_CUSTOM_LINEAR_ENEM_CELLS
 					enems_en_an_calc (get_cell_n ());
 				#else
-				enems_en_an_calc (_en_t - 1);
+					enems_en_an_calc (_en_t - 1);
 				#endif
 				break;
 
@@ -5419,7 +5544,7 @@ void platform_get_player (void) {
 	#endasm
 }
 
-#if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD
+#if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
 	void enems_kill (void) {
 		#ifdef ENABLE_CODE_HOOKS
 			enemy_died = _en_t;
@@ -5835,6 +5960,7 @@ void mueve_bicharracos (void) {
 									
 						en_an_x [enit] += en_an_vx [enit];
 						en_an_y [enit] += en_an_vy [enit];
+
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
 						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
@@ -5898,17 +6024,17 @@ void mueve_bicharracos (void) {
 								if (en_an_state [enit] != 1) 
 							#endif
 							{
-							// Always pursue
-
-							if ((rand () & 7) > 1) {
-								if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-									en_an_vx [enit] += FANTY_A;
-								else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-									en_an_vx [enit] -= FANTY_A;
-								if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-									en_an_vy [enit] += FANTY_A;
-								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-									en_an_vy [enit] -= FANTY_A;
+								// Always pursue
+	
+								if ((rand () & 7) > 1) {
+									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+										en_an_vx [enit] += FANTY_A;
+									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+										en_an_vx [enit] -= FANTY_A;
+									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+										en_an_vy [enit] += FANTY_A;
+									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+										en_an_vy [enit] -= FANTY_A;
 								}
 							}
 						#endif
@@ -5955,7 +6081,6 @@ void mueve_bicharracos (void) {
 						._en_bg_collision
 							call en_xx_calc
 							call en_yy_calc
-
 
 							ld  a, (__en_mx)
 							or  a

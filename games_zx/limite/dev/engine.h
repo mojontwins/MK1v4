@@ -2262,7 +2262,7 @@ void move (void) {
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {
 				rdx = gpxx;	x0 = x1 = gpxx;	y0 = y1 = gpyy;
 				if (player.facing) {				// Looking left
-					if ((gpx & 15) == 0 && qtile (gpxx - 1, gpyy) == 14) {
+					if ((gpx & 15) == 0 && attr (gpxx - 1, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0) {
 							x0 = gpxx - 1; x1 = gpxx - 2;
@@ -2273,7 +2273,7 @@ void move (void) {
 						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				} else {								// Looking right
-					if ((gpx & 15) == 0 && qtile (gpxx + 1, gpyy) == 14) {
+					if ((gpx & 15) == 0 && attr (gpxx + 1, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) < 0) {
 							x0 = gpxx + 1; x1 = gpxx;
@@ -2324,7 +2324,7 @@ void move (void) {
 				.push_pull_facing_left
 					// Facing left
 
-					//if ((gpx & 15) == 0 && qtile (gpxx - 1, gpyy) == 14) {
+					//if ((gpx & 15) == 0 && attr (gpxx - 1, gpyy) == 10) {
 					ld  a, (_gpx)
 					and 15
 					jp  nz, push_pull_done
@@ -2336,11 +2336,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_left_do
@@ -2401,7 +2401,7 @@ void move (void) {
 				.push_pull_facing_right
 					// Facing right
 
-					// if ((gpx & 15) == 0 && qtile (gpxx + 1, gpyy) == 14)
+					// if ((gpx & 15) == 0 && attr (gpxx + 1, gpyy) == 10)
 					ld  a, (_gpx)
 					and 15
 					
@@ -2414,11 +2414,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_right_do	
@@ -2534,7 +2534,7 @@ void move (void) {
 			if ((pad0 & sp_FIRE) == 0 && player.possee) {				
 				rdx = gpx;	x0 = 0xff;	y0 = y1 = gpyy;
 				if (player.facing) {				// Looking left
-					if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
+					if ((gpx & 15) == 12 && attr (gpxx, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0) {
 							x0 = gpxx; x1 = gpxx - 1;
@@ -2545,7 +2545,7 @@ void move (void) {
 						pad_this_frame = pad0 |= (sp_FIRE|sp_LEFT|sp_RIGHT);
 					}
 				} else {								// Looking right
-					if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14) {
+					if ((gpx & 15) == 4 && attr (gpxx + 1, gpyy) == 10) {
 						player.grab_block = 1;
 						if ((pad_this_frame & sp_LEFT) == 0 && attr (gpxx - 1, gpyy) < 4) {
 							x0 = gpxx + 1; x1 = gpxx;
@@ -2597,7 +2597,7 @@ void move (void) {
 				.push_pull_facing_left
 					// Facing left
 
-					// if ((gpx & 15) == 12 && qtile (gpxx, gpyy) == 14) {
+					// if ((gpx & 15) == 12 && attr (gpxx, gpyy) == 10) {
 					ld  a, (_gpx)
 					and 15
 					cp  TIGHT_UPPER
@@ -2609,11 +2609,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_left_do
@@ -2684,11 +2684,11 @@ void move (void) {
 					ld  hl, (_gpyy)
 					ld  h, 0
 					push hl
-					call _qtile
+					call _attr
 					pop bc 
 					pop bc 
 					ld  a, l
-					cp  14
+					cp  10
 					jp  nz, push_pull_done
 
 				.push_pull_facing_right_do	
@@ -3269,7 +3269,7 @@ void move (void) {
 		}
 	#endif
 	
-	// Pushing boxes (tile #14) engine
+	// Pushing boxes (tile attr #10) engine
 
 	#if defined PLAYER_PUSH_BOXES && !defined PUSH_AND_PULL
 		#ifdef PLAYER_MOGGY_STYLE

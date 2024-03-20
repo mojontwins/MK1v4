@@ -73,6 +73,7 @@
 //#define ENEMIES_MAY_BE_PARALIZED 			// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
 #define ENEMIES_COLLIDE 					// Check collisions for linear enemies
+//#define ENEMIES_COLLIDE_MASK 		8
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
 
 //#define PACKED_ENEMS 						// Packed XY1, XY2 format.
@@ -196,6 +197,7 @@
 //#define HIDDEN_CAN_MOVE 					// Originally, if you are moving you are not hidden. Override.
 //#define RANDOM_RESPAWN					// If defined, automatic flying enemies spawn on killed enemies
 //#define USE_TYPE_6						// If defined, type 6 enemies are enabled.
+//#define PLAYER_MAY_BE_INVISIBLE	
 //#define USE_SIGHT_DISTANCE				// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE			120		
 //#define FANTY_MAX_V 				256 	// Flying enemies max speed.
@@ -238,7 +240,10 @@
 // ----------
 
 //#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
-#define SHORT_PLAYER 						// Bounding box 12x16
+#define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
+#define TIGHT_LOWER 				4
+#define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
+#define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
 //#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
@@ -334,6 +339,7 @@
 // Stupid animated tiles
 //#define ENABLE_ANIMATED_TILES 			// Enables them
 //#define ANIMATED_TILE 			11 		// Which tile. Alternates with N + 16
+//#define ANIMATED_NEXT			 			// Alternate with N + 1 rather than N + 16
 //#define MAX_ANIMATED_TILES 		16 		// Must be a power of two
 
 // ============================================================================
@@ -392,8 +398,10 @@
 // 32 = Breakable
 // 64 = Quicksands
 
+// 10 = PUSHABLE!
+
 unsigned char comportamiento_tiles [] = {
-	0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 8, 0, 8, 8, 8,
+	0, 0, 8, 8, 8, 8, 1, 1, 8, 0, 1, 8, 0, 8,10, 8,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
