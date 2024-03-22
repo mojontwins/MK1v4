@@ -81,7 +81,7 @@ MALOTE malotes [] = {
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 13
- 	{32, 80, 0x25, 0xC5, 1, 0, 2},
+ 	{32, 80, 0x25, 0xC5, 2, 0, 3},
  	{160, 32, 0xA2, 0x13, -1, 1, 18},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
@@ -111,12 +111,12 @@ MALOTE malotes [] = {
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 19
- 	{176, 80, 0x55, 0xB5, -1, 0, 2},
+ 	{176, 80, 0x65, 0xB5, -2, 0, 3},
  	{64, 112, 0x47, 0xD7, 1, 0, 2},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 20
- 	{192, 80, 0x75, 0xC5, -1, 0, 0},
+ 	{192, 112, 0x67, 0xC7, -2, 0, 3},
  	{16, 16, 0x11, 0xD1, 2, 0, 18},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
@@ -146,12 +146,12 @@ MALOTE malotes [] = {
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 26
- 	{64, 96, 0x46, 0xC6, 1, 0, 2},
- 	{208, 64, 0x14, 0xD4, -2, 0, 2},
+ 	{80, 96, 0x56, 0xC6, 2, 0, 3},
+ 	{208, 64, 0x14, 0xD4, -1, 0, 2},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 27
- 	{48, 96, 0x36, 0xC6, 1, 0, 11},
+ 	{48, 96, 0x36, 0xC6, 2, 0, 3},
  	{80, 16, 0x51, 0x54, 0, 1, 12},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
@@ -186,7 +186,7 @@ MALOTE malotes [] = {
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 34
- 	{112, 48, 0x73, 0x78, 0, 1, 12},
+ 	{112, 112, 0x73, 0x77, 0, -2, 3},
  	{176, 16, 0xB1, 0xB7, 0, 1, 11},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
@@ -227,17 +227,17 @@ MALOTE malotes [] = {
 
 };
 
-#define N_ENEMS_TYPE_0 64
+#define N_ENEMS_TYPE_0 63
 #define N_ENEMS_TYPE_1 2
-#define N_ENEMS_TYPE_2 11
-#define N_ENEMS_TYPE_3 1
+#define N_ENEMS_TYPE_2 8
+#define N_ENEMS_TYPE_3 7
 #define N_ENEMS_TYPE_5 0
 #define N_ENEMS_TYPE_6 0
 #define N_ENEMS_TYPE_7 2
 #define N_ENEMS_TYPE_8 12
 #define N_ENEMS_TYPE_10 2
-#define N_ENEMS_TYPE_11 9
-#define N_ENEMS_TYPE_12 14
+#define N_ENEMS_TYPE_11 8
+#define N_ENEMS_TYPE_12 13
 #define N_ENEMS_TYPE_13 3
 #define N_ENEMS_TYPE_14 4
 #define N_ENEMS_TYPE_18 2
