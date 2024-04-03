@@ -417,6 +417,8 @@
 // 32 = Breakable
 // 64 = Quicksands
 
+// 10 = PUSHABLE!
+
 unsigned char comportamiento_tiles [] = {
 	0, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8,
 	0, 0, 8, 0, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 8, 8,

@@ -22,6 +22,14 @@
 	void hook_entering (void) {		
 	}
 
+	void hook_hotspots (void) {	
+	}
+
+	int hook_game_over (void) {
+		// Do your shit then return 1 for normal game over.
+		return 1;
+	}
+
 #endif
 
 #ifdef ENABLE_CUSTOM_ENEMS
@@ -38,6 +46,13 @@
 	void extra_enems_killed (void) {
 	}
 	
+#endif
+
+#ifdef ENABLE_CUSTOM_LINEAR_ENEM_CELLS
+	unsigned char get_cell_n (void) {
+		// Change this:
+		return _en_t - 1;
+	}
 #endif
 
 #ifdef ENEMS_CUSTOM_COLLISION

@@ -251,7 +251,7 @@ void main (void) {
 			game_loop_flag = 0;
 			hook_init_game ();
 		#endif
-		
+
 		#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 			#ifdef SHOW_TOTAL
 				// Show total of enemies next to the killed amount.
@@ -947,14 +947,14 @@ void main (void) {
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
-							draw_scr ();
-							init_player_values ();
 							#ifdef FIXED_SCREENS
 								player.killed = 0;
 								malotes [enoffs].t = malotes [enoffs].t & 15;
 								malotes [enoffs + 1].t = malotes [enoffs + 1].t & 15;
 								malotes [enoffs + 2].t = malotes [enoffs + 2].t & 15;
 							#endif
+							draw_scr ();
+							init_player_values ();
 						#else	
 							draw_scr_background ();
 							init_player_values ();
@@ -976,9 +976,14 @@ void main (void) {
 					|| game_loop_flag == 2
 				#endif
 			) {
-				saca_a_todo_el_mundo_de_aqui ();				
-				game_over ();
-				playing = 0;
+				#ifdef ENABLE_CODE_HOOKS
+					if (hook_game_over ())
+				#endif
+				{
+					saca_a_todo_el_mundo_de_aqui ();				
+					game_over ();
+					playing = 0;
+				}
 			}
 			
 			#ifdef USE_SUICIDE_KEY

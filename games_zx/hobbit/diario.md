@@ -63,3 +63,20 @@ Esto activa la aparición del anillo. Cualquier enemigo es traspasable con el an
 
 Pero las próximas veces que aparezca gallumb será INSTAKILL.
 
+# Anillo y rabas
+
+Al final no instakill. 
+
+- Si te pones el anillo: throw the rabas.
+- Si te lo pones 6 veces: te desmayas.
+- Si te desmayas en los terrenos de gallumb: te despiertas fuera.
+- Si te toca gallumb: te hostia, y te despiertas fuera.
+
+Check: que cuando te pones el anillo por sexta vez fuera del territorio de gallumb te despiertas en el mismo sitio, pero si que si lo haces en el territorio de gallumb te despiertas fuera.
+
+# Final
+
+Antes de llegar a la pantalla del dragón Gandalf deber explicarte de qué va la secuencia final, que es mayormente pillar todo el tesoro que puedas de la pantalla antes de que el dragón te quite todas las vidas. Luego entras en la pantalla del dragón y al acercarte smaug te habla rollo cutscene antes de moverse a una de las pantallas especiales de comecocos de la que ya no se podrá salir. Hay que enganchar como sea una detección temprana de "game over" para poder modificar el comportamiento y mandar al ending.
+
+Voy a ver de hacer esa modificación al motor primero.
+

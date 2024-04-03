@@ -15,6 +15,7 @@ unsigned char anillo_ct;
 unsigned char gallumb_flag; 	// 0 - init, 1 - talk, 2 - angered, 3 - teleport
 unsigned char last_estado;
 unsigned char anillo_first_time;
+unsigned char anillo_uses; 		// # of times
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
@@ -25,6 +26,7 @@ unsigned char intro_text;
 unsigned char n_pant_was, xwas, ywas;
 unsigned char comecocos_on;
 unsigned char cocos_count;
+unsigned char inside_gallumb_lair;
 
 // Show a text box next frame:
 unsigned char tfn_a, tfn_b, delayed_ct;
@@ -208,6 +210,12 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "WHO WOULD'VE GUESSED?%"
 							 "HE'S SO TINY, BUT MY%"
 							 "HEAD IS SPINNING!";
+
+	unsigned char text36[] = "_BILBOS%"
+							 "AW... THAT'S A NASTY%"
+							 "HANGOVER! BETTER NOT%"
+							 "TO USE THE RING UNLESS%"
+							 "COMPLETELY NECESSARY!";
 #else
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -395,6 +403,13 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "QUE MAREO... MI MAE%"
 							 "ME DESMAYO...";
 
+	unsigned char text36[] = "_BILBOS%"
+							 "AY... ESTO ES COMO UNA%"
+							 "RESACA DE LARIOS! NO%"
+							 "DEBO USAR EL ANILLO%"
+							 "MAS QUE CUANDO SEA IM-%"
+							 "PRESCINDIBLE HACERLO!";
+
 #endif
 
 unsigned char *texts [] = {
@@ -412,7 +427,7 @@ unsigned char *texts [] = {
 	text27, text28,	text29,					// Gallumb
 	text30, text31,							// Gallumb + tasslehoff
 	text32, text33, 						// Gallumb expels
-	text34, text35							// Anillo bad
+	text34, text35, text36					// Anillo bad
 };
 
 unsigned char dwarf_names [] = 
@@ -1069,6 +1084,19 @@ unsigned char touch_tile (void) {
 	#endasm
 }
 
+void bilbos_hangover (void) {
+	rdb = 33; show_text_box ();
+	recuadrius ();				
+
+	// Back to the entrance?
+	if (inside_gallumb_lair) n_pant = 12; 
+	
+	// Force redraw
+	on_pant = 0xff;
+	
+	player.x = player.y = 2 << 10;
+}
+
 #ifdef ENABLE_CODE_HOOKS
 
 	// Hooks
@@ -1083,6 +1111,7 @@ unsigned char touch_tile (void) {
 		anillo_flag = 0;
 		gallumb_flag = 0;
 		anillo_first_time = 1;
+		anillo_uses = 0;
 
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
@@ -1097,13 +1126,21 @@ unsigned char touch_tile (void) {
 	}
 
 	void hook_init_mainloop (void) {
-		if (n_pant == 12 && pant_just_rendered && gallumb_flag == 3) {
-			// Show text
-			// Text & fade
-			rdb = 47; rda = 33; show_text_box ();
+		if (n_pant == 12 && pant_just_rendered) {
+			if (gallumb_flag == 3 || anillo_uses == 6) {
+				if (gallumb_flag == 3) {
+					rda = 33;
+					gallumb_flag = 2;
+				} else {
+					rda = 36;
+				}
 
-			// Reset flag
-			gallumb_flag = 2;
+				// Show text
+				rdb = 47; show_text_box ();
+
+				// Reset flag
+				anillo_uses = 0;
+			}
 		}
 	}
 
@@ -1353,7 +1390,7 @@ unsigned char touch_tile (void) {
 
 		// Anillo
 		if (anillo_flag) {
-				#asm
+			#asm
 					// if (player.estado == 0) 
 					ld  a, (_player + 23) 			// player.estado
 					or  a 
@@ -1364,7 +1401,7 @@ unsigned char touch_tile (void) {
 					ld  c, a 
 					ld  a, (_last_estado)
 					cp  c 
-					jr  z, anillo_ct_check
+					jp  z, anillo_ct_check
 
 					ld  a, 25
 					ld  (_anillo_ct), a				// 1 sec cooldown	
@@ -1385,7 +1422,7 @@ unsigned char touch_tile (void) {
 					call Ashl16_HL
 					ld  (_player + 2), hl
 
-					// Throw up!
+					// Throw the rabas!
 
 					ld  a, (_gpx)
 					add 8
@@ -1394,6 +1431,7 @@ unsigned char touch_tile (void) {
 					srl a
 					srl a 
 					ld  (__x), a 
+					ld  c, a
 					ld  a, (_gpy)
 					add 8
 					srl a
@@ -1414,21 +1452,35 @@ unsigned char touch_tile (void) {
 				espera_activa (20);
 				#asm
 
-
 					// First time with anillo: text
 					
 					ld  a, (_anillo_first_time) 
 					or  a
-					jr  z, anillo_done
+					jr  z, anillo_not_first_time
 					xor a 
 					ld  (_anillo_first_time), a
 
 					// Text!
+
 					ld  a, 34
 					ld  (_rda), a 
 					ld  a, 47
 					ld  (_rdb), a 
 					call _show_text_box
+
+				.anillo_not_first_time
+					// Count how many times. After sixth time, reset!
+					
+					ld  a, (_anillo_uses)
+					inc a 
+					ld  (_anillo_uses), a 
+					cp  6 
+					jr  nz, anillo_done
+
+					// Reset!
+					ld  a, 36
+					ld  (_rda), a 
+					call _bilbos_hangover
 
 					jr  anillo_done
 
@@ -1469,6 +1521,12 @@ unsigned char touch_tile (void) {
 
 	void hook_entering (void) {	
 		draw_cur_screen_decos ();	
+		inside_gallumb_lair = 
+			n_pant == 0x05 || n_pant == 0x06 ||
+			n_pant == 0x0c || n_pant == 0x0d ||
+			n_pant == 0x13 || n_pant == 0x14 ||
+			n_pant == 0x1a || n_pant == 0x1b ||
+			n_pant == 0x21 || n_pant == 0x22;
 	}
 
 	void hook_hotspots (void) {
@@ -1524,6 +1582,11 @@ unsigned char touch_tile (void) {
 		}
 	}
 
+	int hook_game_over (void) {
+		// Do your shit then return 1 for normal game over.
+		return 1;
+	}
+
 #endif
 
 #ifdef ENABLE_CUSTOM_ENEMS
@@ -1557,13 +1620,8 @@ unsigned char touch_tile (void) {
 			if (gallumb_flag == 2) {
 				// Gallumb is angered! on touch->text, fade, teleport, text2 <- "on enter"
 
-				// Text & fade
-				rdb = 33; rda = 32; show_text_box ();
-				recuadrius ();				
-
-				// Back to the entrance
-				n_pant = 12; on_pant = 0xff;
-				player.x = player.y = 2 << 10;
+				// Text & fade & back to the entrance
+				rda = 32; bilbos_hangover ();
 
 				// on reenter, detect this & show text, then set it back to 2.
 				gallumb_flag = 3;

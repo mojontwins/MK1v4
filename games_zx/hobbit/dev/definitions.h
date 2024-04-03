@@ -373,3 +373,4 @@ void init_player_values (void);
 unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
+void enems_kill (void);

@@ -25,6 +25,11 @@
 	void hook_hotspots (void) {	
 	}
 
+	int hook_game_over (void) {
+		// Do your shit then return 1 for normal game over.
+		return 1;
+	}
+
 #endif
 
 #ifdef ENABLE_CUSTOM_ENEMS

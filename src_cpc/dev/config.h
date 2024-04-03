@@ -36,9 +36,9 @@
 
 //#define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 //#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
-
-//#define ENEMS_CUSTOM_CELLS 					// Include custom_enem_cells.h
-//#define ENEMS_CUSTOM_COLLISION 				// Normal code will only be ran if enems_custom_collision returns 0
+//#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS	// Call `custom.h/get_cell_n ()` for linear
+//#define ENEMS_CUSTOM_CELLS 				// Include custom_enem_cells.h
+//#define ENEMS_CUSTOM_COLLISION 			// Normal code will only be ran if enems_custom_collision returns 0
 
 // ============================================================================
 // II. Engine type
@@ -91,6 +91,7 @@
 //#define COINS_DEACTIVABLE					// Coins can be hidden.
 //#define COINS_SCRIPTING 					// Run script when player gets coin
 //#define COINS_PERSISTENT	 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes
+//#define COINS_SMALL_BB 					// Much smaller collision BB
 
 // Fixed screens engine
 // --------------------

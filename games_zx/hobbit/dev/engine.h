@@ -2715,7 +2715,7 @@ void move (void) {
 				.push_pull_facing_right
 					// Facing right
 
-					// if ((gpx & 15) == 4 && qtile (gpxx + 1, gpyy) == 14)
+					// if ((gpx & 15) == 4 && attr (gpxx + 1, gpyy) == 10)
 					ld  a, (_gpx)
 					and 15
 					cp  TIGHT_LOWER
@@ -5544,7 +5544,7 @@ void platform_get_player (void) {
 	#endasm
 }
 
-#if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD
+#if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
 	void enems_kill (void) {
 		#ifdef ENABLE_CODE_HOOKS
 			enemy_died = _en_t;

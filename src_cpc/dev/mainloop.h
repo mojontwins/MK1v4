@@ -1108,9 +1108,14 @@ void main (void) {
 					|| game_loop_flag == 2
 				#endif
 			) {
-				saca_a_todo_el_mundo_de_aqui ();				
-				game_over ();
-				playing = 0;
+				#ifdef ENABLE_CODE_HOOKS
+					if (hook_game_over ())
+				#endif
+				{
+					saca_a_todo_el_mundo_de_aqui ();				
+					game_over ();
+					playing = 0;
+				}
 			}
 			
 			#ifdef USE_SUICIDE_KEY
