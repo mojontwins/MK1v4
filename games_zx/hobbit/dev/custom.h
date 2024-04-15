@@ -3,6 +3,9 @@
 
 // Add here your custom routines & vars
 
+// Pokemon engine!
+#include "pokemon.h"
+
 #define ATTR_TEXTBOX   48
 
 unsigned char gandalf_talk;		// 0 - init, 1 - talk, 2 - open
