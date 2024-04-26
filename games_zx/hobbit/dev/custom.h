@@ -3,9 +3,6 @@
 
 // Add here your custom routines & vars
 
-// Pokemon engine!
-#include "pokemon.h"
-
 #define ATTR_TEXTBOX   48
 
 unsigned char gandalf_talk;		// 0 - init, 1 - talk, 2 - open
@@ -825,45 +822,6 @@ void recuadrius (void) {
 }
 
 void draw_cur_screen_decos (void) {
-	/*
-	switch (n_pant) {
-		case 0:
-			gp_gen = decos0; draw_decos (); break;
-		case 1:
-			gp_gen = decos1; draw_decos (); break;
-		case 4:
-			// Hide hotspot!
-			if (gallumb_flag < 1) {
-				set_map_tile (6, 4, 0, 0);
-				hotspot_y = 240;
-			}
-			break;
-		case 5:
-			gp_gen = decos2; draw_decos (); break;
-		case 17:
-			// Sonia
-			if (sonia_talk == 0) {
-				set_map_tile (12, 3, 34, 8);
-			}
-			break;
-		case 24:
-			// Dwarf at the entrance to the mountain / closed door
-			if (gandalf_talk == 2) {
-				if (dwarf_talk == 0) {
-					set_map_tile (9, 7, 17, 8);
-				} else {
-					set_map_tile (9, 9, 15, 8);
-				}
-			}
-			break;
-		case 31:
-			// Cover the entrance to the mountain
-			if (gandalf_talk != 2) {
-				set_map_tile (9, 0, 15, 8);
-			}
-			break;
-	}
-	*/
 	#asm
 			ld  a, (_n_pant)
 			cp  0
@@ -1099,6 +1057,14 @@ void bilbos_hangover (void) {
 	
 	player.x = player.y = 2 << 10;
 }
+
+// ***************
+// Pokemon engine!
+// ***************
+
+#include "pokemon.h"
+
+// Code hooks:
 
 #ifdef ENABLE_CODE_HOOKS
 

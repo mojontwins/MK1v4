@@ -1,14 +1,14 @@
 // Pokemon routines for the ending
 
 unsigned char pk_base, pk_iv, pk_effort, pk_level;
-unsigned char pk_at, pk_df, pk_pw;
+unsigned char pk_at, pk_df, pk_pw, pk_accuracy;
 unsigned char pk_turn;
 unsigned int pk_temp;
 
 unsigned char pa1, pa2, pa3, pa4;
 unsigned char *p_ptr, *p_dst;
 
-unsigned char pk_pl_attack, pk_op_attack;
+unsigned char pk_pl_attack, pk_op_attack, pk_item;
 
 // ****** STATIC DATA LISTS ******
 
@@ -37,33 +37,33 @@ extern unsigned char a_scratch [], a_ember [], a_leer [];
 	._a_list
 	// 16 bytes per pk_at definition, last 12 bytes is pk_at name.
 	._a_growl      defb 0, 255, 40, AFX_LOWER_AT
-	               defm "GROWL       "
+	               defm "GROWL%      "
 	._a_tackle     defb 35, 242, 35, AFX_NORMAL
-	               defm "TACKLE      "
+	               defm "TACKLE%     "
 	._a_leechseed  defb 0, 229, 10, AFX_LEECH
-	               defm "LEECH SEED  "
+	               defm "LEECH SEED% "
 	._a_vinewhip   defb 35, 255, 10, AFX_NORMAL
-	               defm "VINE WHIP   "
+	               defm "VINE WHIP%  "
 	._a_scratch    defb 40, 255, 35, AFX_NORMAL
-	               defm "SCRATCH     "
+	               defm "SCRATCH%    "
 	._a_ember      defb 40, 255, 25, AFX_BURN
-	               defm "EMBER       "
+	               defm "EMBER%      "
 	._a_leer       defb 0, 255, 30, AFX_LOWER_DF
-	               defm "LEER        "
+	               defm "LEER%       "
 #endasm	               
 
 // Pokemon definitions: 6 bytes stats, 10 bytes name, 8 bytes attack lists
-// Stats. order is HP AT DF SP - x
+// Stats. order is HP AT DF SP ST MAXHP
 extern unsigned char bubasaur [], charmander [];
 #asm
 	._bubasaur 
 		// Stats 6 bytes
-		defb 45, 49, 49, 45, 0, 0
-		defm "BUBASAUR  "
+		defb 45, 49, 49, 45, 0, 45
+		defm "BUBASAUR% "
 		defw _a_growl, _a_tackle, _a_leechseed, _a_vinewhip
 
 	._charmander
-		defb 39, 52, 43, 65, 0, 0
+		defb 39, 52, 43, 65, 0, 39
 		defm "CHARMANDER"
 		defw _a_growl, _a_scratch, _a_ember, _a_leer
 #endasm
@@ -76,7 +76,7 @@ extern unsigned char bubasaur [], charmander [];
 #define C_DF 2
 #define C_SP 3
 #define C_ST 4
-#define C_RESERVED 5
+#define C_MAX_HP 5
 
 // ST is a status effect
 // 0 - No status effect
@@ -92,7 +92,7 @@ extern unsigned char bubasaur [], charmander [];
 
 extern unsigned char pk_data [];
 
-// Reserve 6 bytes for stats HP AT DF SP ST x 
+// Reserve 6 bytes for stats HP AT DF SP ST MAXHP 
 // Reserve 10 byte for name
 // Reserve 64 bytes to copy up to 4 attacks. 
 // If an pk_at PP == 0xff, pk_at not present (not implemented here)
@@ -101,7 +101,7 @@ extern unsigned char pk_data [];
 	._pk_data
 	._player_stats     defs 6
 	._player_name      defs 10
-	._player_attacks   defs 64, 0xFF
+	._pk_player_attacks   defs 64, 0xFF
 	._opponent_stats   defs 6 
 	._opponent_name    defs 10
 	._opponent_attacks defs 64, 0xFF
@@ -139,6 +139,11 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 	// p_ptr points to a 16 bytes pokemon definition (charmander or bubasaur)
 	// pa1 is 0 or 1 (player or opponent), indexing where to copy/setup data
 
+	// iv / effort are fixed for this version, to keep things simple
+	pk_iv = 8;
+	pk_effort = 0; 	// Never trained. Bilbos is not a good pokemon trainer!
+	pk_level = 10; 	// Both pokemon are level 10.
+
 	#asm
 		// Copies & setups stats / name
 			
@@ -154,19 +159,61 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 			// DE -> Stats pool to copy to
 
 			// 4 bytes of stats to be processed (based upon level, iv, effort)
-			// TODO
-			ldi 
-			ldi 
-			ldi 
-			ldi 
+			// HP AT DF SP MAXHP
 
-			// 2 bytes of stats to be set to 0
-			ldi
-			ldi 
+			ld  a, (hl)				// Load HP
+			inc hl 
+			ld  (_pk_base), a
+			push hl 
+			call _pk_calc_hp
+			ld  a, l
+			pop hl
+			ld  (de), a 			// Store calculated HP
+			ld  (_pa1), a 			// Save for later (MAX HP)
+			inc de 
+			
+			ld  a, (hl)				// Load AT
+			inc hl 
+			ld  (_pk_base), a
+			push hl 
+			call _pk_calc_stat
+			ld  a, l
+			pop hl
+			ld  (de), a 			// Store calculated AT
+			inc de 
+
+			ld  a, (hl)				// Load DF
+			inc hl 
+			ld  (_pk_base), a
+			push hl 
+			call _pk_calc_stat
+			ld  a, l
+			pop hl
+			ld  (de), a 			// Store calculated DF
+			inc de 
+
+			ld  a, (hl)				// Load SP
+			inc hl 
+			ld  (_pk_base), a
+			push hl 
+			call _pk_calc_stat
+			ld  a, l
+			pop hl
+			ld  (de), a 			// Store calculated SP
+			inc de 
+
+			ldi  					// Status FX = =
+
+			inc hl 
+			ld  a, (_pa1) 
+			ld  (de), a 
+			inc de 					// MAX HP 
 
 			ld  hl, (_p_ptr)
-			ld  bc, 10				// Copy 16 bytes: 6 bytes stats + 10 bytes name
+			ld  bc, 10				// Copy 10 bytes name
 			ldir 					// Do it, now HL -> pointers, DE -> attack pool
+
+			// Populate attacks using attack pointers
 
 			ld  b, 4				// Used to iterate 4 times
 		.pk_ip_ca_loop
@@ -190,53 +237,158 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 	#endasm
 }
 
+#define PK_MENU_ATTR 6*8
+
+#define PK_ATTACK_MENU_X 16
+#define PK_ATTACK_MENU_Y 14
+
+// To save code, add 4 dummy bytes so this looks like an attack pool
+#ifdef LANG_EN
+	unsigned char pk_main_menu [] = {
+		"????FIGHT!%     "
+		"????USE ITEM%   "
+		"????SWAP POKEMON"
+		"????RUN%        "
+	};
+
+	unsigned char pk_items_menu [] = {
+		"????CHICKEN%    "
+		"????COCK RING%  "
+		"????PENCIL%     "
+		"????SYRINGE%    "
+	};
+#else
+	unsigned char pk_main_menu [] = {
+		"????ATACAR!%    "
+		"????USAR ITEM%  "
+		"????OTRO POKEMON"
+		"????ESCAPARSE%  "
+	};
+
+	unsigned char pk_items_menu [] = {
+		"????GALLINA%    "
+		"????ANILLO PENE%"
+		"????LAPIZ%      "
+		"????JERINGUILLA%"
+	};
+#endif
+
 // Simple menu: Just a cursor >
 // _x, _y -> origin
-// at1 -> # of options
-// On exit: at2 = selected option
+// pa1 -> # of options
+// On exit: pa2 = selected option
 void pk_simple_menu (void) {
-	at2 = 0; at3 = 1;
+	pa2 = 0; pa3 = 1;
 
 	while (1) {
 		pad_read ();
 		if (pad_this_frame & sp_UP) {
-			at2 --; if (at2 > at1) at2 = at1 - 1;
+			pa2 --; if (pa2 > pa1) pa2 = pa1 - 1;
 		} 
 		if (pad_this_frame & sp_DOWN) {
-			at2 ++; if (at2 >= at1) at2 = 0;
+			pa2 ++; if (pa2 >= pa1) pa2 = 0;
 		}
 		if (pad_this_frame & sp_FIRE) break;
-		if (at3 != at2) {
+		if (pa3 != pa2) {
 			#asm
-				//        /\----------D = 0x47 = attribute (bright white on black)
-				ld  de, 0x473F
-				//          \/--------E = 0x3F = arrow (char # 63)
+
+				ld  de, PK_MENU_ATTR * 256 + 0x3F   // D = ATTRIBUTE, E = 0x3F (>)
 				ld  a, (__x)
 				ld  c, a 
 				ld  a, (__y)
 				ld  b, a 
-				ld  a, (_at2)
+				ld  a, (_pa2)
 				add b 
 				call SPPrintAtInv
 
-				//        /\----------D = 0x00 = attribute (black on black)
-				ld  de, 0x0000
-				//          \/--------E = 0x00 = blank
+				ld  de, PK_MENU_ATTR * 256 	       // D = ATTRIBUTE, E = 0
 				ld  a, (__x)
 				ld  c, a 
 				ld  a, (__y)
 				ld  b, a 
-				ld  a, (_at3)
+				ld  a, (_pa3)
 				add b 
 				call SPPrintAtInv
 
-				ld  a, (_at2)
-				ld  (_at3), a
+				ld  a, (_pa2)
+				ld  (_pa3), a
 			#endasm			
 		}
 	}
 }
 
+void pk_print_menu (void) {
+	// Preload HL pointing to menu tiems (or attacks pool)
+	#asm
+			ld  a, PK_ATTACK_MENU_Y
+			ld  (__y), a 
+
+			ld  b, 4 					// 4 menu itmes
+		.pk_pa_loop
+			push bc 
+
+			inc hl
+			inc hl
+			inc hl
+			inc hl 						// Skip attack values
+
+			ld  a, PK_ATTACK_MENU_X
+			ld  (__x), a 
+
+			ld  b, 12 					// 12 characters
+		.pk_pa_can
+			push bc 
+
+			ld  e, (hl) 				// E = Get char
+			inc hl 
+			ld  d, PK_MENU_ATTR			// D = Attribute
+
+			ld  a, (__x)
+			ld  c, a 					// C = X
+			inc a 
+			ld  (__x), a 
+
+			ld  a, (__y) 				// A = Y
+
+			push hl 
+			call SPPrintAtInv
+			pop hl 	
+
+			pop bc 
+			djnz pk_pa_can
+
+			ld  hl, __y
+			inc (hl)
+
+			pop bc 
+			djnz pk_pa_loop
+	#endasm	
+}
+
+// Shows all attacks stacked for the player (to be used as a menu)
+void pk_print_attacks (void) {
+	#asm
+			ld  hl, _pk_player_attacks
+			jp  _pk_print_menu
+	#endasm
+
+}
+
+// Shows main menu
+void pk_print_main_menu (void) {
+	#asm
+			ld  hl, _pk_main_menu
+			jp  _pk_print_menu
+	#endasm
+}
+
+// Shows dummy items menu
+void pk_print_items_menu (void) {
+	#asm
+			ld  hl, _pk_items_menu
+			jp  _pk_print_menu
+	#endasm
+}
 
 // Attack cycle
 
@@ -245,24 +397,57 @@ void pk_attack (void) {
 	// pa2 is the attack selected
 	// pa1 attacks and causes damages and / or starts a status effect
 
-	// If pa1 = 0xff -> pokemon does nothing, return.
+	// ** ITEM **
+	// If pa1 == 0, pk_item != 0xff -> Use item (useless)
 
-	// Put values into pk_level, pk_at, pk_pw, pk_df
+	if (pa1 == 0 && pk_item != 0xff) {
+		// Use item but fails
+		// Print text
+		return;
+	}
+
+	// If pa2 = 0xff && (pa1 == 1 || pk_item = 0xff) -> pokemon does nothing, return.
+	if (pa2 == 0xff) {
+		// Does nothing
+		// Print text
+		return;
+	}
+
+	// Show what attack pokemon throws!
+	// `CHARMANDER USED TAIL WHIP!', for example
+
+	// Put values into pk_accuracy, pk_level, pk_at, pk_pw, pk_df
+
+	// If miss -> pokemon misses! return.
+	if (rand () >= pk_accuracy) {
+		// `BUT FAILED!`
+		return;
+	}
+
+	// Inflict damage
+	// HP AT DF SP ST MAXHP 
+	pa3 = C_HP + (pa1 ? OPPONENT_OFFSET : 0);
+	pa1 = pk_calc_damage ();
+	if (pa1 >= pk_data [pa3]) {
+		pk_data [pa3] = 0;
+	} else {
+		pk_data [pa3] -= pa1;
+	}
 }
 
 // AI : Pick up attack -> pk_op_attack
 
 void pk_op_pickup_attack (void) {
 	// Don't run more than 8 times. 
-	for (at4 = 0; at4 < 8; at4 ++) {
+	for (pa4 = 0; pa4 < 8; pa4 ++) {
 		// 1st select at random
 		pk_op_attack = 0xff;
-		at1 = rand () & 3;
+		pa1 = rand () & 3;
 
 		// Check if enough PP, if not, next until all four have been checked
-		for (at2 = 0; at2 < 4; at2 ++) {
-			if (pk_data [OPPONENT_OFFSET + ATTACKS_OFFSET + (at1 << 4) + AT_PP]) {
-				pk_op_attack = at1;
+		for (pa2 = 0; pa2 < 4; pa2 ++) {
+			if (pk_data [OPPONENT_OFFSET + ATTACKS_OFFSET + (pa1 << 4) + AT_PP]) {
+				pk_op_attack = pa1;
 				break;
 			}
 		}
@@ -271,13 +456,13 @@ void pk_op_pickup_attack (void) {
 		if (pk_op_attack == 0xff) return;
 			
 		// 2nd if picked inflicts status effect and player has status effect -> pick another.
-		at3 = pk_data [OPPONENT_OFFSET + ATTACKS_OFFSET + (pk_op_attack << 4) + AT_FX];
+		pa3 = pk_data [OPPONENT_OFFSET + ATTACKS_OFFSET + (pk_op_attack << 4) + AT_FX];
 		if (
-			pk_data [C_ST] & at3
+			pk_data [C_ST] & pa3
 		) continue;
 
 		// 3rd 2nd turn, and picked doesn't inflict status effect -> pick another.
-		if (at3 == 0 && pk_turn == 1) continue;
+		if (pa3 == 0 && pk_turn == 1) continue;
 
 		// 4th super effectiveness: ember rather than scratch <- unimplemented, no use in this demo
 
@@ -289,21 +474,53 @@ void pk_op_pickup_attack (void) {
 // Player : Select attack from menu -> pk_pl_attack
 
 void pk_pl_pickup_attack (void) {
-
+	pk_print_attacks ();
+	pk_simple_menu ();
+	pk_pl_attack = pa2;
 }
 
 // Attack cycle
 
 void pk_attack_cycle (void) {
+	// Show main menu
+	pk_item = 0xff;
+	pk_pl_attack = 0xff;
+
+	pk_print_main_menu ();
+	pk_simple_menu ();
+
+	switch (pa2) {
+		case 0: // Attack
+			// Select player attack -> pk_pl_attack
+			pk_pl_pickup_attack ();
+			
+			break;
+		case 1: // Item
+			pk_print_items_menu ();
+			pk_simple_menu ();
+
+			pk_item = pa2; 
+			break;
+
+		case 2: // Change pokemon
+			// Show you can't
+			break;
+
+		case 3: // RUN!
+			// Show you can't
+			break;
+	}
+
 	// Select opponent's attack -> pk_op_attack
 	pk_op_pickup_attack ();
-
-	// Select player attack -> pk_pl_attack
-	pk_pl_pickup_attack ();
-
+	
 	// Who strikes first? - Fixed for this one. Charmander is faster.
 
 	// Execute attacks in order - check for MISS ofc.
 	pa1 = 1; pa2 = pk_op_attack; pk_attack ();
 	pa1 = 0; pa2 = pk_pl_attack; pk_attack ();
+
+	// Execute status effects
+	// "XXXX" IS HURT BY THE BURN!
+	// "XXXX" IS HURT BY DRENADORAS! (or whatever)
 }
