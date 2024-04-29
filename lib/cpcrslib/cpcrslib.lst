@@ -96,6 +96,7 @@ cpc_PutTrSp8x16TileMap2bG
 cpc_PutTrSp8x16TileMap2bPx
 cpc_PutTrSp8x16TileMap2bGPx
 cpc_PutTrSp16x16TileMap2bPxM1
+cpc_PutTrSp16x16TileMap2bGPxM1
 cpc_PutTrSp8x24TileMap2b
 cpc_PutTrSp8x24TileMap2bG
 cpc_PutTrSp8x24TileMap2bPx

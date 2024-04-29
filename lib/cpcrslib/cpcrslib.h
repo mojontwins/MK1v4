@@ -41,6 +41,7 @@ extern void  __FASTCALL__ __LIB__   cpc_PutTrSp8x16TileMap2bG(int sprite);
 extern void  __FASTCALL__ __LIB__   cpc_PutTrSp8x16TileMap2bPx(int sprite);
 extern void  __FASTCALL__ __LIB__   cpc_PutTrSp8x16TileMap2bGPx(int sprite);
 extern void  __FASTCALL__ __LIB__   cpc_PutTrSp16x16TileMap2bPxM1(int sprite);
+extern void  __FASTCALL__ __LIB__   cpc_PutTrSp16x16TileMap2bGPxM1(int sprite);
 extern void  __FASTCALL__ __LIB__   cpc_PutTrSp8x24TileMap2b(int sprite);
 extern void  __FASTCALL__ __LIB__   cpc_PutTrSp8x24TileMap2bG(int sprite);
 extern void  __FASTCALL__ __LIB__   cpc_PutTrSp8x24TileMap2bPx(int sprite);

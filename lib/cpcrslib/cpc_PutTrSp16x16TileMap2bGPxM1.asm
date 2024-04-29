@@ -7,7 +7,6 @@
 ; [na_th_an] Gracias a Fran Gallego y al código de la CPCTelera, rescrito para usar LUTs
 ; [na_th_an] Esta versión utiliza OR para mezclar con lo que ya haya. No necesita LUT.
 ; [na_th_an] Esta nueva vesión de la rutina imprime al pixel en m1
-; Necesita una LUT en $FE00
 
 XLIB cpc_PutTrSp16x16TileMap2bGPxM1
 
@@ -55,13 +54,10 @@ XREF posicion_inicial_superbuffer
 	
 .sp_buffer_mask
 	ld ixh,16
-	ex de,hl 		; de -> bg
-	ld b, h
-	ld c, l 		; bc -> sprite
-
+	
 	; Remember A = X in pixels
 	; Select routine based upon number of rotations
-	; would write self-modifying code for short but too complicated
+	; would write self-modifying code for short but meh
 	and 3
 	jr  z, loop_alto_map_sbuffer	
 	cp  1
@@ -75,41 +71,28 @@ XREF posicion_inicial_superbuffer
 
 	; El ancho está desenrollado: Hay que procesar y copiar 4 bytes.
 
-	ld a, (bc) 		; Get sprite
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	ld a, (de) 		; Get sprite
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save BG+sprite
 	inc de
-	inc bc
+	inc hl
 
-	ld a, (bc) 		; Get sprite
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	ld a, (de) 		; Get sprite
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save BG+sprite
 	inc de
-	inc bc
+	inc hl
 
-	ld a, (bc) 		; Get sprite
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	ld a, (de) 		; Get sprite
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save BG+sprite
 	inc de
-	inc bc
+	inc hl
 
-	ld a, (bc) 		; Get sprite
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	ld a, (de) 		; Get sprite
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save BG+sprite
 	inc de
-	inc bc
 	
 	;*************************************************		
 		
@@ -117,15 +100,11 @@ XREF posicion_inicial_superbuffer
 	ret z
 
 	; de += 60 (next line in bg)
-	ld hl, 60
-	add hl, de
-	ex de, hl
-
+	ld bc, 60
+	add hl, bc
 	jp loop_alto_map_sbuffer
 
 .loop_alto_map_sbuffer_shift1
-	ld  h, $FE; 	; hl -> LUT
-	
 	; El ancho está desenrollado. Procesamos 4 bytes que copiamos en 5:
 	; 1: -> A'A; byte 1 = A'A AND 0x77 = 0A
 	; 2: -> B'B; byte 2 = (B'B AND 0x77) OR (A'A AND 0x88) = A'B
@@ -135,149 +114,133 @@ XREF posicion_inicial_superbuffer
 
 	; 1: -> A'A; byte 1 = A'A AND 0x77 = 0A
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
 	rrca            ; A = 07654321
-	ld  l, a        ; A = 07654321 C = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
 	rrca            ;     x   x
 	rrca            ; A = 43210765
-	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
 	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor l           ; A = 47650321!
+	xor c           ; A = 47650321!
 
-	ld  ixl, a 		; Save for next byte
+	ld  c, a 		; Save for next byte
 
 	and 0x77 		; Mask
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save bg + masked sprite
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 2: -> B'B; byte 2 = (B'B AND 0x77) OR (A'A AND 0x88) = A'B
 
-	ld  a, ixl 		; A'A
+	ld  a, c 		; A'A
 	and $88 		; A'
-	ld  iyl, a 		; IYL = A'0
+	ld  b, a 		; IYL = A'0
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
 	rrca            ; A = 07654321
-	ld  l, a        ; A = 07654321 C = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
 	rrca            ;     x   x
 	rrca            ; A = 43210765
-	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
 	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor l           ; A = 47650321!
+	xor c           ; A = 47650321!
 
-	ld  ixl, a 		; Save for next byte
+	ld  c, a 		; Save for next byte
 
 	and 0x77 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 3: -> C'C; byte 3 = (C'C AND 0x77) OR (B'B AND 0x88) = B'C
 
-	ld  a, ixl 		; B'B
+	ld  a, c 		; B'B
 	and $88 		; B'
-	ld  iyl, a 		; IYL = B'0
+	ld  b, a 		; IYL = B'0
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
 	rrca            ; A = 07654321
-	ld  l, a        ; A = 07654321 C = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
 	rrca            ;     x   x
 	rrca            ; A = 43210765
-	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
 	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor l           ; A = 47650321!
+	xor c           ; A = 47650321!
 
-	ld  ixl, a 		; Save for next byte
+	ld  c, a 		; Save for next byte
 
 	and 0x77 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 4: -> D'D; byte 4 = (D'D AND 0x77) OR (C'C AND 0x88) = C'D
 
-	ld  a, ixl 		; C'C
+	ld  a, c 		; C'C
 	and $88 		; C'
-	ld  iyl, a 		; IYL = C'0
+	ld  b, a 		; IYL = C'0
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
 	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
 	rrca            ; A = 07654321
-	ld  l, a        ; A = 07654321 C = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
 	rrca            ;     x   x
 	rrca            ; A = 43210765
-	xor l           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
 	and $88         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor l           ; A = 47650321!
+	xor c           ; A = 47650321!
 
-	ld  ixl, a 		; Save for next byte
+	ld  c, a 		; Save for next byte
 
 	and 0x77 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 5:       ; byte 5 = D'D AND 0x88  
 
-	ld  a, ixl 		; D'D
+	ld  a, c 		; D'D
 	and $88 		; D'
 
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG	
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 
 	dec ixh
 	ret z
 
 	; de += 60 (next line in bg)
-	ld hl, 60
-	add hl, de
-	ex de, hl
+	ld bc, 60
+	add hl, bc
 
 	jp loop_alto_map_sbuffer_shift1
 
@@ -293,149 +256,133 @@ XREF posicion_inicial_superbuffer
 
 	; 1: -> A'A; byte 1 = A'A AND 0x33 = 0A
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right twice 76543210 -> 54761032
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rrca 
-	rrca            ; A = 10765432     xx__xx__
-	ld  l, a        ; A = 10765432 C = 10765432
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     xx  xx
-	rrca            ; A = 54321076
-	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
-	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
-	xor l           ; A = 54761032
-	ld  ixl, a 		; Save for next byte
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x33 		; Mask
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save bg + masked sprite
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 2: -> B'B; byte 2 = (B'B AND 0x33) OR (A'A AND 0xCC) = A'B
-	
-	ld  a, ixl 		; A'A
-	and $CC 		; A'
-	ld  iyl, a 		; IYL = A'0
-	
-	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right twice 76543210 -> 54761032
+	ld  a, c 		; A'A
+	and $CC 		; A'
+	ld  b, a 		; IYL = A'0
+	
+	ld  a, (de) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rrca 
-	rrca            ; A = 10765432     xx__xx__
-	ld  l, a        ; A = 10765432 C = 10765432
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     xx  xx
-	rrca            ; A = 54321076
-	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
-	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
-	xor l           ; A = 54761032
-	ld  ixl, a 		; Save for next byte
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x33 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 3: -> C'C; byte 3 = (C'C AND 0x33) OR (B'B AND 0xCC) = B'C
-	
-	ld  a, ixl 		; B'B
-	and $CC 		; B'
-	ld  iyl, a 		; IYL = B'0
-	
-	ld  a, (bc) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right twice 76543210 -> 54761032
+	ld  a, c 		; B'B
+	and $CC 		; B'
+	ld  b, a 		; IYL = B'0
+	
+	ld  a, (de) 	; Get Sprite byte in A
+
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rrca 
-	rrca            ; A = 10765432     xx__xx__
-	ld  l, a        ; A = 10765432 C = 10765432
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     xx  xx
-	rrca            ; A = 54321076
-	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
-	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
-	xor l           ; A = 54761032
-	ld  ixl, a 		; Save for next byte
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x33 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 4: -> D'D; byte 4 = (D'D AND 0x33) OR (C'C AND 0xCC) = C'D
 
-	ld  a, ixl 		; C'C
+	ld  a, c 		; C'C
 	and $CC 		; C'
-	ld  iyl, a 		; IYL = C'0
+	ld  b, a 		; IYL = C'0
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right twice 76543210 -> 54761032
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rrca 
-	rrca            ; A = 10765432     xx__xx__
-	ld  l, a        ; A = 10765432 C = 10765432
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     xx  xx
-	rrca            ; A = 54321076
-	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
-	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
-	xor l           ; A = 54761032
-	ld  ixl, a 		; Save for next byte
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x33 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
-	; 5:       ; byte 5 = D'D AND 0xCC
+	; 5:       ; byte 5 = D'D AND 0xCC  
 
-	ld  a, ixl 		; D'D
+	ld  a, c 		; D'D
 	and $CC 		; D'
 
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG	
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 
 	dec ixh
 	ret z
 
 	; de += 60 (next line in bg)
-	ld hl, 60
-	add hl, de
-	ex de, hl
+	ld bc, 60
+	add hl, bc
 
 	jp loop_alto_map_sbuffer_shift2
 
@@ -452,144 +399,132 @@ XREF posicion_inicial_superbuffer
 
 	; 1: -> A'A; byte 1 = A'A AND 0x11 = 0A
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right thrice 76543210 -> 65472103
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rlca            ; A = 65432107     ___x___x
-	ld  l, a        ; A = 65432107 C = 65432107
-	rlca
-	rlca
-	rlca            ;        x   x   
-	rlca            ; A = 21076543
-	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
-	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
-	xor l           ; A = 65472103
-	ld  ixl, a 		; Save for next byte
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save bg + masked sprite
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
 	; 2: -> B'B; byte 2 = (B'B AND 0x11) OR (A'A AND 0xEE) = A'B
-	
-	ld  a, ixl 		; A'A
+
+	ld  a, c 		; A'A
 	and $EE 		; A'
-	ld  iyl, a 		; IYL = A'0
+	ld  b, a 		; IYL = A'0
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right thrice 76543210 -> 65472103
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rlca            ; A = 65432107     ___x___x
-	ld  l, a        ; A = 65432107 C = 65432107
-	rlca
-	rlca
-	rlca            ;        x   x   
-	rlca            ; A = 21076543
-	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
-	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
-	xor l           ; A = 65472103
-	ld  ixl, a 		; Save for next byte
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
-	; 3: -> C'C; byte 3 = (C'C AND 0x33) OR (B'B AND 0xCC) = B'C
-	
-	ld  a, ixl 		; B'B
+	; 3: -> C'C; byte 3 = (C'C AND 0x11) OR (B'B AND 0xEE) = B'C
+
+	ld  a, c 		; B'B
 	and $EE 		; B'
-	ld  iyl, a 		; IYL = B'0
+	ld  b, a 		; IYL = B'0
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right thrice 76543210 -> 65472103
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rlca            ; A = 65432107     ___x___x
-	ld  l, a        ; A = 65432107 C = 65432107
-	rlca
-	rlca
-	rlca            ;        x   x   
-	rlca            ; A = 21076543
-	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
-	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
-	xor l           ; A = 65472103
-	ld  ixl, a 		; Save for next byte
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
-	; 4: -> D'D; byte 4 = (D'D AND 0x33) OR (C'C AND 0xCC) = C'D
+	; 4: -> D'D; byte 4 = (D'D AND 0x11) OR (C'C AND 0xEE) = C'D
 
-	ld  a, ixl 		; C'C
+	ld  a, c 		; C'C
 	and $EE 		; C'
-	ld  iyl, a 		; IYL = C'0
+	ld  b, a 		; IYL = C'0
 	
-	ld  a, (bc) 	; Get Sprite byte in A
+	ld  a, (de) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right thrice 76543210 -> 65472103
+	; Now rotate nibbles right once 76543210 -> 47650321
 
 	                ; A = 76543210
-	rlca            ; A = 65432107     ___x___x
-	ld  l, a        ; A = 65432107 C = 65432107
-	rlca
-	rlca
-	rlca            ;        x   x   
-	rlca            ; A = 21076543
-	xor l           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
-	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
-	xor l           ; A = 65472103
-	ld  ixl, a 		; Save for next byte
+	rrca            ; A = 07654321
+	ld  c, a        ; A = 07654321 C = 07654321
+	rrca
+	rrca
+	rrca            ;     x   x
+	rrca            ; A = 43210765
+	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
+	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
+	xor c           ; A = 47650321!
+
+	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
-	or  iyl 		; Combine
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG
+	or  b 			; Combine
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 	inc de
-	inc bc
+	inc hl
 
-	; 5:       ; byte 5 = D'D AND 0xCC
+	; 5:       ; byte 5 = D'D AND 0xEE  
 
-	ld  a, ixl 		; D'D
+	ld  a, c 		; D'D
 	and $EE 		; D'
 
-	ld l, a 		; copy to L to index LUT
-	ld a, (de) 		; Get bg
-	and (hl) 		; make a hole
-	or l  			; draw pixels
-	ld (de), a 		; save BG	
+	or (hl) 		; Get bg + draw pixels
+	ld (hl), a 		; save bg + masked sprite
 
 	dec ixh
 	ret z
 
 	; de += 60 (next line in bg)
-	ld hl, 60
-	add hl, de
-	ex de, hl
+	ld bc, 60
+	add hl, bc
 
 	jp loop_alto_map_sbuffer_shift3
