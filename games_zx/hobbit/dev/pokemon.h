@@ -9,6 +9,7 @@ unsigned char pa1, pa2, pa3, pa4;
 unsigned char *p_ptr, *p_dst;
 
 unsigned char pk_pl_attack, pk_op_attack, pk_item;
+unsigned char pk_win;
 
 // ****** STATIC DATA LISTS ******
 
@@ -523,4 +524,29 @@ void pk_attack_cycle (void) {
 	// Execute status effects
 	// "XXXX" IS HURT BY THE BURN!
 	// "XXXX" IS HURT BY DRENADORAS! (or whatever)
+}
+
+// Combat
+unsigned char pokemon_combat(void) {
+	pk_win = 0;
+
+	// Init pokemons
+	
+	pa1 = 0; p_ptr = bubasaur; pk_init_pokemon_pa1_from_ptr ();
+	pa1 = 1; p_ptr = charmander; pk_init_pokemon_pa1_from_ptr ();
+
+	// Battle
+	while (1) {
+		pk_attack_cycle ();
+
+		// Player wins!
+		if (pk_data [C_HP + OPPONENT_OFFSET] == 0) { pk_win = 1; break; } 
+		
+		// Player loses!
+		if (pk_data [C_HP] == 0) break;
+	}
+
+	// Print XXXXX is defeated
+
+	// Back to main control
 }
