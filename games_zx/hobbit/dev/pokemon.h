@@ -13,7 +13,7 @@ unsigned char pk_win;
 
 // ****** STATIC DATA LISTS ******
 
-// Attacks. pk_pw ACCURACY PP FX
+// Attacks. PW ACCURACY PP FX
 #define AT_DMG 0
 #define AT_ACC 1
 #define AT_PP 2 
@@ -37,6 +37,7 @@ extern unsigned char a_scratch [], a_ember [], a_leer [];
 #asm
 	._a_list
 	// 16 bytes per pk_at definition, last 12 bytes is pk_at name.
+	// PW ACCURACY PP FX
 	._a_growl      defb 0, 255, 40, AFX_LOWER_AT
 	               defm "GROWL%      "
 	._a_tackle     defb 35, 242, 35, AFX_NORMAL
@@ -100,12 +101,12 @@ extern unsigned char pk_data [];
 
 #asm 
 	._pk_data
-	._player_stats     defs 6
-	._player_name      defs 10
-	._pk_player_attacks   defs 64, 0xFF
-	._opponent_stats   defs 6 
-	._opponent_name    defs 10
-	._opponent_attacks defs 64, 0xFF
+	._player_stats         defs 6
+	._player_name          defs 10
+	._pk_player_attacks    defs 64, 0xFF
+	._opponent_stats       defs 6 
+	._opponent_name        defs 10
+	._opponent_attacks     defs 64, 0xFF
 #endasm
 
 #define ATTACKS_OFFSET 16
@@ -419,6 +420,26 @@ void pk_attack (void) {
 
 	// Put values into pk_accuracy, pk_level, pk_at, pk_pw, pk_df
 
+	// Attack "pw" and "accuracy" are obtained
+	// from the selected attack pa2.
+
+	pa4 = (pa1 == 1 ? OPPONENT_OFFSET : 0);
+	pa3 = pa4 + ATTACKS_OFFSET + (pa2 << 4);
+
+	pk_pw = pk_data [pa3 + AT_DMG];
+	pk_accuracy = pk_data [pa3 + AT_ACC];
+
+	// iv / effort are fixed for this version, to keep things simple
+	
+	pk_iv = 8;
+	pk_effort = 0; 	// Never trained. Bilbos is not a good pokemon trainer!
+	pk_level = 10; 	// Both pokemon are level 10.
+
+	// At / Df come from attacker/defendant stats
+
+	pk_at = pk_data [pa4 + C_AT];
+	pk_df = pk_data [OPPONENT_OFFSET - pa4 + C_DF];
+
 	// If miss -> pokemon misses! return.
 	if (rand () >= pk_accuracy) {
 		// `BUT FAILED!`
@@ -524,6 +545,8 @@ void pk_attack_cycle (void) {
 	// Execute status effects
 	// "XXXX" IS HURT BY THE BURN!
 	// "XXXX" IS HURT BY DRENADORAS! (or whatever)
+
+	// Update health displays
 }
 
 // Combat
