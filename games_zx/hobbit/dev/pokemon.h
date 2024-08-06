@@ -160,15 +160,19 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 		.pk_ip_cs
 			// DE -> Stats pool to copy to
 
+			ld  hl, (_p_ptr)
+
 			// 4 bytes of stats to be processed (based upon level, iv, effort)
 			// HP AT DF SP MAXHP
 
 			ld  a, (hl)				// Load HP
 			inc hl 
 			ld  (_pk_base), a
-			push hl 
+			push hl
+			push de 
 			call _pk_calc_hp
 			ld  a, l
+			pop de
 			pop hl
 			ld  (de), a 			// Store calculated HP
 			ld  (_pa1), a 			// Save for later (MAX HP)
@@ -177,9 +181,11 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 			ld  a, (hl)				// Load AT
 			inc hl 
 			ld  (_pk_base), a
-			push hl 
+			push hl
+			push de 
 			call _pk_calc_stat
 			ld  a, l
+			pop de
 			pop hl
 			ld  (de), a 			// Store calculated AT
 			inc de 
@@ -188,8 +194,10 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 			inc hl 
 			ld  (_pk_base), a
 			push hl 
+			push de
 			call _pk_calc_stat
 			ld  a, l
+			pop de
 			pop hl
 			ld  (de), a 			// Store calculated DF
 			inc de 
@@ -198,8 +206,10 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 			inc hl 
 			ld  (_pk_base), a
 			push hl 
+			push de
 			call _pk_calc_stat
 			ld  a, l
+			pop de
 			pop hl
 			ld  (de), a 			// Store calculated SP
 			inc de 
@@ -211,7 +221,7 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 			ld  (de), a 
 			inc de 					// MAX HP 
 
-			ld  hl, (_p_ptr)
+			//ld  hl, (_p_ptr)
 			ld  bc, 10				// Copy 10 bytes name
 			ldir 					// Do it, now HL -> pointers, DE -> attack pool
 
@@ -284,19 +294,18 @@ void pk_simple_menu (void) {
 
 	while (1) {
 		pad_read ();
-		if (pad_this_frame & sp_UP) {
+		if ((pad_this_frame & sp_UP) == 0) {
 			pa2 --; if (pa2 > pa1) pa2 = pa1 - 1;
 		} 
-		if (pad_this_frame & sp_DOWN) {
+		if ((pad_this_frame & sp_DOWN) == 0) {
 			pa2 ++; if (pa2 >= pa1) pa2 = 0;
 		}
-		if (pad_this_frame & sp_FIRE) break;
+		if ((pad_this_frame & sp_FIRE) == 0) break;
 		if (pa3 != pa2) {
 			#asm
 
 				ld  de, PK_MENU_ATTR * 256 + 0x3F   // D = ATTRIBUTE, E = 0x3F (>)
-				ld  a, (__x)
-				ld  c, a 
+				ld  c, PK_ATTACK_MENU_X
 				ld  a, (__y)
 				ld  b, a 
 				ld  a, (_pa2)
@@ -304,8 +313,7 @@ void pk_simple_menu (void) {
 				call SPPrintAtInv
 
 				ld  de, PK_MENU_ATTR * 256 	       // D = ATTRIBUTE, E = 0
-				ld  a, (__x)
-				ld  c, a 
+				ld  c, PK_ATTACK_MENU_X
 				ld  a, (__y)
 				ld  b, a 
 				ld  a, (_pa3)
@@ -314,16 +322,22 @@ void pk_simple_menu (void) {
 
 				ld  a, (_pa2)
 				ld  (_pa3), a
+
+				call sp_UpdateNow
 			#endasm			
 		}
 	}
 }
 
 void pk_print_menu (void) {
-	// Preload HL pointing to menu tiems (or attacks pool)
+	// Preload HL pointing to menu items (or attacks pool)
+
 	#asm
+			ld  a, (__y)
+			ld  (_rdy), a
+
 			ld  a, PK_ATTACK_MENU_Y
-			ld  (__y), a 
+			ld  (_rdy), a 
 
 			ld  b, 4 					// 4 menu itmes
 		.pk_pa_loop
@@ -335,14 +349,28 @@ void pk_print_menu (void) {
 			inc hl 						// Skip attack values
 
 			ld  a, PK_ATTACK_MENU_X
-			ld  (__x), a 
+
+			// Insert space first
+			ld  d, PK_MENU_ATTR
+			ld  e, 0
+			ld  c, a 
+			inc a 
+			ld  (__x), a
+			ld  a, (_rdy)
+			push hl 
+			call SPPrintAtInv
+			pop hl 
+
 
 			ld  b, 12 					// 12 characters
 		.pk_pa_can
 			push bc 
 
-			ld  e, (hl) 				// E = Get char
+			ld  a, (hl) 				// E = Get char
+			sub 32
+			ld  e, a
 			inc hl 
+			
 			ld  d, PK_MENU_ATTR			// D = Attribute
 
 			ld  a, (__x)
@@ -350,7 +378,7 @@ void pk_print_menu (void) {
 			inc a 
 			ld  (__x), a 
 
-			ld  a, (__y) 				// A = Y
+			ld  a, (_rdy) 				// A = Y
 
 			push hl 
 			call SPPrintAtInv
@@ -359,11 +387,14 @@ void pk_print_menu (void) {
 			pop bc 
 			djnz pk_pa_can
 
-			ld  hl, __y
-			inc (hl)
+			ld  a, (_rdy)
+			inc a 
+			ld  (_rdy), a
 
 			pop bc 
 			djnz pk_pa_loop
+
+			call SPUpdateNow
 	#endasm	
 }
 
@@ -496,7 +527,10 @@ void pk_op_pickup_attack (void) {
 // Player : Select attack from menu -> pk_pl_attack
 
 void pk_pl_pickup_attack (void) {
+	_x = PK_ATTACK_MENU_X;
+	_y = PK_ATTACK_MENU_Y;
 	pk_print_attacks ();
+	pa1 = 4;
 	pk_simple_menu ();
 	pk_pl_attack = pa2;
 }
@@ -508,7 +542,10 @@ void pk_attack_cycle (void) {
 	pk_item = 0xff;
 	pk_pl_attack = 0xff;
 
+	_x = PK_ATTACK_MENU_X;
+	_y = PK_ATTACK_MENU_Y;
 	pk_print_main_menu ();
+	pa1 = 4;
 	pk_simple_menu ();
 
 	switch (pa2) {
@@ -519,6 +556,7 @@ void pk_attack_cycle (void) {
 			break;
 		case 1: // Item
 			pk_print_items_menu ();
+			pa1 = 4;
 			pk_simple_menu ();
 
 			pk_item = pa2; 

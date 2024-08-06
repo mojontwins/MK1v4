@@ -31,7 +31,7 @@ cd ..\dev
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
-zcc +zx -vn churromain.c -o %game%.bin -lsplib2f -zorg=24200 -DLANG_%lang% > nul
+zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200 -DLANG_%lang% > nul
 ..\utils\printsize.exe %game%.bin
 
 echo Preparing tape 
