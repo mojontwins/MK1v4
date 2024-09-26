@@ -184,6 +184,9 @@ void main (void) {
 		hook_system_inits ();
 	#endif
 
+		pokemon_combat();
+		sp_Border(2);
+		while(1);
 	while (1) {
 		// Here the title screen
 		cortina ();

@@ -6659,7 +6659,7 @@ void mueve_bicharracos (void) {
 							#endif
 							
 							// We decide which kind of life drain we do:
-							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT))
+							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT)
 								if (_en_t == 6) {
 									player.life -= FLYING_ENEMY_HIT;
 								} else
