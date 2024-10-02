@@ -373,7 +373,7 @@ MALOTE malotes [] = {
 	// Pantalla 71
  	{96, 128, 96, 128, 96, 112, 0, 0, 5},
  	{208, 64, 192, 64, 208, 64, -1, 0, 1},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{48, 48, 48, 48, 48, 96, 0, 1, 2},
 
 	// Pantalla 72
  	{144, 48, 96, 48, 144, 48, -1, 0, 4},
@@ -468,7 +468,7 @@ MALOTE malotes [] = {
 	// Pantalla 90
  	{112, 128, 112, 128, 192, 128, 2, 0, 4},
  	{128, 48, 128, 48, 176, 80, 2, 2, 1},
- 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
+ 	{32, 80, 32, 80, 32, 128, 0, 1, 1},
 
 	// Pantalla 91
  	{96, 80, 96, 80, 96, 128, 0, 1, 2},
@@ -497,9 +497,9 @@ MALOTE malotes [] = {
 
 };
 
-#define N_ENEMS_TYPE_0 25
-#define N_ENEMS_TYPE_1 61
-#define N_ENEMS_TYPE_2 85
+#define N_ENEMS_TYPE_0 23
+#define N_ENEMS_TYPE_1 62
+#define N_ENEMS_TYPE_2 86
 #define N_ENEMS_TYPE_3 71
 #define N_ENEMS_TYPE_5 8
 #define N_ENEMS_TYPE_6 0

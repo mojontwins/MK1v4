@@ -1,7 +1,7 @@
 @echo off
 
 set game=perils
-set lang=ES
+set lang=EN
 
 echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 12 8 15 10 15 packed  > nul
