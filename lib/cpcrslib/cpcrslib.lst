@@ -6,6 +6,7 @@ cpc_SetTouchTileXY
 cpc_TouchTileSpXY
 cpc_ResetTouchedTiles
 cpc_UpdScr
+cpc_UpdScrM1P
 cpc_ShowTouchedTiles
 cpc_PutSpTileMap
 cpc_PutSpTileMap4x8
@@ -97,6 +98,7 @@ cpc_PutTrSp8x16TileMap2bPx
 cpc_PutTrSp8x16TileMap2bGPx
 cpc_PutTrSp16x16TileMap2bPxM1
 cpc_PutTrSp16x16TileMap2bGPxM1
+cpc_PutTrSp16x16TileMap2bGPxM1P
 cpc_PutTrSp8x24TileMap2b
 cpc_PutTrSp8x24TileMap2bG
 cpc_PutTrSp8x24TileMap2bPx

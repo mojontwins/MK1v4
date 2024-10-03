@@ -27,8 +27,8 @@
 	$00 N        - Pauses stream reading for N frames.
 	$01          - Pauses stream until all actors are stopped.
 	$10 A X Y B F- Define actor A (0-3) at X, Y (pixel) with base cell B
-	               if F is 1 then the actor may face left or right
-	$11 A MX MY  - Define MX / MY for actor A in ppf. <0 means fpp (***)
+	               if F is 1 then the actor may face left or right (***)
+	$11 A MX MY  - Define MX / MY for actor A in ppf. <0 means fpp 
 	$12 A DX DY  - Set DX / DY for actor A. This causes A to start moving
 	$13 A        - Sets DX=X and DY=Y for A, which makes it stop
 	$14 A F      - Changes facing if player is stopped 
@@ -47,6 +47,14 @@
 
 	(***) Again, no checks. Actors may be overwritten. To turn an actor
 	off define it again with Y >= 144.
+
+	MX / MY values: positive: add every frame. negative: special:
+		- 0b10000001 = 0x81 = move 1 p every 2 f (1/2 ppf)
+		- 0b10000011 = 0x83 = move 1 p every 4 f (1/4 ppf)
+		- 0b10000111 = 0x87 = move 1 p every 8 f (1/8 ppf)
+		...
+
+
 */
 
 void show_text_box (unsigned char n); 	// Prototype. Define @ custom.h!
@@ -76,6 +84,7 @@ extern unsigned char *actor_data;
 #endasm
 
 unsigned char pause_counter;
+unsigned char frame_counter;
 unsigned char blocked; 
 
 void run_cutscene (void) {
@@ -89,6 +98,7 @@ void run_cutscene (void) {
 	draw_scr_background ();
 
 	// Setup
+	frame_counter = 0;
 	pause_counter = 0;
 	blocked = 0;
 
@@ -141,8 +151,110 @@ void run_cutscene (void) {
 
 		.run_cutscene_update
 
+			ld  hl, _frame_counter
+			inc (hl)
+
 			// Update sprites
-		
+
+			ld  ix, _actor_data 
+			ld  b, 4 
+
+		.run_cutscene_actor_loop
+			push bc 
+
+			// IX + 0  1  2  3  4  5  6  7
+			//      X  Y  DX DY MX MY B  F
+
+		.rc_upd_x
+			// Update X
+			ld  a, (ix + 0) 			// X
+			ld  c, (ix + 2) 			// DX
+			cp  c 
+			jr  z, rc_upd_x_done 		// Cur == Dest? -> skip 
+
+			ld  c, (ix + 4) 			// MX
+			bit 7, c 					// bit 7 on -> frames per pixel
+			jr  z, rc_upd_x_do 
+
+		.rc_upd_x_fpp
+			and 0x7f 					// Clear bit 7 
+			ld  a, (_frame_counter) 
+			and c 
+			jr  nz, rc_upd_x_done 		// FC AND D != 0 -> skip
+			ld  c, 1 					// Move this frame, just 1 pixel
+
+		.rc_upd_x_do
+			// Move C pixels towards DX. 
+			// First check if X < DX or X > DX
+			// if X > DX do C = -C
+			id  a, (ix + 0)
+			ld  b, (ix + 2)
+			cp  b 
+			jr  c, rc_upd_x_do_do 		// A < B, X < DX, -> positive
+
+			// A > B, X > DX, make C = -C
+			ld  a, c 
+			neg a 
+			ld  c, a 
+
+		.rc_upd_x_do_do
+			ld  a, (ix + 0) 			// X
+			add c 
+			ld  (ix + 8), a 
+
+		.rc_upd_x_done
+
+		.rc_upd_y
+			// Update Y
+			ld  a, (ix + 1) 			// Y
+			ld  c, (ix + 3) 			// DY
+			cp  c 
+			jr  z, rc_upd_y_done 		// Cur == Dest? -> skip 
+
+			ld  c, (ix + 5) 			// MY
+			bit 7, c 					// bit 7 on -> frames per pixel
+			jr  z, rc_upd_y_do 
+
+		.rc_upd_y_fpp
+			and 0x7f 					// Clear bit 7 
+			ld  a, (_frame_counter) 
+			and c 
+			jr  nz, rc_upd_y_done 		// FC AND D != 0 -> skip
+			ld  c, 1 					// Move this frame, just 1 pixel
+
+		.rc_upd_y_do
+			// Move C pixels towards DY. 
+			// First check if Y < DY or Y > DY
+			// if Y > DY do C = -C
+			id  a, (ix + 1)
+			ld  b, (ix + 3)
+			cp  b 
+			jr  c, rc_upd_y_do_do 		// A < B, Y < DY, -> positive
+
+			// A > B, Y > DY, make C = -C
+			ld  a, c 
+			neg a 
+			ld  c, a 
+
+		.rc_upd_y_do_do
+			ld  a, (ix + 1) 			// Y
+			add c 
+			ld  (ix + 8), a 
+
+		.rc_upd_y_done
+
+		.rc_upd_spr
+			// Update sprite
+
+
+			// Next actor
+
+			ld  bc, 8 
+			add ix, bc
+
+			pop bc
+			djnz run_cutscene_actor_loop
+
 			// Wait VBLANK
 
 			// Show stuff on screen

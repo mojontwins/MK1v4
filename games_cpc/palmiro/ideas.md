@@ -37,5 +37,54 @@ Opcodes:
 
 Cada bucle se debe recorrer todos los actores y actualizarlos. El script finaliza cuando se llega a un opcode FF. El script debe empezar además con el número de pantalla que hay que mostrar (del mapa).
 
+# Pack graphics
 
+En este juego los gráficos son de 1 bit en modo 1, esto signfica que de cada pixel con bits B1 B0, los sprites usan B1 y los tiles usan B0. En los sprites se usa 00 y 10 para apagado/encendido y en los fondos se usa 00 y 01. Así se puede poner los sprites sobre los fondos con OR sin máscaras y no hay mezcla, pero en la paleta los colores 10 y 11 deben ser iguales, el color 01 será el encendido del fondo y el 00 el color de fondo global.
+
+Esto me sugiere que quizá podría almacenar sprites y tiles superpuestos en la memoria y usar bitwise para leer unos u otros. Pero el formato de pixel raro del CPC no me deja sacarlo de cabeza, así que...
+
+En modo 1, los pixels ABCD correlativos en pantalla se representan así en 1 byte:
+
+```
+	7  6  5  4  3  2  1  0
+	A0 B0 C0 D0 A1 B1 C1 D1
+```
+
+Hemos dicho que los fondos usan el bit 0 de cada pixel, por lo que los bytes que representan el fondo sólo usan estos bits:
+
+```
+	76543210
+	XXXX0000
+```
+
+El primer plano solo usa el bit 1 de cada pixel, por lo que los bytes que representan los sprites solo usan estos bits:
+
+```
+	76543210
+	0000XXXX
+```` 
+
+Por tanto, sí es viable almacenar tiles y sprites en la misma zona de memoria. Cuando queramos pintar tiles, habrá que hacer un `AND 0xF0` al byte leído para quitar los datos de sprites, y para pintar sprites habrá que hacer un `AND 0x0F` para quitar los de los tiles.
+
+Esto es terriblemente sencillo de implementar. Lo que tengo que resolver es el tema de la conversión de forma que mkts_om saque el binario o el array de marras con sprites y tiles superpuestos.
+
+Pensando en que los sprites en CPC ocupan lo mismo que el equivalente en tamaño de tiles, lo más fácil es habilitar sitio para almacenar 256 "patrones" para sprites, que equivalen a 64 caras de sprites de 16x16.
+
+Tengo que añadir rutinas como las de Modo 1 en OR que hagan el decoding antes para los sprites, y rutinas de sprites específicas.
+
+Remember: La rutina que copia el tile de fondo en cada posición invalidada es `transferir_map_sbuffer_grey` dentro de `cpc_updScr`. Puedo añadir un `cpc_updScrM1P` que haga el `AND 0xF0` cada vez que lea una fila de patrón de RAM.
+
+En cuanto a los sprites, tengo las funciones `cpc_PutTrSp[TAMAÑO]TileMap2bGPxM1` que son las "modo 1 pixel a pixel con OR". Tendría que replicarlas a `cpc_PutTrSp[TAMAÑO]TileMap2bGPxM1P` con la P de packed y ya empieza esto a ser demasiado chorizo, pero ¿quién se va a andar fijando?.
+
+```
+	cpc_PutTrSp16x16TileMap2bGPxM1P
+```
+
+Estoy pensando que quizá lo mejor sea generar los binarios de tiles y sprites como siempre y luego tener un packer que coja dos binarios y genere otro combinando nibbles de uno con nibbles de otro, rollo
+
+```
+	packnibbles.exe left.bin right.bin output.bin
+```
+
+El tamaño resultante será tan grande como el mayor de left.bin y right.bin.
 
