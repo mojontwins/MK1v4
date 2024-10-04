@@ -78,6 +78,7 @@ En cuanto a los sprites, tengo las funciones `cpc_PutTrSp[TAMAÑO]TileMap2bGPxM1
 
 ```
 	cpc_PutTrSp16x16TileMap2bGPxM1P
+	cpc_PutTrSp16x24TileMap2bGPxM1P
 ```
 
 Estoy pensando que quizá lo mejor sea generar los binarios de tiles y sprites como siempre y luego tener un packer que coja dos binarios y genere otro combinando nibbles de uno con nibbles de otro, rollo
@@ -88,3 +89,53 @@ Estoy pensando que quizá lo mejor sea generar los binarios de tiles y sprites c
 
 El tamaño resultante será tan grande como el mayor de left.bin y right.bin.
 
+## Modo 0
+
+No lo uso aquí pero me da curiosidad.
+
+Un byte contiene dos pixels AB, que se guardan así:
+
+```` 
+	7   6   5   4   3   2   1   0
+	A0  B0  A2  B2  A1  B1  A3  B3
+````
+
+Si uso las máscaras 0xCC 0 0x33 tengo 
+
+```
+	& 0xCC: Me quedo con los pixels de fondo
+	A0 B0 00 00 A1 B1 00 00
+
+	& 0x33: Me quedo con los pixels de sprite
+	00 00 A2 B2 00 00 A3 B3
+```
+
+Esto significa que de cada color 3210, "32" serán para sprite y "10" para fondo y la paleta debería definirse así:
+
+```
+    #  S F
+	0 0000 Color de fondo 0
+	1 0001 Color de fondo 1
+	2 0010 Color de fondo 2
+	3 0011 Color de fondo 3
+	4 0100 Color de sprite 1
+	5 0101 Color de sprite 1
+	6 0110 Color de sprite 1
+	7 0111 Color de sprite 1
+	8 1000 Color de sprite 2
+	9 1001 Color de sprite 2
+	A 1010 Color de sprite 2
+	B 1011 Color de sprite 2
+	C 1100 Color de sprite 3
+	D 1101 Color de sprite 3
+	E 1110 Color de sprite 3
+	F 1111 Color de sprite 3
+```
+
+O sea, F0 F1 F2 F3 S1 S1 S1 S1 S2 S2 S2 S2 S3 S3 S3 S3. El conversor no tendrá problemas con esto.
+
+```
+	cpc_UpdScrP
+	cpc_PutTrSp8x16TileMap2bGPxP
+	cpc_PutTrSp8x24TileMap2bGPxP
+```
