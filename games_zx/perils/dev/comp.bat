@@ -1,7 +1,7 @@
 @echo off
 
 set game=perils
-set lang=EN
+set lang=ES
 
 echo Making %game%
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 12 8 15 10 15 packed  > nul
@@ -12,6 +12,7 @@ echo Making %game%
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
 ..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
+..\utils\png2scr.exe ..\gfx\preloading.png preloading.bin  > nul
 ..\utils\zx0.exe ..\gfx\title.scr title.bin  > nul
 ..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\zx0.exe ..\gfx\ending.scr ending.bin  > nul
@@ -24,6 +25,8 @@ rem zcc +zx -vn -a churromain.c -o %game%.asm -lsplib2f -zorg=24200 -DLANG_%lang
 ..\utils\printsize.exe %game%.bin
 
 echo Preparing tape 
+del preloadingc.bin > nul 2> nul
+..\utils\zx7 preloading.bin preloadingc.bin > nul
 del loadingc.bin > nul 2> nul
 ..\utils\zx7 loading.bin loadingc.bin > nul
 del gamec.bin > nul 2> nul 
@@ -41,6 +44,7 @@ del gamec.bin > nul 2> nul
 
 ..\utils\GenTape.exe %game%_%lang%.tap ^
     basic 'PERILS' 10 loader.bin ^
+    data              preloadingc.bin ^
     data              loadingc.bin ^
     data              gamec.bin ^
     data              ..\ogt\RAM1.bin > nul
@@ -48,5 +52,5 @@ del gamec.bin > nul 2> nul
 echo Output: %game%_%lang%.tap
 
 del ..\gfx\*.scr > nul
-del loader.asm > nul
+rem del loader.asm > nul
 del *.bin >nul
