@@ -4,5 +4,11 @@
 extern unsigned char tileset [0];
 #asm
 	._tileset
+	#ifdef COMPRESSED_TS
+		defs 2304
+	._tilesetc
+		BINARY "tilesetc.bin"
+	#else
 		BINARY "tileset.bin"
+	#endif
 #endasm

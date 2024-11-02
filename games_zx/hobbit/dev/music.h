@@ -34,7 +34,6 @@
 		CP    $1F
 		JR    Z,NEXTNOTE                    ; Play next note if no key pressed
 
-		EI
 		RET                                 ; Return from playing tune
 
 	.PATTERN_PTR

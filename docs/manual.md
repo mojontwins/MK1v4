@@ -2739,6 +2739,20 @@ En cada bucle del juego, al llegar a nuestra rutina de código custom, y si el j
 
 En la siguiente vuelta del bucle de juego, `player_just_died` volverá a 0.
 
+## Tileset comprimido
+
+Puede que necesites sustituir el tileset principal del juego. Como luego necesitarás volver a poner el inicial, ofrecemos esta opción:
+
+```c
+	#define COMPRESSED_TS
+```
+
+Si se activa, se obrarán los siguientes cambios:
+
+* El tileset principal será cargado con 2048+256 ceros.
+* A continuación se cargará tilesetc.bin con el tileset comprimido, apuntado por `tilesetc`.
+* Durante la inicialización del motor, se descomprimirá automáticamente tilesetc.bin en su sitio, esto es, sobre los 2048+256 bytes reservados a partir de `tileset`. 
+
 # Capítulo 9 - `MODE_128K_DUAL`
 
 La macro `MODE_128K_DUAL` prepara el motor para que añadamos un player en RAM1 para tocar música y efectos AY si el juego se carga en los modelos de Spectrum con 128K, mientras que si se carga en un modelo de 48K se toquen con el beeper, como siempre. Eso implica también modificar el loader para que se cargue le bloque extra si se detecta un modelo de 128K.

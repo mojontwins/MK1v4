@@ -75,6 +75,20 @@ void main (void) {
 	sp_Border (BLACK);
 	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
 
+	// Compressed tileset
+	#ifdef COMPRESSED_TS
+		#asm
+			.decompress_ts
+				ld hl, _tilesetc 
+				ld de, _tileset
+				#ifdef DECOMPRESSOR_ZX0
+					jp dzx0_standard
+				#else
+					jp depack
+				#endif
+		#endasm
+	#endif
+
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 		#asm
 				ei
