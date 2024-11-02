@@ -751,7 +751,9 @@ void show_text_box (void) {
 		gp_gen ++;
 	}
 
-	sp_UpdateNow ();
+	#asm 
+		call SPUpdateNow
+	#endasm
 	play_sfx (7);
 
 	while (any_key ()); while (!any_key ()); 
@@ -759,7 +761,9 @@ void show_text_box (void) {
 		redraw_from_buffer ();
 		hotspot_paint ();
 		render_all_sprites ();
-		sp_UpdateNow  ();
+		#asm 
+			call SPUpdateNow
+		#endasm
 	}
 	redraw_after_text = 1;
 }
