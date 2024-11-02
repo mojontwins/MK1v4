@@ -5,11 +5,13 @@ unsigned char pk_at, pk_df, pk_pw, pk_accuracy;
 unsigned char pk_turn;
 unsigned int pk_temp;
 
-unsigned char pa1, pa2, pa3, pa4;
+unsigned char pa1, pa2, pa3, pa4, pa5, pa6;
 unsigned char *p_ptr, *p_dst;
 
 unsigned char pk_pl_attack, pk_op_attack, pk_item;
 unsigned char pk_win;
+
+unsigned char *pk_ml1, *pk_ml2;
 
 // ****** STATIC DATA LISTS ******
 
@@ -18,6 +20,7 @@ unsigned char pk_win;
 #define AT_ACC 1
 #define AT_PP 2 
 #define AT_FX 3
+#define AT_NAME 4
 
 // FX is a number:
 // 0 - Normal pk_at
@@ -66,9 +69,26 @@ extern unsigned char bubasaur [], charmander [];
 
 	._charmander
 		defb 39, 52, 43, 65, 0, 39
-		defm "CHARMANDER"
+		defm "CHRMANDER%"
 		defw _a_growl, _a_scratch, _a_ember, _a_leer
 #endasm
+
+// Strings (translatable)
+unsigned char str_wipe [] = "               "; // 15 spaces
+unsigned char str_used [] = " USED";
+unsigned char str_failed [] = "BUT FAILED!";
+unsigned char str_useless [] = "IT WAS USELESS";
+unsigned char str_nomore1[] = "YOU GOT NO";
+unsigned char str_nomore2[] = "MORE POKEMONS!";
+unsigned char str_leech [] = "LECH SEED SAPS";
+unsigned char str_is [] = " IS";
+unsigned char str_burn [] ="HURT BY BURN";
+unsigned char str_regain [] = "REGAINS HEALTH!";
+unsigned char str_infected[] = "WAS INFECTED!";
+unsigned char str_burning [] = "IS BURNING!";
+unsigned char str_genitive [] = "'S";
+unsigned char str_low_def [] = "DEFENSE LOW!";
+unsigned char str_low_attack [] = "ATTACK LOW!";
 
 // ****** DYNAMIC (VARIABLE) DATA LISTS ******
 
@@ -79,6 +99,7 @@ extern unsigned char bubasaur [], charmander [];
 #define C_SP 3
 #define C_ST 4
 #define C_MAX_HP 5
+#define C_NAME 6
 
 // ST is a status effect
 // 0 - No status effect
@@ -88,9 +109,9 @@ extern unsigned char bubasaur [], charmander [];
 // 2 - Burning (bit 1)
 #define AST_BURN 2
 // 4 - Defence halved
-#define AST_DEFENCE 4
+#define AST_LOWER_DF 4
 // 8 - Attack halved
-#define AST_ATTACK 8
+#define AST_LOWER_AT 8
 
 extern unsigned char pk_data [];
 
@@ -251,8 +272,15 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 
 #define PK_MENU_ATTR 6*8
 
-#define PK_ATTACK_MENU_X 16
+#define PK_ATTACK_MENU_X 17
 #define PK_ATTACK_MENU_Y 14
+
+#define PK_ATTACK_TB_Y 15
+
+#define PK_BLINK_Y 17
+#define PK_BLINK_X 14
+
+#define PK_LIFE_ATTR 68
 
 // To save code, add 4 dummy bytes so this looks like an attack pool
 #ifdef LANG_EN
@@ -285,6 +313,53 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 	};
 #endif
 
+// pa1 is HP, pa2 = MAX_HP
+// _x, _y is where
+unsigned char pk_display_life (void) {
+
+	pa1 = (pa1 << 3) / pa2;
+	
+	#asm
+			ld  b, 0
+
+		.pk_dl_loop
+			push bc 
+
+			// if B >= pa1 -> space, else bar
+			ld  de, PK_LIFE_ATTR * 256 + 8 			// attribute + space
+			ld  a, (_pa1)
+			cp  b 
+			jr  nc, pk_dl_nobar
+
+			ld  e, 9 								// bar
+
+		.pk_dl_nobar
+
+			ld  a, (__x)
+			ld  c, a 
+			inc a 
+			ld  (__x), a 
+			ld  a, (__y)
+
+			call SPPrintAtInv
+
+			pop bc 
+			inc b
+			ld  a, b 
+			cp  8
+			jr  nz, pk_dl_loop
+
+	#endasm
+}
+
+unsigned char pk_update_displays (void) {
+	pa1 = pk_data[C_HP + OPPONENT_OFFSET]; pa2 = pk_data[C_MAX_HP + OPPONENT_OFFSET];
+	_x = 2; _y = 2; pk_display_life ();
+
+	pa1 = pk_data[C_HP]; pa2 = pk_data[C_MAX_HP];
+	_x = 16; _y = 10; pk_display_life ();
+}
+
 // Simple menu: Just a cursor >
 // _x, _y -> origin
 // pa1 -> # of options
@@ -304,28 +379,53 @@ void pk_simple_menu (void) {
 		if (pa3 != pa2) {
 			#asm
 
-				ld  de, PK_MENU_ATTR * 256 + 0x3F   // D = ATTRIBUTE, E = 0x3F (>)
-				ld  c, PK_ATTACK_MENU_X
-				ld  a, (__y)
-				ld  b, a 
-				ld  a, (_pa2)
-				add b 
-				call SPPrintAtInv
+					ld  de, PK_MENU_ATTR * 256 + 0x3F   // D = ATTRIBUTE, E = 0x3F (>)
+					ld  c, PK_ATTACK_MENU_X
+					ld  a, (__y)
+					ld  b, a 
+					ld  a, (_pa2)
+					add b 
+					call SPPrintAtInv
 
-				ld  de, PK_MENU_ATTR * 256 	       // D = ATTRIBUTE, E = 0
-				ld  c, PK_ATTACK_MENU_X
-				ld  a, (__y)
-				ld  b, a 
-				ld  a, (_pa3)
-				add b 
-				call SPPrintAtInv
+					ld  de, PK_MENU_ATTR * 256 	       // D = ATTRIBUTE, E = 0
+					ld  c, PK_ATTACK_MENU_X
+					ld  a, (__y)
+					ld  b, a 
+					ld  a, (_pa3)
+					add b 
+					call SPPrintAtInv
 
-				ld  a, (_pa2)
-				ld  (_pa3), a
+					ld  a, (_pa2)
+					ld  (_pa3), a
 
-				call sp_UpdateNow
+					call SPUpdateNow
 			#endasm			
 		}
+	}
+}
+
+void pk_pad_wait (void) {
+	while (1) {
+		pad_read ();
+		if ((pad_this_frame & sp_FIRE) == 0) break;
+		rda ++;
+
+		#asm
+				ld  de, PK_MENU_ATTR * 256
+
+				ld  a, (_rda)
+				and 32
+				jr  z, pk_pad_wait_skip_arrow
+
+				ld  e, 0x3F 							// Arrow
+
+			.pk_pad_wait_skip_arrow
+				ld  a, PK_BLINK_Y 
+				ld  c, PK_BLINK_X 
+
+				call SPPrintAtInv
+				call SPUpdateNow
+		#endasm
 	}
 }
 
@@ -345,6 +445,10 @@ void pk_print_menu (void) {
 
 			inc hl
 			inc hl
+
+			ld  a, (hl) 				// Save PP
+			ld  (_rda), a
+
 			inc hl
 			inc hl 						// Skip attack values
 
@@ -393,8 +497,6 @@ void pk_print_menu (void) {
 
 			pop bc 
 			djnz pk_pa_loop
-
-			call SPUpdateNow
 	#endasm	
 }
 
@@ -423,21 +525,102 @@ void pk_print_items_menu (void) {
 	#endasm
 }
 
+// Silly secuential printer
+unsigned char ssp_x, ssp_y;
+void pk_ssp (void) {
+	// Prints @ ssp_x, ssp_y with PK_MENU_ATTR
+	// from gp_gen to \0
+	#asm
+			ld  hl, (_gp_gen)
+		.pk_ssp_loop
+			ld  a, (hl) 
+
+			// Finish when \0
+			or  a
+			ret z
+
+			cp  '%'
+			ret z
+
+			inc hl
+
+			push hl 
+
+			// Send character to output
+			sub 32 
+			ld  e, a 
+
+			ld  d, PK_MENU_ATTR
+
+			ld  a, (_ssp_x) 
+			ld  c, a 
+			inc a 
+			ld  (_ssp_x), a 
+			
+			ld  a, (_ssp_y)
+			
+			call SPPrintAtInv
+
+			halt 
+			call SPUpdateNow
+
+			pop hl
+
+			jr  pk_ssp_loop
+	#endasm
+}
+
+void pk_message (void) {	
+	ssp_x = 1; ssp_y = PK_ATTACK_TB_Y; 
+
+	// With name
+	if (gp_gen) {
+		pk_ssp ();
+	}
+
+	if (pk_ml1) {
+		gp_gen = pk_ml1; pk_ssp ();
+	}
+
+	if (pk_ml2) {
+		gp_gen = pk_ml2;
+		ssp_x = 1; ssp_y = PK_ATTACK_TB_Y + 1; pk_ssp ();
+	}
+
+	gp_gen = 0;
+}
+
+void pk_message_wipe (void) {
+	pk_ml1 = pk_ml2 = str_wipe;
+	pk_message ();
+}
+
+void pk_message_cycle (void) {
+	pk_message ();
+	pk_pad_wait ();
+	pk_message_wipe ();
+}
+
 // Attack cycle
+
+#define OPONENT_STATS pa4
+#define ATTACKER_ATTACK pa3
+#define ATTACKER_STATS pa5
 
 void pk_attack (void) {
 	// pa1 is the attacker, 1 - pa1 is the opponent.
 	// pa2 is the attack selected
+
+	// pa1 attacks (1 - pa1) with pa2 and inflicts damage and/or effects on (1 - pa1).
+
+	// p4 points to opponent stats
+	OPONENT_STATS = (pa1 == 0 ? OPPONENT_OFFSET : 0);
+	ATTACKER_STATS = (pa1 == 0 ? 0 : OPPONENT_OFFSET);
+
+	// p3 poits to the attack selected
+	ATTACKER_ATTACK = ATTACKER_STATS + ATTACKS_OFFSET + (pa2 << 4);
+
 	// pa1 attacks and causes damages and / or starts a status effect
-
-	// ** ITEM **
-	// If pa1 == 0, pk_item != 0xff -> Use item (useless)
-
-	if (pa1 == 0 && pk_item != 0xff) {
-		// Use item but fails
-		// Print text
-		return;
-	}
 
 	// If pa2 = 0xff && (pa1 == 1 || pk_item = 0xff) -> pokemon does nothing, return.
 	if (pa2 == 0xff) {
@@ -448,17 +631,18 @@ void pk_attack (void) {
 
 	// Show what attack pokemon throws!
 	// `CHARMANDER USED TAIL WHIP!', for example
+	gp_gen = pk_data + ATTACKER_STATS + C_NAME;
+	pk_ml1 = str_used;
+	pk_ml2 = pk_data + ATTACKER_ATTACK + AT_NAME;
+	pk_message_cycle ();
 
 	// Put values into pk_accuracy, pk_level, pk_at, pk_pw, pk_df
 
 	// Attack "pw" and "accuracy" are obtained
 	// from the selected attack pa2.
 
-	pa4 = (pa1 == 1 ? OPPONENT_OFFSET : 0);
-	pa3 = pa4 + ATTACKS_OFFSET + (pa2 << 4);
-
-	pk_pw = pk_data [pa3 + AT_DMG];
-	pk_accuracy = pk_data [pa3 + AT_ACC];
+	pk_pw = pk_data [ATTACKER_ATTACK + AT_DMG];
+	pk_accuracy = pk_data [ATTACKER_ATTACK + AT_ACC];
 
 	// iv / effort are fixed for this version, to keep things simple
 	
@@ -468,23 +652,114 @@ void pk_attack (void) {
 
 	// At / Df come from attacker/defendant stats
 
-	pk_at = pk_data [pa4 + C_AT];
-	pk_df = pk_data [OPPONENT_OFFSET - pa4 + C_DF];
+	pk_at = pk_data [ATTACKER_STATS + C_AT];
+	pk_df = pk_data [OPONENT_STATS + C_DF];
+
+	// Decrease attack PP
+	pk_data [ATTACKER_ATTACK + AT_PP] --;
+
+	// Check C_FX to lower pk_at or pk_df!
+	// Attacker:
+	if (pk_data [ATTACKER_STATS + C_ST] & AFX_LOWER_AT) pk_at -= (pk_at >> 2);
+	
+	// Defendant
+	if (pk_data [OPONENT_STATS + C_ST] & AFX_LOWER_DF) pk_df -= (pk_df >> 2);
 
 	// If miss -> pokemon misses! return.
 	if (rand () >= pk_accuracy) {
-		// `BUT FAILED!`
+		pk_ml1 = str_failed; pk_ml2 = 0; 
+		pk_message_cycle ();
 		return;
 	}
 
 	// Inflict damage
 	// HP AT DF SP ST MAXHP 
-	pa3 = C_HP + (pa1 ? OPPONENT_OFFSET : 0);
+	rda = OPONENT_STATS + C_HP;
 	pa1 = pk_calc_damage ();
-	if (pa1 >= pk_data [pa3]) {
-		pk_data [pa3] = 0;
+	if (pa1 >= pk_data [rda]) {
+		pk_data [rda] = 0;
 	} else {
-		pk_data [pa3] -= pa1;
+		pk_data [rda] -= pa1;
+	}
+
+	// Inflict status effects
+	rda = pk_data [ATTACKER_ATTACK + AT_FX]; 			// rda = attack's FX
+	rdb = OPONENT_STATS + C_ST; 						// rdb = point to player ST
+
+	if (rda == AFX_LEECH) {
+		if(0 == (pk_data [rdb] & AST_LEECH)) {
+			pk_data [rdb] |= AST_LEECH;
+			pk_ml1 = pk_data + pa4 + C_NAME;
+			pk_ml2 = str_infected;
+			pk_message_cycle ();
+		}
+	}
+
+	if (rda == AFX_BURN) {
+		if(0 == (pk_data [rdb] & AST_BURN) && rand() < 85) {
+			pk_data [rdb] |= AST_BURN;			
+			pk_ml1 = pk_data + pa4 + C_NAME;
+			pk_ml2 = str_burning;
+			pk_message_cycle ();
+		}
+	}
+
+	if (rda == AFX_LOWER_DF) {
+		pk_data [rdb] |= AST_LOWER_DF;
+		gp_gen = pk_data + pa4 + C_NAME;
+		pk_ml1 = str_genitive;
+		pk_ml2 = str_low_def;
+		pk_message_cycle ();
+	}
+
+	if (rda == AFX_LOWER_AT) {
+		pk_data [rdb] |= AST_LOWER_AT;
+		gp_gen = pk_data + pa4 + C_NAME;
+		pk_ml1 = str_genitive;
+		pk_ml2 = str_low_attack;
+		pk_message_cycle ();
+	}
+}
+
+#define APPLY_STATUS_EFFECTS_ON pa3 
+#define APPLY_STATUS_EFFECTS_OTHER pa4
+void pk_status_effects (void) {
+	// pa1 is the attacker, 1 - pa1 is the opponent.
+	APPLY_STATUS_EFFECTS_ON = (pa1 == 0 ? 0 : OPPONENT_OFFSET);
+	APPLY_STATUS_EFFECTS_OTHER = (pa1 == 0 ? OPPONENT_OFFSET : 0);
+
+	// "XXXX" IS HURT BY THE BURN!
+	// "XXXX" IS HURT BY DRENADORAS! (or whatever)
+
+	pa2 = pk_data [APPLY_STATUS_EFFECTS_ON + C_ST]; 		// Cache status effect
+	pa1 = pk_data [APPLY_STATUS_EFFECTS_ON + C_HP] >> 4;  	// Damage
+	if (pa1 == 0) pa1 = 1; 									// Min damage = 1;
+
+	if(pa2 & AST_LEECH) {
+		// Hurt affected, give life to opponent
+		pk_data [APPLY_STATUS_EFFECTS_ON + C_HP] -= pa1;
+		pk_data [APPLY_STATUS_EFFECTS_OTHER + C_HP] += pa1;
+
+		// Message LECH SEEDS SAP / name
+		pk_ml1 = str_leech;
+		pk_ml2 = pk_data + APPLY_STATUS_EFFECTS_ON + C_NAME;
+		pk_message_cycle ();
+
+		// name / REGAINS HEALTH
+		pk_ml1 = pk_data + APPLY_STATUS_EFFECTS_OTHER + C_NAME;
+		pk_ml2 = str_regain;
+		pk_message_cycle ();
+	}
+
+	if(pa2 & AST_BURN) {
+		// Hurt affected
+		pk_data [APPLY_STATUS_EFFECTS_ON + C_HP] -= pa1;		
+
+		// Message name IS / HURT BY BURN
+		gp_gen = pk_data + APPLY_STATUS_EFFECTS_ON + C_NAME;
+		pk_ml1 = str_is;
+		pk_ml2 = str_burn;
+		pk_message_cycle ();
 	}
 }
 
@@ -547,7 +822,7 @@ void pk_attack_cycle (void) {
 	pk_print_main_menu ();
 	pa1 = 4;
 	pk_simple_menu ();
-
+	
 	switch (pa2) {
 		case 0: // Attack
 			// Select player attack -> pk_pl_attack
@@ -560,14 +835,30 @@ void pk_attack_cycle (void) {
 			pk_simple_menu ();
 
 			pk_item = pa2; 
+
+			// pk_item is always useless in this version
+			pk_ml1 = str_useless; pk_ml2 = 0; 
+			pk_message ();
+			pk_pad_wait ();
+			pk_message_wipe ();			
+
 			break;
 
 		case 2: // Change pokemon
 			// Show you can't
+			pk_ml1 = str_nomore1; pk_ml2 = str_nomore2; 
+			pk_message ();
+			pk_pad_wait();
+			pk_message_wipe ();
+
 			break;
 
 		case 3: // RUN!
-			// Show you can't
+			pk_ml1 = str_useless; pk_ml2 = 0;
+			pk_message ();
+			pk_pad_wait ();
+			pk_message_wipe ();
+
 			break;
 	}
 
@@ -577,18 +868,28 @@ void pk_attack_cycle (void) {
 	// Who strikes first? - Fixed for this one. Charmander is faster.
 
 	// Execute attacks in order - check for MISS ofc.
+	// And update displays	
 	pa1 = 1; pa2 = pk_op_attack; pk_attack ();
+	pk_update_displays ();
+
 	pa1 = 0; pa2 = pk_pl_attack; pk_attack ();
+	pk_update_displays ();
 
 	// Execute status effects
 	// "XXXX" IS HURT BY THE BURN!
 	// "XXXX" IS HURT BY DRENADORAS! (or whatever)
+	pa1 = 1; pk_status_effects ();
+	pk_update_displays ();
+
+	pa1 = 0; pk_status_effects ();
+	pk_update_displays ();
 
 	// Update health displays
 }
 
 // Combat
 unsigned char pokemon_combat(void) {
+
 	pk_win = 0;
 
 	// Init pokemons
@@ -598,6 +899,7 @@ unsigned char pokemon_combat(void) {
 
 	// Battle
 	while (1) {
+		pk_update_displays ();
 		pk_attack_cycle ();
 
 		// Player wins!
