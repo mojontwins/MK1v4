@@ -141,6 +141,9 @@ extern unsigned char pk_data [];
 #define ATTACKS_OFFSET 16
 #define OPPONENT_OFFSET ATTACKS_OFFSET + 64
 
+#define C_HP_OP OPPONENT_OFFSET+C_HP
+#define C_MAX_HP_OP OPPONENT_OFFSET+C_MAX_HP
+
 // So pk_attacks [0] are the player's and pk_attacks [1] are the opponent's
 
 unsigned char pk_calc_stat (void) {
@@ -361,13 +364,42 @@ unsigned char pk_display_life (void) {
 }
 
 unsigned char pk_update_displays (void) {
-	pa1 = pk_data[C_HP + OPPONENT_OFFSET]; pa2 = pk_data[C_MAX_HP + OPPONENT_OFFSET];
+	// pa1 = pk_data[C_HP + OPPONENT_OFFSET]; pa2 = pk_data[C_MAX_HP + OPPONENT_OFFSET];
+	#asm
+		ld  ix, _pk_data
+		ld  a, (ix + C_HP + OPPONENT_OFFSET)
+		ld  (_pa1), a
+		ld  a, (ix + C_MAX_HP + OPPONENT_OFFSET)
+		ld  (_pa2), a
+	#endasm
+
 	_x = 8; _y = 3; pk_display_life ();
 
+	// pa1 = pk_data[C_HP]; pa2 = pk_data[C_MAX_HP];
+	#asm
+		ld  ix, _pk_data
+		ld  a, (ix + C_HP)
+		ld  (_pa1), a
+		ld  a, (ix + C_MAX_HP)
+		ld  (_pa2), a
+	#endasm
 
-	pa1 = pk_data[C_HP]; pa2 = pk_data[C_MAX_HP];
-	draw_2_digits (20, 12, pa1);
-	draw_2_digits (24, 12, pa2);
+	#asm 
+		ld  a, 12
+		ld  (__y), a 
+
+		ld  a, 20
+		ld  (__x), a 
+		ld  a, (_pa1)
+		call draw_2_digits_shortcut
+
+		ld  a, 24
+		ld  (__x), a 
+		ld  a, (_pa2)
+		call draw_2_digits_shortcut
+	#endasm
+
+
 	_x = 18; _y = 11; pk_display_life ();
 }
 
@@ -376,44 +408,105 @@ unsigned char pk_update_displays (void) {
 // pa1 -> # of options
 // On exit: pa2 = selected option
 void pk_simple_menu (void) {
-	pa2 = 0; pa3 = 1;
+	#asm
+			// pa2 = 0; pa3 = 1;
 
-	while (1) {
-		pad_read ();
-		if ((pad_this_frame & sp_UP) == 0) {
-			pa2 --; if (pa2 > pa1) pa2 = pa1 - 1;
-		} 
-		if ((pad_this_frame & sp_DOWN) == 0) {
-			pa2 ++; if (pa2 >= pa1) pa2 = 0;
-		}
-		if ((pad_this_frame & sp_FIRE) == 0) break;
-		if (pa3 != pa2) {
-			#asm
+			xor a 
+			ld  (_pa2), a 
+			inc a 
+			ld  (_pa3), a
 
-					ld  de, PK_MENU_ATTR * 256 + 0x3F   // D = ATTRIBUTE, E = 0x3F (>)
-					ld  c, PK_ATTACK_MENU_X
-					ld  a, (__y)
-					ld  b, a 
-					ld  a, (_pa2)
-					add b 
-					call SPPrintAtInv
+		.pk_simple_menu_loop
+			call _pad_read 
 
-					ld  de, PK_MENU_ATTR * 256 	       // D = ATTRIBUTE, E = 0
-					ld  c, PK_ATTACK_MENU_X
-					ld  a, (__y)
-					ld  b, a 
-					ld  a, (_pa3)
-					add b 
-					call SPPrintAtInv
+			// UP
 
-					ld  a, (_pa2)
-					ld  (_pa3), a
+			ld  a, (_pad_this_frame)
+			and sp_UP
+			jr  nz, pk_sm_up_done
 
-					call SPUpdateNow
-			#endasm			
-		}
-	}
+			ld  a, (_pa1)
+			ld  c, a
+
+			ld  a, (_pa2)
+			dec a 
+
+			// pa2 > pa1
+			cp  c
+			jr  c, pk_sm_up_set
+			jr  z, pk_sm_up_set
+
+			ld  a, c 
+			dec a
+
+		.pk_sm_up_set
+			ld  (_pa2), a
+
+		.pk_sm_up_done
+
+			// DOWN
+
+			ld  a, (_pad_this_frame)
+			and sp_DOWN
+			jr  nz, pk_sm_down_done
+
+			ld  a, (_pa1)
+			ld  c, a
+
+			ld  a, (_pa2)
+			inc a 
+
+			// pa2 >= pa1
+			cp  c 
+			jr  c, pk_sm_down_set
+
+			xor a
+
+		.pk_sm_down_set
+			ld  (_pa2), a
+
+		.pk_sm_down_done
+
+			// FIRE TO BREAK
+
+			ld  a, (_pad_this_frame)
+			and sp_FIRE 
+			jr  z, pk_simple_menu_done
+
+			// pa3 != pa2 -> Update
+
+			ld  a, (_pa3)
+			ld  c, a 
+			ld  a, (_pa2)
+			cp  c 
+			jr  z, pk_simple_menu_loop
+
+			ld  de, PK_MENU_ATTR * 256 + 0x3F   // D = ATTRIBUTE, E = 0x3F (>)
+			ld  c, PK_ATTACK_MENU_X
+			ld  a, (__y)
+			ld  b, a 
+			ld  a, (_pa2)
+			add b 
+			call SPPrintAtInv
+
+			ld  de, PK_MENU_ATTR * 256 	       // D = ATTRIBUTE, E = 0
+			ld  c, PK_ATTACK_MENU_X
+			ld  a, (__y)
+			ld  b, a 
+			ld  a, (_pa3)
+			add b 
+			call SPPrintAtInv
+
+			ld  a, (_pa2)
+			ld  (_pa3), a
+
+			call SPUpdateNow
+
+			jr  pk_simple_menu_loop
+		.pk_simple_menu_done
+	#endasm
 }
+
 
 void pk_pad_wait (void) {
 	while (1) {
