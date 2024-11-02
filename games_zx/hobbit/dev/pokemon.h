@@ -509,28 +509,49 @@ void pk_simple_menu (void) {
 
 
 void pk_pad_wait (void) {
-	while (1) {
-		pad_read ();
-		if ((pad_this_frame & sp_FIRE) == 0) break;
-		rda ++;
+	#asm
+			ld  a, 1
+			ld  (_rdb), a
 
-		#asm
-				ld  de, PK_MENU_ATTR * 256
+		.pk_pad_wait_loop
 
-				ld  a, (_rda)
-				and 32
-				jr  z, pk_pad_wait_skip_arrow
+			call _pad_read
 
-				ld  e, 0x3F 							// Arrow
+			ld  a, (_pad_this_frame)
+			and sp_FIRE 
+			jr  nz, pk_pad_wait_nobreak
 
-			.pk_pad_wait_skip_arrow
-				ld  a, PK_BLINK_Y 
-				ld  c, PK_BLINK_X 
+			xor a 
+			ld  (_rdb), a
 
-				call SPPrintAtInv
-				call SPUpdateNow
-		#endasm
-	}
+		.pk_pad_wait_nobreak
+
+			ld  de, PK_MENU_ATTR * 256
+
+			ld  a, (_rda)
+			inc a 
+			ld  (_rda), a 
+
+			and 32
+			jr  z, pk_pad_wait_skip_arrow
+
+			ld  a, (_rdb) 
+			or  a
+			jr  z, pk_pad_wait_skip_arrow
+
+			ld  e, 0x3F 							// Arrow
+
+		.pk_pad_wait_skip_arrow
+			ld  a, PK_BLINK_Y 
+			ld  c, PK_BLINK_X 
+
+			call SPPrintAtInv
+			call SPUpdateNow
+
+			ld  a, (_rdb) 
+			or  a 
+			jr  nz, pk_pad_wait_loop
+	#endasm
 }
 
 void pk_print_menu (void) {
@@ -674,29 +695,61 @@ void pk_ssp (void) {
 	#endasm
 }
 
-void pk_message (void) {	
-	ssp_x = 1; ssp_y = PK_ATTACK_TB_Y; 
+void pk_message (void) {
+	#asm
+		ld  a, 1 
+		ld  (_ssp_x), a 
+		ld  a, PK_ATTACK_TB_Y
+		ld  (_ssp_y), a 
 
-	// With name
-	if (gp_gen) {
-		pk_ssp ();
-	}
+	// With name: write a name if gp_gen != 0
 
-	if (pk_ml1) {
-		gp_gen = pk_ml1; pk_ssp ();
-	}
+		ld  hl, (_gp_gen) 
+		ld  a, h 
+		or  l 
+		jr  z, pk_message_name_done
 
-	if (pk_ml2) {
-		gp_gen = pk_ml2;
-		ssp_x = 1; ssp_y = PK_ATTACK_TB_Y + 2; pk_ssp ();
-	}
+		call _pk_ssp
+	.pk_message_name_done
 
-	gp_gen = 0;
+	// Message line 1
+		ld  hl, (_pk_ml1)
+		ld  a, h 
+		or  l 
+		jr  z, pk_message_l1_done 
+
+		ld  (_gp_gen), hl 
+		call _pk_ssp
+	.pk_message_l1_done
+
+	// Message line 2 
+		ld  hl, (_pk_ml2)
+		ld  a, h 
+		or  l 
+		jr  z, pk_message_l2_done
+
+		ld  (_gp_gen), hl 
+		ld  a, 1 
+		ld  (_ssp_x), a 
+		ld  a, PK_ATTACK_TB_Y + 2
+		ld  (_ssp_y), a 
+		call _pk_ssp
+	.pk_message_l2_done
+
+		ld  hl, 0
+		ld  (_gp_gen), hl
+
+	#endasm
 }
 
 void pk_message_wipe (void) {
-	pk_ml1 = pk_ml2 = str_wipe;
-	pk_message ();
+	#asm 
+		ld  hl, (_str_wipe)
+		ld  (_pk_ml1), hl 
+		ld  (_pk_ml2), hl
+
+		jr  _pk_message 
+	#endasm
 }
 
 void pk_message_cycle (void) {
