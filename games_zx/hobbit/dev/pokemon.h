@@ -1,5 +1,7 @@
 // Pokemon routines for the ending
 
+void unpack(void);
+
 unsigned char pk_base, pk_iv, pk_effort, pk_level;
 unsigned char pk_at, pk_df, pk_pw, pk_accuracy;
 unsigned char pk_turn;
@@ -12,6 +14,12 @@ unsigned char pk_pl_attack, pk_op_attack, pk_item;
 unsigned char pk_win;
 
 unsigned char *pk_ml1, *pk_ml2;
+
+extern unsigned char s_pokemon [];
+#asm
+	._s_pokemon
+		BINARY "pokemon.bin"
+#endasm
 
 // ****** STATIC DATA LISTS ******
 
@@ -273,12 +281,12 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 #define PK_MENU_ATTR 6*8
 
 #define PK_ATTACK_MENU_X 17
-#define PK_ATTACK_MENU_Y 14
+#define PK_ATTACK_MENU_Y 15
 
 #define PK_ATTACK_TB_Y 15
 
-#define PK_BLINK_Y 17
-#define PK_BLINK_X 14
+#define PK_BLINK_Y 18
+#define PK_BLINK_X 15
 
 #define PK_LIFE_ATTR 68
 
@@ -354,10 +362,13 @@ unsigned char pk_display_life (void) {
 
 unsigned char pk_update_displays (void) {
 	pa1 = pk_data[C_HP + OPPONENT_OFFSET]; pa2 = pk_data[C_MAX_HP + OPPONENT_OFFSET];
-	_x = 2; _y = 2; pk_display_life ();
+	_x = 8; _y = 3; pk_display_life ();
+
 
 	pa1 = pk_data[C_HP]; pa2 = pk_data[C_MAX_HP];
-	_x = 16; _y = 10; pk_display_life ();
+	draw_2_digits (20, 12, pa1);
+	draw_2_digits (24, 12, pa2);
+	_x = 18; _y = 11; pk_display_life ();
 }
 
 // Simple menu: Just a cursor >
@@ -584,7 +595,7 @@ void pk_message (void) {
 
 	if (pk_ml2) {
 		gp_gen = pk_ml2;
-		ssp_x = 1; ssp_y = PK_ATTACK_TB_Y + 1; pk_ssp ();
+		ssp_x = 1; ssp_y = PK_ATTACK_TB_Y + 2; pk_ssp ();
 	}
 
 	gp_gen = 0;
@@ -889,6 +900,11 @@ void pk_attack_cycle (void) {
 
 // Combat
 unsigned char pokemon_combat(void) {
+
+	#asm 
+		call SPUpdateNow
+	#endasm
+	asm_int = (unsigned int) (s_pokemon); unpack ();
 
 	pk_win = 0;
 

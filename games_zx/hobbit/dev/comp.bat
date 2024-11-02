@@ -12,11 +12,13 @@ echo Making %game%
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h > nul
 ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
 ..\utils\png2scr.exe ..\gfx\title%lang%.png ..\gfx\title.scr  > nul
+..\utils\png2scr.exe ..\gfx\pokemon%lang%.png ..\gfx\pokemon.scr  > nul
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
 ..\utils\png2scr.exe ..\gfx\preloading.png preloading.bin  > nul
 ..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
 ..\utils\zx0.exe ..\gfx\title.scr title.bin  > nul
+..\utils\zx0.exe ..\gfx\pokemon.scr pokemon.bin  > nul
 ..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\zx0.exe ..\gfx\ending.scr ending.bin  > nul
 
