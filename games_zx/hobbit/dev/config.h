@@ -10,7 +10,7 @@
 #define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
 #define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
 #define DECOMPRESSOR_ZX0				// User Einar Saukas' ZX0 rather than aplib
-#define COMPRESSED_TS 					// TS will contain 0s, and tilesetc.bin is used
+#define COMPRESSED_TS 			2		// See manual!
 
 //#define TALL_PLAYER					// Main character is 16x24
 

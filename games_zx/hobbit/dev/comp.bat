@@ -2,13 +2,22 @@
 
 set game=hobbit
 set lang=ES
+set base=24200
 
 if [%1]==[justcompile] goto :compile
 
 echo Making %game%
 ..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=7,6 scrsize=15,10 tlock=15 mk1h=mapa.h  > nul
-..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
-..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\poketiles.png poketiles.bin 7 > nul
+
+rem generate for "COMPRESSED_TS 2", i.e. the font and 0s:
+..\utils\ts2bin.exe ..\gfx\font.png blank tileset.bin 7 > nul
+
+rem generate for "COMPRESSED_TS 2", i.e. 192 tiles + 256 attrs
+..\utils\ts2bin.exe nofont ..\gfx\work.png ts_attrs.bin 7 > nul
+
+rem generate for "COMPRESSED_TS 2", i.e. 192 tiles + 256 attrs
+..\utils\ts2bin.exe nofont ..\gfx\poketiles.png poketiles.bin 7 > nul
+
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h dsall compacted 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h > nul
 ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
@@ -19,11 +28,11 @@ echo Making %game%
 ..\utils\png2scr.exe ..\gfx\preloading.png preloading.bin  > nul
 ..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
 ..\utils\zx0.exe ..\gfx\title.scr title.bin  > nul
-..\utils\zx0.exe ..\gfx\pokemon.scr pokemon.bin  
+..\utils\zx0.exe ..\gfx\pokemon.scr pokemon.bin > nul 
 ..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\zx0.exe ..\gfx\ending.scr ending.bin  > nul
 
-..\utils\zx0.exe tileset.bin tilesetc.bin > nul
+..\utils\zx0.exe ts_attrs.bin ts_attrsc.bin > nul
 ..\utils\zx0.exe poketiles.bin poketilesc.bin > nul
 
 :compile
@@ -37,7 +46,7 @@ cd ..\dev
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
-zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=24200 -DLANG_%lang% > nul
+zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2f -zorg=%base% -DLANG_%lang% > nul
 rem zcc +zx -vn -a churromain.c -o %game%.asm -lsplib2f -zorg=24200 -DLANG_%lang% > nul
 
 ..\utils\printsize.exe %game%.bin
@@ -54,6 +63,7 @@ del gamec.bin > nul 2> nul
     in=loader_128.asm-orig ^
     out=loader.asm ^
     ram1_length=?RAM1.bin ^
+    basebinaddress=%base% ^
     preloadingcomplength=?preloadingc.bin ^
     loadingcomplength=?loadingc.bin ^
     mainbincomplength=?gamec.bin > nul

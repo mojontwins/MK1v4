@@ -77,16 +77,29 @@ void main (void) {
 
 	// Compressed tileset
 	#ifdef COMPRESSED_TS
-		#asm
-			.decompress_ts
-				ld hl, _tilesetc 
-				ld de, _tileset
-				#ifdef DECOMPRESSOR_ZX0
-					jp dzx0_standard
-				#else
-					jp depack
-				#endif
-		#endasm
+		#if COMPRESSED_TS == 1
+			#asm
+				.decompress_ts
+					ld hl, _tilesetc 
+					ld de, _tileset
+					#ifdef DECOMPRESSOR_ZX0
+						call dzx0_standard
+					#else
+						call depack
+					#endif
+			#endasm
+		#elif COMPRESSED_TS == 2
+			#asm
+				.decompress_ts
+					ld hl, _tilesetc 
+					ld de, _tileset+512
+					#ifdef DECOMPRESSOR_ZX0
+						call dzx0_standard
+					#else
+						call depack
+					#endif
+			#endasm	
+		#endif
 	#endif
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME

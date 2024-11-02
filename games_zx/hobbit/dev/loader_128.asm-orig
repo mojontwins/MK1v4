@@ -3,7 +3,7 @@
 ; by na_th_an - Thanks to Antonio Villena for his tutorials and utilities.
 
 	org $5ccb
-	ld  sp, 24199
+	ld  sp, %%%basebinaddress%%% - 1
 	di
 	db	$de, $c0, $37, $0e, $8f, $39, $96 ;OVER USR 7 ($5ccb)
 	
@@ -50,7 +50,7 @@
 
 ; Decompress
 	ld  hl, 65368 - %%%mainbincomplength%%%
-	ld  de, 24200
+	ld  de, %%%basebinaddress%%%
 	call depack	
 
 ; Detect if it's a 128K model to load RAM1.
@@ -83,7 +83,7 @@
 	
 ; run game!
 launch_exe:
-	jp 24200
+	jp %%%basebinaddress%%%
 
 blackout:
 	ld  bc, 767

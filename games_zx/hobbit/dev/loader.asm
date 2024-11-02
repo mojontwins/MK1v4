@@ -3,7 +3,7 @@
 ; by na_th_an - Thanks to Antonio Villena for his tutorials and utilities.
 
 	org $5ccb
-	ld  sp, 24199
+	ld  sp, 24200 - 1
 	di
 	db	$de, $c0, $37, $0e, $8f, $39, $96 ;OVER USR 7 ($5ccb)
 	
@@ -40,8 +40,8 @@
 ; Main binary
 	scf
 	ld	a, $ff
-	ld	ix, 65368 - 19081
-	ld	de, 19081
+	ld	ix, 65368 - 19058
+	ld	de, 19058
 	call $0556
 	di
 
@@ -49,7 +49,7 @@
 	out (254), a
 
 ; Decompress
-	ld  hl, 65368 - 19081
+	ld  hl, 65368 - 19058
 	ld  de, 24200
 	call depack	
 

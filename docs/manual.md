@@ -2744,14 +2744,35 @@ En la siguiente vuelta del bucle de juego, `player_just_died` volverá a 0.
 Puede que necesites sustituir el tileset principal del juego. Como luego necesitarás volver a poner el inicial, ofrecemos esta opción:
 
 ```c
-	#define COMPRESSED_TS
+	#define COMPRESSED_TS n
 ```
 
-Si se activa, se obrarán los siguientes cambios:
+Si se activa, con `n` = 1 o 2, se obrarán los siguientes cambios dependiendo de `n`:
+
+### Con `n` = 1
 
 * El tileset principal será cargado con 2048+256 ceros.
 * A continuación se cargará tilesetc.bin con el tileset comprimido, apuntado por `tilesetc`.
 * Durante la inicialización del motor, se descomprimirá automáticamente tilesetc.bin en su sitio, esto es, sobre los 2048+256 bytes reservados a partir de `tileset`. 
+
+### Con `n` = 2
+
+* Se cargará `tileset.bin` con la fuente (512 bytes) en `tileset`. Idealmente sólo contendrá la fuente y el resto a 0.
+* Se rellenará con 0 el resto hasta 2304 bytes.
+* Se cargará `ts_attrsc.bin` que llevará los caracteres 64-256 más los atributos (total 1536+256 bytes) comprimidos en `tilesetc`.
+* Durante la inicialización del motor, se descomprimirá automáticamente ts_attrs.bin en su sitio (esto es, `tileset + 512`).
+
+`tileset.bin` conteniendo sólo la fuente y el resto a 0 se puede generar usando:
+
+```cmd
+	..\utils\ts2bin.exe ..\gfx\font.png blank tileset.bin 7
+```
+
+`ts_attrs.bin`, omitiendo los primeros 512 bytes de la fuente, puede generarse usando:
+
+```cmd
+	..\utils\ts2bin.exe nofont ..\gfx\work.png ts_attrs.bin 7
+```
 
 # Capítulo 9 - `MODE_128K_DUAL`
 

@@ -5,10 +5,16 @@ extern unsigned char tileset [0];
 #asm
 	._tileset
 	#ifdef COMPRESSED_TS
-		defs 2304
-	._tilesetc
-		BINARY "tilesetc.bin"
+		#if COMPRESSED_TS == 1
+				defs 2304
+			._tilesetc
+				BINARY "tilesetc.bin"
+		#elif COMPRESSED_TS == 2
+				BINARY "tileset.bin"
+			._tilesetc 
+				BINARY "ts_attrsc.bin"
+		#endif
 	#else
-		BINARY "tileset.bin"
+			BINARY "tileset.bin"
 	#endif
 #endasm
