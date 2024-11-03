@@ -1368,6 +1368,8 @@ void pk_op_pickup_attack (void) {
 				pk_op_attack = pa1;
 				break;
 			}
+
+			pa1 = (pa1 + 1) & 3;
 		}
 
 		// All attacks ran out of PP return 0xff
