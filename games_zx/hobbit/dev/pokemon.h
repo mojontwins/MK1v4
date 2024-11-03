@@ -744,7 +744,7 @@ void pk_message (void) {
 
 void pk_message_wipe (void) {
 	#asm 
-		ld  hl, (_str_wipe)
+		ld  hl, _str_wipe
 		ld  (_pk_ml1), hl 
 		ld  (_pk_ml2), hl
 
@@ -765,12 +765,303 @@ void pk_message_cycle (void) {
 #define ATTACKER_STATS pa5
 
 void pk_attack (void) {
+	// Assembly redo attempt 1
+	#asm
+		// pa1 is the attacker (0 player 1 CPU)
+		// pa2 is the selected attack (0-3)
+
+		// Make it so IX points to the ATTACKER
+		//            IY points to the OPPONENNT
+
+			ld  a, (_pa1)
+			or  a
+			jr  nz, pka_CPU_attacks
+
+		.pka_PLA_attacks
+			ld  ix, _pk_data
+			ld  iy, _pk_data + OPPONENT_OFFSET
+			jr  pka_setup_done
+
+		.pka_CPU_attacks
+			ld  ix, _pk_data + OPPONENT_OFFSET
+			ld  iy, _pk_data
+
+		.pka_setup_done
+
+		// Make an offset to the current attack in BC
+		// so BC can be added to IX to get attack stats
+
+			ld  a, (_pa2)
+
+			cp  0xff
+			ret z 					// No attack selected
+
+			sla a
+			sla a
+			sla a
+			sla a
+			add ATTACKS_OFFSET
+
+			ld  b, 0
+			ld  c, a
+
+		// Show what attack pokemon throws!
+		// `CHARMANDER USED TAIL WHIP!', for example
+
+			// Get pokemon name
+			push ix
+			ld  de, C_NAME
+			add ix, de
+			ld  (_gp_gen), ix
+			pop ix
+			
+			ld  hl, _str_used
+			ld  (_pk_ml1), hl
+
+			// Get attack name
+			push ix
+			add ix, bc 				// IX->attack
+			ld  de, AT_NAME
+			add ix, de
+			ld  (_pk_ml2), ix
+
+			push bc 
+			push iy
+			call _pk_message_cycle
+			pop iy 
+			pop bc
+
+			pop ix  				// Get pointer back
+
+			// Put values into pk_accuracy, pk_level, pk_at, pk_pw, pk_df
+
+			// Attack "pw" and "accuracy" are obtained
+			// from the selected attack pa2.
+
+			push ix
+			add ix, bc 				// IX->attack
+
+			ld  a, (ix + AT_DMG)
+			ld  (_pk_pw), a
+			ld  a, (ix + AT_ACC)
+			ld  (_pk_accuracy), a
+
+			// Decrease attack PP
+			dec (ix + AT_PP)
+
+			pop ix
+
+			// iv / effort are fixed for this version, to keep things simple
+			
+			ld  a, 8
+			ld  (_pk_iv), a
+			xor a 
+			ld  (_pk_effort), a 	
+			ld  a, 10
+			ld  (_pk_effort), a
+
+			// At / Df come from attacker/defendant stats
+
+			ld  a, (ix + C_AT)
+			ld  (_pk_at), a
+			ld  a, (iy + C_DF)
+			ld  (_pk_df), a
+
+		// STATUS EFFECTS
+
+			// Check C_FX to lower pk_at or pk_df!
+			// Attacker:
+
+			ld  a, (ix + C_ST)
+			and AFX_LOWER_AT
+			jr  z, pka_at_nost
+
+			ld  a, (_pk_at)
+			ld  e, a  				// E = pk_at
+			srl a 	
+			srl a
+			ld  d, a 				// D = pk_at >> 2 
+			ld  a, e
+			sub d
+			ld  (_pk_at), a
+
+		.pka_at_nost
+
+			// Defendant:
+
+			ld  a, (iy + C_ST)
+			and AFX_LOWER_DF
+			jr  z, pka_df_nost
+
+			ld  a, (_pk_df)
+			ld  e, a  				// E = pk_df
+			srl a 	
+			srl a
+			ld  d, a 				// D = pk_df >> 2 
+			ld  a, e
+			sub d
+			ld  (_pk_df), a
+
+		.pka_df_nost
+
+		// POKEMON MISS ?
+
+			// Miss if rand() >= pk_accuracy
+			call _rand 				// uses HL, DE.
+			ld  d, l
+			ld  a, (_pk_accuracy)
+			ld  e, a 
+			ld  a, d 
+			cp  e
+			jr  c, pka_nomiss
+
+			//  MISS!
+
+			ld  hl, _str_failed
+			ld  (_pk_ml1), hl 
+			ld  hl, 0
+			ld  (_pk_ml2), hl
+
+			// We are returning so no need to save
+			call _pk_message_cycle
+
+			ret
+
+		.pka_nomiss
+
+		// INFLICT DAMAGE!
+			push bc 
+			push ix 
+			push iy
+			call _pk_calc_damage	// L = Damage
+			pop iy 
+			pop ix 
+			pop bc
+
+			ld  a, (iy + C_HP)		// Opponent HL
+			cp  l
+			jr  c, pka_hp_zero
+
+			sub l 
+			jr  pka_hp_set
+
+		.pka_hp_zero
+			xor a 
+
+		.pka_hp_set
+			ld  (iy + C_HP), a
+
+		// INFLICT STATUS EFFECTS!
+
+			// Oponent name
+			ld  d, 0
+			ld  e, C_NAME
+			push iy 
+			add iy, de
+			ld  (_pk_ml1), iy 
+			pop iy
+
+			push ix
+			add ix, bc 				// IX->attack
+			ld  a, (ix + AT_FX)
+			pop ix
+
+			cp  AFX_LEECH
+			jr  z, pka_fx_leech
+
+			cp  AFX_BURN
+			jr  z, pka_fx_burn
+
+			cp  AFX_LOWER_DF
+			jr  z, pka_fx_lower_df
+
+			cp  AFX_LOWER_AT
+			jr  z, pka_fx_lower_at
+
+		// Nothing to do: return
+
+			ret
+
+		// STATUS EFFECTS DO
+
+		.pka_fx_leech
+			// Check if already leeched
+			ld  a, (iy + C_ST)
+			ld  d, a
+			and AST_LEECH
+			ret nz
+
+			ld  a, d
+			or  AST_LEECH
+			ld  (iy + C_ST), a
+
+			// pk_ml1 has already opponent's name
+
+			ld  hl, _str_infected
+			ld  (_pk_ml2), hl
+			jr  pka_message
+
+		.pka_fx_burn
+			// Check if already burnt
+			ld  a, (iy + C_ST)
+			ld  d, a
+			and AST_BURN
+			ret nz
+
+			ld  a, d
+			or  AST_BURN
+			ld  (iy + C_ST), a
+
+			// pk_ml1 has already opponent's name
+
+			ld  hl, _str_burning
+			ld  (_pk_ml2), hl
+			jr  pka_message
+
+		.pka_fx_lower_df
+			ld  a, AST_LOWER_DF
+			or  (iy + C_ST)
+			ld  (iy + C_ST), a
+
+			// pk_ml1 has already opponent's name
+			ld  hl, (_pk_ml1)
+			ld  (_gp_gen), hl 
+
+			ld  hl, _str_genitive
+			ld  (_pk_ml1), hl
+
+			ld  hl, _str_low_def
+			ld  (_pk_ml2), hl
+			jr  pka_message
+
+		.pka_fx_lower_at
+			ld  a, AST_LOWER_AT
+			or  (iy + C_ST)
+			ld  (iy + C_ST), a
+
+			// pk_ml1 has already opponent's name
+			ld  hl, (_pk_ml1)
+			ld  (_gp_gen), hl 
+
+			ld  hl, _str_genitive
+			ld  (_pk_ml1), hl
+
+			ld  hl, _str_low_def
+			ld  (_pk_ml2), hl
+
+		// Print message & exit
+
+		.pka_message
+			call _pk_message_cycle
+	#endasm
+
+	/*
 	// pa1 is the attacker, 1 - pa1 is the opponent.
 	// pa2 is the attack selected
 
 	// pa1 attacks (1 - pa1) with pa2 and inflicts damage and/or effects on (1 - pa1).
 
-	// p4 points to opponent stats
+	// pa4 points to opponent stats
 	OPONENT_STATS = (pa1 == 0 ? OPPONENT_OFFSET : 0);
 	ATTACKER_STATS = (pa1 == 0 ? 0 : OPPONENT_OFFSET);
 
@@ -876,6 +1167,8 @@ void pk_attack (void) {
 		pk_ml2 = str_low_attack;
 		pk_message_cycle ();
 	}
+
+	*/
 }
 
 #define APPLY_STATUS_EFFECTS_ON pa3 
