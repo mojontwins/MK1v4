@@ -1174,6 +1174,145 @@ void pk_attack (void) {
 #define APPLY_STATUS_EFFECTS_ON pa3 
 #define APPLY_STATUS_EFFECTS_OTHER pa4
 void pk_status_effects (void) {
+
+	#asm
+		// pa1 is the attacker (0 player 1 CPU)
+		// pa2 is the selected attack (0-3)
+
+		// Make it so IX points to the ATTACKER
+		//            IY points to the AFFECTED
+
+		// i.e. IY will receive the status effects
+		// which may refrect on IX.
+
+			ld  a, (_pa1)
+			or  a
+			jr  nz, pks_CPU_attacks
+
+		.pks_PLA_attacks
+			ld  ix, _pk_data
+			ld  iy, _pk_data + OPPONENT_OFFSET
+			jr  pks_setup_done
+
+		.pks_CPU_attacks
+			ld  ix, _pk_data + OPPONENT_OFFSET
+			ld  iy, _pk_data
+
+		.pks_setup_done
+
+		// The amount of damage made by AST_LEECH
+		// or AST_BURN is min(HP / 16, 1). Store in pa1 
+
+			ld  a, (iy + C_HP) 		// Affected HP
+			srl a 
+			srl a 
+			srl a 
+			srl a 
+
+			or  a 					// if 0 make it 1
+			jr  nz, pks_dmg_store
+
+			inc a 					// 0 -> 1
+
+		.pks_dmg_store
+			ld  (_pa1), a
+
+		// Get which status
+
+			ld  a, (iy + C_ST)
+			and AST_LEECH
+			call nz, pks_leech
+
+			ld  a, (iy + C_ST)
+			and AST_BURN
+			ret z
+
+		.pks_burn
+			// Hurt affected
+			ld  a, (_pa1) 			// Damage
+			ld  c, a
+			ld  a, (iy + C_HP) 		// affected's HP
+			sub c
+			jr  nc, pks_burn_af_store
+
+			xor a 					// if < 0 -> 0
+
+		.pks_burn_af_store
+			ld  (iy + C_HP), a
+
+			// Message name IS / HURT BY BURN
+			push iy 
+			ld  de, C_NAME
+			add iy, de 
+			ld  (_gp_gen), iy
+			pop iy 
+
+			ld  hl, _str_is
+			ld  (_pk_ml1), hl 
+
+			ld  hl, _str_burn 
+			ld  (_pk_ml2), hl
+
+			call _pk_message_cycle
+
+			ret
+
+		.pks_leech
+			// Hurt affected, give life to opponent
+
+			ld  a, (_pa1) 			// Damage
+			ld  c, a
+			ld  a, (iy + C_HP) 		// affected's HP
+			sub c
+			jr  nc, pks_leech_af_store
+
+			xor a 					// if < 0 -> 0
+
+		.pks_leech_af_store
+			ld  (iy + C_HP), a
+
+			ld  a, (ix + C_HP) 		// attacker's HP
+			add c
+			cp  (ix + C_MAX_HP)		// Never surpass mx
+			jr  c, pks_leech_at_store
+
+			ld  a, (ix + C_MAX_HP)
+
+		.pks_leech_at_store
+			ld  (ix + C_HP), a
+
+			// Message LEECH SEEDS SAP / name
+			ld  hl, _str_leech
+			ld  (_pk_ml1), hl 
+
+			ld  de, C_NAME
+			push iy 
+			add iy, de 
+			ld  (_pk_ml2), iy
+			
+			push ix
+			call _pk_message_cycle
+			pop ix 
+			pop iy
+
+			// name / REGAINS HEALTH
+			ld  de, C_NAME
+			push ix
+			add ix, de 
+			ld  (_pk_ml1), ix
+			
+			ld  hl, _str_regain
+			ld  (_pk_ml2), hl
+
+			push iy
+			call _pk_message_cycle
+			pop iy
+			pop ix
+
+			ret
+	#endasm
+
+	/*
 	// pa1 is the attacker, 1 - pa1 is the opponent.
 	APPLY_STATUS_EFFECTS_ON = (pa1 == 0 ? 0 : OPPONENT_OFFSET);
 	APPLY_STATUS_EFFECTS_OTHER = (pa1 == 0 ? OPPONENT_OFFSET : 0);
@@ -1211,6 +1350,7 @@ void pk_status_effects (void) {
 		pk_ml2 = str_burn;
 		pk_message_cycle ();
 	}
+	*/
 }
 
 // AI : Pick up attack -> pk_op_attack
