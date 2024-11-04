@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Nov 04 14:17:52 2024
+;	Module compile time: Mon Nov 04 14:21:36 2024
 
 
 
@@ -24,6 +24,7 @@
 	LIB SPRegisterHook
 	LIB SPCreateGenericISR
 	LIB SPInitIM2
+	LIB SPInitialize
 	XREF SProtatetblInitialize
 ;	SECTION	text
 
@@ -3649,8 +3650,8 @@
 ._text11
 	defm	"BILBOS PIENSA EN LO%QUE DICE G"
 	defm	"ANDALF DEL%TESORO. ESTA FASE R"
-	defm	"E%PRESENTA EL PENSAMIEN-%TO DE"
-	defm	" BILBOS"
+	defm	"E-%PRESENTA EL PENSAMIEN-%TO D"
+	defm	"E BILBOS"
 	defb	0
 
 ;	SECTION	code
@@ -3960,7 +3961,7 @@
 
 ._text37
 	defm	"_GANDALF%ESO AUN NO TE LO PUED"
-	defm	"O%DECIR!"
+	defm	"O%DECIR!!"
 	defb	0
 
 ;	SECTION	code
@@ -9589,13 +9590,8 @@
 	ld l, 255
 	ld bc, _ISR
 	call SPRegisterHook
-	ld	hl,7 % 256	;const
-	push	hl
-	ld	hl,0 % 256	;const
-	push	hl
-	call	sp_Initialize
-	pop	bc
-	pop	bc
+	ld de, 0
+	call SPInitialize
 	ld a,0
 	out (254),a
 	ld	hl,0 % 256	;const

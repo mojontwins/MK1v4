@@ -79,7 +79,12 @@ void main (void) {
 	#endif
 
 	// splib2 initialization
-	sp_Initialize (7, 0);
+	//sp_Initialize (7, 0);
+	#asm
+			ld de, 0
+			call SPInitialize
+	#endasm
+
 	BORDER(0);
 	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
 

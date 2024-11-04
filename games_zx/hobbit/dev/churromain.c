@@ -18,6 +18,7 @@
 		LIB SPRegisterHook
 		LIB SPCreateGenericISR
 		LIB SPInitIM2
+		LIB SPInitialize
 		XREF SProtatetblInitialize
 #endasm
 
