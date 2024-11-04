@@ -1400,7 +1400,7 @@ void pk_op_pickup_attack (void) {
 			// All attacks are out of PP, so return.
 			// pk_op_attack = -1
 
-			ret
+			jr pk_pickup_ret
 
 		.pk_pickup_ok1
 
@@ -1423,7 +1423,7 @@ void pk_op_pickup_attack (void) {
 
 			ld  a, (_pk_turn)
 			dec a 
-			ret nz
+			jr nz, pk_pickup_ret
 
 			ld  a, 2
 			ld  (_pk_turn), a 			// Cheese so it won't run again
@@ -1434,6 +1434,8 @@ void pk_op_pickup_attack (void) {
 
 			// Finally
 
+		.pk_pickup_ret
+			pop bc
 			ret
 
 		.pk_pickup_continue

@@ -47,6 +47,8 @@
 #define PLAYER_KILLED_BY_EZ 	4
 #define PLAYER_KILLED_BY_SELF 	8
 
+#define BORDER(b) 				asm("ld a,"#b"\nout (254),a")
+
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
 	int vx, vy; 										// 6, 8

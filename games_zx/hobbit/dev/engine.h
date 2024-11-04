@@ -3808,13 +3808,13 @@ void move (void) {
 				if (player.killingzone_framecount > EVIL_ZONE_FRAME_COUNT) {
 					player.killingzone_framecount = 0;
 					player.killingzone_beepcount ++;
-					sp_Border (2);
+					BORDER(2);
 					play_sfx (4);
 					#ifdef MODE_128K_DUAL
 						#asm
 								halt
 						#endasm
-						sp_Border (0);
+						BORDER(0);
 					#endif
 				} else {
 					player.killingzone_framecount ++;

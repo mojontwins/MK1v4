@@ -72,7 +72,7 @@ void main (void) {
 
 	// splib2 initialization
 	sp_Initialize (7, 0);
-	sp_Border (BLACK);
+	BORDER(0);
 	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
 
 	// Compressed tileset
@@ -211,9 +211,8 @@ void main (void) {
 		hook_system_inits ();
 	#endif
 
-		pokemon_combat();
-		sp_Border(2);
-		while(1);
+		pokemon_combat(); while(1);
+		
 	while (1) {
 		// Here the title screen
 		cortina ();
