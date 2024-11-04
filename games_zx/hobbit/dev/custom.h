@@ -216,6 +216,9 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "HANGOVER! BETTER NOT%"
 							 "TO USE THE RING UNLESS%"
 							 "COMPLETELY NECESSARY!";
+
+	unsigned char text37 [] = "_GANDALF%"
+							 "THINK ABOUT IT!%";
 #else
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -245,21 +248,21 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "Y APUESTO ZAGALETE?";
 
 	unsigned char text5 [] = "_GANDALF%"
-							 "PARA GANAR EL TESORO%"
-							 "HAY QUE ROBARSELO AL%"
-							 "DRAGON SMAUG QUE VIVE%"
-							 "EN LA MONTA/A NOSEQUE";	
+							 "AYUDAME A ENTRAR EN LA%"
+							 "MONTA/A DE AHI CERCA,%"
+							 "DONDE HABITA EL DRAGON%"
+							 "CHAMANDER POKEMOS!";	
 
 	unsigned char text6 [] = "_BILBOS%"
-							 "ESO YA LO SE PERO LA%"
-							 "MONTA/A ESTA CERRADA%"
-							 "CUAL TOTO DE NANCY";	
+							 "LA MONTA/A ESTA CERRA-%"
+							 "DA CUAL TOTO DE NANCY.%"
+							 "ES QUE HAY UN TESORO%"
+							 "DENTRO?";
 
 	unsigned char text7 [] = "_GANDALF%"
-							 "LOS ENANITOS DEL BOS-%"
-							 "QUE SABRAN ABRIRTE LA%"
-							 "MONTA/A. ENCUENTRA LOS%"
-							 "13 Y VUELVE AQUIS!";
+							 "BILBOS, TRAE 13 NOMOS%"
+							 "Y LES OBLIGARE A ABRIR%"
+							 "LA PUERTA CON MI MAGIA";
 
 	unsigned char text8 [] = "_GANDALF%"
 							 "LOS ENANOS SAN EMPA-%"
@@ -278,7 +281,7 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 	unsigned char text11[] = "BILBOS PIENSA EN LO%"
 							 "QUE DICE GANDALF DEL%"
-							 "TESORO. ESTA FASE RE%"
+							 "TESORO. ESTA FASE RE-%"
 							 "PRESENTA EL PENSAMIEN-%"
 							 "TO DE BILBOS";
 
@@ -410,11 +413,14 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "MAS QUE CUANDO SEA IM-%"
 							 "PRESCINDIBLE HACERLO!";
 
+	unsigned char text37[] = "_GANDALF%"
+							 "ESO AUN NO TE LO PUEDO%"
+							 "DECIR!!";
 #endif
 
 unsigned char *texts [] = {
 	text0, text1, text2, text3, 			// Dwarves are unknown to bilbos
-	text4, text5, text6, text7, 			// Gandalf - biblo talks
+	text4, text5, text6, text37, 			// Gandalf - biblo talks
 	text8, 									// Cave is open
 	text9, 									// I am dwarf... write from p+13
 	text10, 								// Moto seminueva
@@ -427,7 +433,9 @@ unsigned char *texts [] = {
 	text27, text28,	text29,					// Gallumb
 	text30, text31,							// Gallumb + tasslehoff
 	text32, text33, 						// Gallumb expels
-	text34, text35, text36					// Anillo bad
+	text34, text35, text36,					// Anillo bad
+	text37									// If you know you know
+
 };
 
 unsigned char dwarf_names [] = 
@@ -454,7 +462,7 @@ unsigned char dwarf_names [] =
 
 #asm
 	.cuts0
-		defb 46|128, 4, 5, 47|128, 6, 255
+		defb 46|128, 4, 5, 47|128, 6, 46|128, 7, 255
 	.cuts1
 		defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
@@ -1093,10 +1101,12 @@ void bilbos_hangover (void) {
 		wyz_play_music (1);
 
 		// Debug
+		/*
 		gandalf_talk = 3; dwarf_talk = 1; 
 		n_pant = 11;
 		anillo_flag = 1; gallumb_flag = 1;
-
+		*/
+		n_pant = 0;
 	}
 
 	void hook_init_mainloop (void) {
@@ -1494,13 +1504,50 @@ void bilbos_hangover (void) {
 	}
 
 	void hook_entering (void) {	
-		draw_cur_screen_decos ();	
+		draw_cur_screen_decos ();
+
+		/*
+		// This translates very badly to assembly with z88dk
 		inside_gallumb_lair = 
 			n_pant == 0x05 || n_pant == 0x06 ||
 			n_pant == 0x0c || n_pant == 0x0d ||
 			n_pant == 0x13 || n_pant == 0x14 ||
 			n_pant == 0x1a || n_pant == 0x1b ||
 			n_pant == 0x21 || n_pant == 0x22;
+		*/
+
+		#asm
+ 				ld  a, (_n_pant)
+ 				cp  0x05
+ 				jr  z, in_gallumb
+ 				cp  0x06
+ 				jr  z, in_gallumb
+ 				cp  0x0c 
+ 				jr  z, in_gallumb
+ 				cp  0x0d 
+ 				jr  z, in_gallumb
+ 				cp  0x13
+ 				jr  z, in_gallumb
+ 				cp  0x14
+ 				jr  z, in_gallumb
+ 				cp  0x1a
+ 				jr  z, in_gallumb
+ 				cp  0x1b 
+ 				jr  z, in_gallumb
+ 				cp  0x21
+ 				jr  z, in_gallumb
+ 				cp  0x22
+ 				jr  z, in_gallumb
+
+ 				xor a 
+ 				jr  in_gallumb_set
+
+ 			.in_gallumb
+ 				ld  a, 1
+
+ 			.in_gallumb_set 
+ 				ld  (_inside_gallumb_lair), a
+		#endasm
 	}
 
 	void hook_hotspots (void) {

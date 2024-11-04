@@ -120,7 +120,7 @@ unsigned int key_3 = 0x04f7;
 
 void *my_malloc(uint bytes) { return sp_BlockAlloc(0); }
 void *u_malloc = my_malloc;
-void *u_free = sp_FreeBlock;
+void *u_free = NULL; //sp_FreeBlock;
 
 // Sprite structs
 

@@ -15,6 +15,9 @@
 		LIB SPUpdateNow
 		LIB SPInitialize
 		LIB SPNullSprPtr
+		LIB SPRegisterHook
+		LIB SPCreateGenericISR
+		LIB SPInitIM2
 		XREF SProtatetblInitialize
 #endasm
 

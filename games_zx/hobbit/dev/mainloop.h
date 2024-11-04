@@ -65,9 +65,17 @@ void main (void) {
 	#endasm
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-		sp_InitIM2 (0xf1f1);
-		sp_CreateGenericISR (0xf1f1);
-		sp_RegisterHook (255, ISR);
+		#asm
+				ld  bc, 0xf1f1 
+				call SPInitIM2
+
+				ld  de, 0xf1f1
+				call SPCreateGenericISR
+
+				ld  l, 255
+				ld  bc, _ISR 
+				call SPRegisterHook
+		#endasm
 	#endif
 
 	// splib2 initialization
@@ -211,8 +219,8 @@ void main (void) {
 		hook_system_inits ();
 	#endif
 
-		pokemon_combat(); while(1);
-		
+		//pokemon_combat(); while(1);
+
 	while (1) {
 		// Here the title screen
 		cortina ();

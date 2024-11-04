@@ -1024,7 +1024,15 @@ void cortina (void) {
 			player.coins ++;
 		#endif
 		
-		set_map_tile (_x, _y, 0, 0);
+		//set_map_tile (_x, _y, 0, 0);
+
+		#asm
+				xor a 
+				ld  (__t), a 
+				ld  (__n), a 
+				call set_map_tile_do
+		#endasm
+
 		play_sfx (5);
 
 		#if defined ACTIVATE_SCRIPTING && defined COINS_SCRIPTING

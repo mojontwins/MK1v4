@@ -1495,14 +1495,23 @@ void pk_pl_pickup_attack (void) {
 
 void pk_attack_cycle (void) {
 	// Show main menu
-	pk_item = 0xff;
-	pk_pl_attack = 0xff;
+	#asm
+			ld  a, 0xff 
+			ld  (_pk_item), a 
+			ld  (_pk_pl_attack), a 
 
-	_x = PK_ATTACK_MENU_X;
-	_y = PK_ATTACK_MENU_Y;
-	pk_print_main_menu ();
-	pa1 = 4;
-	pk_simple_menu ();
+			ld  a, PK_ATTACK_MENU_X
+			ld  (__x), a 
+			ld  a, PK_ATTACK_MENU_Y
+			ld  (__y), a 
+
+			call _pk_print_main_menu
+
+			ld  a, 4 
+			ld  (_pa1), a 
+
+			call _pk_simple_menu
+	#endasm
 	
 	switch (pa2) {
 		case 0: // Attack
@@ -1518,27 +1527,64 @@ void pk_attack_cycle (void) {
 			pk_item = pa2; 
 
 			// pk_item is always useless in this version
-			pk_ml1 = str_useless; pk_ml2 = 0; 
-			pk_message ();
-			pk_pad_wait ();
-			pk_message_wipe ();			
+			#asm
+ 					ld  hl, _pk_data + C_NAME
+ 					ld  (_gp_gen), hl 
+
+ 					ld  hl, _str_used
+					ld  (_pk_ml1), hl
+
+					// Get item name
+					ld  hl, _pk_items_menu 
+					ld  a, (_pa2)
+					sla a
+					sla a
+					sla a
+					sla a
+					add 4
+					ld  e, a
+					ld  d, 0
+					add hl, de 
+					ld  (_pk_ml2), hl 
+
+					call _pk_message_cycle
+
+					ld  hl, _str_useless 
+					ld  (_pk_ml1), hl 
+
+					ld  hl, 0
+					ld  (_pk_ml2), hl 
+
+					call _pk_message_cycle
+			#endasm
 
 			break;
 
 		case 2: // Change pokemon
 			// Show you can't
-			pk_ml1 = str_nomore1; pk_ml2 = str_nomore2; 
-			pk_message ();
-			pk_pad_wait();
-			pk_message_wipe ();
+
+			#asm
+					ld  hl, _str_nomore1 
+					ld  (_pk_ml1), hl 
+
+					ld  hl, _str_nomore2
+					ld  (_pk_ml2), hl 
+
+					call _pk_message_cycle
+			#endasm
 
 			break;
 
 		case 3: // RUN!
-			pk_ml1 = str_useless; pk_ml2 = 0;
-			pk_message ();
-			pk_pad_wait ();
-			pk_message_wipe ();
+			#asm
+					ld  hl, _str_useless
+					ld  (_pk_ml1), hl 
+
+					ld  hl, 0
+					ld  (_pk_ml2), hl 
+
+					call _pk_message_cycle
+			#endasm
 
 			break;
 	}
