@@ -1356,6 +1356,92 @@ void pk_status_effects (void) {
 // AI : Pick up attack -> pk_op_attack
 
 void pk_op_pickup_attack (void) {
+	#asm
+			ld  b, 8 					// Don't try very hard
+
+		.pk_pickup_loop
+			push bc
+
+			ld  a, 0xff
+			ld  (_pk_op_attack), a 		// 0xff means "no attack"
+
+			call _rand
+			ld  a, l
+			and 3 						// Picked attack at random 0-3
+
+			// Check if enough PP, if not pick next, until all four
+			// are selected.
+
+			ld  b, 4	 				// Worst case scenario
+			ld  c, a 					// C = selected attack
+		.pk_pickup_pp_check
+			ld  a, c
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  d, 0
+			ld  e, a 					// DE = offset to attack
+
+			ld  hl, _pk_data + OPPONENT_OFFSET + ATTACKS_OFFSET + AT_PP
+			add hl, de 					// HL -> Attack's PP
+
+			ld  a, (hl) 				// Get PP
+			or  a 						// is it 0?
+			jr  nz, pk_pickup_ok1 		// Nope, keep going
+
+			ld  a, c 
+			inc a
+			and 3
+			ld  c, a 					// C = next attack
+
+			djnz pk_pickup_pp_check // Iterate
+
+			// All attacks are out of PP, so return.
+			// pk_op_attack = -1
+
+			ret
+
+		.pk_pickup_ok1
+
+			ld  a, c 					// A = C = current attack
+			ld  (_pk_op_attack), a 		// Set pk_op_attack
+
+			// If picked attack inflicts a status that's already on
+
+										// DE = offset to attack		
+			ld  hl, _pk_data + OPPONENT_OFFSET + ATTACKS_OFFSET + AT_FX
+			add hl, de 					// HL -> Attack's FX
+
+			ld  b, (hl)					// B = attack's AT_FX
+
+			ld  a, (_pk_data + C_ST) 	// player status
+			and b 						// Effect is active?
+			jr  nz, pk_pickup_continue 	// It is -> pick another
+
+			// During the 2nd turn try to inflict a status effect, but just try once
+
+			ld  a, (_pk_turn)
+			dec a 
+			ret nz
+
+			ld  a, 2
+			ld  (_pk_turn), a 			// Cheese so it won't run again
+
+			xor a
+			or  b 						// B = attack's AT_FX
+			jr  z, pk_pickup_continue 	// No status effect -> pick another
+
+			// Finally
+
+			ret
+
+		.pk_pickup_continue
+			pop bc
+			djnz pk_pickup_loop
+	#endasm
+
+	/*
 	// Don't run more than 8 times. 
 	for (pa4 = 0; pa4 < 8; pa4 ++) {
 		// 1st select at random
@@ -1389,6 +1475,7 @@ void pk_op_pickup_attack (void) {
 		// Finally
 		return;
 	}
+	*/
 }
 
 // Player : Select attack from menu -> pk_pl_attack
@@ -1494,6 +1581,8 @@ unsigned char pokemon_combat(void) {
 	pa1 = 0; p_ptr = bubasaur; pk_init_pokemon_pa1_from_ptr ();
 	pa1 = 1; p_ptr = charmander; pk_init_pokemon_pa1_from_ptr ();
 
+	pk_turn = 0;
+
 	// Battle
 	while (1) {
 		pk_update_displays ();
@@ -1504,6 +1593,9 @@ unsigned char pokemon_combat(void) {
 		
 		// Player loses!
 		if (pk_data [C_HP] == 0) break;
+
+		// Next turn
+		pk_turn ++;
 	}
 
 	// Print XXXXX is defeated
