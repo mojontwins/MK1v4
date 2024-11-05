@@ -493,6 +493,87 @@ unsigned char pk_portrait (void) {
 	#endasm
 }
 
+void pk_delay (void) {
+	#asm 
+			ld  b, 20 
+		.pk_delay_loop 
+			halt 
+			djnz pk_delay_loop
+	#endasm
+}
+
+// Animate uses pa (1 or -1) as a displacement
+void pk_animate_portrait(void) {
+	#asm 
+			ld  a, (__n)
+			ld  (__t), a
+
+			// Delete
+			ld  a, 2
+			ld  (__n), a
+			call _pk_portrait
+
+			// Move pa 
+			ld  a, (_pa)
+			ld  c, a
+			ld  a, (__x)
+			add c 
+			ld  (__x), a 
+
+			// paint
+			ld  a, (__t) 
+			ld  (__n), a
+			call _pk_portrait
+
+			// Show
+			call SPUpdateNow
+			call _pk_delay
+
+			// Delete
+			ld  a, 2
+			ld  (__n), a
+			call _pk_portrait
+
+			// Move pa 
+			ld  a, (_pa)
+			ld  c, a
+			ld  a, (__x)
+			add c 
+			ld  (__x), a 
+
+			// paint
+			ld  a, (__t) 
+			ld  (__n), a
+			call _pk_portrait
+
+			// Show
+			call SPUpdateNow
+			call _pk_delay
+
+			// Delete
+			ld  a, 2
+			ld  (__n), a
+			call _pk_portrait
+
+			// Move -2*pa
+			ld  a, (_pa)
+			sla a 
+			ld  c, a 
+			ld  a, (__x)
+			sub c 
+			ld  (__x), a
+
+			// paint
+			ld  a, (__t) 
+			ld  (__n), a
+			call _pk_portrait
+
+			// show
+			call SPUpdateNow
+			call _pk_delay
+	#endasm
+}
+
 // Simple menu: Just a cursor >
 // _x, _y -> origin
 // pa1 -> # of options
