@@ -16,7 +16,7 @@ rem generate for "COMPRESSED_TS 2", i.e. 192 tiles + 256 attrs
 ..\utils\ts2bin.exe nofont ..\gfx\work.png ts_attrs.bin 7 > nul
 
 rem generate for "COMPRESSED_TS 2", i.e. 192 tiles + 256 attrs
-..\utils\ts2bin.exe nofont ..\gfx\poketiles.png poketiles.bin 7 > nul
+..\utils\ts2bin.exe nofont ..\gfx\poketiles.png poketiles.bin 7 straittiles > nul
 
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h dsall compacted 2bytes  > nul
 ..\utils\sprcnv.exe ..\gfx\sprites.png sprites.h > nul

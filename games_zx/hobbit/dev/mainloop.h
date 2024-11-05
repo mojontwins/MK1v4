@@ -224,7 +224,7 @@ void main (void) {
 		hook_system_inits ();
 	#endif
 
-		//pokemon_combat(); while(1);
+	pokemon_combat(); 
 
 	while (1) {
 		// Here the title screen
@@ -378,13 +378,19 @@ void main (void) {
 						#ifdef ONLY_ONE_OBJECT
 							draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 						#else
-							draw_2_digits (OBJECTS_X, OBJECTS_Y, 
+							#asm 
+									ld  a, OBJECTS_X 
+									ld  (__x), a 
+									ld  a, OBJECTS_Y 
+									ld  (__y), a 
+									ld  a, (_player + 27)		// player.objs
 								#ifdef REVERSE_OBJECT_COUNT
-									PLAYER_NUM_OBJETOS - player.objs
-								#else
-									player.objs
+									ld  c, a 
+									ld  a, PLAYER_NUM_OBJETOS
+									sub c
 								#endif
-							);
+									call draw_2_digits_shortcut
+							#endasm
 						#endif
 					#endif
 					objs_old = player.objs;
@@ -393,19 +399,52 @@ void main (void) {
 			
 			#ifdef LIFE_X
 				if (player.life != life_old) {
-					if (player.life > 0) pti = (unsigned char) player.life; else pti = 0;
-					#ifdef DRAW_HI_DIGIT
-						sp_PrintAtInv (LIFE_H_Y, LIFE_H_X, 71, 16 + pti / 100);
-					#endif
-					draw_2_digits (LIFE_X, LIFE_Y, pti);
+					#asm
+							ld  hl, (_player + 29) 				// player.life, 16 bits signed
+							bit 7, h 
+							jr  z, draw_life_do
+
+							ld  hl, 0 							// life < 0 -> 0
+							
+						.draw_life_do
+
+						#ifdef DRAW_HI_DIGIT
+							ex  de, hl 
+							ld  hl, 100 
+							call l_div_u  						// Result in DE, what we need in E
+							
+							ld  a, LIFE_H_Y
+							ld  c, LIFE_H_X 
+							ld  d, 71 
+
+							call SPPrintAtInv
+
+							ld  hl, (_player + 29) 				// player.life, 16 bits signed
+						#endif
+
+							ld  a, LIFE_X 
+							ld  (__x), a 
+							ld  a, LIFE_Y 
+							ld  (__y), a 
+							ld  a, l
+							call draw_2_digits_shortcut
+					#endasm
+
 					life_old = player.life;
 				}
 			#endif
 
 			#if !defined DEACTIVATE_KEYS && defined KEYS_X
 				if (player.keys != keys_old) {
-					draw_2_digits (KEYS_X, KEYS_Y, player.keys);
-					keys_old = player.keys;
+					#asm
+						ld  a, OBJECTS_X 
+						ld  (__x), a 
+						ld  a, OBJECTS_Y 
+						ld  (__y), a 
+						ld  a, (_player + 28)		// player.objs
+						ld  (_keys_old), a 
+						call draw_2_digits_shortcut
+					#endasm
 				}
 			#endif
 

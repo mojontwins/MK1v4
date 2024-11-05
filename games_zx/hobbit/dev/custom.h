@@ -680,7 +680,25 @@ void show_text_box (void) {
 	// build substrings for draw_text.
 
 	//clear_temp_string ();
-	draw_text (4, rdb ? 5 : 6, ATTR_TEXTBOX, top_string);
+	//draw_text (4, rdb ? 5 : 6, ATTR_TEXTBOX, top_string);
+
+	#asm
+			ld  a, (_rdb)
+			or  a 
+			ld  a, 6
+			jr  z, stb_do
+			dec a
+		.stb_do
+			ld  (__y), a 
+			ld  a, 4 
+			ld  (__x), a 
+			ld  a, ATTR_TEXTBOX
+			ld  (__n), a 
+			ld  hl, _top_string
+
+			call draw_text_loop
+	#endasm
+
 	rdy = 7;
 
 	while (1) {
@@ -697,11 +715,44 @@ void show_text_box (void) {
 			.stb_top
 		#endasm 
 
+		/*
 		draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
 		draw_text (4, rdy, ATTR_TEXTBOX, temp_string);
 		draw_text (4, rdy + 1, ATTR_TEXTBOX, bottom_string);
+		*/			
 
 		#asm
+				ld  a, (_rdy)
+				dec a 
+				ld  (__y), a 
+				ld  a, 4
+				ld  (__x), a 
+				ld  a, ATTR_TEXTBOX
+				ld  (__n), a 
+				ld  hl, _temp_string 
+				call draw_text_loop
+
+				ld  a, (_rdy)
+				ld  (__y), a 
+				ld  a, 4
+				ld  (__x), a 
+				ld  a, ATTR_TEXTBOX
+				ld  (__n), a 
+				ld  hl, _temp_string 
+				call draw_text_loop
+
+				ld  a, (_rdy)
+				inc a 
+				ld  (__y), a 
+				ld  a, 4
+				ld  (__x), a 
+				ld  a, ATTR_TEXTBOX
+				ld  (__n), a 
+				ld  hl, _bottom_string 
+				call draw_text_loop
+
+				//
+
 				ld  a, (_rdb) 
 				or  a 
 				jr  z, no_character

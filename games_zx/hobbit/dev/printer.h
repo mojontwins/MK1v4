@@ -300,7 +300,7 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 				ld  c, a
 				ld  a, (__y)
 				call SPCompDListAddr
-				ex de, hl
+				ex  de, hl
 
 				// Now write 4 attributes and 4 chars.
 

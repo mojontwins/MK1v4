@@ -48,14 +48,53 @@ void unpack (void) {
 	#endasm
 }
 
+// Strings 
+
+#asm 
+	.str_controls
+		defm "1 POAQ    %2 KEMPSTON%3 SINCLAIR"
+		defb 0
+	.str_copyright
+		defm  "@ 2012, 2024 THE MOJON TWINS"
+		defb 0
+	.str_ending
+		defm "SOY RICO POTRICO"
+		defb 0
+	.str_gameover
+		defm "GAME OVER!"
+		defb 0
+#endasm
+
 void title_screen (void) {
 	#asm 
 		call SPUpdateNow
 	#endasm
 	asm_int = (unsigned int) (s_title); unpack ();
 
-	draw_text (11, 12, 71, "1 POAQ    %2 KEMPSTON%3 SINCLAIR");
+	/*
+	draw_text (11, 11, 71, "1 POAQ    %2 KEMPSTON%3 SINCLAIR");
+	draw_text (2, 17, 67, "@ 2012, 2024 THE MOJON TWINS");
+	*/
+
 	#asm 
+		ld  a, 11
+		ld  (__x), a 
+		ld  (__t), a 			// Because it is a multi line print		
+		ld  (__y), a 
+		ld  a, 71
+		ld  (__n), a 
+		ld  hl, str_controls
+		call draw_text_loop
+
+		ld  a, 2
+		ld  (__x), a 
+		ld  a, 17
+		ld  (__y), a 
+		ld  a, 67
+		ld  (__n), a 
+		ld  hl, str_copyright
+		call draw_text_loop
+
 		call SPUpdateNow
 	#endasm
 
@@ -89,6 +128,22 @@ void game_ending (void) {
 		call SPUpdateNow
 	#endasm
 	asm_int = (unsigned int) (s_ending); unpack ();
+
+	//draw_text (8, 7, 4, "SOY RICO POTRICO");
+
+	#asm 
+		ld  a, 8
+		ld  (__x), a 
+		ld  a, 7
+		ld  (__y), a 
+		ld  a, 4
+		ld  (__n), a 
+		ld  hl, str_ending
+		call draw_text_loop
+
+		call SPUpdateNow
+	#endasm
+
 	beepet (); play_sfx (11);
 	espera_activa (500);
 }
@@ -107,9 +162,21 @@ void game_over (void) {
 			ld  a, GAME_OVER_ATTR
 			ld  (__t), a
 	#endasm
+	
 	draw_rectangle ();	
-	draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
+	
+	//draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
+	
 	#asm 
+		ld  a, 11
+		ld  (__x), a 
+		ld  a, 12
+		ld  (__y), a 
+		ld  a, GAME_OVER_ATTR
+		ld  (__n), a 
+		ld  hl, str_gameover
+		call draw_text_loop
+
 		call SPUpdateNow
 	#endasm
 	beepet (); play_sfx (10);

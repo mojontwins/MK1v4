@@ -15,10 +15,13 @@ unsigned char pk_win;
 
 unsigned char *pk_ml1, *pk_ml2;
 
-extern unsigned char s_pokemon [];
+extern unsigned char s_pokemon [0];
 #asm
 	._s_pokemon
 		BINARY "pokemon.bin"
+
+	._pokemon_tiles
+		BINARY "poketilesc.bin"
 #endasm
 
 // ****** STATIC DATA LISTS ******
@@ -145,6 +148,49 @@ extern unsigned char pk_data [];
 #define C_MAX_HP_OP OPPONENT_OFFSET+C_MAX_HP
 
 // So pk_attacks [0] are the player's and pk_attacks [1] are the opponent's
+
+#define PK_MENU_ATTR 6*8
+
+#define PK_ATTACK_MENU_X 17
+#define PK_ATTACK_MENU_Y 15
+
+#define PK_ATTACK_TB_Y 15
+
+#define PK_BLINK_Y 18
+#define PK_BLINK_X 15
+
+#define PK_LIFE_ATTR 68
+
+// To save code, add 4 dummy bytes so this looks like an attack pool
+#ifdef LANG_EN
+	unsigned char pk_main_menu [] = {
+		"????FIGHT!%     "
+		"????USE ITEM%   "
+		"????SWAP POKEMON"
+		"????RUN%        "
+	};
+
+	unsigned char pk_items_menu [] = {
+		"????CHICKEN%    "
+		"????COCK RING%  "
+		"????PENCIL%     "
+		"????SYRINGE%    "
+	};
+#else
+	unsigned char pk_main_menu [] = {
+		"????ATACAR!%    "
+		"????USAR ITEM%  "
+		"????OTRO POKEMON"
+		"????ESCAPARSE%  "
+	};
+
+	unsigned char pk_items_menu [] = {
+		"????GALLINA%    "
+		"????ANILLO PENE%"
+		"????LAPIZ%      "
+		"????JERINGUILLA%"
+	};
+#endif
 
 unsigned char pk_calc_stat (void) {
 	pk_temp = ((pk_base << 1) + pk_iv + pk_effort) * pk_level / 100 + 5;
@@ -281,49 +327,6 @@ void pk_init_pokemon_pa1_from_ptr (void) {
 	#endasm
 }
 
-#define PK_MENU_ATTR 6*8
-
-#define PK_ATTACK_MENU_X 17
-#define PK_ATTACK_MENU_Y 15
-
-#define PK_ATTACK_TB_Y 15
-
-#define PK_BLINK_Y 18
-#define PK_BLINK_X 15
-
-#define PK_LIFE_ATTR 68
-
-// To save code, add 4 dummy bytes so this looks like an attack pool
-#ifdef LANG_EN
-	unsigned char pk_main_menu [] = {
-		"????FIGHT!%     "
-		"????USE ITEM%   "
-		"????SWAP POKEMON"
-		"????RUN%        "
-	};
-
-	unsigned char pk_items_menu [] = {
-		"????CHICKEN%    "
-		"????COCK RING%  "
-		"????PENCIL%     "
-		"????SYRINGE%    "
-	};
-#else
-	unsigned char pk_main_menu [] = {
-		"????ATACAR!%    "
-		"????USAR ITEM%  "
-		"????OTRO POKEMON"
-		"????ESCAPARSE%  "
-	};
-
-	unsigned char pk_items_menu [] = {
-		"????GALLINA%    "
-		"????ANILLO PENE%"
-		"????LAPIZ%      "
-		"????JERINGUILLA%"
-	};
-#endif
-
 // pa1 is HP, pa2 = MAX_HP
 // _x, _y is where
 unsigned char pk_display_life (void) {
@@ -401,6 +404,93 @@ unsigned char pk_update_displays (void) {
 
 
 	_x = 18; _y = 11; pk_display_life ();
+}
+
+// Draws portrait _n @ _x, _y
+// Portraits are 6x8 tiles.
+unsigned char pk_portrait (void) {
+	// _n * 48 = _n * 32 + _n * 16
+	#asm
+			ld  a, (__n) 
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  b, a 
+			sla a
+			add b
+			add 64
+
+			ld  (_pa1), a 					// pa1 = tile # to print
+
+		// Calculate starting point in the display list
+
+			ld  a, (__x) 
+			ld  c, a 
+			ld  a, (__y)
+			call SPCompDListAddr 			// Address in HL
+			ex  de, hl 						// Address in DE
+
+		// Iterate 48 times
+			ld  b, 6 						// 6 rows
+		.pk_portrait_loop
+			ld  c, 8 						// 8 columns
+
+		.pk_portrait_loop_row
+			push bc 
+
+			ld a, (_pa1) 					// Print this tile
+			
+			ld  hl, _tileset + 2048
+			ld b, 0
+			ld c, a  						// BC = A			
+			add hl, bc 						
+			
+			ld  c, a 						// C = Current tile
+
+			ld  a, (hl)						// Get attribute
+			ld  (de), a 					// Output to the DList
+			inc de 
+
+			ld  a, c 	 					// Print this tile
+			ld  (de), a  					// Output to the DList
+			inc de 
+			inc a 
+			ld  (_pa1), a  					// Next tile
+
+			inc de 
+			inc de 							// next DisplayList cell
+
+			pop bc 
+
+			dec c 
+			jr  nz, pk_portrait_loop_row  	// Inner loop uses C
+
+			ld  hl, 96
+			add hl, de 
+			ex  de, hl 
+
+			djnz pk_portrait_loop 			// Outer loop uses B
+
+		// Invalidate
+
+			ld  a, (__x)
+			ld  c, a
+
+			ld  a, (__y)
+			ld  b, a
+			
+			ld  a, (__x)
+			add 7
+			ld  e, a
+
+			ld  a, (__y)
+			add 5
+			ld  d, a
+			
+			ld  iy, fsClipStruct
+			call SPInvalidate	
+	#endasm
 }
 
 // Simple menu: Just a cursor >
@@ -1619,7 +1709,16 @@ unsigned char pokemon_combat(void) {
 
 	#asm 
 		call SPUpdateNow
+
+		ld hl, _pokemon_tiles
+		ld de, _tileset+512
+		#ifdef DECOMPRESSOR_ZX0
+			call dzx0_standard
+		#else
+			call depack
+		#endif
 	#endasm
+
 	asm_int = (unsigned int) (s_pokemon); unpack ();
 
 	pk_win = 0;
@@ -1630,6 +1729,10 @@ unsigned char pokemon_combat(void) {
 	pa1 = 1; p_ptr = charmander; pk_init_pokemon_pa1_from_ptr ();
 
 	pk_turn = 0;
+
+_x = _y = _n = 0; pk_portrait ();
+_x = _y = 8; _n = 1; pk_portrait ();
+
 
 	// Battle
 	while (1) {
@@ -1649,4 +1752,14 @@ unsigned char pokemon_combat(void) {
 	// Print XXXXX is defeated
 
 	// Back to main control
+
+	#asm
+		ld hl, _tilesetc
+		ld de, _tileset+512
+		#ifdef DECOMPRESSOR_ZX0
+			call dzx0_standard
+		#else
+			call depack
+		#endif
+	#endasm
 }
