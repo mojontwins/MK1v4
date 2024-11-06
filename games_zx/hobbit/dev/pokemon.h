@@ -7,7 +7,7 @@ unsigned char pk_at, pk_df, pk_pw, pk_accuracy;
 unsigned char pk_turn;
 unsigned int pk_temp;
 
-unsigned char pa1, pa2, pa3, pa4, pa5, pa6;
+unsigned char pa1, pa2, pa3, pa4, pa5, pa6, pan;
 unsigned char *p_ptr, *p_dst;
 
 unsigned char pk_pl_attack, pk_op_attack, pk_item;
@@ -421,7 +421,7 @@ unsigned char pk_portrait (void) {
 			add b
 			add 64
 
-			ld  (_pa1), a 					// pa1 = tile # to print
+			ld  (_gpit), a 					// gpit = tile # to print
 
 		// Calculate starting point in the display list
 
@@ -439,7 +439,7 @@ unsigned char pk_portrait (void) {
 		.pk_portrait_loop_row
 			push bc 
 
-			ld a, (_pa1) 					// Print this tile
+			ld a, (_gpit) 					// Print this tile
 			
 			ld  hl, _tileset + 2048
 			ld b, 0
@@ -456,7 +456,7 @@ unsigned char pk_portrait (void) {
 			ld  (de), a  					// Output to the DList
 			inc de 
 			inc a 
-			ld  (_pa1), a  					// Next tile
+			ld  (_gpit), a  				// Next tile
 
 			inc de 
 			inc de 							// next DisplayList cell
@@ -495,14 +495,14 @@ unsigned char pk_portrait (void) {
 
 void pk_delay (void) {
 	#asm 
-			ld  b, 20 
+			ld  b, 8
 		.pk_delay_loop 
 			halt 
 			djnz pk_delay_loop
 	#endasm
 }
 
-// Animate uses pa (1 or -1) as a displacement
+// Animate uses pan (1 or -1) as a displacement
 void pk_animate_portrait(void) {
 	#asm 
 			ld  a, (__n)
@@ -514,7 +514,7 @@ void pk_animate_portrait(void) {
 			call _pk_portrait
 
 			// Move pa 
-			ld  a, (_pa)
+			ld  a, (_pan)
 			ld  c, a
 			ld  a, (__x)
 			add c 
@@ -535,7 +535,7 @@ void pk_animate_portrait(void) {
 			call _pk_portrait
 
 			// Move pa 
-			ld  a, (_pa)
+			ld  a, (_pan)
 			ld  c, a
 			ld  a, (__x)
 			add c 
@@ -556,7 +556,7 @@ void pk_animate_portrait(void) {
 			call _pk_portrait
 
 			// Move -2*pa
-			ld  a, (_pa)
+			ld  a, (_pan)
 			sla a 
 			ld  c, a 
 			ld  a, (__x)
@@ -571,6 +571,90 @@ void pk_animate_portrait(void) {
 			// show
 			call SPUpdateNow
 			call _pk_delay
+	#endasm
+}
+
+void pk_animate_damaged (void) {
+	// Show & hide sprite "explosion" in a random area
+	// From (_x - 1) * 8 to (_x + 7) * 8 (range 64)
+	// And _y * 8 to (_y + 4) * 8 (range 32)
+
+	// Well be hacking into `render_this_enemy` with 
+	// enit = 0
+	// rdx, rdy = coordinates
+
+	// We set up the sprite face first
+	en_an_next_frame[0] = extra_sprite_17_a;
+	enit = 0;
+
+	#asm
+			ld  b, 8
+		.pk_andmg_loop
+			push bc 
+
+			call _rand 
+			ld  a, l 
+			and 63
+			ld  c, a 
+
+			ld  a, (__x)
+			dec a 
+			sla a 
+			sla a 
+			sla a 
+			add c 
+			ld  (_rdx), a 
+
+			call _rand 
+			ld  a, l 
+			and 31
+			ld  c, a 
+
+			ld  a, (__y)
+			sla a 
+			sla a 
+			sla a 
+			add c 
+			ld  (_rdy), a 
+
+			call _render_this_enemy 
+			halt
+			halt
+			call SPUpdateNow
+
+			pop bc 
+			djnz pk_andmg_loop
+	#endasm
+
+	saca_a_todo_el_mundo_de_aqui ();
+
+	#asm
+			ld  a, (__n)
+			ld  (__t), a
+
+			ld  b, 4
+		.pk_andmg_blink_loop
+			push bc
+
+			// Delete
+			ld  a, 2
+			ld  (__n), a
+			call _pk_portrait
+
+			call SPUpdateNow
+			call _pk_delay
+
+			// paint
+			ld  a, (__t) 
+			ld  (__n), a
+			call _pk_portrait
+
+			halt
+			call SPUpdateNow
+			call _pk_delay
+
+			pop bc 
+			djnz pk_andmg_blink_loop
 	#endasm
 }
 
@@ -798,11 +882,45 @@ void pk_print_menu (void) {
 
 // Shows all attacks stacked for the player (to be used as a menu)
 void pk_print_attacks (void) {
+	clr2d = 6*8;
 	#asm
 			ld  hl, _pk_player_attacks
-			jp  _pk_print_menu
-	#endasm
+			call _pk_print_menu
 
+			ld  a, (__y)
+			ld  (_rdy), a
+
+		// Now add PP 
+
+			ld  hl, _pk_data + ATTACKS_OFFSET + AT_PP
+			ld  a, 29
+			ld  (__x), a 
+			ld  a, PK_ATTACK_MENU_Y
+			ld  (__y), a
+
+			ld  b, 4
+		.print_pp_loop
+			push bc 
+
+			ld  a, (hl)					// Get PP
+
+			ld  de, 16
+			add hl, de  				// Next entry
+
+			push hl
+			call draw_2_digits_shortcut
+
+			ld  hl, __y  				// Next line
+			inc (hl)
+
+			pop hl 
+			pop bc 
+			djnz print_pp_loop
+
+			ld  a, (_rdy)
+			ld  (__y), a
+	#endasm
+	clr2d = 71;
 }
 
 // Shows main menu
@@ -1075,6 +1193,18 @@ void pk_attack (void) {
 
 		.pka_df_nost
 
+		// ATTACK animation
+			ld  a, (_pa1)
+			or  a 
+			jr  z, show_anim_player
+		.show_anim_opponent
+			call an_set_opponent
+			jr show_anim_done
+		.show_anim_player
+			call an_set_player
+		.show_anim_done
+			call _pk_animate_portrait
+
 		// POKEMON MISS ?
 
 			// Miss if rand() >= pk_accuracy
@@ -1099,7 +1229,7 @@ void pk_attack (void) {
 			ret
 
 		.pka_nomiss
-
+			
 		// INFLICT DAMAGE!
 			push bc 
 			push ix 
@@ -1108,6 +1238,23 @@ void pk_attack (void) {
 			pop iy 
 			pop ix 
 			pop bc
+
+		// DAMAGE ANIMATION!
+			xor a 
+			or  l 
+			jr  z, damage_animation_done
+
+			ld  a, (_pa1)
+			or  a
+			jr  z, show_damage_player
+		.show_damage_opponent
+			call an_set_player
+			jr show_damage_done
+		.show_damage_player
+			call an_set_opponent
+		.show_damage_done
+			call _pk_animate_damaged
+		.damage_animation_done
 
 			ld  a, (iy + C_HP)		// Opponent HL
 			cp  l
@@ -1123,6 +1270,9 @@ void pk_attack (void) {
 			ld  (iy + C_HP), a
 
 		// INFLICT STATUS EFFECTS!
+
+			ld  hl, 0 
+			ld  (_gp_gen), hl
 
 			// Oponent name
 			ld  d, 0
@@ -1151,6 +1301,28 @@ void pk_attack (void) {
 
 		// Nothing to do: return
 
+			ret
+
+		.an_set_opponent
+			ld  a, 17
+			ld  (__x), a 
+			ld  a, 1
+			ld  (__y), a 
+			xor a 
+			ld  (__n), a 
+			inc a 
+			ld  (_pan), a
+			ret
+
+		.an_set_player
+			ld  a, 7
+			ld  (__x), a 
+			ld  a, 8
+			ld  (__y), a 
+			ld  a, 1 
+			ld  (__n), a
+			ld  a, 0xFF
+			ld  (_pan), a 
 			ret
 
 		// STATUS EFFECTS DO
@@ -1811,9 +1983,8 @@ unsigned char pokemon_combat(void) {
 
 	pk_turn = 0;
 
-_x = _y = _n = 0; pk_portrait ();
-_x = _y = 8; _n = 1; pk_portrait ();
-
+	_x = 17; _y = 1; _n = 0; pk_portrait ();
+	_x = 7; _y = 8; _n = 1; pk_portrait ();
 
 	// Battle
 	while (1) {

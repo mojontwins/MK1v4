@@ -441,6 +441,8 @@ void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned c
 	#endasm
 }
 
+unsigned char clr2d = 71;
+
 void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	#asm
 			ld  hl, 6
@@ -471,7 +473,8 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 			
 			add 16
 			ld  e, a
-			ld  d, 71
+			ld  a, (_clr2d)
+			ld  d, a
 			ld  a, (__x)
 			ld  c, a
 			ld  a, (__y)
@@ -480,7 +483,8 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 			ld  a, (__n)
 			add 16
 			ld  e, a
-			ld  d, 71
+			ld  a, (_clr2d)
+			ld  d, a
 			ld  a, (__x)
 			inc a
 			ld  c, a
