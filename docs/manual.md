@@ -2456,7 +2456,7 @@ Cuando queramos "pasar de fase", que según el juego será cumpliendo la condici
 
 ## Ganar o perder
 
-Si quieres ganar o perder dede tus customs, sólo tienes que asignar un valor a `game_loop_flag`. Normalmente vale 0, pero si vale 1 ganarás el juego (se mostrará `game_ending`) y si vale 2 perderás (el mensaje de *Game Over*).
+Si quieres ganar o perder desde tus customs, sólo tienes que asignar un valor a `game_loop_flag`. Normalmente vale 0, pero si vale 1 ganarás el juego (se mostrará `game_ending`) y si vale 2 perderás (el mensaje de *Game Over*).
 
 ## Como hacer continues
 

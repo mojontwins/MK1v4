@@ -16,6 +16,7 @@ unsigned char gallumb_flag; 	// 0 - init, 1 - talk, 2 - angered, 3 - teleport
 unsigned char last_estado;
 unsigned char anillo_first_time;
 unsigned char anillo_uses; 		// # of times
+unsigned char smaug_talk;
 
 unsigned char top_string []    = "<======================>";
 unsigned char temp_string []   = ";                      [";
@@ -70,7 +71,7 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text5 [] = "_GANDALF%"
 							 "TO WIN THE TREASURE%"
 							 "YOU MUST STEAL IT FROM%"
-							 "DRAGON SMAUG WHO LIVES%"
+							 "CHARMANDER WHO LIVES%"
 							 "IN THAT MOUNTAIN";
 
 	unsigned char text6 [] = "_BILBOS%"
@@ -219,6 +220,24 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 	unsigned char text37 [] = "_GANDALF%"
 							 "THINK ABOUT IT!%";
+
+
+	unsigned char text38[] = "_CHARMANDER%"
+	//                        XXXXXXXXXXXXXXXXXXXXXX	
+							 "GOTCHA, INTRUDER!%"
+							 "DO YOU COME TO STEAL%"
+							 "MY TREASURE?";
+
+	unsigned char text39[] = "_BILBOS%"
+							 "AH! SURPRISE!";
+
+	unsigned char text40[] = "_CHARMANDER%"
+							 "PREPARE TO FIGHT FOR%"
+							 "YOUR LIFE!";
+
+	unsigned char text41[] = "_BILBOS%"
+							 "MEH. EVERYBODY KNOWS%"
+							 "THAT PLANT WINS FIRE!";							 
 #else
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -251,7 +270,7 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "AYUDAME A ENTRAR EN LA%"
 							 "MONTA/A DE AHI CERCA,%"
 							 "DONDE HABITA EL DRAGON%"
-							 "CHAMANDER POKEMOS!";	
+							 "CHARMANDER POKEMOS!";	
 
 	unsigned char text6 [] = "_BILBOS%"
 							 "LA MONTA/A ESTA CERRA-%"
@@ -416,6 +435,27 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text37[] = "_GANDALF%"
 							 "ESO AUN NO TE LO PUEDO%"
 							 "DECIR!!";
+
+	unsigned char text38[] = "_CHARMANDER%"
+	//                        XXXXXXXXXXXXXXXXXXXXXX	
+							 "TE PILLE, INTRUSO!%"
+							 "QUE QUIERES? VIENES%"
+							 "A ROBAR MI TESORO?";
+
+	unsigned char text39[] = "_BILBOS%"
+							 "ESO AUN NO TE LO PUEDO%"
+							 "DECIR!!";
+
+	unsigned char text40[] = "_CHARMANDER%"
+							 "PREPARATE PARA LUCHAR%"
+							 "POR TU VIDA!";
+
+	unsigned char text41[] = "_BILBOS%"
+							 "BAH. TODOS SABEN QUE%"
+							 "PLANTA GANA A FUEGO!";
+
+
+
 #endif
 
 unsigned char *texts [] = {
@@ -434,8 +474,8 @@ unsigned char *texts [] = {
 	text30, text31,							// Gallumb + tasslehoff
 	text32, text33, 						// Gallumb expels
 	text34, text35, text36,					// Anillo bad
-	text37									// If you know you know
-
+	text37,									// If you know you know
+	text38, text39, text40, text41 			// Fight charmander
 };
 
 unsigned char dwarf_names [] = 
@@ -469,6 +509,8 @@ unsigned char dwarf_names [] =
 		defb 46|128, 29, 20, 21, 255
 	.cuts3
 		defb 33|128, 27, 28, 17|128, 30, 33|128, 31, 255
+	.cuts4 		// Charmander showdown
+		defb 27|128, 38, 47|128, 39, 27|128, 40, 47|128, 41, 255
 #endasm
 
 #asm
@@ -1137,13 +1179,28 @@ void bilbos_hangover (void) {
 	}
 
 	void hook_init_game (void) {
+		/*
 		gandalf_talk = 0;
 		dwarf_talk = 0;
 		comecocos_on = 0;
 		anillo_flag = 0;
 		gallumb_flag = 0;
-		anillo_first_time = 1;
 		anillo_uses = 0;
+		smaug_talk = 0;
+		anillo_first_time = 1;
+		*/
+		#asm 
+			xor a 
+			ld  (_gandalf_talk), a 
+			ld  (_dwarf_talk), a 
+			ld  (_comecocos_on), a 
+			ld  (_anillo_flag), a 
+			ld  (_gallumb_flag), a 
+			ld  (_anillo_uses), a 
+			ld  (_smaug_talk), a 
+			inc a 
+			ld  (_anillo_first_time), a
+		#endasm
 
 		dwarf_ct = rand () & 3;
 		redraw_after_text = 1;
@@ -1157,7 +1214,7 @@ void bilbos_hangover (void) {
 		n_pant = 11;
 		anillo_flag = 1; gallumb_flag = 1;
 		*/
-		n_pant = 0;
+		n_pant = 6;
 	}
 
 	void hook_init_mainloop (void) {
@@ -1345,6 +1402,47 @@ void bilbos_hangover (void) {
 					interact_flag = 0;
 				}
 				
+				break;
+
+			case 5:
+				// Smaug / Charmander
+
+				if (gpx < 12*16) {
+					if (smaug_talk == 0) {
+						// Cutscene
+
+						#asm
+								ld  hl, cuts4
+								call run_cutscene
+						#endasm
+
+						// Pokemon
+						#asm
+								// VERY VERY DIRTY CLS
+								ld  hl, SPDisplayList 
+								ld  de, SPDisplayList + 1
+								ld  bc, 3071 
+								xor a 
+								ld  (hl), a 
+								ldir
+						#endasm
+
+						saca_a_todo_el_mundo_de_aqui ();
+						pokemon_combat ();
+						if(pk_win) {
+							game_loop_flag = 1;
+
+						} else {
+							// If lose -> one life less, throw right	
+							on_pant = 0xff;						
+							player.vx = 256;
+							player.is_dead = 1;
+						}
+
+						smaug_talk = 1;
+					}
+				} 
+
 				break;
 
 			case 12:

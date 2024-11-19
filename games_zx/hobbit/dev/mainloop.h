@@ -224,7 +224,7 @@ void main (void) {
 		hook_system_inits ();
 	#endif
 
-	pokemon_combat(); 
+	//pokemon_combat(); 
 
 	while (1) {
 		// Here the title screen

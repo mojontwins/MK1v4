@@ -7,7 +7,7 @@ unsigned char pk_at, pk_df, pk_pw, pk_accuracy;
 unsigned char pk_turn;
 unsigned int pk_temp;
 
-unsigned char pa1, pa2, pa3, pa4, pa5, pa6, pan;
+unsigned char pa1, pa2, pa3, pa4, pa5, pa6, pan, psk;
 unsigned char *p_ptr, *p_dst;
 
 unsigned char pk_pl_attack, pk_op_attack, pk_item;
@@ -48,25 +48,47 @@ extern unsigned char s_pokemon [0];
 extern unsigned char a_growl [], a_tackle [], a_leechseed [], a_vinewhip [];
 extern unsigned char a_scratch [], a_ember [], a_leer [];
 
-#asm
-	._a_list
-	// 16 bytes per pk_at definition, last 12 bytes is pk_at name.
-	// PW ACCURACY PP FX
-	._a_growl      defb 0, 255, 40, AFX_LOWER_AT
-	               defm "GROWL%      "
-	._a_tackle     defb 35, 242, 35, AFX_NORMAL
-	               defm "TACKLE%     "
-	._a_leechseed  defb 0, 229, 10, AFX_LEECH
-	               defm "LEECH SEED% "
-	._a_vinewhip   defb 35, 255, 10, AFX_NORMAL
-	               defm "VINE WHIP%  "
-	._a_scratch    defb 40, 255, 35, AFX_NORMAL
-	               defm "SCRATCH%    "
-	._a_ember      defb 40, 255, 25, AFX_BURN
-	               defm "EMBER%      "
-	._a_leer       defb 0, 255, 30, AFX_LOWER_DF
-	               defm "LEER%       "
-#endasm	               
+#ifdef LANG_EN
+	#asm
+		._a_list
+		// 16 bytes per pk_at definition, last 12 bytes is pk_at name.
+		// PW ACCURACY PP FX
+		._a_growl      defb 0, 255, 33, AFX_LOWER_AT
+		               defm "GROWL%      "
+		._a_tackle     defb 35, 242, 7, AFX_NORMAL
+		               defm "TACKLE%     "
+		._a_leechseed  defb 0, 229, 2, AFX_LEECH
+		               defm "LEECH SEED% "
+		._a_vinewhip   defb 35, 255, 1, AFX_NORMAL
+		               defm "VINE WHIP%  "
+		._a_scratch    defb 40, 255, 20, AFX_NORMAL
+		               defm "SCRATCH%    "
+		._a_ember      defb 40, 255, 10, AFX_BURN
+		               defm "EMBER%      "
+		._a_leer       defb 0, 255, 5, AFX_LOWER_DF
+		               defm "LEER%       "
+	#endasm	      
+#else
+	#asm
+		._a_list
+		// 16 bytes per pk_at definition, last 12 bytes is pk_at name.
+		// PW ACCURACY PP FX
+		._a_growl      defb 0, 255, 33, AFX_LOWER_AT
+		               defm "AULLIDO%    "
+		._a_tackle     defb 35, 242, 7, AFX_NORMAL
+		               defm "PLACAJE%    "
+		._a_leechseed  defb 0, 229, 2, AFX_LEECH
+		               defm "DRENADORAS% "
+		._a_vinewhip   defb 35, 255, 1, AFX_NORMAL
+		               defm "LATIGO CEPA%"
+		._a_scratch    defb 40, 255, 20, AFX_NORMAL
+		               defm "ARA/AZO%    "
+		._a_ember      defb 40, 255, 10, AFX_BURN
+		               defm "BRASAS%     "
+		._a_leer       defb 0, 255, 5, AFX_LOWER_DF
+		               defm "MALICIOSO%  "
+	#endasm
+#endif         
 
 // Pokemon definitions: 6 bytes stats, 10 bytes name, 8 bytes attack lists
 // Stats. order is HP AT DF SP ST MAXHP
@@ -86,20 +108,38 @@ extern unsigned char bubasaur [], charmander [];
 
 // Strings (translatable)
 unsigned char str_wipe [] = "               "; // 15 spaces
-unsigned char str_used [] = " USED";
-unsigned char str_failed [] = "BUT FAILED!";
-unsigned char str_useless [] = "IT WAS USELESS";
-unsigned char str_nomore1[] = "YOU GOT NO";
-unsigned char str_nomore2[] = "MORE POKEMONS!";
-unsigned char str_leech [] = "LECH SEED SAPS";
-unsigned char str_is [] = " IS";
-unsigned char str_burn [] ="HURT BY BURN";
-unsigned char str_regain [] = "REGAINS HEALTH!";
-unsigned char str_infected[] = "WAS INFECTED!";
-unsigned char str_burning [] = "IS BURNING!";
-unsigned char str_genitive [] = "'S";
-unsigned char str_low_def [] = "DEFENSE LOW!";
-unsigned char str_low_attack [] = "ATTACK LOW!";
+
+#ifdef LANG_EN
+	unsigned char str_used [] = " USED";
+	unsigned char str_failed [] = "BUT FAILED!";
+	unsigned char str_useless [] = "IT WAS USELESS";
+	unsigned char str_nomore1[] = "YOU GOT NO";
+	unsigned char str_nomore2[] = "MORE POKEMON!";
+	unsigned char str_leech [] = "LECH SEED SAPS";
+	unsigned char str_is [] = " IS";
+	unsigned char str_burn [] ="HURT BY BURN";
+	unsigned char str_regain [] = "REGAINS HEALTH!";
+	unsigned char str_infected[] = "WAS INFECTED!";
+	unsigned char str_burning [] = "IS BURNING!";
+	unsigned char str_genitive [] = "'S";
+	unsigned char str_low_def [] = "DEFENSE LOW!";
+	unsigned char str_low_attack [] = "ATTACK LOW!";
+#else
+	unsigned char str_used [] = " USO";
+	unsigned char str_failed [] = "PERO FALLO!";
+	unsigned char str_useless [] = "PERO FUE INUTIL";
+	unsigned char str_nomore1[] = "NO TIENES";
+	unsigned char str_nomore2[] = "MAS POKEMON!";
+	unsigned char str_leech [] = "DRENAJE HIERE A";
+	unsigned char str_is [] = " ES";
+	unsigned char str_burn [] ="QUEMADO!!";
+	unsigned char str_regain [] = "RECUPERA SALUD";
+	unsigned char str_infected[] = "FUE INFECTADO!";
+	unsigned char str_burning [] = "ESTA ARDIENDO";
+	unsigned char str_genitive [] = "";
+	unsigned char str_low_def [] = "BAJA DEFENSA!";
+	unsigned char str_low_attack [] = "BAJA ATAQUE!";
+#endif
 
 // ****** DYNAMIC (VARIABLE) DATA LISTS ******
 
@@ -189,7 +229,7 @@ extern unsigned char pk_data [];
 		"????ANILLO PENE%"
 		"????LAPIZ%      "
 		"????JERINGUILLA%"
-	};
+	};	
 #endif
 
 unsigned char pk_calc_stat (void) {
@@ -406,7 +446,7 @@ unsigned char pk_update_displays (void) {
 	_x = 18; _y = 11; pk_display_life ();
 }
 
-// Draws portrait _n @ _x, _y
+// Draws portrait _n @ _x, _y, offsetting psk lines
 // Portraits are 6x8 tiles.
 unsigned char pk_portrait (void) {
 	// _n * 48 = _n * 32 + _n * 16
@@ -439,6 +479,23 @@ unsigned char pk_portrait (void) {
 		.pk_portrait_loop_row
 			push bc 
 
+			// Skip lines (to make the death animation)
+			ld  a, (_psk)
+			cp  b
+			jr  nc, pk_portrait_paint
+
+			xor a 
+
+			ld  (de), a 					// Attribute
+			inc de 
+
+			ld  (de), a 					// Tile
+			inc de
+
+			jr pk_portrait_paint_done
+
+		.pk_portrait_paint
+
 			ld a, (_gpit) 					// Print this tile
 			
 			ld  hl, _tileset + 2048
@@ -457,6 +514,7 @@ unsigned char pk_portrait (void) {
 			inc de 
 			inc a 
 			ld  (_gpit), a  				// Next tile
+		.pk_portrait_paint_done
 
 			inc de 
 			inc de 							// next DisplayList cell
@@ -505,6 +563,9 @@ void pk_delay (void) {
 // Animate uses pan (1 or -1) as a displacement
 void pk_animate_portrait(void) {
 	#asm 
+			ld  a, 6
+			ld  (_psk), a
+
 			ld  a, (__n)
 			ld  (__t), a
 
@@ -572,6 +633,17 @@ void pk_animate_portrait(void) {
 			call SPUpdateNow
 			call _pk_delay
 	#endasm
+}
+
+void pk_animate_death (void) {
+	psk = 6; while (psk > 0) {
+		pk_portrait ();
+		psk --;
+		#asm
+			call SPUpdateNow
+			call _pk_delay
+		#endasm
+	}
 }
 
 void pk_animate_damaged (void) {
@@ -759,6 +831,8 @@ void pk_simple_menu (void) {
 
 			jr  pk_simple_menu_loop
 		.pk_simple_menu_done
+
+			call _pk_clear_rec
 	#endasm
 }
 
@@ -975,13 +1049,44 @@ void pk_ssp (void) {
 			
 			call SPPrintAtInv
 
+			ld  a, (_rdc)
+			or  a 
+			jr  nz, pk_ssp_noupd
+
 			halt 
 			call SPUpdateNow
+		.pk_ssp_noupd
 
 			pop hl
 
 			jr  pk_ssp_loop
 	#endasm
+}
+
+
+// clears menu area 
+void pk_clear_rec (void) {
+	#asm
+			ld  a, PK_ATTACK_MENU_Y
+			ld  (_ssp_y), a
+			ld  b, 4 
+		.pk_clear_loop
+			push bc 
+			ld  a, PK_ATTACK_MENU_X
+			ld  (_ssp_x), a
+			ld  (_rdc), a 						// NONZERO will suffice
+			ld  hl, _str_wipe + 1 				// 15 - 1 = 14 spaces!
+	
+			call pk_ssp_loop
+
+			ld  hl, _ssp_y 
+			inc (hl)
+
+			pop bc 
+			djnz pk_clear_loop
+			xor a 
+			ld  (_rdc), a 
+	#endasm 
 }
 
 void pk_message (void) {
@@ -1194,6 +1299,10 @@ void pk_attack (void) {
 		.pka_df_nost
 
 		// ATTACK animation
+			push bc 
+			push ix 
+			push iy
+
 			ld  a, (_pa1)
 			or  a 
 			jr  z, show_anim_player
@@ -1204,6 +1313,10 @@ void pk_attack (void) {
 			call an_set_player
 		.show_anim_done
 			call _pk_animate_portrait
+
+			pop iy 
+			pop ix 
+			pop bc
 
 		// POKEMON MISS ?
 
@@ -1234,15 +1347,15 @@ void pk_attack (void) {
 			push bc 
 			push ix 
 			push iy
-			call _pk_calc_damage	// L = Damage
-			pop iy 
-			pop ix 
-			pop bc
 
+			call _pk_calc_damage	// L = Damage
+			
 		// DAMAGE ANIMATION!
 			xor a 
 			or  l 
 			jr  z, damage_animation_done
+
+			push hl 
 
 			ld  a, (_pa1)
 			or  a
@@ -1254,9 +1367,16 @@ void pk_attack (void) {
 			call an_set_opponent
 		.show_damage_done
 			call _pk_animate_damaged
+
+			pop hl
 		.damage_animation_done
 
-			ld  a, (iy + C_HP)		// Opponent HL
+			pop iy 
+			pop ix 
+			pop bc
+
+
+			ld  a, (iy + C_HP)		// Opponent HP
 			cp  l
 			jr  c, pka_hp_zero
 
@@ -1826,12 +1946,15 @@ void pk_op_pickup_attack (void) {
 // Player : Select attack from menu -> pk_pl_attack
 
 void pk_pl_pickup_attack (void) {
-	_x = PK_ATTACK_MENU_X;
-	_y = PK_ATTACK_MENU_Y;
-	pk_print_attacks ();
-	pa1 = 4;
-	pk_simple_menu ();
-	pk_pl_attack = pa2;
+	do {
+		_x = PK_ATTACK_MENU_X;
+		_y = PK_ATTACK_MENU_Y;
+		pk_print_attacks ();
+		pa1 = 4;
+		pk_simple_menu ();
+		pk_pl_attack = pa2;
+	} while(pk_data[pk_pl_attack<<4 + AT_PP] == 0);
+
 }
 
 // Attack cycle
@@ -1958,9 +2081,12 @@ void pk_attack_cycle (void) {
 }
 
 // Combat
-unsigned char pokemon_combat(void) {
+void pokemon_combat(void) {
 
 	#asm 
+		xor a 
+		ld  (_rdc), a 
+		
 		call SPUpdateNow
 
 		ld hl, _pokemon_tiles
@@ -1983,6 +2109,7 @@ unsigned char pokemon_combat(void) {
 
 	pk_turn = 0;
 
+	psk = 6;
 	_x = 17; _y = 1; _n = 0; pk_portrait ();
 	_x = 7; _y = 8; _n = 1; pk_portrait ();
 
@@ -1992,10 +2119,16 @@ unsigned char pokemon_combat(void) {
 		pk_attack_cycle ();
 
 		// Player wins!
-		if (pk_data [C_HP + OPPONENT_OFFSET] == 0) { pk_win = 1; break; } 
+		if (pk_data [C_HP + OPPONENT_OFFSET] == 0) { 
+			_x = 17; _y = 1; _n = 0; pk_animate_death ();
+			pk_win = 1; break; 
+		} 
 		
 		// Player loses!
-		if (pk_data [C_HP] == 0) break;
+		if (pk_data [C_HP] == 0) {
+			_x = 7; _y = 8; _n = 1; pk_animate_death ();
+			break;
+		}
 
 		// Next turn
 		pk_turn ++;

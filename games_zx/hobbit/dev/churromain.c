@@ -20,6 +20,7 @@
 		LIB SPInitIM2
 		LIB SPInitialize
 		XREF SProtatetblInitialize
+		XREF SPDisplayList
 #endasm
 
 /* splib2 memory map
