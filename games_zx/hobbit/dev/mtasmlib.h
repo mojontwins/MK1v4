@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.10
+// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // Mojon Twin Asm Lib (auxiliary functions)
 

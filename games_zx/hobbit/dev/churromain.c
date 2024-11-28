@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.10
+// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // churromain.c
 // Program skeleton. Rename to your game title.c
@@ -19,6 +19,7 @@
 		LIB SPCreateGenericISR
 		LIB SPInitIM2
 		LIB SPInitialize
+		LIB SPCreateSpr
 		XREF SProtatetblInitialize
 		XREF SPDisplayList
 #endasm

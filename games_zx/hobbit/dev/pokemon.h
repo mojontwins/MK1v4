@@ -124,6 +124,7 @@ unsigned char str_wipe [] = "               "; // 15 spaces
 	unsigned char str_genitive [] = "'S";
 	unsigned char str_low_def [] = "DEFENSE LOW!";
 	unsigned char str_low_attack [] = "ATTACK LOW!";
+	unsigned char str_defeated [] = "WAS DEFEATED";
 #else
 	unsigned char str_used [] = " USO";
 	unsigned char str_failed [] = "PERO FALLO!";
@@ -139,6 +140,7 @@ unsigned char str_wipe [] = "               "; // 15 spaces
 	unsigned char str_genitive [] = "";
 	unsigned char str_low_def [] = "BAJA DEFENSA!";
 	unsigned char str_low_attack [] = "BAJA ATAQUE!";
+	unsigned char str_defeated [] = "HA PERDIDO";
 #endif
 
 // ****** DYNAMIC (VARIABLE) DATA LISTS ******
@@ -2133,8 +2135,6 @@ void pokemon_combat(void) {
 		// Next turn
 		pk_turn ++;
 	}
-
-	// Print XXXXX is defeated
 
 	// Back to main control
 
