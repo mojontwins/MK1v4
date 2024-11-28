@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu Nov 28 10:37:14 2024
+;	Module compile time: Thu Nov 28 10:40:04 2024
 
 
 
@@ -10264,11 +10264,20 @@
 	djnz load_tileset_loop
 	ld	hl,_spritesClipValues
 	ld	(_spritesClip),hl
-	ld bc, #(3 * 256 | 1 | 0x00)
-	ld de, _sprite_2_a
-	call SPCreateSpr
-	ld (_sp_player), ix
-	ld	hl,(_sp_player)
+	ld	hl,0 % 256	;const
+	push	hl
+	ld	hl,3 % 256	;const
+	push	hl
+	ld	hl,_sprite_2_a
+	push	hl
+	ld	hl,1 % 256	;const
+	push	hl
+	call	sp_CreateSpr
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	ld	(_sp_player),hl
 	push	hl
 	ld	hl,_sprite_2_b
 	push	hl
@@ -10301,26 +10310,32 @@
 	inc	(hl)
 .i_311
 	ld	a,(_rdi)
-	ld	e,a
-	ld	d,0
-	ld	hl,3	;const
-	call	l_ult
+	cp	#(3 % 256)
+	jp	z,i_310
 	jp	nc,i_310
-	ld de, _sp_moviles
-	ld hl, (_rdi)
-	ld h, 0
-	add hl, hl
-	add hl, de
-	ld (_gp_gen), hl
-	ld bc, #(3 * 256 | 2 | 0x00)
-	ld de, _sprite_9_a
-	call SPCreateSpr
-	push ix
-	pop de
-	ld hl, (_gp_gen)
-	ld (hl), e
-	inc hl
-	ld (hl), d
+	ld	hl,_sp_moviles
+	push	hl
+	ld	hl,(_rdi)
+	ld	h,0
+	add	hl,hl
+	pop	de
+	add	hl,de
+	push	hl
+	ld	hl,0 % 256	;const
+	push	hl
+	ld	hl,3 % 256	;const
+	push	hl
+	ld	hl,_sprite_9_a
+	push	hl
+	ld	hl,2 % 256	;const
+	push	hl
+	call	sp_CreateSpr
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	de
+	call	l_pint
 	ld	hl,_sp_moviles
 	push	hl
 	ld	hl,(_rdi)
