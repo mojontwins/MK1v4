@@ -21,7 +21,7 @@ rem generate for "COMPRESSED_TS 2", i.e. 192 tiles + 256 attrs
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h dsall compacted 2bytes  > nul
 ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 17 extra > nul
 ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
-..\utils\png2scr.exe ..\gfx\title%lang%.png ..\gfx\title.scr  > nul
+..\utils\png2scr.exe ..\gfx\title.png ..\gfx\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\pokemon%lang%.png ..\gfx\pokemon.scr  > nul
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul

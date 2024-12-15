@@ -223,6 +223,7 @@
 #define FANTIES_LIFE_GAUGE			10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 //#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
+#define FANTY_ASSEMBLY 						// Comment for classic fanties.
 
 // Quadrators
 // ----------
@@ -300,7 +301,7 @@
 //#define LIFE_H_X 					1
 //#define LIFE_H_Y					8
 
-#define OBJECTS_X					14		//
+#define OBJECTS_X					9		//
 #define OBJECTS_Y					23		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
