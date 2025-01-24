@@ -125,7 +125,7 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 	unsigned char text16[] = "PLACEHOLDER";
 
-	unsigned char text17[] = "PLACEHOLDER";
+	unsigned char text17[] = "A DWARF APPROACHES";
 
 	unsigned char text18[] = "_GANDALF%"
 							 "THANK YOU FOR BRINGING%"
@@ -145,7 +145,10 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "AND THE FORCE IS VERY%"
 							 "STRONG IN HIM";
 
-	unsigned char text21[] = "PLACEHOLDER";
+	unsigned char text21[] = "_DWARFY%";
+							 "YOU CAN'T POSSIBLY GET%"
+							 "PAST HIM IF HE CAN SEE%"
+							 "YOU...";
 
 	unsigned char text22[] = "_BILBOS%"
 							 "A ROLL OF TOILET PAPER%"
@@ -324,7 +327,8 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 	unsigned char text16[] = "PLACEHOLDER";
 
-	unsigned char text17[] = "PLACEHOLDER";
+	unsigned char text17[] = "DE PRONTO LLEGA UN%"
+	                         "NOMO...";
 
 	unsigned char text18[] = "_GANDALF%"
 							 "GRACIAS POR LOS ENANOS%"
@@ -335,8 +339,8 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 	unsigned char text19[] = "_ENANITO%"
 							 "IBAMOS A COGER EL TE-%"
 							 "SORO Y SER GRANDES DE%"
-							 "NUEVO (EN SENTIDO ME-%"
-							 "TAFORICO) PERO HAY UN%"
+							 "NUEVO *EN SENTIDO ME-%"
+							 "TAFORICO+ PERO HAY UN%"
 							 "PROBLEMA...";
 
 	unsigned char text20[] = "_ENANITO%"
@@ -345,7 +349,9 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "DA LOS PASILLOS. DOMI-%"
 							 "NA LA FUERZA!";
 
-	unsigned char text21[] = "PLACEHOLDER";
+	unsigned char text21[] = "_ENANITO%"
+							 "NO PODRAS PASAR DE EL%"
+							 "SI PUEDE VERTE ...";
 
 	unsigned char text22[] = "_BILBOS%"
 							 "UN ROLLO DE PAPEL DEL%"
@@ -506,9 +512,9 @@ unsigned char dwarf_names [] =
 	.cuts1
 		defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
-		defb 46|128, 29, 20, 21, 255
+		defb 46|128, 19, 20, 21, 255
 	.cuts3
-		defb 33|128, 27, 28, 17|128, 30, 33|128, 31, 255
+		defb 33|128, 27, 28, 0|128, 17, 17|128, 30, 33|128, 31, 255
 	.cuts4 		// Charmander showdown
 		defb 27|128, 38, 47|128, 39, 27|128, 40, 47|128, 41, 255
 #endasm
@@ -1042,7 +1048,7 @@ void draw_cur_screen_decos (void) {
 			ld  a, 9
 			ld  c, a
 			ld  (__x), a
-			xor a 
+			ld  a, 1
 			ld  (__y), a
 			ld  a, 15
 			ld  (__t), a 
@@ -1109,6 +1115,7 @@ void back_from_comecocos_screen(void) {
 	#endasm
 
 	// Now n_pant_was contains which comecocos screen just finished
+	player.estado = EST_PARP; player.ct_estado = 50;			
 }
 
 unsigned char touch_tile (void) {
@@ -1213,12 +1220,11 @@ void bilbos_hangover (void) {
 		wyz_play_music (1);
 
 		// Debug
-		/*
+		
 		gandalf_talk = 3; dwarf_talk = 1; 
-		n_pant = 11;
+		n_pant = 4;
 		anillo_flag = 1; gallumb_flag = 1;
-		*/
-		n_pant = 0;
+		
 	}
 
 	void hook_init_mainloop (void) {
@@ -1328,6 +1334,11 @@ void bilbos_hangover (void) {
 			.after_comecocos_3
 				ld  hl, 3  					// Play "CAVE"
 				call _wyz_play_music 
+
+				// Enable ring
+				ld  a, 1 
+				ld  (_anillo_flag), a
+
 				ld  a, 18
 				ld  (_tfn_b), a 
 				ld  a, 26
@@ -1497,8 +1508,6 @@ void bilbos_hangover (void) {
 			case 24:
 				// Enano en la cueva
 				if (dwarf_talk == 0) {
-					gandalf_talk = 3;
-
 					_x = 9 << 4; _y = 7 << 4; if (touch_tile ()) {
 						if (interact_flag == 0) {
 							interact_flag = 1;
@@ -1515,6 +1524,8 @@ void bilbos_hangover (void) {
 							#endasm
 
 							dwarf_talk = 1; 
+							gandalf_talk = 3;
+
 							on_pant = 0xFF;
 
 							wyz_play_music (3);		// Cave music
@@ -1534,12 +1545,18 @@ void bilbos_hangover (void) {
 					or  a 
 					jp  nz, anillo_done
 
-					// if (player_estado != last_estado)
-
+					/*
+					// if (player_estado != last_estado)					
 					ld  c, a 
 					ld  a, (_last_estado)
 					cp  c 
 					jp  z, anillo_ct_check
+					*/
+					// Changed to:
+					// if (last_estado == EST_PARP | EST_DIZZY)
+					ld  a, (_last_estado)
+					cp  EST_PARP | EST_DIZZY
+					jp  nz, anillo_ct_check
 
 					ld  a, 25
 					ld  (_anillo_ct), a				// 1 sec cooldown	
@@ -1702,6 +1719,8 @@ void bilbos_hangover (void) {
  			.in_gallumb_set 
  				ld  (_inside_gallumb_lair), a
 		#endasm
+
+ 		// Clear door
 	}
 
 	void hook_hotspots (void) {
@@ -1720,9 +1739,8 @@ void bilbos_hangover (void) {
 				}
 				break;
 
-			case 2:
+			case 2:				
 				// Anillo
-				anillo_flag = 1;
 				draw_coloured_tile (19, 22, 18);
 				rdb = 18; rda = 25; show_text_box ();
 

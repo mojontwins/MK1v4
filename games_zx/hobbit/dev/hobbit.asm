@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Jan 24 12:37:30 2025
+;	Module compile time: Fri Jan 24 14:18:11 2025
 
 
 
@@ -2706,8 +2706,8 @@
 	defb	194
 	defb	1
 	defb	0
-	defb	0
-	defb	0
+	defb	209
+	defb	3
 	defb	0
 	defb	100
 	defb	2
@@ -2733,8 +2733,8 @@
 	defb	0
 	defb	0
 	defb	0
-	defb	0
-	defb	0
+	defb	53
+	defb	3
 	defb	0
 	defb	0
 	defb	0
@@ -2748,8 +2748,8 @@
 	defb	180
 	defb	1
 	defb	0
-	defb	0
-	defb	0
+	defb	101
+	defb	3
 	defb	0
 	defb	0
 	defb	0
@@ -2799,8 +2799,8 @@
 	defb	0
 	defb	0
 	defb	0
-	defb	0
-	defb	0
+	defb	99
+	defb	3
 	defb	0
 	defb	113
 	defb	12
@@ -3872,7 +3872,7 @@
 ;	SECTION	text
 
 ._text17
-	defm	"PLACEHOLDER"
+	defm	"DE PRONTO LLEGA UN%NOMO..."
 	defb	0
 
 ;	SECTION	code
@@ -3896,8 +3896,8 @@
 
 ._text19
 	defm	"_ENANITO%IBAMOS A COGER EL TE-"
-	defm	"%SORO Y SER GRANDES DE%NUEVO ("
-	defm	"EN SENTIDO ME-%TAFORICO) PERO "
+	defm	"%SORO Y SER GRANDES DE%NUEVO *"
+	defm	"EN SENTIDO ME-%TAFORICO+ PERO "
 	defm	"HAY UN%PROBLEMA..."
 	defb	0
 
@@ -3921,7 +3921,8 @@
 ;	SECTION	text
 
 ._text21
-	defm	"PLACEHOLDER"
+	defm	"_ENANITO%NO PODRAS PASAR DE EL"
+	defm	"%SI PUEDE VERTE ..."
 	defb	0
 
 ;	SECTION	code
@@ -4234,9 +4235,9 @@
 	.cuts1
 	defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
-	defb 46|128, 29, 20, 21, 255
+	defb 46|128, 19, 20, 21, 255
 	.cuts3
-	defb 33|128, 27, 28, 17|128, 30, 33|128, 31, 255
+	defb 33|128, 27, 28, 0|128, 17, 17|128, 30, 33|128, 31, 255
 	.cuts4
 	defb 27|128, 38, 47|128, 39, 27|128, 40, 47|128, 41, 255
 	.run_cutscene
@@ -4747,7 +4748,7 @@
 	ld a, 9
 	ld c, a
 	ld (__x), a
-	xor a
+	ld a, 1
 	ld (__y), a
 	ld a, 15
 	ld (__t), a
@@ -4830,6 +4831,12 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), hl
+	ld	hl,_player+23
+	ld	(hl),#(2 % 256 % 256)
+	ld	hl,_player+24
+	ld	(hl),#(50 % 256 % 256)
+	ld	l,(hl)
+	ld	h,0
 	ret
 
 
@@ -6564,9 +6571,17 @@
 	pop	bc
 	ld	hl,1 % 256	;const
 	call	_wyz_play_music
-	ld	hl,0 % 256	;const
-	ld	a,l
+	ld	a,#(3 % 256 % 256)
+	ld	(_gandalf_talk),a
+	ld	a,#(1 % 256 % 256)
+	ld	(_dwarf_talk),a
+	ld	a,#(4 % 256 % 256)
 	ld	(_n_pant),a
+	ld	a,#(1 % 256 % 256)
+	ld	(_anillo_flag),a
+	ld	hl,1 % 256	;const
+	ld	a,l
+	ld	(_gallumb_flag),a
 	ret
 
 
@@ -6681,6 +6696,8 @@
 	.after_comecocos_3
 	ld hl, 3
 	call _wyz_play_music
+	ld a, 1
+	ld (_anillo_flag), a
 	ld a, 18
 	ld (_tfn_b), a
 	ld a, 26
@@ -6970,8 +6987,6 @@
 	ld	a,(_dwarf_talk)
 	and	a
 	jp	nz,i_170
-	ld	a,#(3 % 256 % 256)
-	ld	(_gandalf_talk),a
 	ld	a,#(144 % 256 % 256)
 	ld	(__x),a
 	ld	hl,112 % 256	;const
@@ -6991,6 +7006,8 @@
 	call run_cutscene
 	ld	a,#(1 % 256 % 256)
 	ld	(_dwarf_talk),a
+	ld	a,#(3 % 256 % 256)
+	ld	(_gandalf_talk),a
 	ld	a,#(255 % 256 % 256)
 	ld	(_on_pant),a
 	ld	hl,3 % 256	;const
@@ -7012,10 +7029,9 @@
 	ld a, (_player + 23)
 	or a
 	jp nz, anillo_done
-	ld c, a
 	ld a, (_last_estado)
-	cp c
-	jp z, anillo_ct_check
+	cp 2 | 8
+	jp nz, anillo_ct_check
 	ld a, 25
 	ld (_anillo_ct), a
 	ld hl, 3
@@ -7187,8 +7203,6 @@
 .i_180
 	jp	i_176
 .i_181
-	ld	a,#(1 % 256 % 256)
-	ld	(_anillo_flag),a
 	ld	hl,19 % 256	;const
 	push	hl
 	ld	hl,22 % 256	;const
