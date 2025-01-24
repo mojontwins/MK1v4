@@ -1166,12 +1166,15 @@ void bilbos_hangover (void) {
 	recuadrius ();				
 
 	// Back to the entrance?
-	if (inside_gallumb_lair) n_pant = 12; 
+	if (inside_gallumb_lair) {
+		n_pant = 12; 	
+		player.x = player.y = 2 << 10;
+	} 
 	
 	// Force redraw
 	on_pant = 0xff;
 	
-	player.x = player.y = 2 << 10;
+	// TODO : RESACA DE LARIOS
 }
 
 // ***************
@@ -1633,7 +1636,7 @@ void bilbos_hangover (void) {
 					jr  nz, anillo_done
 
 					// Reset!
-					ld  a, 36
+					ld  a, 35
 					ld  (_rda), a 
 					call _bilbos_hangover
 
