@@ -460,7 +460,7 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 unsigned char *texts [] = {
 	text0, text1, text2, text3, 			// Dwarves are unknown to bilbos
-	text4, text5, text6, text37, 			// Gandalf - biblo talks
+	text4, text5, text6, text7, 			// Gandalf - biblo talks
 	text8, 									// Cave is open
 	text9, 									// I am dwarf... write from p+13
 	text10, 								// Moto seminueva
@@ -502,7 +502,7 @@ unsigned char dwarf_names [] =
 
 #asm
 	.cuts0
-		defb 46|128, 4, 5, 47|128, 6, 46|128, 7, 255
+		defb 46|128, 4, 5, 47|128, 6, 46|128, 37, 255
 	.cuts1
 		defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
@@ -693,13 +693,14 @@ void draw_text_cbc (void) {
 			ld  d, a 
 			ld  a, (hl) 
 			or  a 
-			ret z  
+			jr z, dtcbc_done
 			inc hl 
 			sub 32 
 			halt 
 			halt 
-			jr z, dtcbc_loop
-
+			
+			jr  z, dtcbc_loop		// Skip spaces.
+			
 			ld  e, a 
 			ld  a, (_rdy)
 
@@ -710,6 +711,10 @@ void draw_text_cbc (void) {
 			pop hl 
 
 			jr  dtcbc_loop
+
+		.dtcbc_done
+			xor a 
+			ld  (_rdc), a
 	#endasm
 }
 
@@ -745,18 +750,7 @@ void show_text_box (void) {
 
 	while (1) {
 		clear_temp_string ();
-		// if (rdy > 7 || rdb != 0) 
-		#asm
-				ld  a, (_rdy)
-				cp  7
-				jr  nc, stb_top
-
-				ld  a, (_rdb) 
-				or  a 
-				jr  z, stb_notop
-			.stb_top
-		#endasm 
-
+		
 		/*
 		draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
 		draw_text (4, rdy, ATTR_TEXTBOX, temp_string);
@@ -764,6 +758,16 @@ void show_text_box (void) {
 		*/			
 
 		#asm
+
+				// Clear line above, only if rdb != 0 or rdy > 7
+				ld  a, (_rdb) 
+				or  a
+				jr  nz, stb_top
+				ld  a, (_rdy)
+				cp  8
+				jr  c, stb_notop
+
+			.stb_top
 				ld  a, (_rdy)
 				dec a 
 				ld  (__y), a 
@@ -773,6 +777,7 @@ void show_text_box (void) {
 				ld  (__n), a 
 				ld  hl, _temp_string 
 				call draw_text_loop
+			.stb_notop			
 
 				ld  a, (_rdy)
 				ld  (__y), a 
@@ -793,7 +798,7 @@ void show_text_box (void) {
 				ld  hl, _bottom_string 
 				call draw_text_loop
 
-				//
+				// Portrait if rdb != 0
 
 				ld  a, (_rdb) 
 				or  a 
@@ -809,7 +814,6 @@ void show_text_box (void) {
 		#endasm
 
 		#asm
-			.stb_notop
 				// Fill buffer
 				ld  de, _temp_string + 1
 				ld  a, (_rdb) 
@@ -821,16 +825,16 @@ void show_text_box (void) {
 				inc de 
 				inc de
 			.fill_buffer_noinc
-				ld  hl, (_gp_gen)
+				ld  hl, (_gp_gen)				// HL -> current text
 
 			.fill_buffer_loop
-				ld  a, (hl)
+				ld  a, (hl) 					// Read char from text
 				or  a
-				jr  z, fill_buffer_end
+				jr  z, fill_buffer_end 			// 0 -> done filling buffer (string end)
 				cp  '%'
-				jr  z, fill_buffer_end
+				jr  z, fill_buffer_end 			// % -> done filling buffer (new line)
 
-				ld  (de), a
+				ld  (de), a 					// Write to buffer
 
 				inc hl
 				inc de
@@ -1214,7 +1218,7 @@ void bilbos_hangover (void) {
 		n_pant = 11;
 		anillo_flag = 1; gallumb_flag = 1;
 		*/
-		n_pant = 6;
+		n_pant = 0;
 	}
 
 	void hook_init_mainloop (void) {
@@ -1249,6 +1253,7 @@ void bilbos_hangover (void) {
 				cp  1
 				jr  nz, delayed_text_done
 
+			.delayed_text_do
 				ld  a, (_tfn_b)
 				ld  (_rdb), a 
 				ld  a, (_tfn_a)

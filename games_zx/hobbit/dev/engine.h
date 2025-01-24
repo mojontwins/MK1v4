@@ -6118,7 +6118,7 @@ void mueve_bicharracos (void) {
 									ld  hl, (_player)				// HL = player.x
 
 									push hl 
-									call l_lt 						// C if DE < HL
+									call l_lt 						// C if DE < HL, so C if en < pl
 									pop  hl 
 									
 									jr  nc, fanty_vx_sk1
@@ -6197,7 +6197,13 @@ void mueve_bicharracos (void) {
 								.fanty_vx_done
 
 									// en_an_x [enit] += en_an_vx [enit];
-									// en_an_vx [enit] is already in DE
+
+									ld  hl, (_gp_gen) 				// INDEX
+									ld  bc, _en_an_vx
+									add hl, bc 						// HL -> en_an_vx [enit]
+									ld  e, (hl)
+									inc hl
+									ld  d, (hl)						//  DE = en_an_vx [enit] 
 
 									ld  hl, (_gp_gen) 				// INDEX
 									ld  bc, _en_an_x
@@ -6341,7 +6347,13 @@ void mueve_bicharracos (void) {
 								.fanty_vy_done
 
 									// en_an_y [enit] += en_an_vy [enit];
-									// en_an_vy [enit] is already in DE
+
+									ld  hl, (_gp_gen) 				// INDEX
+									ld  bc, _en_an_vy
+									add hl, bc 						// HL -> en_an_vy [enit]
+									ld  e, (hl)
+									inc hl
+									ld  d, (hl)						//  DE = en_an_vy [enit] DE =
 
 									ld  hl, (_gp_gen) 				// INDEX
 									ld  bc, _en_an_y
