@@ -338,7 +338,23 @@ PLAY:
 		JR      NZ,PAUTAS
 		LD      [HL],0
 		    
-;INTERPRETA      
+;INTERPRETA
+		; Lee una nueva linea. Yo voy a incrementar dos contadores:
+		; uno de lineas. Otro se incrementará cada 4 lineas. Éste lo "reflejaré" en low ram.
+		ld      a, (LINE_COUNTER)
+		inc     a
+		cp      4
+		jr      nz, nonewblack
+
+		; Incrementamos esto en low RAM
+		ld      hl, 23298
+		inc     (hl)
+
+		xor     a
+
+nonewblack:	
+		ld      (LINE_COUNTER), a
+
 		LD      IY,PSG_REG
 		LD      IX,PUNTERO_A
 		LD      BC,PSG_REG+8
@@ -1139,6 +1155,13 @@ SONG_4:
 	INCBIN "04_invisible.mus.bin"
 SONG_5:
 	INCBIN "05_coca.mus.bin"
+SONG_6:
+	INCBIN "06_pokemos.mus.bin"
+SONG_7:
+	INCBIN "07_gameover.mus.bin"
+SONG_8:
+	INCBIN "08_silence.mus.bin"
+
 
 ;; Añadir entradas para cada canción
 				
@@ -1148,6 +1171,9 @@ TABLA_SONG:     DW      SONG_0
 				DW      SONG_3
 				DW      SONG_4
 				DW      SONG_5
+				DW      SONG_6
+				DW      SONG_7
+				DW      SONG_8
 
 ;; Añadir entradas para cada efecto
 
@@ -1158,6 +1184,8 @@ TABLA_EFECTOS:  DW  	EFECTO0, EFECTO1, EFECTO2, EFECTO3
 				
 BUFFERS_CANALES:
 				DEFS 	$120
+
+LINE_COUNTER: 	DB 		0
 
 ;; LA CANCION ACTUAL SE DESCOMPRIME AQUI:
 

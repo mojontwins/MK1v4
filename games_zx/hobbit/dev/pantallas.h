@@ -121,6 +121,7 @@ void title_screen (void) {
 	}
 
 	after_title:
+	recuadrius ();
 }
 
 void game_ending (void) {
@@ -149,26 +150,7 @@ void game_ending (void) {
 }
 
 void game_over (void) {
-	/*
-	//10, 11, 21, 13, GAME_OVER_ATTR
-	#asm
-			ld  a, 10
-			ld  (__x), a
-			ld  a, 11
-			ld  (__y), a
-			ld  a, 21
-			ld  (__x2), a
-			ld  a, 13
-			ld  (__y2), a
-			ld  a, GAME_OVER_ATTR
-			ld  (__t), a
-	#endasm
-	
-	draw_rectangle ();	
-	
-	//draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
-	
-	*/
+	wyz_play_music (8);
 
 	#asm
 			call SPUpdateNow
@@ -183,10 +165,14 @@ void game_over (void) {
 			ld  (__n), a 
 			ld  hl, str_gameover
 			call draw_text_loop
-			
+
 			ld hl, _pokemon_tiles
 			call _set_ts
 
+			xor a 
+			ld  (_rda), a 		// offset			
+			
+			// Paint
 			ld  a, 6
 			ld  (_psk), a
 			ld  a, 12
@@ -197,16 +183,96 @@ void game_over (void) {
 			ld  (__n), a 
 
 			call _pk_portrait
+			
+			halt
 			call SPUpdateNow
 
-			ld hl, _tilesetc
-			call _set_ts
-	
-
-			call SPUpdateNow
+			halt
 	#endasm
 
-	beepet (); play_sfx (10);
-	espera_activa (5000);
+	wyz_play_music (7);
+
+	rdb = ay_counter;
+	rdc = 32; 			// Skip # notes before dance!
+	
+	pti = any_key (); while (1) {
+
+		#asm
+			.gameover_loop
+				ld  a, (_rdb) 
+				ld  c, a 
+				ld  a, (_ay_counter);
+				cp  c 
+				jr  z, gameover_animate_done 			// No new note
+
+				ld  (_rdb), a 					// Update local counter
+
+			.gameover_animate
+
+				// Erase
+				ld  a, (_rda)
+				ld  c, a 
+				
+				ld  a, 6
+				ld  (_psk), a
+				ld  a, 12
+				sub c
+				ld  (__x), a 
+				ld  a, 8
+				ld  (__y), a 
+				ld  a, 2
+				ld  (__n), a 
+
+				call _pk_portrait
+
+				// Flip Flop dx
+				ld  a, (_rda)
+				ld  c, a 
+
+				ld  a, (_rdc)
+				or  a 
+				jr  z, gameover_animate_do
+
+				dec a 
+				ld  (_rdc), a 
+				jr  gameover_animate_paint
+				
+			.gameover_animate_do
+				ld  a, 1
+				sub c 
+				ld  (_rda), a 
+				ld  c, a 
+
+			.gameover_animate_paint
+
+				// Paint
+				ld  a, 6
+				ld  (_psk), a
+				ld  a, 12
+				sub c
+				ld  (__x), a 
+				ld  a, 8
+				ld  (__y), a 
+				ld  a, 3
+				ld  (__n), a 
+
+				call _pk_portrait
+
+				call SPUpdateNow
+			.gameover_animate_done
+				halt
+
+		#endasm
+	
+		ptj = any_key (); if (ptj && pti == 0) { break; } pti = ptj;
+	}
+
+	wyz_play_music (8);
+
+	#asm
+		ld hl, _tilesetc
+		call _set_ts
+		call _recuadrius
+	#endasm
 
 }

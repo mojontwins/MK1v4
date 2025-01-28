@@ -225,7 +225,7 @@ void main (void) {
 	#endif
 
 	//pokemon_combat(); 
-
+game_over();
 	while (1) {
 		// Here the title screen
 		cortina ();

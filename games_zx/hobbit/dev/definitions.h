@@ -217,6 +217,7 @@ unsigned char orig_tile;	// Original background tile
 
 unsigned char isrc           @ 23296;
 unsigned char ay_player_on   @ 23297;
+unsigned char ay_counter     @ 23298;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN

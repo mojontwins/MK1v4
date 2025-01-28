@@ -1447,7 +1447,10 @@ void bilbos_hangover (void) {
 						#endasm
 
 						saca_a_todo_el_mundo_de_aqui ();
+						wyz_play_music (6); 		// Pokemon
 						pokemon_combat ();
+						wyz_play_music (3); 		// Cave
+						
 						if(pk_win) {
 							game_loop_flag = 1;
 
