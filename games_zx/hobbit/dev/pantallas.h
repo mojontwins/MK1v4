@@ -149,6 +149,7 @@ void game_ending (void) {
 }
 
 void game_over (void) {
+	/*
 	//10, 11, 21, 13, GAME_OVER_ATTR
 	#asm
 			ld  a, 10
@@ -167,18 +168,45 @@ void game_over (void) {
 	
 	//draw_text (11, 12, GAME_OVER_ATTR, "GAME OVER!");
 	
-	#asm 
-		ld  a, 11
-		ld  (__x), a 
-		ld  a, 12
-		ld  (__y), a 
-		ld  a, GAME_OVER_ATTR
-		ld  (__n), a 
-		ld  hl, str_gameover
-		call draw_text_loop
+	*/
 
-		call SPUpdateNow
+	#asm
+			call SPUpdateNow
+			call _sprite_remove_aid
+			call _recuadrius
+
+			ld  a, 11
+			ld  (__x), a 
+			ld  a, 14
+			ld  (__y), a 
+			ld  a, 7
+			ld  (__n), a 
+			ld  hl, str_gameover
+			call draw_text_loop
+			
+			ld hl, _pokemon_tiles
+			call _set_ts
+
+			ld  a, 6
+			ld  (_psk), a
+			ld  a, 12
+			ld  (__x), a 
+			ld  a, 8
+			ld  (__y), a 
+			ld  a, 3
+			ld  (__n), a 
+
+			call _pk_portrait
+			call SPUpdateNow
+
+			ld hl, _tilesetc
+			call _set_ts
+	
+
+			call SPUpdateNow
 	#endasm
+
 	beepet (); play_sfx (10);
-	espera_activa (500);
+	espera_activa (5000);
+
 }

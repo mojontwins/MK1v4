@@ -2082,22 +2082,28 @@ void pk_attack_cycle (void) {
 	// Update health displays
 }
 
+void set_ts(void) {
+	#asm
+			ld de, _tileset+512
+			#ifdef DECOMPRESSOR_ZX0
+				call dzx0_standard
+			#else
+				call depack
+			#endif
+	#endasm
+}
+
 // Combat
 void pokemon_combat(void) {
 
 	#asm 
-		xor a 
-		ld  (_rdc), a 
-		
-		call SPUpdateNow
+			xor a 
+			ld  (_rdc), a 
+			
+			call SPUpdateNow
 
-		ld hl, _pokemon_tiles
-		ld de, _tileset+512
-		#ifdef DECOMPRESSOR_ZX0
-			call dzx0_standard
-		#else
-			call depack
-		#endif
+			ld hl, _pokemon_tiles
+			call _set_ts
 	#endasm
 
 	asm_int = (unsigned int) (s_pokemon); unpack ();
@@ -2139,12 +2145,7 @@ void pokemon_combat(void) {
 	// Back to main control
 
 	#asm
-		ld hl, _tilesetc
-		ld de, _tileset+512
-		#ifdef DECOMPRESSOR_ZX0
-			call dzx0_standard
-		#else
-			call depack
-		#endif
+			ld hl, _tilesetc
+			call _set_ts
 	#endasm
 }

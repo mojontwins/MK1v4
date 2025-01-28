@@ -1227,7 +1227,7 @@ void bilbos_hangover (void) {
 		gandalf_talk = 3; dwarf_talk = 1; 
 		n_pant = 4;
 		anillo_flag = 1; gallumb_flag = 1;
-		
+		player.life = 0;
 	}
 
 	void hook_init_mainloop (void) {

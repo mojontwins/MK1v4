@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Jan 24 14:18:11 2025
+;	Module compile time: Mon Jan 27 13:58:22 2025
 
 
 
@@ -4881,12 +4881,8 @@
 	ld	a,(_inside_gallumb_lair)
 	and	a
 	jp	z,i_87
-	ld	hl,12 % 256	;const
-	ld	a,l
+	ld	a,#(12 % 256 % 256)
 	ld	(_n_pant),a
-.i_87
-	ld	a,#(255 % 256 % 256)
-	ld	(_on_pant),a
 	ld	hl,_player
 	push	hl
 	inc	hl
@@ -4896,6 +4892,10 @@
 	call	l_pint
 	pop	de
 	call	l_pint
+.i_87
+	ld	hl,255 % 256	;const
+	ld	a,l
+	ld	(_on_pant),a
 	ret
 
 
@@ -6446,13 +6446,19 @@
 
 
 
+._set_ts
+	ld de, _tileset+512
+	call dzx0_standard
+	ret
+
+
+
 ._pokemon_combat
 	xor a
 	ld (_rdc), a
 	call SPUpdateNow
 	ld hl, _pokemon_tiles
-	ld de, _tileset+512
-	call dzx0_standard
+	call _set_ts
 	ld	hl,_s_pokemon
 	ld	(_asm_int),hl
 	call	_unpack
@@ -6528,8 +6534,7 @@
 	jp	i_121
 .i_122
 	ld hl, _tilesetc
-	ld de, _tileset+512
-	call dzx0_standard
+	call _set_ts
 	ret
 
 
@@ -6579,9 +6584,10 @@
 	ld	(_n_pant),a
 	ld	a,#(1 % 256 % 256)
 	ld	(_anillo_flag),a
-	ld	hl,1 % 256	;const
-	ld	a,l
+	ld	a,#(1 % 256 % 256)
 	ld	(_gallumb_flag),a
+	ld	hl,0	;const
+	ld	(_player+29),hl
 	ret
 
 
@@ -7089,7 +7095,7 @@
 	ld (_anillo_uses), a
 	cp 6
 	jr nz, anillo_done
-	ld a, 36
+	ld a, 35
 	ld (_rda), a
 	call _bilbos_hangover
 	jr anillo_done
@@ -7452,20 +7458,25 @@
 
 
 ._game_over
-	ld a, 10
-	ld (__x), a
-	ld a, 11
-	ld (__y), a
-	ld a, 21
-	ld (__x2), a
-	ld a, 13
-	ld (__y2), a
-	ld a, 15
-	ld (__t), a
-	call	_draw_rectangle
-	ld a, 11
-	ld (__x), a
+	call SPUpdateNow
+	call _sprite_remove_aid
+	ld hl, _pokemon_tiles
+	call _set_ts
+	ld a, 6
+	ld (_psk), a
 	ld a, 12
+	ld (__x), a
+	ld a, 8
+	ld (__y), a
+	ld a, 3
+	ld (__n), a
+	call _pk_portrait
+	call SPUpdateNow
+	ld hl, _tilesetc
+	call _set_ts
+	ld a, 11
+	ld (__x), a
+	ld a, 13
 	ld (__y), a
 	ld a, 15
 	ld (__n), a
@@ -7475,7 +7486,7 @@
 	call	_beepet
 	ld	hl,10 % 256	;const
 	call	_play_sfx
-	ld	hl,500	;const
+	ld	hl,5000	;const
 	push	hl
 	call	_espera_activa
 	pop	bc
@@ -11339,6 +11350,7 @@
 	XDEF	_pant_just_rendered
 	XDEF	_pk_print_attacks
 	XDEF	_pk_status_effects
+	XDEF	_set_ts
 	XDEF	_get_coin
 	XDEF	_player_flicker
 	XDEF	_init_hotspots
