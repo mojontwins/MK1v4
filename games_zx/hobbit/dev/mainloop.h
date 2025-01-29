@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.10
+// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
@@ -223,8 +223,6 @@ void main (void) {
 	#ifdef ENABLE_CODE_HOOKS
 		hook_system_inits ();
 	#endif
-
-	//pokemon_combat(); 
 
 	while (1) {
 		// Here the title screen

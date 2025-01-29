@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // printer.h
@@ -441,6 +441,8 @@ void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned c
 	#endasm
 }
 
+unsigned char clr2d = 71;
+
 void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	#asm
 			ld  hl, 6
@@ -455,8 +457,13 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 			dec hl
 			ld  a, (hl)
 			
+			// You may call here with __x, __y prefilled 
+			// and the number in A.
+			
+		.draw_2_digits_shortcut
 			ld  d, 0
 			ld  e, a
+
 			ld  hl, 10
 			call l_div_u 	// HL = division, DE = rest
 
@@ -466,7 +473,8 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 			
 			add 16
 			ld  e, a
-			ld  d, 71
+			ld  a, (_clr2d)
+			ld  d, a
 			ld  a, (__x)
 			ld  c, a
 			ld  a, (__y)
@@ -475,7 +483,8 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 			ld  a, (__n)
 			add 16
 			ld  e, a
-			ld  d, 71
+			ld  a, (_clr2d)
+			ld  d, a
 			ld  a, (__x)
 			inc a
 			ld  c, a

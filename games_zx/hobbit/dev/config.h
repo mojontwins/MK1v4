@@ -55,6 +55,7 @@
 #define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 //#define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
 //#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS	// Call `custom.h/get_cell_n ()` for linear
+//#define ENEMS_CUSTOM_CELLS 				// Include custom_enem_cells.h
 #define ENEMS_CUSTOM_COLLISION 				// Normal code will only be ran if enems_custom_collision returns 0
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // Substitute with beepola stuff or whatever you like.
@@ -34,7 +34,6 @@
 		CP    $1F
 		JR    Z,NEXTNOTE                    ; Play next note if no key pressed
 
-		EI
 		RET                                 ; Return from playing tune
 
 	.PATTERN_PTR

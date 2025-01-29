@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // pantallas.h
@@ -65,6 +65,8 @@ void title_screen (void) {
 	#endasm
 	
 	while (1) {
+		rand ();
+
 		if (sp_KeyPressed (key_1)) {
 			joyfunc = sp_JoyKeyboard; break;
 		} else if (sp_KeyPressed (key_2)) {

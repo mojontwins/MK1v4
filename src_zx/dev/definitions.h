@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // definitions.h
@@ -46,6 +46,8 @@
 #define PLAYER_KILLED_BY_ENEM 	2
 #define PLAYER_KILLED_BY_EZ 	4
 #define PLAYER_KILLED_BY_SELF 	8
+
+#define BORDER(b) 				asm("ld a,"#b"\nout (254),a")
 
 typedef struct {
 	int x, y, cx;										// 0, 2, 4
@@ -118,7 +120,7 @@ unsigned int key_3 = 0x04f7;
 
 void *my_malloc(uint bytes) { return sp_BlockAlloc(0); }
 void *u_malloc = my_malloc;
-void *u_free = sp_FreeBlock;
+void *u_free = NULL; //sp_FreeBlock;
 
 // Sprite structs
 
@@ -215,6 +217,7 @@ unsigned char orig_tile;	// Original background tile
 
 unsigned char isrc           @ 23296;
 unsigned char ay_player_on   @ 23297;
+unsigned char ay_counter     @ 23298;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN

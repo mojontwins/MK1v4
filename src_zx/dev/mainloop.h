@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // mainloop.h
@@ -65,15 +65,55 @@ void main (void) {
 	#endasm
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-		sp_InitIM2 (0xf1f1);
-		sp_CreateGenericISR (0xf1f1);
-		sp_RegisterHook (255, ISR);
+		#asm
+				ld  bc, 0xf1f1 
+				call SPInitIM2
+
+				ld  de, 0xf1f1
+				call SPCreateGenericISR
+
+				ld  l, 255
+				ld  bc, _ISR 
+				call SPRegisterHook
+		#endasm
 	#endif
 
 	// splib2 initialization
-	sp_Initialize (7, 0);
-	sp_Border (BLACK);
+	//sp_Initialize (7, 0);
+	#asm
+			ld de, 0
+			call SPInitialize
+	#endasm
+
+	BORDER(0);
 	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
+
+	// Compressed tileset
+	#ifdef COMPRESSED_TS
+		#if COMPRESSED_TS == 1
+			#asm
+				.decompress_ts
+					ld hl, _tilesetc 
+					ld de, _tileset
+					#ifdef DECOMPRESSOR_ZX0
+						call dzx0_standard
+					#else
+						call depack
+					#endif
+			#endasm
+		#elif COMPRESSED_TS == 2
+			#asm
+				.decompress_ts
+					ld hl, _tilesetc 
+					ld de, _tileset+512
+					#ifdef DECOMPRESSOR_ZX0
+						call dzx0_standard
+					#else
+						call depack
+					#endif
+			#endasm	
+		#endif
+	#endif
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 		#asm
@@ -336,13 +376,19 @@ void main (void) {
 						#ifdef ONLY_ONE_OBJECT
 							draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 						#else
-							draw_2_digits (OBJECTS_X, OBJECTS_Y, 
+							#asm 
+									ld  a, OBJECTS_X 
+									ld  (__x), a 
+									ld  a, OBJECTS_Y 
+									ld  (__y), a 
+									ld  a, (_player + 27)		// player.objs
 								#ifdef REVERSE_OBJECT_COUNT
-									PLAYER_NUM_OBJETOS - player.objs
-								#else
-									player.objs
+									ld  c, a 
+									ld  a, PLAYER_NUM_OBJETOS
+									sub c
 								#endif
-							);
+									call draw_2_digits_shortcut
+							#endasm
 						#endif
 					#endif
 					objs_old = player.objs;
@@ -351,19 +397,52 @@ void main (void) {
 			
 			#ifdef LIFE_X
 				if (player.life != life_old) {
-					if (player.life > 0) pti = (unsigned char) player.life; else pti = 0;
+					#asm
+							ld  hl, (_player + 29) 				// player.life, 16 bits signed
+							bit 7, h 
+							jr  z, draw_life_do
+
+							ld  hl, 0 							// life < 0 -> 0
+							
+						.draw_life_do
+
 					#ifdef DRAW_HI_DIGIT
-						sp_PrintAtInv (LIFE_H_Y, LIFE_H_X, 71, 16 + pti / 100);
+							ex  de, hl 
+							ld  hl, 100 
+							call l_div_u  						// Result in DE, what we need in E
+							
+							ld  a, LIFE_H_Y
+							ld  c, LIFE_H_X 
+							ld  d, 71 
+
+							call SPPrintAtInv
+
+							ld  hl, (_player + 29) 				// player.life, 16 bits signed
 					#endif
-					draw_2_digits (LIFE_X, LIFE_Y, pti);
+
+							ld  a, LIFE_X 
+							ld  (__x), a 
+							ld  a, LIFE_Y 
+							ld  (__y), a 
+							ld  a, l
+							call draw_2_digits_shortcut
+					#endasm
+
 					life_old = player.life;
 				}
 			#endif
 
 			#if !defined DEACTIVATE_KEYS && defined KEYS_X
 				if (player.keys != keys_old) {
-					draw_2_digits (KEYS_X, KEYS_Y, player.keys);
-					keys_old = player.keys;
+					#asm
+						ld  a, OBJECTS_X 
+						ld  (__x), a 
+						ld  a, OBJECTS_Y 
+						ld  (__y), a 
+						ld  a, (_player + 28)		// player.objs
+						ld  (_keys_old), a 
+						call draw_2_digits_shortcut
+					#endasm
 				}
 			#endif
 

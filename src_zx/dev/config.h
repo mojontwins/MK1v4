@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // ============================================================================
@@ -10,6 +10,7 @@
 //#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
 //#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
 //#define DECOMPRESSOR_ZX0					// User Einar Saukas' ZX0 rather than aplib
+//#define COMPRESSED_TS 			2		// See manual!
 
 //#define TALL_PLAYER					// Main character is 16x24
 
@@ -223,6 +224,7 @@
 //#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 //#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
+#define FANTY_ASSEMBLY 						// Comment for classic fanties.
 
 // Quadrators
 // ----------

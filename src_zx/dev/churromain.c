@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // churromain.c
@@ -15,7 +15,13 @@
 		LIB SPUpdateNow
 		LIB SPInitialize
 		LIB SPNullSprPtr
+		LIB SPRegisterHook
+		LIB SPCreateGenericISR
+		LIB SPInitIM2
+		LIB SPInitialize
+		LIB SPCreateSpr
 		XREF SProtatetblInitialize
+		XREF SPDisplayList
 #endasm
 
 /* splib2 memory map
