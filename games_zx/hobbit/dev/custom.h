@@ -28,6 +28,7 @@ unsigned char n_pant_was, xwas, ywas;
 unsigned char comecocos_on;
 unsigned char cocos_count;
 unsigned char inside_gallumb_lair;
+unsigned char just_passed_out; 
 
 // Show a text box next frame:
 unsigned char tfn_a, tfn_b, delayed_ct;
@@ -214,6 +215,17 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "WHO WOULD'VE GUESSED?%"
 							 "HE'S SO TINY, BUT MY%"
 							 "HEAD IS SPINNING!";
+
+	unsigned char text34[] = "_BILBOS%"
+							 "GOSH, I PUKED. MY HEAD%"
+							 "IS SPINNING. I DON'T%"
+							 "THINK I CAN TAKE THIS%"
+							 "VERY OFTEN...";
+
+	unsigned char text35[] = "_BILBOS%"
+							 "HOBBIT, HOBA... CADA%"
+							 "DIA TE QUIERO MA...%"
+							 "I'M PASSING OUT...";
 
 	unsigned char text36[] = "_BILBOS%"
 							 "AW... THAT'S A NASTY%"
@@ -1162,7 +1174,8 @@ unsigned char touch_tile (void) {
 }
 
 void bilbos_hangover (void) {
-	rdb = 33; show_text_box ();
+	redraw_after_text = 0;
+	show_text_box ();
 	recuadrius ();				
 
 	// Back to the entrance?
@@ -1174,7 +1187,7 @@ void bilbos_hangover (void) {
 	// Force redraw
 	on_pant = 0xff;
 	
-	// TODO : RESACA DE LARIOS
+	just_passed_out = 1;
 }
 
 // ***************
@@ -1212,6 +1225,7 @@ void bilbos_hangover (void) {
 			ld  (_gallumb_flag), a 
 			ld  (_anillo_uses), a 
 			ld  (_smaug_talk), a 
+			ld  (_just_passed_out), a
 			inc a 
 			ld  (_anillo_first_time), a
 		#endasm
@@ -1224,28 +1238,30 @@ void bilbos_hangover (void) {
 
 		// Debug
 		
+		/*
 		gandalf_talk = 3; dwarf_talk = 1; 
 		n_pant = 4;
 		anillo_flag = 1; gallumb_flag = 1;
-		player.life = 0;
+		*/
 	}
 
 	void hook_init_mainloop (void) {
-		if (n_pant == 12 && pant_just_rendered) {
-			if (gallumb_flag == 3 || anillo_uses == 6) {
-				if (gallumb_flag == 3) {
-					rda = 33;
-					gallumb_flag = 2;
-				} else {
-					rda = 36;
-				}
-
-				// Show text
-				rdb = 47; show_text_box ();
-
-				// Reset flag
-				anillo_uses = 0;
+		if (just_passed_out) {
+		
+			if (gallumb_flag == 3) {
+				rda = 33;
+				gallumb_flag = 2;
+			} else {
+				rda = 36;
 			}
+
+			// Show text
+			redraw_after_text = 0;
+			rdb = 47; show_text_box ();
+
+			// Reset flag
+			anillo_uses = 0;
+			just_passed_out = 0;
 		}
 	}
 
@@ -1450,7 +1466,7 @@ void bilbos_hangover (void) {
 						wyz_play_music (6); 		// Pokemon
 						pokemon_combat ();
 						wyz_play_music (3); 		// Cave
-						
+
 						if(pk_win) {
 							game_loop_flag = 1;
 
@@ -1635,12 +1651,14 @@ void bilbos_hangover (void) {
 					ld  a, (_anillo_uses)
 					inc a 
 					ld  (_anillo_uses), a 
-					cp  6 
+					cp  8
 					jr  nz, anillo_done
 
 					// Reset!
 					ld  a, 35
-					ld  (_rda), a 
+					ld  (_rda), a
+					ld  a, 47
+					ld  (_rdb), a 
 					call _bilbos_hangover
 
 					jr  anillo_done
@@ -1820,7 +1838,7 @@ void bilbos_hangover (void) {
 				// Gallumb is angered! on touch->text, fade, teleport, text2 <- "on enter"
 
 				// Text & fade & back to the entrance
-				rda = 32; bilbos_hangover ();
+				rda = 32; rdb = 33; bilbos_hangover ();
 
 				// on reenter, detect this & show text, then set it back to 2.
 				gallumb_flag = 3;
