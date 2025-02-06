@@ -30,7 +30,7 @@
 #define WYZ_RAM 						1
 #define WYZ_ADDRESS_PLAYERINIT			0xC018	// INIT_BUFFERS		EQU 0C018H
 #define WYZ_ADDRESS_PLAYERISR			0xC000	// INICIO			EQU 0C000H
-#define WYZ_ADDRESS_SFX_PLAY			0xC47E	// INICIA_EFECTO	EQU 0C46BH
+#define WYZ_ADDRESS_SFX_PLAY			0xC48E	// INICIA_EFECTO	EQU 0C48EH
 #define WYZ_ADDRESS_MT_LOAD_SONG		0xC087	// CARGA_CANCION	EQU 0C087H
 #define WYZ_ADDRESS_PLAYER_OFF			0xC062	// PLAYER_OFF		EQU 0C062H
 
@@ -235,6 +235,7 @@
 // ---------------------------------
 
 #define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
+#define MARRULLERS_CONFINED 				// Marrullers will never touch the borders of the screen
 
 // Scripting
 // ---------

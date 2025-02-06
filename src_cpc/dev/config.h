@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 // ============================================================================
@@ -7,7 +7,12 @@
 
 //#define MODE_1
 
+//#define CUSTOM_SCREEN_CONNECTIONS 			// Uses code in custom_screen_connections.h
+
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
+//#define DECOMPRESSOR_ZX0					// User Einar Saukas' ZX0 rather than aplib
+//#define COMPRESSED_TS 			2		// See manual!
+
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
 #define BLACK_PEN		 			1		// Which pen is black?
 
@@ -206,6 +211,7 @@
 //#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 //#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
+#define FANTY_ASSEMBLY 						// Comment for classic fanties.
 
 // Quadrators
 // ----------

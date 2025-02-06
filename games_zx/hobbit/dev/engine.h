@@ -5272,6 +5272,7 @@ void enems_en_an_calc (unsigned char n) {
 
 #ifdef ENABLE_MARRULLERS
 	void marrullers_select_direction (void) {
+		/*
 		rdd = en_an_ff [enit];
 		switch (rand () & 3) {
 			case 0:
@@ -5283,6 +5284,56 @@ void enems_en_an_calc (unsigned char n) {
 			case 3:
 				_en_mx = -rdd; _en_my = 0; break;
 		}
+		*/
+		#asm
+				ld  hl, (_enit)
+				ld  h, 0
+				ld  de, _en_an_ff
+				add hl, de 
+				ld  c, (hl)
+				xor a 
+				sub c 
+				ld  b, a 				// b = negative, c = positive speed.
+				
+				call _rand 				// Doesn't trash BC 
+				ld  a, l 
+				and 3
+				cp  1
+				jr  z, msd1 
+				cp  2 
+				jr  z, msd2 
+				cp  3
+				jr  z, msd3 
+
+			.msd0	// 0, rdd
+				xor a 
+				ld  (__en_mx), a 
+				ld  a, b
+				ld  (__en_my), a 
+				ret
+
+			.msd1 	// 0, -rdd
+				xor a 
+				ld  (__en_mx), a 
+				ld  a, c 
+				ld  (__en_my), a 
+				ret
+
+			.msd2 	// rdd, 0 
+				ld  a, c 
+				ld  (__en_mx), a
+				xor a 
+				ld  (__en_my), a 
+				ret 
+
+			.msd3 	// -rdd, 0 
+				ld  a, b 
+				ld  (__en_mx), a
+				xor a 
+				ld  (__en_my), a 
+				ret 
+		#endasm
+
 	}
 #endif
 
@@ -5759,7 +5810,7 @@ void mueve_bicharracos (void) {
 							add c 
 							ld  (__en_y), a
 
-						#ifdef ENABLE_MARRULLERS
+						#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
 							ld  a, (__en_t)
 							cp  11
 							jr  nc, vert_limit_skip_2

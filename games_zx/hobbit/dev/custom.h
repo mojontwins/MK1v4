@@ -9,6 +9,7 @@ unsigned char gandalf_talk;		// 0 - init, 1 - talk, 2 - open
 unsigned char dwarf_talk;
 unsigned char dwarf_ct;
 unsigned char sonia_talk;
+unsigned char amador_talk;
 unsigned char interact_flag;
 unsigned char anillo_flag;
 unsigned char anillo_ct;
@@ -45,6 +46,15 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							0x29, 0x44, 0xAD, 0x18, 0xA6, 0x36, 0xA7, 0x37, 
 							0xA4, 0x46, 0xA5, 0x47, 0xff };
 
+// Decos, screen 17
+unsigned char decos3 [] = { 0xA2, 0x3c, 0xff };
+
+// Decos, screen 31
+unsigned char decos4 [] = { 0x91, 0x19, 0xff };
+
+// Decos, screen 28
+unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
+
 #ifdef LANG_EN
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
@@ -70,13 +80,13 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "WANNA WIN A TREASURE?";
 
 	unsigned char text5 [] = "_GANDALF%"
-							 "TO WIN THE TREASURE%"
-							 "YOU MUST STEAL IT FROM%"
-							 "CHARMANDER WHO LIVES%"
-							 "IN THAT MOUNTAIN";
+							 "HELP ME GAIN ACCESS TO%"
+							 "THAT NEARBY MOUNTAIN,%"
+							 "WHERE CHARMANDER THE%"
+							 "DRAGON DWELLS";
 
 	unsigned char text6 [] = "_BILBOS%"
-							 "THAT I KNOW BUT SUCH%"
+							 "BUT HOW, MY MAN? THAT%"
 							 "MOUNTAIN IS AS CLOSED%"
 							 "AS BARBIE'S TWAT!";	
 
@@ -252,7 +262,13 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 
 	unsigned char text41[] = "_BILBOS%"
 							 "MEH. EVERYBODY KNOWS%"
-							 "THAT PLANT WINS FIRE!";							 
+							 "THAT PLANT WINS FIRE!";
+
+	unsigned char text42[]  = "_AMADOR%"
+							  "THERE'S A WEIRD OLD%"
+							  "MAN THAT'S BOTHERING%"
+							  "ME. FIND HIM AND MAKE%"
+							  "HIM GO AWAY!";
 #else
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -455,7 +471,6 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "DECIR!!";
 
 	unsigned char text38[] = "_CHARMANDER%"
-	//                        XXXXXXXXXXXXXXXXXXXXXX	
 							 "TE PILLE, INTRUSO!%"
 							 "QUE QUIERES? VIENES%"
 							 "A ROBAR MI TESORO?";
@@ -472,7 +487,12 @@ unsigned char decos2 [] = { 0xA9, 0x17, 0x2A, 0x03, 0x15, 0x24, 0x55, 0x2B,
 							 "BAH. TODOS SABEN QUE%"
 							 "PLANTA GANA A FUEGO!";
 
-
+	//                        XXXXXXXXXXXXXXXXXXXXXX	
+	unsigned char text42[] = "_AMADOR%"
+							 "HAY UN VIEJO QUE NO%"
+							 "ME DEJA PODAR EL SETO.%"
+							 "ENCUENTRALO Y HAZ QUE%"
+							 "SE VAYA, BILBOS!";
 
 #endif
 
@@ -493,7 +513,8 @@ unsigned char *texts [] = {
 	text32, text33, 						// Gallumb expels
 	text34, text35, text36,					// Anillo bad
 	text37,									// If you know you know
-	text38, text39, text40, text41 			// Fight charmander
+	text38, text39, text40, text41,			// Fight charmander
+	text42 									// Lil' amador intro
 };
 
 unsigned char dwarf_names [] = 
@@ -963,6 +984,8 @@ void draw_cur_screen_decos (void) {
 			jr  z, dcsd_17
 			cp  24
 			jr  z, dcsd_24
+			cp  28
+			jp  z, dcsd_28
 			cp  31
 			jp  z, dcsd_31
 			ret
@@ -970,14 +993,12 @@ void draw_cur_screen_decos (void) {
 		.dcsd_0 
 			ld  hl, _decos0
 			ld  (_gp_gen), hl
-			call _draw_decos
-			ret
+			jp _draw_decos			
 
 		.dcsd_1
 			ld  hl, _decos1
 			ld  (_gp_gen), hl
-			call _draw_decos
-			ret
+			jp _draw_decos
 
 		.dcsd_4
 			ld  a, (_gallumb_flag)
@@ -1000,25 +1021,17 @@ void draw_cur_screen_decos (void) {
 		.dcsd_5 
 			ld  hl, _decos2
 			ld  (_gp_gen), hl
-			call _draw_decos
-			ret
+			jp _draw_decos
 
 
 		.dcsd_17
 			// Sonia la momia
 			ld  a, (_sonia_talk)
 			ret nz
-			ld  a, 12
-			ld  c, a
-			ld  (__x), a
-			ld  a, 3 
-			ld  (__y), a
-			ld  a, 34
-			ld  (__t), a 
-			ld  a, 8
-			ld  (__n), a 
-			call set_map_tile_do
-			ret
+
+			ld  hl, _decos3
+			ld  (_gp_gen), hl
+			jp _draw_decos
 
 		.dcsd_24
 			// Dwarf at the entrance to the mountain / closed door
@@ -1052,22 +1065,24 @@ void draw_cur_screen_decos (void) {
 			call set_map_tile_do
 			ret
 
+		.dcsd_28
+			ld  a, (_amador_talk)
+			or  a
+			ret nz
+
+			ld  hl, _decos5
+			ld  (_gp_gen), hl
+			jp _draw_decos
+			ret 
+
 		.dcsd_31
 			ld  a, (_gandalf_talk)
 			cp  2 
 			ret z
 
-			ld  a, 9
-			ld  c, a
-			ld  (__x), a
-			ld  a, 1
-			ld  (__y), a
-			ld  a, 15
-			ld  (__t), a 
-			ld  a, 8
-			ld  (__n), a 
-			call set_map_tile_do
-			ret		
+			ld  hl, _decos4
+			ld  (_gp_gen), hl
+			jp _draw_decos
 	#endasm
 }
 
@@ -1206,20 +1221,13 @@ void bilbos_hangover (void) {
 	}
 
 	void hook_init_game (void) {
-		/*
-		gandalf_talk = 0;
-		dwarf_talk = 0;
-		comecocos_on = 0;
-		anillo_flag = 0;
-		gallumb_flag = 0;
-		anillo_uses = 0;
-		smaug_talk = 0;
-		anillo_first_time = 1;
-		*/
+
 		#asm 
 			xor a 
 			ld  (_gandalf_talk), a 
 			ld  (_dwarf_talk), a 
+			ld  (_sonia_talk), a
+			ld  (_amador_talk), a
 			ld  (_comecocos_on), a 
 			ld  (_anillo_flag), a 
 			ld  (_gallumb_flag), a 
@@ -1557,6 +1565,16 @@ void bilbos_hangover (void) {
 					}
 				}
 				break;
+
+			case 28:
+				// Amador
+				if (amador_talk == 0) {
+					_x = 8 << 4; _y = 6 << 4; if (touch_tile ()) {
+						rda = 42; rdb = 26; show_text_box ();
+						amador_talk = 1;
+						on_pant = 0xFF;
+					}
+				}
 		}
 
 		// Anillo

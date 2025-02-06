@@ -17,9 +17,6 @@
 void main (void) {
 	#asm
 			di 
-			ld  sp, STACK_ADDR
-
-			call musicstart
 
 		#ifdef MODE_128K_DUAL
 				xor a
@@ -61,7 +58,11 @@ void main (void) {
 					ld  a, 1
 					ld  (_ay_player_on), a
 			#endif
+		#else
+			ld  sp, STACK_ADDR
 		#endif
+
+			call musicstart
 	#endasm
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME

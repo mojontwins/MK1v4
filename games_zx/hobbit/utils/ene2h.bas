@@ -1,4 +1,4 @@
-' ene2h.bas v0.5.20210615-v4
+' ene2h.bas v0.6.20250206-v4
 
 ' Commands first draft
 ' CMD=C,T,O,V where C = command, T = type, O = output member, V = value
@@ -20,7 +20,7 @@ End Type
 
 Sub usage
 	Print
-	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall] [compacted] [CMD=C,T,O,V]"
+	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall] [compacted] [CMD=C,T,O,V] [marrullers]"
 	Print
 	Print "2bytes (optional) - support really old .ene files which stored the hotspots"
 	Print "    2 bytes each instead of 3 bytes.  As a rule of thumb: "
@@ -33,6 +33,8 @@ Sub usage
 	Print "dsall (optional) - Like dslight, but only types 1-4 are switched."
 	Print
 	Print "compacted (optional) - pack x1, y1 and x2, y2 in 1 byte XY each"
+	Print
+	Print "marrullers (optional) - enems 11-14 are marrullers & will make x1=1, y1=1, x2=13, y2=8"
 End Sub
 
 Function inCommand (spec As String) As Integer
@@ -62,13 +64,14 @@ Dim As Integer enTypeCounters (255)
 Dim As String Dummy, cmm
 Dim As Integer sx, sy, equals
 Dim As Integer compacted
+Dim As Integer marrullers
 Dim As Integer coords (16)
 Dim As Integer outX, outY, outX1, outX2, outY1, outY2, outMX, outMY, outT
 Dim As CMD cmds (31)
 Dim As Integer cmdIndex
 Dim As String tokens (16)
 
-Print "ene2h.bas v0.5.20210615-v4 ";
+Print "ene2h.bas v0.6.20250206-v4 ";
 
 sclpParseAttrs
 
@@ -90,6 +93,8 @@ Else
 End If
 
 compacted = inCommand ("compacted")
+
+marrullers = inCommand ("marrullers")
 
 ' Look for & parse CMDs
 i = 3
@@ -179,6 +184,12 @@ For i = 1 To mapPants
 		outMX = mn*sx: outMY = mn*sy
 		outT = t
 
+		' Marrullers
+		If marrullers And t >= 11 And t <= 14 Then 
+			outX1 = 16: outX2 = 13 * 16
+			outY1 = 16: outY2 = 8 * 16
+		End If
+
 		' Run commands
 		For k = 0 To cmdIndex - 1
 			If cmds (k).t = t Then 
@@ -203,9 +214,10 @@ For i = 1 To mapPants
 		Print #fOut, " 	{";
 		Print #fOut, "" & (outX) & ", " & (outY) & ", ";		' x y
 		
+
 		If compacted Then
-			Print #fOut, "0x" & Hex (16*x + y, 2) & ", ";		' xy1
-			Print #fOut, "0x" & Hex (16*xx + yy, 2) & ", ";		' xy2
+			Print #fOut, "0x" & Hex (16*(outX1/16) + (outY1/16), 2) & ", ";		' xy1
+			Print #fOut, "0x" & Hex (16*(outX2/16) + (outY2/16), 2) & ", ";		' xy2
 		Else
 			Print #fOut, "" & (outX1) & ", " & (outY1) & ", ";		' x1 y1
 			Print #fOut, "" & (outX2) & ", " & (outY2) & ", ";		' x2 y2

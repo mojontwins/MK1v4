@@ -80,3 +80,17 @@ Antes de llegar a la pantalla del dragón Gandalf deber explicarte de qué va la
 
 Voy a ver de hacer esa modificación al motor primero.
 
+# Final 2
+
+Lo de arriba no se hizo, se me fue la olla y programé todo el motor de Pokemon
+
+# Terminando
+
+Vale, con el primer build completo se ve que hay que arreglar estas miserias:
+
+* [X] El enanito del marcador sale mal, revisar atributos.
+* [X] Añadir un primer texto de Bilbo que diga que hay que buscar a Gandalf. Poner a Amador el leñador, que diga "Hay un viejo por la comarca que no me deja podar el seto. Buscalo y haz que se vaya Bilbos".
+* [ ] Cambiar al enemigo que se parece a Gollum por otro o hacer que sea más distinto y menos igual.
+* [X] Quitar el atajo que hay en la caverna entre el anillo y Gollum.
+* [X] Ver de no dejar que los enemigos de trayectoria libre lleguen al borde de la pantalla.
+* [?] Ver que pasa cuando se pierde contra smaug. ¿Por qué tiene puesto el anillo?

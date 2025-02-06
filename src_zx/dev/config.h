@@ -235,6 +235,7 @@
 // ---------------------------------
 
 #define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
+#define MARRULLERS_CONFINED 				// Marrullers will never touch the borders of the screen
 
 // Scripting
 // ---------

@@ -5272,6 +5272,7 @@ void enems_en_an_calc (unsigned char n) {
 
 #ifdef ENABLE_MARRULLERS
 	void marrullers_select_direction (void) {
+		/*
 		rdd = en_an_ff [enit];
 		switch (rand () & 3) {
 			case 0:
@@ -5283,6 +5284,56 @@ void enems_en_an_calc (unsigned char n) {
 			case 3:
 				_en_mx = -rdd; _en_my = 0; break;
 		}
+		*/
+		#asm
+				ld  hl, (_enit)
+				ld  h, 0
+				ld  de, _en_an_ff
+				add hl, de 
+				ld  c, (hl)
+				xor a 
+				sub c 
+				ld  b, a 				// b = negative, c = positive speed.
+				
+				call _rand 				// Doesn't trash BC 
+				ld  a, l 
+				and 3
+				cp  1
+				jr  z, msd1 
+				cp  2 
+				jr  z, msd2 
+				cp  3
+				jr  z, msd3 
+
+			.msd0	// 0, rdd
+				xor a 
+				ld  (__en_mx), a 
+				ld  a, b
+				ld  (__en_my), a 
+				ret
+
+			.msd1 	// 0, -rdd
+				xor a 
+				ld  (__en_mx), a 
+				ld  a, c 
+				ld  (__en_my), a 
+				ret
+
+			.msd2 	// rdd, 0 
+				ld  a, c 
+				ld  (__en_mx), a
+				xor a 
+				ld  (__en_my), a 
+				ret 
+
+			.msd3 	// -rdd, 0 
+				ld  a, b 
+				ld  (__en_mx), a
+				xor a 
+				ld  (__en_my), a 
+				ret 
+		#endasm
+
 	}
 #endif
 
@@ -5759,7 +5810,7 @@ void mueve_bicharracos (void) {
 							add c 
 							ld  (__en_y), a
 
-						#ifdef ENABLE_MARRULLERS
+						#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
 							ld  a, (__en_t)
 							cp  11
 							jr  nc, vert_limit_skip_2
@@ -5977,7 +6028,6 @@ void mueve_bicharracos (void) {
 				#endif
 
 				#ifdef USE_TYPE_6
-					// TODO : Put this into small assembly code!!
 					#asm
 						._update_fantys
 							ld  a, (__en_t)
@@ -5986,55 +6036,55 @@ void mueve_bicharracos (void) {
 
 					#endasm 
 
-						#if defined (USE_SIGHT_DISTANCE) || defined (PLAYER_CAN_HIDE)
-							// Idle, retreat or pursue depending on player status (distance or hidden)
+					#if defined (USE_SIGHT_DISTANCE) || defined (PLAYER_CAN_HIDE)
+						// Idle, retreat or pursue depending on player status (distance or hidden)
 
-							switch (en_an_state [enit]) {
-								case TYPE_6_IDLE:
-									#ifdef PLAYER_CAN_HIDE
-										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
-									#else
-										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
-									#endif
-										en_an_state [enit] = TYPE_6_PURSUING;
-									break;
-								case TYPE_6_PURSUING:
-									if ((rand () & 7) > 1) {
-										if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-											en_an_vx [enit] += FANTY_A;
-										else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-											en_an_vx [enit] -= FANTY_A;
-										if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-											en_an_vy [enit] += FANTY_A;
-										else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-											en_an_vy [enit] -= FANTY_A;
-									}
-									
-									#ifdef PLAYER_CAN_HIDE
-										if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE || player_hidden ()) 
-									#else
-										if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE)
-									#endif
-										en_an_state [enit] = TYPE_6_RETREATING;
-									break;
-								case TYPE_6_RETREATING:
-									if ((_en_x << 6) > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+						switch (en_an_state [enit]) {
+							case TYPE_6_IDLE:
+								#ifdef PLAYER_CAN_HIDE
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
+								#else
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
+								#endif
+									en_an_state [enit] = TYPE_6_PURSUING;
+								break;
+							case TYPE_6_PURSUING:
+								if ((rand () & 7) > 1) {
+									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
 										en_an_vx [enit] += FANTY_A;
-									else if ((_en_x << 6) < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
 										en_an_vx [enit] -= FANTY_A;
-									if ((_en_y << 6) > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
 										en_an_vy [enit] += FANTY_A;
-									else if ((_en_y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
 										en_an_vy [enit] -= FANTY_A;
-									
-									#ifdef PLAYER_CAN_HIDE
-										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
-									#else
-										if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
-									#endif
-										en_an_state [enit] = TYPE_6_PURSUING;
-									break;	
-							}
+								}
+								
+								#ifdef PLAYER_CAN_HIDE
+									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE || player_hidden ()) 
+								#else
+									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE)
+								#endif
+									en_an_state [enit] = TYPE_6_RETREATING;
+								break;
+							case TYPE_6_RETREATING:
+								if ((_en_x << 6) > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
+									en_an_vx [enit] += FANTY_A;
+								else if ((_en_x << 6) < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
+									en_an_vx [enit] -= FANTY_A;
+								if ((_en_y << 6) > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
+									en_an_vy [enit] += FANTY_A;
+								else if ((_en_y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
+									en_an_vy [enit] -= FANTY_A;
+								
+								#ifdef PLAYER_CAN_HIDE
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
+								#else
+									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
+								#endif
+									en_an_state [enit] = TYPE_6_PURSUING;
+								break;	
+						}
 
 						if (scenery_info.allow_type_6) {
 							en_an_x [enit] += en_an_vx [enit];
@@ -6046,7 +6096,7 @@ void mueve_bicharracos (void) {
 						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;	
 
-						#else
+					#else
 						#ifndef FANTY_ASSEMBLY
 							#ifdef FANTIES_EXIT_STATE_V
 								if (en_an_state [enit] != 1) 
@@ -6067,14 +6117,16 @@ void mueve_bicharracos (void) {
 								
 							}
 
-						if (scenery_info.allow_type_6) {
-							en_an_x [enit] += en_an_vx [enit];
-							en_an_y [enit] += en_an_vy [enit];
-						}
-						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
-						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
+							if (scenery_info.allow_type_6) {
+								en_an_x [enit] += en_an_vx [enit];
+								en_an_y [enit] += en_an_vy [enit];
+							}
+	
+							if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
+							if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+		
+							if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
+							if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 						#else 
 
 							// New version:

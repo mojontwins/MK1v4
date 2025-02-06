@@ -95,6 +95,21 @@ void main (void) {
 	blackout ();
 	pal_set (my_inks);
 	
+	// Compressed tileset
+	#ifdef COMPRESSED_TS
+		#asm
+			.decompress_ts
+				ld hl, _tilesetc 
+				ld de, _tspatterns
+				#ifdef DECOMPRESSOR_ZX0
+					call dzx0_standard
+				#else
+					call depack
+				#endif
+
+		#endasm	
+	#endif
+	
 	// Set mode
 
 	#ifdef MODE_1
@@ -529,8 +544,15 @@ void main (void) {
 
 			#if !defined DEACTIVATE_KEYS && defined KEYS_X
 				if (player.keys != keys_old) {
-					draw_2_digits (KEYS_X, KEYS_Y, player.keys);
-					keys_old = player.keys;
+					#asm
+						ld  a, OBJECTS_X 
+						ld  (__x), a 
+						ld  a, OBJECTS_Y 
+						ld  (__y), a 
+						ld  a, (_player + 28)		// player.objs
+						ld  (_keys_old), a 
+						call draw_2_digits_shortcut
+					#endasm
 				}
 			#endif
 

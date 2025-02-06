@@ -1,4 +1,4 @@
-// MTE MK1 v4.9
+// MTE MK1 v4.10
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 #ifdef PLAYER_PUSH_BOXES
@@ -23,9 +23,10 @@
 				or l 
 				jr z, move_tile_do
 
-		#endasm
-		play_sfx (8);				
-		#asm				
+				ld  hl, 8
+				push hl
+				call _play_sfx
+				pop bc 
 
 				#ifdef FALLING_BOXES
 					call _fall_box

@@ -724,22 +724,22 @@ extern unsigned char extra_sprite_17_c [];
 ; Sprite #8 y máscara
 ; Primera columna
     ._sprite_9_a
-        defb 0, 255
-        defb 0, 241
-        defb 14, 224
-        defb 31, 192
-        defb 27, 192
-        defb 31, 192
-        defb 14, 224
+        defb 1, 248
+        defb 3, 24
+        defb 66, 8
+        defb 162, 0
+        defb 34, 0
+        defb 35, 0
+        defb 27, 128
+        defb 1, 192
+        defb 0, 248
+        defb 1, 248
+        defb 0, 248
         defb 1, 224
-        defb 31, 192
-        defb 63, 128
-        defb 62, 128
-        defb 31, 192
-        defb 31, 192
-        defb 15, 224
-        defb 3, 240
-        defb 0, 252
+        defb 12, 192
+        defb 19, 192
+        defb 16, 0
+        defb 112, 7
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -751,22 +751,22 @@ extern unsigned char extra_sprite_17_c [];
  
 ; Segunda columna
     ._sprite_9_b
+        defb 128, 31
+        defb 192, 8
+        defb 163, 0
+        defb 165, 0
+        defb 164, 0
+        defb 229, 0
+        defb 104, 0
+        defb 32, 3
+        defb 0, 7
+        defb 240, 0
+        defb 70, 0
+        defb 234, 0
+        defb 82, 0
+        defb 227, 0
+        defb 0, 8
         defb 0, 255
-        defb 0, 255
-        defb 0, 207
-        defb 48, 7
-        defb 120, 3
-        defb 88, 3
-        defb 120, 3
-        defb 184, 3
-        defb 196, 1
-        defb 254, 0
-        defb 30, 0
-        defb 254, 0
-        defb 252, 1
-        defb 248, 3
-        defb 224, 7
-        defb 0, 31
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -806,22 +806,22 @@ extern unsigned char extra_sprite_17_c [];
 ; Sprite #9 y máscara
 ; Primera columna
     ._sprite_10_a
-        defb 0, 241
-        defb 14, 224
-        defb 31, 192
-        defb 27, 192
-        defb 31, 192
-        defb 14, 224
-        defb 1, 224
-        defb 31, 192
-        defb 63, 128
-        defb 60, 128
-        defb 56, 128
-        defb 28, 192
-        defb 31, 192
-        defb 15, 224
-        defb 3, 240
-        defb 0, 252
+        defb 1, 248
+        defb 3, 16
+        defb 197, 0
+        defb 165, 0
+        defb 37, 0
+        defb 167, 0
+        defb 22, 0
+        defb 4, 192
+        defb 0, 224
+        defb 15, 0
+        defb 98, 0
+        defb 87, 0
+        defb 74, 0
+        defb 199, 0
+        defb 0, 16
+        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -833,22 +833,22 @@ extern unsigned char extra_sprite_17_c [];
  
 ; Segunda columna
     ._sprite_10_b
-        defb 0, 255
-        defb 0, 207
-        defb 48, 7
-        defb 120, 3
-        defb 88, 3
-        defb 120, 3
-        defb 184, 3
-        defb 196, 1
-        defb 254, 0
-        defb 30, 0
-        defb 14, 0
-        defb 30, 0
-        defb 252, 1
-        defb 248, 3
-        defb 224, 7
+        defb 128, 31
+        defb 192, 24
+        defb 66, 16
+        defb 69, 0
+        defb 68, 0
+        defb 196, 0
+        defb 216, 1
+        defb 128, 3
         defb 0, 31
+        defb 128, 31
+        defb 0, 31
+        defb 128, 7
+        defb 48, 3
+        defb 200, 3
+        defb 8, 0
+        defb 14, 224
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -888,22 +888,22 @@ extern unsigned char extra_sprite_17_c [];
 ; Sprite #10 y máscara
 ; Primera columna
     ._sprite_11_a
-        defb 0, 248
-        defb 3, 128
-        defb 39, 128
-        defb 42, 128
-        defb 10, 128
-        defb 15, 224
-        defb 6, 192
-        defb 21, 128
-        defb 35, 128
-        defb 56, 128
-        defb 27, 128
-        defb 0, 192
-        defb 1, 248
-        defb 1, 240
         defb 3, 240
-        defb 7, 240
+        defb 6, 240
+        defb 5, 240
+        defb 5, 240
+        defb 5, 240
+        defb 6, 240
+        defb 7, 192
+        defb 27, 128
+        defb 61, 128
+        defb 62, 128
+        defb 63, 128
+        defb 63, 128
+        defb 59, 128
+        defb 28, 128
+        defb 6, 192
+        defb 30, 192
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -915,22 +915,22 @@ extern unsigned char extra_sprite_17_c [];
  
 ; Segunda columna
     ._sprite_11_b
-        defb 0, 71
-        defb 16, 7
-        defb 176, 7
-        defb 160, 7
-        defb 160, 7
-        defb 224, 1
-        defb 236, 0
-        defb 66, 0
-        defb 150, 0
-        defb 54, 0
-        defb 240, 0
-        defb 0, 7
-        defb 64, 15
-        defb 96, 15
-        defb 0, 127
-        defb 0, 127
+        defb 224, 7
+        defb 48, 7
+        defb 208, 7
+        defb 80, 7
+        defb 208, 7
+        defb 48, 7
+        defb 240, 3
+        defb 104, 1
+        defb 220, 1
+        defb 60, 0
+        defb 249, 0
+        defb 249, 0
+        defb 255, 0
+        defb 15, 0
+        defb 0, 224
+        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -970,22 +970,22 @@ extern unsigned char extra_sprite_17_c [];
 ; Sprite #11 y máscara
 ; Primera columna
     ._sprite_12_a
-        defb 0, 226
-        defb 8, 224
-        defb 13, 224
-        defb 5, 224
-        defb 5, 224
-        defb 7, 128
-        defb 55, 0
-        defb 66, 0
-        defb 105, 0
-        defb 108, 0
-        defb 15, 0
-        defb 0, 224
-        defb 2, 240
-        defb 6, 240
-        defb 0, 254
-        defb 0, 254
+        defb 7, 224
+        defb 12, 224
+        defb 11, 224
+        defb 10, 224
+        defb 11, 224
+        defb 12, 224
+        defb 15, 192
+        defb 22, 128
+        defb 59, 128
+        defb 60, 0
+        defb 159, 0
+        defb 159, 0
+        defb 255, 0
+        defb 240, 0
+        defb 0, 7
+        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -997,22 +997,22 @@ extern unsigned char extra_sprite_17_c [];
  
 ; Segunda columna
     ._sprite_12_b
-        defb 0, 31
-        defb 192, 1
-        defb 228, 1
-        defb 84, 1
-        defb 80, 1
-        defb 240, 7
-        defb 96, 3
-        defb 168, 1
-        defb 196, 1
-        defb 28, 1
-        defb 216, 1
-        defb 0, 3
-        defb 128, 31
-        defb 128, 15
         defb 192, 15
-        defb 224, 15
+        defb 96, 15
+        defb 160, 15
+        defb 160, 15
+        defb 160, 15
+        defb 96, 15
+        defb 224, 3
+        defb 216, 1
+        defb 188, 1
+        defb 124, 1
+        defb 252, 1
+        defb 252, 1
+        defb 220, 1
+        defb 56, 1
+        defb 96, 3
+        defb 120, 3
         defb 0, 255
         defb 0, 255
         defb 0, 255
