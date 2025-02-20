@@ -297,7 +297,7 @@
 #define VIEWPORT_X					1		//
 #define VIEWPORT_Y					0		// Viewport character coordinates
 
-#define LIFE_X						28		//
+#define LIFE_X						27		//
 #define LIFE_Y						23		// Life gauge counter character coordinates
 //#define DRAW_HI_DIGIT	
 //#define LIFE_H_X 					1
@@ -425,6 +425,6 @@
 
 unsigned char comportamiento_tiles [] = {
 	0, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8,
-	0, 0, 8, 0, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 8, 8,
+	0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };

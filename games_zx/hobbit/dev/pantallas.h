@@ -121,6 +121,7 @@ void title_screen (void) {
 	}
 
 	after_title:
+	wyz_play_music (8);
 	recuadrius ();
 }
 
@@ -145,8 +146,9 @@ void game_ending (void) {
 		call SPUpdateNow
 	#endasm
 
-	beepet (); play_sfx (11);
-	espera_activa (500);
+	wyz_play_music (9);
+	espera_activa (9999);
+	wyz_play_music (8);
 }
 
 void game_over (void) {

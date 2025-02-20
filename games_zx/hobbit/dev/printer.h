@@ -519,6 +519,8 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			ld  l, (hl)
 			ld  h, a
 
+		// Fill __t=__x, __y, __n, and point hl to the string, then call here
+
 		.draw_text_loop
 			ld  a, (__x)
 			ld  c, a

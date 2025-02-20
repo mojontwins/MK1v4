@@ -269,6 +269,13 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 							  "MAN THAT'S BOTHERING%"
 							  "ME. FIND HIM AND MAKE%"
 							  "HIM GO AWAY!";
+
+	unsigned char mission0[] = "FIND THE WEIRD OLD MAN!";
+	unsigned char mission1[] = "GATHER ALL 13 DWARVES! ";
+	unsigned char mission2[] = "EXPLORE THE BIG CAVE! ";
+	unsigned char mission3[] = "FIND THE MAGICAL RING!";
+	unsigned char mission4[] = "FIND THE TREASURE!    ";
+
 #else
 
 	//                        XXXXXXXXXXXXXXXXXXXXXX
@@ -494,6 +501,12 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 							 "ENCUENTRALO Y HAZ QUE%"
 							 "SE VAYA, BILBOS!";
 
+	unsigned char mission0[] = "BUSCA AL VIEJO PELLEJO";
+	unsigned char mission1[] = "ENCUENTRA LOS 13 NOMOS";
+	unsigned char mission2[] = "EXPLORA LA CUEVA GORDA";
+	unsigned char mission3[] = "BUSCA EL ANILLO,QUILLO";
+	unsigned char mission4[] = "ENCUENTRA EL TESORO!  ";
+
 #endif
 
 unsigned char *texts [] = {
@@ -515,6 +528,10 @@ unsigned char *texts [] = {
 	text37,									// If you know you know
 	text38, text39, text40, text41,			// Fight charmander
 	text42 									// Lil' amador intro
+};
+
+unsigned char *missions[] = {
+	mission0, mission1, mission2, mission3, mission4
 };
 
 unsigned char dwarf_names [] = 
@@ -575,6 +592,31 @@ unsigned char dwarf_names [] =
 		
 		jr  run_cutscene
 #endasm
+
+void update_mission (void) {
+	// Prints mission in rda
+	#asm
+			ld  a, (_rda)
+			sla a 
+			ld  h, 0 
+			ld  l, a 
+			ld  de, _missions
+			add hl, de 
+			ld  a, (hl)
+			inc hl 
+			ld  h, (hl)
+			ld  l, a
+
+			ld  a, 5
+			ld  (__x), a 
+			ld  a, 21 
+			ld  (__y), a 
+			ld  a, 71
+			ld  (__n), a 
+
+			call draw_text_loop
+	#endasm
+}
 
 void insert_dwarf_name (void) {
 	// copy 10 bytes dwarf_ct -> text9 + 19; dwarf_ct += 10
@@ -1408,6 +1450,8 @@ void bilbos_hangover (void) {
 							rda = 0;
 							launch_comecocos_screen ();
 							cocos_count = 65;
+
+							rda = 1; update_mission ();
 						}
 
 						if (gandalf_talk == 2) {
@@ -1423,6 +1467,8 @@ void bilbos_hangover (void) {
 							rda = 1;
 							launch_comecocos_screen ();
 							cocos_count = 65;
+
+							rda = 2; update_mission ();
 						}
 
 					}
@@ -1500,6 +1546,8 @@ void bilbos_hangover (void) {
 							rda = 29; show_text_box ();
 							interact_flag = 1;
 							gallumb_flag = 2;
+
+							rda = 4; update_mission ();
 						} 
 					} else interact_flag = 0;
 				}
@@ -1573,6 +1621,7 @@ void bilbos_hangover (void) {
 						rda = 42; rdb = 26; show_text_box ();
 						amador_talk = 1;
 						on_pant = 0xFF;
+						rda = 0; update_mission ();
 					}
 				}
 		}
@@ -1877,6 +1926,8 @@ void bilbos_hangover (void) {
 					#endasm
 
 					gallumb_flag = 1;
+
+					rda = 3; update_mission ();
 				} 
 
 				if (gallumb_flag == 1) {

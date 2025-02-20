@@ -1161,6 +1161,8 @@ SONG_7:
 	INCBIN "07_gameover.mus.bin"
 SONG_8:
 	INCBIN "08_silence.mus.bin"
+SONG_9:
+	INCBIN "09_ending.mus.bin"
 
 
 ;; Añadir entradas para cada canción
@@ -1174,6 +1176,7 @@ TABLA_SONG:     DW      SONG_0
 				DW      SONG_6
 				DW      SONG_7
 				DW      SONG_8
+				DW      SONG_9
 
 ;; Añadir entradas para cada efecto
 

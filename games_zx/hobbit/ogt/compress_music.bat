@@ -8,3 +8,4 @@
 ..\utils\apack.exe spc_pokemongo.mus 06_pokemos.mus.bin
 ..\utils\apack.exe spc_negros.mus 07_gameover.mus.bin
 ..\utils\apack.exe spc_nomusic.mus 08_silence.mus.bin
+..\utils\apack.exe spc_ending.mus 09_ending.mus.bin

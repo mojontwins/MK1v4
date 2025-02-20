@@ -1961,7 +1961,7 @@ void pk_pl_pickup_attack (void) {
 
 // Attack cycle
 
-void pk_attack_cycle (void) {
+void pk_attack_cycle (void) {	
 	// Show main menu
 	#asm
 			ld  a, 0xff 
@@ -2067,8 +2067,14 @@ void pk_attack_cycle (void) {
 	pa1 = 1; pa2 = pk_op_attack; pk_attack ();
 	pk_update_displays ();
 
+	// Break on HP = 0, so leech seed doesn't break the gameplay & also die ASAP
+	if (pk_data [C_HP] == 0) return;
+
 	pa1 = 0; pa2 = pk_pl_attack; pk_attack ();
 	pk_update_displays ();
+
+	// Break on HP = 0, so  die ASAP
+	if (pk_data [C_HP + OPPONENT_OFFSET] == 0) return;
 
 	// Execute status effects
 	// "XXXX" IS HURT BY THE BURN!
