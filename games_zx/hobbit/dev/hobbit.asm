@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Feb 11 11:54:39 2025
+;	Module compile time: Fri Feb 21 12:01:35 2025
 
 
 
@@ -92,16 +92,16 @@
 	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
 	defb	0
@@ -6725,6 +6725,9 @@
 	pop	bc
 	ld	hl,1 % 256	;const
 	call	_wyz_play_music
+	ld	hl,0 % 256	;const
+	ld	a,l
+	ld	(_n_pant),a
 	ret
 
 
@@ -9463,64 +9466,89 @@
 	ld	a,h
 	or	l
 	jp	z,i_267
+	.en_linear_horizontal_axis
 	ld a, (__en_mx)
+	or a
+	jr z, en_linear_horizontal_axis_done
 	ld c, a
 	ld a, (__en_x)
 	add c
 	ld (__en_x), a
-	ld a, (__en_my)
-	ld c, a
-	ld a, (__en_y)
-	add c
-	ld (__en_y), a
 	.en_linear_horz_bounds
 	ld a, (__en_x)
 	ld c, a
 	ld a, (__en_x1)
 	cp c
 	jr c, horz_limit_skip_1
+	ld a, (__en_x1)
+	ld (__en_x), a
+	ld a, (__en_t)
+	cp 11
+	jr nc, en_linear_decide_for_marrullers
 	ld a, (__en_mx)
 	call _abs_a
 	ld (__en_mx), a
-	ld a, (__en_x1)
-	ld (__en_x), a
 	.horz_limit_skip_1
 	ld a, (__en_x2)
 	ld c, a
 	ld a, (__en_x)
 	cp c
 	jr c, horz_limit_skip_2
+	ld a, (__en_x2)
+	ld (__en_x), a
+	ld a, (__en_t)
+	cp 11
+	jr nc, en_linear_decide_for_marrullers
 	ld a, (__en_mx)
 	call _abs_a
 	neg
 	ld (__en_mx), a
-	ld a, (__en_x2)
-	ld (__en_x), a
 	.horz_limit_skip_2
+	.en_linear_horizontal_axis_done
+	.en_linear_vertical_axis
+	ld a, (__en_my)
+	or a
+	jr z, en_linear_vertical_axis_done
+	ld c, a
+	ld a, (__en_y)
+	add c
+	ld (__en_y), a
 	.en_linear_vert_bounds
 	ld a, (__en_y)
 	ld c, a
 	ld a, (__en_y1)
 	cp c
 	jr c, vert_limit_skip_1
+	ld a, (__en_y1)
+	ld (__en_y), a
+	ld a, (__en_t)
+	cp 11
+	jr nc, en_linear_decide_for_marrullers
 	ld a, (__en_my)
 	call _abs_a
 	ld (__en_my), a
-	ld a, (__en_y1)
-	ld (__en_y), a
 	.vert_limit_skip_1
 	ld a, (__en_y2)
 	ld c, a
 	ld a, (__en_y)
 	cp c
 	jr c, vert_limit_skip_2
+	ld a, (__en_y2)
+	ld (__en_y), a
+	ld a, (__en_t)
+	cp 11
+	jr nc, en_linear_decide_for_marrullers
 	ld a, (__en_my)
 	call _abs_a
 	neg
 	ld (__en_my), a
-	ld a, (__en_y2)
-	ld (__en_y), a
 	.vert_limit_skip_2
+	.en_linear_vertical_axis_done
+	jr en_linear_done
+	.en_linear_decide_for_marrullers
+	call _marrullers_select_direction
+	jp _en_bg_collision_end
+	.en_linear_done
 .i_267
 	ld	a,(__en_t)
 	cp	#(7 % 256)
@@ -10228,7 +10256,7 @@
 	jr z, draw_life_do
 	ld hl, 0
 	.draw_life_do
-	ld a, 28
+	ld a, 27
 	ld (__x), a
 	ld a, 23
 	ld (__y), a

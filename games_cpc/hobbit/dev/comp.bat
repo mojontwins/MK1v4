@@ -35,7 +35,7 @@ del trpixlutc.bin > nul 2> nul
 ..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c -DLANG_%lang% > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg -o %game%.bin system\tilemap_conf.asm churromain.c -DLANG_%lang% > nul
 rem zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c -DLANG_%lang% > nul
 
 ..\utils\printsize.exe %game%.bin

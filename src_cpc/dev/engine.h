@@ -5547,6 +5547,7 @@ void mueve_bicharracos (void) {
 			#endif
 			{
 
+				// Basic linear movement x = x + mx, etc.
 				if (
 					_en_t <= 4
 					#ifdef RANDOM_RESPAWN
@@ -5568,27 +5569,31 @@ void mueve_bicharracos (void) {
 					*/
 					#asm
 						
-						// _en_x += _en_mx;
+						// ***************
+						// HORIZONTAL AXIS
+						// ***************
+						.en_linear_horizontal_axis
 							ld  a, (__en_mx)
+							or  a
+							jr  z, en_linear_horizontal_axis_done
+
+							// Move: en_x += _en_mx;
 							ld  c, a
 							ld  a, (__en_x)
 							add c 
 							ld  (__en_x), a
 
-						// _en_y += _en_my;
-							ld  a, (__en_my)
-							ld  c, a
-							ld  a, (__en_y)
-							add c 
-							ld  (__en_y), a
-
-						#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
-							ld  a, (__en_t)
-							cp  11
-							jr  nc, vert_limit_skip_2
-						#endif
+							#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
+								// In this case, marrullers don't care about boundaries.
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_horizontal_axis_done
+							#endif
 						
+						// Now check horz. boundaries
 						.en_linear_horz_bounds
+
+							// Left of x1
 							// _en_x <= _en_x1 -> _en_x1 >= _en_x
 							ld  a, (__en_x)
 							ld  c, a
@@ -5596,17 +5601,25 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, horz_limit_skip_1
 
-							ld  a, (__en_mx)
-							call _abs_a
-							ld  (__en_mx), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_x1)
 								ld  (__en_x), a
 							#endif
 
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_mx)
+							call _abs_a
+							ld  (__en_mx), a
+
 						.horz_limit_skip_1
 
+							// Right of x2
 							// _en_x >= _en_x2
 							ld  a, (__en_x2)
 							ld  c, a
@@ -5614,19 +5627,52 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, horz_limit_skip_2
 
-							ld  a, (__en_mx)
-							call _abs_a
-							neg
-							ld  (__en_mx), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_x2)
 								ld  (__en_x), a
 							#endif
 
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_mx)
+							call _abs_a
+							neg
+							ld  (__en_mx), a
+
 						.horz_limit_skip_2
 
+
+						.en_linear_horizontal_axis_done
+
+						// *************
+						// VERTICAL AXIS
+						// *************
+						.en_linear_vertical_axis
+							ld  a, (__en_my) 
+							or  a 
+							jr  z, en_linear_vertical_axis_done
+
+							// Move: _en_y += _en_my;
+							ld  c, a
+							ld  a, (__en_y)
+							add c 
+							ld  (__en_y), a
+
+							#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
+								// In this case, marrullers don't care about boundaries.
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_vertical_axis_done
+							#endif
+
+						// Now check vert. boundaries
 						.en_linear_vert_bounds
+
 							// _en_y <= _en_y1 -> _en_y1 >= _en_y
 							ld  a, (__en_y)
 							ld  c, a
@@ -5634,14 +5680,21 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, vert_limit_skip_1
 
-							ld  a, (__en_my)
-							call _abs_a
-							ld  (__en_my), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_y1)
 								ld  (__en_y), a
 							#endif
+
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_my)
+							call _abs_a
+							ld  (__en_my), a
 
 						.vert_limit_skip_1
 
@@ -5652,17 +5705,35 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, vert_limit_skip_2
 
-							ld  a, (__en_my)
-							call _abs_a
-							neg
-							ld  (__en_my), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_y2)
 								ld  (__en_y), a
 							#endif
 
-						.vert_limit_skip_2
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_my)
+							call _abs_a
+							neg
+							ld  (__en_my), a
+
+						.vert_limit_skip_2		
+
+						.en_linear_vertical_axis_done
+
+						#if defined ENABLE_MARRULLERS
+								jr en_linear_done
+							.en_linear_decide_for_marrullers							
+								call _marrullers_select_direction
+								jp _en_bg_collision_end 				// VERY DANGEROUS BUT...
+						#endif
+
+						.en_linear_done
 
 					#endasm
 				}
@@ -6465,10 +6536,9 @@ void mueve_bicharracos (void) {
 							srl a
 							ld  (_en_yy), a
 							ret
-
-						._en_bg_collision_end
 					#endasm
 				#endif
+				._en_bg_collision_end
 
 				// Animate
 				/*

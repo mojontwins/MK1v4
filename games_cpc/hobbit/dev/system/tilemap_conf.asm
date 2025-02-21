@@ -135,4 +135,5 @@
 ;Rutinas para transferir bloques independientes a la pantalla
 	
 .behindtilemasks
+XDEF behindtilemasks
 	INCLUDE "system/behindtilemasks.asm"
