@@ -13,6 +13,7 @@ if [%1]==[justcompile] goto :compile
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\font.png out=font.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=strait2x2 greyordered in=..\gfx\work.png out=work.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\poketiles.png out=poketiles.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites.png out=sprites.bin mappings=spriteset_mappings.h max=16 pixelperfectm0 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
@@ -23,6 +24,8 @@ if [%1]==[justcompile] goto :compile
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
 ..\utils\zx0.exe title.bin titlec.bin > nul
 ..\utils\zx0.exe ending.bin endingc.bin > nul
+..\utils\zx0.exe work.bin tilesetc.bin > nul
+..\utils\zx0.exe poketiles.bin poketilesc.bin > nul
 
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 cpc > nul

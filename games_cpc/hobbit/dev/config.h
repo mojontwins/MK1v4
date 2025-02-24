@@ -11,7 +11,7 @@
 
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
 #define DECOMPRESSOR_ZX0					// User Einar Saukas' ZX0 rather than aplib
-//#define COMPRESSED_TS 			2		// See manual!
+#define COMPRESSED_TS 						// See manual!
 
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
 #define BLACK_PEN		 			1		// Which pen is black?
