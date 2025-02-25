@@ -838,7 +838,6 @@ void pk_simple_menu (void) {
 	#endasm
 }
 
-
 void pk_pad_wait (void) {
 	#asm
 			ld  a, 1

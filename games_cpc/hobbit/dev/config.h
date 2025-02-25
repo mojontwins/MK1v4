@@ -81,8 +81,8 @@
 //#define ENEMIES_COLLIDE_MASK 		8
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
 
-//#define PACKED_ENEMS 						// Packed XY1, XY2 format.
-//#define FIXED_ENEMS_LIMITS 				// x1, x2, y1, y2 won't change.
+#define PACKED_ENEMS 						// Packed XY1, XY2 format.
+#define FIXED_ENEMS_LIMITS 					// x1, x2, y1, y2 won't change.
 
 // Coins engine
 // ------------
@@ -335,7 +335,7 @@
 //#define UNPACKED_MAP						// Full, uncompressed maps. Shadows settings are ignored.
 //#define COLUMN_MAP 						// Do not check horizontal screen flicks
 //#define ROW_MAP 							// Do not check vertical screen flicks
-//#define NO_ALT_BG							// No alternative tile 19 for bg = 0
+#define NO_ALT_BG							// No alternative tile 19 for bg = 0
 #define NO_MAX_ENEMS						// Less than 3 enems in some screens
 //#define PLAYER_ALTERNATE_ANIMATION		// If defined, animation is 1,2,3,1,2,3... 
 //#define TWO_SETS							// If defined, two sets of tiles. Second set is activated if

@@ -599,6 +599,10 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 			dec hl
 			ld  a, (hl)
 			
+			// You may call here with __x, __y prefilled 
+			// and the number in A.
+			
+		.draw_2_digits_shortcut
 			ld  d, 0
 			ld  e, a
 			ld  hl, 10
@@ -697,8 +701,7 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			dec a
 			ld  e, a
 			call cpc_InvalidateRect
-
-			
+	
 	#endasm
 }
 

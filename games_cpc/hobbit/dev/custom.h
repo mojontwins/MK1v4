@@ -1281,7 +1281,7 @@ void bilbos_hangover (void) {
 // Pokemon engine!
 // ***************
 
-#include "pokemon.h"
+//#include "pokemon.h"
 
 #ifdef ENABLE_CODE_HOOKS
 
@@ -1333,6 +1333,357 @@ void bilbos_hangover (void) {
 			anillo_uses = 0;
 			just_passed_out = 0;
 		}
+	}
+
+	void interactions (void) {
+		#asm
+				ld  a, (_n_pant)
+				cp  0
+				jp  z, room_00
+				cp  1
+				jp  z, room_01
+				cp  5
+				jp  z, room_05
+				cp  12
+				jp  z, room_12
+				cp  17
+				jp  z, room_17
+				cp  24
+				jp  z, room_24
+				cp  28
+				jp  z, room_28
+				ret
+
+			.no_interact_and_ret
+				xor a 
+				ld  (_interact_flag), a 
+				ret
+
+
+			.interact_and_ret
+				ld  a, 1
+				ld  (_interact_flag), a 
+				ret
+
+
+		// ********************************************************************
+			.room_00
+				// GANDALF
+
+				ld  a, 2*16
+				ld  (__x), a 
+				ld  (__y), a 
+				call _touch_tile
+				ld  a, l
+				or  a
+				jr  z, no_interact_and_ret
+
+				ld  a, (_interact_flag) 
+				or  a
+				ret  nz
+
+			// if (gandalf_talk == 1 && player.objs < 13) {
+				ld  a, (_gandalf_talk)
+				cp  1 
+				jr  nz, int_gandalf_t1_done
+
+				ld  a, (_player+27)		// player.objs
+				cp  13
+				jr  nc, int_gandalf_t1_done
+
+				ld  a, 46
+				ld  (_rdb), a 
+				ld  a, 7
+				ld  (_rda), a
+				call _show_text_box
+
+			.int_gandalf_t1_done
+
+			// if (gandalf_talk == 0)
+				ld  a, (_gandalf_talk)
+				or  a
+				jr  nz, int_gandalf_t2_done
+
+				ld  hl, cuts0
+				call run_cutscene
+
+				ld  a, 1
+				ld  (_gandalf_talk), a 
+
+				// Reset this to reuse as dwarf name pointer
+				xor a
+				ld  (_dwarf_ct), a
+
+				// But first, fire up comecocos #0
+				ld  (_rda), a
+				call _launch_comecocos_screen
+				ld  a, 65
+				ld  (_cocos_count), a 
+				ld  a, 1 
+				ld  (_rda), a
+				call _update_mission
+
+			.int_gandalf_t2_done
+
+			// if (gandalf_talk == 2) {
+				ld  a, (_gandalf_talk)
+				cp  2
+				jr  nz, int_gandalf_t3_done
+
+				ld  a, 46
+				ld  (_rdb), a 
+				ld  a, 8
+				ld  (_rda), a
+				call _show_text_box
+
+			.int_gandalf_t3_done
+
+			// if (player.objs == 13 && gandalf_talk == 1) {
+				ld  a, (_gandalf_talk)
+				cp  1
+				jr  nz, int_gandalf_t4_done
+
+				ld  a, (_player+27) 		// player.objs
+				cp  13
+				jr  nz, int_gandalf_t4_done
+
+				ld  a, 46
+				ld  (_rdb), a 
+				ld  a, 18
+				ld  (_rda), a 
+				call _show_text_box
+
+				ld  a, 2 
+				ld  (_gandalf_talk), a 
+				xor a 
+				ld  (_player+27), a 		// player.objs
+
+				ld  a, 1
+				ld  (_rda), a 
+				call _launch_comecocos_screen
+				ld  a, 65
+				ld  (_cocos_count), a
+
+				ld  a, 2 
+				ld  (_rda), a 
+				call _update_mission
+
+			.int_gandalf_t4_done
+				jp interact_and_ret
+
+		// ********************************************************************
+			.room_01
+				
+				// Moto seminueva
+				ld  a, (_gpx)
+	
+				// if (gpx > 48 && gpx < 88 && gpy < 32) {
+
+				// gpx > 48 -> gpx >= 49
+				cp  49 
+				jp  c, no_interact_and_ret			
+
+				// gpx < 88
+				cp  88
+				jp  nc, no_interact_and_ret
+
+				// gpy < 32
+				ld  a, (_gpy)
+				cp  32
+				jp  nc, no_interact_and_ret
+
+				ld  a, (_interact_flag)
+				or  a
+				ret nz 
+
+				ld  a, 35
+				ld  (_rdb), a 
+				ld  a, 10
+				ld  (_rda), a 
+				call _show_text_box		
+
+				jp  interact_and_ret
+
+		// ********************************************************************
+			.room_05
+				
+				// Smaug / Charmander
+
+				// if (gpx < 12*16) {
+				ld  a, (_gpx)
+				cp  12*16
+				ret nc
+
+				ld  a, (_smaug_talk)
+				or  a
+				ret nz 
+
+				ld  hl, cuts4
+				call run_cutscene
+
+				// *********** POKEMON ****************
+				/*
+				saca_a_todo_el_mundo_de_aqui ();
+				wyz_play_music (6); 		// Pokemon
+				pokemon_combat ();
+				wyz_play_music (3); 		// Cave
+
+				if(pk_win) {
+					game_loop_flag = 1;
+
+				} else {
+					// If lose -> one life less, throw right	
+					on_pant = 0xff;						
+					player.vx = 256;
+					player.is_dead = 1;
+				}
+				*/
+
+				ret
+
+		// ********************************************************************
+			.room_12
+
+				// Gallumb gets angry!
+				ld  a, (_gallumb_flag)
+				cp  1 
+				ret nz
+
+				ld  a, 7*16
+				ld  (__x), a 
+				ld  a, 9*16
+				ld  (__y), a 
+				call _touch_tile
+				ld  a, l
+				or  a
+				jp  z, no_interact_and_ret
+
+				ld  a, (_interact_flag)
+				or  a
+				ret nz
+
+				ld  a, 33
+				ld  (_rdb), a
+				ld  a, 29
+				ld  (_rda), a
+				call _show_text_box
+
+				ld  a, 2
+				ld  (_gallumb_flag), a
+				ld  a, 4 
+				ld  (_rda), a 
+				call _update_mission
+
+				jp  interact_and_ret
+
+		// ********************************************************************
+			.room_17
+
+				// Sonia la momia
+				ld  a, (_sonia_talk)
+				or  a 
+				ret nz 
+
+				ld  a, 12*16
+				ld  (__x), a 
+				ld  a, 3*16
+				ld  (__y), a 
+				call _touch_tile
+				ld  a, l
+				or  a
+				jp  z, no_interact_and_ret
+
+				ld  a, (_interact_flag)
+				or  a
+				ret nz
+
+				ld  hl, cuts1 
+				call run_cutscene 
+
+				ld  a, 2
+				ld  (_rda), a 
+				call _launch_comecocos_screen 
+
+				ld  a, 65
+				ld  (_cocos_count), a 
+
+				ld  a, 1
+				ld  (_sonia_talk), a
+
+				jp  interact_and_ret
+
+		// ********************************************************************
+			.room_24
+
+				// Enano en la cueva
+				ld  a, (_dwarf_talk)
+				or  a 
+				ret nz 
+
+				ld  a, 9*16
+				ld  (__x), a 
+				ld  a, 7*16
+				ld  (__y), a 
+				call _touch_tile
+				ld  a, l
+				or  a
+				jp  z, no_interact_and_ret
+
+				ld  a, (_interact_flag)
+				or  a
+				ret nz
+
+				ld  hl, cuts2
+				call run_cutscene 
+
+				ld  a, 1
+				ld  (_dwarf_talk), a 
+
+				ld  a, 3
+				ld  (_gandalf_talk), a 
+
+				ld  a, 0xff 
+				ld  (_on_pant), a 
+
+				#endasm 
+				wyz_play_music (3);
+				#asm
+
+				jp  interact_and_ret
+
+		// ********************************************************************
+			.room_28
+
+				// Amador
+				ld  a, (_amador_talk)
+				or  a  
+				ret nz 
+
+				ld  a, 8*16
+				ld  (__x), a 
+				ld  a, 6*16
+				ld  (__y), a 
+				call _touch_tile
+				ld  a, l
+				or  a
+				jp  z, no_interact_and_ret
+
+				ld  a, 42
+				ld  (_rda), a 
+				ld  a, 26
+				ld  (_rdb), a 
+				call _show_text_box 
+
+				ld  a, 1 
+				ld  (_amador_talk), a 
+
+				ld  a, 0xff 
+				ld  (_on_pant), a 
+
+				xor a 
+				ld  (_rda), a 
+				call _update_mission
+		#endasm
 	}
 
 	void hook_mainloop (void) {
@@ -1440,215 +1791,7 @@ void bilbos_hangover (void) {
 		#endasm
 
 		// Interactions
-		switch(n_pant) {
-			case 0:
-				// Gandalf
-				_x = _y = 2 << 4; if (touch_tile ()) {
-					if (interact_flag == 0) {
-						if (gandalf_talk == 1 && player.objs < 13) {
-							rdb = 46; rda = 7; show_text_box ();
-						} 
-
-						if (gandalf_talk == 0) {
-							/*
-							rdb = 46;
-							rda = 4; show_text_box ();
-							rda = 5; show_text_box ();
-							rdb = 47; rda = 6; show_text_box ();
-							*/
-							#asm
-									ld  hl, cuts0 
-									call run_cutscene
-							#endasm
-
-							gandalf_talk = 1;
-
-							// Reset this to reuse as dwarf name pointer
-							dwarf_ct = 0;
-
-							// But first, fire up comecocos #0
-							rda = 0;
-							launch_comecocos_screen ();
-							cocos_count = 65;
-
-							rda = 1; update_mission ();
-						}
-
-						if (gandalf_talk == 2) {
-							rdb = 46; rda = 8; show_text_box ();
-						}
-
-						if (player.objs == 13 && gandalf_talk == 1) {
-							rdb = 46; rda = 18; show_text_box ();
-							gandalf_talk = 2;
-							player.objs = 0;
-
-							// Fire up comecocos #1
-							rda = 1;
-							launch_comecocos_screen ();
-							cocos_count = 65;
-
-							rda = 2; update_mission ();
-						}
-
-					}
-
-					interact_flag = 1;
-				} else {
-					interact_flag = 0;
-				}
-
-				break;
-
-			case 1:
-				// Moto seminueva
-				if (gpx > 48 && gpx < 88 && gpy < 32) {
-					if (interact_flag == 0) {
-						rdb = 35; rda = 10; show_text_box ();
-						interact_flag = 1;
-					}
-				} else {
-					interact_flag = 0;
-				}
-				
-				break;
-
-			case 5:
-				// Smaug / Charmander
-
-				if (gpx < 12*16) {
-					if (smaug_talk == 0) {
-						// Cutscene
-
-						#asm
-								ld  hl, cuts4
-								call run_cutscene
-						#endasm
-
-						// Pokemon
-						/*
-						#asm
-								// VERY VERY DIRTY CLS
-								ld  hl, SPDisplayList 
-								ld  de, SPDisplayList + 1
-								ld  bc, 3071 
-								xor a 
-								ld  (hl), a 
-								ldir
-						#endasm
-						*/
-
-						/*
-						saca_a_todo_el_mundo_de_aqui ();
-						wyz_play_music (6); 		// Pokemon
-						pokemon_combat ();
-						wyz_play_music (3); 		// Cave
-
-						if(pk_win) {
-							game_loop_flag = 1;
-
-						} else {
-							// If lose -> one life less, throw right	
-							on_pant = 0xff;						
-							player.vx = 256;
-							player.is_dead = 1;
-						}
-						*/
-
-						smaug_talk = 1;
-					}
-				} 
-
-				break;
-
-			case 12:
-				// Gallumb angers
-				if (gallumb_flag == 1) {
-					_x = 7 << 4; _y = 9 << 4; if (touch_tile ()) {
-						if (interact_flag == 0) {
-							rdb = 33;
-							rda = 29; show_text_box ();
-							interact_flag = 1;
-							gallumb_flag = 2;
-
-							rda = 4; update_mission ();
-						} 
-					} else interact_flag = 0;
-				}
-				break;
-
-			case 17:
-				// Sonia
-				if (sonia_talk == 0) {
-					_x = 12 << 4; _y = 3 << 4; if (touch_tile ()) {
-						if (interact_flag == 0) {
-							interact_flag = 1;
-							/*
-							rdb = 47;
-							rda = 22; show_text_box ();
-							rda = 23; show_text_box ();
-							rdb = 34;
-							rda = 24; show_text_box ();
-							*/
-							#asm
-									ld  hl, cuts1 
-									call run_cutscene
-							#endasm
-
-							// Fire up comecocos #2
-							rda = 2;
-							launch_comecocos_screen ();
-							cocos_count = 65;
-							sonia_talk = 1;
-						}
-					} else {
-						interact_flag = 0;
-					}
-				}
-				break;
-
-			case 24:
-				// Enano en la cueva
-				if (dwarf_talk == 0) {
-					_x = 9 << 4; _y = 7 << 4; if (touch_tile ()) {
-						if (interact_flag == 0) {
-							interact_flag = 1;
-
-							/*
-							rdb = 46;
-							rda = 19; show_text_box ();
-							rda = 20; show_text_box ();							
-							rda = 21; show_text_box ();
-							*/
-							#asm
-									ld  hl, cuts2
-									call run_cutscene							
-							#endasm
-
-							dwarf_talk = 1; 
-							gandalf_talk = 3;
-
-							on_pant = 0xFF;
-
-							wyz_play_music (3);		// Cave music
-						}
-					} else {
-						interact_flag = 0;
-					}
-				}
-				break;
-
-			case 28:
-				// Amador
-				if (amador_talk == 0) {
-					_x = 8 << 4; _y = 6 << 4; if (touch_tile ()) {
-						rda = 42; rdb = 26; show_text_box ();
-						amador_talk = 1;
-						on_pant = 0xFF;
-						rda = 0; update_mission ();
-					}
-				}
-		}
+		interactions ();
 
 		// Anillo
 		if (anillo_flag) {
@@ -1839,6 +1982,7 @@ void bilbos_hangover (void) {
 	}
 
 	void hook_hotspots (void) {	
+		/*
 		switch (hotspot_t) {
 			case 1:	
 				// Hook for objects (dwarves)
@@ -1888,6 +2032,102 @@ void bilbos_hangover (void) {
 
 				break;
 		}
+		*/
+
+				#asm
+				ld  a, (_hotspot_t)
+				cp  1
+				jr  z, hook_hotspots_1
+				cp  2
+				jr  z, hook_hotspots_2
+				cp  12
+				jr  z, hook_hotspots_12
+				ret 
+
+
+			.hook_hotspots_1
+				// Hook for objects (dwarves)
+				ld  a, (_gandalf_talk)
+				or  a 
+				jr  nz, hh_gandalf_talked
+
+			.hh_gandalf_not_talked
+				ld  a, (_dwarf_ct) 
+				ld  (_rda), a 
+				inc a
+				and 3 
+				ld  (_dwarf_ct), a
+				ld  a, 47
+				ld  (_rdb), a 
+
+				xor a 
+				ld  (_hotspot_t), a
+
+				jp _show_text_box
+
+			.hh_gandalf_talked
+				call _insert_dwarf_name
+				ld  a, 9
+				ld  (_rda), a 
+				ld  a, 17
+				ld  (_rdb), a 
+				jp  _show_text_box
+
+
+			.hook_hotspots_2
+				// Anillo
+				#endasm
+				draw_coloured_tile (19, 22, 18);
+				#asm
+
+				ld  a, 18
+				ld  (_rdb), a 
+				ld  a, 25
+				ld  (_rda), a 
+				call _show_text_box 
+
+				// We'll be changing current n_pant from a
+				// hotspot interaction so we have to do this
+				// manually!
+				#endasm
+				hotspots [n_pant].act = 0;
+				#asm 
+
+				// Disable normal interaction 
+				xor a 
+				ld  (_hotspot_t), a 
+
+				// Fire up comecocos #3
+				ld  a, 3
+				ld  (_rda), a 
+				call _launch_comecocos_screen
+				ld  a, 55
+				ld  (_cocos_count), a
+
+				ret
+
+			.hook_hotspots_12
+				// Special mushroom for pacman stages
+
+				ld  a, (_player + 23) 		// player.estado
+				or  a
+				jr  nz, hh12_has_estado
+
+				ld  a, EST_PARP
+				ld  (_player + 23), a 
+				ld  a, 150
+				ld  (_player + 24), a 		// player.ct_estado
+
+			.hh12_has_estado
+				#endasm
+				wyz_play_sound (6);
+				#asm
+
+				// Disable normal interaction 
+				xor a 
+				ld  (_hotspot_t), a 
+				
+		#endasm
 	}
 
 	int hook_game_over (void) {
@@ -1922,6 +2162,7 @@ void bilbos_hangover (void) {
 
 #ifdef ENEMS_CUSTOM_COLLISION
 	unsigned char enems_custom_collision (void) {
+		/*
 		if(_en_t == 3) {
 			// Custom collision with Gallumb
 			
@@ -1937,13 +2178,7 @@ void bilbos_hangover (void) {
 			} else {
 
 				if(gallumb_flag == 0) {
-					/*
-					rdb = 33; 
-					rda = 27; show_text_box ();
-					rda = 28; show_text_box ();
-					rdb = 17; rda = 30; show_text_box ();
-					rdb = 33; rda = 31; show_text_box ();
-					*/
+
 					#asm
 							ld  hl, cuts3
 							call run_cutscene
@@ -1964,5 +2199,52 @@ void bilbos_hangover (void) {
 		} 
 
 		return 0;
+		*/
+
+		#asm
+				ld  hl, 0
+				ld  a, (__en_t)
+				cp  3 
+				ret nz 
+
+				ld  a, (_gallumb_flag) 
+				cp  2 
+				jr  nz, ecc_gallumb_notangry
+
+				ld  a, 32 
+				ld  (_rda), a 
+				inc a 
+				ld  (_rdb), a 
+				call _bilbos_hangover
+
+				ld  a, 3 
+				ld  (_gallumb_flag), a 
+
+				ld  hl, 0
+				ret
+
+			.ecc_gallumb_notangry
+				or  a 					// if(gallumb_flag == 0) {
+				jr  nz, ecc_gallumb_repel
+
+				ld  hl, cuts3 
+				call run_cutscene
+
+				ld  a, 1 
+				ld  (_gallumb_flag), a 
+				ld  a, 3 
+				ld  (_rda), a 
+				call _update_mission 
+				ld  hl, 0 
+				ret 
+
+			.ecc_gallumb_repel				
+				ld  hl, (_player) 
+				ld  de, -256
+				add hl, de 
+				ld  (_player), hl 
+				ld  hl, 1 
+				ret	
+		#endasm
 	}
 #endif
