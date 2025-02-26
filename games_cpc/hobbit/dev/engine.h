@@ -181,7 +181,12 @@ void calc_baddies_pointer (void) {
 }
 
 void render_all_sprites (void) {
-	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+	#ifdef INDEXED_ENEMS
+		for (enit = 0; enit < n_enems; enit ++)
+	#else
+		for (enit = 0; enit < MAX_ENEMS; enit ++)
+	#endif
+	{
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 			#ifdef RANDOM_RESPAWN
 				if (en_an_fanty_activo [enit])
@@ -595,7 +600,7 @@ unsigned int __FASTCALL__ abs (int n) {
 			// 0  1  2    3    4   5   6   7
 			// x, y, xy1, xy2, mx, my, t[, life]
 
-			ld  bc, MAP_W * MAP_H * MAX_ENEMS
+			ld  bc, TOTAL_EXISTING_ENEMS
 			#if defined PACKED_ENEMS
 				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 					ld  de, 8
@@ -5120,11 +5125,11 @@ void draw_scr (void) {
 		invalidate_viewport();
 
 		#ifdef SHOW_LEVEL_SUBLEVEL
-			draw_text (VIEWPORT_X + 9, VIEWPORT_Y + 10, 71, cad_level);
+			draw_text (VIEWPORT_X + 9, VIEWPORT_Y + 10, cad_level);
 			draw_2_digits (VIEWPORT_X + 16, VIEWPORT_Y + 10, 1+(n_pant / MAP_W));
 			draw_2_digits (VIEWPORT_X + 19, VIEWPORT_Y + 10, 1+(n_pant % MAP_W));
 		#else
-			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, 71, cad_level);
+			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, cad_level);
 			draw_2_digits (VIEWPORT_X + 17, VIEWPORT_Y + 10, (n_pant+1));
 		#endif
 		cpc_UpdScr ();
@@ -5161,13 +5166,20 @@ void draw_scr (void) {
 		._enems_init
 	#endasm
 	
-	enoffs = n_pant * MAX_ENEMS;
+	// Initialising enemies
+	#ifdef INDEXED_ENEMS
+		enoffs = enoffs_index [n_pant];
+		n_enems = enoffs_index [n_pant + 1] - enoffs;
+	#else 
+		enoffs = n_pant * MAX_ENEMS;
+	#endif
 
 	#ifdef COUNT_KILLABLE_ON
 		flags [COUNT_KILLABLE_ON] = 0;
 	#endif
 
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+
 		/*
 		en_an_frame [enit] = 0;
 		en_an_state [enit] = 0;
@@ -5190,8 +5202,12 @@ void draw_scr (void) {
 				ld  (_enoffsmasi), hl
 		#endasm
 
-		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) 
+		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) || defined INDEXED_ENEMS
 			en_an_next_frame [enit] = sprite_18_a;
+		#endif
+
+		#ifdef INDEXED_ENEMS
+			if (enit >= n_enems) continue;
 		#endif
 		
 		#ifdef RANDOM_RESPAWN
@@ -5254,8 +5270,22 @@ void draw_scr (void) {
 				case 13:
 				case 14:
 					enems_en_an_calc (_en_t - 11);
-					malotes [enoffsmasi].x &= 0xf0;
-					malotes [enoffsmasi].y &= 0xf0;
+
+					//malotes [enoffsmasi].x &= 0xf0;
+					//malotes [enoffsmasi].y &= 0xf0;
+
+					#asm 
+							ld  hl, _enoffsmasi
+							call _calc_baddies_pointer
+							ld  a, (hl)
+							and 0xf0 
+							ld  (hl), a 
+							inc hl 
+							ld  a, (hl)
+							and 0xf0 
+							ld  (hl), a 
+					#endasm
+					
 					en_an_ff [enit] = abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].my);
 					break;
 			#endif
@@ -5296,7 +5326,7 @@ void draw_scr (void) {
 					xor a
 					ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
 			#endasm
-			draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+			draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, line_of_text_clear);
 		#endif
 
 		// Run "ENTERING ANY" script (if available)
@@ -5427,7 +5457,12 @@ void mueve_bicharracos (void) {
 	player.gotten = 0;
 	ptgmx =  ptgmy = 0;
 	
-	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+	#ifdef INDEXED_ENEMS
+		for (enit = 0; enit < n_enems; enit ++) 
+	#else
+		for (enit = 0; enit < MAX_ENEMS; enit ++) 
+	#endif
+	{
 		enoffsmasi = enoffs + enit;
 
 		// Copy array values to temporary variables as fast as possible
@@ -5547,6 +5582,7 @@ void mueve_bicharracos (void) {
 			#endif
 			{
 
+				// Basic linear movement x = x + mx, etc.
 				if (
 					_en_t <= 4
 					#ifdef RANDOM_RESPAWN
@@ -5568,27 +5604,31 @@ void mueve_bicharracos (void) {
 					*/
 					#asm
 						
-						// _en_x += _en_mx;
+						// ***************
+						// HORIZONTAL AXIS
+						// ***************
+						.en_linear_horizontal_axis
 							ld  a, (__en_mx)
+							or  a
+							jr  z, en_linear_horizontal_axis_done
+
+							// Move: en_x += _en_mx;
 							ld  c, a
 							ld  a, (__en_x)
 							add c 
 							ld  (__en_x), a
 
-						// _en_y += _en_my;
-							ld  a, (__en_my)
-							ld  c, a
-							ld  a, (__en_y)
-							add c 
-							ld  (__en_y), a
-
 						#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
+								// In this case, marrullers don't care about boundaries.
 							ld  a, (__en_t)
 							cp  11
-							jr  nc, vert_limit_skip_2
+								jr  nc, en_linear_horizontal_axis_done
 						#endif
 						
+						// Now check horz. boundaries
 						.en_linear_horz_bounds
+
+							// Left of x1
 							// _en_x <= _en_x1 -> _en_x1 >= _en_x
 							ld  a, (__en_x)
 							ld  c, a
@@ -5596,17 +5636,25 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, horz_limit_skip_1
 
-							ld  a, (__en_mx)
-							call _abs_a
-							ld  (__en_mx), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_x1)
 								ld  (__en_x), a
 							#endif
 
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_mx)
+							call _abs_a
+							ld  (__en_mx), a
+
 						.horz_limit_skip_1
 
+							// Right of x2
 							// _en_x >= _en_x2
 							ld  a, (__en_x2)
 							ld  c, a
@@ -5614,19 +5662,52 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, horz_limit_skip_2
 
-							ld  a, (__en_mx)
-							call _abs_a
-							neg
-							ld  (__en_mx), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_x2)
 								ld  (__en_x), a
 							#endif
 
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_mx)
+							call _abs_a
+							neg
+							ld  (__en_mx), a
+
 						.horz_limit_skip_2
 
+
+						.en_linear_horizontal_axis_done
+
+						// *************
+						// VERTICAL AXIS
+						// *************
+						.en_linear_vertical_axis
+							ld  a, (__en_my) 
+							or  a 
+							jr  z, en_linear_vertical_axis_done
+
+							// Move: _en_y += _en_my;
+							ld  c, a
+							ld  a, (__en_y)
+							add c 
+							ld  (__en_y), a
+
+							#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
+								// In this case, marrullers don't care about boundaries.
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_vertical_axis_done
+							#endif
+
+						// Now check vert. boundaries
 						.en_linear_vert_bounds
+
 							// _en_y <= _en_y1 -> _en_y1 >= _en_y
 							ld  a, (__en_y)
 							ld  c, a
@@ -5634,14 +5715,21 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, vert_limit_skip_1
 
-							ld  a, (__en_my)
-							call _abs_a
-							ld  (__en_my), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_y1)
 								ld  (__en_y), a
 							#endif
+
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_my)
+							call _abs_a
+							ld  (__en_my), a
 
 						.vert_limit_skip_1
 
@@ -5652,17 +5740,35 @@ void mueve_bicharracos (void) {
 							cp  c
 							jr  c, vert_limit_skip_2
 
-							ld  a, (__en_my)
-							call _abs_a
-							neg
-							ld  (__en_my), a
-
 							#ifdef ENEMIES_COLLIDE	
 								ld  a, (__en_y2)
 								ld  (__en_y), a
 							#endif
 
-						.vert_limit_skip_2
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_my)
+							call _abs_a
+							neg
+							ld  (__en_my), a
+
+						.vert_limit_skip_2		
+
+						.en_linear_vertical_axis_done
+
+						#if defined ENABLE_MARRULLERS
+								jr en_linear_done
+							.en_linear_decide_for_marrullers							
+								call _marrullers_select_direction
+								jp _en_bg_collision_end 				// VERY DANGEROUS BUT...
+							#endif
+
+						.en_linear_done
 
 					#endasm
 				}
@@ -6466,9 +6572,12 @@ void mueve_bicharracos (void) {
 							ld  (_en_yy), a
 							ret
 
-						._en_bg_collision_end
 					#endasm
 				#endif
+				
+				#asm
+						._en_bg_collision_end
+					#endasm
 
 				// Animate
 				/*

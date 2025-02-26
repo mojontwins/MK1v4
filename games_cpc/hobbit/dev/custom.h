@@ -53,6 +53,9 @@ unsigned char decos4 [] = { 0x91, 0x19, 0xff };
 // Decos, screen 28
 unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 
+// Decos, ending
+unsigned char decos_ending [] = { 0xAF, 0x57, 0xAA, 0x66, 0xAC, 0x67, 0xAD, 0x68, 0xff };
+
 #ifdef LANG_EN
 	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
@@ -130,10 +133,7 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 							 "IS BILBO DOMINATING%"
 							 "THE RING";
 
-	unsigned char text15[] = "PLACEHOLDER";
-
-	unsigned char text16[] = "PLACEHOLDER";
-
+	
 	unsigned char text17[] = "A DWARF APPROACHES";
 
 	unsigned char text18[] = "_GANDALF%"
@@ -356,9 +356,6 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 							 "QUE DOMINARLA. ESTA%"
 							 "FASE ES LA DOMINASION";
 
-	unsigned char text15[] = "PLACEHOLDER";
-
-	unsigned char text16[] = "PLACEHOLDER";
 
 	unsigned char text17[] = "DE PRONTO LLEGA UN%"
 	                         "NOMO...";
@@ -514,7 +511,7 @@ unsigned char *texts [] = {
 	text9, 									// I am dwarf... write from p+13
 	text10, 								// Moto seminueva
 	text11, text12, text13, text14,
-	text15, text16, text17, 				// Comecocos
+	0, 0, text17, 							// Comecocos
 	text18, 								// Thanks for the dwarves
 	text19, text20, text21,					// Enanito speech
 	text22, text23, text24,					// Sonia	
@@ -822,8 +819,6 @@ void show_text_box (void) {
 	// Text renderer will read the string and
 	// build substrings for draw_text.
 
-	//clear_temp_string ();
-	
 	#asm
 			ld  a, (_rdb)
 			or  a 
@@ -843,15 +838,8 @@ void show_text_box (void) {
 	rdy = 7;
 
 	while (1) {
-		clear_temp_string ();
-		
-		/*
-		draw_text (4, rdy - 1, ATTR_TEXTBOX, temp_string);
-		draw_text (4, rdy, ATTR_TEXTBOX, temp_string);
-		draw_text (4, rdy + 1, ATTR_TEXTBOX, bottom_string);
-		*/			
-
 		#asm
+				call _clear_temp_string
 
 				// Clear line above, only if rdb != 0 or rdy > 7
 				ld  a, (_rdb) 
@@ -933,15 +921,16 @@ void show_text_box (void) {
 
 			.fill_buffer_end
 				ld  (_gp_gen), hl
-		#endasm
+			
+				ld  a, 4
+				ld  (_rdx), a
+				ld  hl, _temp_string
+				call dtcbc_loop
 
-		rdx = 4;
-		#asm 
-			ld  hl, _temp_string
-			call dtcbc_loop
+				ld  a, (_rdy)
+				add 2 
+				ld  (_rdy), a
 		#endasm
-
-		rdy += 2;
 	
 		if (*gp_gen == 0) break;
 		gp_gen ++;
@@ -950,7 +939,8 @@ void show_text_box (void) {
 	cpc_UpdateNow (0);
 	wyz_play_sound (7);
 
-	while (any_key ()); while (!any_key ()); 
+	do { pad_read (); } while (0xff == pad_this_frame);
+
 	if (redraw_after_text) {
 		redraw_from_buffer ();
 		hotspot_paint ();
@@ -1145,8 +1135,7 @@ void draw_cur_screen_decos (void) {
 
 			ld  hl, _decos5
 			ld  (_gp_gen), hl
-			jp _draw_decos
-			ret 
+			jp _draw_decos 
 
 		.dcsd_31
 			ld  a, (_gandalf_talk)
@@ -1170,24 +1159,37 @@ void launch_comecocos_screen(void) {
 			ld  (_xwas), a
 			ld  a, (_gpy)
 			ld  (_ywas), a
+
+			// Clear screen
+			call _recuadrius
+
+			// New n_pant
+			ld  a, (_rda)
+			add 35
+			ld  (_n_pant), a 
+
+			// Show text
+			xor a 
+			ld  (_redraw_after_text), a 
+			ld  (_rdb), a 
+			ld  a, (_rda) 
+			add 11 
+			ld  (_rda), a
+			call _show_text_box
+
+			ld  a, 16
+			ld  (_gpx), a 
+			ld  (_gpy), a 
+			ld  hl, 16*64
+			ld  (_player), hl 		// player.x
+			ld  (_player + 2), hl 	// player.y
+
+			ld  a, 1 
+			ld  (_comecocos_on), a 
+			dec a 
+			ld  (_player + 45), a 	// player.coins
 	#endasm
-
-	// Clear screen
-	recuadrius ();
-
-	// New n_pant
-	n_pant = 35 + rda;
-
-	// Show text
-	redraw_after_text = 0;
-	rdb = 0; rda = 11 + rda; show_text_box ();
-
-	gpx = gpy = 16; player.x = player.y = 16 << 6;
-
 	wyz_play_music (5);
-	comecocos_on = 1;
-	player.coins = 0;
-
 }
 
 void back_from_comecocos_screen(void) {
@@ -1211,10 +1213,14 @@ void back_from_comecocos_screen(void) {
 			ld  (_gpy), a
 			call Ashl16_HL
 			ld  (_player + 2), hl
+
+			// Now n_pant_was contains which comecocos screen just finished
+			ld  hl, _player + 23 		// player.estado 
+			ld  (hl), EST_PARP
+			inc hl 						// player.ct_estado
+			ld  (hl), 50
 	#endasm
 
-	// Now n_pant_was contains which comecocos screen just finished
-	player.estado = EST_PARP; player.ct_estado = 50;			
 }
 
 unsigned char touch_tile (void) {
@@ -1261,27 +1267,38 @@ unsigned char touch_tile (void) {
 }
 
 void bilbos_hangover (void) {
-	redraw_after_text = 0;
-	show_text_box ();
-	recuadrius ();				
+	#asm
+			xor a 
+			ld  (_redraw_after_text), a 
+			call _show_text_box 
+			call _recuadrius 
 
-	// Back to the entrance?
-	if (inside_gallumb_lair) {
-		n_pant = 12; 	
-		player.x = player.y = 2 << 10;
-	} 
-	
-	// Force redraw
-	on_pant = 0xff;
-	
-	just_passed_out = 1;
+			// Back to the entrance?
+			ld  a, (_inside_gallumb_lair)
+			or  a 
+			jr  z, no_gallumb_lair
+			ld  a, 12
+			ld  (_n_pant), a 
+			ld  hl, 2*1024
+			ld  (_player), hl 		// player.x
+			ld  (_player + 2), hl 	// player.y
+		.no_gallumb_lair
+
+			// Force redraw
+			ld  a, 0xff 
+			ld  (_on_pant), a 
+
+			// Signal that just passed out test must be shown
+			ld  a, 1
+			ld  (_just_passed_out), a
+	#endasm
 }
 
 // ***************
 // Pokemon engine!
 // ***************
 
-//#include "pokemon.h"
+#include "pokemon.h"
 
 #ifdef ENABLE_CODE_HOOKS
 
@@ -1313,26 +1330,40 @@ void bilbos_hangover (void) {
 		draw_coloured_tile (19, 22, 0);		
 
 		wyz_play_music (1);
+
+		// Debug
+		//n_pant = 0;
 	}
 
 	void hook_init_mainloop (void) {
-		if (just_passed_out) {
-		
-			if (gallumb_flag == 3) {
-				rda = 33;
-				gallumb_flag = 2;
-			} else {
-				rda = 36;
-			}
+		#asm
+				ld  a, (_just_passed_out)
+				or  a 
+				ret z 
 
-			// Show text
-			redraw_after_text = 0;
-			rdb = 47; show_text_box ();
+				ld  a, (_gallumb_flag) 		// if (gallumb_flag == 3) {
+				cp  3 
+				jr  nz, gallumb_not_3
+				dec a 
+				ld  (_gallumb_flag), a  	// gallumb_flag = 2;
+				ld  a, 33 					// rda = 33;
+				jr  gallumb_rda_set
+			.gallumb_not_3					// } else {
+				ld  a, 36 					// rda = 36;
+			.gallumb_rda_set 				// }
+				ld  (_rda), a
 
-			// Reset flag
-			anillo_uses = 0;
-			just_passed_out = 0;
-		}
+
+				xor a 
+				ld  (_anillo_uses), a 
+				ld  (_just_passed_out) , a
+
+				// Show text
+				ld  (_redraw_after_text), a
+				ld  a, 47
+				ld  (_rdb), a 
+				jp _show_text_box
+		#endasm
 	}
 
 	void interactions (void) {

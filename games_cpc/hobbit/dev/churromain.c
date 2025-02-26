@@ -53,8 +53,8 @@
 #define BASE_ARRAYS 		0xD000 + 0x600
 #define BASE_WYZ 			0xDF80
 #define BASE_SPRITES 		0xE000 + 0x600
+#define BASE_CUSTOM 		0xF000 + 0x600
 #define BASE_LUT			0xF800 + 0x600
-
 
 #define ANIMATED_BASE		0xE800 - MAX_ANIMATED_TILES
 #define PERSIST_BASE 		0xE800 + 0x600

@@ -9,7 +9,7 @@ if [%1]==[justcompile] goto :compile
 
 ..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=7,6 scrsize=15,10 tlock=99 mk1h=mapa.h  > nul
 
-..\utils\ene2h.exe ..\enems\enems.ene enems.h compacted 2bytes marrullers  > nul
+..\utils\ene2h.exe ..\enems\enems.ene enems.h compacted indexed 2bytes marrullers  > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\font.png out=font.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=strait2x2 greyordered in=..\gfx\work.png out=work.bin silent > nul
@@ -20,11 +20,11 @@ if [%1]==[justcompile] goto :compile
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
 ..\utils\mkts_om.exe platform=cpc mode=pals in=..\gfx\pal.png prefix=my_inks out=pal.h silent > nul
 
-..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
+rem ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\pokemon.png out=pokemon.bin silent > nul
 ..\utils\zx0.exe title.bin titlec.bin > nul
-..\utils\zx0.exe ending.bin endingc.bin > nul
+rem ..\utils\zx0.exe ending.bin endingc.bin > nul
 ..\utils\zx0.exe work.bin tilesetc.bin > nul
 ..\utils\zx0.exe pokemon.bin pokemonc.bin > nul
 ..\utils\zx0.exe poketiles.bin poketilesc.bin > nul
@@ -41,7 +41,7 @@ del trpixlutc.bin > nul 2> nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
 zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg -o %game%.bin system\tilemap_conf.asm churromain.c -DLANG_%lang% > nul
-rem zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c -DLANG_%lang% > nul
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_fg -o %game%.asm system\tilemap_conf.asm churromain.c -DLANG_%lang% > nul
 
 ..\utils\printsize.exe %game%.bin
 

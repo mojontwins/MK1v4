@@ -130,20 +130,21 @@ extern unsigned char def_keys [0];
 		defw $4580 		; BUTTON_A SPACE
 		defw $4808 		; BUTTON_B Q
 
-		defw $4204		; KEY_ENTER
-		defw $4804		; KEY_ESC	
-
-		defw $4880		; KEY_AUX1 Z
-		defw $4780 		; KEY_AUX2 X
 		defw $4801 		; KEY_AUX3 1
 		defw $4802 		; KEY_AUX4 2
+		
+		defw $4880		; KEY_AUX1 Z
+		defw $4780 		; KEY_AUX2 X
+
+		defw $4204		; KEY_ENTER
+		defw $4804		; KEY_ESC	
 #endasm
 
 extern unsigned char def_keys_joy [0];
 #asm
 	._def_keys_joy
 		defw 0x4904, 0x4908, 0x4901, 0x4902, 0x4910, 0x4920
-		defw 0x4004, 0x4804, 0x4880, 0x4780, 0x4801, 0x4802
+		defw 0x4801, 0x4802, 0x4880, 0x4780, 0x4204, 0x4804
 #endasm
 
 #define KEY_M 0x4440
@@ -158,18 +159,21 @@ extern unsigned char def_keys_joy [0];
 #define KEY_DOWN 		3
 #define KEY_BUTTON_A	4
 #define KEY_BUTTON_B	5
-#define KEY_ENTER		6
-#define KEY_ESC			7
+#define KEY_AUX3 		6
+#define KEY_AUX4 		7
 #define KEY_AUX1		8
 #define KEY_AUX2		9
-#define KEY_AUX3 		10
-#define KEY_AUX4 		11
+#define KEY_ENTER		10
+#define KEY_ESC			11
 
 #define sp_LEFT           0x01
 #define sp_RIGHT          0x02
 #define sp_UP             0x04		
 #define sp_DOWN           0x08
 #define sp_FIRE           0x10
+#define sp_FIRE2          0x20
+#define sp_AUX3           0x40
+#define sp_AUX4           0x80
 
 // Sprite structs
 
@@ -228,6 +232,9 @@ unsigned char en_tocado = 0;
 unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
 signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
+#ifdef INDEXED_ENEMS
+	unsigned char n_enems;
+#endif
 unsigned char *_baddies_pointer;
 
 #if defined ENABLE_CODE_HOOKS
@@ -342,7 +349,7 @@ unsigned char success;
 unsigned char rdi;
 signed int rdj;
 unsigned char rdx, rdy;
-unsigned char gpit, enit, pad0, pad1, pad_this_frame;
+unsigned char gpit, enit, pad0, pad1 = 0, pad_this_frame = 0;
 unsigned char gpx, gpy, gpxx, gpyy;
 signed int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;

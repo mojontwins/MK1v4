@@ -83,6 +83,7 @@
 
 //#define PACKED_ENEMS 						// Packed XY1, XY2 format.
 //#define FIXED_ENEMS_LIMITS 				// x1, x2, y1, y2 won't change.
+//#define INDEXED_ENEMS 					// Good if you have lots screens with less than MAX_ENEMS
 
 // Coins engine
 // ------------
@@ -222,6 +223,7 @@
 // ---------------------------------
 
 #define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
+//#define MARRULLERS_CONFINED 				// Marrullers will never touch the borders of the screen
 
 // Scripting
 // ---------

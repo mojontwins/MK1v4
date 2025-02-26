@@ -167,7 +167,7 @@ unsigned char str_wipe [] = "               "; // 15 spaces
 // 8 - Attack halved
 #define AST_LOWER_AT 8
 
-extern unsigned char pk_data [];
+extern unsigned char pk_data [160] @ BASE_CUSTOM;
 
 // Reserve 6 bytes for stats HP AT DF SP ST MAXHP 
 // Reserve 10 byte for name
@@ -175,6 +175,7 @@ extern unsigned char pk_data [];
 // If an pk_at PP == 0xff, pk_at not present (not implemented here)
 
 #asm 
+	/*
 	._pk_data
 	._player_stats         defs 6
 	._player_name          defs 10
@@ -182,6 +183,14 @@ extern unsigned char pk_data [];
 	._opponent_stats       defs 6 
 	._opponent_name        defs 10
 	._opponent_attacks     defs 64, 0xFF
+	*/
+
+	defc _player_stats = BASE_CUSTOM
+	defc _player_name = BASE_CUSTOM + 6
+	defc _pk_player_attacks = BASE_CUSTOM + 16
+	defc _opponent_stats = BASE_CUSTOM + 80
+	defc _opponent_name = BASE_CUSTOM + 86
+	defc _opponent_attacks = BASE_CUSTOM + 96
 #endasm
 
 #define ATTACKS_OFFSET 16

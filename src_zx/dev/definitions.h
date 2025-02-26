@@ -178,6 +178,9 @@ unsigned char en_tocado = 0;
 unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
 signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
+#ifdef INDEXED_ENEMS
+	unsigned char n_enems;
+#endif
 unsigned char *_baddies_pointer;
 
 #if defined ENABLE_CODE_HOOKS

@@ -21,6 +21,9 @@
 #define SOUND_WYZ
 #define WYZ_FX_CHANNEL 				1		// Where to play sound effects
 
+//#define NO_COMPRESSED_TITLE_SCR
+#define NO_COMPRESSED_ENDING_SCR
+
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W						7		//
@@ -83,6 +86,7 @@
 
 #define PACKED_ENEMS 						// Packed XY1, XY2 format.
 #define FIXED_ENEMS_LIMITS 					// x1, x2, y1, y2 won't change.
+#define INDEXED_ENEMS 						// Good if you have lots screens with less than MAX_ENEMS
 
 // Coins engine
 // ------------

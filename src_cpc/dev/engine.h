@@ -181,7 +181,12 @@ void calc_baddies_pointer (void) {
 }
 
 void render_all_sprites (void) {
-	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+	#ifdef INDEXED_ENEMS
+		for (enit = 0; enit < n_enems; enit ++)
+	#else
+		for (enit = 0; enit < MAX_ENEMS; enit ++)
+	#endif
+	{
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 			#ifdef RANDOM_RESPAWN
 				if (en_an_fanty_activo [enit])
@@ -595,7 +600,7 @@ unsigned int __FASTCALL__ abs (int n) {
 			// 0  1  2    3    4   5   6   7
 			// x, y, xy1, xy2, mx, my, t[, life]
 
-			ld  bc, MAP_W * MAP_H * MAX_ENEMS
+			ld  bc, TOTAL_EXISTING_ENEMS
 			#if defined PACKED_ENEMS
 				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
 					ld  de, 8
@@ -5161,7 +5166,13 @@ void draw_scr (void) {
 		._enems_init
 	#endasm
 	
-	enoffs = n_pant * MAX_ENEMS;
+	// Initialising enemies
+	#ifdef INDEXED_ENEMS
+		enoffs = enoffs_index [n_pant];
+		n_enems = enoffs_index [n_pant + 1] - enoffs;
+	#else 
+		enoffs = n_pant * MAX_ENEMS;
+	#endif
 
 	#ifdef COUNT_KILLABLE_ON
 		flags [COUNT_KILLABLE_ON] = 0;
@@ -5190,8 +5201,12 @@ void draw_scr (void) {
 				ld  (_enoffsmasi), hl
 		#endasm
 
-		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) 
+		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) || defined INDEXED_ENEMS
 			en_an_next_frame [enit] = sprite_18_a;
+		#endif
+		
+		#ifdef INDEXED_ENEMS
+			if (enit >= n_enems) continue;
 		#endif
 		
 		#ifdef RANDOM_RESPAWN
@@ -5427,7 +5442,12 @@ void mueve_bicharracos (void) {
 	player.gotten = 0;
 	ptgmx =  ptgmy = 0;
 	
-	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+	#ifdef INDEXED_ENEMS
+		for (enit = 0; enit < n_enems; enit ++) 
+	#else
+		for (enit = 0; enit < MAX_ENEMS; enit ++) 
+	#endif
+	{
 		enoffsmasi = enoffs + enit;
 
 		// Copy array values to temporary variables as fast as possible
@@ -6536,9 +6556,13 @@ void mueve_bicharracos (void) {
 							srl a
 							ld  (_en_yy), a
 							ret
+
 					#endasm
 				#endif
+				
+				#asm
 				._en_bg_collision_end
+				#endasm
 
 				// Animate
 				/*

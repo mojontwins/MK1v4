@@ -20,21 +20,22 @@ XDEF keymap
 
 .tabla_teclas0
 
-	defw $4820 		; A
-	defw $4720 		; D
-	defw $4710 		; S
-	defw $4708 		; W
+	defw $4404 		; LEFT     O
+	defw $4308 		; RIGHT    P
+	defw $4808 		; UP       Q
+	defw $4820 		; DOWN     A
 
-	defw $4440 		; M
-	defw $4540 		; N
+	defw $4580 		; BUTTON_A SPACE
+	defw $4808 		; BUTTON_B Q
 
-	defw $4204		; ENTER
-	defw $4804		; ESC	
+	defw $4801 		; KEY_AUX3 1
+	defw $4802 		; KEY_AUX4 2
+	
+	defw $4880		; KEY_AUX1 Z
+	defw $4780 		; KEY_AUX2 X
 
-	defw $4880		; Z
-	defw $4780 		; X
-	defw $4801 		; 1
-	defw $4802      ; 2	
+	defw $4204		; KEY_ENTER
+	defw $4804		; KEY_ESC	
 
 	defb 0
 

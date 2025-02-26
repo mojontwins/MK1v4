@@ -65,6 +65,8 @@ Dim Shared As Integer greyRowOrder (7) => { 0, 1, 3, 2, 6, 7, 5, 4 }
 Dim Shared As TypeSpriteEntry spriteMetaData (127)
 Dim Shared As Integer spriteMetaIndex
 
+Dim Shared As Integer basicsprites
+
 ' 255 is an out of bounds value meaning "undefined". 
 Dim Shared As RGBType CPCHWColours (31) => { _
 	(1, 1, 1), _
@@ -147,7 +149,7 @@ Sub usage
 	Puts "              in=file.png out=output.bin mode=mode [offset=x,y] [size=w,h]"
 	Puts "              [metasize=w,h] [tmapoffs=offset] [max=n] [silent] [defaultink=i]"
 	Puts "              [cpcmode=m] [pixelperfectm0] [pixelperfectm1] [greyordered] [gng]"
-	Puts "              [mappings=mappings.h]"
+	Puts "              [mappings=mappings.h] [basicsprites]"
 	Puts ""
 	Puts "Supported modes: pals, chars, strait2x2, mapped, sprites, bg, scripted, scr, "
 	Puts "                 superbuffer"
@@ -158,6 +160,7 @@ Sub usage
 	Puts "greyordered is used with chars and strait2x2"
 	Puts "mappings is for sprite modes and for mapped mode"
 	Puts "gng is for OR sprites with suited palete, Ghosts'n Goblins style"
+	Puts "basicsprites will assume all 8x16/16x16 no offsets, etc."
 End Sub
 
 Sub mbWrite (v As uByte)
