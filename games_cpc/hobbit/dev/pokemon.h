@@ -629,14 +629,22 @@ void pk_animate_portrait(void) {
 }
 
 void pk_animate_death (void) {
-	psk = 6; while (psk > 0) {
-		pk_portrait ();
-		psk --;
-		cpc_UpdateNow (0);	
-		#asm		
-			call _pk_delay
-		#endasm
-	}
+	#asm
+			ld  a, 6
+		.looper
+			ld  (_psk), a 
+			or  a 
+			ret z 
+
+			call _pk_portrait
+			ld  hl, 0
+			push hl 
+			call _cpc_UpdateNow
+
+			ld  a, (_psk)
+			dec a 
+			jr looper
+	#endasm
 }
 
 void pk_animate_damaged (void) {
@@ -1774,6 +1782,7 @@ void pk_op_pickup_attack (void) {
 // Player : Select attack from menu -> pk_pl_attack
 
 void pk_pl_pickup_attack (void) {
+	/*
 	do {
 		_x = PK_ATTACK_MENU_X;
 		_y = PK_ATTACK_MENU_Y;
@@ -1782,7 +1791,35 @@ void pk_pl_pickup_attack (void) {
 		pk_simple_menu ();
 		pk_pl_attack = pa2;
 	} while(pk_data[pk_pl_attack<<4 + AT_PP] == 0);
+	*/
+	#asm 
+		.pk_pl_pickup_attack_loop
+			ld  a, PK_ATTACK_MENU_X
+			ld  (__x), a 
+			ld  a, PK_ATTACK_MENU_Y
+			ld  (__y), a 
+			call _pk_print_attacks
+			ld  a, 4
+			ld  (_pa1), a 
+			call _pk_simple_menu 
+			ld  a, (_pa2)
+			ld  (_pk_pl_attack), a 
 
+			// } while(pk_data[pk_pl_attack<<4 + AT_PP] == 0);
+			sla a 
+			sla a 
+			sla a 
+			sla a 			// A = pk_pl_attack << 4
+			add AT_PP 		// A = pk_pl_attack<<4 + AT_PP
+
+			ld  h, 0 
+			ld  l, a 
+			ld  de, _pk_data
+			add hl, de 
+			ld  a, (hl)
+			or  a 
+			jr  nz, pk_pl_pickup_attack_loop
+	#endasm
 }
 
 // Attack cycle
@@ -1931,56 +1968,90 @@ void pokemon_combat(void) {
 	#asm 
 			xor a 
 			ld  (_rdc), a 
-			
-		
-
 			ld hl, _pokemon_tiles
 			call _set_ts
-	#endasm
 
-	#asm
 			ld  hl, _s_pokemon
 			ld  de, BASE_SUPERBUFF
 			call depack
-	#endasm
 
-	pk_win = 0;
+			xor a 
+			ld  (_pk_win), a 
+			ld  (_pk_turn), a
 
-	// Init pokemons
-	
-	pa1 = 0; p_ptr = bubasaur; pk_init_pokemon_pa1_from_ptr ();
-	pa1 = 1; p_ptr = charmander; pk_init_pokemon_pa1_from_ptr ();
+			// Init pokemons
+			ld  (_pa1), a 
+			ld  hl, _bubasaur
+			ld  (_p_ptr), hl 
+			call _pk_init_pokemon_pa1_from_ptr
 
-	pk_turn = 0;
+			ld  a, 1
+			ld  (_pa1), a
+			ld  hl, _charmander 
+			ld  (_p_ptr), hl 
+			call _pk_init_pokemon_pa1_from_ptr
 
-	psk = 6;
-	_x = 17; _y = 1; _n = 0; pk_portrait ();
-	_x = 7; _y = 8; _n = 1; pk_portrait ();
+			ld  a, 6
+			ld  (_psk), a 
+			ld  a, 17 
+			ld  (__x), a 
+			ld  a, 1
+			ld  (__y), a 
+			xor a 
+			ld  (__n), a 
+			call _pk_portrait
 
-	// Battle
-	while (1) {
-		pk_update_displays ();
-		pk_attack_cycle ();
+			ld  a, 7 
+			ld  (__x), a 
+			ld  a, 8
+			ld  (__y), a 
+			ld  a, 1 
+			ld  (__n), a 
+			call _pk_portrait
 
-		// Player wins!
-		if (pk_data [C_HP + OPPONENT_OFFSET] == 0) { 
-			_x = 17; _y = 1; _n = 0; pk_animate_death ();
-			pk_win = 1; break; 
-		} 
-		
-		// Player loses!
-		if (pk_data [C_HP] == 0) {
-			_x = 7; _y = 8; _n = 1; pk_animate_death ();
-			break;
-		}
+		.pokemon_combat_loop
 
-		// Next turn
-		pk_turn ++;
-	}
+			call _pk_update_displays
+			call _pk_attack_cycle 
 
-	// Back to main control
+			ld  a, (_pk_data + C_HP + OPPONENT_OFFSET)
+			or  a 
+			jr  nz, pcl1
 
-	#asm
+			ld  a, 17
+			ld  (__x), a 
+			ld  a, 1 
+			ld  (__y), a 
+			xor a 
+			ld  (__n), a 
+			call _pk_animate_death
+
+			ld  a, 1
+			ld  (_pk_win), a 
+			jr  pokemon_combat_done
+
+		.pcl1
+			ld  a, (_pk_data + C_HP)
+			or  a 
+			jr  nz, pcl2
+
+			ld  a, 7
+			ld  (__x), a 
+			ld  a, 8 
+			ld  (__y), a 
+			ld  a, 1
+			ld  (__n), a 
+			call _pk_animate_death
+
+			jr  pokemon_combat_done
+
+		.pcl2 
+			ld  hl, _pk_turn 
+			inc (hl)
+			jr pokemon_combat_loop
+
+		.pokemon_combat_done
+
 			ld hl, _tilesetc
 			call _set_ts
 	#endasm

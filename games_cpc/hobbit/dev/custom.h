@@ -595,24 +595,24 @@ unsigned char dwarf_names [] =
 // _n = 0-255
 
 void print_tile_inv () {
-  #asm
+	#asm
 
-      // Esto obtiene la direccion del tile en DE
-      call __tile_address
+			// Esto obtiene la direccion del tile en DE
+			call __tile_address
 
-      // Escribimos el tile
-      ld  a, (__n)
-      ld  (de), a
+			// Escribimos el tile
+			ld  a, (__n)
+			ld  (de), a
 
-      // Invalidamos el tile
-      ld  a, (__x)
-      ld  e, a
-      ld  a, (__y)
-      ld  d, a 
+			// Invalidamos el tile
+			ld  a, (__x)
+			ld  e, a
+			ld  a, (__y)
+			ld  d, a 
 
-      // Esto invalida el tile en E, D
-      call cpc_UpdTileTable 
-  #endasm
+			// Esto invalida el tile en E, D
+			call cpc_UpdTileTable 
+	#endasm
 }
 
 void update_mission (void) {
@@ -833,121 +833,145 @@ void show_text_box (void) {
 			ld  hl, _top_string
 
 			call draw_text_pre_loop
+
+			ld  a, 7 
+			ld  (_rdy), a
 	#endasm
 
-	rdy = 7;
+	#asm
+		.stb_loop
+			call _clear_temp_string
 
-	while (1) {
-		#asm
-				call _clear_temp_string
+			// Clear line above, only if rdb != 0 or rdy > 7
+			ld  a, (_rdb) 
+			or  a
+			jr  nz, stb_top
+			ld  a, (_rdy)
+			cp  8
+			jr  c, stb_notop
 
-				// Clear line above, only if rdb != 0 or rdy > 7
-				ld  a, (_rdb) 
-				or  a
-				jr  nz, stb_top
-				ld  a, (_rdy)
-				cp  8
-				jr  c, stb_notop
-
-			.stb_top
-				ld  a, (_rdy)
-				dec a 
-				ld  (__y), a 
-				ld  a, 4
-				ld  (__x), a 
-				
-				ld  hl, _temp_string 
-				call draw_text_pre_loop
-			.stb_notop			
-
-				ld  a, (_rdy)
-				ld  (__y), a 
-				ld  a, 4
-				ld  (__x), a 
-				
-				ld  hl, _temp_string 
-				call draw_text_pre_loop
-
-				ld  a, (_rdy)
-				inc a 
-				ld  (__y), a 
-				ld  a, 4
-				ld  (__x), a 
-				
-				ld  hl, _bottom_string 
-				call draw_text_pre_loop
-
-				// Portrait if rdb != 0
-
-				ld  a, (_rdb) 
-				or  a 
-				jr  z, no_character
-				ld  a, 5
-				ld  (__x), a
-				ld  a, 6
-				ld  (__y), a 
-				ld  a, (_rdb)
-				ld  (__t), a
-				call _draw_coloured_tile_do
-			.no_character
-		#endasm
-
-		#asm
-				// Fill buffer
-				ld  de, _temp_string + 1
-				ld  a, (_rdb) 
-				or  a 
-				jr  z, fill_buffer_noinc
-				ld  a, (_rdy)
-				cp  7
-				jr  nz, fill_buffer_noinc
-				inc de 
-				inc de
-			.fill_buffer_noinc
-				ld  hl, (_gp_gen)				// HL -> current text
-
-			.fill_buffer_loop
-				ld  a, (hl) 					// Read char from text
-				or  a
-				jr  z, fill_buffer_end 			// 0 -> done filling buffer (string end)
-				cp  '%'
-				jr  z, fill_buffer_end 			// % -> done filling buffer (new line)
-
-				ld  (de), a 					// Write to buffer
-
-				inc hl
-				inc de
-				jr  fill_buffer_loop
-
-			.fill_buffer_end
-				ld  (_gp_gen), hl
+		.stb_top
+			ld  a, (_rdy)
+			dec a 
+			ld  (__y), a 
+			ld  a, 4
+			ld  (__x), a 
 			
-				ld  a, 4
-				ld  (_rdx), a
-				ld  hl, _temp_string
-				call dtcbc_loop
+			ld  hl, _temp_string 
+			call draw_text_pre_loop
+		.stb_notop			
 
-				ld  a, (_rdy)
-				add 2 
-				ld  (_rdy), a
-		#endasm
-	
-		if (*gp_gen == 0) break;
-		gp_gen ++;
-	}
+			ld  a, (_rdy)
+			ld  (__y), a 
+			ld  a, 4
+			ld  (__x), a 
+			
+			ld  hl, _temp_string 
+			call draw_text_pre_loop
+
+			ld  a, (_rdy)
+			inc a 
+			ld  (__y), a 
+			ld  a, 4
+			ld  (__x), a 
+			
+			ld  hl, _bottom_string 
+			call draw_text_pre_loop
+
+			// Portrait if rdb != 0
+
+			ld  a, (_rdb) 
+			or  a 
+			jr  z, no_character
+			ld  a, 5
+			ld  (__x), a
+			ld  a, 6
+			ld  (__y), a 
+			ld  a, (_rdb)
+			ld  (__t), a
+			call _draw_coloured_tile_do
+		.no_character
+
+			// Fill buffer
+			ld  de, _temp_string + 1
+			ld  a, (_rdb) 
+			or  a 
+			jr  z, fill_buffer_noinc
+			ld  a, (_rdy)
+			cp  7
+			jr  nz, fill_buffer_noinc
+			inc de 
+			inc de
+		.fill_buffer_noinc
+			ld  hl, (_gp_gen)				// HL -> current text
+
+		.fill_buffer_loop
+			ld  a, (hl) 					// Read char from text
+			or  a
+			jr  z, fill_buffer_end 			// 0 -> done filling buffer (string end)
+			cp  '%'
+			jr  z, fill_buffer_end 			// % -> done filling buffer (new line)
+
+			ld  (de), a 					// Write to buffer
+
+			inc hl
+			inc de
+			jr  fill_buffer_loop
+
+		.fill_buffer_end
+			ld  (_gp_gen), hl
+		
+			ld  a, 4
+			ld  (_rdx), a
+			ld  hl, _temp_string
+			call dtcbc_loop
+
+			ld  a, (_rdy)
+			add 2 
+			ld  (_rdy), a
+
+			// if (*gp_gen == 0) break;
+			ld  hl, (_gp_gen)
+			ld  a, (hl) 
+			or  a 
+			jr  z, stb_exitloop
+
+			// gp_gen ++;
+			inc hl 
+			ld  (_gp_gen), hl
+
+			jp stb_loop
+
+		.stb_exitloop
+	#endasm
 
 	cpc_UpdateNow (0);
 	wyz_play_sound (7);
 
-	do { pad_read (); } while (0xff == pad_this_frame);
+	#asm
+		// do { pad_read (); } while (0xff == pad_this_frame);
+		.stb_waitkey
+			call _pad_read 
+			ld  a, _pad_this_frame
+			inc a 
+			jr  nz, stb_waitkey 			// if pad = 0xff, inc pad = 0, so exit.
 
-	if (redraw_after_text) {
-		redraw_from_buffer ();
-		hotspot_paint ();
-		render_all_sprites ();		
-		cpc_UpdateNow (1);
-	}
-	redraw_after_text = 1;
+			ld  a, (_redraw_after_text)
+			or  a 
+			jr  z, stb_redraw_done
+
+			call _redraw_from_buffer
+			call _hotspot_paint
+			call _render_all_sprites
+			ld  hl, 1 
+			push hl 
+			call _cpc_UpdateNow
+			pop hl 
+		.stb_redraw_done
+
+			ld  a, 1 
+			ld  (_redraw_after_text), a
+	#endasm 
 }
 
 void recuadrius (void) {	
