@@ -20,7 +20,9 @@
 	#define MAX_SWORD_HIT_FRAME 6
 #endif
 
-unsigned char line_of_text_clear [] = "                                ";
+#ifdef LINE_OF_TEXT
+	unsigned char line_of_text_clear [] = "                                ";
+#endif
 
 #ifdef PLAYER_CUSTOM_CELLS
 	#include "custom_player_cells.h"
@@ -441,12 +443,12 @@ unsigned char rand (void) {
 
 unsigned int __FASTCALL__ abs (int n) {
 	#asm
-		// HL = n
-		bit 7, h
-		ret z
+			// HL = n
+			bit 7, h
+			ret z
 
-		// neg HL
-		call l_neg
+			// neg HL
+			call l_neg
 	#endasm
 }
 

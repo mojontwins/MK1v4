@@ -34,6 +34,7 @@ void _tile_address (void) {
 	#endasm
 }
 
+#ifndef DRAW_RECTANGLE_NOT_NEEDED
 void draw_rectangle (void) {	
 	#asm
 			call __tile_address		// DE = buffer address
@@ -90,6 +91,7 @@ void draw_rectangle (void) {
 			call cpc_InvalidateRect
 	#endasm
 }
+#endif
 
 void attr (char x, char y) {
 	#asm

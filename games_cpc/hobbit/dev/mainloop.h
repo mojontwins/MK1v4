@@ -327,7 +327,7 @@ void main (void) {
 	while (1) {
 		// Here the title screen
 		title_screen ();
-	
+pokemon_combat ();	
 		#ifndef DIRECT_TO_PLAY
 			//unpack ((unsigned int) (s_marco), BASE_SUPERBUFF);
 			#asm

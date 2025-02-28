@@ -29,6 +29,12 @@ extern unsigned char s_ending [];
 #endasm
 #endif
 
+#asm
+	.str_gameover
+		defm "GAME OVER!"
+		defb 0
+#endasm
+
 void blackout (void) {
 	rda = BLACK_COLOUR_BYTE;
 	#asm
@@ -117,20 +123,124 @@ void game_ending (void) {
 }
 
 void game_over (void) {
-	AY_STOP_SOUND ();
-	//10, 11, 21, 13, GAME_OVER_ATTR
+	AY_PLAY_MUSIC (8);
+
 	#asm
-			ld  a, 10
-			ld  (__x), a
+			call _recuadrius
+
 			ld  a, 11
-			ld  (__y), a
-			ld  a, 21
-			ld  (__x2), a
-			ld  a, 13
-			ld  (__y2), a
+			ld  (__x), a 
+			ld  a, 14
+			ld  (__y), a 
+			ld  a, 7
+			ld  (__n), a 
+			ld  hl, str_gameover
+			call draw_text_loop
+
+			ld hl, _pokemon_tiles
+			call _set_ts
+
+			xor a 
+			ld  (_rda), a 		// offset			
+			
+			// Paint
+			ld  a, 6
+			ld  (_psk), a
+			ld  a, 12
+			ld  (__x), a 
+			ld  a, 8
+			ld  (__y), a 
+			ld  a, 3
+			ld  (__n), a 
+
+			call _pk_portrait
 	#endasm
-	draw_rectangle ();	
-	draw_text (11, 12, "GAME OVER!");
+
+	AY_PLAY_MUSIC (7);
+
+	rdb = wyz_beat_ct;
+	rdc = 32; 			// Skip # notes before dance!
+	
+	#asm
+		.gameover_loop
+			ld  a, (_rdb) 
+			ld  c, a 
+			ld  a, (_wyz_beat_ct);
+			cp  c 
+			jr  z, gameover_animate_done 			// No new note
+
+			ld  (_rdb), a 					// Update local counter
+
+		.gameover_animate
+
+			// Erase
+			ld  a, (_rda)
+			ld  c, a 
+			
+			ld  a, 6
+			ld  (_psk), a
+			ld  a, 12
+			sub c
+			ld  (__x), a 
+			ld  a, 8
+			ld  (__y), a 
+			ld  a, 2
+			ld  (__n), a 
+
+			call _pk_portrait
+
+			// Flip Flop dx
+			ld  a, (_rda)
+			ld  c, a 
+
+			ld  a, (_rdc)
+			or  a 
+			jr  z, gameover_animate_do
+
+			dec a 
+			ld  (_rdc), a 
+			jr  gameover_animate_paint
+			
+		.gameover_animate_do
+			ld  a, 1
+			sub c 
+			ld  (_rda), a 
+			ld  c, a 
+
+		.gameover_animate_paint
+
+			// Paint
+			ld  a, 6
+			ld  (_psk), a
+			ld  a, 12
+			sub c
+			ld  (__x), a 
+			ld  a, 8
+			ld  (__y), a 
+			ld  a, 3
+			ld  (__n), a 
+
+			call _pk_portrait
+
+		.gameover_animate_done
+
+	#endasm
 	cpc_UpdateNow (0);
-	espera_activa (500);
+		
+	#asm
+		// Break on key
+		call _pad_read 
+		ld  a, (_pad_this_frame)
+		inc a
+		jp z, gameover_loop
+	#endasm
+
+	AY_PLAY_MUSIC (8);
+
+	#asm
+		ld hl, _tilesetc
+		call _set_ts
+		call _recuadrius
+	#endasm
+
 }

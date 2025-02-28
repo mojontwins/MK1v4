@@ -23,6 +23,7 @@
 
 //#define NO_COMPRESSED_TITLE_SCR
 #define NO_COMPRESSED_ENDING_SCR
+#define DRAW_RECTANGLE_NOT_NEEDED
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 

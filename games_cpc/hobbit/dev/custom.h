@@ -952,7 +952,7 @@ void show_text_box (void) {
 		// do { pad_read (); } while (0xff == pad_this_frame);
 		.stb_waitkey
 			call _pad_read 
-			ld  a, _pad_this_frame
+			ld  a, (_pad_this_frame)
 			inc a 
 			jr  nz, stb_waitkey 			// if pad = 0xff, inc pad = 0, so exit.
 

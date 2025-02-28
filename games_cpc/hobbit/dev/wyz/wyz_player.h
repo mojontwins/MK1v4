@@ -553,10 +553,21 @@ void wyz_stop_sound (void) {
 		LD (HL),0
 		
 	;INTERPRETA 
-		LD A, (_pattern_line_ct)
-		INC A
-		AND 63
-		LD (_pattern_line_ct), a
+		; Lee una nueva linea. Yo voy a incrementar dos contadores:
+		; uno de lineas. Otro se incrementará cada 4 lineas. Éste lo "reflejaré" en low ram.
+		ld  a, (LINE_COUNTER)
+		inc a
+		cp  4
+		jr  nz, nonewblack
+
+		; Incrementamos esto en low RAM
+		ld  hl, _wyz_beat_ct
+		inc (hl)
+
+		xor a
+
+nonewblack:	
+		ld  (LINE_COUNTER), a
 
 		LD IY,PSG_REG
 		LD IX,PUNTERO_A
@@ -1155,4 +1166,7 @@ void wyz_stop_sound (void) {
 	.TABLA_EFECTOS
 		defw 	EFECTO0, EFECTO1, EFECTO2, EFECTO3, EFECTO4, EFECTO5, EFECTO6, EFECTO7
 		defw	EFECTO8, EFECTO9, EFECTO10, EFECTO11, EFECTO12
+
+	.LINE_COUNTER
+		defb 0
 #endasm
