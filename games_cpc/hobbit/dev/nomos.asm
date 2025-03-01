@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Feb 28 12:59:49 2025
+;	Module compile time: Sat Mar 01 09:35:39 2025
 
 
 
@@ -7045,7 +7045,7 @@
 
 
 
-._render_this_enemy
+._get_pointer_to_enem
 	ld a, (_enit)
 	add 1
 	ld h, 0
@@ -7058,6 +7058,12 @@
 	add hl, de
 	push hl
 	pop ix
+	ret
+
+
+
+._render_this_enemy
+	call _get_pointer_to_enem
 	ld a, (_rdx)
 	add #(1*8)
 	add (ix + 6)
@@ -8147,125 +8153,45 @@
 
 
 ._enems_en_an_calc
-	ld	de,_en_an_base_frame
-	ld	hl,(_enit)
-	ld	h,0
-	add	hl,de
-	push	hl
-	ld	hl,4	;const
-	add	hl,sp
-	ld	e,(hl)
-	ld	d,0
-	ld	l,#(1 % 256)
-	call	l_asl
-	pop	de
-	ld	a,l
-	ld	(de),a
-	ld	h,0
-	ld	a,l
-	ld	(_rdb),a
-	ld	hl,(_enit)
-	ld	h,0
-	ld	de,1
-	add	hl,de
-	ld	h,0
-	ld	a,l
-	ld	(_rda),a
-	ld	hl,_sp_sw
-	push	hl
-	ld	hl,(_rda)
-	ld	h,0
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	pop	de
-	add	hl,de
-	ld	bc,6
-	add	hl,bc
-	push	hl
-	ld	de,_sm_cox
-	ld	hl,(_rdb)
-	ld	h,0
-	add	hl,de
-	ld	l,(hl)
-	ld	h,0
-	ld	a,l
-	call	l_sxt
-	pop	de
-	ld	a,l
-	ld	(de),a
-	ld	hl,_sp_sw
-	push	hl
-	ld	hl,(_rda)
-	ld	h,0
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	pop	de
-	add	hl,de
-	ld	bc,7
-	add	hl,bc
-	push	hl
-	ld	de,_sm_coy
-	ld	hl,(_rdb)
-	ld	h,0
-	add	hl,de
-	ld	l,(hl)
-	ld	h,0
-	ld	a,l
-	call	l_sxt
-	pop	de
-	ld	a,l
-	ld	(de),a
-	ld	hl,_sp_sw
-	push	hl
-	ld	hl,(_rda)
-	ld	h,0
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	pop	de
-	add	hl,de
-	ld	bc,12
-	add	hl,bc
-	push	hl
-	ld	hl,_sm_invfunc
-	push	hl
-	ld	hl,(_rdb)
-	ld	h,0
-	add	hl,hl
-	pop	de
-	add	hl,de
-	call	l_gint	;
-	pop	de
-	call	l_pint
-	ld	hl,_sp_sw
-	push	hl
-	ld	hl,(_rda)
-	ld	h,0
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	add	hl,hl
-	pop	de
-	add	hl,de
-	ld	bc,14
-	add	hl,bc
-	push	hl
-	ld	hl,_sm_updfunc
-	push	hl
-	ld	hl,(_rdb)
-	ld	h,0
-	add	hl,hl
-	pop	de
-	add	hl,de
-	call	l_gint	;
-	pop	de
-	call	l_pint
-	call	_enems_calc_frame
+	call _get_pointer_to_enem
+	ld a, l
+	sla a
+	ld hl, (_enit)
+	ld h, 0
+	add hl, hl
+	ld de, _en_an_base_frame
+	add hl, de
+	ld (hl), a
+	ld d, a
+	ld b, 0
+	ld c, a
+	ld hl, _sm_cox
+	add hl, bc
+	ld a, (hl)
+	ld (ix + 6), a
+	ld hl, _sm_coy
+	add hl, bc
+	ld a, (hl)
+	add (ix + 7), a
+	ld a, d
+	sla a
+	ld c, a
+	ld hl, _sm_invfunc
+	add hl, bc
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ld (ix + 12), e
+	ld (ix + 13), d
+	ld hl, _sm_updfunc
+	add hl, bc
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	ld d, (hl)
+	ld (ix + 14), e
+	ld (ix + 15), d
+	jr _enems_calc_frame
 	ret
 
 
@@ -8445,9 +8371,7 @@
 	ld	hl,(__en_t)
 	ld	h,0
 	dec	hl
-	push	hl
 	call	_enems_en_an_calc
-	pop	bc
 	jp	i_154
 .i_160
 .i_161
@@ -8462,9 +8386,7 @@
 	ld	h,0
 	ld	bc,-7
 	add	hl,bc
-	push	hl
 	call	_enems_en_an_calc
-	pop	bc
 	jp	i_154
 .i_164
 .i_165
@@ -8474,9 +8396,7 @@
 	ld	h,0
 	ld	bc,-11
 	add	hl,bc
-	push	hl
 	call	_enems_en_an_calc
-	pop	bc
 	ld hl, _enoffsmasi
 	call _calc_baddies_pointer
 	ld a, (hl)
@@ -9287,7 +9207,6 @@
 	ei
 .i_192
 	call	_title_screen
-	call	_pokemon_combat
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_playing),a
@@ -10238,6 +10157,7 @@
 	XDEF	_gpyy
 	XDEF	_pk_ml1
 	XDEF	_pk_ml2
+	XDEF	_get_pointer_to_enem
 	XDEF	_maincounter
 	XDEF	_rdmt
 	XDEF	_ptx1

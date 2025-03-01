@@ -91,10 +91,8 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	#endasm
 }
 
-void render_this_enemy (void) {
-	// sp_sw struct is 16 bytes wide. This is easy
-	// 0   2   4      6   7   8  9  10 11 12      14
-	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+void get_pointer_to_enem (void) {
+	// In -> _enit, out -> pointer in IX
 	#asm
 			ld  a, (_enit)
 			add SP_ENEMS_BASE
@@ -108,6 +106,15 @@ void render_this_enemy (void) {
 			add hl, de
 			push hl
 			pop ix
+	#endasm
+}
+
+void render_this_enemy (void) {
+	// sp_sw struct is 16 bytes wide. This is easy
+	// 0   2   4      6   7   8  9  10 11 12      14
+	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+	#asm
+			call _get_pointer_to_enem
 
 			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 1;
 			ld  a, (_rdx)
@@ -5018,20 +5025,73 @@ void enems_calc_frame (void) {
 	#endasm
 }
 
-void enems_en_an_calc (unsigned char n) {
-	rdb = en_an_base_frame [enit] = 
-		#ifdef ENEMS_OFFSET
-			ENEMS_OFFSET +
-		#endif
-		n << 1;
+void __FASTCALL__ enems_en_an_calc (unsigned char n) {
+	// Fastcall so n is in HL
+	// en_an_base_frame is 16 bit
+	#asm
+			// Get pointer to enem in IX
+			call _get_pointer_to_enem
 
-	rda = SP_ENEMS_BASE + enit;
-	sp_sw [rda].cox = sm_cox [rdb];
-	sp_sw [rda].coy = sm_coy [rdb];
-	sp_sw [rda].invfunc = sm_invfunc [rdb];
-	sp_sw [rda].updfunc = sm_updfunc [rdb];
-		
-	enems_calc_frame ();
+			// And now get index to spriteset mappings
+			ld  a, l 		// A = n
+			sla a 			// A = n << 1
+		#ifdef ENEMS_OFFSET 
+				add ENEMS_OFFSET
+		#endif
+			ld  hl, (_enit)
+			ld  h, 0 
+			add hl, hl 
+			ld  de, _en_an_base_frame 
+			add hl, de 			// HL ->en_an_base_frame [enit]HL
+			ld  (hl), a 
+			ld  d, a
+
+			// sp_sw struct is 16 bytes wide. This is easy
+			// 0   2   4      6   7   8  9  10 11 12      14
+			// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+
+			// sm_cox, sm_coy are byte arrays
+			ld  b, 0 
+			ld  c, a 			// BC = index
+			
+			// sp_sw [rda].cox = sm_cox [rdb];
+			ld  hl, _sm_cox 
+			add hl, bc 
+			ld  a, (hl) 		// A = sm_cox [rdb]
+			ld  (ix + 6), a 	// sp_sw[...].cox
+
+			// sp_sw [rda].coy = sm_coy [rdb];
+			ld  hl, _sm_coy 
+			add hl, bc 
+			ld  a, (hl) 		// A = sm_coy [rdb]
+			add (ix + 7), a 	// sp_sw[...].coy
+
+			// sm_invfunc, sm_updfunc are 16 bit arrays
+			ld  a, d 
+			sla a 
+			ld  c, a 			// BC = A*2
+	
+			// sp_sw [rda].invfunc = sm_invfunc [rdb];
+			ld  hl, _sm_invfunc 
+			add hl, bc 			// HL -> sm_invfunc [rdb]
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl) 
+			ld  (ix + 12), e 
+			ld  (ix + 13), d 	// Write 16 bits
+
+			// sp_sw [rda].updfunc = sm_updfunc [rdb];
+			ld  hl, _sm_updfunc 
+			add hl, bc 
+			ld  e, (hl) 
+			inc hl 
+			ld  d, (hl) 
+			ld  d, (hl) 
+			ld  (ix + 14), e 
+			ld  (ix + 15), d 	// Write 16 bits			
+	
+			jr _enems_calc_frame
+	#endasm
 }
 
 #ifdef ENABLE_MARRULLERS
@@ -7125,7 +7185,7 @@ void mueve_bicharracos (void) {
 			#ifdef RANDOM_RESPAWN
 				// Activate fanty
 
-			if ((_en_t & 16) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
+				if ((_en_t & 16) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
 					en_an_fanty_activo [enit] = 1;
 					if (player.y > 5120)
 						en_an_y [enit] = -1024;
@@ -7133,7 +7193,7 @@ void mueve_bicharracos (void) {
 						en_an_y [enit] = 10240;
 					en_an_x [enit] = (rand () % 240 - 8) << 6;
 					en_an_vx [enit] = en_an_vy [enit] = 0;
-				enems_en_an_calc (2);
+					enems_en_an_calc (2);
 				}
 			#endif
 
