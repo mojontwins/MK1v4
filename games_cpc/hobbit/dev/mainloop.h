@@ -98,7 +98,6 @@ void main (void) {
 				#else
 					call depack
 				#endif
-
 		#endasm	
 	#endif
 	
@@ -173,7 +172,7 @@ void main (void) {
 			ld  (ix + 15), h
 			ld  (ix + 14), l
 
-			ld  hl, (_sm_sprptr) 		// sm_sprptr [0]
+			ld  hl, _sprite_18_a
 			ld  (ix + 1), h
 			ld  (ix + 0), l
 
@@ -196,11 +195,11 @@ void main (void) {
 			ld  b, MAX_ENEMS
 
 		.sp_sw_init_enems_loop
-			ld  hl, cpc_PutSpTileMap4x8Px			// sm_invfunc [0]
+			ld  hl, cpc_PutSpTileMap8x16Px			// sm_invfunc [0]
 			ld  (ix + 13), h
 			ld  (ix + 12), l
 
-			ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+			ld  hl, cpc_PutTrSp8x16TileMap2bPx 		// sm_updfunc [0]
 			ld  (ix + 15), h
 			ld  (ix + 14), l	
 
@@ -327,7 +326,7 @@ void main (void) {
 	while (1) {
 		// Here the title screen
 		title_screen ();
-
+pokemon_combat ();
 		#ifndef DIRECT_TO_PLAY
 			//unpack ((unsigned int) (s_marco), BASE_SUPERBUFF);
 			#asm

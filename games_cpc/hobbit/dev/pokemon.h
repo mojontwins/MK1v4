@@ -744,8 +744,6 @@ void pk_animate_damaged (void) {
 unsigned char __y;
 void pk_simple_menu (void) {
 	#asm
-			ld  a, (__y) 
-			ld  (___y), a
 
 			// pa2 = 0; pa3 = 1;
 
@@ -821,10 +819,8 @@ void pk_simple_menu (void) {
 
 			ld  a, PK_ATTACK_MENU_X
 			ld  (__x), a
-			ld  a, (___y) 
-			ld  b, a 
 			ld  a, (_pa2)
-			add b 
+			add PK_ATTACK_MENU_Y 
 			ld  (__y), a
 
 			ld  a, 0x3F
@@ -832,10 +828,8 @@ void pk_simple_menu (void) {
 
 			call _print_tile_inv
 
-			ld  a, (___y) 
-			ld  b, a 
 			ld  a, (_pa3)
-			add b 
+			add PK_ATTACK_MENU_Y
 			ld  (__y), a
 
 			xor a 
@@ -916,8 +910,6 @@ void pk_print_menu (void) {
 	// Preload HL pointing to menu items (or attacks pool)
 
 	#asm
-			ld  a, (__y)
-			ld  (_rdy), a
 
 			ld  a, PK_ATTACK_MENU_Y
 			ld  (_rdy), a 
@@ -940,35 +932,32 @@ void pk_print_menu (void) {
 			ld  (__n), a
 
 			ld  a, PK_ATTACK_MENU_X
-
 			ld  (__x), a
+
 			ld  a, (_rdy)
 			ld  (__y), a
+			
 			push hl 
 			call _print_tile_inv
+
+			ld  hl, __x 
+			inc (hl) 					// _x ++
 			pop hl 
-
-			ld  a, (__x)
-			inc a 
-			ld  (__x), a
-
 
 			ld  b, 12 					// 12 characters
 		.pk_pa_can
 			push bc 
 
-			ld  a, (hl) 				// E = Get char
+			ld  a, (hl) 				// Get char
 			sub 32
 			ld  (__n), a 
 			inc hl 
 
-			ld  a, (__x)
-			ld  c, a 					// C = X
-			inc a 
-			ld  (__x), a 
-
 			push hl 
 			call _print_tile_inv
+			
+			ld  hl, __x 
+			inc (hl) 					// _x ++
 			pop hl 	
 
 			pop bc 
@@ -1818,7 +1807,7 @@ void pk_pl_pickup_attack (void) {
 			add hl, de 
 			ld  a, (hl)
 			or  a 
-			jr  nz, pk_pl_pickup_attack_loop
+			jr  z, pk_pl_pickup_attack_loop
 	#endasm
 }
 
@@ -1966,6 +1955,8 @@ void set_ts(void) {
 void pokemon_combat(void) {
 
 	#asm 
+			call cpc_ResetTouchedTiles
+
 			xor a 
 			ld  (_rdc), a 
 			ld hl, _pokemon_tiles
@@ -1974,7 +1965,9 @@ void pokemon_combat(void) {
 			ld  hl, _s_pokemon
 			ld  de, BASE_SUPERBUFF
 			call depack
-
+	#endasm
+	cpc_ShowTileMap (1);
+	#asm
 			xor a 
 			ld  (_pk_win), a 
 			ld  (_pk_turn), a
@@ -2053,6 +2046,6 @@ void pokemon_combat(void) {
 		.pokemon_combat_done
 
 			ld hl, _tilesetc
-			call _set_ts
+			jp _set_ts
 	#endasm
 }

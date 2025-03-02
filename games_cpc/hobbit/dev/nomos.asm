@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Mar 01 09:35:39 2025
+;	Module compile time: Sun Mar 02 18:18:40 2025
 
 
 
@@ -71,28 +71,28 @@
 	defb	0
 
 	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
 	defb	8
 
 	defm	""
-	defb	0
+	defb	8
 
 	defm	""
-	defb	0
+	defb	8
 
 	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
+	defb	8
 
 	defm	""
 	defb	0
@@ -5211,8 +5211,6 @@
 
 
 ._pk_simple_menu
-	ld a, (__y)
-	ld (___y), a
 	xor a
 	ld (_pa2), a
 	inc a
@@ -5257,18 +5255,14 @@
 	jr z, pk_simple_menu_loop
 	ld a, 17
 	ld (__x), a
-	ld a, (___y)
-	ld b, a
 	ld a, (_pa2)
-	add b
+	add 15
 	ld (__y), a
 	ld a, 0x3F
 	ld (__n), a
 	call _print_tile_inv
-	ld a, (___y)
-	ld b, a
 	ld a, (_pa3)
-	add b
+	add 15
 	ld (__y), a
 	xor a
 	ld (__n), a
@@ -5329,8 +5323,6 @@
 
 
 ._pk_print_menu
-	ld a, (__y)
-	ld (_rdy), a
 	ld a, 15
 	ld (_rdy), a
 	ld b, 4
@@ -5350,10 +5342,9 @@
 	ld (__y), a
 	push hl
 	call _print_tile_inv
+	ld hl, __x
+	inc (hl)
 	pop hl
-	ld a, (__x)
-	inc a
-	ld (__x), a
 	ld b, 12
 	.pk_pa_can
 	push bc
@@ -5361,12 +5352,10 @@
 	sub 32
 	ld (__n), a
 	inc hl
-	ld a, (__x)
-	ld c, a
-	inc a
-	ld (__x), a
 	push hl
 	call _print_tile_inv
+	ld hl, __x
+	inc (hl)
 	pop hl
 	pop bc
 	djnz pk_pa_can
@@ -5933,7 +5922,7 @@
 	add hl, de
 	ld a, (hl)
 	or a
-	jr nz, pk_pl_pickup_attack_loop
+	jr z, pk_pl_pickup_attack_loop
 	ret
 
 
@@ -6069,6 +6058,7 @@
 
 
 ._pokemon_combat
+	call cpc_ResetTouchedTiles
 	xor a
 	ld (_rdc), a
 	ld hl, _pokemon_tiles
@@ -6076,6 +6066,8 @@
 	ld hl, _s_pokemon
 	ld de, 0x9000
 	call depack
+	ld	hl,1	;const
+	call	cpc_ShowTileMap
 	xor a
 	ld (_pk_win), a
 	ld (_pk_turn), a
@@ -6138,7 +6130,7 @@
 	jr pokemon_combat_loop
 	.pokemon_combat_done
 	ld hl, _tilesetc
-	call _set_ts
+	jp _set_ts
 	ret
 
 
@@ -7113,11 +7105,10 @@
 	ld	a,(hl)
 	inc	(hl)
 .i_123
-	ld	hl,(_enit)
-	ld	h,0
-	ex	de,hl
-	ld	hl,(_n_enems)
-	ld	h,0
+	ld	a,(_enit)
+	ld	e,a
+	ld	d,0
+	ld	hl,3	;const
 	call	l_ult
 	jp	nc,i_122
 	ld hl, (_enoffs)
@@ -8153,16 +8144,15 @@
 
 
 ._enems_en_an_calc
+	ld b, l
+	sla b
 	call _get_pointer_to_enem
-	ld a, l
-	sla a
+	ld a, b
 	ld hl, (_enit)
 	ld h, 0
-	add hl, hl
 	ld de, _en_an_base_frame
 	add hl, de
 	ld (hl), a
-	ld d, a
 	ld b, 0
 	ld c, a
 	ld hl, _sm_cox
@@ -8173,9 +8163,7 @@
 	add hl, bc
 	ld a, (hl)
 	add (ix + 7), a
-	ld a, d
-	sla a
-	ld c, a
+	sla c
 	ld hl, _sm_invfunc
 	add hl, bc
 	ld e, (hl)
@@ -8249,29 +8237,17 @@
 	ld	(_seed),hl
 	call	_draw_scr_background
 	._enems_init
-	ld	de,_enoffs_index
-	ld	hl,(_n_pant)
-	ld	h,0
-	add	hl,de
-	ld	l,(hl)
-	ld	h,0
-	ld	(_enoffs),hl
-	ld	hl,_enoffs_index
-	push	hl
-	ld	hl,(_n_pant)
-	ld	h,0
-	inc	hl
-	pop	de
-	add	hl,de
-	ld	e,(hl)
-	ld	d,0
-	ld	hl,(_enoffs)
-	ex	de,hl
-	and	a
-	sbc	hl,de
-	ld	h,0
-	ld	a,l
-	ld	(_n_enems),a
+	ld hl, (_n_pant)
+	ld h, 0
+	ld de, _enoffs_index
+	add hl, de
+	ld a, (hl)
+	ld (_enoffs), a
+	inc hl
+	ld b, a
+	ld a, (hl)
+	sub b
+	ld (_n_enems), a
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
@@ -9176,7 +9152,7 @@
 	ld hl, (_sm_updfunc)
 	ld (ix + 15), h
 	ld (ix + 14), l
-	ld hl, (_sm_sprptr)
+	ld hl, _sprite_18_a
 	ld (ix + 1), h
 	ld (ix + 0), l
 	ld (ix + 3), h
@@ -9185,10 +9161,10 @@
 	ld de, 16
 	ld b, 3
 	.sp_sw_init_enems_loop
-	ld hl, cpc_PutSpTileMap4x8Px
+	ld hl, cpc_PutSpTileMap8x16Px
 	ld (ix + 13), h
 	ld (ix + 12), l
-	ld hl, cpc_PutTrSp4x8TileMap2bPx
+	ld hl, cpc_PutTrSp8x16TileMap2bPx
 	ld (ix + 15), h
 	ld (ix + 14), l
 	add ix, de
@@ -9207,6 +9183,7 @@
 	ei
 .i_192
 	call	_title_screen
+	call	_pokemon_combat
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_playing),a

@@ -190,12 +190,7 @@ void calc_baddies_pointer (void) {
 }
 
 void render_all_sprites (void) {
-	#ifdef INDEXED_ENEMS
-		for (enit = 0; enit < n_enems; enit ++)
-	#else
-		for (enit = 0; enit < MAX_ENEMS; enit ++)
-	#endif
-	{
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 			#ifdef RANDOM_RESPAWN
 				if (en_an_fanty_activo [enit])
@@ -5027,24 +5022,24 @@ void enems_calc_frame (void) {
 
 void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 	// Fastcall so n is in HL
-	// en_an_base_frame is 16 bit
 	#asm
+			ld  b, l 		// B = n
+			sla b 			// B = n << 1
+
 			// Get pointer to enem in IX
+			// Won't trash BC
 			call _get_pointer_to_enem
 
 			// And now get index to spriteset mappings
-			ld  a, l 		// A = n
-			sla a 			// A = n << 1
+			ld  a, b
 		#ifdef ENEMS_OFFSET 
 				add ENEMS_OFFSET
 		#endif
 			ld  hl, (_enit)
 			ld  h, 0 
-			add hl, hl 
 			ld  de, _en_an_base_frame 
-			add hl, de 			// HL ->en_an_base_frame [enit]HL
-			ld  (hl), a 
-			ld  d, a
+			add hl, de 			// HL ->en_an_base_frame [enit]
+			ld  (hl), a 		// en_an_base_frame [enit] = (n << 1) + ENEMS_OFFSET
 
 			// sp_sw struct is 16 bytes wide. This is easy
 			// 0   2   4      6   7   8  9  10 11 12      14
@@ -5067,9 +5062,8 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 			add (ix + 7), a 	// sp_sw[...].coy
 
 			// sm_invfunc, sm_updfunc are 16 bit arrays
-			ld  a, d 
-			sla a 
-			ld  c, a 			// BC = A*2
+			// We'll never have more than 128 sprite faces
+			sla c 				// BC = A*2
 	
 			// sp_sw [rda].invfunc = sm_invfunc [rdb];
 			ld  hl, _sm_invfunc 
@@ -5230,8 +5224,22 @@ void draw_scr (void) {
 	
 	// Initialising enemies
 	#ifdef INDEXED_ENEMS
-		enoffs = enoffs_index [n_pant];
-		n_enems = enoffs_index [n_pant + 1] - enoffs;
+		#asm
+				// enoffs = enoffs_index [n_pant];
+				ld  hl, (_n_pant)
+				ld  h, 0 
+				ld  de, _enoffs_index
+				add hl, de 
+				ld  a, (hl) 		// A = enoffs_index [n_pant]
+				ld  (_enoffs), a 
+		
+				// n_enems = enoffs_index [n_pant + 1] - enoffs;
+				inc hl 
+				ld  b, a 
+				ld  a, (hl) 		// A = enoffs [n_pant + 1]
+				sub b 
+				ld  (_n_enems), a
+		#endasm
 	#else 
 		enoffs = n_pant * MAX_ENEMS;
 	#endif
