@@ -954,7 +954,7 @@ void show_text_box (void) {
 			call _pad_read 
 			ld  a, (_pad_this_frame)
 			inc a 
-			jr  nz, stb_waitkey 			// if pad = 0xff, inc pad = 0, so exit.
+			jr  z, stb_waitkey 			// if pad = 0xff, inc pad = 0, so loop.
 
 			ld  a, (_redraw_after_text)
 			or  a 
@@ -1356,7 +1356,7 @@ void bilbos_hangover (void) {
 		wyz_play_music (1);
 
 		// Debug
-		//n_pant = 0;
+		n_pant = 6;
 	}
 
 	void hook_init_mainloop (void) {
@@ -1577,23 +1577,56 @@ void bilbos_hangover (void) {
 				call run_cutscene
 
 				// *********** POKEMON ****************
-				/*
-				saca_a_todo_el_mundo_de_aqui ();
-				wyz_play_music (6); 		// Pokemon
-				pokemon_combat ();
-				wyz_play_music (3); 		// Cave
+				
+				// This is not enough :-/
+				//call _saca_a_todo_el_mundo_de_aqui
+				ld  b, 4 				// 4 = bilbo + 3 enems will suffice
+				ld  hl, _sprite_18_a 
+				ld  ix, _sp_sw
+			.custom_clear_sprites_loop
+				ld  (ix + 0), l
+				ld  (ix + 1), h 
+				xor a 
+				ld  (ix + 8), a 
+				ld  (ix + 9), a 
+				ld  (ix + 10), a 
+				ld  (ix + 11), a 
 
-				if(pk_win) {
-					game_loop_flag = 1;
+				push bc 
+				ld  bc, 16 
+				add ix, bc 
+				pop bc 
+				djnz custom_clear_sprites_loop
+				
+				// Clear nametable
+				xor a 
+				ld  hl, _nametable
+				ld  (hl), a
+				ld  de, _nametable+1
+				ld  bc, 767
+				ldir
+			#endasm
+			wyz_play_music (6); 		// Pokemon
+			pokemon_combat ();
+			wyz_play_music (3); 		// Cave
+			#asm 
+				ld  a, (_pk_win)
+				or  a 
+				jr  z, pokemon_lose
 
-				} else {
-					// If lose -> one life less, throw right	
-					on_pant = 0xff;						
-					player.vx = 256;
-					player.is_dead = 1;
-				}
-				*/
+			.pokemon_win 
+				ld  a, 1 
+				ld  (_game_loop_flag), a 
+				ret 
 
+			.pokemon_lose
+				// If lose -> one life less, throw right
+				dec a 					// A = 0-1 = 255
+				ld  (_on_pant), a 
+				ld  hl, 256
+				ld  (_player + 6), hl 	// player.vx
+				ld  a, 1 
+				ld  (_player + 26), a 	// player.is_dead
 				ret
 
 		// ********************************************************************

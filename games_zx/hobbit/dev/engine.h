@@ -6763,7 +6763,10 @@ void mueve_bicharracos (void) {
 
 					#endasm
 				#endif
+				
+				#asm
 				._en_bg_collision_end
+				#endasm
 
 				// Animate
 				/*

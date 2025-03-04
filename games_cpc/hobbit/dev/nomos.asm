@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun Mar 02 18:18:40 2025
+;	Module compile time: Tue Mar 04 13:24:49 2025
 
 
 
@@ -4151,7 +4151,7 @@
 	call _pad_read
 	ld a, (_pad_this_frame)
 	inc a
-	jr nz, stb_waitkey
+	jr z, stb_waitkey
 	ld a, (_redraw_after_text)
 	or a
 	jr z, stb_redraw_done
@@ -6175,6 +6175,9 @@
 	pop	bc
 	ld	hl,1	;const
 	call	_wyz_play_music
+	ld	hl,6 % 256	;const
+	ld	a,l
+	ld	(_n_pant),a
 	ret
 
 
@@ -6331,6 +6334,47 @@
 	ret nz
 	ld hl, cuts4
 	call run_cutscene
+	ld b, 4
+	ld hl, _sprite_18_a
+	ld ix, _sp_sw
+	.custom_clear_sprites_loop
+	ld (ix + 0), l
+	ld (ix + 1), h
+	xor a
+	ld (ix + 8), a
+	ld (ix + 9), a
+	ld (ix + 10), a
+	ld (ix + 11), a
+	push bc
+	ld bc, 16
+	add ix, bc
+	pop bc
+	djnz custom_clear_sprites_loop
+	xor a
+	ld hl, _nametable
+	ld (hl), a
+	ld de, _nametable+1
+	ld bc, 767
+	ldir
+	ld	hl,6	;const
+	call	_wyz_play_music
+	call	_pokemon_combat
+	ld	hl,3	;const
+	call	_wyz_play_music
+	ld a, (_pk_win)
+	or a
+	jr z, pokemon_lose
+	.pokemon_win
+	ld a, 1
+	ld (_game_loop_flag), a
+	ret
+	.pokemon_lose
+	dec a
+	ld (_on_pant), a
+	ld hl, 256
+	ld (_player + 6), hl
+	ld a, 1
+	ld (_player + 26), a
 	ret
 	.room_12
 	ld a, (_gallumb_flag)
@@ -7024,8 +7068,8 @@
 ._saca_a_todo_el_mundo_de_aqui
 	ld de, 15
 	ld b, 1 + 3 + 0 + 0 + 0
-	.clear_sprites_loop
 	ld hl, 0xE000 + 0x600
+	.clear_sprites_loop
 	ld a, #(_sprite_18_a%256)
 	ld (hl), a
 	inc hl
@@ -9183,7 +9227,6 @@
 	ei
 .i_192
 	call	_title_screen
-	call	_pokemon_combat
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_playing),a
@@ -9840,6 +9883,7 @@
 	LIB	cpc_PrintGphStrXY
 	XDEF	_sm_invfunc
 	XDEF	_can_move_box
+	LIB	cpc_PutSpTileMap12x24CA
 	XDEF	_str_infected
 	LIB	cpc_PrintGphStrStdXY
 	XDEF	_hook_init_mainloop
@@ -9900,6 +9944,8 @@
 	XDEF	_gp_gen_alt
 	XDEF	_mueve_bicharracos
 	XDEF	_gandalf_talk
+	LIB	cpc_PutTrSp8x16TileMap2bGPxP
+	LIB	cpc_PutTrSp8x24TileMap2bGPxP
 	XDEF	_pk_portrait
 	XDEF	_pk_animate_portrait
 	LIB	cpc_ShowTouchedTiles2
@@ -9992,19 +10038,24 @@
 	LIB	cpc_PrintGphStrXY2X
 	XDEF	_life_old
 	XDEF	_en_ccx
+	LIB	cpc_PutTrSp4x8TileMap2bG
+	LIB	cpc_PutTrSp8x16TileMap2bG
+	LIB	cpc_PutTrSp8x24TileMap2bG
 	LIB	cpc_SpRRM1
 	XDEF	_en_ccy
 	XDEF	_tfn_a
 	XDEF	_tfn_b
-	XDEF	_enems_en_an_calc
 	XDEF	_sm_sprptr
+	XDEF	_enems_en_an_calc
 	XDEF	_str_regain
 	LIB	cpc_PrintGphStrXYM1
 	XDEF	_str_wipe
 	XDEF	_str_used
 	XDEF	_fall_box
 	XDEF	_bottom_string
+	LIB	cpc_UpdScrP
 	LIB	cpc_PutSpriteXOR
+	LIB	cpc_PutTrSp16x16TileMap2bGPxM1
 	LIB	cpc_TestKey
 	XDEF	_text0
 	LIB	cpc_PutSprite
@@ -10057,6 +10108,7 @@
 	XDEF	_pk_temp
 	XDEF	_enoffs
 	LIB	cpc_PutSpTr
+	LIB	cpc_PutTrSp12x24TileMap2bGCA
 	XDEF	_pad_this_frame
 	LIB	cpc_DisableFirmware
 	LIB	cpc_EnableFirmware
@@ -10073,6 +10125,7 @@
 	XDEF	_pad1
 	XDEF	__tile_address
 	XDEF	_n_pant
+	LIB	cpc_UpdScrM1P
 	XDEF	_def_keys_joy
 	XDEF	_en_j
 	XDEF	_redraw_after_text
@@ -10089,14 +10142,17 @@
 	XDEF	_enems_custom_collision
 	LIB	cpc_RRI
 	LIB	cpc_GetSp
+	LIB	cpc_PutTrSp4x8TileMap2bGPx
+	LIB	cpc_PutTrSp8x16TileMap2bGPx
+	LIB	cpc_PutTrSp8x24TileMap2bGPx
 	XDEF	_enit
-	XDEF	_collide_enem
 	LIB	cpc_SpUpdX
 	LIB	cpc_SpUpdY
 	LIB	cpc_PutTile4x16
 	XDEF	_hook_mainloop
-	XDEF	_main
+	XDEF	_collide_enem
 	XDEF	_mapa
+	XDEF	_main
 	XDEF	_draw_coloured_tile
 	XDEF	_attr
 	XDEF	_pk_pad_wait
@@ -10232,16 +10288,16 @@
 	XDEF	_en_tocado
 	LIB	cpc_TestKeyF
 	XDEF	_text18
-	XDEF	_text19
-	XDEF	_draw_2_digits
+	LIB	cpc_PutTrSp16x16TileMap2bGPxM1P
+	LIB	cpc_PutTrSp16x24TileMap2bGPxM1P
 	XDEF	_rdx
 	XDEF	_rdy
 	XDEF	_sm_cox
 	XDEF	_sm_coy
+	XDEF	_draw_2_digits
+	XDEF	_text19
 	XDEF	_text20
 	XDEF	_text21
-	XDEF	_text22
-	XDEF	_text23
 	LIB	cpc_PutTrSp4x8TileMap2bPx
 	LIB	cpc_PutTrSp8x16TileMap2bPx
 	LIB	cpc_PutTrSp8x24TileMap2bPx
@@ -10252,38 +10308,40 @@
 	XDEF	_tileset
 	LIB	cpc_PutSpTileMap8x16
 	LIB	cpc_PutSpTileMap8x24
-	XDEF	_text24
-	XDEF	_text25
+	XDEF	_text22
+	XDEF	_text23
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask
+	XDEF	_text24
+	XDEF	_text25
 	XDEF	_text26
-	XDEF	_text27
-	XDEF	_text28
 	LIB	cpc_ReadTile
 	LIB	cpc_PutMaskSprite
+	XDEF	_text27
+	XDEF	_text28
 	XDEF	_text29
 	XDEF	_text30
 	XDEF	_text31
 	XDEF	_text32
 	XDEF	_text33
 	XDEF	_text34
-	XDEF	_text35
-	XDEF	_text36
 	LIB	cpc_PutSpTileMapO
 	XDEF	_enoffsmasi
-	XDEF	_text37
+	XDEF	_text35
 	LIB	cpc_PutSp
+	XDEF	_text36
+	XDEF	_text37
+	LIB	cpc_UpdScrAddresses
 	XDEF	_text38
 	XDEF	_text39
-	LIB	cpc_UpdScrAddresses
 	XDEF	_text40
 	XDEF	_text41
 	XDEF	_text42
 	XDEF	_draw_cur_screen_decos
 	XDEF	_psk
+	XDEF	_game_loop_flag
 	XDEF	_a_leechseed
 	XDEF	_bubasaur
-	XDEF	_game_loop_flag
 	XDEF	_pk_delay
 	XDEF	_pk_attack
 	XDEF	_set_ts

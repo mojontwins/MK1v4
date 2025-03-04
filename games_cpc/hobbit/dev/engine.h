@@ -79,8 +79,8 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	#asm
 			ld  de, 15
 			ld  b, SW_SPRITES_ALL
-		.clear_sprites_loop
 			ld  hl, BASE_SPRITES
+		.clear_sprites_loop
 			ld  a, #(_sprite_18_a%256)
 			ld  (hl), a
 			inc hl
@@ -89,6 +89,9 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 			add hl, de
 			djnz clear_sprites_loop
 	#endasm
+
+	// Old version is crap
+
 }
 
 void get_pointer_to_enem (void) {
