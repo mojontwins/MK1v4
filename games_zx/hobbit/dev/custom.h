@@ -1293,7 +1293,6 @@ void bilbos_hangover (void) {
 		n_pant = 4;
 		anillo_flag = 1; gallumb_flag = 1;
 		*/
-		n_pant = 0;
 	}
 
 	void hook_init_mainloop (void) {

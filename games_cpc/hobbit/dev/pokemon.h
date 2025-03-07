@@ -1803,7 +1803,7 @@ void pk_pl_pickup_attack (void) {
 
 			ld  h, 0 
 			ld  l, a 
-			ld  de, _pk_data
+			ld  de, _pk_player_attacks
 			add hl, de 
 			ld  a, (hl)
 			or  a 

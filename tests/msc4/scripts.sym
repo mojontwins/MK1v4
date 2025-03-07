@@ -1,0 +1,22 @@
+Z80 Module Assembler 1.1.19 (03.11.2012), (c) InterLogic 1993-2009, Paulo Custodio 2011-2012     Fri Mar 07 11:37:16 2025
+Page 001                                                                                                    'scripts.sym'
+
+
+
+
+Local Module Symbols:
+
+SCRIPT_E_00			= 00000009
+SCRIPT_F_00			= 0000000A
+
+
+Global Module Symbols:
+
+SCRIPTS_E			= 00000000
+SCRIPTS_F			= 00000002
+SCRIPT_E_ANY			= 00000006
+SCRIPT_E_GAME			= 00000007
+SCRIPT_F_ANY			= 00000008
+SCRIPT_GET_COIN			= 00000004
+SCRIPT_KILL_ENEMY		= 00000005
+

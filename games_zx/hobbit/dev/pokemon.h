@@ -1947,6 +1947,7 @@ void pk_op_pickup_attack (void) {
 // Player : Select attack from menu -> pk_pl_attack
 
 void pk_pl_pickup_attack (void) {
+	/*
 	do {
 		_x = PK_ATTACK_MENU_X;
 		_y = PK_ATTACK_MENU_Y;
@@ -1955,7 +1956,35 @@ void pk_pl_pickup_attack (void) {
 		pk_simple_menu ();
 		pk_pl_attack = pa2;
 	} while(pk_data[pk_pl_attack<<4 + AT_PP] == 0);
+	*/
+	#asm 
+		.pk_pl_pickup_attack_loop
+			ld  a, PK_ATTACK_MENU_X
+			ld  (__x), a 
+			ld  a, PK_ATTACK_MENU_Y
+			ld  (__y), a 
+			call _pk_print_attacks
+			ld  a, 4
+			ld  (_pa1), a 
+			call _pk_simple_menu 
+			ld  a, (_pa2)
+			ld  (_pk_pl_attack), a 
 
+			// } while(pk_data[pk_pl_attack<<4 + AT_PP] == 0);
+			sla a 
+			sla a 
+			sla a 
+			sla a 			// A = pk_pl_attack << 4
+			add AT_PP 		// A = pk_pl_attack<<4 + AT_PP
+
+			ld  h, 0 
+			ld  l, a 
+			ld  de, _pk_player_attacks
+			add hl, de 
+			ld  a, (hl)
+			or  a 
+			jr  z, pk_pl_pickup_attack_loop
+	#endasm
 }
 
 // Attack cycle

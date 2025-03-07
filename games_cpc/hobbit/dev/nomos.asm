@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Mar 04 13:24:49 2025
+;	Module compile time: Fri Mar 07 09:26:58 2025
 
 
 
@@ -5918,7 +5918,7 @@
 	add 2
 	ld h, 0
 	ld l, a
-	ld de, _pk_data
+	ld de, _pk_player_attacks
 	add hl, de
 	ld a, (hl)
 	or a

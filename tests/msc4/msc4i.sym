@@ -1,0 +1,33 @@
+Z80 Module Assembler 1.1.19 (03.11.2012), (c) InterLogic 1993-2009, Paulo Custodio 2011-2012     Fri Mar 07 11:37:16 2025
+Page 001                                                                                                      'msc4i.sym'
+
+
+
+
+Local Module Symbols:
+
+C_OPCODE_01			= 00000038
+C_OPCODE_10			= 0000003D
+C_OPCODE_11			= 00000044
+C_OPCODE_14			= 00000007
+C_OPCODE_15			= 00000012
+C_OPCODE_16			= 0000001F
+C_OPCODE_17			= 0000002C
+C_OPCODE_F0			= 00000037
+READ_BYTE			= 0000008A
+READ_I_V			= 000000B4
+READ_VBYTE			= 00000093
+READ_VBYTE_REC			= 0000009B
+READ_X_Y			= 000000A7
+RUN_SCRIPT			= 00000000
+SCRIPT				= 000000C2
+SC_TERMINADO			= 000000C6
+SC_X				= 000000C4
+SC_Y				= 000000C5
+SET_BREAK_AND_RET		= 00000001
+_FLAGS				= 000000C7
+
+
+Global Module Symbols:
+
+
