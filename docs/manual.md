@@ -969,6 +969,12 @@ A partir de `4.9` hay más todavía:
 
 * `SWORD_DISABLE_HIT` desactivará todo el código que se ejecuta normalmente cuando la espada impacta con un enemigo, por si quieres implementar toda la lógica por tu cuenta.
 
+### El puñito
+
+El puñito de Ninjajar es en realidad una espada con `SWORD_STAB` activado. Además, si dejamos comentado `SWORD_HIT_FRAME` no se modificará el cell activo cuando se saca el puñito.
+
+Sin embargo hay dos cosas más a tener en cuenta que se introdujeron precisamente para **Ninjajar: The Lost Levels**, que es en modo 0 y tiene un puño que ocupa 6x8 pixeles en un cuadro de 8x8: `SWORD_W` define el ancho lógico del puño, que en este caso no es 8 sino 12 píxels. `SWORD_WIDE` hace que se emplée un sprite de 8x8 en lugar del normal de 4x8.
+
 ### Tiles que se rompen
 
 Si se activa este motor, los tiles de comportamiento `& 32` se podrán romper. Los tiles se rompen con un solo golpe de espada o un solo disparo, no hay posibilidad de configurar un número de golpes como en las versiones 3.99.x o 5.x+.
@@ -2720,6 +2726,16 @@ Es este juego, la fase 4 ocupa las dos últimas filas del mapa de 8x12 pantallas
 
 De forma parecida, las pantallas a los extremos de estas filas conectan con la del extremo opuesto, de forma cíclica.
 
+## Conexiones de pantalla personalizadas, mark 2
+
+Si lo que quieres es sustituir todo el código que cambia de pantalla (por ejemplo si estás manejando varios niveles de diferentes tamaños de forma que, utilizando el anterior método, los overrides siempre devolviesen 1), activa 
+
+```c
+	#define CUSTOM_FLICK_SCREEN_HANDLER
+```
+
+E implementa tus cambios en `custom_flick_screen_handler` dentro de `custom.h`.
+
 ## Enemigos empaquetados
 
 Los enemigos empaquetados se activan con `#define PACKED_ENEMS` en `config.h` y almacenan los pares (`x1`, `y1`) y (`x2`, `y2`) cada uno en un byte. Esto añade algo de overhead, sobre todo si no activamos `FIXED_ENEMS_LIMITS` (con lo que el motor asume que los limites no cambian y no tratará de reempaquetarlos tras cada vuelta de bucle), pero ahorra 2 bytes por cada enemigo del juego, algo que viene muy bien para juegos con muchas pantallas o si queremos subir el número de enemigos por pantalla. Por ejemplo, en un juego de 96 pantallas ahorraría 576 bytes (los enemigos pasarían de ocupar 2880 bytes a ocupar 2304 bytes).
@@ -2772,6 +2788,63 @@ Si se activa, con `n` = 1 o 2, se obrarán los siguientes cambios dependiendo de
 
 ```cmd
 	..\utils\ts2bin.exe nofont ..\gfx\work.png ts_attrs.bin 7
+```
+
+### En CPC
+
+En CPC la fuente y el resto de los tiles están separados así que sólo basta con definir `COMPRESSED_TS` (sin un valor) y actuará como `n = 2`. Puedes verlo en acción en el `Hobbit` de CPC. 
+
+## Organización custom de Mapas
+
+Esto te sirve para hacer multinivel usando varios mapas en RLE. Si defines 
+
+```c
+	#define CUSTOM_MAP_POINTER_CALCULATOR
+```
+
+el motor llamará a la función `custom_flick_screen_handler` de `custom.h` y dibujará la pantalla apuntada por `gp_gen` en el formato que esté activo. Es decir, se espera que calcules la dirección de la pantalla. Por ejemplo, podrías tener un array de punteros a mapas packed indexada por el número de nivel `level` y hacer algo así:
+
+```c
+	void custom_map_pointer_calculator (void) {
+		gp_gen = mapas [level] + (n_pant * 75);
+	}
+```
+
+o algo un poco más complejo para RLE (que llevan un ínidice). En la misma situación anterior en la que tienes un array `mapas` con un puntero al mapa de cada nivel podrías hacer:
+
+```c
+	void custom_map_pointer_calculator (void) {
+		#asm
+			._draw_scr_get_scr_address
+				ld  hl, (_level)
+				ld  h, 0
+				add hl, hl
+				ld  de, _maps
+				add hl, de 		; HL -> mapas [level]
+
+				ld  e, (hl)
+				inc hl 
+				ld  d, (hl) 	; DE = mapas [level]
+
+				push de 		; Save mapas [level]
+
+				ld  hl, (_n_pant)
+				ld  h, 0
+				add hl, hl
+				
+				add hl, de 		; HL = mapas [level] + (n_pant << 1)
+
+				ld  e, (hl)
+				inc hl
+				ld  d, (hl) 	; DE = index
+
+				pop hl 			; HL = mapas [level]
+				
+				add hl, de      ; HL = mapas [level] + index
+
+				ld  (_gp_gen), hl
+		#endasm
+	}
 ```
 
 # Capítulo 9 - `MODE_128K_DUAL`

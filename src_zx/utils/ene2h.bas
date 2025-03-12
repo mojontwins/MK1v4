@@ -1,4 +1,4 @@
-' ene2h.bas v0.7.20250226-v4
+' ene2h.bas v0.8.20250311-v4
 
 ' Commands first draft
 ' CMD=C,T,O,V where C = command, T = type, O = output member, V = value
@@ -20,7 +20,9 @@ End Type
 
 Sub usage
 	Print
-	Print "$ ene2h.exe enems.ene enems.h [2bytes] [dslight|dsall] [compacted] [indexed] [CMD=C,T,O,V] [marrullers]"
+	Print "$ ene2h.exe enems.ene|empty=W,H,N enems.h [2bytes] [dslight|dsall] [compacted] [indexed] [CMD=C,T,O,V] [marrullers]"
+	Print
+	Print "empty en vez de enems.ene generará todo a 0 contando WxH con N enems"
 	Print
 	Print "2bytes (optional) - support really old .ene files which stored the hotspots"
 	Print "    2 bytes each instead of 3 bytes.  As a rule of thumb: "
@@ -76,8 +78,9 @@ Dim As String tokens (16)
 Dim As Integer enoffsIndex(999)
 Dim As Integer nonEmptyEnems
 Dim As Integer first
+Dim As Integer empty
 
-Print "ene2h.bas v0.7.20250226-v4 ";
+Print "ene2h.bas v0.8.20250311-v4 ";
 
 sclpParseAttrs
 
@@ -104,6 +107,14 @@ marrullers = inCommand ("marrullers")
 
 indexed = inCommand ("indexed")
 
+empty = sclpGIsDef ("empty")
+If empty Then
+	parseCommaSeparatedString sclpGetValue ("empty"), tokens ()
+	mapW = Val (tokens (0))
+	mapH = Val (tokens (1))
+	nEnems = Val (tokens (2))
+End If 
+
 ' Look for & parse CMDs
 i = 3
 cmdIndex = 0
@@ -121,17 +132,22 @@ Wend
 
 If cmdIndex > 0 Then Print "~ " & cmdIndex & " commands found ";
 
-fIn = FreeFile
-Open Command (1) For Binary As #fIn
+If Not empty Then 
+	fIn = FreeFile
+	Open Command (1) For Binary As #fIn
+End If 
+
 fOut = FreeFile
 Open Command (2) For Output As #fOut
 
 ' Header
-dummy = Input (256, fIn)
-Get #fIn, , d: mapW = d
-Get #fIn, , d: mapH = d
-Get #fIn, , d: Get #fIn, , d
-Get #fIn, , d: nEnems = d
+If Not empty Then 
+	dummy = Input (256, fIn)
+	Get #fIn, , d: mapW = d
+	Get #fIn, , d: mapH = d
+	Get #fIn, , d: Get #fIn, , d
+	Get #fIn, , d: nEnems = d
+End If
 
 mapPants = mapW * mapH
 
@@ -165,14 +181,26 @@ For i = 1 To mapPants
 	Print #fOut, "	// Pantalla " & (i-1)
 	enoffsIndex (i-1) = nonEmptyEnems
 	For j = 1 To nEnems
-		Get #fIn, , t
-		Get #fIn, , x
-		Get #fIn, , y
-		Get #fIn, , xx
-		Get #fIn, , yy 
-		Get #fIn, , mn
-		Get #fIn, , s1
-		Get #fIn, , s2
+
+		If empty Then 
+			t = 0
+			x = 0
+			y = 0
+			xx = 0
+			yy = 0
+			mn = 0
+			s1 = 0
+			s2 = 0
+		Else
+			Get #fIn, , t
+			Get #fIn, , x
+			Get #fIn, , y
+			Get #fIn, , xx
+			Get #fIn, , yy 
+			Get #fIn, , mn
+			Get #fIn, , s1
+			Get #fIn, , s2
+		End If
 
 		outX = 16*x: outY = 16*y
 
@@ -299,14 +327,19 @@ Print #fOut, ""
 Print #fOut, "HOTSPOT hotspots [] = {"
 
 For i = 1 To mapPants
-	If use2bytes Then
-		Get #fIn, , xy
-		Get #fIn, , t
-	Else
-		Get #fIn, , x
-		Get #fIn, , y
-		Get #fIn, , t
-		xy = (x Shl 4) Or (y And 15)
+	If empty Then
+		xy = 0
+		t = 0
+	Else 
+		If use2bytes Then
+			Get #fIn, , xy
+			Get #fIn, , t
+		Else
+			Get #fIn, , x
+			Get #fIn, , y
+			Get #fIn, , t
+			xy = (x Shl 4) Or (y And 15)
+		End If
 	End If
 
 	typeCounters (t) = typeCounters (t) + 1

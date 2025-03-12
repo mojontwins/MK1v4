@@ -13,6 +13,7 @@ cpc_PutSpTileMap
 cpc_PutSpTileMap4x8
 cpc_PutSpTileMap4x8Px
 cpc_PutSpTileMap8x8PxM1
+cpc_PutSpTileMap8x8Px
 cpc_PutSpTileMap8x16
 cpc_PutSpTileMap8x16Px
 cpc_PutSpTileMap16x16PxM1
@@ -93,6 +94,7 @@ cpc_PutTrSp4x8TileMap2bG
 cpc_PutTrSp4x8TileMap2bPx
 cpc_PutTrSp4x8TileMap2bGPx
 cpc_PutTrSp8x8TileMap2bPxM1
+cpc_PutTrSp8x8TileMap2bPx
 cpc_PutTrSp8x16TileMap2b
 cpc_PutTrSp8x16TileMap2bG
 cpc_PutTrSp8x16TileMap2bPx

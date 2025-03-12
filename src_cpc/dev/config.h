@@ -44,6 +44,8 @@
 //#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS	// Call `custom.h/get_cell_n ()` for linear
 //#define ENEMS_CUSTOM_CELLS 				// Include custom_enem_cells.h
 //#define ENEMS_CUSTOM_COLLISION 			// Normal code will only be ran if enems_custom_collision returns 0
+//#define CUSTOM_MAP_POINTER_CALCULATOR 	// Calculate gp_gen yourself in custom_map_pointer_calculator @ custom.h
+//#define CUSTOM_FLICK_SCREEN_HANDLER		// Change n_pant yourselfcustom_flick_screen_handler @ custom.h
 
 // ============================================================================
 // II. Engine type

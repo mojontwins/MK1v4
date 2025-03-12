@@ -856,7 +856,16 @@ void main (void) {
 
 			// Flick screen
 
-			#ifndef FIXED_SCREENS
+			#ifdef FIXED_SCREENS
+				// Do nothing
+
+			#elif defined CUSTOM_FLICK_SCREEN_HANDLER
+				// Defined in custom.h, Changes n_pant when it's needed.
+				custom_flick_screen_handler ();
+
+			#else
+				// Default flick screen code.
+
 				#ifndef COLUMN_MAP
 					if (gpx == 0 && player.vx < 0) {
 						#asm

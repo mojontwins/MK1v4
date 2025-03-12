@@ -4648,17 +4648,13 @@ void draw_scr_background (void) {
 			ld  (_rdi), a
 	#endasm
 	
-	#ifdef RLE_MAP
+	#ifdef CUSTOM_MAP_POINTER_CALCULATOR
+		// Defined in custom.h. Calculates gp_gen for current n_pant
+		custom_map_pointer_calculator ();
+		
+	#elif defined (RLE_MAP)
 		#asm
 			._draw_scr_get_scr_address
-				/*
-				ld  a, (_n_pant)
-				sla a
-				ld  d, 0
-				ld  e, a
-				ld  hl, _mapa
-				*/
-
 				// Full 16 bits calculation
 				ld  hl, (_n_pant)
 				ld  h, 0

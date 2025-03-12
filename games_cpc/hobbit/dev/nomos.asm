@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Mar 07 09:26:58 2025
+;	Module compile time: Wed Mar 12 11:26:25 2025
 
 
 
@@ -9849,8 +9849,8 @@
 ._pti	defs	1
 ._ptj	defs	1
 ._enoffsmasi	defs	2
-._psk	defs	1
 ._game_loop_flag	defs	1
+._psk	defs	1
 ._latest_hotspot	defs	1
 ._amador_talk	defs	1
 ._asm_int	defs	2
@@ -10275,19 +10275,19 @@
 	XDEF	_gpy
 	XDEF	_rdd
 	XDEF	_text10
-	XDEF	_text11
+	LIB	cpc_PutSpTileMap8x8Px
 	XDEF	_rdi
 	XDEF	_rdj
+	XDEF	_text11
 	XDEF	_text12
 	XDEF	_text13
-	XDEF	_text14
 	XDEF	_rdn
-	XDEF	_text17
+	XDEF	_text14
 	XDEF	_keys_old
 	XDEF	_init_player_values
 	XDEF	_en_tocado
 	LIB	cpc_TestKeyF
-	XDEF	_text18
+	XDEF	_text17
 	LIB	cpc_PutTrSp16x16TileMap2bGPxM1P
 	LIB	cpc_PutTrSp16x24TileMap2bGPxM1P
 	XDEF	_rdx
@@ -10295,59 +10295,61 @@
 	XDEF	_sm_cox
 	XDEF	_sm_coy
 	XDEF	_draw_2_digits
+	XDEF	_text18
 	XDEF	_text19
 	XDEF	_text20
-	XDEF	_text21
 	LIB	cpc_PutTrSp4x8TileMap2bPx
+	LIB	cpc_PutTrSp8x8TileMap2bPx
 	LIB	cpc_PutTrSp8x16TileMap2bPx
 	LIB	cpc_PutTrSp8x24TileMap2bPx
 	XDEF	_pti
-	XDEF	_ptj
 	XDEF	_comportamiento_tiles
+	XDEF	_ptj
 	XDEF	_move_tile
-	XDEF	_tileset
 	LIB	cpc_PutSpTileMap8x16
 	LIB	cpc_PutSpTileMap8x24
-	XDEF	_text22
-	XDEF	_text23
+	XDEF	_tileset
+	XDEF	_text21
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask
+	XDEF	_text22
+	XDEF	_text23
 	XDEF	_text24
-	XDEF	_text25
-	XDEF	_text26
 	LIB	cpc_ReadTile
 	LIB	cpc_PutMaskSprite
+	XDEF	_text25
+	XDEF	_text26
 	XDEF	_text27
 	XDEF	_text28
 	XDEF	_text29
 	XDEF	_text30
 	XDEF	_text31
 	XDEF	_text32
-	XDEF	_text33
-	XDEF	_text34
 	LIB	cpc_PutSpTileMapO
 	XDEF	_enoffsmasi
-	XDEF	_text35
+	XDEF	_text33
 	LIB	cpc_PutSp
+	XDEF	_text34
+	XDEF	_text35
+	LIB	cpc_UpdScrAddresses
 	XDEF	_text36
 	XDEF	_text37
-	LIB	cpc_UpdScrAddresses
 	XDEF	_text38
 	XDEF	_text39
 	XDEF	_text40
 	XDEF	_text41
 	XDEF	_text42
+	XDEF	_game_loop_flag
 	XDEF	_draw_cur_screen_decos
 	XDEF	_psk
-	XDEF	_game_loop_flag
 	XDEF	_a_leechseed
 	XDEF	_bubasaur
 	XDEF	_pk_delay
 	XDEF	_pk_attack
 	XDEF	_set_ts
 	XDEF	_player_flicker
-	XDEF	_init_hotspots
 	XDEF	_pk_init_pokemon_pa1_from_ptr
+	XDEF	_init_hotspots
 	XDEF	_get_coin
 	XDEF	_latest_hotspot
 	XDEF	_str_defeated

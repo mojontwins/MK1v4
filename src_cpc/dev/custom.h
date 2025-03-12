@@ -60,3 +60,20 @@
 		return 0;
 	}
 #endif
+
+#ifdef CUSTOM_MAP_POINTER_CALCULATOR
+	void custom_map_pointer_calculator (void) {
+		// custom calculate gp_gen based on n_pant (and level, etc...)
+		// to point to the screen that's to be rendered.
+
+	}
+
+#endif
+
+#ifdef CUSTOM_FLICK_SCREEN_HANDLER
+	void custom_flick_screen_handler (void) {
+	 	// Changes n_pant when it's needed.
+	 	// Substitutes normal flick screen code. Use for multilevel, etc.
+	 }
+
+#endif
