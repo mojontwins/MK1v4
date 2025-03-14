@@ -116,7 +116,7 @@
 // Boxes engine
 // ------------
 
-#define PLAYER_PUSH_BOXES 					// If defined, tile #14 is pushable
+//#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 //#define PUSH_OVER_FLOOR 					// Must be on floor to push
 //#define PUSH_AND_PULL 					// Use fire+LEFT/RIGHT to push/pull in side view
 //#define PUSH_AND_PULL_PILES 				// Can push/pull piles of stacked boxes
@@ -221,12 +221,12 @@
 // Quadrators
 // ----------
 
-#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
+//#define ENABLE_CUADRATORS					// Enable QUADRATORS, enemy type 7-10
 
 // Patrulleros marrulleros genitales
 // ---------------------------------
 
-#define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
+//#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
 //#define MARRULLERS_CONFINED 				// Marrullers will never touch the borders of the screen
 
 // Scripting
@@ -244,7 +244,7 @@
 // Top view:
 // ---------
 
-#define PLAYER_MOGGY_STYLE					// Enable top view.
+//#define PLAYER_MOGGY_STYLE				// Enable top view.
 //#define LOOK_AT_THE_CAMERA				// Use "walk down" cell if player is idle
 //#define PLAYER_NO_INERTIA					// Disable inertia
 //#define PLAYER_CONST_V			256		// Constant speed
@@ -252,10 +252,10 @@
 // Side view:
 // ----------
 
-//#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
+#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
-#define TIGHT_LOWER 				4
-#define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
+#define TIGHT_LOWER 				8
+#define TIGHT_UPPER 				16 		// For horizontal BB against BG, don't touch unless you know...
 #define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
 //#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
@@ -286,23 +286,23 @@
 
 // This sections defines how stuff is rendered, where to show counters, etcetera
 
-#define VIEWPORT_X					0		//
+#define VIEWPORT_X					1		//
 #define VIEWPORT_Y					2		// Viewport character coordinates
 
-#define LIFE_X						30		//
-#define LIFE_Y						8		// Life gauge counter character coordinates
+#define LIFE_X						3		//
+#define LIFE_Y						0		// Life gauge counter character coordinates
 //#define DRAW_HI_DIGIT	
 //#define LIFE_H_X 					1
 //#define LIFE_H_Y					8
 
-#define OBJECTS_X					30		//
-#define OBJECTS_Y					12		// Objects counter character coordinates
+//#define OBJECTS_X					30		//
+//#define OBJECTS_Y					12		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			2		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 //#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
-#define KEYS_X						30		//
-#define KEYS_Y						16		// Keys counter character coordinates
+//#define KEYS_X					30		//
+//#define KEYS_Y					16		// Keys counter character coordinates
 
 //#define SHOW_KILLED
 //#define SHOW_TOTAL
@@ -318,8 +318,8 @@
 //#define ITEM_SHOW_X				2		//
 //#define ITEM_SHOW_Y				21		// Position
 
-//#define COINS_X 					12 		// Coins coint character coordinates
-//#define COINS_Y					23
+#define COINS_X 					29 		// Coins coint character coordinates
+#define COINS_Y						0
 
 //#define EVIL_GAUGE_X				21		// For evil zone counters
 //#define EVIL_GAUGE_Y				23
@@ -330,8 +330,6 @@
 //#define LINE_OF_TEXT_X			1
 //#define LINE_OF_TEXT_SUBSTR		2
 //#define LINE_OF_TEXT_ATTR 		7		
-
-#define GAME_OVER_ATTR				15
 
 // Graphic FX, uncomment which applies...
 

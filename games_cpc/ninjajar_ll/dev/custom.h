@@ -94,14 +94,19 @@ unsigned char l_ini_y [] = { 2, 2, 2 };
 unsigned char map_w, map_h;
 
 unsigned char *dst;
-void depack_asset (unsigned char **collection) {
+unsigned char **collection;
+void depack_asset (void) {
 	gp_gen = collection [level];
 	#asm 
-			ld  hl, _dst 
+			ld  hl, (_level)
+			ld  h, 0 
+			add hl, hl
+			ld  de, _collection
+			add hl, de 
 			ld  e, (hl)
-			inc hl 
+			inc hl
 			ld  d, (hl)
-
+			
 			ld  hl, _gp_gen
 			ld  a, (hl)
 			inc hl 
@@ -134,12 +139,31 @@ void depack_asset (unsigned char **collection) {
 			map_h = l_map_h [level];
 
 			n_pant = l_scr_ini [level];
+			on_pant = 0xff;
 
 			// I've tricked the engine via defines, PLAYER_INI_X / Y are defined to read the arrays.
 			init_player_values ();
 
 			// Decompress stuff
-			dst = tspatterns;
+			dst = tspatterns; collection = tss; depack_asset();
+			dst = sprites + 512; collection = sss; depack_asset();
+			dst = malotes; collection = enems_hotspotss; depack_asset();
+
+			// Copy behs
+			#asm
+					ld  hl, (_level)
+					ld  h, 0
+					add hl, hl 
+					ld  de, _ts_behs
+					add hl, de 
+					ld  a, (hl)
+					inc hl 
+					ld  h, (hl)
+					ld  l, a 
+					ld  de, _comportamiento_tiles
+					ld  bc, 16
+					ldir
+			#endasm 
 		}
 	}
 
