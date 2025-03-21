@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Mar 12 11:26:25 2025
+;	Module compile time: Fri Mar 21 10:47:53 2025
 
 
 
@@ -3843,7 +3843,7 @@
 	.cuts1
 	defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
-	defb 46|128, 19, 20, 21, 255
+	defb 17|128, 19, 20, 21, 255
 	.cuts3
 	defb 33|128, 27, 28, 0|128, 17, 17|128, 30, 33|128, 31, 255
 	.cuts4
@@ -6331,9 +6331,12 @@
 	ret nc
 	ld a, (_smaug_talk)
 	or a
-	ret nz
+	jr nz, smaug_talk_skip
+	inc a
+	ld (_smaug_talk), a
 	ld hl, cuts4
 	call run_cutscene
+	.smaug_talk_skip
 	ld b, 4
 	ld hl, _sprite_18_a
 	ld ix, _sp_sw
@@ -6356,11 +6359,13 @@
 	ld de, _nametable+1
 	ld bc, 767
 	ldir
+	call	_recuadrius
 	ld	hl,6	;const
 	call	_wyz_play_music
 	call	_pokemon_combat
 	ld	hl,3	;const
 	call	_wyz_play_music
+	call	_recuadrius
 	ld a, (_pk_win)
 	or a
 	jr z, pokemon_lose

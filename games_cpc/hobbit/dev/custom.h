@@ -557,7 +557,7 @@ unsigned char dwarf_names [] =
 	.cuts1
 		defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
-		defb 46|128, 19, 20, 21, 255
+		defb 17|128, 19, 20, 21, 255
 	.cuts3
 		defb 33|128, 27, 28, 0|128, 17, 17|128, 30, 33|128, 31, 255
 	.cuts4 		// Charmander showdown
@@ -1571,10 +1571,14 @@ void bilbos_hangover (void) {
 
 				ld  a, (_smaug_talk)
 				or  a
-				ret nz 
+				jr  nz, smaug_talk_skip
+				inc a 
+				ld  (_smaug_talk), a
 
 				ld  hl, cuts4
 				call run_cutscene
+
+			.smaug_talk_skip
 
 				// *********** POKEMON ****************
 				
@@ -1606,9 +1610,11 @@ void bilbos_hangover (void) {
 				ld  bc, 767
 				ldir
 			#endasm
+			recuadrius ();
 			wyz_play_music (6); 		// Pokemon
 			pokemon_combat ();
 			wyz_play_music (3); 		// Cave
+			recuadrius ();
 			#asm 
 				ld  a, (_pk_win)
 				or  a 

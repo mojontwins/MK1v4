@@ -562,7 +562,7 @@ unsigned char dwarf_names [] =
 	.cuts1
 		defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
-		defb 46|128, 19, 20, 21, 255
+		defb 17|128, 19, 20, 21, 255
 	.cuts3
 		defb 33|128, 27, 28, 0|128, 17, 17|128, 30, 33|128, 31, 255
 	.cuts4 		// Charmander showdown
@@ -1504,35 +1504,37 @@ void bilbos_hangover (void) {
 								ld  hl, cuts4
 								call run_cutscene
 						#endasm
-
-						// Pokemon
-						#asm
-								// VERY VERY DIRTY CLS
-								ld  hl, SPDisplayList 
-								ld  de, SPDisplayList + 1
-								ld  bc, 3071 
-								xor a 
-								ld  (hl), a 
-								ldir
-						#endasm
-
-						saca_a_todo_el_mundo_de_aqui ();
-						wyz_play_music (6); 		// Pokemon
-						pokemon_combat ();
-						wyz_play_music (3); 		// Cave
-
-						if(pk_win) {
-							game_loop_flag = 1;
-
-						} else {
-							// If lose -> one life less, throw right	
-							on_pant = 0xff;						
-							player.vx = 256;
-							player.is_dead = 1;
-						}
-
 						smaug_talk = 1;
 					}
+
+					// Pokemon
+					#asm
+							// VERY VERY DIRTY CLS
+							ld  hl, SPDisplayList 
+							ld  de, SPDisplayList + 1
+							ld  bc, 3071 
+							xor a 
+							ld  (hl), a 
+							ldir
+					#endasm
+
+					saca_a_todo_el_mundo_de_aqui ();
+					recuadrius ();
+					wyz_play_music (6); 		// Pokemon
+					pokemon_combat ();
+					wyz_play_music (3); 		// Cave
+					recuadrius ();
+
+					if(pk_win) {
+						game_loop_flag = 1;
+
+					} else {
+						// If lose -> one life less, throw right	
+						on_pant = 0xff;						
+						player.vx = 256;
+						player.is_dead = 1;
+					}
+
 				} 
 
 				break;

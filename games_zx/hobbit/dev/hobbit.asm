@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Mar 07 09:29:15 2025
+;	Module compile time: Fri Mar 21 10:49:16 2025
 
 
 
@@ -4348,7 +4348,7 @@
 	.cuts1
 	defb 47|128, 22, 23, 34|128, 24, 255
 	.cuts2
-	defb 46|128, 19, 20, 21, 255
+	defb 17|128, 19, 20, 21, 255
 	.cuts3
 	defb 33|128, 27, 28, 0|128, 17, 17|128, 30, 33|128, 31, 255
 	.cuts4
@@ -7010,6 +7010,10 @@
 	jp	nz,i_160
 	ld hl, cuts4
 	call run_cutscene
+	ld	hl,1 % 256	;const
+	ld	a,l
+	ld	(_smaug_talk),a
+.i_160
 	ld hl, SPDisplayList
 	ld de, SPDisplayList + 1
 	ld bc, 3071
@@ -7017,11 +7021,13 @@
 	ld (hl), a
 	ldir
 	call	_saca_a_todo_el_mundo_de_aqui
+	call	_recuadrius
 	ld	hl,6 % 256	;const
 	call	_wyz_play_music
 	call	_pokemon_combat
 	ld	hl,3 % 256	;const
 	call	_wyz_play_music
+	call	_recuadrius
 	ld	a,(_pk_win)
 	and	a
 	jp	z,i_161
@@ -7038,11 +7044,9 @@
 	ld	(hl),#(256 / 256)
 	ld	hl,_player+36
 	ld	(hl),#(1 % 256 % 256)
+	ld	l,(hl)
+	ld	h,0
 .i_162
-	ld	hl,1 % 256	;const
-	ld	a,l
-	ld	(_smaug_talk),a
-.i_160
 .i_159
 	jp	i_138
 .i_163
