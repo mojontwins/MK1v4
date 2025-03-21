@@ -7,6 +7,19 @@
 // STORAGE FOR MULTI LEVEL
 // ***********************
 
+// What you need:
+// An empty `enems.h` with enough space.
+// A set of RLE'd maps in binary format.
+// A set of ZX0'd tilesets, not including the font.
+// A set of ZX0'd spritesets, just the enemies part.
+// A set of ZX0'd enems+hotspots.
+// Arrays of behs.
+
+// Stuff to check if this goes haywire: 
+// 1.- Are your compressed enemies in the right format? 
+
+#define TS_SIZE 16 						// # of tiles in your tilesets 
+
 unsigned char level;
 unsigned char new_level;
 
@@ -93,29 +106,35 @@ unsigned char l_ini_y [] = { 2, 2, 2 };
 
 unsigned char map_w, map_h;
 
-unsigned char *dst;
-unsigned char **collection;
-void depack_asset (void) {
-	gp_gen = collection [level];
-	#asm 
-			ld  hl, (_level)
-			ld  h, 0 
-			add hl, hl
-			ld  de, _collection
-			add hl, de 
-			ld  e, (hl)
-			inc hl
-			ld  d, (hl)
-			
-			ld  hl, _gp_gen
-			ld  a, (hl)
-			inc hl 
-			ld  h, (hl)
-			ld  l, a 
+// Helper
 
-			call depack 
-	#endasm
-}
+#asm
+	// SRC collection in HL
+	// Uses `level`
+	.get_pointer_from_array
+		ld  a, (_level) 
+	.get_pointer_from_array_hijack
+		sla a 
+		ld  b, 0 
+		ld  c, a 
+		add hl, bc
+		
+		ld  a, (hl)
+		inc hl 
+		ld  h, (hl)
+		ld  l, a 
+
+		// Now HL points to the collection item
+		ret
+
+	// SRC collection in HL, 
+	// Uses `level`
+	// DST in DE
+	.depack_asset
+		call get_pointer_from_array 
+		call depack
+		ret 
+#endasm
 
 #ifdef ENABLE_CODE_HOOKS
 
@@ -145,23 +164,23 @@ void depack_asset (void) {
 			init_player_values ();
 
 			// Decompress stuff
-			dst = tspatterns; collection = tss; depack_asset();
-			dst = sprites + 512; collection = sss; depack_asset();
-			dst = malotes; collection = enems_hotspotss; depack_asset();
-
-			// Copy behs
 			#asm
-					ld  hl, (_level)
-					ld  h, 0
-					add hl, hl 
-					ld  de, _ts_behs
-					add hl, de 
-					ld  a, (hl)
-					inc hl 
-					ld  h, (hl)
-					ld  l, a 
+					ld  hl, _tss
+					ld  de, _tspatterns
+					call depack_asset
+
+					ld  hl, _sss
+					ld  de, _sprites + 512 
+					call depack_asset
+			
+					ld  hl, _enems_hotspotss 
+					ld  de, _malotes
+					call depack_asset 						
+
+					ld  hl, _ts_behs
+					call get_pointer_from_array 
 					ld  de, _comportamiento_tiles
-					ld  bc, 16
+					ld  bc, TS_SIZE
 					ldir
 			#endasm 
 		}
@@ -219,31 +238,17 @@ void depack_asset (void) {
 
 		#asm
 			._draw_scr_get_scr_address
-				ld  hl, (_level)
-				ld  h, 0
-				add hl, hl
-				ld  de, _maps
-				add hl, de 		; HL -> mapas [level]
+				ld  hl, _maps
+				call get_pointer_from_array				// HL = current map address
 
-				ld  e, (hl)
-				inc hl 
-				ld  d, (hl) 	; DE = mapas [level]
+				push hl 								// Save map address
 
-				push de 		; Save mapas [level]
+				ld  a, (_n_pant)
+				call get_pointer_from_array_hijack		// HL = current screen offset
 
-				ld  hl, (_n_pant)
-				ld  h, 0
-				add hl, hl
+				pop de 									// Retrieve map address
 				
-				add hl, de 		; HL = mapas [level] + (n_pant << 1)
-
-				ld  e, (hl)
-				inc hl
-				ld  d, (hl) 	; DE = index
-
-				pop hl 			; HL = mapas [level]
-				
-				add hl, de      ; HL = mapas [level] + index
+				add hl, de      						// Add offset to get screen address
 
 				ld  (_gp_gen), hl
 		#endasm

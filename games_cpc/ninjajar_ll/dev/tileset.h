@@ -2,7 +2,7 @@
 // Copyleft 2010-2013, 2020-2024 by The Mojon Twins
 
 extern unsigned char tileset [0];
-extern unsigned char tspatterns;
+extern unsigned char tspatterns [0];
 #asm
 		XDEF _ts
 		XDEF tiles

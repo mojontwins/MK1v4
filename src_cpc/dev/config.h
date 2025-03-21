@@ -21,6 +21,10 @@
 #define SOUND_WYZ
 #define WYZ_FX_CHANNEL 				1		// Where to play sound effects
 
+//#define NO_COMPRESSED_TITLE_SCR
+//#define NO_COMPRESSED_ENDING_SCR
+//#define DRAW_RECTANGLE_NOT_NEEDED
+
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W						5		//
@@ -154,6 +158,8 @@
 //#define SWORD_DEPLETES 					// Can only hit when player.sword_g > 0 & decs
 //#define SWORD_CUSTOM_HIT 					// use code @ sword_custom_hit.h before default
 //#define SWORD_DISABLE_HIT 				// Disable default hit code.
+//#define SWORD_W 					12 		// For horizontal, LOGICAL width of the sprite (introduced for Ninjajar LL CPC)
+//#define SWORD_WIDE 						// For horizontal, sprite is 8x8 rather than 4x8.
 
 // Breakable
 // ---------
@@ -328,8 +334,6 @@
 //#define LINE_OF_TEXT_X			1
 //#define LINE_OF_TEXT_SUBSTR		2
 //#define LINE_OF_TEXT_ATTR 		7		
-
-#define GAME_OVER_ATTR				15
 
 // Graphic FX, uncomment which applies...
 

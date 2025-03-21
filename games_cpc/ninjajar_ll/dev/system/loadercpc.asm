@@ -30,13 +30,13 @@ org $BA00
 
 ; Load binary
 
-	ld      ix, $BA00 - 11036
-	ld      de, 11036
+	ld      ix, $BA00 - 14544
+	ld      de, 14544
 	call    cpct_miniload_asm
 
 ; Depack binary
 
-	ld      hl, $BA00 - 11036
+	ld      hl, $BA00 - 14544
 	ld      de, $0400
 	call    dzx7_standard
 

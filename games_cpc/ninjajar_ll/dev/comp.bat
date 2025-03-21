@@ -7,7 +7,7 @@ echo Making %game%
 if [%1]==[justcompile] goto :compile
 
 rem Multilevel: no map (left empty) and empty enems with space for the biggest level
-..\utils\ene2h.exe empty=12,1,3 enems.h compacted 2bytes  > nul
+..\utils\ene2h.exe empty=10,2,3 enems.h compacted 2bytes  > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\font.png out=font.bin silent > nul
 
@@ -51,7 +51,7 @@ rem map data
 ..\utils\rle44map_sp.exe in=..\map\level1.map out=mapa1.bin size=10,2 scrsize=15,10 tlock=99 fixmappy > nul
 ..\utils\rle44map_sp.exe in=..\map\level2.map out=mapa2.bin size=12,1 scrsize=15,10 tlock=99  > nul
 
-ren enems_data
+rem enems_data
 ..\utils\ene2bin_mk1v4.exe ..\enems\level0orig.ene enems_hotspots0.bin 2bytes compacted life > nul
 ..\utils\ene2bin_mk1v4.exe ..\enems\level1orig.ene enems_hotspots1.bin 2bytes compacted life > nul
 ..\utils\ene2bin_mk1v4.exe ..\enems\level2orig.ene enems_hotspots2.bin 2bytes compacted life > nul
@@ -64,7 +64,8 @@ ren enems_data
 
 rem luts
 ..\utils\pasmo.exe system\cpc_TrPixLutM0.asm trpixlut.bin
-..\utils\apack.exe trpixlut.bin trpixlutc.bin > nul
+del trpixlutc.bin > nul 2> nul
+..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
 zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c > nul

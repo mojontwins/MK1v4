@@ -34,6 +34,7 @@ void _tile_address (void) {
 	#endasm
 }
 
+#ifndef DRAW_RECTANGLE_NOT_NEEDED
 void draw_rectangle (void) {	
 	#asm
 			call __tile_address		// DE = buffer address
@@ -90,6 +91,7 @@ void draw_rectangle (void) {
 			call cpc_InvalidateRect
 	#endasm
 }
+#endif
 
 void attr (char x, char y) {
 	#asm
@@ -632,10 +634,10 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	#endasm
 }
 
-void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
+void draw_text (unsigned char x, unsigned char y, char *s) {
 	// Zero terminated strings, supports newlines with %
 	#asm
-			ld  hl, 8
+			ld  hl, 6
 			add hl, sp
 			
 			ld  a, (hl)
@@ -646,11 +648,6 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 
 			ld  a, (hl)
 			ld  (__y), a
-			dec hl
-			dec hl
-			
-			ld  a, (hl)
-			ld  (__n), a
 			dec hl
 
 			ld  a, (hl)
@@ -705,10 +702,6 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 	#endasm
 }
 
-void any_key (void) {
-	return cpc_AnyKeyPressed ();
-}
-
 void pad_read (void) {
 	pad_this_frame = pad1;
 
@@ -750,8 +743,8 @@ void pad_read (void) {
 }
 
 void espera_activa (int espera) {
-	while (cpc_AnyKeyPressed ());
 	do {
+		pad_read ();
 		#asm
 				halt
 				halt
@@ -760,7 +753,7 @@ void espera_activa (int espera) {
 				halt
 				halt
 		#endasm
-		if (cpc_AnyKeyPressed ()) break;
+		if (pad_this_frame != 0xff) break;
 	} while (-- espera);
 }
 

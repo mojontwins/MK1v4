@@ -15,14 +15,6 @@ void main (void) {
 
 	#asm
 		di
-
-		ld  hl, 0xC000
-		xor a
-		ld  (hl), a
-		ld  de, 0xC001
-		ld  bc, 0x3DFF
-		ldir
-
 		ld  a, 195
 		ld  (0x38), a
 		ld  hl, _isr
@@ -181,7 +173,7 @@ void main (void) {
 			ld  (ix + 15), h
 			ld  (ix + 14), l
 
-			ld  hl, (_sm_sprptr) 		// sm_sprptr [0]
+			ld  hl, _sprite_18_a
 			ld  (ix + 1), h
 			ld  (ix + 0), l
 
@@ -204,11 +196,11 @@ void main (void) {
 			ld  b, MAX_ENEMS
 
 		.sp_sw_init_enems_loop
-			ld  hl, cpc_PutSpTileMap4x8Px			// sm_invfunc [0]
+			ld  hl, cpc_PutSpTileMap8x16Px			// sm_invfunc [0]
 			ld  (ix + 13), h
 			ld  (ix + 12), l
 
-			ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+			ld  hl, cpc_PutTrSp8x16TileMap2bPx 		// sm_updfunc [0]
 			ld  (ix + 15), h
 			ld  (ix + 14), l	
 

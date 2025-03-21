@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Mar 21 10:47:53 2025
+;	Module compile time: Fri Mar 21 11:18:33 2025
 
 
 
@@ -6175,9 +6175,6 @@
 	pop	bc
 	ld	hl,1	;const
 	call	_wyz_play_music
-	ld	hl,6 % 256	;const
-	ld	a,l
-	ld	(_n_pant),a
 	ret
 
 

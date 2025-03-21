@@ -1356,7 +1356,7 @@ void bilbos_hangover (void) {
 		wyz_play_music (1);
 
 		// Debug
-		n_pant = 6;
+		//n_pant = 6;
 	}
 
 	void hook_init_mainloop (void) {

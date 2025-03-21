@@ -20,7 +20,13 @@
 	#define MAX_SWORD_HIT_FRAME 6
 #endif
 
+#ifndef SWORD_W 
+	#define SWORD_W 8
+#endif
+
+#ifdef LINE_OF_TEXT
 unsigned char line_of_text_clear [] = "                                ";
+#endif
 
 #ifdef PLAYER_CUSTOM_CELLS
 	#include "custom_player_cells.h"
@@ -77,8 +83,8 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 	#asm
 			ld  de, 15
 			ld  b, SW_SPRITES_ALL
-		.clear_sprites_loop
 			ld  hl, BASE_SPRITES
+		.clear_sprites_loop
 			ld  a, #(_sprite_18_a%256)
 			ld  (hl), a
 			inc hl
@@ -87,12 +93,13 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 			add hl, de
 			djnz clear_sprites_loop
 	#endasm
+
+	// Old version is crap
+
 }
 
-void render_this_enemy (void) {
-	// sp_sw struct is 16 bytes wide. This is easy
-	// 0   2   4      6   7   8  9  10 11 12      14
-	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+void get_pointer_to_enem (void) {
+	// In -> _enit, out -> pointer in IX
 	#asm
 			ld  a, (_enit)
 			add SP_ENEMS_BASE
@@ -106,6 +113,15 @@ void render_this_enemy (void) {
 			add hl, de
 			push hl
 			pop ix
+	#endasm
+}
+
+void render_this_enemy (void) {
+	// sp_sw struct is 16 bytes wide. This is easy
+	// 0   2   4      6   7   8  9  10 11 12      14
+	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+	#asm
+			call _get_pointer_to_enem
 
 			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 1;
 			ld  a, (_rdx)
@@ -181,12 +197,7 @@ void calc_baddies_pointer (void) {
 }
 
 void render_all_sprites (void) {
-	#ifdef INDEXED_ENEMS
-		for (enit = 0; enit < n_enems; enit ++)
-	#else
-		for (enit = 0; enit < MAX_ENEMS; enit ++)
-	#endif
-	{
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 			#ifdef RANDOM_RESPAWN
 				if (en_an_fanty_activo [enit])
@@ -1090,7 +1101,7 @@ void adjust_to_tile_y (void) {
 
 				.sword_left 
 					ld  a, (_gpx)
-					add 8
+					add 16 - SWORD_W // 8 - (SWORD_W - 8)
 					sub c 
 					ld  (_s_x), a
 					ld  (_s_hit_x), a
@@ -1100,7 +1111,7 @@ void adjust_to_tile_y (void) {
 					ld  a, (_gpx)
 					add c
 					ld  (_s_x), a
-					add 7
+					add SWORD_W - 1
 					ld  (_s_hit_x), a
 			#endif
 
@@ -3871,7 +3882,7 @@ void move (void) {
 				#ifdef PUSH_AND_PULL
 					if (player.grab_block) rdd = PLAYER_GRAB_FRAME; else
 				#endif
-				#ifdef ENABLE_SWORD
+				#if defined (ENABLE_SWORD) && defined (SWORD_HIT_FRAME)
 					if (s_on) rdd = SWORD_HIT_FRAME; else
 				#endif
 				if (0 == player.possee && 0 == player.gotten) {
@@ -5012,20 +5023,72 @@ void enems_calc_frame (void) {
 	#endasm
 }
 
-void enems_en_an_calc (unsigned char n) {
-	rdb = en_an_base_frame [enit] = 
-		#ifdef ENEMS_OFFSET
-			ENEMS_OFFSET +
-		#endif
-		n << 1;
+void __FASTCALL__ enems_en_an_calc (unsigned char n) {
+	// Fastcall so n is in HL
+	#asm
+			ld  b, l 		// B = n
+			sla b 			// B = n << 1
 
-	rda = SP_ENEMS_BASE + enit;
-	sp_sw [rda].cox = sm_cox [rdb];
-	sp_sw [rda].coy = sm_coy [rdb];
-	sp_sw [rda].invfunc = sm_invfunc [rdb];
-	sp_sw [rda].updfunc = sm_updfunc [rdb];
+			// Get pointer to enem in IX
+			// Won't trash BC
+			call _get_pointer_to_enem
+
+			// And now get index to spriteset mappings
+			ld  a, b
+		#ifdef ENEMS_OFFSET
+				add ENEMS_OFFSET
+		#endif
+			ld  hl, (_enit)
+			ld  h, 0 
+			ld  de, _en_an_base_frame 
+			add hl, de 			// HL ->en_an_base_frame [enit]
+			ld  (hl), a 		// en_an_base_frame [enit] = (n << 1) + ENEMS_OFFSET
+
+			// sp_sw struct is 16 bytes wide. This is easy
+			// 0   2   4      6   7   8  9  10 11 12      14
+			// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+
+			// sm_cox, sm_coy are byte arrays
+			ld  b, 0 
+			ld  c, a 			// BC = index
+			
+			// sp_sw [rda].cox = sm_cox [rdb];
+			ld  hl, _sm_cox 
+			add hl, bc 
+			ld  a, (hl) 		// A = sm_cox [rdb]
+			ld  (ix + 6), a 	// sp_sw[...].cox
+
+			// sp_sw [rda].coy = sm_coy [rdb];
+			ld  hl, _sm_coy 
+			add hl, bc 
+			ld  a, (hl) 		// A = sm_coy [rdb]
+			add (ix + 7), a 	// sp_sw[...].coy
+
+			// sm_invfunc, sm_updfunc are 16 bit arrays
+			// We'll never have more than 128 sprite faces
+			sla c 				// BC = A*2
+	
+			// sp_sw [rda].invfunc = sm_invfunc [rdb];
+			ld  hl, _sm_invfunc 
+			add hl, bc 			// HL -> sm_invfunc [rdb]
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl) 
+			ld  (ix + 12), e 
+			ld  (ix + 13), d 	// Write 16 bits
+
+			// sp_sw [rda].updfunc = sm_updfunc [rdb];
+			ld  hl, _sm_updfunc 
+			add hl, bc 
+			ld  e, (hl) 
+			inc hl 
+			ld  d, (hl) 
+			ld  d, (hl) 
+			ld  (ix + 14), e 
+			ld  (ix + 15), d 	// Write 16 bits			
 		
-	enems_calc_frame ();
+			jr _enems_calc_frame
+	#endasm
 }
 
 #ifdef ENABLE_MARRULLERS
@@ -5121,11 +5184,11 @@ void draw_scr (void) {
 		invalidate_viewport();
 
 		#ifdef SHOW_LEVEL_SUBLEVEL
-			draw_text (VIEWPORT_X + 9, VIEWPORT_Y + 10, 71, cad_level);
+			draw_text (VIEWPORT_X + 9, VIEWPORT_Y + 10, cad_level);
 			draw_2_digits (VIEWPORT_X + 16, VIEWPORT_Y + 10, 1+(n_pant / MAP_W));
 			draw_2_digits (VIEWPORT_X + 19, VIEWPORT_Y + 10, 1+(n_pant % MAP_W));
 		#else
-			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, 71, cad_level);
+			draw_text (VIEWPORT_X + 11, VIEWPORT_Y + 10, cad_level);
 			draw_2_digits (VIEWPORT_X + 17, VIEWPORT_Y + 10, (n_pant+1));
 		#endif
 		cpc_UpdScr ();
@@ -5164,8 +5227,22 @@ void draw_scr (void) {
 	
 	// Initialising enemies
 	#ifdef INDEXED_ENEMS
-		enoffs = enoffs_index [n_pant];
-		n_enems = enoffs_index [n_pant + 1] - enoffs;
+		#asm
+				// enoffs = enoffs_index [n_pant];
+				ld  hl, (_n_pant)
+				ld  h, 0 
+				ld  de, _enoffs_index
+				add hl, de 
+				ld  a, (hl) 		// A = enoffs_index [n_pant]
+				ld  (_enoffs), a 
+		
+				// n_enems = enoffs_index [n_pant + 1] - enoffs;
+				inc hl 
+				ld  b, a 
+				ld  a, (hl) 		// A = enoffs [n_pant + 1]
+				sub b 
+				ld  (_n_enems), a
+		#endasm
 	#else 
 		enoffs = n_pant * MAX_ENEMS;
 	#endif
@@ -5265,8 +5342,22 @@ void draw_scr (void) {
 				case 13:
 				case 14:
 					enems_en_an_calc (_en_t - 11);
-					malotes [enoffsmasi].x &= 0xf0;
-					malotes [enoffsmasi].y &= 0xf0;
+
+					//malotes [enoffsmasi].x &= 0xf0;
+					//malotes [enoffsmasi].y &= 0xf0;
+
+					#asm 
+							ld  hl, _enoffsmasi
+							call _calc_baddies_pointer
+							ld  a, (hl)
+							and 0xf0 
+							ld  (hl), a 
+							inc hl 
+							ld  a, (hl)
+							and 0xf0 
+							ld  (hl), a 
+					#endasm
+					
 					en_an_ff [enit] = abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].my);
 					break;
 			#endif
@@ -5307,7 +5398,7 @@ void draw_scr (void) {
 					xor a
 					ld  (_line_of_text_clear+32-LINE_OF_TEXT_SUBSTR), a			
 			#endasm
-			draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, LINE_OF_TEXT_ATTR, line_of_text_clear);
+			draw_text (LINE_OF_TEXT_X, LINE_OF_TEXT, line_of_text_clear);
 		#endif
 
 		// Run "ENTERING ANY" script (if available)

@@ -3,7 +3,7 @@
 // Copyleft 2017-2023 by The Mojon Twins
 
 const unsigned char my_inks [] = {
-	0x1B, // FF80FFFF
+	0x18, // FF800080
 	0x14, // FF000000
 	0x04, // FF000080
 	0x1F, // FF8080FF
