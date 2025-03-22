@@ -2,9 +2,11 @@ COLORES_CARGA equ $445f
 
 ; This is the real loader which will be used once the CPC is set up
 
-org $BA00
+;org $C000
+org 512
 
-	ld     sp, $BFFF
+	;ld     sp, $BFFF
+	ld     sp, $3FF
 
 	call   blackenpal
 
@@ -16,29 +18,29 @@ org $BA00
 
 ; Load screen 
 
-	ld      ix, $BA00 - 16
-	ld      de, 16
+	ld      ix, $C000 - 15
+	ld      de, 15
 	call    cpct_miniload_asm
 
 	call setPal
 
 ; Depack screen
 
-	ld      hl, $BA00 - 16
+	ld      hl, $C000 - 15
 	ld      de, $C000
-	call    dzx7_standard
+	call    dzx0_standard
 
 ; Load binary
 
-	ld      ix, $BA00 - 21725
-	ld      de, 21725
+	ld      ix, $C000 - 20195
+	ld      de, 20195
 	call    cpct_miniload_asm
 
 ; Depack binary
 
-	ld      hl, $BA00 - 21725
+	ld      hl, $C000 - 20195
 	ld      de, $0400
-	call    dzx7_standard
+	call    dzx0_standard
 
 ; Run 
 
@@ -83,77 +85,6 @@ loopPal:
 
 palette:
 	defb $05, $14, $07, $18, $15, $04, $1F, $17, $16, $1A, $0A, $03, $0E, $0C, $1C, $0B
-
-
-; -----------------------------------------------------------------------------
-; ZX7 decoder by Einar Saukas, Antonio Villena & Metalbrain
-; "Standard" version (69 bytes only)
-; -----------------------------------------------------------------------------
-; Parameters:
-;   HL: source address (compressed data)
-;   DE: destination address (decompressing)
-; -----------------------------------------------------------------------------
-
-dzx7_standard:
-		ld      a, $80
-dzx7s_copy_byte_loop:
-		ldi                             ; copy literal byte
-dzx7s_main_loop:
-		call    dzx7s_next_bit
-		jr      nc, dzx7s_copy_byte_loop ; next bit indicates either literal or sequence
-
-; determine number of bits used for length (Elias gamma coding)
-		push    de
-		ld      bc, 0
-		ld      d, b
-dzx7s_len_size_loop:
-		inc     d
-		call    dzx7s_next_bit
-		jr      nc, dzx7s_len_size_loop
-
-; determine length
-dzx7s_len_value_loop:
-		call    nc, dzx7s_next_bit
-		rl      c
-		rl      b
-		jr      c, dzx7s_exit           ; check end marker
-		dec     d
-		jr      nz, dzx7s_len_value_loop
-		inc     bc                      ; adjust length
-
-; determine offset
-		ld      e, (hl)                 ; load offset flag (1 bit) + offset value (7 bits)
-		inc     hl
-		defb    $cb, $33                ; opcode for undocumented instruction "SLL E" aka "SLS E"
-		jr      nc, dzx7s_offset_end    ; if offset flag is set, load 4 extra bits
-		ld      d, $10                  ; bit marker to load 4 bits
-dzx7s_rld_next_bit:
-		call    dzx7s_next_bit
-		rl      d                       ; insert next bit into D
-		jr      nc, dzx7s_rld_next_bit  ; repeat 4 times, until bit marker is out
-		inc     d                       ; add 128 to DE
-		srl	d			; retrieve fourth bit from D
-dzx7s_offset_end:
-		rr      e                       ; insert fourth bit into E
-
-; copy previous sequence
-		ex      (sp), hl                ; store source, restore destination
-		push    hl                      ; store destination
-		sbc     hl, de                  ; HL = destination - offset - 1
-		pop     de                      ; DE = destination
-		ldir
-dzx7s_exit:
-		pop     hl                      ; restore source address (compressed data)
-		jr      nc, dzx7s_main_loop
-dzx7s_next_bit:
-		add     a, a                    ; check next bit
-		ret     nz                      ; no more bits left?
-		ld      a, (hl)                 ; load another group of 8 bits
-		inc     hl
-		rla
-		ret
-
-; -----------------------------------------------------------------------------
 
 
 ; MINILOAD, adapted (nicked?) from
@@ -452,3 +383,67 @@ exit:
 	
 
 	ret
+
+
+
+; -----------------------------------------------------------------------------
+; ZX0 decoder by Einar Saukas & Urusergi
+; "Standard" version (68 bytes only)
+; -----------------------------------------------------------------------------
+; Parameters:
+;   HL: source address (compressed data)
+;   DE: destination address (decompressing)
+; -----------------------------------------------------------------------------
+
+dzx0_standard:
+        ld      bc, $ffff               ; preserve default offset 1
+        push    bc
+        inc     bc
+        ld      a, $80
+dzx0s_literals:
+        call    dzx0s_elias             ; obtain length
+        ldir                            ; copy literals
+        add     a, a                    ; copy from last offset or new offset?
+        jr      c, dzx0s_new_offset
+        call    dzx0s_elias             ; obtain length
+dzx0s_copy:
+        ex      (sp), hl                ; preserve source, restore offset
+        push    hl                      ; preserve offset
+        add     hl, de                  ; calculate destination - offset
+        ldir                            ; copy from offset
+        pop     hl                      ; restore offset
+        ex      (sp), hl                ; preserve offset, restore source
+        add     a, a                    ; copy from literals or new offset?
+        jr      nc, dzx0s_literals
+dzx0s_new_offset:
+        pop     bc                      ; discard last offset
+        ld      c, $fe                  ; prepare negative offset
+        call    dzx0s_elias_loop        ; obtain offset MSB
+        inc     c
+        ret     z                       ; check end marker
+        ld      b, c
+        ld      c, (hl)                 ; obtain offset LSB
+        inc     hl
+        rr      b                       ; last offset bit becomes first length bit
+        rr      c
+        push    bc                      ; preserve new offset
+        ld      bc, 1                   ; obtain length
+        call    nc, dzx0s_elias_backtrack
+        inc     bc
+        jr      dzx0s_copy
+dzx0s_elias:
+        inc     c                       ; interlaced Elias gamma coding
+dzx0s_elias_loop:
+        add     a, a
+        jr      nz, dzx0s_elias_skip
+        ld      a, (hl)                 ; load another group of 8 bits
+        inc     hl
+        rla
+dzx0s_elias_skip:
+        ret     c
+dzx0s_elias_backtrack:
+        add     a, a
+        rl      c
+        rl      b
+        jr      dzx0s_elias_loop
+; -----------------------------------------------------------------------------
