@@ -3,7 +3,7 @@ COLORES_CARGA equ $445f
 ; This is the real loader which will be used once the CPC is set up
 
 ;org $C000
-org 512
+org $200
 
 	;ld     sp, $BFFF
 	ld     sp, $3FF

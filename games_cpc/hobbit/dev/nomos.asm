@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Mar 22 09:33:46 2025
+;	Module compile time: Sat Mar 22 10:44:25 2025
 
 
 
@@ -9110,6 +9110,12 @@
 ._main
 	call	_wyz_init
 	di
+	ld hl, 0xC000
+	xor a
+	ld (hl), a
+	ld de, 0xC001
+	ld bc, 0x3DFF
+	ldir
 	ld a, 195
 	ld (0x38), a
 	ld hl, _isr
