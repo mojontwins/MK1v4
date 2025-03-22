@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Mar 21 14:12:46 2025
+;	Module compile time: Sat Mar 22 14:07:08 2025
 
 
 
@@ -3045,13 +3045,13 @@
 
 ._l_scr_ini
 	defm	""
-	defb	1
+	defb	0
 
 	defm	""
-	defb	1
+	defb	0
 
 	defm	""
-	defb	1
+	defb	0
 
 ;	SECTION	code
 
@@ -5276,6 +5276,12 @@
 ._main
 	call	_wyz_init
 	di
+	ld hl, 0xC000
+	xor a
+	ld (hl), a
+	ld de, 0xC001
+	ld bc, 0x3DFF
+	ldir
 	ld a, 195
 	ld (0x38), a
 	ld hl, _isr

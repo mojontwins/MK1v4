@@ -100,7 +100,7 @@ unsigned char *sss [] = { ss0, ss1, ss1 };
 
 unsigned char l_map_w [] = { 10, 10, 12 };
 unsigned char l_map_h [] = { 2, 2, 1 };
-unsigned char l_scr_ini [] = { 1, 1, 1 };
+unsigned char l_scr_ini [] = { 0, 0, 0 };
 unsigned char l_ini_x [] = { 2, 2, 2 };
 unsigned char l_ini_y [] = { 2, 2, 2 };
 

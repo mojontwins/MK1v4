@@ -4430,10 +4430,13 @@ void draw_scr_background (void) {
 				add hl, de      ; HL = map + index
 				ld  (_gp_gen), hl		
 		#endasm
+
 	#elif defined (UNPACKED_MAP)
-		gp_gen = mapa + (n_pant * 150);		
+		gp_gen = mapa + (n_pant * 150);	
+
 	#else
 		gp_gen = mapa + (n_pant * 75);
+
 	#endif
 		
 	#if defined TWO_SETS || defined TWO_SETS_REAL
@@ -4552,7 +4555,6 @@ void draw_scr_background (void) {
 					.draw_scr_bg_loop_end
 				#endif
 		#endasm	
-
 	#elif defined TWO_SETS_REAL
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
