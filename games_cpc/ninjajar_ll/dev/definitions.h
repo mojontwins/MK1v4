@@ -319,7 +319,7 @@ unsigned char flags [MAX_FLAGS];
 
 	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
 	#ifndef SWORD_STAB
-		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
+		unsigned char swoffs_y [] = {2,  2,  3,  4,  5,  6,  7,  8,  8};
 	#endif
 #endif
 

@@ -10,13 +10,12 @@ extern unsigned char tspatterns [0];
 	.tiles
 	._font
 		BINARY "font.bin" 	// 1024 bytes for 64 patterns
+	._tspatterns
 	#ifdef COMPRESSED_TS
-		._tspatterns
 			defs 3072
 		._tilesetc
 			BINARY "tilesetc.bin"
 	#else
-		._tspatterns
 			BINARY "work.bin"   // 3072 bytes for 192 patterns
 	#endif
 	

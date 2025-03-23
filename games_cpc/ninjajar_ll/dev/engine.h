@@ -62,7 +62,11 @@ unsigned char line_of_text_clear [] = "                                ";
 	extern unsigned char *sword_cells [0];
 	#asm 
 		._sword_cells
+		#ifdef SWORD_WIDE
+			defw _sprite_sword, _sprite_sword + 32
+		#else
 			defw _sprite_sword, _sprite_sword + 16, _sprite_sword + 32, _sprite_sword + 48
+		#endif
 	#endasm
 #endif
 
@@ -1093,7 +1097,7 @@ void adjust_to_tile_y (void) {
 					ld  b, 0
 					ld  hl, _swoffs_x
 					add hl, bc
-					ld  c, (hl) 
+					ld  c, (hl)  		// C = swoffs_x
 
 					ld  a, (_s_type)
 					cp  SWORD_TYPE_LEFT
@@ -1101,7 +1105,6 @@ void adjust_to_tile_y (void) {
 
 				.sword_left 
 					ld  a, (_gpx)
-					add 16 - SWORD_W // 8 - (SWORD_W - 8)
 					sub c 
 					ld  (_s_x), a
 					ld  (_s_hit_x), a
@@ -1110,8 +1113,9 @@ void adjust_to_tile_y (void) {
 				.sword_right
 					ld  a, (_gpx)
 					add c
+					add 16 - SWORD_W
 					ld  (_s_x), a
-					add SWORD_W - 1
+					add 7
 					ld  (_s_hit_x), a
 			#endif
 

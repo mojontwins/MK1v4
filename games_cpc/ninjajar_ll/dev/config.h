@@ -148,7 +148,7 @@
 // Sword
 // -----
 
-//#define ENABLE_SWORD 						// Let the player swing a sword
+#define ENABLE_SWORD 						// Let the player swing a sword
 //#define SWORD_UP 							// Can hit upwards
 #define SWORD_LINEAL_DAMAGE			1		// Damage to linear.
 #define SWORD_FLYING_DAMAGE 		1		// Damage to flying.
@@ -350,7 +350,7 @@
 //#define TWO_SETS_REAL 					// Tiles have their real value in map_buff
 //#define TWO_SETS_CONDITION	(n_pant>14?32:0)	// Must return 32 if second tileset is active, 0 otherwise.
 //#define MAPPED_TILESETS 					// Like packed but tiles are mapped with array tileset_mappings
-//#define RLE_MAP 					44 		// Use RLE compression (values 44, 54, 62; see docs)
+#define RLE_MAP 					44 		// Use RLE compression (values 44, 54, 62; see docs)
 
 // Stupid animated tiles
 //#define ENABLE_ANIMATED_TILES 			// Enables them

@@ -84,9 +84,14 @@ do_update:
 
 origin_next_row:
     pop de                  ; Recuperamos   
-    inc d                   ; Y = Y + 1
-    push de                 ; Guardamos
 
+    ; Marcar fila de abajo?
+    ld a, iyh
+    or a
+    jr z, fin
+
+    inc d                   ; Y = Y + 1
+    
     ; Marco el primer tile
     call cpc_UpdTileTableClp   ; Marca el tile en DE
 

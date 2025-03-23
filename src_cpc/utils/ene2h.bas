@@ -169,7 +169,7 @@ End If
 
 Print #fOut, "	signed char mx, my;"
 Print #fOut, "	signed char t;"
-Print #fOut, "#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD"
+Print #fOut, "#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE"
 Print #fOut, "	unsigned char life;"
 Print #fOut, "#endif"
 Print #fOut, "} MALOTE;"
