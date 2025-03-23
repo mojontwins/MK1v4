@@ -159,18 +159,20 @@
 //#define SWORD_DEPLETES 					// Can only hit when player.sword_g > 0 & decs
 //#define SWORD_CUSTOM_HIT 					// use code @ sword_custom_hit.h before default
 //#define SWORD_DISABLE_HIT 				// Disable default hit code.
-#define SWORD_W 					12 		// For horizontal, LOGICAL width of the sprite (introduced for Ninjajar LL CPC)
+#define SWORD_OFFS 					-4 		// If defined, Added to sword X (value for looking right)
+#define SWORD_W 					16 		// For horizontal, LOGICAL width of the sprite (introduced for Ninjajar LL CPC)
 #define SWORD_WIDE 							// For horizontal, sprite is 8x8 rather than 4x8.
 
 // Breakable
 // ---------
 
-//#define ENABLE_BREAKABLE 					// Enable breakable tiles (& 32)
-//#define MAX_BREAKABLE_FRAMES 		8 		// N = frames to display this tile:
-//#define BREAKABLE_BREAKING_TILE 	45		// display this for N frames
-//#define BREAKABLE_ERASE_TILE 		0		// The substitute by this tile.
-//#define BREAKABLE_SPAWN_CHANCE  	3 		// Must be a power of 2 - 1, ifdef there's a chance to spawn...
-//#define BREAKABLE_SPAWN_TILE    	46 		// Throw this tile if rand() & chance == 1.
+#define ENABLE_BREAKABLE 					// Enable breakable tiles (& 32)
+#define MAX_BREAKABLE_FRAMES 		4 		// N = frames to display this tile:
+#define BREAKABLE_BREAKING_TILE 	31		// display this for N frames
+#define BREAKABLE_ERASE_TILE 		0		// The substitute by this tile.
+#define BREAKABLE_SPAWN_ONLY_IF 	12		// If defined, spawn only if broken tile is N.
+#define BREAKABLE_SPAWN_CHANCE  	3 		// Must be a power of 2 - 1, ifdef there's a chance to spawn...
+#define BREAKABLE_SPAWN_TILE    	22 		// Throw this tile if rand() & chance == 1.
 //#define BREAKABLE_PERSISTENT 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
 
 // Persistence
@@ -259,10 +261,10 @@
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
-#define TIGHT_LOWER 				8
-#define TIGHT_UPPER 				16 		// For horizontal BB against BG, don't touch unless you know...
-#define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
-//#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
+#define TIGHT_LOWER 				4
+#define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
+//define PERSPECTIVE_GENITAL                // smaller vertical bb, get behind tiles
+#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 //#define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
@@ -421,3 +423,14 @@ unsigned char comportamiento_tiles [] = {
 	0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 8
 };
 
+// Sword offset. See the manual if you wanna change those
+// Default values are
+// swoffs_x ->  8, 10, 12, 14, 16, 16, 14, 13, 10
+// swoffs_y ->  2,  2,  2,  3,  4,  4,  5,  6,  7
+
+#ifdef ENABLE_SWORD
+	unsigned char swoffs_x [] = {  8, 10, 12, 14, 16, 16, 14, 13, 10};
+#endif
+#if defined ENABLE_SWORD && !defined SWORD_STAB
+	unsigned char swoffs_y [] = {  2,  2,  2,  3,  4,  4,  5,  6,  7};
+#endif

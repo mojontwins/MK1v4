@@ -316,11 +316,6 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_on, s_type;
 	unsigned char s_x, s_y, s_frame;
 	unsigned char s_hit_x, s_hit_y;
-
-	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
-	#ifndef SWORD_STAB
-		unsigned char swoffs_y [] = {2,  2,  3,  4,  5,  6,  7,  8,  8};
-	#endif
 #endif
 
 // Breakable
@@ -330,6 +325,9 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char b_f [MAX_BREAKABLE];
 	unsigned char b_x [MAX_BREAKABLE];
 	unsigned char b_y [MAX_BREAKABLE];
+	#ifdef BREAKABLE_SPAWN_ONLY_IF
+		unsigned char b_was [MAX_BREAKABLE];
+	#endif
 #endif
 
 // Aux

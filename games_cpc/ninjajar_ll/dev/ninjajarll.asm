@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun Mar 23 10:12:52 2025
+;	Module compile time: Sun Mar 23 14:51:57 2025
 
 
 
@@ -115,6 +115,39 @@
 ;	SECTION	code
 
 
+;	SECTION	text
+
+._swoffs_x
+	defm	""
+	defb	8
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	12
+
+	defm	""
+	defb	14
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	14
+
+	defm	""
+	defb	13
+
+	defm	""
+	defb	10
+
+;	SECTION	code
+
+
 	XREF _nametable
 	XREF tabla_teclas
 	LIB cpc_KeysData
@@ -150,39 +183,6 @@
 ._en_tocado
 	defm	""
 	defb	0
-
-;	SECTION	code
-
-
-;	SECTION	text
-
-._swoffs_x
-	defm	""
-	defb	8
-
-	defm	""
-	defb	10
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	13
-
-	defm	""
-	defb	10
 
 ;	SECTION	code
 
@@ -2393,8 +2393,12 @@
 	._attr_2
 	cp 10
 	jr c, _attr_1
+	cp 11
+	jr nc, _attr3
 	ld hl, 0
 	ret
+	._attr3
+	xor a
 	._attr_1
 	ld b, a
 	ld a, c
@@ -2544,6 +2548,7 @@
 	add hl, bc
 	ld a, (__n)
 	ld (hl), a
+	.set_map_tile_do_print
 	ld a, (__x)
 	sla a
 	add 1
@@ -2951,16 +2956,7 @@
 	defm	""
 	defb	0
 
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
+	defm	"((("
 	defb	1
 
 	defm	""
@@ -2996,16 +2992,7 @@
 	defm	""
 	defb	8
 
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
+	defm	"((("
 	defb	1
 
 	defm	""
@@ -3050,16 +3037,7 @@
 	defm	""
 	defb	8
 
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
+	defm	"((("
 	defb	1
 
 	defm	""
@@ -3695,6 +3673,20 @@
 
 
 
+._init_breakable
+	ld hl, _b_f
+	ld de, _b_f + 1
+	ld bc, 4 - 1
+	xor a
+	ld (hl), a
+	ldir
+	ld	hl,0 % 256	;const
+	ld	a,l
+	ld	(_process_breakable),a
+	ret
+
+
+
 ._init_malotes
 	ld bc, 60
 	ld de, 8
@@ -3748,6 +3740,120 @@
 	ret
 
 
+	.get_beh_in_A
+	ld d, 0
+	ld e, a
+	ld hl, _comportamiento_tiles
+	add hl, de
+	ld a, (hl)
+	ret
+
+._actualiza_breakables
+	xor a
+	ld (_process_breakable), a
+	ld bc, 4
+	.actualiza_breakables_loop
+	push bc
+	dec c
+	ld hl, _b_f
+	add hl, bc
+	ld a, (hl)
+	or a
+	jr z, actualiza_breakables_cont
+	dec a
+	ld (hl), a
+	jr nz, actualiza_breakables_reset
+	ld hl, _b_y
+	add hl, bc
+	ld a, (hl)
+	ld (__y), a
+	ld a, 0
+	ld (__t), a
+	call get_beh_in_A
+	ld (__n), a
+	call _rand
+	ld a, l
+	and 3
+	jr nz, actualiza_breakables_spawn_done
+	ld hl, _b_was
+	add hl, bc
+	ld a, (hl)
+	cp 12
+	jr nz, actualiza_breakables_spawn_done
+	ld a, 22
+	ld (__t), a
+	call get_beh_in_A
+	ld (__n), a
+	.actualiza_breakables_spawn_done
+	ld hl, _b_x
+	add hl, bc
+	ld a, (hl)
+	ld (__x), a
+	ld c, a
+	call set_map_tile_do
+	jr actualiza_breakables_cont
+	.actualiza_breakables_reset
+	ld a, 1
+	ld (_process_breakable), a
+	.actualiza_breakables_cont
+	pop bc
+	dec c
+	jr nz, actualiza_breakables_loop
+	ret
+
+
+
+._add_to_breakables
+	ld bc, 4
+	.add_to_breakables_loop
+	push bc
+	dec c
+	ld hl, _b_f
+	add hl, bc
+	ld a, (hl)
+	or a
+	jr nz, add_to_breakables_cont
+	ld hl, _b_y
+	add hl, bc
+	ld a, (__y)
+	ld (hl), a
+	ld hl, _b_f
+	add hl, bc
+	ld a, 4
+	ld (hl), a
+	push bc
+	ld a, (__x)
+	ld c, a
+	ld a, (__y)
+	call qtile_do
+	pop bc
+	ld a, l
+	ld hl, _b_was
+	add hl, bc
+	ld (hl), a
+	ld a, 31
+	ld (__t), a
+	call get_beh_in_A
+	ld (__n), a
+	ld hl, _b_x
+	add hl, bc
+	ld a, (__x)
+	ld (hl), a
+	ld c, a
+	call set_map_tile_do
+	ld a, 1
+	ld (_process_breakable), a
+	ld	hl,9	;const
+	call	_wyz_play_sound
+	pop bc
+	ret
+	.add_to_breakables_cont
+	pop bc
+	dec c
+	jr nz, add_to_breakables_loop
+	ret
+
+
 
 ._swing_sword
 	ld a, (_s_on)
@@ -3766,21 +3872,47 @@
 	ld c, (hl)
 	ld a, (_s_type)
 	cp 1
+	ld a, (_gpx)
 	jr nz, sword_right
 	.sword_left
-	ld a, (_gpx)
 	sub c
+	add 8
+	add -4
 	ld (_s_x), a
 	ld (_s_hit_x), a
 	jr sword_check_done
 	.sword_right
-	ld a, (_gpx)
 	add c
-	add 16 - 12
+	add -4
 	ld (_s_x), a
-	add 7
+	add 16-1
 	ld (_s_hit_x), a
 	.sword_check_done
+	ld a, (_s_frame)
+	cp 3
+	jr c, sword_breakable_done
+	cp 6
+	jr nc, sword_breakable_done
+	ld h, 0
+	ld a, (_s_hit_x)
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (__x), a
+	ld c, a
+	ld a, (_s_hit_y)
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (__y), a
+	call _attr_2
+	ld a, l
+	and 32
+	jr z, sword_breakable_done
+	call _add_to_breakables
+	.sword_breakable_done
 	ld a, (_s_frame)
 	inc a
 	ld (_s_frame), a
@@ -3940,10 +4072,11 @@
 	pop	de
 	call	l_pint
 	ld	hl,(_player+1+1)
-	xor	a
-	or	h
-	jp	p,i_55
-	ld	hl,0	;const
+	ld	de,65024	;const
+	ex	de,hl
+	call	l_lt
+	jp	nc,i_55
+	ld	hl,65024	;const
 	ld	(_player+1+1),hl
 .i_55
 	ld	hl,(_player+1+1)
@@ -3992,7 +4125,7 @@
 	.vert_collision_if1
 	ld a, (_gpx)
 	and 15
-	cp 16
+	cp 12
 	jr nc, vert_collision_if2
 	ld a, (_gpxx)
 	ld c, a
@@ -4004,7 +4137,7 @@
 	.vert_collision_if2
 	ld a, (_gpx)
 	and 15
-	cp 8+1
+	cp 4+1
 	jp c, vert_collision_done
 	ld a, (_gpxx)
 	inc a
@@ -4042,7 +4175,7 @@
 	.vert_collision_if3
 	ld a, (_gpx)
 	and 15
-	cp 16
+	cp 12
 	jr nc, vert_collision_if4
 	ld a, (_gpxx)
 	ld c, a
@@ -4055,7 +4188,7 @@
 	.vert_collision_if4
 	ld a, (_gpx)
 	and 15
-	cp 8 + 1
+	cp 4 + 1
 	jr c, vert_collision_done
 	ld a, (_gpxx)
 	inc a
@@ -4256,7 +4389,7 @@
 	.horz_collision_negative
 	ld a, (_gpx)
 	and 15
-	cp 16
+	cp 12
 	jp nc, horz_collision_done
 	.horz_collision_if1
 	ld a, (_gpy)
@@ -4290,7 +4423,7 @@
 	sla a
 	sla a
 	sla a
-	add 16
+	add 12
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player), hl
@@ -4300,7 +4433,7 @@
 	.horz_collision_positive
 	ld a, (_gpx)
 	and 15
-	cp 8
+	cp 4
 	jp c, horz_collision_done
 	.horz_collision_if3
 	ld a, (_gpy)
@@ -4336,7 +4469,7 @@
 	sla a
 	sla a
 	sla a
-	add 8
+	add 4
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player), hl
@@ -4969,6 +5102,7 @@
 	jp	i_82
 .i_83
 	call	_hook_entering
+	call	_init_breakable
 	ret
 
 
@@ -5898,6 +6032,12 @@
 	call	_mueve_bicharracos
 	call	_move
 	call	_swing_sword
+	ld	hl,(_process_breakable)
+	ld	h,0
+	ld	a,h
+	or	l
+	call	nz,_actualiza_breakables
+.i_129
 	call	_render_all_sprites
 	ld	a,#(0 % 256 % 256)
 	ld	(_latest_hotspot),a
@@ -5931,7 +6071,7 @@
 	jp c, _hotspots_else
 	ld	a,(_hotspot_flag)
 	and	a
-	jp	nz,i_129
+	jp	nz,i_130
 	ld	a,#(1 % 256 % 256)
 	ld	(_hotspot_flag),a
 	ld	hl,(_hotspot_t)
@@ -5941,19 +6081,19 @@
 	call	_hook_hotspots
 	ld	a,(_hotspot_t)
 	and	a
-	jp	z,i_130
+	jp	z,i_131
 	ld	a,#(0 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,(_hotspot_t)
 	ld	h,0
-.i_133
+.i_134
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_134
-	cp	#(3% 256)
 	jp	z,i_135
-	jp	i_132
-.i_134
+	cp	#(3% 256)
+	jp	z,i_136
+	jp	i_133
+.i_135
 	ld	hl,_player+27
 	push	hl
 	call	l_gchar
@@ -5963,8 +6103,8 @@
 	ld	(de),a
 	ld	hl,6	;const
 	call	_wyz_play_sound
-	jp	i_132
-.i_135
+	jp	i_133
+.i_136
 	ld	hl,_player+29
 	push	hl
 	call	l_gint	;
@@ -5976,18 +6116,18 @@
 	ld	de,99	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_136
+	jp	nc,i_137
 	ld	hl,99	;const
 	ld	(_player+29),hl
-.i_136
+.i_137
 	ld	a,#(2 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,6	;const
 	call	_wyz_play_sound
-.i_132
+.i_133
 	ld	a,(_rdi)
 	cp	#(1 % 256)
-	jp	z,i_137
+	jp	z,i_138
 	ld	a,(_hotspot_x)
 	ld	e,a
 	ld	d,0
@@ -6032,9 +6172,9 @@
 	ld	(de),a
 	ld	l,a
 	ld	h,0
-.i_137
+.i_138
+.i_131
 .i_130
-.i_129
 	jr _hotspots_done
 	._hotspots_else
 	ld	hl,0 % 256	;const
@@ -6048,12 +6188,12 @@
 	ld	hl,(_on_pant)
 	ld	h,0
 	call	l_eq
-	jp	nc,i_138
+	jp	nc,i_139
 	ld	hl,1	;const
 	push	hl
 	call	_cpc_UpdateNow
 	pop	bc
-.i_138
+.i_139
 	.player_flicker_done_check
 	ld a, (_player + 23)
 	and 2
@@ -6072,46 +6212,46 @@
 	ld	d,0
 	ld	hl,1	;const
 	call	l_eq
-	jp	nc,i_139
+	jp	nc,i_140
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_ending
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_139
+.i_140
 	ld	a,(_player+36)
 	and	a
-	jp	z,i_140
+	jp	z,i_141
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	m,i_141
+	jp	m,i_142
 	or	l
-	jp	z,i_141
+	jp	z,i_142
+.i_142
 .i_141
-.i_140
 	ld	hl,(_player+29)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	c,i_143
+	jp	c,i_144
 	ld	a,(_game_loop_flag)
 	cp	#(2 % 256)
-	jp	nz,i_142
-.i_143
+	jp	nz,i_143
+.i_144
 	call	_hook_game_over
 	ld	a,h
 	or	l
-	jp	z,i_145
+	jp	z,i_146
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_145
-.i_142
+.i_146
+.i_143
 	jp	i_124
 .i_125
 	call	_wyz_stop_sound
@@ -6144,6 +6284,7 @@
 .__en_x	defs	1
 .__en_y	defs	1
 ._isr_player_on	defs	1
+._b_was	defs	4
 .__en_x1	defs	1
 .__en_x2	defs	1
 .__en_y1	defs	1
@@ -6218,8 +6359,12 @@
 .__x2	defs	1
 .__y2	defs	1
 .__en_life	defs	1
+._b_f	defs	4
 ._prxx	defs	1
 ._pryy	defs	1
+._b_x	defs	4
+._b_y	defs	4
+._process_breakable	defs	1
 ._item_old	defs	1
 ._idx	defs	2
 ._player	defs	46
@@ -6273,6 +6418,7 @@
 	XDEF	_can_move_box
 	LIB	cpc_PutSpTileMap12x24CA
 	LIB	cpc_PrintGphStrStdXY
+	XDEF	_b_was
 	XDEF	_hook_init_mainloop
 	XDEF	_saca_a_todo_el_mundo_de_aqui
 	XDEF	_set_map_tile
@@ -6465,6 +6611,8 @@
 	XDEF	_hook_mainloop
 	XDEF	_collide_enem
 	XDEF	_init_malotes
+	XDEF	_actualiza_breakables
+	XDEF	_add_to_breakables
 	XDEF	_main
 	XDEF	_draw_coloured_tile
 	XDEF	_attr
@@ -6531,6 +6679,7 @@
 	XDEF	__en_life
 	XDEF	_cpc_HardPause
 	XDEF	_hook_init_game
+	XDEF	_b_f
 	LIB	cpc_AssignKey
 	XDEF	_prxx
 	XDEF	_calc_hotspot_ptr
@@ -6538,11 +6687,15 @@
 	LIB	cpc_TouchTiles
 	LIB	cpc_PutSpTileMap4x8Px
 	XDEF	_abs
+	XDEF	_b_x
+	XDEF	_b_y
 	LIB	cpc_ScrollRight0
 	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
 	XDEF	_game_ending
 	LIB	cpc_UnExo
+	XDEF	_process_breakable
+	XDEF	_init_breakable
 	XDEF	_item_old
 	XDEF	_ss0
 	LIB	cpc_SetInkGphStrM1

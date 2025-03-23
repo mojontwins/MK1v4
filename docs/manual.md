@@ -899,6 +899,8 @@ Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo qu
 
 **Sir Ababol 2** empezó como prototipo en **MTE MK1 v4**, aunque luego se desarrolló sobre un motor específico. Parte de los trabajos para apañar la versión 4.8 de **MTE MK1** ha tenido que ver con reintegrar los añadidos de la demo técnica de **Sir Ababol**, entre ellos la espada. Además, se ha añadido lo necesario para que puedas usarla también en modo genital, algo que planeamos ya en 2011 para un juego tipo Zelda.
 
+Conceptualmente, la espada es un sprite de 8x8 píxeles (lógicos, en CPC bla bla bla ya tu sabeh) que sobresaldrá 8 píxeles del sprite del jugador en la dirección en la que se "lance", y que "golpeará" en el pixel más alejado del sprite por el lado que salga.
+
 Para poder usar la espada necesitaremos añadir los gráficos para pintarla. Para ello tendremos que poner en `gfx` un nuevo spriteset de 8x8 con los cells necesarios, que serán, dependiendo del modo (lateral o genital):
 
 * **Vista lateral**: 3 (izquierda, derecha, arriba) en el caso de que la espada pueda lanzarse hacia arriba (`SWORD UP`) o 2 en el caso de que no (izquierda, derecha). El punto que "golpea" de la espada es (0, 4) a la izquierda, (7, 4) a la derecha, y (4, 0) arriba. Algo así:
@@ -969,11 +971,13 @@ A partir de `4.9` hay más todavía:
 
 * `SWORD_DISABLE_HIT` desactivará todo el código que se ejecuta normalmente cuando la espada impacta con un enemigo, por si quieres implementar toda la lógica por tu cuenta.
 
+La posición de la espada con respecto al jugador se controla usando un par de arrays que están en `config.h`, `swoffs_x` y `swoffs_y`. Para entendernos más fácilmente, estos offsets representan una animación de 9 frames en los que la posición de la espada se calculará sumando dichos offsets a las coordenadas `gpx, gpy` del sprite principal cuando éste mira a la derecha. A la coordenada X (la que aleja a la espada del muñeco cuando mira a la derecha) se le añadirá también, si está definido, un SWORD_OFFS que nos ayudará a finar un poco más.
+
 ### El puñito
 
 El puñito de Ninjajar es en realidad una espada con `SWORD_STAB` activado. Además, si dejamos comentado `SWORD_HIT_FRAME` no se modificará el cell activo cuando se saca el puñito.
 
-Sin embargo hay dos cosas más a tener en cuenta que se introdujeron precisamente para **Ninjajar: The Lost Levels**, que es en modo 0 y tiene un puño que ocupa 6x8 pixeles en un cuadro de 8x8: `SWORD_W` define el ancho lógico del puño, que en este caso no es 8 sino 12 píxels. `SWORD_WIDE` hace que se emplée un sprite de 8x8 en lugar del normal de 4x8.
+Sin embargo hay dos cosas más a tener en cuenta que se introdujeron precisamente para **Ninjajar: The Lost Levels**, que es en modo 0 y tiene un puño que ocupa 6x8 pixeles en un cuadro de 8x8: `SWORD_W` define el ancho lógico del puño, que en este caso no es 8 sino 16 píxels. `SWORD_W` sólo se utiliza para calcular la posición del "punto caliente", que es el que registra la colisión, con respecto a la coordenada del sprite cuando se está mirando hacia la derecha. `SWORD_WIDE` hace que se emplée un sprite de 8x8 en lugar del normal de 4x8.
 
 ### Tiles que se rompen
 
@@ -987,6 +991,7 @@ Si se activa este motor, los tiles de comportamiento `& 32` se podrán romper. L
     //#define MAX_BREAKABLE_FRAMES  8       // N = frames to display this tile:
     //#define BREAKABLE_BREAKING_TILE 45    // display this for N frames
     //#define BREAKABLE_ERASE_TILE  0       // The substitute by this tile.
+	//#define BREAKABLE_SPAWN_ONLY_IF 	12  // If defined, spawn only if broken tile is N
     //#define BREAKABLE_SPAWN_CHANCE  3     // Must be a power of 2 - 1, ifdef there's a chance to spawn...
     //#define BREAKABLE_SPAWN_TILE    46    // Throw this tile if rand() & chance == 1.
     //#define BREAKABLE_PERSISTENT          // Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
@@ -999,6 +1004,8 @@ Si se activa este motor, los tiles de comportamiento `& 32` se podrán romper. L
 * `BREAKABLE_BREAKING_TILE` que tile del tileset representa el estado "rompiéndose".
 
 * `BREAKABLE_ERASE_TILE` con qué tile borramos el tile una vez que han pasado `MAX_BREAKABLE_FRAMES` cuadros de juego.
+
+* `BREAKABLE_SPAWN_ONLY_IF` (opcional): El tile roto debe ser "N" para que pueda producir `BREAKABLE_SPAWN_TILE`.
 
 * `BREAKABLE_SPAWN_CHANCE` (opcional): Si se define, el valor que se le asigna debe ser una potencia de 2 menos 1 "N". Al romper un tile, si `rand () & N == 1`, aparece un tile específico tras `MAX_BREAKABLE_FRAMES` en lugar de `BREAKABLE_ERASE_TILE`. Se diseñó para que apareciera una moneda, pero puedes poner cualquier cosa:
 
@@ -1216,6 +1223,8 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 ```c
     //#define PLAYER_HAS_JUMP               // If defined, player is able to jump.
     //#define TIGHT_BOUNDING_BOX            // Bounding box 12x16
+	//#define TIGHT_LOWER 				4
+	//#define TIGHT_UPPER 				12 		// For horizontal BB against BG
     //#define FIRE_TO_JUMP                  // Jump using the fire button, only if no PLAYER_CAN_FIRE
     //#define BOTH_KEYS_JUMP                // Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
     //#define RAMIRO_HOP                    // press jump when reaching a type 4 platform to jump again 
@@ -1231,7 +1240,7 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 * `PLAYER_HAS_JUMP`: el jugador puede saltar pulsando "arriba".
 
-* `TIGHT_BOUNDING_BOX`: El jugador colisiona con el escenario con una caja más pequeña, de 8x12 pixels. Esto permite tener un control más agradable en motores de vista lateral cuando el sprite no suele ocupar todo el ancho de la caja de 16x16. Además, permite entrar por huecos de un sólo tile más fácilmente.
+* `TIGHT_BOUNDING_BOX`: El jugador colisiona con el escenario con una caja más pequeña, de 8x12 pixels. Esto permite tener un control más agradable en motores de vista lateral cuando el sprite no suele ocupar todo el ancho de la caja de 16x16. Además, permite entrar por huecos de un sólo tile más fácilmente. `TIGHT_LOWER` y `TIGHT_UPPER` permiten afinar esto horizontalmente. Los valores por defecto de 4 y 12 definen la zona dentro del los 16 pixeles de ancho donde el personaje es "sólido".
 
 * `FIRE_TO_JUMP`: se usa con `PLAYER_HAS_JUMP` para saltar pulsando el botón de disparo en vez de "arriba".
 

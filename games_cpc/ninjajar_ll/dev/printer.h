@@ -562,7 +562,8 @@ void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned c
 			add hl, bc
 			ld  a, (__n)
 			ld (hl), a
-			
+		
+		.set_map_tile_do_print
 			ld  a, (__x)
 			sla a
 			add VIEWPORT_X

@@ -60,9 +60,9 @@ unsigned char *enems_hotspotss [] = { enems_hotspots0, enems_hotspots1, enems_ho
 // Tile behaviours for each level
 // LDIR this to `_comportamiento_tiles`
 
-unsigned char ts0_behs [] = { 0,0,0,8,8,8,8,0,0,0,0,136,136,136,1,1 };
-unsigned char ts1_behs [] = { 0,0,0,40,41,8,8,8,8,8,136,136,136,1,1,4 };
-unsigned char ts2_behs [] = { 0,8,8,0,0,0,0,0,4,8,136,136,136,1,1,0 };
+unsigned char ts0_behs [] = { 0,0,0,8,8,8,8,0,0,0,0,40,40,40,1,1 };
+unsigned char ts1_behs [] = { 0,0,0,40,41,8,8,8,8,8,40,40,40,1,1,4 };
+unsigned char ts2_behs [] = { 0,8,8,0,0,0,0,0,4,8,40,40,40,1,1,0 };
 unsigned char *ts_behs [] = { ts0_behs, ts1_behs, ts2_behs };
 
 // Compressed TS graphics
