@@ -791,6 +791,10 @@ unsigned int __FASTCALL__ abs (int n) {
 		#endif
 		
 		//set_map_tile (_x, _y, 0, 0);
+		#ifdef COIN_BEH
+				ld  a, (__x)
+				ld  c, a
+		#endif
 
 		#asm
 				xor a 

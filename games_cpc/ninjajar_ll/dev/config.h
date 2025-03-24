@@ -173,7 +173,7 @@
 #define BREAKABLE_SPAWN_ONLY_IF 	12		// If defined, spawn only if broken tile is N.
 #define BREAKABLE_SPAWN_CHANCE  	3 		// Must be a power of 2 - 1, ifdef there's a chance to spawn...
 #define BREAKABLE_SPAWN_TILE    	22 		// Throw this tile if rand() & chance == 1.
-//#define BREAKABLE_PERSISTENT 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
+#define BREAKABLE_PERSISTENT 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
 
 // Persistence
 // -----------

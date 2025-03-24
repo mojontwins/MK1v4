@@ -767,12 +767,12 @@ void espera_activa (int espera) {
 	}
 
 	void draw_persistent_row (void) {
-		/*
+		
 		for (gpit = 0; gpit < 8; gpit ++) {
 			if (rdi & (bitmask [gpit]))
 				set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR_TILE, comportamiento_tiles [PERSIST_CLEAR_TILE]);
 		}
-		*/
+		/*
 		#asm 
 				ld  a, (_rdy)
 				ld  (__y), a
@@ -811,6 +811,7 @@ void espera_activa (int espera) {
 				jr  nz, draw_persistent_row_loop
 
 		#endasm
+		*/
 	}
 
 	void draw_persistent (void) {

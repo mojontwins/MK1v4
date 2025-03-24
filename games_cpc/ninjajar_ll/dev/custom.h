@@ -261,7 +261,69 @@ unsigned char map_w, map_h;
 	 	// Changes n_pant when it's needed.
 	 	// Substitutes normal flick screen code. Use for multilevel, etc.
 
-	 	// TODO
-	 }
+		if (gpx == 0 && player.vx < 0) {
+			#asm
+					ld  hl, _n_pant
+					dec (hl)
+
+					ld  a, 224
+					ld  (_gpx), a
+
+					ld  hl, #(224*64)
+					ld  (_player), hl 			// player.x = 224<<6
+				.flick_left_done
+			#endasm
+
+		} else if (gpx == 224 && player.vx > 0) {
+			#asm
+					ld  hl, _n_pant
+					inc (hl)
+
+					xor a
+					ld  (_gpx), a
+
+					ld  hl, 0
+					ld  (_player), hl 			// player.x = 0
+
+				.flick_right_done
+			#endasm
+		}
+
+		// BETTER_VERTICAL_CONNECTIONS
+		if (player.y == -512 && player.vy < 0 && n_pant >= map_w) {
+			player.vy = -PLAYER_MAX_VY_SALTANDO;
+			player.cont_salto = 0;
+			#asm
+					ld  a, (_map_w)
+					ld  c, a
+					ld  a, (_n_pant)
+					sub c
+					ld  (_n_pant), a 
+
+					ld  a, 144
+					ld  (_gpy), a 
+
+					ld  hl, #(144*64)
+					ld  (_player+2), hl 		// player.y = 144 << 6
+
+				.flick_up_done
+			#endasm				
+		} else if (gpy == 144 && player.vy > 0) {
+			#asm
+					ld  a, (_map_w)
+					ld  c, a
+					ld  a, (_n_pant)
+					add c
+					ld  (_n_pant), a 
+
+					xor a 
+					ld  (_gpy), a
+
+					ld  hl, 0
+					ld  (_player+2),hl 			// player.y = 0
+				.flick_down_done
+			#endasm
+		}
+	}
 
 #endif
