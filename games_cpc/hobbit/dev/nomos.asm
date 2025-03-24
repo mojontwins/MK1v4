@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Mar 22 10:44:25 2025
+;	Module compile time: Mon Mar 24 11:00:40 2025
 
 
 
@@ -4508,11 +4508,11 @@
 	defm "PLACAJE%    "
 	._a_leechseed defb 0, 229, 2, 1
 	defm "DRENADORAS% "
-	._a_vinewhip defb 35, 255, 1, 0
+	._a_vinewhip defb 35, 255, 2, 0
 	defm "LATIGO CEPA%"
 	._a_scratch defb 40, 255, 20, 0
 	defm "ARA/AZO%    "
-	._a_ember defb 40, 255, 10, 2
+	._a_ember defb 40, 127, 10, 2
 	defm "BRASAS%     "
 	._a_leer defb 0, 255, 5, 4
 	defm "MALICIOSO%  "
@@ -5132,6 +5132,7 @@
 	ld hl, 0
 	push hl
 	call _cpc_UpdateNow
+	pop bc
 	ld a, (_psk)
 	dec a
 	jr looper
@@ -6099,6 +6100,8 @@
 	.pokemon_combat_loop
 	call _pk_update_displays
 	call _pk_attack_cycle
+	call _pk_update_displays
+	.pokemon_check_wins
 	ld a, (_pk_data + 0 + 16 + 64)
 	or a
 	jr nz, pcl1
@@ -6175,6 +6178,9 @@
 	pop	bc
 	ld	hl,1	;const
 	call	_wyz_play_music
+	ld	hl,6 % 256	;const
+	ld	a,l
+	ld	(_n_pant),a
 	ret
 
 
@@ -6324,7 +6330,7 @@
 	jp interact_and_ret
 	.room_05
 	ld a, (_gpx)
-	cp 12*16
+	cp 11*16
 	ret nc
 	ld a, (_smaug_talk)
 	or a
@@ -6362,7 +6368,6 @@
 	call	_pokemon_combat
 	ld	hl,3	;const
 	call	_wyz_play_music
-	call	_recuadrius
 	ld a, (_pk_win)
 	or a
 	jr z, pokemon_lose
@@ -6373,6 +6378,10 @@
 	.pokemon_lose
 	dec a
 	ld (_on_pant), a
+	ld hl, 12*16*64
+	ld (_player), hl
+	ld a, 12*16
+	ld (_gpx), a
 	ld hl, 256
 	ld (_player + 6), hl
 	ld a, 1

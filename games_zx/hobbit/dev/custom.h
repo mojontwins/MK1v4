@@ -1496,7 +1496,7 @@ void bilbos_hangover (void) {
 			case 5:
 				// Smaug / Charmander
 
-				if (gpx < 12*16) {
+				if (gpx < 11*16) {
 					if (smaug_talk == 0) {
 						// Cutscene
 
@@ -1523,7 +1523,6 @@ void bilbos_hangover (void) {
 					wyz_play_music (6); 		// Pokemon
 					pokemon_combat ();
 					wyz_play_music (3); 		// Cave
-					recuadrius ();
 
 					if(pk_win) {
 						game_loop_flag = 1;
@@ -1531,6 +1530,8 @@ void bilbos_hangover (void) {
 					} else {
 						// If lose -> one life less, throw right	
 						on_pant = 0xff;						
+						player.x = 12*16*64;
+						gpx = 12*16;
 						player.vx = 256;
 						player.is_dead = 1;
 					}

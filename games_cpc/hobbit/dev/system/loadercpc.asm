@@ -32,13 +32,13 @@ org $200
 
 ; Load binary
 
-	ld      ix, $C000 - 20219
-	ld      de, 20219
+	ld      ix, $C000 - 20268
+	ld      de, 20268
 	call    cpct_miniload_asm
 
 ; Depack binary
 
-	ld      hl, $C000 - 20219
+	ld      hl, $C000 - 20268
 	ld      de, $0400
 	call    dzx0_standard
 
