@@ -212,7 +212,7 @@ El puño podría implementarse con `ENABLE_SWORD`, `SWORD_*_DAMAGE` a 1, `SWORD_
 
 También he añadido `SWORD_WIDE` para usar 8x8 en vez de 4x8, sólo en horizontal.
 
-Otra cosa que tengo que hacer es una animación mucho más rápida. La actual dura 9 frames y es excesivo. Tengo que lograr meter una en 4 frames para que haya mas ¡PAH!.
+* [ ] Otra cosa que tengo que hacer es una animación mucho más rápida. La actual dura 9 frames y es excesivo. Tengo que lograr meter una en 4 frames para que haya mas ¡PAH!.
 
 ### Cocos
 
@@ -228,5 +228,11 @@ He conseguido convertir a la sintaxis de z80asm con la idea de utilizar el playe
 
 Implementar que pueda librarme de life gauge cuando todo se muere de un golpe. Esto implica no inicializarlo, no tener que hacer sitio para ella, y no comprobar la que queda cuando los enemigos reciben daño. Es un cambio gordo, lo dejo para el final del final.
 
+### `DIE_AND_RESPAWN`
 
+* [ ] Creo que esto no está en v4 y habría que añadirlo.
+
+### Custom vertical engine
+
+* [ ] Implementar el salto consolero como custom vertical engine. Poder activar / desactivar por define y controla por variable el motor de nadal.
 
