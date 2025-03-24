@@ -767,10 +767,50 @@ void espera_activa (int espera) {
 	}
 
 	void draw_persistent_row (void) {
+		/*
 		for (gpit = 0; gpit < 8; gpit ++) {
 			if (rdi & (bitmask [gpit]))
 				set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR_TILE, comportamiento_tiles [PERSIST_CLEAR_TILE]);
 		}
+		*/
+		#asm 
+				ld  a, (_rdy)
+				ld  (__y), a
+
+				ld  bc, 0
+
+			.draw_persistent_row_loop
+				push bc
+				ld  hl, _bitmask
+				add hl, bc 
+				ld  a, (_rdi)
+				and (hl)
+				jr  z, draw_persistent_row_continue
+
+				// Draw PERSIST_CLEAR_TILE
+				ld  bc, PERSIST_CLEAR_TILE
+				ld  hl, _comportamiento_tiles
+				add hl, bc
+				ld  a, (hl)
+				ld  (__n), a 
+				ld  a, c 
+				ld  (__t), a 
+				ld  a, (_rdi)
+				ld  c, a 
+				ld  a, (_rdx)
+				add c 
+				ld  (__x), a
+				ld  c, a
+				call set_map_tile_do 		// Expects x in __x/C and y in __y
+
+			.draw_persistent_row_continue
+				pop bc
+				inc c 
+				ld  a, c
+				cp  8
+				jr  nz, draw_persistent_row_loop
+
+		#endasm
 	}
 
 	void draw_persistent (void) {

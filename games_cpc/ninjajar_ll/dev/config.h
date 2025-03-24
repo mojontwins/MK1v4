@@ -95,8 +95,8 @@
 // Coins engine
 // ------------
 
-//#define USE_COINS							// Coin engine activated
-//#define COIN_TILE					13		// Coin is tile #X
+#define USE_COINS							// Coin engine activated
+#define COIN_TILE					22		// Coin is tile #X
 //#define COIN_BEH 					2 		// Detect coin by behaviour rather than tile nº
 //#define COIN_FLAG					1		// Coins are counted in flag #N
 //#define COINS_REFILL 				1		// If defined, add this to player.life
@@ -104,7 +104,7 @@
 //#define COINS_DEACTIVABLE					// Coins can be hidden.
 //#define COINS_SCRIPTING 					// Run script when player gets coin
 //#define COINS_PERSISTENT	 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes
-//#define COINS_SMALL_BB 					// Much smaller collision BB
+#define COINS_SMALL_BB 						// Much smaller collision BB
 
 // Fixed screens engine
 // --------------------
