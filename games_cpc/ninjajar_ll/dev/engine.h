@@ -780,7 +780,7 @@ unsigned int __FASTCALL__ abs (int n) {
 
 #ifdef USE_COINS
 	void get_coin (void) {
-		#ifdef ENABLE_PERSISTENCE
+		#ifdef COINS_PERSISTENT
 			persist ();
 		#endif
 
@@ -999,7 +999,6 @@ void adjust_to_tile_y (void) {
 
 				// Free slot!
 
-
 				ld  hl, _b_y
 				add hl, bc 
 				ld  a, (__y)
@@ -1036,6 +1035,12 @@ void adjust_to_tile_y (void) {
 				ld  a, (__x)
 				ld  (hl), a
 				ld  c, a
+
+				#ifdef BREAKABLE_PERSISTENT
+					push bc
+					call _persist
+					pop bc
+				#endif
 
 				call set_map_tile_do
 

@@ -179,7 +179,7 @@
 // -----------
 
 //#define ENABLE_PERSISTENCE				// Turned on automaticly if needed, but you can do it manually
-//#define PERSIST_CLEAR_TILE 		0 		// Clear persistent bit this tile
+#define PERSIST_CLEAR_TILE 			0 		// Clear persistent bit this tile
 
 // Frigoababol
 // -----------

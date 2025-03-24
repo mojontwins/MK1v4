@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Mar 24 14:09:45 2025
+;	Module compile time: Mon Mar 24 17:52:05 2025
 
 
 
@@ -2736,6 +2736,120 @@
 
 
 
+._calc_persist_base
+	.call_persist_base
+	ld hl, (_n_pant)
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	ld d, h
+	ld e, l
+	add hl, hl
+	add hl, hl
+	add hl, de
+	ld de, 0xE800 + 0x600
+	add hl, de
+	ret
+
+
+
+._persist
+	ld a, (__x)
+	and 7
+	ld b, 0
+	ld c, a
+	ld hl, _bitmask
+	add hl, bc
+	ld b, (hl)
+	ld a, (__y)
+	sla a
+	ld c, a
+	ld a, (__x)
+	srl a
+	srl a
+	srl a
+	add c
+	call _calc_persist_base
+	ld d, 0
+	ld e, a
+	add hl, de
+	ld a, (hl)
+	or b
+	ld (hl), a
+	ret
+
+
+
+._draw_persistent_row
+	ld bc, 0
+	.draw_persistent_row_loop
+	push bc
+	ld hl, _bitmask
+	add hl, bc
+	ld a, (_rdi)
+	and (hl)
+	jr z, draw_persistent_row_continue
+	ld a, (_comportamiento_tiles + 0)
+	ld (__n), a
+	ld a, 0
+	ld (__t), a
+	ld a, (_rdx)
+	add c
+	ld (__x), a
+	ld c, a
+	ld a, (_rdy)
+	ld (__y), a
+	call set_map_tile_do
+	.draw_persistent_row_continue
+	pop bc
+	inc c
+	ld a, c
+	cp 8
+	jr nz, draw_persistent_row_loop
+	ret
+
+
+
+._draw_persistent
+	call _calc_persist_base
+	xor a
+	.draw_persistent_loop
+	ld (_rdy), a
+	xor a
+	ld (_rdx), a
+	ld a, (hl)
+	ld (_rdi), a
+	inc hl
+	push hl
+	call _draw_persistent_row
+	pop hl
+	ld a, 8
+	ld (_rdx), a
+	ld a, (hl)
+	ld (_rdi), a
+	inc hl
+	push hl
+	call _draw_persistent_row
+	pop hl
+	ld a, (_rdy)
+	inc a
+	cp 10
+	jr nz, draw_persistent_loop
+	ret
+
+
+
+._clear_persistent
+	ld hl, 0xE800 + 0x600
+	ld de, 0xE800 + 0x600+1
+	ld bc, 5*4*20-1
+	xor a
+	ld (hl), a
+	ldir
+	ret
+
+
+
 ._cpc_UpdateNow
 	ld	hl,2	;const
 	add	hl,sp
@@ -3958,6 +4072,9 @@
 	ld a, (__x)
 	ld (hl), a
 	ld c, a
+	push bc
+	call _persist
+	pop bc
 	call set_map_tile_do
 	ld a, 1
 	ld (_process_breakable), a
@@ -5144,6 +5261,7 @@
 	inc	hl
 	ld	(_seed),hl
 	call	_draw_scr_background
+	call	_draw_persistent
 	._enems_init
 	ld	hl,(_n_pant)
 	ld	h,0
@@ -6082,6 +6200,7 @@
 	call	_init_player
 	call	_init_hotspots
 	call	_init_malotes
+	call	_clear_persistent
 	ld	a,#(1 % 256 % 256)
 	ld	(_n_pant),a
 	ld	a,#(0 % 256 % 256)
@@ -6721,7 +6840,9 @@
 	defc	_en_an_current_frame	=	54790
 	XDEF	_s_current_frame
 	XDEF	_sprite_17_a
+	XDEF	_draw_persistent
 	XDEF	_sprite_18_a
+	XDEF	_clear_persistent
 	XDEF	_l_scr_ini
 	XDEF	_player_just_died
 	XDEF	_init_player
@@ -6804,6 +6925,7 @@
 	XDEF	_hook_entering
 	XDEF	_enems_calc_frame
 	XDEF	_rand
+	XDEF	_persist
 	XDEF	_seed
 	XDEF	_s_on
 	LIB	cpc_DeleteKeys
@@ -6830,6 +6952,7 @@
 	XDEF	_wall
 	XDEF	_enems_hotspotss
 	XDEF	_custom_flick_screen_handler
+	XDEF	_calc_persist_base
 	XDEF	_en_an_next_frame
 	defc	_en_an_next_frame	=	54796
 	XDEF	_s_next_frame
@@ -6928,6 +7051,7 @@
 	XDEF	_tspatterns
 	XDEF	_get_coin
 	XDEF	_latest_hotspot
+	XDEF	_draw_persistent_row
 	XDEF	_asm_int
 	XDEF	_hotspot_paint
 	XDEF	_pant_just_rendered

@@ -1019,7 +1019,7 @@ void cortina (void) {
 
 #ifdef USE_COINS
 	void get_coin (void) {
-		#ifdef ENABLE_PERSISTENCE
+		#ifdef COINS_PERSISTENT
 			persist ();
 		#endif
 
@@ -1129,7 +1129,7 @@ void adjust_to_tile_y (void) {
 	void add_to_breakables (void) {
 		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
 			if (b_f [gpit] == 0) {
-				#ifdef ENABLE_PERSISTENCE
+				#ifdef BREAKABLE_PERSISTENT
 					persist ();
 				#endif					
 				b_x [gpit] = _x;
