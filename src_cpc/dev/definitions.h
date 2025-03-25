@@ -50,7 +50,7 @@
 typedef struct {
 	signed int x, y, cx;								// 0, 2, 4
 	signed int vx, vy; 									// 6, 8
-	signed char g, ax, rx; 								// 10, 11, 12
+	unsigned char g, ax, rx; 							// 10, 11, 12
 	unsigned char salto, cont_salto; 					// 13, 14
 	unsigned char *current_frame, *next_frame; 			// 15, 17
 	unsigned char saltando; 							// 19
@@ -316,11 +316,6 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_on, s_type;
 	unsigned char s_x, s_y, s_frame;
 	unsigned char s_hit_x, s_hit_y;
-
-	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
-	#ifndef SWORD_STAB
-		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
-	#endif
 #endif
 
 // Breakable
@@ -330,6 +325,9 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char b_f [MAX_BREAKABLE];
 	unsigned char b_x [MAX_BREAKABLE];
 	unsigned char b_y [MAX_BREAKABLE];
+	#ifdef BREAKABLE_SPAWN_ONLY_IF
+		unsigned char b_was [MAX_BREAKABLE];
+	#endif
 #endif
 
 // Aux

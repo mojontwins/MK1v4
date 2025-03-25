@@ -62,7 +62,11 @@ unsigned char line_of_text_clear [] = "                                ";
 	extern unsigned char *sword_cells [0];
 	#asm 
 		._sword_cells
+		#ifdef SWORD_WIDE
+			defw _sprite_sword, _sprite_sword + 32
+		#else
 			defw _sprite_sword, _sprite_sword + 16, _sprite_sword + 32, _sprite_sword + 48
+		#endif
 	#endasm
 #endif
 
@@ -158,7 +162,7 @@ void render_this_enemy (void) {
 void calc_baddies_pointer (void) {
 	#asm
 		#if defined PACKED_ENEMS
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD				
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE				
 				add hl, hl 				// x2
 				add hl, hl 				// x4
 				add hl, hl 				// HL = x8
@@ -172,7 +176,7 @@ void calc_baddies_pointer (void) {
 				sbc hl, de 				// HL = x8 - x1 = x7
 			#endif
 		#else
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
 				add hl, hl 				// x2
 				ld  d, h
 				ld  e, l 				// DE = x2
@@ -596,7 +600,7 @@ unsigned int __FASTCALL__ abs (int n) {
 		/*
 		for (gpit = 0; gpit < MAP_W * MAP_H * MAX_ENEMS; gpit ++) {
 			malotes [gpit].t = malotes [gpit].t & 15;	
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
 				malotes [gpit].life = ENEMIES_LIFE_GAUGE;
 				#ifdef RANDOM_RESPAWN
 					if (malotes [gpit].t == 5) malotes [gpit].t |= 16;
@@ -613,13 +617,13 @@ unsigned int __FASTCALL__ abs (int n) {
 
 			ld  bc, TOTAL_EXISTING_ENEMS
 			#if defined PACKED_ENEMS
-				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
 					ld  de, 8
 				#else
 					ld  de, 7
 				#endif
 			#else
-				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
 					ld  de, 10
 				#else
 					ld  de, 9
@@ -650,7 +654,7 @@ unsigned int __FASTCALL__ abs (int n) {
 					ld  (ix+8), a 	// .t
 			#endif
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
 					ld  a, ENEMIES_LIFE_GAUGE
 				#if defined PACKED_ENEMS
 						ld  (ix+7), a 	// .life
@@ -776,7 +780,7 @@ unsigned int __FASTCALL__ abs (int n) {
 
 #ifdef USE_COINS
 	void get_coin (void) {
-		#ifdef ENABLE_PERSISTENCE
+		#ifdef COINS_PERSISTENT
 			persist ();
 		#endif
 
@@ -787,6 +791,10 @@ unsigned int __FASTCALL__ abs (int n) {
 		#endif
 		
 		//set_map_tile (_x, _y, 0, 0);
+		#ifdef COIN_BEH
+				ld  a, (__x)
+				ld  c, a
+		#endif
 
 		#asm
 				xor a 
@@ -865,14 +873,30 @@ void adjust_to_tile_y (void) {
 #endif
 
 #ifdef ENABLE_BREAKABLE
+	#asm
+		.get_beh_in_A
+			ld  d, 0
+			ld  e, a 
+			ld  hl, _comportamiento_tiles
+			add hl, de 
+			ld  a, (hl)
+			ret
+	#endasm
+
 	void actualiza_breakables (void) {
+		/*
 		process_breakable = 0;
 		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
 			if (b_f [gpit]) {
 				b_f [gpit] --;
 				if (b_f [gpit] == 0) {
 					#ifdef BREAKABLE_SPAWN_CHANCE
-						rdi = ((rand () & BREAKABLE_SPAWN_CHANCE) == 1) ? BREAKABLE_SPAWN_TILE : BREAKABLE_ERASE_TILE;
+						rdi = 
+							((rand () & BREAKABLE_SPAWN_CHANCE) == 0) 
+							#ifdef BREAKABLE_SPAWN_ONLY_IF
+								&& b_was [gpit] == BREAKABLE_SPAWN_ONLY_IF
+							#endif
+							? BREAKABLE_SPAWN_TILE : BREAKABLE_ERASE_TILE;
 						set_map_tile (b_x [gpit], b_y [gpit], rdi, comportamiento_tiles [rdi]);
 					#else
 						set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_ERASE_TILE, comportamiento_tiles [BREAKABLE_ERASE_TILE]);
@@ -880,23 +904,163 @@ void adjust_to_tile_y (void) {
 				} else process_breakable = -1;
 			}
 		}
+		*/
+
+		#asm
+				xor a 
+				ld  (_process_breakable), a
+
+				ld  bc, MAX_BREAKABLE
+			.actualiza_breakables_loop
+				push bc
+				dec c
+
+				ld  hl, _b_f
+				add hl, bc 
+				ld  a, (hl)
+				or  a 
+				jr  z, actualiza_breakables_cont
+
+				dec a			
+				ld  (hl), a 		// b_f [gpit] --;
+
+				jr  nz, actualiza_breakables_reset
+
+				// Counter got to zero, so do shit
+
+				ld  hl, _b_y
+				add hl, bc
+				ld  a, (hl)
+				ld  (__y), a
+
+				ld  a, BREAKABLE_ERASE_TILE
+				ld  (__t), a
+				call get_beh_in_A
+				ld  (__n), a
+
+			#ifdef BREAKABLE_SPAWN_CHANCE
+					// Substitute A for something else?
+
+					call _rand 		// This won't trash BC
+					ld  a, l
+					and BREAKABLE_SPAWN_CHANCE
+					jr  nz, actualiza_breakables_spawn_done
+
+				#ifdef BREAKABLE_SPAWN_ONLY_IF
+						ld  hl, _b_was
+						add hl, bc 
+						ld  a, (hl)
+						cp  BREAKABLE_SPAWN_ONLY_IF
+						jr  nz, actualiza_breakables_spawn_done
+				#endif
+
+					ld  a, BREAKABLE_SPAWN_TILE
+					ld  (__t), a
+					call get_beh_in_A
+					ld  (__n), a
+
+				.actualiza_breakables_spawn_done
+			#endif
+
+				
+				ld  hl, _b_x
+				add hl, bc 
+				ld  a, (hl)
+				ld  (__x), a 
+				ld  c, a
+
+				call set_map_tile_do
+				jr  actualiza_breakables_cont
+
+			.actualiza_breakables_reset
+				ld  a, 1
+				ld  (_process_breakable), a
+
+			.actualiza_breakables_cont
+				pop bc 
+				dec c 
+				jr  nz, actualiza_breakables_loop
+		#endasm
 	}
 
 	void add_to_breakables (void) {
-		for (gpit = 0; gpit < MAX_BREAKABLE; gpit ++) {
-			if (b_f [gpit] == 0) {
-				#ifdef ENABLE_PERSISTENCE
-					persist ();
-				#endif					
-				b_x [gpit] = _x;
-				b_y [gpit] = _y;
-				b_f [gpit] = MAX_BREAKABLE_FRAMES;
-				set_map_tile (b_x [gpit], b_y [gpit], BREAKABLE_BREAKING_TILE, comportamiento_tiles [BREAKABLE_BREAKING_TILE]);
-				play_sfx (9);
-				process_breakable = 1;
-				break;
-			}
-		}
+		#asm
+				ld  bc, MAX_BREAKABLE
+			.add_to_breakables_loop
+				push bc
+
+				dec c 
+
+				ld  hl, _b_f
+				add hl, bc 
+				ld  a, (hl) 
+				or  a 
+				jr  nz, add_to_breakables_cont
+
+				// Free slot!
+
+				ld  hl, _b_y
+				add hl, bc 
+				ld  a, (__y)
+				ld  (hl), a
+
+				ld  hl, _b_f
+				add hl, bc 
+				ld  a, MAX_BREAKABLE_FRAMES
+				ld  (hl), a
+
+			#ifdef BREAKABLE_SPAWN_ONLY_IF 
+					push bc 
+					ld  a, (__x)
+					ld  c, a 
+					ld  a, (__y)
+					call qtile_do
+					pop bc 
+					ld  a, l
+
+					ld  hl, _b_was
+					add hl, bc 
+					ld  (hl), a 
+			#endif
+
+				// Print intermediate tile. _x, _y are already set
+				
+				ld  a, BREAKABLE_BREAKING_TILE
+				ld  (__t), a
+				call get_beh_in_A
+				ld  (__n), a
+
+				ld  hl, _b_x
+				add hl, bc 
+				ld  a, (__x)
+				ld  (hl), a
+				ld  c, a
+
+				#ifdef BREAKABLE_PERSISTENT
+					push bc
+					call _persist
+					pop bc
+				#endif
+
+				call set_map_tile_do
+
+				ld  a, 1
+				ld  (_process_breakable),  a 
+
+			#endasm
+			play_sfx(9);
+			#asm 
+
+				// Break
+				pop bc 
+				ret
+
+			.add_to_breakables_cont
+				pop bc 
+				dec c
+				jr nz, add_to_breakables_loop
+
+		#endasm
 	}
 #endif
 
@@ -937,6 +1101,9 @@ void adjust_to_tile_y (void) {
 					#endif
 					ld  a, (_gpy)
 					add d
+				#ifdef SWORD_OFFS
+						add SWORD_OFFS
+				#endif
 					ld  (_s_y), a
 					add 7
 					ld  (_s_hit_y), a
@@ -966,6 +1133,9 @@ void adjust_to_tile_y (void) {
 					ld  a, (_gpy)
 					add 8
 					sub d
+				#ifdef SWORD_OFFS
+						add SWORD_OFFS
+				#endif
 					ld  (_s_y), a
 					ld  (_s_hit_y), a
 
@@ -1003,6 +1173,9 @@ void adjust_to_tile_y (void) {
 					ld  a, (_gpx)
 					add 8
 					sub d 
+				#ifdef SWORD_OFFS
+						add SWORD_OFFS
+				#endif	
 					ld  (_s_x), a
 					ld  (_s_hit_x), a
 
@@ -1029,6 +1202,9 @@ void adjust_to_tile_y (void) {
 					ld  d, (hl)
 					ld  a, (_gpx)
 					add d 
+				#ifdef SWORD_OFFS
+						add SWORD_OFFS
+				#endif
 					ld  (_s_x), a
 					add 7
 					ld  (_s_hit_x), a
@@ -1064,8 +1240,11 @@ void adjust_to_tile_y (void) {
 						ld  c, (hl)
 
 						ld  a, (_gpy)
-						add 8
 						sub c 
+						add 8
+					#ifdef SWORD_OFFS
+						add SWORD_OFFS
+					#endif
 						ld  (_s_y), a
 
 						ld  (_s_hit_y), a
@@ -1093,23 +1272,28 @@ void adjust_to_tile_y (void) {
 					ld  b, 0
 					ld  hl, _swoffs_x
 					add hl, bc
-					ld  c, (hl) 
+					ld  c, (hl)  		// C = swoffs_x
 
 					ld  a, (_s_type)
 					cp  SWORD_TYPE_LEFT
+					ld  a, (_gpx)
 					jr  nz, sword_right
 
 				.sword_left 
-					ld  a, (_gpx)
-					add 16 - SWORD_W // 8 - (SWORD_W - 8)
 					sub c 
+					add 8
+				#ifdef SWORD_OFFS
+						add SWORD_OFFS
+				#endif
 					ld  (_s_x), a
 					ld  (_s_hit_x), a
 					jr  sword_check_done
 
 				.sword_right
-					ld  a, (_gpx)
 					add c
+				#ifdef SWORD_OFFS
+						add SWORD_OFFS
+				#endif	
 					ld  (_s_x), a
 					add SWORD_W - 1
 					ld  (_s_hit_x), a
@@ -1136,8 +1320,7 @@ void adjust_to_tile_y (void) {
 					srl a
 					srl a
 					ld  (__x), a
-					ld  l, a
-					push hl
+					ld  c, a
 
 					ld  a, (_s_hit_y)
 					srl a
@@ -1145,13 +1328,8 @@ void adjust_to_tile_y (void) {
 					srl a
 					srl a
 					ld  (__y), a
-					ld  l, a
-					push hl
 
-					call _attr
-
-					pop bc
-					pop bc
+					call _attr_2
 
 					ld  a, l
 					and 32
@@ -1165,7 +1343,7 @@ void adjust_to_tile_y (void) {
 				ld  a, (_s_frame)
 				inc a
 				ld  (_s_frame), a
-				cp  9
+				cp  NUM_SWORD_FRAMES
 				jr  nz, swing_sword_goon
 
 				xor a
@@ -2633,8 +2811,10 @@ void move (void) {
 				#asm
 					ld  hl, -PLAYER_CONST_V
 					ld  (_player + 6), hl 			// player.vx
+
 					ld  a, GENITAL_FACING_LEFT 
 					ld  (_player + 22), a 			// player.facing
+				.player_press_left_done
 				#endasm
 			}
 			if ((pad0 & sp_RIGHT) == 0) { 
@@ -2642,8 +2822,10 @@ void move (void) {
 				#asm
 					ld  hl, PLAYER_CONST_V
 					ld  (_player + 6), hl 			// player.vx
+
 					ld  a, GENITAL_FACING_RIGHT 
 					ld  (_player + 22), a 			// player.facing
+					.player_press_right_done
 				#endasm
 			}
 			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
@@ -2658,6 +2840,7 @@ void move (void) {
 				if (player.estado != EST_FRIGOABABOL)
 			#endif
 			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
+				/*
 				if (player.vx > 0) {
 					player.vx -= player.rx;
 					if (player.vx < 0)
@@ -2667,9 +2850,45 @@ void move (void) {
 					if (player.vx > 0)
 						player.vx = 0;
 				}
+				*/
+				// Check sign of player.vx (16  bit signed)
+				#asm
+						ld  de, (_player + 12)				// player.rx
+						ld  d, 0
+
+						ld  hl, (_player + 6) 				// player.vx 
+						bit 7, h 							// 1 -> negative (left)
+						jr  z, decelerate_right
+
+					.decelerate_left 
+						// player.vx < 0, so add RX
+						add hl, de 
+
+						// Did player.vx become positive?
+						bit 7, h 
+						jr  nz, h_acceleration_set 
+
+						ld  hl, 0 
+
+					.h_acceleration_set
+						ld  (_player + 6), hl 				// player.vx
+						jr  h_acceleration_done
+
+					.decelerate_right
+						// player.vx > 0, so subtract RX
+						sbc hl, de 
+
+						// Did player.vx become negative?
+						bit 7, h 
+						jr  z, h_acceleration_set 
+
+						ld  hl, 0 
+						jr  h_acceleration_set
+				#endasm
 			}
 
 			if ((pad0 & sp_LEFT) == 0) {
+				/*
 				if (player.vx > -player.max_vx) {
 					#ifndef PLAYER_MOGGY_STYLE
 						player.facing = 1;
@@ -2679,9 +2898,48 @@ void move (void) {
 				#ifdef PLAYER_MOGGY_STYLE
 					player.facing = GENITAL_FACING_LEFT;
 				#endif
+				*/
+				#asm
+						// if (player.vx > -player.max_vx) --->
+						// if (player.vx + player.max_vx  > 0)
+						ld  hl, (_player + 6) 				// player.vx
+						ld  de, (_player + 39)				// player.max_vx 
+						add hl, de 
+
+						bit 7, h
+						jr  nz, accelerate_left_done 		// This is rough but should suffice!
+
+						// player.vx -= player.ax;
+						ld  hl, (_player + 6) 				// player.vx 
+						ld  de, (_player + 11)				// player.ax
+						ld  d, 0
+
+						sbc hl, de 
+
+						#ifndef PLAYER_MOGGY_STYLE
+							#ifdef CHANGE_FACING_LIKE_ALEX
+									ld  a, (_player + 26) 		// player.possee
+									or  a
+									jr  z, facing_left_done
+							#endif
+
+								ld  a, 1 
+								ld  (_player + 22), a 			// player.facing
+							.facing_left_done
+						#endif
+						
+						jr  h_acceleration_set
+
+					.accelerate_left_done
+						#ifdef PLAYER_MOGGY_STYLE
+								ld  a,  GENITAL_FACING_LEFT;
+								ld  (_player + 22), a 		// player.facing
+						#endif
+				#endasm
 			}
 
 			if ((pad0 & sp_RIGHT) == 0) {
+				/*
 				if (player.vx < player.max_vx) {
 					player.vx += player.ax;
 					#ifndef PLAYER_MOGGY_STYLE
@@ -2691,7 +2949,78 @@ void move (void) {
 				#ifdef PLAYER_MOGGY_STYLE
 					player.facing = GENITAL_FACING_RIGHT;
 				#endif
+				*/
+				#asm
+						// if (player.vx < player.max_vx) --->
+						// if (player.max_vx - player.vx > 0)
+						ld  hl, (_player + 39)				// player.max_vx 
+						ld  de, (_player + 6) 				// player.vx
+						sbc hl, de
+
+						bit 7, h 
+						jr  nz, accelerate_right_done 		// This is rough but should suffice!
+
+						// player.vx += player.ax;
+						ld  hl, (_player + 6) 				// player.vx 
+						ld  de, (_player + 11)				// player.ax
+						ld  d, 0
+
+						add hl, de 
+
+						#ifndef PLAYER_MOGGY_STYLE
+							#ifdef CHANGE_FACING_LIKE_ALEX
+									ld  a, (_player + 26) 		// player.possee
+									or  a
+									jr  z, facing_right_done
+							#endif
+
+								xor a
+								ld  (_player + 22), a 			// player.facing
+							.facing_right_done
+						#endif
+						
+						jr  h_acceleration_set
+
+					.accelerate_right_done
+						#ifdef PLAYER_MOGGY_STYLE
+								ld  a,  GENITAL_FACING_RIGHT;
+								ld  (_player + 22), a 		// player.facing
+						#endif
+				#endasm
 			}
+
+			#asm
+				.h_acceleration_done
+			#endasm
+
+			#if !defined PLAYER_MOGGY_STYLE && defined CHANGE_FACING_LIKE_ALEX
+				#asm
+						ld  a, (_player + 26) 		// player.possee
+						or  a
+						jr  nz, facing_ariborne_check_done
+
+						ld  hl, (_player + 6) 		// player.vx
+
+						ld  a, h 
+						or  l 
+						jr  z, facing_ariborne_check_done
+
+						bit 7, h
+						jr  nz, facing_airborne_negative
+
+					.facing_airborne_positive
+						xor a 
+						jr  facing_airborne_set
+
+					.facing_airborne_negative
+						ld  a, 1
+
+					.facing_airborne_set
+						ld  (_player + 22), a 		// player.facing
+
+					.facing_ariborne_check_done
+				#endasm
+			#endif
 		#endif
 
 		#ifdef PLAYER_DIZZY
@@ -5617,7 +5946,7 @@ void mueve_bicharracos (void) {
 				ld  a, (hl)
 				ld  (__en_t), a
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
 				inc hl 
 
 				ld  a, (hl)
@@ -7282,7 +7611,7 @@ void mueve_bicharracos (void) {
 				ld  (hl), a
 				inc hl
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
 				ld  a, (__en_life)
 				ld  (hl), a
 			#endif

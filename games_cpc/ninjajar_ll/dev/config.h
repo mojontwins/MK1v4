@@ -262,14 +262,14 @@
 
 #define PLAYER_CUSTOM_VERT_AXIS 			// Do it yourself!
 //#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
-#define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
-#define TIGHT_LOWER 				4
-#define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
+//#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
+//#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
 #define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
 #define CHANGE_FACING_LIKE_ALEX				// Floor: L/R sets facing. Air: VX sets facing
 
-//#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
-//#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+#define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
+#define TIGHT_LOWER 				4
+#define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
 
 //#define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
 //#define RAMIRO_HOVER 						// press down to hover

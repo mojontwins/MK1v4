@@ -973,6 +973,8 @@ A partir de `4.9` hay más todavía:
 
 La posición de la espada con respecto al jugador se controla usando un par de arrays que están en `config.h`, `swoffs_x` y `swoffs_y`. Para entendernos más fácilmente, estos offsets representan una animación de 9 frames en los que la posición de la espada se calculará sumando dichos offsets a las coordenadas `gpx, gpy` del sprite principal cuando éste mira a la derecha. A la coordenada X (la que aleja a la espada del muñeco cuando mira a la derecha) se le añadirá también, si está definido, un SWORD_OFFS que nos ayudará a finar un poco más.
 
+Puedes personalizar la animación y el momento en el que la espada esté golpeando tocando `NUM_SWORD_FRAMES` (que corresponderá con el tamaño de los arrays `swoffs_x` y `swoffs_y`) y `MIN_SWORD_HIT_FRAME` y `MAX_SWORD_HIT_FRAME`, teniendo en cuenta que la espada golpeará si `MIN_SWORD_HIT_FRAME` <= frame < `MAX_SWORD_HIT_FRAME`.
+
 ### El puñito
 
 El puñito de Ninjajar es en realidad una espada con `SWORD_STAB` activado. Además, si dejamos comentado `SWORD_HIT_FRAME` no se modificará el cell activo cuando se saca el puñito.

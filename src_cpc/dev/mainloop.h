@@ -582,10 +582,17 @@ void main (void) {
 			#endif
 
 			#if defined USE_COINS && defined COINS_X
-				if (flags [COIN_FLAG] != coins_old) {
-					draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
-					coins_old = flags [COIN_FLAG];
-				}
+				#ifdef COIN_FLAG
+					if (flags [COIN_FLAG] != coins_old) {
+						draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
+						coins_old = flags [COIN_FLAG];
+					}
+				#else
+					if (player.coins != coins_old) {
+						draw_2_digits (COINS_X, COINS_Y, player.coins);
+						coins_old = player.coins;
+					}
+				#endif
 			#endif
 
 			#asm
