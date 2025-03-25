@@ -436,7 +436,7 @@ unsigned char comportamiento_tiles [] = {
 // swoffs_y ->  2,  2,  2,  3,  4,  4,  5,  6,  7
 
 #define NUM_SWORD_FRAMES 4
-#define MIN_SWORD_HIT_FRAME 1
+#define MIN_SWORD_HIT_FRAME 0
 #define MAX_SWORD_HIT_FRAME 2
 
 #ifdef ENABLE_SWORD
