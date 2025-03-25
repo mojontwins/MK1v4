@@ -50,7 +50,7 @@
 typedef struct {
 	signed int x, y, cx;								// 0, 2, 4
 	signed int vx, vy; 									// 6, 8
-	signed char g, ax, rx; 								// 10, 11, 12
+	unsigned char g, ax, rx; 							// 10, 11, 12
 	unsigned char salto, cont_salto; 					// 13, 14
 	unsigned char *current_frame, *next_frame; 			// 15, 17
 	unsigned char saltando; 							// 19

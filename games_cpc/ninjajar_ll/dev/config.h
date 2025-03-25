@@ -252,6 +252,7 @@
 // ---------
 
 //#define PLAYER_MOGGY_STYLE				// Enable top view.
+//#define PERSPECTIVE_GENITAL               // smaller vertical bb, get behind tiles
 //#define LOOK_AT_THE_CAMERA				// Use "walk down" cell if player is idle
 //#define PLAYER_NO_INERTIA					// Disable inertia
 //#define PLAYER_CONST_V			256		// Constant speed
@@ -259,21 +260,26 @@
 // Side view:
 // ----------
 
-#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
+#define PLAYER_CUSTOM_VERT_AXIS 			// Do it yourself!
+//#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
 #define TIGHT_LOWER 				4
 #define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
-//define PERSPECTIVE_GENITAL                // smaller vertical bb, get behind tiles
 #define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
+#define CHANGE_FACING_LIKE_ALEX				// Floor: L/R sets facing. Air: VX sets facing
+
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+
 //#define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
 //#define RAMIRO_HOVER 						// press down to hover
 //#define HOVER_WITH_JUMP_ALSO 				// use jump to hover as well
+
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
 //#define JETPAC_DRAINS_LIFE				// If defined, flying drains life.
 //#define JETPAC_DRAIN_RATIO		3		// Drain 1 each X frames.
 //#define JETPAC_DRAIN_OFFSET		8		// Drain after X frames.
+
 //#define PLAYER_KILLS_ENEMIES			  	// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 		3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define PLAYER_MAX_KILLABLE 		6 		// Only kill enemies if id <= PLAYER_MAX_KILLABLE
@@ -425,11 +431,16 @@ unsigned char comportamiento_tiles [] = {
 
 // Sword offset. See the manual if you wanna change those
 // Default values are
+// #define MAX_SWORD_FRAMES 9
 // swoffs_x ->  8, 10, 12, 14, 16, 16, 14, 13, 10
 // swoffs_y ->  2,  2,  2,  3,  4,  4,  5,  6,  7
 
+#define NUM_SWORD_FRAMES 4
+#define MIN_SWORD_HIT_FRAME 1
+#define MAX_SWORD_HIT_FRAME 2
+
 #ifdef ENABLE_SWORD
-	unsigned char swoffs_x [] = {  8, 10, 12, 14, 16, 16, 14, 13, 10};
+	unsigned char swoffs_x [] = {  8, 16, 13, 10 };
 #endif
 #if defined ENABLE_SWORD && !defined SWORD_STAB
 	unsigned char swoffs_y [] = {  2,  2,  2,  3,  4,  4,  5,  6,  7};
