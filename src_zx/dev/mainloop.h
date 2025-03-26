@@ -440,9 +440,9 @@ void main (void) {
 			#if !defined DEACTIVATE_KEYS && defined KEYS_X
 				if (player.keys != keys_old) {
 					#asm
-						ld  a, OBJECTS_X 
+						ld  a, KEYS_X 
 						ld  (__x), a 
-						ld  a, OBJECTS_Y 
+						ld  a, KEYS_Y 
 						ld  (__y), a 
 						ld  a, (_player + 28)		// player.objs
 						ld  (_keys_old), a 

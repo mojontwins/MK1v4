@@ -3159,6 +3159,11 @@ void move (void) {
 				#endif
 				*/
 				#asm
+					#ifdef PLAYER_MOGGY_STYLE
+							ld  a,  GENITAL_FACING_LEFT;
+							ld  (_player + 22), a 		// player.facing
+					#endif
+
 						// if (player.vx > -player.max_vx) --->
 						// if (player.vx + player.max_vx  > 0)
 						ld  hl, (_player + 6) 				// player.vx
@@ -3190,10 +3195,6 @@ void move (void) {
 						jr  h_acceleration_set
 
 					.accelerate_left_done
-						#ifdef PLAYER_MOGGY_STYLE
-								ld  a,  GENITAL_FACING_LEFT;
-								ld  (_player + 22), a 		// player.facing
-						#endif
 				#endasm
 			}
 
@@ -3210,6 +3211,11 @@ void move (void) {
 				#endif
 				*/
 				#asm
+					#ifdef PLAYER_MOGGY_STYLE
+							ld  a,  GENITAL_FACING_RIGHT;
+							ld  (_player + 22), a 		// player.facing
+					#endif
+
 						// if (player.vx < player.max_vx) --->
 						// if (player.max_vx - player.vx > 0)
 						ld  hl, (_player + 39)				// player.max_vx 
@@ -4165,9 +4171,6 @@ void move (void) {
 					player.killingzone_framecount = (player.killingzone_framecount + 1) & 3;
 					if (
 						0 == player.killingzone_framecount
-						#ifdef MODE_128K_DUAL
-							|| is128k
-						#endif
 					) play_sfx (3);
 					player.life --;	
 					player_just_died = PLAYER_KILLED_BY_EZ;

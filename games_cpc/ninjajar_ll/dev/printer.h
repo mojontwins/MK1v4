@@ -163,6 +163,8 @@ void attr (char x, char y) {
 
 		._attr_end
 			ld  h, 0
+			ret
+
 	#endasm
 }
 

@@ -5804,12 +5804,71 @@ void draw_scr (void) {
 
 #ifdef USE_SIGHT_DISTANCE
 	unsigned char distance (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
-		// return abs (x2 - x1 + y2 - y1);
-		// Better version:
-		unsigned char dx = abs (x2 - x1);
-		unsigned char dy = abs (y2 - y1);
+		/*
+		unsigned char dx = abs (cx2 - cx1);
+		unsigned char dy = abs (cy2 - cy1);
 		unsigned char mn = dx < dy ? dx : dy;
 		return (dx + dy - (mn >> 1) - (mn >> 2) + (mn >> 4));
+		*/
+		
+		#asm
+				// Calculate dx
+				ld  a, (_cx1)
+				ld  c, a
+				ld  a, (_cx2)
+				sub c
+				bit 7, a 	// Negative?
+				jr  z, _distance_dx_set
+				neg
+			._distance_dx_set
+				ld  (__x), a
+
+				// Calculate dy
+				ld  a, (_cy1)
+				ld  c, a
+				ld  a, (_cy2)
+				sub c
+				bit 7, a 	// Negative?
+				jr  z, _distance_dy_set
+				neg
+			._distance_dy_set
+				ld  (__y), a
+
+				// Calculate mn
+				ld  c, a 			; c = _y
+				ld  a, (__x)        ; a = _x
+				cp  c 				; _x < _y ?
+				jr  c, _distance_mn_set
+			._distance_dy_min
+				ld  a, c
+			._distance_mn_set
+				ld  (__n), a
+
+				// Calculate distance
+				// return (dx + dy - (mn >> 1) - (mn >> 2) + (mn >> 4));
+				ld  a, (__x)
+				ld  c, a
+				ld  a, (__y)
+				add c
+				ld  b, a 	// dx + dy
+
+				ld  a, (__n)
+				srl a
+				ld  c, a 			; c = (mn >> 1)
+				srl a
+				ld  d, a 			; d = (mn >> 2)
+				srl a
+				srl a
+				ld  e, a 			; e = (mn >> 4)
+
+				ld  a, b 	// dx + dy
+				sub c  		// dx + dy - (mn >> 1)
+				sub d 		// dx + dy - (mn >> 1) - (mn >> 2)
+				add e 		// dx + dy - (mn >> 1) - (mn >> 2) + (mn >> 4)
+
+				ld  l, a
+				ld  h, 0
+		#endasm	
 	}
 #endif
 
@@ -5879,6 +5938,67 @@ void platform_get_player (void) {
 		#ifdef ENABLE_CUSTOM_ENEMS
 			extra_enems_killed ();
 		#endif
+	}
+#endif
+
+#ifdef ENABLE_COCOS
+	// Cocos are very simple. Only one can be active per enemy.
+	// These functions will reuse enit when possible and will be called
+	// mostly from the `mueve_bicharracos` loop
+
+	// Coco is active if its y < 255
+
+	void coco_new (void) {
+		// Creates a coco for enit.
+
+		cx1 = _en_x + 4;
+		cy1 = _en_y + 4;
+		cx2 = gpx; 
+		cy2 = gpy;
+		rda = distance ();
+
+		if (SHOOTER_SAFE_DISTANCE < rda) {
+			play_sfx (3);
+
+			coco_x [enit] = cx1;
+			coco_y [enit] = cy1;
+
+			coco_vx [enit] = ENEMY_SHOOT_SPEED * (cx2 - cx1) / rda;
+			coco_vy [enit] = ENEMY_SHOOT_SPEED * (cy2 - cy1) / rda;
+		}
+	}
+
+	void coco_update (void) {
+		if (coco_y [enit] != 0xff) {
+			_x = coco_x [enit] + coco_vx [enit];
+			_y = coco_y [enit] + coco_vy [enit];
+
+			// Collide with bg (out of the screen attr = 8)
+			#asm 
+					ld  a, (__x)
+					ld  c, a 
+					ld  a, (__y) 
+					call _attr_enems 
+
+					ld  a, h 
+					cp  8 
+					jr  z, coco_update_kill
+			#endasm 
+
+			// Collide with player
+
+
+			#asm 
+				jr coco_update_fin 
+
+			.coco_update_kill
+
+			.coco_update_fin
+			#endasm 
+
+			coco_x [enit] = _x;
+			coco_y [enit] = _y;
+		}
 	}
 #endif
 
