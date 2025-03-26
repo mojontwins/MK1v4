@@ -334,6 +334,15 @@ unsigned char flags [MAX_FLAGS];
 	#endif
 #endif
 
+// Cocos
+
+#ifdef ENABLE_COCOS
+	unsigned char coco_x [MAX_ENEMS];
+	unsigned char coco_y [MAX_ENEMS];
+	signed char coco_vx [MAX_ENEMS];
+	signed char coco_vy [MAX_ENEMS];
+#endif
+
 // Aux
 
 unsigned int asm_int;

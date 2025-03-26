@@ -102,11 +102,12 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 
 }
 
-void get_pointer_to_enem (void) {
-	// In -> _enit, out -> pointer in IX
+void get_pointer_to_enem_or_coco (void) {
+	// D = SP_ENEMS_BASE or SP_COCOS_BASE
+	// In -> _enit, spr base in D, out -> pointer in IX
 	#asm
 			ld  a, (_enit)
-			add SP_ENEMS_BASE
+			add d
 			ld  h, 0
 			ld  l, a
 			add hl, hl
@@ -124,8 +125,9 @@ void render_this_enemy (void) {
 	// sp_sw struct is 16 bytes wide. This is easy
 	// 0   2   4      6   7   8  9  10 11 12      14
 	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
-	#asm
-			call _get_pointer_to_enem
+	#asm		
+			ld  d, SP_ENEMS_BASE
+			call _get_pointer_to_enem_or_coco
 
 			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 1;
 			ld  a, (_rdx)
@@ -158,6 +160,33 @@ void render_this_enemy (void) {
 			ld (ix + 1), h
 	#endasm
 }
+
+#ifdef ENABLE_COCOS
+	void render_this_coco (void) {
+		// sp_sw struct is 16 bytes wide. This is easy
+		// 0   2   4      6   7   8  9  10 11 12      14
+		// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+		#asm
+				ld  d, SP_COCOS_BASE
+				call _get_pointer_to_enem_or_coco
+
+				// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 1;
+				ld  a, (_rdx)
+				add #(VIEWPORT_X*8)
+				add (ix + 6)
+				#ifndef MODE_1
+					srl a
+				#endif
+				ld  (ix + 8), a
+
+				// sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
+				ld  a, (_rdy) 
+				add #(VIEWPORT_Y*8)
+				add (ix + 7)
+				ld  (ix + 9), a	
+		#endasm
+	}
+#endif
 
 void calc_baddies_pointer (void) {
 	#asm
@@ -201,6 +230,9 @@ void calc_baddies_pointer (void) {
 }
 
 void render_all_sprites (void) {
+	// Render enems & cocos
+	// ====================
+
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 			#ifdef RANDOM_RESPAWN
@@ -269,9 +301,55 @@ void render_all_sprites (void) {
 		#asm
 				call _render_this_enemy
 		#endasm
+
+		#ifdef ENABLE_COCOS
+			#asm
+					ld  bc, (_enit)
+					ld  b, 0
+					
+					ld  hl, coco_x
+					add hl, bc 
+					ld  a, (hl)
+					ld  (_rdx), a 
+
+					ld  hl, coco_y
+					add hl, bc 
+					ld  a, (hl)
+					ld  (_rdy), a
+
+					call _render_this_coco
+			#endasm 
+		#endif
 	}
 
-	rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
+	// Render player
+	// =============
+
+	//rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
+
+	#asm 
+			ld  a, (_gpy)
+			ld  (_rdy), a 
+
+			ld  a, (_player + 23)		// player.estado
+			and EST_PARP 
+			jr  z, render_player_on_screen
+
+			ld  a, (_half_life)
+			or  a 
+			jr  nz, render_player_on_screen
+		
+		.render_player_off_screen
+			ld  a, 240
+			jr  render_player_set_x 
+		
+		.render_player_on_screen
+			ld  a, (_gpx) 
+
+		.render_player_set_x
+			ld  (_rdx), a 
+	#endasm
+
 	//#ifdef BETTER_VERTICAL_CONNECTIONS
 		/*
 		if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
@@ -327,6 +405,9 @@ void render_all_sprites (void) {
 	//#endif
 	player.current_frame = player.next_frame;
 	
+	// Render bullets
+	// ==============
+
 	#ifdef PLAYER_CAN_FIRE
 		bspr_it = SP_BULLETS_BASE;
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
@@ -5390,7 +5471,8 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 
 			// Get pointer to enem in IX
 			// Won't trash BC
-			call _get_pointer_to_enem
+			ld  d, SP_ENEMS_BASE
+			call _get_pointer_to_enem_or_coco
 
 			// And now get index to spriteset mappings
 			ld  a, b
@@ -5583,6 +5665,10 @@ void draw_scr (void) {
 	#asm
 		._enems_init
 	#endasm
+
+	#ifdef ENABLE_COCOS
+		cocos_reset ();
+	#endif
 	
 	// Initialising enemies
 	#ifdef INDEXED_ENEMS
@@ -5999,6 +6085,18 @@ void platform_get_player (void) {
 			coco_x [enit] = _x;
 			coco_y [enit] = _y;
 		}
+	}
+
+	void cocos_reset (void) {
+		#asm
+				ld  b, MAX_ENEMS
+				ld  hl, cocos_y
+				ld  a, 0xff
+			.coco_reset_loop
+				ld  (hl), a
+				inc hl 
+				djnz coco_reset_loop
+		#endasm
 	}
 #endif
 
@@ -7507,6 +7605,7 @@ void mueve_bicharracos (void) {
 							enems_kill ();
 						} else	
 					#endif
+						
 					if (
 						player.estado == EST_NORMAL
 						#ifdef PARALYZED_DONT_KILL

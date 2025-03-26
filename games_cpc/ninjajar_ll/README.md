@@ -212,7 +212,7 @@ El puño podría implementarse con `ENABLE_SWORD`, `SWORD_*_DAMAGE` a 1, `SWORD_
 
 También he añadido `SWORD_WIDE` para usar 8x8 en vez de 4x8, sólo en horizontal.
 
-* [ ] Otra cosa que tengo que hacer es una animación mucho más rápida. La actual dura 9 frames y es excesivo. Tengo que lograr meter una en 4 frames para que haya mas ¡PAH!.
+* [X] Otra cosa que tengo que hacer es una animación mucho más rápida. La actual dura 9 frames y es excesivo. Tengo que lograr meter una en 4 frames para que haya mas ¡PAH!.
 
 ### Cocos
 
@@ -230,9 +230,56 @@ Implementar que pueda librarme de life gauge cuando todo se muere de un golpe. E
 
 ### `DIE_AND_RESPAWN`
 
-* [ ] Creo que esto no está en v4 y habría que añadirlo.
+* [X] Creo que esto no está en v4 y habría que añadirlo.
 
 ### Custom vertical engine
 
-* [ ] Implementar el salto consolero como custom vertical engine. Poder activar / desactivar por define y controla por variable el motor de nadal.
+* [X] Implementar el salto consolero como custom vertical engine. Poder activar / desactivar por define y controla por variable el motor de nadal.
+
+### Fanties con estados
+
+* [ ] Ninjajar original tenía fanties que sólo salían a por ti si te acercabas, pero eran terriblemente costosos en espacio... Tengo que lograr una implementación más escueta y sencilla.
+
+## Sacando la basura
+
+### La muerte
+
+Tengo que refactorizar la forma en la que se gestiona la muerte del jugador en el engine, que creo que hay bastante código duplicado porque tengo mierdas aquí desde MK1 v2.1.
+
+* Si mueres por evil tile hay código completo para quitarte vida, poner el flicker, etc. Se resta `LINEAR_ENEMY_HIT` de la vida.
+* Si mueres por drain al disparar (`Cheril the Goddess` 2011), se pone `player_just_died` a `PLAYER_KILLED_BY_SELF`. Se resta `FIRING_DRAIN_AMOUNT` de la vida.
+* Si mueres por drain de jetpac (de nuevo, `Cheril the Goddess` 2011) igual. Se resta 1 de la vida.
+* Si mueres por evil zone (`Ramiro` 1, 2 y 3), `player_just_died` se pone a `PLAYER_KILLED_BY_EZ`. Se resta 1 de la vida.
+* Si colisionas con enemigo, se pone `player.is_dead` a 1. Si el enemigo es tipo 6 (fanty) se resta `FLYING_ENEMY_HIT` de la vida, si no se resta `LINEAR_ENEMY_HIT`. Se pone `player_just_died` a `PLAYER_KILLED_BY_ENEM`. Se rebota al jugador **C Code Warning**.  Se pone el flicker si no hay `frigoababol`.
+
+En el main loop, justo al principio, `player_just_died` se pone a 0. **Y luego no se usa para nada más**.
+
+Tengo que centralizar la muerte del player. Las diversas muertes deberían poder controlar cuanta vida se resta. En el handler de muerte general debería:
+
+* Controlarse RANDOM RESPAWN o el reenter.
+* Si te mató un enemigo, ponerse el estado frigo ababol (si está activado).
+* Poner el flicker (si está activado).
+
+Se ve que en los últimos tiempos (Johnny Limite) empecé a unificar esto un poco porque en el main loop hay un handler común para morir aplastado por caja, suicidarse o golpeado con un enemigo - pero sólo estaba para controlar el reenter en la pantalla.
+
+Lo que haré será:
+
+* Las cosas que te matan se ocuparán del rebote (si aplica) y
+* pondrán la razón de la muerte en `player_just_died`. 
+* En el main loop sustituiré el bloque de `player.is_dead` por otro nuevo que interprete `player_just_died` para restar vida y luego haga todos los manejes de respawn, flicker, etc.
+
+[ ] Hecho
+[ ] Pasar el bounce contra el fanty a ensamble.
+
+### La vida de los malos
+
+En juegos como Ninjajar todos los malos mueren de un solo hostiazo, por lo que no tiene sentido guardar la vida y luego el estado "muerto", vale con lo último. Esto debería simplificar el código.
+
+[ ] Hecho
+
+### La muerte de los malos
+
+Creo que tampoco está demasiado bien. Cuando un malo muere debería permanecer su explosión en la pantalla unos frames y luego desaparecer. En todos los casos.
+
+[ ] Hecho
 

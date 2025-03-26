@@ -238,6 +238,12 @@
 //#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
 //#define MARRULLERS_CONFINED 				// Marrullers will never touch the borders of the screen
 
+// Cocos
+// -----
+//#define ENABLE_COCOS 						// Enable COCOS so enems can throw COCOS.
+#define SHOOTER_SAFE_DISTANCE 		32 		// Won't fire a COCO if closer than this.
+#define ENEMY_SHOOT_SPEED 			127 	// Coco speed, max is 127
+
 // Scripting
 // ---------
 
@@ -266,7 +272,7 @@
 //#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
-#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
+//#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
 #define CHANGE_FACING_LIKE_ALEX				// Floor: L/R sets facing. Air: VX sets facing
 
 #define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
