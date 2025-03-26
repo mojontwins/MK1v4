@@ -325,6 +325,10 @@ void main (void) {
 			ld  (_on_pant), a
 		#endasm
 
+		#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE && defined SAFE_SPOT_ON_ENTERING
+			safe_n_pant = 0xff;
+		#endif
+		
 		while (playing) {
 			#ifdef ENABLE_CODE_HOOKS
 				hook_init_mainloop ();
@@ -469,10 +473,17 @@ void main (void) {
 			#endif
 
 			#if defined USE_COINS && defined COINS_X
-				if (flags [COIN_FLAG] != coins_old) {
-					draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
-					coins_old = flags [COIN_FLAG];
-				}
+				#ifdef COIN_FLAG
+					if (flags [COIN_FLAG] != coins_old) {
+						draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
+						coins_old = flags [COIN_FLAG];
+					}
+				#else
+					if (player.coins != coins_old) {
+						draw_2_digits (COINS_X, COINS_Y, player.coins);
+						coins_old = player.coins;
+					}
+				#endif
 			#endif
 
 			#asm
@@ -1032,7 +1043,12 @@ void main (void) {
 			// Dead player
 			if (player.is_dead) {
 				player.is_dead = 0;
-				if (player.life > 0) {
+
+				if (
+					#ifdef ENABLE_CODE_HOOKS
+						hook_just_died () &&
+					#endif
+					player.life > 0) {
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
@@ -1048,6 +1064,21 @@ void main (void) {
 							draw_scr_background ();
 							init_player_values ();
 						#endif
+					#elif defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE				
+						#asm
+								ld  a, (_safe_n_pant)
+								ld  (_n_pant), a 
+								ld  a, 0xff
+								ld  (_on_pant), a
+								ld  a, (_safe_x)
+								ld  (_gpx), a
+								call Ashl16_HL
+								ld  (_player), hl 		// player.x
+								ld  a, (_safe_y)
+								ld  (_gpy), a
+								call Ashl16_HL
+								ld  (_player+2), hl 	// player.y
+						#endasm
 					#endif
 					#ifdef RESPAWN_FLICKER
 						player_flicker ();

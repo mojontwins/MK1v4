@@ -50,9 +50,9 @@
 #define BORDER(b) 				asm("ld a,"#b"\nout (254),a")
 
 typedef struct {
-	int x, y, cx;										// 0, 2, 4
-	int vx, vy; 										// 6, 8
-	char g, ax, rx; 									// 10, 11, 12
+	signed int x, y, cx;								// 0, 2, 4
+	signed int vx, vy; 									// 6, 8
+	unsigned char g, ax, rx; 							// 10, 11, 12
 	unsigned char salto, cont_salto; 					// 13, 14
 	unsigned char *current_frame, *next_frame; 			// 15, 17
 	unsigned char saltando; 							// 19
@@ -61,8 +61,8 @@ typedef struct {
 	unsigned char ct_estado; 							// 24
 	unsigned char gotten; 								// 25
 	unsigned char possee; 								// 26
-	char objs, keys; 									// 27, 28
-	int life; 											// 29
+	signed char objs, keys; 							// 27, 28
+	signed int life; 									// 29
 	unsigned char fuel; 								// 31
 	unsigned char killed; 								// 32
 	unsigned char disparando; 							// 33
@@ -230,6 +230,10 @@ unsigned char ay_counter     @ 23298;
 unsigned char n_pant, on_pant;
 unsigned char pant_just_rendered;	// Will be 1 for 1 frame if just entered a new screen in hook_init_mainloop
 
+#ifdef DIE_AND_RESPAWN
+	unsigned char safe_n_pant, safe_x, safe_y;
+#endif
+
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 	unsigned char f_zone_ac;
 	unsigned char fzx1, fzx2, fzy1, fzy2;
@@ -267,11 +271,6 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_on, s_type;
 	unsigned char s_x, s_y, s_frame;
 	unsigned char s_hit_x, s_hit_y;
-
-	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
-	#ifndef SWORD_STAB
-		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
-	#endif
 #endif
 
 // Breakable
@@ -281,6 +280,9 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char b_f [MAX_BREAKABLE];
 	unsigned char b_x [MAX_BREAKABLE];
 	unsigned char b_y [MAX_BREAKABLE];
+	#ifdef BREAKABLE_SPAWN_ONLY_IF
+		unsigned char b_was [MAX_BREAKABLE];
+	#endif
 #endif
 
 // Aux
@@ -300,9 +302,9 @@ unsigned char success;
 unsigned char rdi;
 signed int rdj;
 unsigned char rdx, rdy;
-unsigned char gpit, enit, pad0, pad1, pad_this_frame;
+unsigned char gpit, enit, pad0, pad1 = 0, pad_this_frame = 0;
 unsigned char gpx, gpy, gpxx, gpyy;
-int gpcx, gpcy;
+signed int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
 unsigned char _x, _y, _t, _n;

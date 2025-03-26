@@ -1514,6 +1514,18 @@ void move (void) {
 						player.just_jumped = 1;
 						player.cont_salto = 0;
 						play_sfx (1);
+
+						#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE && !defined SAFE_SPOT_ON_ENTERING
+							#asm
+									ld  a, (_n_pant)
+									ld  (_safe_n_pant), a
+									ld  a, (_gpx)
+									ld  (_safe_x), a 
+									ld  a, (_gpy)
+									ld  (_safe_y), a
+								.die_and_respawn_save_done
+							#endasm
+						#endif
 					}
 				}
 
@@ -2068,6 +2080,23 @@ void move (void) {
 
 			ld  a, 1
 			ld  (_player + 26), a 	// player.possee
+
+
+		#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE && defined SAFE_SPOT_ON_ENTERING
+				ld  a, (_safe_n_pant)
+				ld  c, a 
+				ld  a, (_n_pant)
+				cp  c
+				jr  z, die_and_respawn_save_done
+			
+				ld  (_safe_n_pant), a
+
+				ld  a, (_gpx)
+				ld  (_safe_x), a 
+				ld  a, (_gpy)
+				ld  (_safe_y), a
+			.die_and_respawn_save_done
+		#endif
 
 			ld  a, WALL_DOWN
 			ld  (_wall), a 
@@ -2814,7 +2843,6 @@ void move (void) {
 
 					ld  a, GENITAL_FACING_LEFT 
 					ld  (_player + 22), a 			// player.facing
-				.player_press_left_done
 				#endasm
 			}
 			if ((pad0 & sp_RIGHT) == 0) { 
@@ -2825,7 +2853,6 @@ void move (void) {
 
 					ld  a, GENITAL_FACING_RIGHT 
 					ld  (_player + 22), a 			// player.facing
-					.player_press_right_done
 				#endasm
 			}
 			if ((pad0 & sp_LEFT) != 0 && (pad0 & sp_RIGHT) != 0) {
@@ -2900,6 +2927,11 @@ void move (void) {
 				#endif
 				*/
 				#asm
+					#ifdef PLAYER_MOGGY_STYLE
+							ld  a,  GENITAL_FACING_LEFT;
+							ld  (_player + 22), a 		// player.facing
+					#endif
+
 						// if (player.vx > -player.max_vx) --->
 						// if (player.vx + player.max_vx  > 0)
 						ld  hl, (_player + 6) 				// player.vx
@@ -2916,25 +2948,21 @@ void move (void) {
 
 						sbc hl, de 
 
-						#ifndef PLAYER_MOGGY_STYLE
-							#ifdef CHANGE_FACING_LIKE_ALEX
-									ld  a, (_player + 26) 		// player.possee
-									or  a
-									jr  z, facing_left_done
-							#endif
-
-								ld  a, 1 
-								ld  (_player + 22), a 			// player.facing
-							.facing_left_done
+					#ifndef PLAYER_MOGGY_STYLE
+						#ifdef CHANGE_FACING_LIKE_ALEX
+								ld  a, (_player + 26) 		// player.possee
+								or  a
+								jr  z, facing_left_done
 						#endif
+
+							ld  a, 1 
+							ld  (_player + 22), a 			// player.facing
+						.facing_left_done
+					#endif
 						
 						jr  h_acceleration_set
 
-					.accelerate_left_done
-						#ifdef PLAYER_MOGGY_STYLE
-								ld  a,  GENITAL_FACING_LEFT;
-								ld  (_player + 22), a 		// player.facing
-						#endif
+					.accelerate_left_done						
 				#endasm
 			}
 
@@ -2951,6 +2979,11 @@ void move (void) {
 				#endif
 				*/
 				#asm
+					#ifdef PLAYER_MOGGY_STYLE
+							ld  a,  GENITAL_FACING_RIGHT;
+							ld  (_player + 22), a 		// player.facing
+					#endif
+
 						// if (player.vx < player.max_vx) --->
 						// if (player.max_vx - player.vx > 0)
 						ld  hl, (_player + 39)				// player.max_vx 
@@ -2967,25 +3000,20 @@ void move (void) {
 
 						add hl, de 
 
-						#ifndef PLAYER_MOGGY_STYLE
-							#ifdef CHANGE_FACING_LIKE_ALEX
-									ld  a, (_player + 26) 		// player.possee
-									or  a
-									jr  z, facing_right_done
-							#endif
-
-								xor a
-								ld  (_player + 22), a 			// player.facing
-							.facing_right_done
+					#ifndef PLAYER_MOGGY_STYLE
+						#ifdef CHANGE_FACING_LIKE_ALEX
+								ld  a, (_player + 26) 		// player.possee
+								or  a
+								jr  z, facing_right_done
 						#endif
-						
+
+							xor a
+							ld  (_player + 22), a 			// player.facing
+						.facing_right_done
+					#endif
+					
 						jr  h_acceleration_set
-
 					.accelerate_right_done
-						#ifdef PLAYER_MOGGY_STYLE
-								ld  a,  GENITAL_FACING_RIGHT;
-								ld  (_player + 22), a 		// player.facing
-						#endif
 				#endasm
 			}
 

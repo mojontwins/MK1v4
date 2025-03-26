@@ -74,6 +74,7 @@
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
 //#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
+#define DIE_AND_RESPAWN 					// Die and respawn to the latest safe spot
 
 //#define PACKED_ENEMS 						// Packed XY1, XY2 format.
 //#define FIXED_ENEMS_LIMITS 				// x1, x2, y1, y2 won't change.

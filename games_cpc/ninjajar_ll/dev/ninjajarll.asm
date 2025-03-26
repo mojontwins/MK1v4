@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Mar 25 13:57:54 2025
+;	Module compile time: Wed Mar 26 11:20:31 2025
 
 
 
@@ -3361,7 +3361,21 @@
 
 
 ._hook_game_over
+	ld	hl,1 % 256	;const
+	ret
+
+
+
+._hook_just_died
+	ld	hl,10	;const
+	call	_wyz_play_sound
 	ld	hl,1	;const
+	push	hl
+	call	_cpc_UpdateNow
+	pop	bc
+	ld	hl,50	;const
+	call	_cpc_HardPause
+	ld	hl,1 % 256	;const
 	ret
 
 
@@ -4109,7 +4123,7 @@
 	ld (_s_hit_x), a
 	.sword_check_done
 	ld a, (_s_frame)
-	cp 1
+	cp 0
 	jr c, sword_breakable_done
 	cp 2
 	jr nc, sword_breakable_done
@@ -4222,6 +4236,12 @@
 	ld (_player + 43), a
 	ld hl, -384
 	ld (_player + 8), hl
+	ld a, (_n_pant)
+	ld (_safe_n_pant), a
+	ld a, (_gpx)
+	ld (_safe_x), a
+	ld a, (_gpy)
+	ld (_safe_y), a
 	ld	hl,1	;const
 	call	_wyz_play_sound
 	.player_jump_start_done
@@ -5779,7 +5799,7 @@
 	and	a
 	jp	z,i_102
 	ld	a,(_s_frame)
-	cp	#(1 % 256)
+	cp	#(0 % 256)
 	jr	z,i_102_uge
 	jp	c,i_102
 .i_102_uge
@@ -6436,34 +6456,54 @@
 	jp	z,i_139
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
-	ld	hl,(_player+29)
-	xor	a
-	or	h
-	jp	m,i_140
+	ld	l,(hl)
+	ld	h,0
+	call	_hook_just_died
+	ld	a,h
 	or	l
-	jp	z,i_140
+	jp	z,i_141
+	ld	hl,(_player+29)
+	ld	de,0	;const
+	ex	de,hl
+	call	l_gt
+	jr	c,i_142_i_141
+.i_141
+	jp	i_140
+.i_142_i_141
+	ld a, (_safe_n_pant)
+	ld (_n_pant), a
+	ld a, 0xff
+	ld (_on_pant), a
+	ld a, (_safe_x)
+	ld (_gpx), a
+	call Ashl16_HL
+	ld (_player), hl
+	ld a, (_safe_y)
+	ld (_gpy), a
+	call Ashl16_HL
+	ld (_player+2), hl
 .i_140
 .i_139
 	ld	hl,(_player+29)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	c,i_142
+	jp	c,i_144
 	ld	a,(_game_loop_flag)
 	cp	#(2 % 256)
-	jp	nz,i_141
-.i_142
+	jp	nz,i_143
+.i_144
 	call	_hook_game_over
 	ld	a,h
 	or	l
-	jp	z,i_144
+	jp	z,i_146
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_144
-.i_141
+.i_146
+.i_143
 	jp	i_121
 .i_122
 	call	_wyz_stop_sound
@@ -6501,6 +6541,7 @@
 .__en_x2	defs	1
 .__en_y1	defs	1
 .__en_y2	defs	1
+._safe_n_pant	defs	1
 ._hotspot_t	defs	1
 ._hotspot_x	defs	1
 ._hotspot_y	defs	1
@@ -6559,6 +6600,8 @@
 ._objs_old	defs	1
 ._gpxx	defs	1
 ._gpyy	defs	1
+._safe_x	defs	1
+._safe_y	defs	1
 ._maincounter	defs	1
 ._rdmt	defs	1
 ._ptx1	defs	1
@@ -6641,6 +6684,7 @@
 	XDEF	__en_y1
 	XDEF	_def_keys
 	XDEF	__en_y2
+	XDEF	_safe_n_pant
 	LIB	cpc_PrintGphStrM12X
 	XDEF	_enems_kill
 	XDEF	_en_an_base_frame
@@ -6775,6 +6819,7 @@
 	XDEF	_clear_persistent
 	XDEF	_l_scr_ini
 	XDEF	_player_just_died
+	XDEF	_hook_just_died
 	XDEF	_init_player
 	XDEF	_gp_gen
 	XDEF	_spr_x
@@ -6863,6 +6908,8 @@
 	XDEF	_gpxx
 	XDEF	_gpyy
 	XDEF	_get_pointer_to_enem
+	XDEF	_safe_x
+	XDEF	_safe_y
 	XDEF	_maincounter
 	XDEF	_rdmt
 	XDEF	_ptx1

@@ -279,6 +279,10 @@ unsigned char wyz_beat_ct;
 unsigned char n_pant, on_pant;
 unsigned char pant_just_rendered;	// Will be 1 for 1 frame if just entered a new screen in hook_init_mainloop
 
+#ifdef DIE_AND_RESPAWN
+	unsigned char safe_n_pant, safe_x, safe_y;
+#endif
+
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 	unsigned char f_zone_ac;
 	unsigned char fzx1, fzx2, fzy1, fzy2;

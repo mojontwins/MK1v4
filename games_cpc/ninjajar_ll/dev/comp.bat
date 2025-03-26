@@ -79,6 +79,8 @@ del %game%.sna > nul
 echo Output: %game%.sna
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal_loading.png mode=scr in=..\gfx\loading.png out=loading.bin silent > nul
+del loading.c.bin >nul 2>nul
+del %game%.c.bin >nul 2>nul
 ..\utils\zx7.exe loading.bin loading.c.bin > nul
 ..\utils\zx7.exe %game%.bin %game%.c.bin > nul
 

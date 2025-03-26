@@ -93,6 +93,15 @@
 			ld  (_player + 43), a 			// player.just_jumped;
 			ld  hl, -PLAYER_VY_JUMP_INITIAL
 			ld  (_player + 8), hl 			// player.vy
+
+			// Save safe spot for respawn!
+			ld  a, (_n_pant)
+			ld  (_safe_n_pant), a
+			ld  a, (_gpx)
+			ld  (_safe_x), a 
+			ld  a, (_gpy)
+			ld  (_safe_y), a
+	
 	#endasm
 	play_sfx (1);
 	#asm

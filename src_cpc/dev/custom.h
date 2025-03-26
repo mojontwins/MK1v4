@@ -30,6 +30,10 @@
 		return 1;
 	}
 
+	unsigned char hook_just_died (void) {
+		// Do your shit then return 1 for normal behaviour
+		return 1;
+	}
 #endif
 
 #ifdef ENABLE_CUSTOM_ENEMS

@@ -195,11 +195,21 @@ unsigned char map_w, map_h;
 	void hook_hotspots (void) {	
 	}
 
-	int hook_game_over (void) {
+	unsigned char hook_game_over (void) {
 		// Do your shit then return 1 for normal game over.
 		return 1;
 	}
 
+	unsigned char hook_just_died (void) {
+		// Do your shit then return 1 for normal behaviour
+
+		// You just lost a life.
+		play_sfx (10);	
+		cpc_UpdateNow (1);
+		cpc_HardPause (50);
+
+		return 1;
+	}
 #endif
 
 #ifdef ENABLE_CUSTOM_ENEMS
