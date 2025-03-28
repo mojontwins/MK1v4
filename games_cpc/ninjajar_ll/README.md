@@ -9,6 +9,9 @@ Ninjajar Lost Levels R
 - Ssssh... Let people enjoy things!
 - ¡Y luego lo portarás a Spectrum!
 - ¡¡¡25 faps!!!
+- A lo mejor se hace otra cosa!!!
+
+- MK1v4.11
 
 ## Multilevel
 
@@ -256,6 +259,7 @@ En el main loop, justo al principio, `player_just_died` se pone a 0. **Y luego n
 
 Tengo que centralizar la muerte del player. Las diversas muertes deberían poder controlar cuanta vida se resta. En el handler de muerte general debería:
 
+* Restar `player.drain_amount`.
 * Controlarse RANDOM RESPAWN o el reenter.
 * Si te mató un enemigo, ponerse el estado frigo ababol (si está activado).
 * Poner el flicker (si está activado).
@@ -265,10 +269,10 @@ Se ve que en los últimos tiempos (Johnny Limite) empecé a unificar esto un poc
 Lo que haré será:
 
 * Las cosas que te matan se ocuparán del rebote (si aplica) y
-* pondrán la razón de la muerte en `player_just_died`. 
-* En el main loop sustituiré el bloque de `player.is_dead` por otro nuevo que interprete `player_just_died` para restar vida y luego haga todos los manejes de respawn, flicker, etc.
+* pondrán la razón de la muerte en `player.is_dead` y lo que te matan en `player.drain_amount`.
+* En el main loop sustituiré el bloque de `player.is_dead` por otro nuevo que restar vida y luego haga todos los manejes de respawn, flicker, etc.
 
-[ ] Hecho
+[X] Hecho
 [ ] Pasar el bounce contra el fanty a ensamble.
 
 ### La vida de los malos
@@ -281,5 +285,20 @@ En juegos como Ninjajar todos los malos mueren de un solo hostiazo, por lo que n
 
 Creo que tampoco está demasiado bien. Cuando un malo muere debería permanecer su explosión en la pantalla unos frames y luego desaparecer. En todos los casos.
 
+Por ahora tengo `en_an_state` que puede tomar los siguientes valores:
+
+* `ENEM_PARALYZED` si la espada los paralizo
+* `TYPE_6_*` los estados del fanty con `USE_SIGHT_DISTANCE` que, por cierto, **tengo que pasar a ensamble**
+
+Introduciré para esto el estado `ENEM_IS_DEAD` que empleará el contador en `en_an_count`. Al principio de cada vuelta del bucle, si el estado es `ENEM_IS_DEAD` se pondrá el sprite de la explosión hasta que acabe `en_an_count`.
+
+Se llama a `enems_kill` desde:
+
+* Colisión con hitter. Se coloca `en_an_next_frame` a 17 (explosión).
+* Colisión con caja. idem.
+* Colisión con los zapatos (pisar). idem.
+* Colisión con fire. Se pone `en_an_morido` a 1. ¿Para qué sirve esto? -> se intercepta en main loop y se toca un sonido. Lo quitaré.
+
+[ ] Paso a ensamble el fanty con vista.
 [ ] Hecho
 

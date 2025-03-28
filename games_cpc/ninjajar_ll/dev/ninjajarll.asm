@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Mar 26 22:50:09 2025
+;	Module compile time: Thu Mar 27 16:25:46 2025
 
 
 
@@ -4741,19 +4741,10 @@
 	jp	nz,i_67
 	ld	hl,2	;const
 	call	_wyz_play_sound
-	ld	hl,_player+29
-	dec	(hl)
-	ld	a,(hl)
-	inc	hl
-	cp  255
-	jr	nz,ASMPC+3
-	dec	(hl)
-	ld	h,(hl)
-	ld	l,a
-	call	_player_flicker
-	ld	hl,1 % 256	;const
-	ld	a,l
-	ld	(_player_just_died),a
+	ld	hl,_player+46
+	ld	(hl),#(1 % 256 % 256)
+	ld	hl,_player+36
+	ld	(hl),#(1 % 256 % 256)
 .i_67
 	ld	de,_player
 	ld	hl,(_gpcx)
@@ -5924,19 +5915,12 @@
 	ld	h,0
 	ld	a,l
 	ld	(_enemy_killer),a
-	ld	hl,_player+29
-	dec	(hl)
-	ld	a,(hl)
-	inc	hl
-	cp  255
-	jr	nz,ASMPC+3
-	dec	(hl)
-	ld	h,(hl)
-	ld	l,a
-	ld	hl,2 % 256	;const
-	ld	a,l
-	ld	(_player_just_died),a
-	call	_player_flicker
+	ld	hl,_player+46
+	ld	(hl),#(1 % 256 % 256)
+	ld	hl,_player+36
+	ld	(hl),#(2 % 256 % 256)
+	ld	l,(hl)
+	ld	h,0
 .i_113
 .i_110
 .i_96
@@ -6167,11 +6151,9 @@
 	or	l
 	jp	z,i_118
 	call	_hook_init_mainloop
-	ld	a,#(0 % 256 % 256)
-	ld	(_pant_just_rendered),a
 	ld	hl,0 % 256	;const
 	ld	a,l
-	ld	(_player_just_died),a
+	ld	(_pant_just_rendered),a
 	ld a, (_n_pant)
 	ld c, a
 	ld a, (_on_pant)
@@ -6438,13 +6420,28 @@
 	ld	a,l
 	ld	(_playing),a
 .i_134
-	ld	a,(_player+36)
-	and	a
+	ld	hl,(_player+36)
+	ld	h,0
+	ld	a,h
+	or	l
 	jp	z,i_135
+	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
-	ld	l,(hl)
+	ld	hl,_player+29
+	push	hl
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	push	de
+	ld	hl,(_player+46)
 	ld	h,0
+	pop	de
+	ex	de,hl
+	and	a
+	sbc	hl,de
+	pop	de
+	call	l_pint
 	call	_hook_just_died
 	ld	a,h
 	or	l
@@ -6469,6 +6466,7 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player+2), hl
+	call	_player_flicker
 .i_136
 .i_135
 	ld	hl,(_player+29)
@@ -6565,7 +6563,6 @@
 ._ptgmx	defs	2
 ._ptgmy	defs	2
 ._s_current_frame	defs	2
-._player_just_died	defs	1
 ._gp_gen	defs	2
 ._on_pant	defs	1
 ._enoffs	defs	2
@@ -6609,7 +6606,7 @@
 ._process_breakable	defs	1
 ._item_old	defs	1
 ._idx	defs	2
-._player	defs	46
+._player	defs	47
 ._jetpac_frame_counter	defs	1
 ._rda	defs	1
 ._rdb	defs	1
@@ -6806,7 +6803,6 @@
 	XDEF	_sprite_18_a
 	XDEF	_clear_persistent
 	XDEF	_l_scr_ini
-	XDEF	_player_just_died
 	XDEF	_hook_just_died
 	XDEF	_init_player
 	XDEF	_gp_gen

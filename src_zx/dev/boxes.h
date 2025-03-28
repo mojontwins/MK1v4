@@ -1,5 +1,5 @@
-// MTE MK1 v4.10
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 #ifdef PLAYER_PUSH_BOXES
 	void __FASTCALL__ move_tile (unsigned char act) {
@@ -228,9 +228,8 @@
 							#ifdef BOXES_KILL_PLAYER
 								// Check for player killed!
 								if (gpx >= boxx - 15 && gpx <= boxx + 15 && gpy >= boyy - 15 && gpy <= boyy + 15) {
-									explode_player ();	
-									player.life --;
-									player.is_dead = 1;
+									player.drain_amount = 1;
+									player.is_dead = PLAYER_KILLED_BY_BOX;
 								}
 							#endif
 							}

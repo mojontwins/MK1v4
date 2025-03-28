@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
@@ -451,8 +451,6 @@ void main (void) {
 				hook_init_mainloop ();
 				pant_just_rendered = 0;
 			#endif
-
-			player_just_died = 0;
 
 			// Update SCR
 
@@ -1118,15 +1116,29 @@ void main (void) {
 				}				
 			#endif
 
-			// Dead player
+			// Dead player new code!
+
 			if (player.is_dead) {
+				#asm
+					.player_is_dead
+				#endasm
+
 				player.is_dead = 0;
+				player.life -= player.drain_amount;
 
 				if (
 					#ifdef ENABLE_CODE_HOOKS
 						hook_just_died () &&
 					#endif
-					player.life > 0) {
+					#ifdef FIRING_DRAINS_LIFE
+						player.is_dead != PLAYER_KILLED_BY_SELF &&
+					#endif
+					#ifndef DEACTIVATE_EVIL_ZONE
+						player.is_dead != PLAYER_KILLED_BY_EZ &&
+					#endif
+					player.life > 0
+				) {
+
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
@@ -1136,12 +1148,10 @@ void main (void) {
 								malotes [enoffs + 1].t = malotes [enoffs + 1].t & 15;
 								malotes [enoffs + 2].t = malotes [enoffs + 2].t & 15;
 							#endif
-							draw_scr ();
-							init_player_values ();
-						#else	
-							draw_scr_background ();
-							init_player_values ();
 						#endif
+							init_player_values ();
+						on_pant = 0xff;
+
 					#elif defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE				
 						#asm
 								ld  a, (_safe_n_pant)
@@ -1156,9 +1166,13 @@ void main (void) {
 								ld  (_gpy), a
 								call Ashl16_HL
 								ld  (_player+2), hl 	// player.y
+								ld  hl, 0
+								ld  (_player + 6), hl
+								ld  (_player + 8), hl
 						#endasm
 					#endif
-					#ifdef RESPAWN_FLICKER
+
+					#if defined RESPAWN_FLICKER || defined PLAYER_FLICKERS
 						player_flicker ();
 					#endif
 				}
@@ -1186,8 +1200,8 @@ void main (void) {
 			
 			#ifdef USE_SUICIDE_KEY
 				if (cpc_TestKey (KEY_AUX2)) {
-					player.is_dead = 1;
-					player.life --;
+					player.is_dead = PLAYER_KILLED_BY_SELF;
+					player.drain_amount = 1;
 				}
 			#endif
 		}	

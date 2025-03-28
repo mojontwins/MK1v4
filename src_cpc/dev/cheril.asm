@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Mar 26 12:46:38 2025
+;	Module compile time: Fri Mar 28 08:50:01 2025
 
 
 
@@ -9126,19 +9126,10 @@
 	jp	nz,i_73
 	ld	hl,2	;const
 	call	_wyz_play_sound
-	ld	hl,_player+29
-	dec	(hl)
-	ld	a,(hl)
-	inc	hl
-	cp  255
-	jr	nz,ASMPC+3
-	dec	(hl)
-	ld	h,(hl)
-	ld	l,a
-	call	_player_flicker
-	ld	hl,1 % 256	;const
-	ld	a,l
-	ld	(_player_just_died),a
+	ld	hl,_player+46
+	ld	(hl),#(1 % 256 % 256)
+	ld	hl,_player+36
+	ld	(hl),#(1 % 256 % 256)
 .i_73
 	ld	de,_player
 	ld	hl,(_gpcx)
@@ -10311,17 +10302,10 @@
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,2	;const
 	call	_wyz_play_sound
-	ld	hl,_player+29
-	dec	(hl)
-	ld	a,(hl)
-	inc	hl
-	cp  255
-	jr	nz,ASMPC+3
-	dec	(hl)
-	ld	h,(hl)
-	ld	l,a
-	ld	a,#(2 % 256 % 256)
-	ld	(_player_just_died),a
+	ld	hl,_player+46
+	ld	(hl),#(1 % 256 % 256)
+	ld	hl,_player+36
+	ld	(hl),#(2 % 256 % 256)
 	ld	hl,__en_mx
 	call	l_gchar
 	ld	a,h
@@ -10408,7 +10392,6 @@
 	call	l_pint
 .i_117
 .i_115
-	call	_player_flicker
 .i_111
 .i_108
 .i_99
@@ -10690,12 +10673,11 @@
 	ld	hl,1	;const
 	call	_wyz_play_music
 .i_124
-	ld	a,(_playing)
-	and	a
+	ld	hl,(_playing)
+	ld	h,0
+	ld	a,h
+	or	l
 	jp	z,i_125
-	ld	hl,0 % 256	;const
-	ld	a,l
-	ld	(_player_just_died),a
 	ld a, (_n_pant)
 	ld c, a
 	ld a, (_on_pant)
@@ -11052,17 +11034,34 @@
 	ld	a,l
 	ld	(_playing),a
 .i_155
-	ld	a,(_player+36)
-	and	a
+	ld	hl,(_player+36)
+	ld	h,0
+	ld	a,h
+	or	l
 	jp	z,i_156
+	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
+	ld	hl,_player+29
+	push	hl
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	push	de
+	ld	hl,(_player+46)
+	ld	h,0
+	pop	de
+	ex	de,hl
+	and	a
+	sbc	hl,de
+	pop	de
+	call	l_pint
 	ld	hl,(_player+29)
 	xor	a
 	or	h
 	jp	m,i_157
 	or	l
-	jp	z,i_157
+	call	nz,_player_flicker
 .i_157
 .i_156
 	ld	hl,(_player+29)
@@ -11142,7 +11141,6 @@
 ._en_ccy	defs	1
 ._ptgmx	defs	2
 ._ptgmy	defs	2
-._player_just_died	defs	1
 ._gp_gen	defs	2
 ._on_pant	defs	1
 ._enoffs	defs	2
@@ -11181,7 +11179,7 @@
 ._pryy	defs	1
 ._item_old	defs	1
 ._idx	defs	2
-._player	defs	46
+._player	defs	47
 ._jetpac_frame_counter	defs	1
 ._rda	defs	1
 ._rdb	defs	1
@@ -11354,7 +11352,6 @@
 	XDEF	_en_an_current_frame
 	defc	_en_an_current_frame	=	54790
 	XDEF	_sprite_18_a
-	XDEF	_player_just_died
 	XDEF	_init_player
 	XDEF	_gp_gen
 	XDEF	_spr_x

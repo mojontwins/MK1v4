@@ -1,5 +1,5 @@
-// MTE MK1 v4.10
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // ============================================================================
 // I. General configuration
@@ -224,7 +224,7 @@
 //#define FANTY_A 					16		// Flying enemies acceleration.
 //#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
-//#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
+//#define FANTIES_EXIT_STATE_V		32		// set en_an_state to TYPE_6_RETREATING and make them retreat to (0,0) w. this speed
 #define FANTY_ASSEMBLY 						// Comment for classic fanties.
 
 // Quadrators

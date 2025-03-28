@@ -1,5 +1,5 @@
-// MTE MK1 v4.10
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
@@ -758,26 +758,7 @@ unsigned int __FASTCALL__ abs (int n) {
 	void fire_bullet (void) {
 		
 		// Search a free bullet slot...
-		/*
-		for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-			if (bullets_estado [gpit] == 0) {
-				bullets_estado [gpit] = 1;
-				if (player.facing) {
-					bullets_x [gpit] = (player.x >> 6) - 4;
-					bullets_mx [gpit] = -PLAYER_BULLET_SPEED;
-				} else {
-					bullets_x [gpit] = (player.x >> 6) + 12;
-					bullets_mx [gpit] = PLAYER_BULLET_SPEED;
-				}
-				bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
-				play_sfx (9);
-				#ifdef FIRING_DRAINS_LIFE
-					player.life -= FIRING_DRAIN_AMOUNT;
-				#endif				
-				break;	
-			}	
-		}	
-		*/
+
 		#asm
 				ld  bc, 0
 			.fire_bullet_search_loop
@@ -835,8 +816,8 @@ unsigned int __FASTCALL__ abs (int n) {
 
 		play_sfx (9);
 		#ifdef FIRING_DRAINS_LIFE
-			player.life -= FIRING_DRAIN_AMOUNT;
-			player_just_died = PLAYER_KILLED_BY_SELF;
+			player.drain_amount = FIRING_DRAIN_AMOUNT;
+			player.is_dead = PLAYER_KILLED_BY_SELF;
 		#endif
 
 		#ifdef PLAYER_AX_RECOIL
@@ -1631,8 +1612,8 @@ void move (void) {
 					jetpac_frame_counter ++;
 					if (jetpac_frame_counter == JETPAC_DRAIN_OFFSET + JETPAC_DRAIN_RATIO) {
 						jetpac_frame_counter = JETPAC_DRAIN_OFFSET;
-						player.life --;
-						player_just_died = PLAYER_KILLED_BY_SELF;
+						player.drain_amount = 1;
+						player.is_dead = PLAYER_KILLED_BY_SELF;
 					}
 				#endif
 			} else {
@@ -3972,15 +3953,14 @@ void move (void) {
 		{		
 			if (player.estado == EST_NORMAL) {
 				play_sfx (2);
-				player.life -= LINEAR_ENEMY_HIT;	
-				#ifdef PLAYER_FLICKERS
-					// Flickers. People seem to like this more than the bouncing behaviour.
-					player_flicker ();
-				#endif
-				player_just_died = PLAYER_KILLED_BY_BG;
-			}			
+				
+				player.drain_amount = LINEAR_ENEMY_HIT;	
+				player.is_dead = PLAYER_KILLED_BY_BG;
+			}
+
 			player.x = gpcx;
 			player.y = gpcy;
+			
 			#ifdef PLAYER_MOGGY_STYLE
 				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
 				else player.vy = -player.vy;
@@ -4016,8 +3996,9 @@ void move (void) {
 					if (
 						0 == player.killingzone_framecount
 					) play_sfx (3);
-					player.life --;	
-					player_just_died = PLAYER_KILLED_BY_EZ;
+					
+					player.drain_amount = 1;	
+					player.is_dead = PLAYER_KILLED_BY_EZ;
 				}
 			} else {
 				if (player.killingzone_framecount > EVIL_ZONE_FRAME_COUNT) {
@@ -6642,7 +6623,7 @@ void mueve_bicharracos (void) {
 					#else
 						#ifndef FANTY_ASSEMBLY
 							#ifdef FANTIES_EXIT_STATE_V
-								if (en_an_state [enit] != 1) 
+								if (en_an_state [enit] != TYPE_6_RETREATING) 
 							#endif
 							{
 								// Always pursue
@@ -7625,15 +7606,15 @@ void mueve_bicharracos (void) {
 							#endif
 							
 							// We decide which kind of life drain we do:
-							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT)
+							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT) && (FLYING_ENEMY_HIT != LINEAR_ENEMY_HIT)
 								if (_en_t == 6) {
-									player.life -= FLYING_ENEMY_HIT;
+									player.drain_amount = FLYING_ENEMY_HIT;
 								} else
 							#endif
 							{
-								player.life -= LINEAR_ENEMY_HIT;
+								player.drain_amount = LINEAR_ENEMY_HIT;
 							}
-							player_just_died = PLAYER_KILLED_BY_ENEM;
+							player.is_dead = PLAYER_KILLED_BY_ENEM;
 							
 							#ifdef PLAYER_BOUNCES
 								#ifndef PLAYER_MOGGY_STYLE	
@@ -7675,9 +7656,6 @@ void mueve_bicharracos (void) {
 							#ifdef ENABLE_FRIGOABABOL
 								player.estado = EST_FRIGOABABOL;
 								player.ct_estado = FRIGO_MAX_FRAMES;
-							#elif defined PLAYER_FLICKERS
-								// Flickers. People seem to like this more than the bouncing behaviour.
-								player_flicker ();
 							#endif				
 						}
 					}

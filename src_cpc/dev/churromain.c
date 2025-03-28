@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // churromain.c
 // Program skeleton. Rename to your game title.c
@@ -93,7 +93,8 @@
 #define SP_ENEMS_BASE 		1
 #define SP_BULLETS_BASE 	(SP_ENEMS_BASE + MAX_ENEMS)
 #define SP_SWORD_BASE 		(SP_BULLETS_BASE + MAX_BULLETS)
-#define SP_CUSTOM_BASE		(SP_SWORD_BASE + SWORD_SW_SPRITE_ON)
+#define SP_COCOS_BASE 		(SP_SWORD_BASE + SWORD_SW_SPRITE_ON)
+#define SP_CUSTOM_BASE		(SP_COCOS_BASE + MAX_ENEMS)
 
 #ifdef SOUND_NONE
 	#define AY_INIT()        ;

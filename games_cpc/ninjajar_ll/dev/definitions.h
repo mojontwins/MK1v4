@@ -1,5 +1,5 @@
-// MTE MK1 v4.10
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // definitions.h
 // Contains type definitions and global variables
@@ -19,6 +19,8 @@
 #define TYPE_6_RETREATING		2
 
 #define ENEM_PARALYZED 			32
+
+#define ENEM_IS_DEAD 			128
 
 #define SWORD_TYPE_RIGHT 		0
 #define SWORD_TYPE_LEFT 		1
@@ -43,9 +45,10 @@
 #define HOTSPOT_TYPE_REFILL 	3
 
 #define PLAYER_KILLED_BY_BG 	1
-#define PLAYER_KILLED_BY_ENEM 	2
+#define PLAYER_KILLED_BY_ENEM	2
 #define PLAYER_KILLED_BY_EZ 	4
 #define PLAYER_KILLED_BY_SELF 	8
+#define PLAYER_KILLED_BY_BOX 	16
 
 typedef struct {
 	signed int x, y, cx;								// 0, 2, 4
@@ -75,6 +78,7 @@ typedef struct {
 	unsigned char just_jumped;							// 43
 	unsigned char sword_g;								// 44
 	unsigned char coins;								// 45
+	unsigned char drain_amount; 						// 46
 } INERCIA;
 
 typedef struct {
@@ -205,7 +209,6 @@ INERCIA player;
 	unsigned char bspr_it;
 #endif
 signed int ptgmx, ptgmy;
-unsigned char player_just_died;
 
 // Enemies
 
