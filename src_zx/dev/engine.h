@@ -1573,7 +1573,6 @@ void adjust_to_tile_y (void) {
 					srl a
 					srl a
 					ld  (__y), a
-					push hl
 
 					call _attr_2
 
@@ -3247,10 +3246,6 @@ void move (void) {
 						jr  h_acceleration_set
 
 					.accelerate_right_done
-						#ifdef PLAYER_MOGGY_STYLE
-								ld  a,  GENITAL_FACING_RIGHT;
-								ld  (_player + 22), a 		// player.facing
-						#endif
 				#endasm
 			}
 
@@ -4131,9 +4126,11 @@ void move (void) {
 				
 				player.drain_amount = LINEAR_ENEMY_HIT;	
 				player.is_dead = PLAYER_KILLED_BY_BG;
-			}			
+			}
+
 			player.x = gpcx;
 			player.y = gpcy;
+
 			#ifdef PLAYER_MOGGY_STYLE
 				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
 				else player.vy = -player.vy;
@@ -5025,10 +5022,13 @@ void draw_scr_background (void) {
 				add hl, de      ; HL = map + index
 				ld  (_gp_gen), hl		
 		#endasm
+
 	#elif defined (UNPACKED_MAP)
-		gp_gen = mapa + (n_pant * 150);		
+		gp_gen = mapa + (n_pant * 150);
+
 	#else
 		gp_gen = mapa + (n_pant * 75);
+
 	#endif
 		
 	#if defined TWO_SETS || defined TWO_SETS_REAL
@@ -5618,13 +5618,22 @@ void enems_calc_frame (void) {
 	#endasm
 }
 
-void enems_en_an_calc (unsigned char n) {
-	en_an_base_frame [enit] = 
+void __FASTCALL__ enems_en_an_calc (unsigned char n) {
+	// Fastcall so n is in HL
+	#asm
+			ld  a, l 		// B = n
+			sla a 			// B = n << 1
 		#ifdef ENEMS_OFFSET
-			ENEMS_OFFSET +
+				add ENEMS_OFFSET
 		#endif
-		n << 1;	
-	enems_calc_frame ();
+			ld  hl, (_enit)
+			ld  h, 0 
+			ld  de, _en_an_base_frame 
+			add hl, de 			// HL ->en_an_base_frame [enit]
+			ld  (hl), a 		// en_an_base_frame [enit] = (n << 1) + ENEMS_OFFSET
+			
+			jr _enems_calc_frame
+	#endasm
 }
 
 #ifdef ENABLE_MARRULLERS
@@ -5966,12 +5975,71 @@ void draw_scr (void) {
 
 #ifdef USE_SIGHT_DISTANCE
 	unsigned char distance (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
-		// return abs (x2 - x1 + y2 - y1);
-		// Better version:
-		unsigned char dx = abs (x2 - x1);
-		unsigned char dy = abs (y2 - y1);
+		/*
+		unsigned char dx = abs (cx2 - cx1);
+		unsigned char dy = abs (cy2 - cy1);
 		unsigned char mn = dx < dy ? dx : dy;
 		return (dx + dy - (mn >> 1) - (mn >> 2) + (mn >> 4));
+		*/
+		
+		#asm
+				// Calculate dx
+				ld  a, (_cx1)
+				ld  c, a
+				ld  a, (_cx2)
+				sub c
+				bit 7, a 	// Negative?
+				jr  z, _distance_dx_set
+				neg
+			._distance_dx_set
+				ld  (__x), a
+
+				// Calculate dy
+				ld  a, (_cy1)
+				ld  c, a
+				ld  a, (_cy2)
+				sub c
+				bit 7, a 	// Negative?
+				jr  z, _distance_dy_set
+				neg
+			._distance_dy_set
+				ld  (__y), a
+
+				// Calculate mn
+				ld  c, a 			; c = _y
+				ld  a, (__x)        ; a = _x
+				cp  c 				; _x < _y ?
+				jr  c, _distance_mn_set
+			._distance_dy_min
+				ld  a, c
+			._distance_mn_set
+				ld  (__n), a
+
+				// Calculate distance
+				// return (dx + dy - (mn >> 1) - (mn >> 2) + (mn >> 4));
+				ld  a, (__x)
+				ld  c, a
+				ld  a, (__y)
+				add c
+				ld  b, a 	// dx + dy
+
+				ld  a, (__n)
+				srl a
+				ld  c, a 			; c = (mn >> 1)
+				srl a
+				ld  d, a 			; d = (mn >> 2)
+				srl a
+				srl a
+				ld  e, a 			; e = (mn >> 4)
+
+				ld  a, b 	// dx + dy
+				sub c  		// dx + dy - (mn >> 1)
+				sub d 		// dx + dy - (mn >> 1) - (mn >> 2)
+				add e 		// dx + dy - (mn >> 1) - (mn >> 2) + (mn >> 4)
+
+				ld  l, a
+				ld  h, 0
+		#endasm	
 	}
 #endif
 
@@ -5999,48 +6067,66 @@ void platform_get_player (void) {
 }
 
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
-	void enems_kill (void) {
+	void enems_kill (unsigned char damage) {
+		// Kill enemy
+		if (_en_life >= damage) {
+			_en_life -= damage;
+		} else {
+			_en_life = 0;
+		}
+
 		#ifdef ENABLE_CODE_HOOKS
 			enemy_died = _en_t;
 		#endif
 
-		// Kill enemy
-		/*
-		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
-		en_an_current_frame [enit] = en_an_next_frame [enit];
-		*/
-		#asm
-				ld  a, (_en_ccx)
-				ld  (_rdx), a
-				ld  a, (_en_ccy)
-				ld  (_rdy), a 
-				call _render_this_enemy
-		#endasm
+		#ifdef USE_CLASSIC_ENEMS_KILL
+			// Update frame
+			en_an_next_frame [enit] = sprite_17_a;											
+													
+			#asm
+					ld  a, (_en_ccx)
+					ld  (_rdx), a
+					ld  a, (_en_ccy)
+					ld  (_rdy), a 
+					call _render_this_enemy
+			#endasm
 
-		#asm 
-			call SPUpdateNow
-		#endasm
-		play_sfx (10);
-		en_an_next_frame [enit] = sprite_18_a;
+			// Show changes
+			#asm 
+				call SPUpdateNow
+			#endasm
 
-		_en_t |= 16;			// dead
-
-		// Count
-		player.killed ++;
-
-		#ifdef ACTIVATE_SCRIPTING
-			script = f_scripts [MAX_SCREENS + 2];
-			run_script ();
-		#endif								
-
-		#ifdef RANDOM_RESPAWN								
-			en_an_fanty_activo [enit] = 0;
-			_en_life = FANTIES_LIFE_GAUGE;
+			// Makes a delay
+			play_sfx (10);
+			// TODO: 128 Add 20 HALTs
 		#endif
 
-		#ifdef ENABLE_CUSTOM_ENEMS
-			extra_enems_killed ();
-		#endif
+		if (_en_life == 0) {
+			#ifdef USE_CLASSIC_ENEMS_KILL
+				// Sprite empty
+				en_an_next_frame [enit] = sprite_18_a;
+			#endif
+
+			// Mark dead
+			_en_t |= 16;			// dead
+
+			// Count
+			player.killed ++;
+
+			#ifdef ACTIVATE_SCRIPTING
+				script = f_scripts [MAX_SCREENS + 2];
+				run_script ();
+			#endif								
+
+			#ifdef RANDOM_RESPAWN								
+				en_an_fanty_activo [enit] = 0;
+				_en_life = FANTIES_LIFE_GAUGE;
+			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_killed ();
+			#endif
+		}
 	}
 #endif
 
@@ -6493,6 +6579,7 @@ void mueve_bicharracos (void) {
 
 						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
+						
 						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 					} 
@@ -6570,7 +6657,7 @@ void mueve_bicharracos (void) {
 					#else
 						#ifndef FANTY_ASSEMBLY
 							#ifdef FANTIES_EXIT_STATE_V
-								if (en_an_state [enit] != 1) 
+								if (en_an_state [enit] != TYPE_6_RETREATING) 
 							#endif
 							{
 								// Always pursue
@@ -6585,7 +6672,7 @@ void mueve_bicharracos (void) {
 									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
 										en_an_vy [enit] -= FANTY_A;
 								}
-								
+
 							}
 
 							if (scenery_info.allow_type_6) {
@@ -7467,20 +7554,13 @@ void mueve_bicharracos (void) {
 									#endif
 
 									// Kill?
-									#if SWORD_LINEAL_DAMAGE > 0
-										if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+
+									#if SWORD_LINEAL_DAMAGE != SWORD_FLYING_DAMAGE
+										enems_kill (_en_t == 6 ? SWORD_FLYING_DAMAGE : SWORD_LINEAL_DAMAGE);
+									#else 
+										enems_kill (SWORD_LINEAL_DAMAGE);
 									#endif
 
-									#if SWORD_FLYING_DAMAGE > 0
-										if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-									#endif
-
-									#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-										if (_en_life == 0) {
-											en_an_next_frame [enit] = sprite_17_a;
-											enems_kill ();
-										}
-									#endif
 								#endif
 
 								goto enems_loop_continue;
@@ -7519,11 +7599,11 @@ void mueve_bicharracos (void) {
 							#endif
 						) {
 							// Step on enemy and kill it.
-							en_an_next_frame [enit] = sprite_17_a;
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
-							enems_kill ();
+							enems_kill (0xff);
 						} else	
 					#endif
+						
 					if (
 						player.estado == EST_NORMAL
 						#ifdef PARALYZED_DONT_KILL
@@ -7664,11 +7744,10 @@ void mueve_bicharracos (void) {
 								#endif
 								en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
 							#endif
-							en_an_next_frame [enit] = sprite_17_a;
-							en_an_morido [enit] = 1;
+							
 							bullets_estado [en_j] = 0;
-							_en_life --;
-							if (_en_life == 0) enems_kill ();
+							
+							enems_kill (1);
 							
 							#asm
 								.enems_coll_bullets_continue

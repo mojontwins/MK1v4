@@ -887,16 +887,6 @@ void main (void) {
 
 			if (n_pant == on_pant) cpc_UpdateNow (1);
 			
-			// Dead enemies
-
-			#ifdef PLAYER_CAN_FIRE
-				for (rdi = 0; rdi < 3; rdi ++)
-					if (en_an_morido [rdi] == 1) {
-						play_sfx (1);
-						en_an_morido [rdi] = 0;
-					} 	
-			#endif
-
 			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER) || defined(PLAYER_DIZZY)
 				// Flickering
 				#asm

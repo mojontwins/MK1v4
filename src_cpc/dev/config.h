@@ -87,12 +87,13 @@
 #define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 //#define ENEMIES_COLLIDE_MASK 		8
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
-#define DIE_AND_RESPAWN 					// Respawn the player on the latest safe spot (side view)
+//#define DIE_AND_RESPAWN 					// Respawn the player on the latest safe spot (side view)
 //#define SAFE_SPOT_ON_ENTERING 			// Safe spot is only updated when entering a new screen
 
 //#define PACKED_ENEMS 						// Packed XY1, XY2 format.
 //#define FIXED_ENEMS_LIMITS 				// x1, x2, y1, y2 won't change.
 //#define INDEXED_ENEMS 					// Good if you have lots screens with less than MAX_ENEMS
+#define USE_CLASSIC_ENEMS_KILL				// Killing enemies pauses the action i.e. the classic shit
 
 // Coins engine
 // ------------

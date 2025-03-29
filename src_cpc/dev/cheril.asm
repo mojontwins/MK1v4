@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Mar 28 08:50:01 2025
+;	Module compile time: Sat Mar 29 10:23:55 2025
 
 
 
@@ -11110,7 +11110,6 @@
 .__en_x2	defs	1
 .__en_y1	defs	1
 .__en_y2	defs	1
-._safe_n_pant	defs	1
 ._hotspot_t	defs	1
 ._hotspot_x	defs	1
 ._hotspot_y	defs	1
@@ -11162,8 +11161,6 @@
 ._objs_old	defs	1
 ._gpxx	defs	1
 ._gpyy	defs	1
-._safe_x	defs	1
-._safe_y	defs	1
 ._maincounter	defs	1
 ._rdmt	defs	1
 ._ptx1	defs	1
@@ -11233,11 +11230,10 @@
 	XDEF	__en_y1
 	XDEF	_def_keys
 	XDEF	__en_y2
-	XDEF	_safe_n_pant
 	LIB	cpc_PrintGphStrM12X
 	XDEF	_enems_kill
 	XDEF	_en_an_base_frame
-	defc	_en_an_base_frame	=	54838
+	defc	_en_an_base_frame	=	54835
 	XDEF	_init_falling_box_buffer
 	XDEF	_hotspot_t
 	XDEF	_wyz_play_sound
@@ -11258,7 +11254,7 @@
 	LIB	cpc_PutTrSpriteTileMap2b
 	XDEF	_adjust_to_tile_y
 	XDEF	_en_an_state
-	defc	_en_an_state	=	54832
+	defc	_en_an_state	=	54829
 	XDEF	_flags
 	LIB	cpc_SetInkGphStr
 	XDEF	_mueve_bicharracos
@@ -11277,8 +11273,6 @@
 	LIB	cpc_CollSp
 	XDEF	_beepet
 	LIB	cpc_PutMaskSp4x16
-	XDEF	_en_an_morido
-	defc	_en_an_morido	=	54802
 	XDEF	_gp_gen_org
 	XDEF	_blackout
 	XDEF	_map_buff
@@ -11311,7 +11305,7 @@
 	XDEF	__n
 	XDEF	_title_screen
 	XDEF	_en_an_fanty_activo
-	defc	_en_an_fanty_activo	=	54829
+	defc	_en_an_fanty_activo	=	54826
 	XDEF	__t
 	XDEF	__x
 	XDEF	__y
@@ -11378,7 +11372,7 @@
 	XDEF	_en_j
 	LIB	cpc_SetBorder
 	XDEF	_en_an_ff
-	defc	_en_an_ff	=	54835
+	defc	_en_an_ff	=	54832
 	LIB	cpc_RLI
 	XDEF	_en_x
 	XDEF	_en_y
@@ -11410,9 +11404,9 @@
 	XDEF	_playing
 	LIB	cpc_PutMaskSp2x8
 	XDEF	_en_an_vx
-	defc	_en_an_vx	=	54817
+	defc	_en_an_vx	=	54814
 	XDEF	_en_an_vy
-	defc	_en_an_vy	=	54823
+	defc	_en_an_vy	=	54820
 	XDEF	_gpit
 	LIB	cpc_ScanKeyboard
 	XDEF	_sm_updfunc
@@ -11425,8 +11419,6 @@
 	XDEF	_gpxx
 	XDEF	_gpyy
 	XDEF	_get_pointer_to_enem
-	XDEF	_safe_x
-	XDEF	_safe_y
 	XDEF	_maincounter
 	XDEF	_rdmt
 	XDEF	_ptx1
@@ -11472,9 +11464,9 @@
 	LIB	cpc_SetInkGphStrM1
 	XDEF	_idx
 	XDEF	_en_an_x
-	defc	_en_an_x	=	54805
+	defc	_en_an_x	=	54802
 	XDEF	_en_an_y
-	defc	_en_an_y	=	54811
+	defc	_en_an_y	=	54808
 	XDEF	_player
 	XDEF	_jetpac_frame_counter
 	LIB	cpc_UpdateTileMap

@@ -215,8 +215,7 @@
 										if (en_ccx >= boxx - 15 && en_ccx <= boxx + 15 &&
 											en_ccy >= boyy - 15 && en_ccy <= boyy + 15) {
 											
-											en_an_next_frame [enit] = sprite_17_a;											
-											enems_kill ();
+											enems_kill (0xff);
 										}
 									}						
 

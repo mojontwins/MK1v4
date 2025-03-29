@@ -806,16 +806,6 @@ void main (void) {
 				.skipupd
 			#endasm
 			
-			// Dead enemies
-
-			#ifdef PLAYER_CAN_FIRE
-				for (rdi = 0; rdi < 3; rdi ++)
-					if (en_an_morido [rdi] == 1) {
-						play_sfx (1);
-						en_an_morido [rdi] = 0;
-					} 	
-			#endif
-
 			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER) || defined(PLAYER_DIZZY)
 				// Flickering
 				#asm
@@ -1071,10 +1061,10 @@ void main (void) {
 								malotes [enoffs + 2].t = malotes [enoffs + 2].t & 15;
 							#endif
 						#endif
-							init_player_values ();
+						init_player_values ();
 						on_pant = 0xff;
 
-					#elif defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE				
+					#elif defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE						
 						#asm
 								ld  a, (_safe_n_pant)
 								ld  (_n_pant), a 
@@ -1087,7 +1077,7 @@ void main (void) {
 								ld  a, (_safe_y)
 								ld  (_gpy), a
 								call Ashl16_HL
-								ld  (_player+2), hl 	// player.y
+								ld  (_player + 2), hl 	// player.y
 								ld  hl, 0
 								ld  (_player + 6), hl
 								ld  (_player + 8), hl

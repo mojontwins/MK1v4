@@ -205,7 +205,7 @@ El viejo ene2bin hace demasiadas cosas. Necesito un ene2bin que no haga nada má
 
 ### Puñito
 
-Juraría que el sword tiene modo puño de Ninjajar pero tengo que ver qué hacer con el sprite, que es de más de 4x8. Igual lo pongo de 4x8 y así no tengo que modificar nada. Nah, sería cutre. El sprite es de 6x8, pero por el borde negro que supongo que será necesario :*) Voy a ver qué manejadores de sprites hay. Si tengo 8x8 meto un nuevo modo de espada. Si no hay, lo siento pero se pierde el borde.
+Juraría que el sword tiene modo puño de Ninjajar pero tengo que ver qué hacer con el sprite, que es de más de 4x8. Igual lo pongo de 4x8 y así no tengo que modificar nada. Nah, sería cutre. El sprite es de 6x8, pero por el borde negro que supongo que será necesario `:*)` Voy a ver qué manejadores de sprites hay. Si tengo 8x8 meto un nuevo modo de espada. Si no hay, lo siento pero se pierde el borde.
 
 Pero es que el borde mola :-/ Me veo haciendo otros manejadores de sprite en CPCRSLIB para esto. ARRR NO HAY XD. 
 
@@ -298,6 +298,20 @@ Se llama a `enems_kill` desde:
 * Colisión con caja. idem.
 * Colisión con los zapatos (pisar). idem.
 * Colisión con fire. Se pone `en_an_morido` a 1. ¿Para qué sirve esto? -> se intercepta en main loop y se toca un sonido. Lo quitaré.
+
+Lo primero es que en todos los casos se pone el sprite a 17. Voy a meter esto en `enems_kill` y así puedo ofrecer la opción original con una pequeña mejora.
+
+* Mover poner el sprite explosión a `emems_kill`.
+* Mover el sonido a `enems_kill`.
+* Eliminar `en_an_morido`.
+
+Acabo de entender lo de en_an_morido: es porque los enemigos al morir con disparos podían tener varios puntos de vida y así organizaba mejor el ruido (que para la CPU) en momentos en que la pantalla se hubiera actualizado en Spectrum 48K. Mientras lo cambio aquí pensaré en cómo organizarlo en 48K mejor. 7735
+
+El tema está en que en los casos en los que se comprueba en_life, no pasa "nada" visible cuando el bicho no muere. Al menos con las balas y el hitter. Lo que tengo que hacer es moverlo todo a `enems_kill`.
+
+`enems_kill (unsigned char damage)` comprobará que puede restar la vida, y matará del todo llegado el caso. Si `damage` vale 0xff será *instakill*.
+
+Dejamos `USE_CLASSIC_ENEMS_KILL` para dejar el comportamiento original. *Y en este punto lo propago a los engines*.
 
 [ ] Paso a ensamble el fanty con vista.
 [ ] Hecho

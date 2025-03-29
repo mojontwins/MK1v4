@@ -677,26 +677,7 @@ unsigned int __FASTCALL__ abs (int n) {
 	void fire_bullet (void) {
 		
 		// Search a free bullet slot...
-		/*
-		for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-			if (bullets_estado [gpit] == 0) {
-				bullets_estado [gpit] = 1;
-				if (player.facing) {
-					bullets_x [gpit] = (player.x >> 6) - 4;
-					bullets_mx [gpit] = -PLAYER_BULLET_SPEED;
-				} else {
-					bullets_x [gpit] = (player.x >> 6) + 12;
-					bullets_mx [gpit] = PLAYER_BULLET_SPEED;
-				}
-				bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
-				play_sfx (9);
-				#ifdef FIRING_DRAINS_LIFE
-					player.life -= FIRING_DRAIN_AMOUNT;
-				#endif				
-				break;	
-			}	
-		}	
-		*/
+
 		#asm
 				ld  bc, 0
 			.fire_bullet_search_loop
@@ -2948,21 +2929,21 @@ void move (void) {
 
 						sbc hl, de 
 
-					#ifndef PLAYER_MOGGY_STYLE
-						#ifdef CHANGE_FACING_LIKE_ALEX
-								ld  a, (_player + 26) 		// player.possee
-								or  a
-								jr  z, facing_left_done
-						#endif
+						#ifndef PLAYER_MOGGY_STYLE
+							#ifdef CHANGE_FACING_LIKE_ALEX
+									ld  a, (_player + 26) 		// player.possee
+									or  a
+									jr  z, facing_left_done
+							#endif
 
-							ld  a, 1 
-							ld  (_player + 22), a 			// player.facing
-						.facing_left_done
-					#endif
+								ld  a, 1 
+								ld  (_player + 22), a 			// player.facing
+							.facing_left_done
+						#endif
 						
 						jr  h_acceleration_set
 
-					.accelerate_left_done						
+					.accelerate_left_done
 				#endasm
 			}
 
@@ -3000,19 +2981,20 @@ void move (void) {
 
 						add hl, de 
 
-					#ifndef PLAYER_MOGGY_STYLE
-						#ifdef CHANGE_FACING_LIKE_ALEX
-								ld  a, (_player + 26) 		// player.possee
-								or  a
-								jr  z, facing_right_done
-						#endif
+						#ifndef PLAYER_MOGGY_STYLE
+							#ifdef CHANGE_FACING_LIKE_ALEX
+									ld  a, (_player + 26) 		// player.possee
+									or  a
+									jr  z, facing_right_done
+							#endif
 
-							xor a
-							ld  (_player + 22), a 			// player.facing
-						.facing_right_done
-					#endif
-					
+								xor a
+								ld  (_player + 22), a 			// player.facing
+							.facing_right_done
+						#endif
+						
 						jr  h_acceleration_set
+
 					.accelerate_right_done
 				#endasm
 			}
@@ -3894,9 +3876,11 @@ void move (void) {
 				
 				player.drain_amount = LINEAR_ENEMY_HIT;	
 				player.is_dead = PLAYER_KILLED_BY_BG;
-			}			
+			}
+
 			player.x = gpcx;
 			player.y = gpcy;
+
 			#ifdef PLAYER_MOGGY_STYLE
 				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
 				else player.vy = -player.vy;
@@ -4785,10 +4769,13 @@ void draw_scr_background (void) {
 				add hl, de      ; HL = map + index
 				ld  (_gp_gen), hl		
 		#endasm
+
 	#elif defined (UNPACKED_MAP)
-		gp_gen = mapa + (n_pant * 150);		
+		gp_gen = mapa + (n_pant * 150);
+
 	#else
 		gp_gen = mapa + (n_pant * 75);
+
 	#endif
 		
 	#if defined TWO_SETS || defined TWO_SETS_REAL
@@ -5892,48 +5879,64 @@ void platform_get_player (void) {
 }
 
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
-	void enems_kill (void) {
+	void enems_kill (unsigned char damage) {
+		// Kill enemy
+		if (_en_life >= damage) {
+			_en_life -= damage;
+		} else {
+			_en_life = 0;
+		}
+
 		#ifdef ENABLE_CODE_HOOKS
 			enemy_died = _en_t;
 		#endif
 
-		// Kill enemy
-		/*
-		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
-		en_an_current_frame [enit] = en_an_next_frame [enit];
-		*/
-		#asm
-				ld  a, (_en_ccx)
-				ld  (_rdx), a
-				ld  a, (_en_ccy)
-				ld  (_rdy), a 
-				call _render_this_enemy
-		#endasm
+		#ifdef USE_CLASSIC_ENEMS_KILL
+			// Update frame
+			en_an_next_frame [enit] = sprite_17_a;											
+													
+			#asm
+					ld  a, (_en_ccx)
+					ld  (_rdx), a
+					ld  a, (_en_ccy)
+					ld  (_rdy), a 
+					call _render_this_enemy
+			#endasm
 
-		cpc_UpdateNow (1);
-		cpc_HardPause (50);
+			// Show changes
+			cpc_UpdateNow (1);
 
-		play_sfx (10);
-		en_an_next_frame [enit] = sprite_18_a;
-
-		_en_t |= 16;			// dead
-
-		// Count
-		player.killed ++;
-
-		#ifdef ACTIVATE_SCRIPTING
-			script = f_scripts [MAX_SCREENS + 2];
-			run_script ();
-		#endif								
-
-		#ifdef RANDOM_RESPAWN								
-			en_an_fanty_activo [enit] = 0;
-			_en_life = FANTIES_LIFE_GAUGE;
+			// Makes a delay
+			play_sfx (10);
+			cpc_HardPause (20);
 		#endif
 
-		#ifdef ENABLE_CUSTOM_ENEMS
-			extra_enems_killed ();
-		#endif
+		if (_en_life == 0) {
+			#ifdef USE_CLASSIC_ENEMS_KILL
+				// Sprite empty
+				en_an_next_frame [enit] = sprite_18_a;
+			#endif
+
+			// Mark dead
+			_en_t |= 16;			// dead
+
+			// Count
+			player.killed ++;
+
+			#ifdef ACTIVATE_SCRIPTING
+				script = f_scripts [MAX_SCREENS + 2];
+				run_script ();
+			#endif								
+
+			#ifdef RANDOM_RESPAWN								
+				en_an_fanty_activo [enit] = 0;
+				_en_life = FANTIES_LIFE_GAUGE;
+			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_killed ();
+			#endif
+		}
 	}
 #endif
 
@@ -6397,13 +6400,6 @@ void mueve_bicharracos (void) {
 						#else
 							if (en_an_y [enit] < -(VIEWPORT_Y*8*64)) en_an_y [enit] = -1024;
 						#endif
-
-						/*
-						if (en_an_x [enit] > (224*64)) en_an_x [enit] = (224*64);
-						if (en_an_x [enit] < 0) en_an_x [enit] = 0;
-						if (en_an_y [enit] > (144*64)) en_an_y [enit] = (144*64);
-						if (en_an_y [enit] < 0) en_an_y [enit] = 0;
-						*/
 					} 
 				#endif
 
@@ -7385,20 +7381,13 @@ void mueve_bicharracos (void) {
 									#endif
 
 									// Kill?
-									#if SWORD_LINEAL_DAMAGE > 0
-										if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+
+									#if SWORD_LINEAL_DAMAGE != SWORD_FLYING_DAMAGE
+										enems_kill (_en_t == 6 ? SWORD_FLYING_DAMAGE : SWORD_LINEAL_DAMAGE);
+									#else 
+										enems_kill (SWORD_LINEAL_DAMAGE);
 									#endif
 
-									#if SWORD_FLYING_DAMAGE > 0
-										if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-									#endif
-
-									#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-										if (_en_life == 0) {
-											en_an_next_frame [enit] = sprite_17_a;
-											enems_kill ();
-										}
-									#endif
 								#endif
 
 								goto enems_loop_continue;
@@ -7437,12 +7426,11 @@ void mueve_bicharracos (void) {
 							#endif
 						) {
 							// Step on enemy and kill it.
-							en_an_next_frame [enit] = sprite_17_a;
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
-							enems_kill ();
+							enems_kill (0xff);
 						} else	
 					#endif
-
+						
 					if (
 						player.estado == EST_NORMAL
 						#ifdef PARALYZED_DONT_KILL
@@ -7583,11 +7571,10 @@ void mueve_bicharracos (void) {
 								#endif
 								en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
 							#endif
-							en_an_next_frame [enit] = sprite_17_a;
-							en_an_morido [enit] = 1;
+							
 							bullets_estado [en_j] = 0;
-							_en_life --;
-							if (_en_life == 0) enems_kill ();
+							
+							enems_kill (1);
 							
 							#asm
 								.enems_coll_bullets_continue

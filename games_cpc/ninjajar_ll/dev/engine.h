@@ -1357,7 +1357,7 @@ void adjust_to_tile_y (void) {
 						add SWORD_OFFS
 				#endif	
 					ld  (_s_x), a
-					add SWORD_W-1
+					add SWORD_W - 1
 					ld  (_s_hit_x), a
 			#endif
 
@@ -3045,6 +3045,7 @@ void move (void) {
 							ld  a,  GENITAL_FACING_RIGHT;
 							ld  (_player + 22), a 		// player.facing
 					#endif
+
 						// if (player.vx < player.max_vx) --->
 						// if (player.max_vx - player.vx > 0)
 						ld  hl, (_player + 39)				// player.max_vx 
@@ -3960,7 +3961,7 @@ void move (void) {
 
 			player.x = gpcx;
 			player.y = gpcy;
-			
+
 			#ifdef PLAYER_MOGGY_STYLE
 				if (abs (player.vx) > abs (player.vy)) player.vx = -player.vx;
 				else player.vy = -player.vy;
@@ -4974,6 +4975,7 @@ void draw_scr_background (void) {
 					.draw_scr_bg_loop_end
 				#endif
 		#endasm	
+
 	#elif defined TWO_SETS_REAL
 		// TWO_SETS_PACKED map, every byte contains two tiles,
 		// plus uses several tilesets
@@ -5498,7 +5500,7 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 			ld  d, (hl) 
 			ld  (ix + 12), e 
 			ld  (ix + 13), d 	// Write 16 bits
-		
+
 			// sp_sw [rda].updfunc = sm_updfunc [rdb];
 			ld  hl, _sm_updfunc 
 			add hl, bc 
@@ -5963,48 +5965,64 @@ void platform_get_player (void) {
 }
 
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
-	void enems_kill (void) {
+	void enems_kill (unsigned char damage) {
+		// Kill enemy
+		if (_en_life >= damage) {
+			_en_life -= damage;
+		} else {
+			_en_life = 0;
+		}
+
 		#ifdef ENABLE_CODE_HOOKS
 			enemy_died = _en_t;
 		#endif
 
-		// Kill enemy
-		/*
-		sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an_next_frame [enit] - en_an_current_frame [enit], VIEWPORT_Y + (en_ccy >> 3), VIEWPORT_X + (en_ccx >> 3), en_ccx & 7, en_ccy & 7);
-		en_an_current_frame [enit] = en_an_next_frame [enit];
-		*/
-		#asm
-				ld  a, (_en_ccx)
-				ld  (_rdx), a
-				ld  a, (_en_ccy)
-				ld  (_rdy), a 
-				call _render_this_enemy
-		#endasm
+		#ifdef USE_CLASSIC_ENEMS_KILL
+			// Update frame
+			en_an_next_frame [enit] = sprite_17_a;											
+													
+			#asm
+					ld  a, (_en_ccx)
+					ld  (_rdx), a
+					ld  a, (_en_ccy)
+					ld  (_rdy), a 
+					call _render_this_enemy
+			#endasm
 
-		cpc_UpdateNow (1);
-		cpc_HardPause (50);
+			// Show changes
+			cpc_UpdateNow (1);
 
-		play_sfx (10);
-		en_an_next_frame [enit] = sprite_18_a;
-
-		_en_t |= 16;			// dead
-
-		// Count
-		player.killed ++;
-
-		#ifdef ACTIVATE_SCRIPTING
-			script = f_scripts [MAX_SCREENS + 2];
-			run_script ();
-		#endif								
-
-		#ifdef RANDOM_RESPAWN								
-			en_an_fanty_activo [enit] = 0;
-			_en_life = FANTIES_LIFE_GAUGE;
+			// Makes a delay
+			play_sfx (10);
+			cpc_HardPause (20);
 		#endif
 
-		#ifdef ENABLE_CUSTOM_ENEMS
-			extra_enems_killed ();
-		#endif
+		if (_en_life == 0) {
+			#ifdef USE_CLASSIC_ENEMS_KILL
+				// Sprite empty
+				en_an_next_frame [enit] = sprite_18_a;
+			#endif
+
+			// Mark dead
+			_en_t |= 16;			// dead
+
+			// Count
+			player.killed ++;
+
+			#ifdef ACTIVATE_SCRIPTING
+				script = f_scripts [MAX_SCREENS + 2];
+				run_script ();
+			#endif								
+
+			#ifdef RANDOM_RESPAWN								
+				en_an_fanty_activo [enit] = 0;
+				_en_life = FANTIES_LIFE_GAUGE;
+			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_killed ();
+			#endif
+		}
 	}
 #endif
 
@@ -6032,7 +6050,7 @@ void platform_get_player (void) {
 
 			coco_vx [enit] = ENEMY_SHOOT_SPEED * (cx2 - cx1) / rda;
 			coco_vy [enit] = ENEMY_SHOOT_SPEED * (cy2 - cy1) / rda;
-		}
+			}
 	}
 
 	void coco_update (void) {
@@ -7529,20 +7547,13 @@ void mueve_bicharracos (void) {
 									#endif
 
 									// Kill?
-									#if SWORD_LINEAL_DAMAGE > 0
-										if (_en_t != 6) if (_en_life >= SWORD_LINEAL_DAMAGE) _en_life -= SWORD_LINEAL_DAMAGE; else _en_life = 0;
+
+									#if SWORD_LINEAL_DAMAGE != SWORD_FLYING_DAMAGE
+										enems_kill (_en_t == 6 ? SWORD_FLYING_DAMAGE : SWORD_LINEAL_DAMAGE);
+									#else 
+										enems_kill (SWORD_LINEAL_DAMAGE);
 									#endif
 
-									#if SWORD_FLYING_DAMAGE > 0
-										if (_en_t == 6) if (_en_life >= SWORD_FLYING_DAMAGE) _en_life -= SWORD_FLYING_DAMAGE; else _en_life = 0;
-									#endif
-
-									#if SWORD_LINEAL_DAMAGE > 0 || SWORD_FLYING_DAMAGE > 0
-										if (_en_life == 0) {
-											en_an_next_frame [enit] = sprite_17_a;
-											enems_kill ();
-										}
-									#endif
 								#endif
 
 								goto enems_loop_continue;
@@ -7581,9 +7592,8 @@ void mueve_bicharracos (void) {
 							#endif
 						) {
 							// Step on enemy and kill it.
-							en_an_next_frame [enit] = sprite_17_a;
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
-							enems_kill ();
+							enems_kill (0xff);
 						} else	
 					#endif
 						
@@ -7727,11 +7737,10 @@ void mueve_bicharracos (void) {
 								#endif
 								en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
 							#endif
-							en_an_next_frame [enit] = sprite_17_a;
-							en_an_morido [enit] = 1;
+							
 							bullets_estado [en_j] = 0;
-							_en_life --;
-							if (_en_life == 0) enems_kill ();
+							
+							enems_kill (1);
 							
 							#asm
 								.enems_coll_bullets_continue

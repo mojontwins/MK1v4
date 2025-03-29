@@ -45,7 +45,7 @@
 #define HOTSPOT_TYPE_REFILL 	3
 
 #define PLAYER_KILLED_BY_BG 	1
-#define PLAYER_KILLED_BY_ENEM	2
+#define PLAYER_KILLED_BY_ENEM 	2
 #define PLAYER_KILLED_BY_EZ 	4
 #define PLAYER_KILLED_BY_SELF 	8
 #define PLAYER_KILLED_BY_BOX 	16
@@ -216,15 +216,14 @@ unsigned char en_an_frame [MAX_ENEMS]				@ BASE_ARRAYS;
 unsigned char en_an_count [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS);
 unsigned char *en_an_current_frame [MAX_ENEMS]		@ (BASE_ARRAYS + MAX_ENEMS*2);
 unsigned char *en_an_next_frame [MAX_ENEMS]			@ (BASE_ARRAYS + MAX_ENEMS*4);
-unsigned char en_an_morido [MAX_ENEMS] 				@ (BASE_ARRAYS + MAX_ENEMS*6);
-signed int en_an_x [MAX_ENEMS] 						@ (BASE_ARRAYS + MAX_ENEMS*7);
-signed int en_an_y [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*9);
-signed int en_an_vx [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*11);
-signed int en_an_vy [MAX_ENEMS]	 					@ (BASE_ARRAYS + MAX_ENEMS*13);
-unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (BASE_ARRAYS + MAX_ENEMS*15);
-unsigned char en_an_state [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS*16);
-unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*17);
-unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*18);
+signed int en_an_x [MAX_ENEMS] 						@ (BASE_ARRAYS + MAX_ENEMS*6);
+signed int en_an_y [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*8);
+signed int en_an_vx [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*10);
+signed int en_an_vy [MAX_ENEMS]	 					@ (BASE_ARRAYS + MAX_ENEMS*12);
+unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (BASE_ARRAYS + MAX_ENEMS*14);
+unsigned char en_an_state [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS*15);
+unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*16);
+unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*17);
 
 unsigned int enoffs, enoffsmasi;
 unsigned char en_j, en_x, en_y, en_xx, en_yy;
@@ -442,4 +441,4 @@ void init_player_values (void);
 unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
-void enems_kill (void);
+void enems_kill (unsigned char damage);
