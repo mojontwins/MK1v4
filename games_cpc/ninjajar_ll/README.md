@@ -313,6 +313,8 @@ El tema está en que en los casos en los que se comprueba en_life, no pasa "nada
 
 Dejamos `USE_CLASSIC_ENEMS_KILL` para dejar el comportamiento original. *Y en este punto lo propago a los engines*.
 
+Ya que está esto voy a dejar de marcar los enemigos como puertos modificando `en_t` que no tiene mucho sentido. <- hmmm pero esto es para la persistencia de morisión. De todos modos creo que puedo simplificar algo? Y voy a cambiar 16 por 128, que así luego hay más juego con los tipos.
+
 [ ] Paso a ensamble el fanty con vista.
 [ ] Hecho
 

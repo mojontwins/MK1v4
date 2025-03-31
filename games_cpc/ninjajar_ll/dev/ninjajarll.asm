@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Mar 29 09:29:44 2025
+;	Module compile time: Mon Mar 31 18:48:42 2025
 
 
 
@@ -4105,7 +4105,7 @@
 	add c
 	add -4
 	ld (_s_x), a
-	add 16-1
+	add 16 - 1
 	ld (_s_hit_x), a
 	.sword_check_done
 	ld a, (_s_frame)
@@ -5348,48 +5348,23 @@
 	ld	h,0
 	ld	a,l
 	ld	(_enemy_died),a
-	ld	hl,_en_an_next_frame
-	push	hl
+	ld	de,_en_an_state
 	ld	hl,(_enit)
 	ld	h,0
-	add	hl,hl
-	pop	de
 	add	hl,de
-	push	hl
-	ld	hl,_sprite_17_a
-	pop	de
-	call	l_pint
-	ld a, (_en_ccx)
-	ld (_rdx), a
-	ld a, (_en_ccy)
-	ld (_rdy), a
-	call _render_this_enemy
-	ld	hl,1	;const
-	push	hl
-	call	_cpc_UpdateNow
-	pop	bc
-	ld	hl,10	;const
-	call	_wyz_play_sound
-	ld	hl,20	;const
-	call	_cpc_HardPause
+	ld	(hl),#(128 % 256 % 256)
+	ld	de,_en_an_count
+	ld	hl,(_enit)
+	ld	h,0
+	add	hl,de
+	ld	(hl),#(16 % 256 % 256)
 	ld	a,(__en_life)
 	and	a
 	jp	nz,i_88
-	ld	hl,_en_an_next_frame
-	push	hl
-	ld	hl,(_enit)
-	ld	h,0
-	add	hl,hl
-	pop	de
-	add	hl,de
-	push	hl
-	ld	hl,_sprite_18_a
-	pop	de
-	call	l_pint
 	ld	a,(__en_t)
 	ld	e,a
 	ld	d,0
-	ld	hl,16	;const
+	ld	hl,128	;const
 	call	l_or
 	ld	h,0
 	ld	a,l
@@ -5472,10 +5447,40 @@
 	inc hl
 	ld a, (hl)
 	ld (__en_life), a
+	ld bc, (_enit)
+	ld b, 0
+	ld hl, _en_an_state
+	add hl, bc
+	ld a, (hl)
+	cp 128
+	jr nz, enem_is_not_dead
+	ld hl, _en_an_count
+	add hl, bc
+	ld a, (hl)
+	or a
+	jr z, enem_completely_dead
+	dec a
+	ld (hl), a
+	ld de, _sprite_17_a
+	jp enem_set_frame
+	.enem_completely_dead
+	ld de, _sprite_18_a
+	.enem_set_frame
+	ld a, (_enit)
+	sla a
+	ld b, 0
+	ld c, a
+	ld hl, _en_an_next_frame
+	add hl, bc
+	ld (hl), e
+	inc hl
+	ld (hl), d
+	jp enems_update_values_and_exit
+	.enem_is_not_dead
 	ld	hl,__en_t
 	ld	a,(hl)
-	and	#(16 % 256)
-	jp	z,i_92
+	rlca
+	jp	nc,i_92
 	ld	l,a
 	ld	h,0
 	jp	i_93
@@ -5915,6 +5920,7 @@
 .i_94
 .i_93
 .i_110
+	.enems_update_values_and_exit
 	ld hl, (__baddies_pointer)
 	ld a, (__en_x)
 	ld (hl), a
