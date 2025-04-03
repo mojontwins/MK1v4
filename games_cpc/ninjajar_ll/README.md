@@ -344,7 +344,36 @@ Con esto ya estaría la optimización. Los fanties vanilla ocupan ahora 425 byte
 
 * Si hay `SIGHT DISTANCE` o se aplica `PLAYER_CAN_HIDE` a los tipo 6, entonces tenemos la máquina de estados. En ella, el estado `TYPE_6_PURSUING` modifica `vx` y `vy` como en vanilla. Los otros estados modifican `vx` y `vy` de forma diferente. El resto del código (actualzar `x, y`, confinar en la pantalla, actualizar `_en_x`/`y`) es igual que en los vanilla.
 
-Tengo que refactorizar para idear un bloque conjunto que cubra todos estos casos. Ahora mismo en el código ensamble tengo el tema separado por ejes, y tengo que mirar si es posible cambiarlo para que esté separado por actividades (actualizar velocidad, actualizar posición).
+* `FANTIES_EXIT_STATE_V` establece un `TYPE_6_RETREATING` diferente. Pero esto parece ser un resto de algo porque no parece estar completo. -> Se utiliza en Ramiro 3, aparentemente, y no está documentado. A efectos prácticos (porque se controla desde fuera) lo único que hace en el motor es que no se actualice la velocidad si el estado vale `TYPE_6_RETREATING`.
+
+Tengo que refactorizar para idear un bloque conjunto que cubra todos estos casos. Ahora mismo en el código ensamble tengo el tema separado por ejes, y tengo que mirar si es posible cambiarlo para que esté separado por actividades (actualizar velocidad, actualizar posición). This worked great!
+
+La organización general podría ser
+
+```
+	#ifdef USE_SIGHT_DISTANCE || PLAYER_CAN HIDE
+		if estado idle goto idle
+		if estado retreating goto retreating
+	#endif
+	#ifdef FANTIES_EXIT_STATE_V
+		if estado not pursuing goto end
+	#endif
+
+	.pursuing
+		...
+		goto end
+
+	#ifdef USE_SIGHT_DISTANCE || PLAYER_CAN HIDE
+	.idle
+		...
+		goto end
+	.retreating
+		...
+		goto end
+	#endif
+
+	.end
+```
 
 
 [X] Pasar el bounce contra el fanty y cualquier otra cosa fanty vanilla related a ensamble.
