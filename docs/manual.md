@@ -1133,7 +1133,7 @@ Permite activar y configurar *fantys*.
 
 * `FANTY_MAX_V` y `FANTY_A` definen la velocidad máxima y la aceleración de los *fantys*.
 
-* `FANTIES_LIFE_GAUGE` dice cuánta vida tienen los *fantys*.
+* `FANTIES_LIFE_GAUGE` dice cuánta vida tienen los *fantys*. **OJO - Esto sólo funciona con los fantys originales de tipo 5 `RANDOM_RESPAWN`**. 
 
 * `MAKE_TYPE_6` es un custom de **Ramiro 2**. Si se activa y `scenery_info.make_type_6` vale 1, se creará un *fanty* en lugar de cada enemigo *que no esté colocado* en cada pantalla. O sea, si en una pantalla hay por ejemplo 2 enemigos, aparecerá un tercero que será un *fanty*.
 

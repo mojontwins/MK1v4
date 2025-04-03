@@ -52,9 +52,9 @@ rem map data
 ..\utils\rle44map_sp.exe in=..\map\level2.map out=mapa2.bin size=12,1 scrsize=15,10 tlock=99  > nul
 
 rem enems_data
-..\utils\ene2bin_mk1v4.exe ..\enems\level0orig.ene enems_hotspots0.bin 2bytes compacted life > nul
-..\utils\ene2bin_mk1v4.exe ..\enems\level1orig.ene enems_hotspots1.bin 2bytes compacted life > nul
-..\utils\ene2bin_mk1v4.exe ..\enems\level2orig.ene enems_hotspots2.bin 2bytes compacted life > nul
+..\utils\ene2bin_mk1v4.exe ..\enems\level0orig.ene enems_hotspots0.bin 2bytes compacted > nul
+..\utils\ene2bin_mk1v4.exe ..\enems\level1orig.ene enems_hotspots1.bin 2bytes compacted > nul
+..\utils\ene2bin_mk1v4.exe ..\enems\level2orig.ene enems_hotspots2.bin 2bytes compacted > nul
 
 ..\utils\zx0.exe enems_hotspots0.bin enems_hotspots0c.bin > nul
 ..\utils\zx0.exe enems_hotspots1.bin enems_hotspots1c.bin > nul

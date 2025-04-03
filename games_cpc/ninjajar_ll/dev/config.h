@@ -24,7 +24,7 @@
 //#define NO_COMPRESSED_TITLE_SCR
 //#define NO_COMPRESSED_ENDING_SCR
 //#define DRAW_RECTANGLE_NOT_NEEDED
-#define FORCE_ENEMS_LIFE 					// Force the use of enems life gauge even if not needed
+//#define FORCE_ENEMS_LIFE 					// Force the use of enems life gauge even if not needed
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
@@ -38,8 +38,8 @@
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS			1		// Objects to get to finish game
-#define PLAYER_LIFE 				99		// Max and starting life gauge.
-#define PLAYER_REFILL				25		// Life recharge
+#define PLAYER_LIFE 				10		// Max and starting life gauge.
+#define PLAYER_REFILL				1		// Life recharge
 
 #define LINEAR_ENEMY_HIT			1		// Amount of life to substract when normal enemy hits
 //#define FLYING_ENEMY_HIT			1		// Amount of life to substract when flying enemy hits
@@ -217,13 +217,13 @@
 //#define PLAYER_CAN_HIDE					// If defined, tile type 2 hides player.
 //#define HIDDEN_CAN_MOVE 					// Originally, if you are moving you are not hidden. Override.
 //#define RANDOM_RESPAWN					// If defined, automatic flying enemies spawn on killed enemies
-//#define USE_TYPE_6						// If defined, type 6 enemies are enabled.
+#define USE_TYPE_6							// If defined, type 6 enemies are enabled.
 //#define PLAYER_MAY_BE_INVISIBLE	
 //#define USE_SIGHT_DISTANCE				// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE			120		
-//#define FANTY_MAX_V 				256 	// Flying enemies max speed.
-//#define FANTY_A 					16		// Flying enemies acceleration.
-//#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
+#define FANTY_MAX_V 				256 	// Flying enemies max speed.
+#define FANTY_A 					16		// Flying enemies acceleration.
+//#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies -> only `RANDOM_RESPAWN`!!
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 //#define FANTIES_EXIT_STATE_V		32		// set en_an_state to TYPE_6_RETREATING and make them retreat to (0,0) w. this speed
 #define FANTY_ASSEMBLY 						// Comment for classic fanties.

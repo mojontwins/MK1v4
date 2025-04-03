@@ -273,13 +273,6 @@ Lo que haré será:
 * En el main loop sustituiré el bloque de `player.is_dead` por otro nuevo que restar vida y luego haga todos los manejes de respawn, flicker, etc.
 
 [X] Hecho
-[ ] Pasar el bounce contra el fanty a ensamble.
-
-### La vida de los malos
-
-En juegos como Ninjajar todos los malos mueren de un solo hostiazo, por lo que no tiene sentido guardar la vida y luego el estado "muerto", vale con lo último. Esto debería simplificar el código.
-
-[ ] Hecho
 
 ### La muerte de los malos
 
@@ -305,7 +298,7 @@ Lo primero es que en todos los casos se pone el sprite a 17. Voy a meter esto en
 * Mover el sonido a `enems_kill`.
 * Eliminar `en_an_morido`.
 
-Acabo de entender lo de en_an_morido: es porque los enemigos al morir con disparos podían tener varios puntos de vida y así organizaba mejor el ruido (que para la CPU) en momentos en que la pantalla se hubiera actualizado en Spectrum 48K. Mientras lo cambio aquí pensaré en cómo organizarlo en 48K mejor. 7735
+Acabo de entender lo de `en_an_morido`: es porque los enemigos al morir con disparos podían tener varios puntos de vida y así organizaba mejor el ruido (que para la CPU) en momentos en que la pantalla se hubiera actualizado en Spectrum 48K. Mientras lo cambio aquí pensaré en cómo organizarlo en 48K mejor. 7735
 
 El tema está en que en los casos en los que se comprueba en_life, no pasa "nada" visible cuando el bicho no muere. Al menos con las balas y el hitter. Lo que tengo que hacer es moverlo todo a `enems_kill`.
 
@@ -315,6 +308,44 @@ Dejamos `USE_CLASSIC_ENEMS_KILL` para dejar el comportamiento original. *Y en es
 
 Ya que está esto voy a dejar de marcar los enemigos como puertos modificando `en_t` que no tiene mucho sentido. <- hmmm pero esto es para la persistencia de morisión. De todos modos creo que puedo simplificar algo? Y voy a cambiar 16 por 128, que así luego hay más juego con los tipos.
 
-[ ] Paso a ensamble el fanty con vista.
-[ ] Hecho
+[X] Hecho
 
+### La vida de los malos
+
+En juegos como Ninjajar todos los malos mueren de un solo hostiazo, por lo que no tiene sentido guardar la vida y luego el estado "muerto", vale con lo último. Esto debería simplificar el código.
+
+El tema se controla con `ENEMIES_LIFE_GAUGE`. La idea es que si esto es 1, el código debe simplificarse a saco, y en el exporter de enemigos no debería sacarse la vida.
+
+* `init_malotes` tiene en cuenta o no `life` a la hora de crear el pointer para inicializarlos todos. Se toma en cuenta `life` en el caso de que `defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE`. Esto debería reformularse a algo como `((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE`. Igualmente hay que usar la misma guarda para la parte del código que pone `life` a `ENEMIES_LIFE_GAUGE`.
+
+* `calc_baddies_pointer` necesita la misma consideración. 
+
+* `mueve bicharracos` también necesita la misma consideración a la hora de tomar los valores del array y de volverlos a actualizar.
+
+* `enems_kill` recibe `damage` y usa `_en_life` que ahora no estará disponible si `ENEMIES_LIFE_GAUGE` vale 1. Por tanto debe cambiarse la lógica para que haya *instakill* si `damage != 0`.
+
+Y con esto debería valer, ya que al mejorar la muerte de los malos he quitado mucho código redundante.
+
+[X] Hecho. Liberó más de 120 bytes en este juego.
+
+### Revisando fantis
+
+Por ahora los fantis vanilla (cuyo movimiento fue pasado a ensamble, pero solo el movimiento) ocupan 654 bytes. Ni quiero pensar en cuánto ocuparán los que tienen `sight distance` que no están en ensamble. Esto hay que mejorarlo. Empezaré mejorando los vanilla y luego me pondré con los otros (que reaprovechan código de los vanilla).
+
+* Hmmmm en realidad este juego no usa bounce, así que no hay nada que mejorar aquí, y la política de MK1v4 es ir mejorando segun vaya necesitándolo (más que nada porque si no, no se puede de probar).
+
+* Sin embargo la parte de `enems_init` genera toneladas de ensable, más que nada porque se accede al array de estructuras de enemigos directamente. Debo reaprovechar código y obtener el pointer y operar con esto. 26290 -> 26195 (!) Son más de 100 bytes menos, pero...
+
+* Me he dado cuenta de que al morir la explosión aparece en la posición original. **Las posiciones INT no se están sincronizando**, tengo que arreglar esto. Y esto puede que suponga otra mejora: en `render_all_sprites` se distingue si el enemigo es tipo 6 y se hace esta actualización al vuelo. Esto seguro que tenía un motivo que tenía que ver con algún juego viejo, pero creo que no es necesario (y si lo es para Zombie Calavera ya me ocuparé de arreglarlo cuando lo retome). Voy a cambiar esto para que la actualización se realice siempre y se actualice `en_x` y `en_y` para que así no haya que distinguir entre tipo de enemigo para actualizar los sprites. -> 26061, lo que implica 230 bytes de ahorro en total `O_o` hacer esto me a ahorrado muchas muchas miserias.
+
+Con esto ya estaría la optimización. Los fanties vanilla ocupan ahora 425 bytes. La idea es ahora refactorizar todo para contemplar todos los tipos de fanty reaprovechando la implementación en ensamble de los fanties vanilla.
+
+* Los tipo 5 o `RANDOM RESPAWN` son como los tipo 6 pero si está activado `PLAYER_CAN_HIDE` aplican `rds` en lugar de `FANTY_A`. `rds`se calcula como `rds = player_hidden () ? (-(FANTY_A>>1)) : FANTY_A;`
+
+* Si hay `SIGHT DISTANCE` o se aplica `PLAYER_CAN_HIDE` a los tipo 6, entonces tenemos la máquina de estados. En ella, el estado `TYPE_6_PURSUING` modifica `vx` y `vy` como en vanilla. Los otros estados modifican `vx` y `vy` de forma diferente. El resto del código (actualzar `x, y`, confinar en la pantalla, actualizar `_en_x`/`y`) es igual que en los vanilla.
+
+Tengo que refactorizar para idear un bloque conjunto que cubra todos estos casos. Ahora mismo en el código ensamble tengo el tema separado por ejes, y tengo que mirar si es posible cambiarlo para que esté separado por actividades (actualizar velocidad, actualizar posición).
+
+
+[X] Pasar el bounce contra el fanty y cualquier otra cosa fanty vanilla related a ensamble.
+[ ] Paso a ensamble el fanty con vista.
