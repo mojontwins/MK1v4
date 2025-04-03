@@ -1,5 +1,5 @@
 // MTE MK1 v4.10
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // Add here your custom routines & vars
 
@@ -1356,7 +1356,7 @@ void bilbos_hangover (void) {
 		wyz_play_music (1);
 
 		// Debug
-		 n_pant = 6;
+		//n_pant = 6;
 	}
 
 	void hook_init_mainloop (void) {
@@ -1566,7 +1566,7 @@ void bilbos_hangover (void) {
 
 				// if (gpx < 12*16) {
 				ld  a, (_gpx)
-				cp  11*16
+				cp  12*16
 				ret nc
 
 				ld  a, (_smaug_talk)
@@ -1614,7 +1614,7 @@ void bilbos_hangover (void) {
 			wyz_play_music (6); 		// Pokemon
 			pokemon_combat ();
 			wyz_play_music (3); 		// Cave
-			
+			recuadrius ();
 			#asm 
 				ld  a, (_pk_win)
 				or  a 
@@ -1629,10 +1629,6 @@ void bilbos_hangover (void) {
 				// If lose -> one life less, throw right
 				dec a 					// A = 0-1 = 255
 				ld  (_on_pant), a 
-				ld  hl, 12*16*64
-				ld  (_player), hl 
-				ld  a, 12*16
-				ld  (_gpx), a
 				ld  hl, 256
 				ld  (_player + 6), hl 	// player.vx
 				ld  a, 1 
