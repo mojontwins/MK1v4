@@ -372,6 +372,10 @@ unsigned char _x2, _y2;
 unsigned char wall;
 unsigned char rda, rdb, rdmt;
 
+#if defined USE_SIGHT_DISTANCE || defined ENABLE_COCOS
+	unsigned char cx1, cy1, cx2, cy2;
+#endif
+
 #if defined RLE_MAP
 	unsigned char rdc, rdn;
 #endif

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu Apr 03 13:29:54 2025
+;	Module compile time: Fri Apr 04 13:30:46 2025
 
 
 
@@ -5166,6 +5166,7 @@
 	ld hl, (_enoffs)
 	add hl, bc
 	ld (_enoffsmasi), hl
+	call enems_get_values
 	ld	hl,_en_an_next_frame
 	push	hl
 	ld	hl,(_enit)
@@ -5177,23 +5178,6 @@
 	ld	hl,_sprite_18_a
 	pop	de
 	call	l_pint
-	ld	hl,_malotes
-	push	hl
-	ld	hl,(_enoffsmasi)
-	ld	b,h
-	ld	c,l
-	add	hl,bc
-	add	hl,bc
-	add	hl,hl
-	add	hl,bc
-	pop	de
-	add	hl,de
-	ld	bc,6
-	add	hl,bc
-	call	l_gchar
-	ld	h,0
-	ld	a,l
-	ld	(__en_t),a
 	ld	hl,(__en_t)
 	ld	h,0
 .i_80
@@ -5226,10 +5210,8 @@
 	sla a
 	ld b, 0
 	ld c, a
-	ld hl, (_enoffsmasi)
-	call _calc_baddies_pointer
-	push hl
-	ld a, (hl)
+	ld a, (__en_x1)
+	ld (__en_x), a
 	call Ashl16_HL
 	ex de, hl
 	ld hl, _en_an_x
@@ -5237,9 +5219,8 @@
 	ld (hl), e
 	inc hl
 	ld (hl), d
-	pop hl
-	inc hl
-	ld a, (hl)
+	ld a, (__en_y1)
+	ld (__en_y), a
 	call Ashl16_HL
 	ex de, hl
 	ld hl, _en_an_y
@@ -5272,10 +5253,61 @@
 	pop	de
 	call	l_pint
 .i_79
+	call enems_update_values_store
 	jp	i_75
 .i_76
 	call	_hook_entering
 	call	_init_breakable
+	ret
+
+
+
+._distance
+	ld a, (_cx1)
+	ld c, a
+	ld a, (_cx2)
+	sub c
+	bit 7, a
+	jr z, _distance_dx_set
+	neg
+	._distance_dx_set
+	ld (__x), a
+	ld a, (_cy1)
+	ld c, a
+	ld a, (_cy2)
+	sub c
+	bit 7, a
+	jr z, _distance_dy_set
+	neg
+	._distance_dy_set
+	ld (__y), a
+	ld c, a ; c = _y
+	ld a, (__x) ; a = _x
+	cp c ; _x < _y ?
+	jr c, _distance_mn_set
+	._distance_dy_min
+	ld a, c
+	._distance_mn_set
+	ld (__n), a
+	ld a, (__x)
+	ld c, a
+	ld a, (__y)
+	add c
+	ld b, a
+	ld a, (__n)
+	srl a
+	ld c, a ; c = (mn >> 1)
+	srl a
+	ld d, a ; d = (mn >> 2)
+	srl a
+	srl a
+	ld e, a ; e = (mn >> 4)
+	ld a, b
+	sub c
+	sub d
+	add e
+	ld l, a
+	ld h, 0
 	ret
 
 
@@ -5367,45 +5399,7 @@
 	ld	h,0
 	add	hl,de
 	ld	(_enoffsmasi),hl
-	ld hl, (_enoffsmasi)
-	call _calc_baddies_pointer
-	ld (__baddies_pointer), hl
-	ld a, (hl)
-	ld (__en_x), a
-	inc hl
-	ld a, (hl)
-	ld (__en_y), a
-	inc hl
-	ld a, (hl)
-	ld b, a
-	and 0xf0
-	ld (__en_x1), a
-	ld a, b
-	sla a
-	sla a
-	sla a
-	sla a
-	ld (__en_y1), a
-	inc hl
-	ld a, (hl)
-	ld b, a
-	and 0xf0
-	ld (__en_x2), a
-	ld a, b
-	sla a
-	sla a
-	sla a
-	sla a
-	ld (__en_y2), a
-	inc hl
-	ld a, (hl)
-	ld (__en_mx), a
-	inc hl
-	ld a, (hl)
-	ld (__en_my), a
-	inc hl
-	ld a, (hl)
-	ld (__en_t), a
+	call enems_get_values
 	ld bc, (_enit)
 	ld b, 0
 	ld hl, _en_an_state
@@ -5529,23 +5523,36 @@
 	.en_linear_vertical_axis_done
 	.en_linear_done
 .i_94
-	._update_fantys
-	ld a, (__en_t)
-	cp 6
-	jp nz, _update_fantys_done
-	ld a, (_scenery_info + 3)
-	or a
-	jp z, fanty_no_act
-	call _rand
+	.fantys_calc_distance
+	ld a, (__en_x)
+	ld (_cx1), a
+	ld a, (__en_y)
+	ld (_cy1), a
+	ld a, (_gpx)
+	ld (_cx2), a
+	ld a, (_gpy)
+	ld (_cy2), a
+	call _distance
 	ld a, l
-	and 7
-	cp 2
-	jp c, fanty_no_act
-	ld a, (_enit)
+	ld (_rdd), a
+	ld bc, (_enit)
+	ld b, 0
+	ld a, c
 	sla a
 	ld (_gp_gen), a
 	xor a
 	ld (_gp_gen + 1), a
+	ld a, (__en_t)
+	cp 6
+	jp nz, fantys_end
+	ld hl, _en_an_state
+	add hl, bc
+	ld a, (hl)
+	cp 0
+	jp z, fantys_idle
+	cp 2
+	jp z, fantys_retreating
+	.fantys_pursuing
 	.fanty_x_axis
 	ld bc, _en_an_x
 	ld hl, (_gp_gen)
@@ -5662,6 +5669,81 @@
 	inc hl
 	ld (hl), d
 	.fanty_vy_done
+	ld a, (_rdd)
+	cp 48
+	jr nc, fantys_set_retreating
+	jp fantys_update
+	.fantys_set_retreating
+	ld a, 2
+	jr fantys_set_state
+	.fantys_idle
+	ld a, (_rdd)
+	cp 48
+	jr nc, fantys_update
+	ld a, 1
+	.fantys_set_state
+	ld bc, (_enit)
+	ld b, 0
+	ld hl, _en_an_state
+	add hl, bc
+	ld (hl), a
+	jp fantys_update
+	.fantys_retreating
+	.fantys_retreating_x
+	ld a, (__en_x1)
+	ld c, a
+	ld a, (__en_x)
+	cp c
+	jr z, fantys_retreating_y
+	jr nc, fantys_rsk1
+	ld bc, 128
+	jr fantys_retreating_set_vx
+	.fantys_rsk1
+	ld bc, -128
+	.fantys_retreating_set_vx
+	ld hl, (_enit)
+	add hl, hl
+	ld de, _en_an_vx
+	add hl, de
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	.fantys_retreating_y
+	ld a, (__en_y1)
+	ld c, a
+	ld a, (__en_y)
+	cp c
+	jr z, fantys_retreating_check_home
+	jr nc, fantys_rsk2
+	ld bc, 128
+	jr fantys_retreating_set_vy
+	.fantys_rsk2
+	ld bc, -128
+	.fantys_retreating_set_vy
+	ld hl, (_enit)
+	add hl, hl
+	ld de, _en_an_vy
+	add hl, de
+	ld (hl), c
+	inc hl
+	ld (hl), b
+	.fantys_retreating_check_home
+	ld a, (__en_x)
+	ld c, a
+	ld a, (__en_x1)
+	cp c
+	jr nz, fantys_idle
+	ld a, (__en_y)
+	ld c, a
+	ld a, (__en_y1)
+	cp c
+	jr nz, fantys_idle
+	ld a, 0
+	jr fantys_set_state
+	.fantys_update
+	ld a, (_scenery_info + 3)
+	or a
+	jp z, fantys_end
 	ld hl, (_gp_gen)
 	ld bc, _en_an_vx
 	add hl, bc
@@ -5679,16 +5761,16 @@
 	add hl, de
 	ex de, hl
 	.fanty_x_limit_0
-	ld hl, 15360
+	ld hl, 14336
 	call l_ge
-	ld hl, 15360
+	ld hl, 14336
 	jr nc, fanty_x_limit_1
 	ex de, hl
 	jr fanty_x_write
 	.fanty_x_limit_1
-	ld hl, -1024
+	ld hl, 0
 	call l_lt
-	ld hl, -1024
+	ld hl, 0
 	jr nc, fanty_x_write
 	ex de, hl
 	.fanty_x_write
@@ -5716,16 +5798,16 @@
 	add hl, de
 	ex de, hl
 	.fanty_y_limit_0
-	ld hl, 10240
+	ld hl, 9216
 	call l_ge
-	ld hl, 10240
+	ld hl, 9216
 	jr nc, fanty_y_limit_1
 	ex de, hl
 	jr fanty_y_write
 	.fanty_y_limit_1
-	ld hl, -1024
+	ld hl, 0
 	call l_lt
-	ld hl, -1024
+	ld hl, 0
 	jr nc, fanty_y_write
 	ex de, hl
 	.fanty_y_write
@@ -5736,8 +5818,7 @@
 	ex de, hl
 	call HLshr6_A
 	ld (__en_y), a
-	.fanty_no_act
-	._update_fantys_done
+	.fantys_end
 	._en_bg_collision
 	call en_xx_calc
 	call en_yy_calc
@@ -6049,7 +6130,7 @@
 	or	l
 	jp	z,i_106
 	ld	a,(__en_t)
-	cp	#(16 % 256)
+	cp	#(128 % 256)
 	jp	z,i_106
 	jr	c,i_107_i_106
 .i_106
@@ -6081,6 +6162,54 @@
 .i_92
 .i_109
 	.enems_update_values_and_exit
+	call enems_update_values_store
+	jp	i_88
+.i_89
+	ret
+
+
+	.enems_get_values
+	ld hl, (_enoffsmasi)
+	call _calc_baddies_pointer
+	ld (__baddies_pointer), hl
+	ld a, (hl)
+	ld (__en_x), a
+	inc hl
+	ld a, (hl)
+	ld (__en_y), a
+	inc hl
+	ld a, (hl)
+	ld b, a
+	and 0xf0
+	ld (__en_x1), a
+	ld a, b
+	sla a
+	sla a
+	sla a
+	sla a
+	ld (__en_y1), a
+	inc hl
+	ld a, (hl)
+	ld b, a
+	and 0xf0
+	ld (__en_x2), a
+	ld a, b
+	sla a
+	sla a
+	sla a
+	sla a
+	ld (__en_y2), a
+	inc hl
+	ld a, (hl)
+	ld (__en_mx), a
+	inc hl
+	ld a, (hl)
+	ld (__en_my), a
+	inc hl
+	ld a, (hl)
+	ld (__en_t), a
+	ret
+	.enems_update_values_store
 	ld hl, (__baddies_pointer)
 	ld a, (__en_x)
 	ld (hl), a
@@ -6117,11 +6246,7 @@
 	ld a, (__en_t)
 	ld (hl), a
 	inc hl
-	jp	i_88
-.i_89
 	ret
-
-
 
 ._main
 	call	_wyz_init
@@ -6757,6 +6882,10 @@
 .__y2	defs	1
 .__en_life	defs	1
 ._b_f	defs	4
+._cx1	defs	1
+._cx2	defs	1
+._cy1	defs	1
+._cy2	defs	1
 ._prxx	defs	1
 ._pryy	defs	1
 ._b_x	defs	4
@@ -7081,10 +7210,14 @@
 	XDEF	_cpc_HardPause
 	XDEF	_hook_init_game
 	XDEF	_b_f
+	XDEF	_cx1
+	XDEF	_cx2
 	LIB	cpc_AssignKey
+	XDEF	_cy1
+	XDEF	_cy2
 	XDEF	_prxx
-	XDEF	_calc_hotspot_ptr
 	XDEF	_pryy
+	XDEF	_calc_hotspot_ptr
 	LIB	cpc_TouchTiles
 	LIB	cpc_PutSpTileMap4x8Px
 	XDEF	_abs
@@ -7197,6 +7330,7 @@
 	XDEF	_l_ini_y
 	LIB	cpc_PutSpXOR
 	LIB	cpc_PrintStr
+	XDEF	_distance
 	XDEF	_draw_scr_background
 	LIB	cpc_PrintGphStr2X
 	XDEF	_game_over

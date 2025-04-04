@@ -340,7 +340,7 @@ Por ahora los fantis vanilla (cuyo movimiento fue pasado a ensamble, pero solo e
 
 Con esto ya estaría la optimización. Los fanties vanilla ocupan ahora 425 bytes. La idea es ahora refactorizar todo para contemplar todos los tipos de fanty reaprovechando la implementación en ensamble de los fanties vanilla.
 
-* Los tipo 5 o `RANDOM RESPAWN` son como los tipo 6 pero si está activado `PLAYER_CAN_HIDE` aplican `rds` en lugar de `FANTY_A`. `rds`se calcula como `rds = player_hidden () ? (-(FANTY_A>>1)) : FANTY_A;`
+* Los tipo 5 o `RANDOM RESPAWN` son como los tipo 6 pero si está activado `PLAYER_CAN_HIDE` aplican `rds` en lugar de `FANTY_A`. `rds`se calcula como `rds = player_hidden () ? (-(FANTY_A>>1)) : FANTY_A;`...
 
 * Si hay `SIGHT DISTANCE` o se aplica `PLAYER_CAN_HIDE` a los tipo 6, entonces tenemos la máquina de estados. En ella, el estado `TYPE_6_PURSUING` modifica `vx` y `vy` como en vanilla. Los otros estados modifican `vx` y `vy` de forma diferente. El resto del código (actualzar `x, y`, confinar en la pantalla, actualizar `_en_x`/`y`) es igual que en los vanilla.
 
@@ -351,6 +351,9 @@ Tengo que refactorizar para idear un bloque conjunto que cubra todos estos casos
 La organización general podría ser
 
 ```
+	#ifdef RANDOM_RESPAWN
+		if !fanty_activo goto end
+	#endif
 	#ifdef USE_SIGHT_DISTANCE || PLAYER_CAN HIDE
 		if estado idle goto idle
 		if estado retreating goto retreating
@@ -374,6 +377,12 @@ La organización general podría ser
 
 	.end
 ```
+
+* `en_an_estate` se pone a 0 por defecto, que corresponde al estado "IDLE". Esto no me vale porque cuando salgo y vuelvo a entrar el fanty está en otro sitio. El tema sería reiniciar el fanty a su sitio inicial siempre, que es como funcionaba antes con la implementación original. Lo voy a poner opcional `FANTY_REMEMBER_POSITION`.
+
+* Ahora mismo está medio funcionando, pero tenemos el problema de que en CPC los sprites no pueden salir de la pantalla, que es algo que tengo que ver cómo resuelvo. Los fantys originales de spectrum salían de la pantalla. Ahora tenemos el problema de que estamos usando las coordenadas "de pixel" asociadas (antes no) y estás son unsigned char, por lo que los nuevos fanties deberán estar confinados a 0->224 y 0->144. Esto sólo implica modificar los valores en el código.
+
+* Sigue haciendo cosas raras con el retreating. Tengo que revisarlo de nuevo :)
 
 
 [X] Pasar el bounce contra el fanty y cualquier otra cosa fanty vanilla related a ensamble.
