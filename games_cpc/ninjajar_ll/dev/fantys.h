@@ -26,6 +26,13 @@
 		ld  bc, (_enit)
 		ld  b, 0
 
+	#ifdef FANTY_FACING
+		ld  hl, _en_an_frame 
+		add hl, bc 
+		ld  a, (hl)
+		ld  ixl, a
+	#endif
+
 		// Prepare a 16 bits index (enit) I can use when I need
 		ld  a, c
 		sla a  							// enit * 2, 16 bits here
@@ -115,6 +122,9 @@
 			jr  nc, fanty_vx_sk1
 
 			// ** player.x is > en_an_x, increase vx **
+		#ifdef FANTY_FACING
+				ld  ixl, 1
+		#endif
 
 			// en_an_vx [enit] += FANTY_A
 
@@ -125,7 +135,7 @@
 			ld  e, (hl)
 			inc hl 
 			ld  d, (hl)  					// DE = en_an_vx [enit]
-// TODO: RANDOM RESPAWN CHECK HIDDEN!!
+		.fanty_A_mod_1
 			ld  hl, FANTY_A
 			add hl, de 						// HL = en_an_vx [enit] + FANTY_A
 
@@ -148,6 +158,9 @@
 			jr  c, fanty_vx_done
 
 			// ** player.x is < en_an_x, decrease vx **
+		#ifdef FANTY_FACING
+				ld  ixl, 0
+		#endif
 
 			// en_an_vx [enit] -= FANTY_A
 			ld  hl, (_gp_gen) 				// INDEX
@@ -157,7 +170,7 @@
 			inc hl 
 			ld  h, (hl)
 			ld  l, a
-// TODO: RANDOM RESPAWN CHECK HIDDEN!!
+		.fanty_A_mod_2
 			ld  de, FANTY_A 
 			sbc hl, de 						// HL = en_an_vx [enit] - FANTY_A
 
@@ -217,7 +230,7 @@
 			ld  e, (hl)
 			inc hl 
 			ld  d, (hl) 
-// TODO: RANDOM RESPAWN CHECK HIDDEN!!
+		.fanty_A_mod_3
 			ld  hl, FANTY_A
 			add hl, de 						// HL = en_an_vy [enit] + FANTY_A
 
@@ -248,7 +261,7 @@
 			inc hl 
 			ld  h, (hl)
 			ld  l, a
-// TODO: RANDOM RESPAWN CHECK HIDDEN!!
+		.fanty_A_mod_4
 			ld  de, FANTY_A 
 			sbc hl, de 						// HL = en_an_vy [enit] - FANTY_A
 
@@ -368,6 +381,7 @@
 
 			.fantys_retreating_set_vx
 				ld  hl, (_enit)
+				ld  h, 0
 				add hl, hl 
 				ld  de, _en_an_vx 
 				add hl, de 
@@ -394,6 +408,7 @@
 
 			.fantys_retreating_set_vy
 				ld  hl, (_enit)
+				ld  h, 0
 				add hl, hl 
 				ld  de, _en_an_vy
 				add hl, de 
@@ -553,6 +568,16 @@
 			call HLshr6_A
 			ld  (__en_y), a
 
+		#ifdef FANTY_FACING
+				ld  bc, (_enit)
+				ld  b, 0 
+				ld  hl, _en_an_frame
+				add hl, bc 
+				ld  a, ixl 
+				ld  (hl), a
+		#endif
+
 		.fantys_end
+
 	#endif
 #endasm

@@ -382,8 +382,9 @@ La organización general podría ser
 
 * Ahora mismo está medio funcionando, pero tenemos el problema de que en CPC los sprites no pueden salir de la pantalla, que es algo que tengo que ver cómo resuelvo. Los fantys originales de spectrum salían de la pantalla. Ahora tenemos el problema de que estamos usando las coordenadas "de pixel" asociadas (antes no) y estás son unsigned char, por lo que los nuevos fanties deberán estar confinados a 0->224 y 0->144. Esto sólo implica modificar los valores en el código.
 
-* Sigue haciendo cosas raras con el retreating. Tengo que revisarlo de nuevo :)
+* Necesito poder decirle al motor que los fantys pueden tener los dos cells dedicados a mirar a izquierda y a derecha: `FANTY_FACING`. Aprovecho para poner una animación más sencilla usando `maincounter`, que se supone que es para este tipo de cosas.
 
+* Creo que lo tengo casi fino.
 
 [X] Pasar el bounce contra el fanty y cualquier otra cosa fanty vanilla related a ensamble.
-[ ] Paso a ensamble el fanty con vista.
+[X] Paso a ensamble el fanty con vista.

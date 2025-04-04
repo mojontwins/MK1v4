@@ -6733,25 +6733,20 @@ void mueve_bicharracos (void) {
 					#endasm
 
 					// Animate
-					/*
-					en_an_count [enit] ++; 
-					if (en_an_count [enit] >= 4) {
-						en_an_count [enit] = 0;
-						en_an_frame [enit] = !en_an_frame [enit];					
-					}
-					*/
+
 					#asm
+						#if defined USE_TYPE_6 && defined FANTY_FACING
+							ld  a, (__en_t)
+							cp  6 
+							jr  z, enems_animate_done
+						#endif
+
+							ld  a, (_maincounter)
+							and 3
+							jr  nz, enems_animate_done
+
 							ld  bc, (_enit)
 							ld  b, 0
-
-							ld  hl, _en_an_count
-							add hl, bc
-							ld  a, (hl)
-							inc a
-							cp  4
-							jr  c, _enemy_animate_update_count
-
-							push hl
 
 							ld  hl, _en_an_frame
 							add hl, bc
@@ -6759,10 +6754,7 @@ void mueve_bicharracos (void) {
 							xor 1
 							ld  (hl), a
 
-							pop hl
-							xor a
-						._enemy_animate_update_count
-							ld  (hl), a
+						.enems_animate_done
 					#endasm
 					
 					enems_calc_frame ();				

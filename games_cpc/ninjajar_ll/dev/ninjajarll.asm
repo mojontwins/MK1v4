@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Apr 04 13:30:46 2025
+;	Module compile time: Fri Apr 04 20:38:25 2025
 
 
 
@@ -5537,6 +5537,10 @@
 	ld (_rdd), a
 	ld bc, (_enit)
 	ld b, 0
+	ld hl, _en_an_frame
+	add hl, bc
+	ld a, (hl)
+	ld ixl, a
 	ld a, c
 	sla a
 	ld (_gp_gen), a
@@ -5566,12 +5570,14 @@
 	call l_lt
 	pop hl
 	jr nc, fanty_vx_sk1
+	ld ixl, 1
 	ld hl, (_gp_gen)
 	ld bc, _en_an_vx
 	add hl, bc
 	ld e, (hl)
 	inc hl
 	ld d, (hl)
+	.fanty_A_mod_1
 	ld hl, 16
 	add hl, de
 	ld de, 256
@@ -5584,6 +5590,7 @@
 	.fanty_vx_sk1
 	call l_eq
 	jr c, fanty_vx_done
+	ld ixl, 0
 	ld hl, (_gp_gen)
 	ld bc, _en_an_vx
 	add hl, bc
@@ -5591,6 +5598,7 @@
 	inc hl
 	ld h, (hl)
 	ld l, a
+	.fanty_A_mod_2
 	ld de, 16
 	sbc hl, de
 	ld de, -256
@@ -5627,6 +5635,7 @@
 	ld e, (hl)
 	inc hl
 	ld d, (hl)
+	.fanty_A_mod_3
 	ld hl, 16
 	add hl, de
 	ld de, 256
@@ -5648,6 +5657,7 @@
 	inc hl
 	ld h, (hl)
 	ld l, a
+	.fanty_A_mod_4
 	ld de, 16
 	sbc hl, de
 	ld de, -256
@@ -5702,6 +5712,7 @@
 	ld bc, -128
 	.fantys_retreating_set_vx
 	ld hl, (_enit)
+	ld h, 0
 	add hl, hl
 	ld de, _en_an_vx
 	add hl, de
@@ -5721,6 +5732,7 @@
 	ld bc, -128
 	.fantys_retreating_set_vy
 	ld hl, (_enit)
+	ld h, 0
 	add hl, hl
 	ld de, _en_an_vy
 	add hl, de
@@ -5818,6 +5830,12 @@
 	ex de, hl
 	call HLshr6_A
 	ld (__en_y), a
+	ld bc, (_enit)
+	ld b, 0
+	ld hl, _en_an_frame
+	add hl, bc
+	ld a, ixl
+	ld (hl), a
 	.fantys_end
 	._en_bg_collision
 	call en_xx_calc
@@ -5945,24 +5963,20 @@
 	ld (_en_yy), a
 	ret
 	._en_bg_collision_end
+	ld a, (__en_t)
+	cp 6
+	jr z, enems_animate_done
+	ld a, (_maincounter)
+	and 3
+	jr nz, enems_animate_done
 	ld bc, (_enit)
 	ld b, 0
-	ld hl, _en_an_count
-	add hl, bc
-	ld a, (hl)
-	inc a
-	cp 4
-	jr c, _enemy_animate_update_count
-	push hl
 	ld hl, _en_an_frame
 	add hl, bc
 	ld a, (hl)
 	xor 1
 	ld (hl), a
-	pop hl
-	xor a
-	._enemy_animate_update_count
-	ld (hl), a
+	.enems_animate_done
 	call	_enems_calc_frame
 	ld	a,(__en_t)
 	cp	#(4 % 256)
