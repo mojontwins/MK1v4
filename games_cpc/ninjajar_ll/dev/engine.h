@@ -5630,11 +5630,6 @@ void draw_scr (void) {
 	#endif
 
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
-		/*
-		en_an_frame [enit] = 0;
-		en_an_state [enit] = 0;
-		enoffsmasi = enit + enoffs;
-		*/
 		
 		#asm
 				ld  bc, (_enit)
@@ -5642,14 +5637,14 @@ void draw_scr (void) {
 				ld  b, a
 				ld  hl, _en_an_frame
 				add hl, bc
-				ld  (hl), a
+				ld  (hl), a 				// en_an_frame [enit] = 0;
 				ld  hl, _en_an_state
 				add hl, bc
-				ld  (hl), a
+				ld  (hl), a 				// en_an_state [enit] = 0;
 				
 				ld  hl, (_enoffs)
 				add hl, bc
-				ld  (_enoffsmasi), hl
+				ld  (_enoffsmasi), hl 		// enoffsmasi = enit + enoffs;
 
 				// Get values to temp vars for size & speed
 				call enems_get_values
@@ -7032,7 +7027,17 @@ void mueve_bicharracos (void) {
 								
 								// We decide which kind of life drain we do:
 								#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT) && (FLYING_ENEMY_HIT != LINEAR_ENEMY_HIT)
-									if (_en_t == 6) {
+									if (
+										#ifdef RANDOM_RESPAWN
+											en_an_fanty_activo [enit]
+										#endif
+										#if defined RANDOM_RESPAWN && defined USE_TYPE_6
+											||
+										#endif
+										#ifdef USE_TYPE_6
+											_en_t == 6
+										#endif
+									) {
 										player.drain_amount = FLYING_ENEMY_HIT;
 									} else
 								#endif
@@ -7176,7 +7181,7 @@ void mueve_bicharracos (void) {
 		#ifdef RANDOM_RESPAWN
 			// Activate fanty
 
-		if ((_en_t & 128) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
+			if ((_en_t & 128) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
 				en_an_fanty_activo [enit] = 1;
 				if (player.y > 5120)
 					en_an_y [enit] = -1024;
@@ -7186,6 +7191,93 @@ void mueve_bicharracos (void) {
 				en_an_vx [enit] = en_an_vy [enit] = 0;
 			enems_en_an_calc (2);
 			}
+
+			#asm
+				// Should we create?
+
+					ld  a, (__en_t) 
+					and 128 
+					jr  z, enems_create_fanty_done 
+
+					call _rand 
+					and 31 
+					xor a 
+					or  l 
+					jr  nz, enems_create_fanty_done
+
+					ld  bc, (_enit) 
+					ld  b, 0 
+					ld  hl, _en_an_fanty_activo 
+					add hl, bc 
+					ld  a, (hl) 
+					or  a 
+					jr  nz, enems_create_fanty_done
+
+				// Create a fanty!
+
+					inc a 				// A was 0, now it is 1.
+					ld  (hl), a 		// en_an_fanty_activo [enit] = 1.
+
+					// Position Y depends on player Y
+
+					ld  h, b 
+					ld  l, c 
+					add hl, hl 
+					ld  b, h 
+					ld  c, l 			// We'll be indexing 16 bits from now on
+					
+					ld  hl, _en_an_y 
+					add hl, bc 
+
+					ld  de, 0
+					ld  a, (_gpy) 
+					cp  120 
+					jr  nc, fanty_create_set_y
+
+					ld  de, 144*64
+
+				.fanty_create_set_y
+					ld  (hl), e 
+					inc hl 
+					ld  (hl), d 
+
+					// Position X is random
+
+				.fanty_create_pick_x
+					call _rand 			// Won't trash BC
+					ld  a, l 
+					cp  224
+					jr  nc, fanty_create_pick_x 	// Well, meh
+					call Ashl16_HL 
+					ex  de, hl 			// DE = rand (240) * 64
+
+					ld  hl, _en_an_x 
+					add hl, bc 
+					ld  (hl), e 
+					inc hl 
+					ld  (hl), d
+
+					// Init velocities
+
+					xor a 
+					ld  hl, _en_an_vx 
+					add hl, bc
+					ld  (hl), a 
+					inc hl 
+					ld  (hl), a 
+					ld  hl, _en_an_vy
+					add hl, bc
+					ld  (hl), a 
+					inc hl 
+					ld  (hl), a 
+					
+					// Ready to go fanty!
+
+					ld	hl, 2
+					call _enems_en_an_calc
+
+				.enems_create_fanty_done
+			#endasm
 		#endif
 
 		#asm		

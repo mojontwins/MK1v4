@@ -384,7 +384,33 @@ La organización general podría ser
 
 * Necesito poder decirle al motor que los fantys pueden tener los dos cells dedicados a mirar a izquierda y a derecha: `FANTY_FACING`. Aprovecho para poner una animación más sencilla usando `maincounter`, que se supone que es para este tipo de cosas.
 
-* Creo que lo tengo casi fino.
+* Problema: este nuevo comportamiento de los fantys que simplifica tantas cosas se carga un poco Zombie Calavera, donde los `RANDOM_RESPAWN` tienen que irse fuera de la pantalla... A ver, lo que va a pasar es que al tocar el borde van a desaparecer. Lo que toca ahora es propagar los cambios -> `src_cpc` -> `src_zx` y luego al Zombie Calavera para terminar de reprogramar este tipo de enemigos.
+
+#### `RANDOM_RESPAWN`
+
+Los fantis de este tipo se originaban fuera de la pantalla. Ahora deben originarse en el borde. Cuando toquen el borde no deben pintarse... Si están cerca del borde podrían parpadear (¡esto molaría mil!). Para modificar la dirección en la que avanzan usaré self modifying code like a pro. Hay cuatro `ld hl/de, FANTY_A` donde habría que cambiar esa constante.
+
+¿Cómo lograr que parpadéen? Tengo que pensar en la detección más barata posible. Si hago coincidir que par = invisible, impar = visible, tengo de gratis que desaparezcan en el borde.
+
+Parpadeo si `|x - borde| < 16`. En el motor tengo `abs_a` que hace el valor absoluto de A.
+
+Antes de empezar vamos a documentar todo el funcionamiento de `RANDOM_RESPAWN`. Hay que recordar que se trata de **enemigos marcados como muertos** que tienen `en_an_fanty_activo` a 1.
+
+* En `enems_init` de cada pantalla se pone `en_an_fanty_activo` a 0.
+
+* En `enems_kill` se pone `en_an_fanty_activo` a 0. Esto entiendo que no es necesario para enemigos normales que mates, pero sí para que un fanty que mates se vuelva a inicializar automáticamente.
+
+* En el loop de enemigos, si el enemigo está muerto (bit 7 arriba) y `en_an_fanty_activo` vale 0, se salta todo el loop de enemigos hasta `enems_loop_continue`.
+
+* Tras `enems_loop_continue` está la detección e iniialización de estos fantys. Si el malote está muerto (bit 7 arriba) y `en_an_fanty_activo` vale 0 y se cumple un random, se levanta `en_an_fanty_activo` y se coloca según la posición del jugador:
+
+	* Si gpy < 120 se pone abajo, si gpy >= 120 se pone arriba.
+	* La posición X es random.
+	* vx, vy = 0.
+	* Se calcula el frame 2.
+
+Para empezar tengo que pasar ese código de arriba a ensamble y simplificarlo.
 
 [X] Pasar el bounce contra el fanty y cualquier otra cosa fanty vanilla related a ensamble.
 [X] Paso a ensamble el fanty con vista.
+[ ] No se rompe el `RANDOM_RESPAWN`.
