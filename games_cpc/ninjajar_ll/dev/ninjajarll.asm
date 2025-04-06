@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Apr 04 20:38:25 2025
+;	Module compile time: Sun Apr 06 09:45:07 2025
 
 
 
@@ -3580,6 +3580,14 @@
 	defw (_sprites + 0x0300), (_sprites + 0x0340), (_sprites + 0x0380), (_sprites + 0x03C0)
 	._sword_cells
 	defw _sprite_sword, _sprite_sword + 32
+	.die_and_respawn_save
+	ld a, (_n_pant)
+	ld (_safe_n_pant), a
+	ld a, (_gpx)
+	ld (_safe_x), a
+	ld a, (_gpy)
+	ld (_safe_y), a
+	ret
 
 ._abs_a
 	bit 7, a
@@ -5449,6 +5457,17 @@
 	ld	h,0
 	ld	a,l
 	ld	(_en_cy),a
+	ld a, (_maincounter)
+	and 3
+	jr nz, enems_animate_done
+	ld bc, (_enit)
+	ld b, 0
+	ld hl, _en_an_frame
+	add hl, bc
+	ld a, (hl)
+	xor 1
+	ld (hl), a
+	.enems_animate_done
 	ld	a,(__en_t)
 	ld	e,a
 	ld	d,0
@@ -5523,6 +5542,9 @@
 	.en_linear_vertical_axis_done
 	.en_linear_done
 .i_94
+	ld a, (__en_t)
+	cp 6
+	jp nz, fantys_end
 	.fantys_calc_distance
 	ld a, (__en_x)
 	ld (_cx1), a
@@ -5534,7 +5556,7 @@
 	ld (_cy2), a
 	call _distance
 	ld a, l
-	ld (_rdd), a
+	ld iyl, a
 	ld bc, (_enit)
 	ld b, 0
 	ld hl, _en_an_frame
@@ -5546,9 +5568,6 @@
 	ld (_gp_gen), a
 	xor a
 	ld (_gp_gen + 1), a
-	ld a, (__en_t)
-	cp 6
-	jp nz, fantys_end
 	ld hl, _en_an_state
 	add hl, bc
 	ld a, (hl)
@@ -5679,16 +5698,16 @@
 	inc hl
 	ld (hl), d
 	.fanty_vy_done
-	ld a, (_rdd)
-	cp 48
+	ld a, iyl
+	cp 96
 	jr nc, fantys_set_retreating
 	jp fantys_update
 	.fantys_set_retreating
 	ld a, 2
 	jr fantys_set_state
 	.fantys_idle
-	ld a, (_rdd)
-	cp 48
+	ld a, iyl
+	cp 96
 	jr nc, fantys_update
 	ld a, 1
 	.fantys_set_state
@@ -5963,20 +5982,6 @@
 	ld (_en_yy), a
 	ret
 	._en_bg_collision_end
-	ld a, (__en_t)
-	cp 6
-	jr z, enems_animate_done
-	ld a, (_maincounter)
-	and 3
-	jr nz, enems_animate_done
-	ld bc, (_enit)
-	ld b, 0
-	ld hl, _en_an_frame
-	add hl, bc
-	ld a, (hl)
-	xor 1
-	ld (hl), a
-	.enems_animate_done
 	call	_enems_calc_frame
 	ld	a,(__en_t)
 	cp	#(4 % 256)
@@ -6436,6 +6441,7 @@
 	ld (_ezg_old), a
 	ld (_coins_old), a
 	ld (_on_pant), a
+	call die_and_respawn_save
 	ld	hl,1	;const
 	call	_wyz_play_music
 .i_112

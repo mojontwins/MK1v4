@@ -70,6 +70,19 @@ unsigned char line_of_text_clear [] = "                                ";
 	#endasm
 #endif
 
+#if defined DIE_AND_RESPAWN && !defined SAFE_SPOT_ON_ENTERING
+	#asm
+		.die_and_respawn_save
+			ld  a, (_n_pant)
+			ld  (_safe_n_pant), a
+			ld  a, (_gpx)
+			ld  (_safe_x), a 
+			ld  a, (_gpy)
+			ld  (_safe_y), a
+			ret 
+	#endasm 
+#endif
+
 void abs_a (void) {
 	#asm
 		bit 7, a
@@ -1529,13 +1542,7 @@ void move (void) {
 
 						#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE && !defined SAFE_SPOT_ON_ENTERING
 							#asm
-									ld  a, (_n_pant)
-									ld  (_safe_n_pant), a
-									ld  a, (_gpx)
-									ld  (_safe_x), a 
-									ld  a, (_gpy)
-									ld  (_safe_y), a
-								.die_and_respawn_save_done
+								 call die_and_respawn_save
 							#endasm
 						#endif
 					}
@@ -5380,6 +5387,13 @@ void enems_calc_frame (void) {
 			ld  hl, _en_an_frame
 			add hl, bc
 			ld  a, (hl)
+
+		#ifdef RANDOM_RESPAWN
+				// 0xff means invisible
+				cp  0xff 
+				jr  z, enems_calc_frame_invisible
+		#endif
+
 			ld  hl, _en_an_base_frame
 			add hl, bc
 			add a, (hl)
@@ -5393,6 +5407,15 @@ void enems_calc_frame (void) {
 
 			ldi
 			ldi
+
+		#ifdef RANDOM_RESPAWN
+				ret
+			.enems_calc_frame_invisible
+				pop de 			// DE -> en_an_next_frame [enit]
+				ld  (de), _sprite_18_a % 256
+				inc de 
+				ld  (de), _sprite_18_a / 256
+		#endif
 	#endasm
 }
 
@@ -6213,6 +6236,24 @@ void mueve_bicharracos (void) {
 				#endif
 				{
 
+					// Animate
+					#asm
+							ld  a, (_maincounter)
+							and 3
+							jr  nz, enems_animate_done
+
+							ld  bc, (_enit)
+							ld  b, 0
+
+							ld  hl, _en_an_frame
+							add hl, bc
+							ld  a, (hl)
+							xor 1
+							ld  (hl), a
+
+						.enems_animate_done
+					#endasm
+
 					// Basic linear movement x = x + mx, etc.
 					if (
 						_en_t <= 4
@@ -6507,12 +6548,13 @@ void mueve_bicharracos (void) {
 						}
 					#endif
 
+					// Fanties engine
 					#if defined RANDOM_RESPAWN || defined USE_TYPE_6
 						#include "fantys.h"
 					#endif
 
+					// Check for collisions.
 					#ifdef ENEMIES_COLLIDE			
-						// Check for collisions.
 						/*
 						en_xx = _en_x >> 4;
 						en_yy = _en_y >> 4;
@@ -6726,33 +6768,8 @@ void mueve_bicharracos (void) {
 					#asm
 					._en_bg_collision_end
 					#endasm
-
-					// Animate
-
-					#asm
-						#if defined USE_TYPE_6 && defined FANTY_FACING
-							ld  a, (__en_t)
-							cp  6 
-							jr  z, enems_animate_done
-						#endif
-
-							ld  a, (_maincounter)
-							and 3
-							jr  nz, enems_animate_done
-
-							ld  bc, (_enit)
-							ld  b, 0
-
-							ld  hl, _en_an_frame
-							add hl, bc
-							ld  a, (hl)
-							xor 1
-							ld  (hl), a
-
-						.enems_animate_done
-					#endasm
 					
-					enems_calc_frame ();				
+					enems_calc_frame ();
 
 					#ifdef ENABLE_CUSTOM_ENEMS
 						extra_enems_move ();

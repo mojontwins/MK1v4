@@ -411,6 +411,8 @@ Antes de empezar vamos a documentar todo el funcionamiento de `RANDOM_RESPAWN`. 
 
 Para empezar tengo que pasar ese código de arriba a ensamble y simplificarlo.
 
+* He reorganizado el orden en el que se hacen las cosas en el loop de enemigos para poder modificar el frame de animación sin problemas desde el módulo de fantys, y ahora voy a ver para completar los `RANDOM_RESPAWN` y sus parpadeos.
+
 [X] Pasar el bounce contra el fanty y cualquier otra cosa fanty vanilla related a ensamble.
 [X] Paso a ensamble el fanty con vista.
 [ ] No se rompe el `RANDOM_RESPAWN`.
