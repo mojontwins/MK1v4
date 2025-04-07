@@ -9,7 +9,7 @@ typedef struct {
 	unsigned char x1, y1, x2, y2;
 	signed char mx, my;
 	signed char t;
-#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD
+#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 	unsigned char life;
 #endif
 } MALOTE;

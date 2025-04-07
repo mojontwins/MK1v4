@@ -222,11 +222,13 @@
 //#define USE_SIGHT_DISTANCE				// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE			120		
 //#define FANTY_MAX_V 				256 	// Flying enemies max speed.
+//#define FANTY_V_RETREATING 			128		// Flying eneimes speed when retreating (USE_SIGHT_DISTANCE / PLAYER_CAN_HIDE)
 //#define FANTY_A 					16		// Flying enemies acceleration.
 //#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 //#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
-#define FANTY_ASSEMBLY 						// Comment for classic fanties.
+//#define FANTY_REMEMBER_POSITION 			// Don't reset fanty to x1, y1 on entering.
+//#define FANTY_FACING
 
 // Quadrators
 // ----------

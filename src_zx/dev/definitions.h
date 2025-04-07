@@ -174,7 +174,7 @@ unsigned char en_an_base_frame [MAX_ENEMS] 			@ (23600 + MAX_ENEMS*17);
 unsigned int enoffs, enoffsmasi;
 unsigned char en_j, en_x, en_y, en_xx, en_yy;
 unsigned char en_cx, en_cy;
-unsigned char en_ccx, en_ccy;
+
 // Only one enemy may hurt the player at once, so we need this flag:
 unsigned char en_tocado = 0; 
 unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
@@ -314,6 +314,10 @@ unsigned char _x2, _y2;
 unsigned char wall;
 unsigned char rda, rdb, rdmt;
 
+#if defined USE_SIGHT_DISTANCE || defined ENABLE_COCOS
+	unsigned char cx1, cy1, cx2, cy2;
+#endif
+
 #if defined RLE_MAP
 	unsigned char rdc, rdn;
 #endif
@@ -383,4 +387,4 @@ void init_player_values (void);
 unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
-void enems_kill (void);
+void enems_kill (unsigned char damage);

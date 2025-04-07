@@ -440,8 +440,14 @@ void main (void) {
 			ld  (_on_pant), a
 		#endasm
 
-		#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE && defined SAFE_SPOT_ON_ENTERING
+		#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE 
+			#if defined SAFE_SPOT_ON_ENTERING
 			safe_n_pant = 0xff;
+			#else
+				#asm
+						call die_and_respawn_save
+				#endasm
+			#endif
 		#endif
 
 		AY_PLAY_MUSIC (1);

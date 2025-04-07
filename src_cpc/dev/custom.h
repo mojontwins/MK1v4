@@ -25,7 +25,7 @@
 	void hook_hotspots (void) {	
 	}
 
-	int hook_game_over (void) {
+	unsigned char hook_game_over (void) {
 		// Do your shit then return 1 for normal game over.
 		return 1;
 	}

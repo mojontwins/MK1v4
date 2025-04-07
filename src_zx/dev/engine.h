@@ -66,6 +66,19 @@ unsigned char line_of_text_clear [] = "                                ";
 	#endasm
 #endif
 
+#if defined DIE_AND_RESPAWN && !defined SAFE_SPOT_ON_ENTERING
+	#asm
+		.die_and_respawn_save
+			ld  a, (_n_pant)
+			ld  (_safe_n_pant), a
+			ld  a, (_gpx)
+			ld  (_safe_x), a 
+			ld  a, (_gpy)
+			ld  (_safe_y), a
+			ret 
+	#endasm 
+#endif
+
 void abs_a (void) {
 	#asm
 		bit 7, a
@@ -218,7 +231,7 @@ void render_this_enemy (void) {
 void calc_baddies_pointer (void) {
 	#asm
 		#if defined PACKED_ENEMS
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE				
+			#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE		
 				add hl, hl 				// x2
 				add hl, hl 				// x4
 				add hl, hl 				// HL = x8
@@ -232,7 +245,7 @@ void calc_baddies_pointer (void) {
 				sbc hl, de 				// HL = x8 - x1 = x7
 			#endif
 		#else
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
+			#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 				add hl, hl 				// x2
 				ld  d, h
 				ld  e, l 				// DE = x2
@@ -257,46 +270,10 @@ void calc_baddies_pointer (void) {
 }
 
 void render_all_sprites (void) {
+	// Render enems & cocos
+	// ====================
+
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
-		#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-			#ifdef RANDOM_RESPAWN
-				if (en_an_fanty_activo [enit])
-			#else
-				if (malotes [enoffs + enit].t == 6 || malotes [enoffs + enit].t == 0)
-			#endif
-			{
-				/*
-				rdx = en_an_x [enit] >> 6;
-				rdy = en_an_y [enit] >> 6;
-				*/
-				#asm
-						ld  a, (_enit)
-						sla a
-						ld  c, a
-						ld  b, 0
-
-						ld  hl, _en_an_x
-						add hl, bc
-						ld  a, (hl)
-						inc hl
-						ld  h, (hl)
-						ld  l, a 
-
-						call HLshr6_A
-						ld  (_rdx), a
-
-						ld  hl, _en_an_y
-						add hl, bc
-						ld  a, (hl)
-						inc hl
-						ld  h, (hl)
-						ld  l, a 
-
-						call HLshr6_A
-						ld  (_rdy), a
-				#endasm
-			} else 
-		#endif
 		{
 			/*
 			rdx = malotes [enoffs + enit].x;
@@ -327,13 +304,36 @@ void render_all_sprites (void) {
 		#endasm
 	}
 
+	// Render player
+	// =============
+
 	#ifdef TALL_PLAYER
 		rdy = gpy - 8;
 	#else
 		rdy = gpy; 
 	#endif
 
-	if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
+	// if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
+	#asm
+			ld  a, (_player + 23)		// player.estado
+			and EST_PARP 
+			jr  z, render_player_on_screen
+
+			ld  a, (_half_life)
+			or  a 
+			jr  nz, render_player_on_screen
+		
+		.render_player_off_screen
+			ld  a, 240
+			jr  render_player_set_x 
+		
+		.render_player_on_screen
+			ld  a, (_gpx) 
+
+		.render_player_set_x
+			ld  (_rdx), a 
+	#endasm
+	
 	#if defined BETTER_VERTICAL_CONNECTIONS || defined TALL_PLAYER
 		/*
 		if (rdy >= 248) rdi = VIEWPORT_Y - 1; else rdi = VIEWPORT_Y + (rdy >> 3);
@@ -432,6 +432,9 @@ void render_all_sprites (void) {
 	#endif
 	player.current_frame = player.next_frame;
 	
+	// Render bullets
+	// ==============
+
 	#ifdef PLAYER_CAN_FIRE
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
 			if (bullets_estado [rdi]) {
@@ -519,26 +522,26 @@ void render_all_sprites (void) {
 unsigned char collide_enem (void) {
 	#asm
 			// Normal 16x16 player:
-			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 12 >= gpy && en_ccy <= gpy + 12)
+			// (_en_x + 12 >= gpx && _en_x <= gpx + 12 && _en_y + 12 >= gpy && _en_y <= gpy + 12)
 
 			// Tall 16x24 player: Remember tall players are rendered @ gpy - 8, thus:
-			// (en_ccx + 12 >= gpx && en_ccx <= gpx + 12 && en_ccy + 16 >= gpy && en_ccy <= gpy + 12)
+			// (_en_x + 12 >= gpx && _en_x <= gpx + 12 && _en_y + 16 >= gpy && _en_y <= gpy + 12)
 			//                                                        \_ Change
 
 			ld  hl, 0
 
-			// en_ccx + 12 >= gpx
+			// _en_x + 12 >= gpx
 			ld  a, (_gpx)
 			ld  c, a
-			ld  a, (_en_ccx)
+			ld  a, (__en_x)
 			
 			add BOUNDING_WIDTH
 			
 			cp  c
 			ret c
 
-			// en_ccx <= gpx + 12; gpx + 12 >= en_ccx
-			ld  a, (_en_ccx)
+			// _en_x <= gpx + 12; gpx + 12 >= _en_x
+			ld  a, (__en_x)
 			ld  c, a
 			ld  a, (_gpx)
 			
@@ -547,10 +550,10 @@ unsigned char collide_enem (void) {
 			cp  c
 			ret c
 
-			// en_ccy + 12 >= gpy or en_ccy + 16 >= gpy
+			// _en_y + 12 >= gpy or _en_y + 16 >= gpy
 			ld  a, (_gpy)
 			ld  c, a
-			ld  a, (_en_ccy)
+			ld  a, (__en_y)
 			
 			#ifdef TALL_PLAYER
 				add 16
@@ -561,8 +564,8 @@ unsigned char collide_enem (void) {
 			cp  c
 			ret c
 
-			// en_ccy <= gpy + 12; gpy + 12 >= en_ccy
-			ld  a, (_en_ccy)
+			// _en_y <= gpy + 12; gpy + 12 >= _en_y
+			ld  a, (__en_y)
 			ld  c, a
 			ld  a, (_gpy)
 			
@@ -841,17 +844,6 @@ void cortina (void) {
 
 #ifdef ENEMIES_MAY_DIE
 	void init_malotes (void) {
-		/*
-		for (gpit = 0; gpit < MAP_W * MAP_H * MAX_ENEMS; gpit ++) {
-			malotes [gpit].t = malotes [gpit].t & 15;	
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
-				malotes [gpit].life = ENEMIES_LIFE_GAUGE;
-				#ifdef RANDOM_RESPAWN
-					if (malotes [gpit].t == 5) malotes [gpit].t |= 16;
-				#endif
-			#endif
-		}
-		*/
 		#asm
 			// 0  1  2   3   4   5   6   7   8   9
 			// x, y, x1, y1, x2, y2, mx, my, t[, life]
@@ -861,13 +853,13 @@ void cortina (void) {
 
 			ld  bc, TOTAL_EXISTING_ENEMS
 			#if defined PACKED_ENEMS
-				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
+				#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 					ld  de, 8
 				#else
 					ld  de, 7
 				#endif
 			#else
-				#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
+				#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 					ld  de, 10
 				#else
 					ld  de, 9
@@ -876,19 +868,19 @@ void cortina (void) {
 			ld  ix, _malotes
 			
 			.init_malotes_loop
-				//malotes [gpit].t = malotes [gpit].t & 15;
+				// Clear 'enem is dead' flag				
 			#if defined PACKED_ENEMS
 					ld  a, (ix+6) 	// .t
 			#else
 					ld  a, (ix+8) 	// .t
 			#endif
-				and 15
+				and 127
 				
 			#ifdef RANDOM_RESPAWN
 					cp  5
 					jr  nz, init_malotes_not_5	
 
-					or  16
+					or  128
 				.init_malotes_not_5
 			#endif
 
@@ -898,7 +890,7 @@ void cortina (void) {
 					ld  (ix+8), a 	// .t
 			#endif
 
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
+			#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 					ld  a, ENEMIES_LIFE_GAUGE
 				#if defined PACKED_ENEMS
 						ld  (ix+7), a 	// .life
@@ -921,26 +913,7 @@ void cortina (void) {
 	void fire_bullet (void) {
 		
 		// Search a free bullet slot...
-		/*
-		for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-			if (bullets_estado [gpit] == 0) {
-				bullets_estado [gpit] = 1;
-				if (player.facing) {
-					bullets_x [gpit] = (player.x >> 6) - 4;
-					bullets_mx [gpit] = -PLAYER_BULLET_SPEED;
-				} else {
-					bullets_x [gpit] = (player.x >> 6) + 12;
-					bullets_mx [gpit] = PLAYER_BULLET_SPEED;
-				}
-				bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
-				play_sfx (9);
-				#ifdef FIRING_DRAINS_LIFE
-					player.life -= FIRING_DRAIN_AMOUNT;
-				#endif				
-				break;	
-			}	
-		}	
-		*/
+
 		#asm
 				ld  bc, 0
 			.fire_bullet_search_loop
@@ -998,8 +971,8 @@ void cortina (void) {
 
 		play_sfx (9);
 		#ifdef FIRING_DRAINS_LIFE
-			player.drain_amount -= FIRING_DRAIN_AMOUNT;
-			player_just_died = PLAYER_KILLED_BY_SELF;
+			player.drain_amount = FIRING_DRAIN_AMOUNT;
+			player.is_dead = PLAYER_KILLED_BY_SELF;
 		#endif
 
 		#ifdef PLAYER_AX_RECOIL
@@ -1744,13 +1717,7 @@ void move (void) {
 
 						#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE && !defined SAFE_SPOT_ON_ENTERING
 							#asm
-									ld  a, (_n_pant)
-									ld  (_safe_n_pant), a
-									ld  a, (_gpx)
-									ld  (_safe_x), a 
-									ld  a, (_gpy)
-									ld  (_safe_y), a
-								.die_and_respawn_save_done
+								 call die_and_respawn_save
 							#endasm
 						#endif
 					}
@@ -5602,6 +5569,13 @@ void enems_calc_frame (void) {
 			ld  hl, _en_an_frame
 			add hl, bc
 			ld  a, (hl)
+
+		#ifdef RANDOM_RESPAWN
+				// 0xff means invisible
+				cp  0xff 
+				jr  z, enems_calc_frame_invisible
+		#endif
+
 			ld  hl, _en_an_base_frame
 			add hl, bc
 			add a, (hl)
@@ -5615,6 +5589,15 @@ void enems_calc_frame (void) {
 
 			ldi
 			ldi
+
+		#ifdef RANDOM_RESPAWN
+				ret
+			.enems_calc_frame_invisible
+				pop de 			// DE -> en_an_next_frame [enit]
+				ld  (de), _sprite_18_a % 256
+				inc de 
+				ld  (de), _sprite_18_a / 256
+		#endif
 	#endasm
 }
 
@@ -5782,11 +5765,6 @@ void draw_scr (void) {
 	#endif
 
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
-		/*
-		en_an_frame [enit] = 0;
-		en_an_state [enit] = 0;
-		enoffsmasi = enit + enoffs;
-		*/
 		
 		#asm
 				ld  bc, (_enit)
@@ -5794,14 +5772,17 @@ void draw_scr (void) {
 				ld  b, a
 				ld  hl, _en_an_frame
 				add hl, bc
-				ld  (hl), a
+				ld  (hl), a 				// en_an_frame [enit] = 0;
 				ld  hl, _en_an_state
 				add hl, bc
-				ld  (hl), a
+				ld  (hl), a 				// en_an_state [enit] = 0;
 				
 				ld  hl, (_enoffs)
 				add hl, bc
-				ld  (_enoffsmasi), hl
+				ld  (_enoffsmasi), hl 		// enoffsmasi = enit + enoffs;
+
+				// Get values to temp vars for size & speed
+				call enems_get_values
 		#endasm
 
 		#if defined NO_MAX_ENEMS || (defined USE_TYPE_6 && defined MAKE_TYPE_6) || defined INDEXED_ENEMS
@@ -5815,8 +5796,6 @@ void draw_scr (void) {
 		#ifdef RANDOM_RESPAWN
 			en_an_fanty_activo [enit] = 0;
 		#endif
-
-		_en_t = malotes [enoffsmasi].t;
 
 		switch (_en_t) {
 
@@ -5849,9 +5828,66 @@ void draw_scr (void) {
 			#ifdef USE_TYPE_6
 				case 6:
 					enems_en_an_calc (2);
-					en_an_x [enit] = malotes [enoffsmasi].x << 6;
-					en_an_y [enit] = malotes [enoffsmasi].y << 6;
+					/*
+					en_an_x [enit] = __en_x << 6;
+					en_an_y [enit] = __en_y << 6;
 					en_an_vx [enit] = en_an_vy [enit] = 0;					
+					*/
+					#asm
+							// Note that _calc_baddies_pointer trashes DE.
+						.enems_type6_init
+
+							ld  a, (_enit) 
+							sla a 
+							ld  b, 0 
+							ld  c, a 					// BC = enit * 2
+
+						#ifdef FANTY_REMEMBER_POSITION
+							ld  a, (__en_x)
+						#else
+							ld  a, (__en_x1)
+							ld  (__en_x), a
+						#endif
+							call Ashl16_HL 				// HL = A << 6
+							ex  de, hl 					// DE = A << 6
+
+							ld  hl, _en_an_x 
+							add hl, bc 					// HL -> en_an_x [enit]
+							
+							ld  (hl), e
+							inc hl
+							ld  (hl), d 				// en_an_x [enit] = malotes [enoffsmasi].x << 6;
+
+						#ifdef FANTY_REMEMBER_POSITION
+							ld  a, (__en_y)
+						#else
+							ld  a, (__en_y1)
+							ld  (__en_y), a
+						#endif
+							call Ashl16_HL 				// HL = A << 6
+							ex  de, hl 					// DE = A << 6
+
+							ld  hl, _en_an_y 
+							add hl, bc 					// HL -> en_an_y [enit]
+							
+							ld  (hl), e
+							inc hl
+							ld  (hl), d 				// en_an_y [enit] = malotes [enoffsmasi].x << 6;
+
+							xor a 
+							
+							ld  hl, _en_an_vx 
+							add hl, bc 
+							ld  (hl), a 
+							inc hl 
+							ld  (hl), a 
+
+							ld  hl, _en_an_vy
+							add hl, bc 
+							ld  (hl), a 
+							inc hl 
+							ld  (hl), a 							
+					#endasm 
 					break;
 			#endif
 
@@ -5873,22 +5909,19 @@ void draw_scr (void) {
 				case 14:
 					enems_en_an_calc (_en_t - 11);
 
-					//malotes [enoffsmasi].x &= 0xf0;
-					//malotes [enoffsmasi].y &= 0xf0;
+					//_en_x &= 0xf0;
+					//_en_y &= 0xf0;
 
 					#asm 
-							ld  hl, _enoffsmasi
-							call _calc_baddies_pointer
-							ld  a, (hl)
+							ld  a, (__en_x)
 							and 0xf0 
-							ld  (hl), a 
-							inc hl 
-							ld  a, (hl)
+							ld  (__en_x), a 
+							ld  a, (__en_y)
 							and 0xf0 
-							ld  (hl), a 
+							ld  (__en_y), a 
 					#endasm
 					
-					en_an_ff [enit] = abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].my);
+					en_an_ff [enit] = abs (_en_mx + _en_my);
 					break;
 			#endif
 
@@ -5919,6 +5952,12 @@ void draw_scr (void) {
 				}
 			#endif
 		#endif
+
+
+		#asm
+			// Store temp values in array
+				call enems_update_values_store
+		#endasm
 	}
 		
 	#ifdef ACTIVATE_SCRIPTING
@@ -5973,8 +6012,8 @@ void draw_scr (void) {
 	}
 #endif	
 
-#ifdef USE_SIGHT_DISTANCE
-	unsigned char distance (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+#if defined USE_SIGHT_DISTANCE || defined ENABLE_COCOS
+	unsigned char distance (void) {
 		/*
 		unsigned char dx = abs (cx2 - cx1);
 		unsigned char dy = abs (cy2 - cy1);
@@ -6047,7 +6086,7 @@ void platform_get_player (void) {
 	#asm
 			ld  a, 1
 			ld  (_player+25), a 		// .gotten
-			ld  a, (_en_ccy)
+			ld  a, (__en_y)
 			sub 16
 			ld  (_gpy), a 
 			call Ashl16_HL
@@ -6069,11 +6108,14 @@ void platform_get_player (void) {
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
 	void enems_kill (unsigned char damage) {
 		// Kill enemy
+
+		#if ENEMIES_LIFE_GAUGE > 1
 		if (_en_life >= damage) {
 			_en_life -= damage;
 		} else {
 			_en_life = 0;
 		}
+		#endif
 
 		#ifdef ENABLE_CODE_HOOKS
 			enemy_died = _en_t;
@@ -6084,9 +6126,9 @@ void platform_get_player (void) {
 			en_an_next_frame [enit] = sprite_17_a;											
 													
 			#asm
-					ld  a, (_en_ccx)
+					ld  a, (__en_x)
 					ld  (_rdx), a
-					ld  a, (_en_ccy)
+					ld  a, (__en_y)
 					ld  (_rdy), a 
 					call _render_this_enemy
 			#endasm
@@ -6098,17 +6140,26 @@ void platform_get_player (void) {
 
 			// Makes a delay
 			play_sfx (10);
-			// TODO: 128 Add 20 HALTs
+			cpc_HardPause (20);
+		#else
+			// The new stuff is setting up a state and a counter
+			en_an_state [enit] = ENEM_IS_DEAD;
+			en_an_count [enit] = 16;
 		#endif
 
-		if (_en_life == 0) {
+		#if ENEMS_LIFE_GAUGE > 1
+			if (_en_life == 0) 
+		#else
+			if (damage)
+		#endif
+		{
 			#ifdef USE_CLASSIC_ENEMS_KILL
 				// Sprite empty
 				en_an_next_frame [enit] = sprite_18_a;
 			#endif
 
 			// Mark dead
-			_en_t |= 16;			// dead
+			_en_t |= 128;			// dead
 
 			// Count
 			player.killed ++;
@@ -6120,7 +6171,9 @@ void platform_get_player (void) {
 
 			#ifdef RANDOM_RESPAWN								
 				en_an_fanty_activo [enit] = 0;
-				_en_life = FANTIES_LIFE_GAUGE;
+				#if ENEMS_LIFE_GAUGE > 1
+					_en_life = FANTIES_LIFE_GAUGE;
+				#endif
 			#endif
 
 			#ifdef ENABLE_CUSTOM_ENEMS
@@ -6147,90 +6200,53 @@ void mueve_bicharracos (void) {
 		// Copy array values to temporary variables as fast as possible
 		
 		#asm
-				// Those values are stored in this order:
-				// x, y, x1, y1, x2, y2, mx, my, t[, life]
-				// Point HL to baddies [enoffsmasi]. The struct is 9 or 10 bytes long
-				// so this is baddies + enoffsmasi*(9|10) depending on PLAYER_CAN_FIRE
-				ld 	hl, (_enoffsmasi)
-
-				call _calc_baddies_pointer
-
-				ld  (__baddies_pointer), hl 		// Save address for later
-
-				ld  a, (hl)
-				ld  (__en_x), a
-				inc hl 
-
-				ld  a, (hl)
-				ld  (__en_y), a
-				inc hl 
-
-			#ifdef PACKED_ENEMS
-					ld  a, (hl) 					// XY1
-					ld  b, a 						// save
-
-					and 0xf0 
-					ld  (__en_x1), a
-
-					ld  a, b
-					sla a
-					sla a
-					sla a
-					sla a
-					ld  (__en_y1), a
-
-					inc hl
-
-					ld  a, (hl) 					// XY2
-					ld  b, a 						// save
-
-					and 0xf0 
-					ld  (__en_x2), a
-
-					ld  a, b
-					sla a
-					sla a
-					sla a
-					sla a
-					ld  (__en_y2), a
-
-					inc hl
-			#else
-					ld  a, (hl)
-					ld  (__en_x1), a
-					inc hl 
-	
-					ld  a, (hl)
-					ld  (__en_y1), a
-					inc hl 
-	
-					ld  a, (hl)
-					ld  (__en_x2), a
-					inc hl 
-	
-					ld  a, (hl)
-					ld  (__en_y2), a
-					inc hl 
-			#endif
-
-				ld  a, (hl)
-				ld  (__en_mx), a
-				inc hl 
-
-				ld  a, (hl)
-				ld  (__en_my), a
-				inc hl 
-
-				ld  a, (hl)
-				ld  (__en_t), a
-
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
-				inc hl 
-
-				ld  a, (hl)
-				ld  (__en_life), a
-			#endif
+				call enems_get_values
 		#endasm
+
+		#ifndef USE_CLASSIC_ENEMS_KILL
+			#asm
+				// Check if the enemy is dead / just died
+				// and skip everything else!
+
+					ld  bc, (_enit)
+					ld  b, 0
+					ld  hl, _en_an_state
+					add hl, bc 
+					ld  a, (hl)
+					cp  ENEM_IS_DEAD 
+					jr  nz, enem_is_not_dead
+
+					ld  hl, _en_an_count 
+					add hl, bc 
+					ld  a, (hl)
+					or  a 
+					jr  z, enem_completely_dead
+
+					dec a 
+					ld  (hl), a 
+					
+					ld  de, _sprite_17_a 				// Explosion
+
+					jp enem_set_frame						
+
+				.enem_completely_dead
+					ld  de, _sprite_18_a 				// Empty
+
+				.enem_set_frame
+					ld  a, (_enit) 
+					sla a 
+					ld  b, 0
+					ld  c, a
+					ld  hl, _en_an_next_frame 
+					add hl, bc 
+					ld  (hl), e 
+					inc hl 
+					ld  (hl), d
+
+					jp enems_update_values_and_exit
+				.enem_is_not_dead
+			#endasm
+		#endif
 
 		#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
 			if (en_an_state [enit] == ENEM_PARALYZED) {
@@ -6241,7 +6257,7 @@ void mueve_bicharracos (void) {
 		#endif
 
 		#if defined ENEMIES_MAY_DIE
-			if ((_en_t & 16)
+			if ((_en_t & 128)
 				#ifdef RANDOM_RESPAWN
 					&& (en_an_fanty_activo [enit] == 0)
 				#endif
@@ -6260,6 +6276,24 @@ void mueve_bicharracos (void) {
 				if (en_an_state [enit] != ENEM_PARALYZED)
 			#endif
 			{
+
+				// Animate
+				#asm
+						ld  a, (_maincounter)
+						and 3
+						jr  nz, enems_animate_done
+
+						ld  bc, (_enit)
+						ld  b, 0
+
+						ld  hl, _en_an_frame
+						add hl, bc
+						ld  a, (hl)
+						xor 1
+						ld  (hl), a
+
+					.enems_animate_done
+				#endasm
 
 				// Basic linear movement x = x + mx, etc.
 				if (
@@ -6555,471 +6589,13 @@ void mueve_bicharracos (void) {
 					}
 				#endif
 
-				#ifdef RANDOM_RESPAWN
-					if (en_an_fanty_activo [enit]) { 
-						#ifdef PLAYER_CAN_HIDE
-							rds = player_hidden () ? (-(FANTY_A>>1)) : FANTY_A;
-						#else
-							rds = FANTY_A;
-						#endif
-
-						if (player.x > en_an_x [enit]) en_an_vx [enit] += rds;
-						else en_an_vx [enit] -= rds;
-
-						if (player.y > en_an_y [enit]) en_an_vy [enit] += rds;
-						else en_an_vy [enit] -= rds;
-
-						if (en_an_vx [enit] < -FANTY_MAX_V) en_an_vx [enit] = -FANTY_MAX_V;
-						if (en_an_vy [enit] < -FANTY_MAX_V) en_an_vy [enit] = -FANTY_MAX_V;
-						if (en_an_vx [enit] > FANTY_MAX_V) en_an_vx [enit] = FANTY_MAX_V;
-						if (en_an_vy [enit] > FANTY_MAX_V) en_an_vy [enit] = FANTY_MAX_V;
-									
-						en_an_x [enit] += en_an_vx [enit];
-						en_an_y [enit] += en_an_vy [enit];
-
-						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
-						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-						
-						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-					} 
+				// Fanties engine
+				#if defined RANDOM_RESPAWN || defined USE_TYPE_6
+					#include "fantys.h"
 				#endif
 
-				#ifdef USE_TYPE_6
-					#asm
-						._update_fantys
-							ld  a, (__en_t)
-							cp  6
-							jp  nz, _update_fantys_done
-
-					#endasm 
-
-					#if defined (USE_SIGHT_DISTANCE) || defined (PLAYER_CAN_HIDE)
-						// Idle, retreat or pursue depending on player status (distance or hidden)
-
-						switch (en_an_state [enit]) {
-							case TYPE_6_IDLE:
-								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
-								#else
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
-								#endif
-									en_an_state [enit] = TYPE_6_PURSUING;
-								break;
-							case TYPE_6_PURSUING:
-								if ((rand () & 7) > 1) {
-									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-										en_an_vx [enit] += FANTY_A;
-									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-										en_an_vx [enit] -= FANTY_A;
-									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-										en_an_vy [enit] += FANTY_A;
-									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-										en_an_vy [enit] -= FANTY_A;
-								}
-								
-								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE || player_hidden ()) 
-								#else
-									if (distance (en_ccx, en_ccy, gpx, gpy) >= SIGHT_DISTANCE)
-								#endif
-									en_an_state [enit] = TYPE_6_RETREATING;
-								break;
-							case TYPE_6_RETREATING:
-								if ((_en_x << 6) > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-									en_an_vx [enit] += FANTY_A;
-								else if ((_en_x << 6) < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-									en_an_vx [enit] -= FANTY_A;
-								if ((_en_y << 6) > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-									en_an_vy [enit] += FANTY_A;
-								else if ((_en_y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-									en_an_vy [enit] -= FANTY_A;
-								
-								#ifdef PLAYER_CAN_HIDE
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE && 0 == player_hidden ()) 
-								#else
-									if (distance (en_ccx, en_ccy, gpx, gpy) <= SIGHT_DISTANCE) 
-								#endif
-									en_an_state [enit] = TYPE_6_PURSUING;
-								break;	
-						}
-
-						if (scenery_info.allow_type_6) {
-							en_an_x [enit] += en_an_vx [enit];
-							en_an_y [enit] += en_an_vy [enit];
-						}
-
-						if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
-						if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-						if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;	
-
-					#else
-						#ifndef FANTY_ASSEMBLY
-							#ifdef FANTIES_EXIT_STATE_V
-								if (en_an_state [enit] != TYPE_6_RETREATING) 
-							#endif
-							{
-								// Always pursue
-	
-								if ((rand () & 7) > 1) {
-									if (player.x > en_an_x [enit] && en_an_vx [enit] < FANTY_MAX_V)
-										en_an_vx [enit] += FANTY_A;
-									else if (player.x < en_an_x [enit] && en_an_vx [enit] > -FANTY_MAX_V)
-										en_an_vx [enit] -= FANTY_A;
-									if (player.y > en_an_y [enit] && en_an_vy [enit] < FANTY_MAX_V)
-										en_an_vy [enit] += FANTY_A;
-									else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
-										en_an_vy [enit] -= FANTY_A;
-								}
-
-							}
-
-							if (scenery_info.allow_type_6) {
-								en_an_x [enit] += en_an_vx [enit];
-								en_an_y [enit] += en_an_vy [enit];
-							}
-	
-							if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
-							if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-							if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-							if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-						#else 
-
-							// New version:
-
-							#asm
-									// if (scenery_info.allow_type_6)
-
-									ld  a, (_scenery_info + 3) 		// scenery_info.allow_type_6
-									or  a
-									jp  z, fanty_no_act
-
-									call _rand
-									ld  a, l
-									and 7
-									cp  2
-									jp  c, fanty_no_act
-
-									// if (player.x > en_an_x [enit])  - > en_an_x [enit] < player.x
-
-									// Prepare a 16 bits index (enit) I can use when I need
-									ld  a, (_enit)
-									sla a  							// enit * 2, 16 bits here
-									ld  (_gp_gen), a 
-									xor a 
-									ld  (_gp_gen + 1), a
-									
-								// *+****
-								// X AXIS
-								// *+****
-								.fanty_x_axis
-
-									ld  bc, _en_an_x
-									ld  hl, (_gp_gen) 				// INDEX
-									add hl, bc 
-
-									ld  e, (hl) 
-									inc hl 
-									ld  d, (hl) 					// DE = en_an_x [enit]
-
-								.fanty_vx_sk0
-									ld  hl, (_player)				// HL = player.x
-
-									push hl 
-									call l_lt 						// C if DE < HL, so C if en < pl
-									pop  hl 
-									
-									jr  nc, fanty_vx_sk1
-
-									// ** player.x is > en_an_x, increase vx **
-
-									// en_an_vx [enit] += FANTY_A
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vx
-									add hl, bc 						// HL -> en_an_vx [enit]
-									
-									ld  e, (hl)
-									inc hl 
-									ld  d, (hl)  					// DE = en_an_vx [enit]
-
-									ld  hl, FANTY_A
-									add hl, de 						// HL = en_an_vx [enit] + FANTY_A
-
-									// if (FANTY_MAX_V < en_an_vx [enit]) en_an_vx [enit] = FANTY_MAX_V
-
-									ld  de, FANTY_MAX_V 
-									push hl
-									call l_lt 						// C if DE < HL
-									pop hl 
-									jr  nc, fanty_vx_write
-
-									ex  de, hl  					// HL = FANTY_MAX_V
-
-									jr  fanty_vx_write
-
-								.fanty_vx_sk1
-									//push hl  						// No need to save.
-									call l_eq 						// C if DE == HL
-									//pop hl
-									jr  c, fanty_vx_done
-
-									// ** player.x is < en_an_x, decrease vx **
-
-									// en_an_vx [enit] -= FANTY_A
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vx
-									add hl, bc 						// HL -> en_an_vx [enit]
-									ld  a, (hl)
-									inc hl 
-									ld  h, (hl)
-									ld  l, a
-
-									ld  de, FANTY_A 
-									sbc hl, de 						// HL = en_an_vx [enit] - FANTY_A
-
-									// if (-FANTY_MAX_V >= en_an_vx [enit]) en_an_vx [enit] = -FANTY_MAX_V
-									
-									ld  de, -FANTY_MAX_V
-									
-									push hl 
-									call l_ge 						// C if DE >= HL
-									pop hl
-									
-									jr  nc, fanty_vx_write
-
-									ex  de, hl  					// HL = -FANTY_MAX_V
-
-								.fanty_vx_write 					// Write HL to en_an_vx [enit]
-									ex  de, hl 
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vx
-									add hl, bc
-
-									ld  (hl), e
-									inc hl
-									ld  (hl), d 					// DE = en_an_vx [enit]
-
-
-								.fanty_vx_done
-
-									// en_an_x [enit] += en_an_vx [enit];
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vx
-									add hl, bc 						// HL -> en_an_vx [enit]
-									ld  e, (hl)
-									inc hl
-									ld  d, (hl)						//  DE = en_an_vx [enit] 
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_x
-									add hl, bc 
-									push hl 						// HL -> en_an_x [enit]
-
-									ld  a, (hl)
-									inc hl 
-									ld  h, (hl)
-									ld  l, a  						// HL = en_an_x [enit]
-									add hl, de 
-									ex  de, hl 						// DE = en_an_x [enit] + en_an_vx [enit];
-
-									// Screen boundaries
-
-								.fanty_x_limit_0
-									// if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
-									ld  hl, 15360 								
-									call l_ge  						// C if DE >= HL 
-									ld  hl, 15360 
-									jr  nc, fanty_x_limit_1
-
-									ex  de, hl  					// DE = 15360
-
-									jr fanty_x_write
-
-								.fanty_x_limit_1
-									// if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
-									ld  hl, -1024 
-									call l_lt  						// C if DE < HL
-									ld  hl, -1024
-									jr  nc, fanty_x_write
-
-									ex  de, hl 						// DE = -1024
-
-								.fanty_x_write
-
-									// Write DE to en_an_x [enit];
-
-									pop hl 
-									ld  (hl), e
-									inc hl 
-									ld  (hl), d 
-
-
-								// *+****
-								// Y AXIS
-								// *+****
-								.fanty_y_axis
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_y
-									add hl, bc 
-									ld  e, (hl) 
-									inc hl 
-									ld  d, (hl) 					// DE = en_an_y [enit]
-
-								.fanty_vy_sk0
-									ld  hl, (_player + 2)			// HL = player.y
-
-									push hl 
-									call l_lt 						// C if DE < HL
-									pop hl 
-									
-									jr  nc, fanty_vy_sk1
-
-									// ** player.y is > en_an_y, increase vy **
-
-									// en_an_vy [enit] += FANTY_A
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vy
-									add hl, bc 						// HL -> en_an_vy [enit]
-									
-									ld  e, (hl)
-									inc hl 
-									ld  d, (hl) 
-
-									ld  hl, FANTY_A
-									add hl, de 						// HL = en_an_vy [enit] + FANTY_A
-
-									// if (FANTY_MAX_V < en_an_vy [enit]) en_an_vy [enit] = FANTY_MAX_V
-
-									ld  de, FANTY_MAX_V 
-									push hl 
-									call l_lt 						// C if DE < HL
-									pop hl 
-									jr  nc, fanty_vy_write
-
-									ex  de, hl  					// HL = FANTY_MAX_V
-
-									jr  fanty_vy_write
-
-								.fanty_vy_sk1
-									push hl 
-									call l_eq 						// C if DE == HL
-									pop hl 
-									jr  c, fanty_vy_done
-
-									// ** player.y is < en_an_y, decrease vy **
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vy
-									add hl, bc 						// HL -> en_an_vy [enit]
-									ld  a, (hl)
-									inc hl 
-									ld  h, (hl)
-									ld  l, a
-
-									ld  de, FANTY_A 
-									sbc hl, de 						// HL = en_an_vy [enit] - FANTY_A
-
-									// if (-FANTY_MAX_V >= en_an_vy [enit]) en_an_vy [enit] = -FANTY_MAX_V
-									
-									ld  de, -FANTY_MAX_V
-									push hl
-									call l_ge 						// C if DE >= HL
-									pop hl 
-									jr  nc, fanty_vy_write
-
-									ex  de, hl  					// HL = -FANTY_MAX_V
-
-								.fanty_vy_write 					// Write HL to en_an_vy [enit]
-
-									ex  de, hl 
-
-									ld  a, (_enit)
-									sla a  							// enit * 2, 16 bits here
-									ld  b, 0
-									ld  c, a 						// BC will serve as INDEX
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vy
-									add hl, bc
-
-									ld  (hl), e
-									inc hl
-									ld  (hl), d
-
-
-								.fanty_vy_done
-
-									// en_an_y [enit] += en_an_vy [enit];
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_vy
-									add hl, bc 						// HL -> en_an_vy [enit]
-									ld  e, (hl)
-									inc hl
-									ld  d, (hl)						//  DE = en_an_vy [enit] DE =
-
-									ld  hl, (_gp_gen) 				// INDEX
-									ld  bc, _en_an_y
-									add hl, bc 
-
-									push hl 						// Save ptr to  en_an_y [enit]
-
-									ld  a, (hl)
-									inc hl 
-									ld  h, (hl)
-									ld  l, a  						// HL = en_an_y [enit]
-									add hl, de 
-									ex  de, hl 						// DE = en_an_y [enit] + en_an_vy [enit];
-
-									// Screen boundaries
-
-								.fanty_y_limit_0
-									// if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-									ld  hl, 10240 
-									call l_ge  						// C if DE >= HL 
-									ld  hl, 10240 
-									jr  nc, fanty_y_limit_1
-
-									ex  de, hl  					// DE = 15360
-
-									jr fanty_y_write
-
-								.fanty_y_limit_1
-									// if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-									ld  hl, -1024 
-									call l_lt  						// C if DE < HL
-									ld  hl, -1024 
-									jr  nc, fanty_y_write
-
-									ex  de, hl 						// DE = -1024
-
-								.fanty_y_write
-
-									// Write DE to en_an_y [enit];
-
-									pop hl 							// Restore ptr to en_an_y [enit]
-									ld  (hl), e
-									inc hl 
-									ld  (hl), d 	
-
-								.fanty_no_act
-							#endasm
-						#endif
-					#endif
-
-					#asm
-						._update_fantys_done
-					#endasm 
-				#endif
-
+				// Check for collisions.
 				#ifdef ENEMIES_COLLIDE			
-					// Check for collisions.
 					/*
 					en_xx = _en_x >> 4;
 					en_yy = _en_y >> 4;
@@ -7234,39 +6810,6 @@ void mueve_bicharracos (void) {
 				._en_bg_collision_end
 				#endasm
 
-				// Animate
-				/*
-				en_an_count [enit] ++; 
-				if (en_an_count [enit] >= 4) {
-					en_an_count [enit] = 0;
-					en_an_frame [enit] = !en_an_frame [enit];					
-				}
-				*/
-				#asm
-						ld  bc, (_enit)
-						ld  b, 0
-
-						ld  hl, _en_an_count
-						add hl, bc
-						ld  a, (hl)
-						inc a
-						cp  4
-						jr  c, _enemy_animate_update_count
-
-						push hl
-
-						ld  hl, _en_an_frame
-						add hl, bc
-						ld  a, (hl)
-						xor 1
-						ld  (hl), a
-
-						pop hl
-						xor a
-					._enemy_animate_update_count
-						ld  (hl), a
-				#endasm
-				
 				enems_calc_frame ();				
 
 				#ifdef ENABLE_CUSTOM_ENEMS
@@ -7274,56 +6817,6 @@ void mueve_bicharracos (void) {
 				#endif
 			}
 
-			// Select coordinates for collision
-
-			#if defined RANDOM_RESPAWN || defined USE_TYPE_6				
-				if (
-					#ifdef RANDOM_RESPAWN
-						en_an_fanty_activo [enit]
-					#else
-						_en_t == 6 
-						#ifdef MAKE_TYPE_6
-						|| _en_t == 0
-						#endif
-					#endif
-				) {
-					/*
-					en_ccx = en_an_x [enit] >> 6;
-					en_ccy = en_an_y [enit] >> 6;
-					*/
-					#asm
-							ld  a, (_enit)
-							sla a
-							ld  c, a
-							ld  b, 0
-
-							ld  hl, _en_an_x
-							add hl, bc
-							ld  a, (hl)
-							inc hl
-							ld  h, (hl)
-							ld  l, a 
-
-							call HLshr6_A
-							ld  (_en_ccx), a
-
-							ld  hl, _en_an_y
-							add hl, bc
-							ld  a, (hl)
-							inc hl
-							ld  h, (hl)
-							ld  l, a 
-
-							call HLshr6_A
-							ld  (_en_ccy), a
-					#endasm
-				} else 
-			#endif
-			{
-				en_ccx = _en_x;
-				en_ccy = _en_y;
-			}
-	
 			// Moving platforms engine:
 
 			#ifndef PLAYER_MOGGY_STYLE	
@@ -7331,41 +6824,9 @@ void mueve_bicharracos (void) {
 					#ifdef ENABLE_CUADRATORS
 						|| _en_t == 10
 					#endif
-					) && gpx >= en_ccx - 15 && gpx <= en_ccx + 15
+					) && gpx >= _en_x - 15 && gpx <= _en_x + 15
 				) {
-					/*
-					if (player.saltando == 0 || player.cont_salto > 4) {
-						// Vertical
-						if (_en_my) {
-							if (_en_my < 0) {
-								// Go up.
-								if (gpy + 17 >= en_ccy && gpy + 11 <= en_ccy) {
-									platform_get_player ();
-								}
-							} else {
-								// Go down.
-								if (gpy + 20 >= en_ccy && gpy + 13 <= en_ccy) {
-									platform_get_player ();
-								}
-							}
-						}
 
-						// Horizontal
-						if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0) {
-							platform_get_player ();
-							#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
-								if (en_an_state [enit] != ENEM_PARALYZED)
-							#endif
-							//ptgmx = (_en_mx << 6);
-							#asm
-									ld  a, (__en_mx)
-									call Ashl16_HL
-									call withSign
-									ld  (_ptgmx), hl
-							#endasm
-						}
-					}
-					*/
 					#asm
 						.moving_platforms
 							// if (player.saltando == 0 || player.cont_salto > 4)
@@ -7391,21 +6852,21 @@ void mueve_bicharracos (void) {
 							jr  z, moving_platforms_vert_down
 
 						.moving_platforms_vert_up
-							// if (gpy + 17 >= en_ccy && gpy + 11 <= en_ccy)
+							// if (gpy + 17 >= _en_y && gpy + 11 <= _en_y)
 
-							// gpy + 17 >= en_ccy
-							ld  a, (_en_ccy)
+							// gpy + 17 >= _en_y
+							ld  a, (__en_y)
 							ld  c, a
 							ld  a, (_gpy)
 							add 17
 							cp  c
 							jr  c, moving_platforms_vert_done
 
-							// gpy + 11 <= en_ccy -> en_ccy >= gpy + 11
+							// gpy + 11 <= _en_y -> _en_y >= gpy + 11
 							ld  a, (_gpy)
 							add 11
 							ld  c, a
-							ld  a, (_en_ccy)
+							ld  a, (__en_y)
 							cp  c
 							jr  c, moving_platforms_vert_done
 
@@ -7414,21 +6875,21 @@ void mueve_bicharracos (void) {
 							jr  moving_platforms_vert_done
 
 						.moving_platforms_vert_down
-							// if (gpy + 20 >= en_ccy && gpy + 13 <= en_ccy)
+							// if (gpy + 20 >= _en_y && gpy + 13 <= _en_y)
 
-							// gpy + 20 >= en_ccy
-							ld  a, (_en_ccy)
+							// gpy + 20 >= _en_y
+							ld  a, (__en_y)
 							ld  c, a
 							ld  a, (_gpy)
 							add 20
 							cp  c
 							jr  c, moving_platforms_vert_done
 
-							// gpy + 13 <= en_ccy -> en_ccy >= gpy + 13
+							// gpy + 13 <= _en_y -> _en_y >= gpy + 13
 							ld  a, (_gpy)
 							add 13
 							ld  c, a
-							ld  a, (_en_ccy)
+							ld  a, (__en_y)
 							cp  c
 							jr  c, moving_platforms_vert_done
 
@@ -7437,24 +6898,24 @@ void mueve_bicharracos (void) {
 						.moving_platforms_vert_done
 
 						.moving_platforms_horz
-							// if (_en_mx != 0 && gpy >= en_ccy - 16 && gpy <= en_ccy - 11 && player.vy >= 0)
+							// if (_en_mx != 0 && gpy >= _en_y - 16 && gpy <= _en_y - 11 && player.vy >= 0)
 							ld  a, (__en_mx)
 							or  a
 							jr  z, moving_platforms_done
 
-							// gpy >= en_ccy - 16 -> gpy + 16 >= en_ccy
-							ld  a, (_en_ccy)
+							// gpy >= _en_y - 16 -> gpy + 16 >= _en_y
+							ld  a, (__en_y)
 							ld  c, a
 							ld  a, (_gpy)
 							add 16
 							cp  c
 							jr  c, moving_platforms_done
 
-							// gpy <= en_ccy - 11 -> gpy + 11 <= en_ccy -> en_ccy >= gpy + 11
+							// gpy <= _en_y - 11 -> gpy + 11 <= _en_y -> _en_y >= gpy + 11
 							ld  a, (_gpy)
 							add 11
 							ld  c, a
-							ld  a, (_en_ccy)
+							ld  a, (__en_y)
 							cp  c
 							jr  c, moving_platforms_done
 
@@ -7497,32 +6958,32 @@ void mueve_bicharracos (void) {
 					) {
 						//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
 						#asm
-								// s_hit_x >= en_ccx
-								ld  a, (_en_ccx)
+								// s_hit_x >= _en_x
+								ld  a, (__en_x)
 								ld  c, a
 								ld  a, (_s_hit_x) 
 								cp  c
 								jp  c, _enems_hit_sword_done
 
-								// s_hit_x <= en_ccx + 15 -> en_ccx + 15 >= s_hit_x
+								// s_hit_x <= _en_x + 15 -> _en_x + 15 >= s_hit_x
 								ld  a, (_s_hit_x)
 								ld  c, a
-								ld  a, (_en_ccx)
+								ld  a, (__en_x)
 								add 15
 								cp  c
 								jp  c, _enems_hit_sword_done
 
-								// s_hit_y >= en_ccy 
-								ld  a, (_en_ccy)
+								// s_hit_y >= _en_y 
+								ld  a, (__en_y)
 								ld  c, a
 								ld  a, (_s_hit_y)
 								cp  c 
 								jp  c, _enems_hit_sword_done
 
-								// s_hit_y <= en_ccy + 15 -> en_ccy + 15 >= s_hit_y
+								// s_hit_y <= _en_y + 15 -> _en_y + 15 >= s_hit_y
 								ld  a, (_s_hit_y)
 								ld  c, a
-								ld  a, (_en_ccy)
+								ld  a, (__en_y)
 								add 15
 								cp  c
 								jp  c, _enems_hit_sword_done
@@ -7577,7 +7038,7 @@ void mueve_bicharracos (void) {
 
 				if (
 					0 == en_tocado && collide_enem () && 
-					(_en_t < 16 
+					(_en_t < 128 
 						#ifdef RANDOM_RESPAWN
 							|| en_an_fanty_activo [enit] == 1
 						#endif
@@ -7586,9 +7047,9 @@ void mueve_bicharracos (void) {
 					#ifdef PLAYER_KILLS_ENEMIES
 						if (
 							#ifdef TIGHT_BOUNDING_BOX
-								gpy < en_ccy
+								gpy < _en_y
 							#else
-								gpy <= en_ccy - 8 
+								gpy <= _en_y - 8 
 							#endif
 							&& player.vy >= 0 
 							#ifdef PLAYER_MIN_KILLABLE
@@ -7624,7 +7085,17 @@ void mueve_bicharracos (void) {
 							
 							// We decide which kind of life drain we do:
 							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT) && (FLYING_ENEMY_HIT != LINEAR_ENEMY_HIT)
-								if (_en_t == 6) {
+								if (
+									#ifdef RANDOM_RESPAWN
+										en_an_fanty_activo [enit]
+									#endif
+									#if defined RANDOM_RESPAWN && defined USE_TYPE_6
+										||
+									#endif
+									#ifdef USE_TYPE_6
+										_en_t == 6
+									#endif
+								) {
 									player.drain_amount = FLYING_ENEMY_HIT;
 								} else
 							#endif
@@ -7658,13 +7129,13 @@ void mueve_bicharracos (void) {
 									
 									// x
 									if (_en_mx) {
-										if (gpx < en_ccx) player.vx = - (abs (_en_mx << 1) << 7);
+										if (gpx < _en_x) player.vx = - (abs (_en_mx << 1) << 7);
 										else player.vx = abs (_en_mx + _en_mx) << 7;
 									}
 									
 									// y
 									if (_en_my) {
-										if (gpy < en_ccy) player.vy = - (abs (_en_my << 1) << 7);
+										if (gpy < _en_y) player.vy = - (abs (_en_my << 1) << 7);
 										else player.vy = abs (_en_my + _en_my) << 7;
 									}
 								#endif
@@ -7683,9 +7154,9 @@ void mueve_bicharracos (void) {
 				#ifdef PLAYER_CAN_FIRE
 					// Collision with bullets
 					#ifdef RANDOM_RESPAWN
-						if (_en_t < 16 || en_an_fanty_activo [enit] == 1)
+						if (_en_t < 128 || en_an_fanty_activo [enit] == 1)
 					#else
-						if (_en_t < 16)
+						if (_en_t < 128)
 					#endif
 					{
 						for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
@@ -7700,9 +7171,9 @@ void mueve_bicharracos (void) {
 									jp  z, enems_coll_bullets_continue
 
 								// Bullet is active. Collide?
-								// if (bullets_y [en_j] >= en_ccy - 4 
+								// if (bullets_y [en_j] >= _en_y - 4 
 
-									ld  a, (_en_ccy)
+									ld  a, (__en_y)
 									sub 4
 									ld  d, a
 									ld  hl, _bullets_y
@@ -7711,15 +7182,15 @@ void mueve_bicharracos (void) {
 									cp  d 
 									jp  c, enems_coll_bullets_continue
 
-								// && bullets_y [en_j] <= en_ccy + 12 -> en_ccy + 12 >= bullets_y [en_j]
+								// && bullets_y [en_j] <= _en_y + 12 -> _en_y + 12 >= bullets_y [en_j]
 									ld  d, a
-									ld  a, (_en_ccy)
+									ld  a, (__en_y)
 									add 12
 									cp  d
 									jp  c, enems_coll_bullets_continue
 
-								// && bullets_x [en_j] >= en_ccx - 4 
-									ld  a, (_en_ccx)
+								// && bullets_x [en_j] >= _en_x - 4 
+									ld  a, (__en_x)
 									sub 4
 									ld  d, a 
 									ld  hl, _bullets_x
@@ -7728,9 +7199,9 @@ void mueve_bicharracos (void) {
 									cp  d 
 									jp  c, enems_coll_bullets_continue
 
-								// && bullets_x [en_j] <= en_ccx + 12) { -> en_ccx + 12 >= bullets_x [en_j]
+								// && bullets_x [en_j] <= _en_x + 12) { -> _en_x + 12 >= bullets_x [en_j]
 									ld  d, a
-									ld  a, (_en_ccx)
+									ld  a, (__en_x)
 									add 12
 									cp  d
 									jp  c, enems_coll_bullets_continue
@@ -7764,100 +7235,271 @@ void mueve_bicharracos (void) {
 
 		enems_loop_continue:
 
-			#ifdef RANDOM_RESPAWN
-				// Activate fanty
+		#ifdef RANDOM_RESPAWN
+			// Activate fanty
 
-			if ((_en_t & 16) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
-					en_an_fanty_activo [enit] = 1;
-					if (player.y > 5120)
-						en_an_y [enit] = -1024;
-					else
-						en_an_y [enit] = 10240;
-					en_an_x [enit] = (rand () % 240 - 8) << 6;
-					en_an_vx [enit] = en_an_vy [enit] = 0;
-				enems_en_an_calc (2);
-				}
+			#asm
+				// Should we create?
+
+					ld  a, (__en_t) 
+					and 128 
+					jr  z, enems_create_fanty_done 
+
+					call _rand 
+					and 31 
+					xor a 
+					or  l 
+					jr  nz, enems_create_fanty_done
+
+					ld  bc, (_enit) 
+					ld  b, 0 
+					ld  hl, _en_an_fanty_activo 
+					add hl, bc 
+					ld  a, (hl) 
+					or  a 
+					jr  nz, enems_create_fanty_done
+
+				// Create a fanty!
+
+					inc a 				// A was 0, now it is 1.
+					ld  (hl), a 		// en_an_fanty_activo [enit] = 1.
+
+					// Position Y depends on player Y
+
+					ld  h, b 
+					ld  l, c 
+					add hl, hl 
+					ld  b, h 
+					ld  c, l 			// We'll be indexing 16 bits from now on
+					
+					ld  hl, _en_an_y 
+					add hl, bc 
+
+					ld  de, 0
+					ld  a, (_gpy) 
+					cp  120 
+					jr  nc, fanty_create_set_y
+
+					ld  de, 144*64
+
+				.fanty_create_set_y
+					ld  (hl), e 
+					inc hl 
+					ld  (hl), d 
+
+					// Position X is random
+
+				.fanty_create_pick_x
+					call _rand 			// Won't trash BC
+					ld  a, l 
+					cp  224
+					jr  nc, fanty_create_pick_x 	// Well, meh
+					call Ashl16_HL 
+					ex  de, hl 			// DE = rand (240) * 64
+
+					ld  hl, _en_an_x 
+					add hl, bc 
+					ld  (hl), e 
+					inc hl 
+					ld  (hl), d
+
+					// Init velocities
+
+					xor a 
+					ld  hl, _en_an_vx 
+					add hl, bc
+					ld  (hl), a 
+					inc hl 
+					ld  (hl), a 
+					ld  hl, _en_an_vy
+					add hl, bc
+					ld  (hl), a 
+					inc hl 
+					ld  (hl), a 
+					
+					// Ready to go fanty!
+
+					ld	hl, 2
+					call _enems_en_an_calc
+
+				.enems_create_fanty_done
+			#endasm
 			#endif
 
 		#asm		
-				// Those values are stored in this order:
-				// x, y, x1, y1, x2, y2, mx, my, t[, life]
-
-				ld  hl, (__baddies_pointer) 		// Restore pointer
-
-				ld  a, (__en_x)
-				ld  (hl), a
-				inc hl
-
-				ld  a, (__en_y)
-				ld  (hl), a
-				inc hl
-
-			#ifdef PACKED_ENEMS
-				#ifdef FIXED_ENEMS_LIMITS
-					inc hl
-					inc hl
-				#else
-					ld  a, (__en_x1)
-					ld  b, a
-					ld  a, (__en_y1)
-					srl a
-					srl a
-					srl a
-					srl a
-					or  b
-					ld  (hl), a
-					inc hl
-
-					ld  a, (__en_x2)
-					ld  b, a
-					ld  a, (__en_y2)
-					srl a
-					srl a
-					srl a
-					srl a
-					or  b
-					ld  (hl), a
-					inc hl					
-				#endif
-			#else
-				#ifdef FIXED_ENEMS_LIMITS
-					ld  bc, 4
-					add hl, bc
-				#else
-					ld  a, (__en_x1)
-					ld  (hl), a
-					inc hl
-	
-					ld  a, (__en_y1)
-					ld  (hl), a
-					inc hl
-	
-					ld  a, (__en_x2)
-					ld  (hl), a
-					inc hl
-	
-					ld  a, (__en_y2)
-					ld  (hl), a
-					inc hl
-				#endif
-			#endif
-				ld  a, (__en_mx)
-				ld  (hl), a
-				inc hl
-
-				ld  a, (__en_my)
-				ld  (hl), a
-				inc hl
-
-				ld  a, (__en_t)
-				ld  (hl), a
-				inc hl
-
-			#if defined PLAYER_CAN_FIRE || defined ENABLE_SWORD || defined FORCE_ENEMS_LIFE
-				ld  a, (__en_life)
-				ld  (hl), a
-			#endif
+			.enems_update_values_and_exit
+				call enems_update_values_store
 		#endasm	
 	}
 }
+
+#asm
+	.enems_get_values
+		// Those values are stored in this order:
+		// x, y, x1, y1, x2, y2, mx, my, t[, life]
+		// Point HL to baddies [enoffsmasi]. The struct is 9 or 10 bytes long
+		// so this is baddies + enoffsmasi*(9|10) depending on PLAYER_CAN_FIRE
+		ld 	hl, (_enoffsmasi)
+
+		call _calc_baddies_pointer
+
+		ld  (__baddies_pointer), hl 		// Save address for later
+
+		ld  a, (hl)
+		ld  (__en_x), a
+		inc hl 
+
+		ld  a, (hl)
+		ld  (__en_y), a
+		inc hl 
+
+	#ifdef PACKED_ENEMS
+			ld  a, (hl) 					// XY1
+			ld  b, a 						// save
+
+			and 0xf0 
+			ld  (__en_x1), a
+
+			ld  a, b
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (__en_y1), a
+
+			inc hl
+
+			ld  a, (hl) 					// XY2
+			ld  b, a 						// save
+
+			and 0xf0 
+			ld  (__en_x2), a
+
+			ld  a, b
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (__en_y2), a
+
+			inc hl
+	#else
+			ld  a, (hl)
+			ld  (__en_x1), a
+			inc hl 
+
+			ld  a, (hl)
+			ld  (__en_y1), a
+			inc hl 
+
+			ld  a, (hl)
+			ld  (__en_x2), a
+			inc hl 
+
+			ld  a, (hl)
+			ld  (__en_y2), a
+			inc hl 
+	#endif
+
+		ld  a, (hl)
+		ld  (__en_mx), a
+		inc hl 
+
+		ld  a, (hl)
+		ld  (__en_my), a
+		inc hl 
+
+		ld  a, (hl)
+		ld  (__en_t), a
+
+	#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+			inc hl 
+
+			ld  a, (hl)
+			ld  (__en_life), a
+	#endif
+
+		ret
+
+	.enems_update_values_store
+
+		// Those values are stored in this order:
+		// x, y, x1, y1, x2, y2, mx, my, t[, life]
+
+		ld  hl, (__baddies_pointer) 		// Restore pointer
+
+		ld  a, (__en_x)
+		ld  (hl), a
+		inc hl
+
+		ld  a, (__en_y)
+		ld  (hl), a
+		inc hl
+
+	#ifdef PACKED_ENEMS
+		#ifdef FIXED_ENEMS_LIMITS
+			inc hl
+			inc hl
+		#else
+			ld  a, (__en_x1)
+			ld  b, a
+			ld  a, (__en_y1)
+			srl a
+			srl a
+			srl a
+			srl a
+			or  b
+			ld  (hl), a
+			inc hl
+
+			ld  a, (__en_x2)
+			ld  b, a
+			ld  a, (__en_y2)
+			srl a
+			srl a
+			srl a
+			srl a
+			or  b
+			ld  (hl), a
+			inc hl					
+		#endif
+	#else
+		#ifdef FIXED_ENEMS_LIMITS
+			ld  bc, 4
+			add hl, bc
+		#else
+			ld  a, (__en_x1)
+			ld  (hl), a
+			inc hl
+
+			ld  a, (__en_y1)
+			ld  (hl), a
+			inc hl
+
+			ld  a, (__en_x2)
+			ld  (hl), a
+			inc hl
+
+			ld  a, (__en_y2)
+			ld  (hl), a
+			inc hl
+		#endif
+	#endif
+		ld  a, (__en_mx)
+		ld  (hl), a
+		inc hl
+
+		ld  a, (__en_my)
+		ld  (hl), a
+		inc hl
+
+		ld  a, (__en_t)
+		ld  (hl), a
+		inc hl
+
+	#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+		ld  a, (__en_life)
+		ld  (hl), a
+	#endif
+		ret
+#endasm

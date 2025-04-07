@@ -299,8 +299,8 @@ void render_all_sprites (void) {
 	// Render player
 	// =============
 
-	//rdy = gpy; if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
-
+	// rdy = gpy; 
+	// if ( 0 == (player.estado & EST_PARP) || half_life ) { rdx = gpx; } else { rdx = 240;	}
 	#asm 
 			ld  a, (_gpy)
 			ld  (_rdy), a 
@@ -1826,7 +1826,7 @@ void move (void) {
 			#if defined PLAYER_MOGGY_STYLE || !defined TIGHT_BOUNDING_BOX
 				if (attr (gpxx, gpyy + 1) & 12 || ((gpx & 15) != 0 && attr (gpxx + 1, gpyy + 1) & 12))
 			#else
-				if (((gpx & 15) < 12 && (attr (gpxx, pyy + 1) & 12)) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy + 1) & 12))
+				if (((gpx & 15) < 12 && (attr (gpxx, gpyy + 1) & 12)) || ((gpx & 15) > 4 && attr (gpxx + 1, gpyy + 1) & 12))
 			#endif
 			{
 				player.vy = 0; adjust_to_tile_y ();
@@ -5809,7 +5809,7 @@ void draw_scr (void) {
 							ld  (__en_y), a 
 					#endasm
 					
-					en_an_ff [enit] = abs (__en_mx + __en_my);
+					en_an_ff [enit] = abs (_en_mx + _en_my);
 					break;
 			#endif
 
@@ -6206,1008 +6206,996 @@ void mueve_bicharracos (void) {
 				.enem_is_not_dead
 			#endasm
 		#endif
-		{
+
+		#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
+			if (en_an_state [enit] == ENEM_PARALYZED) {
+				en_an_count [enit] --;
+				if (en_an_count [enit] == 0)
+					en_an_state [enit] = 0;
+			}
+		#endif
+
+		#if defined ENEMIES_MAY_DIE
+			if ((_en_t & 128)
+				#ifdef RANDOM_RESPAWN
+					&& (en_an_fanty_activo [enit] == 0)
+				#endif
+			) goto enems_loop_continue;
+		#endif
+
+		if (_en_t != 0
+			#if defined USE_TYPE_6 && defined MAKE_TYPE_6
+				|| scenery_info.make_type_6
+			#endif
+		) {
+			en_cx = _en_x;
+			en_cy = _en_y;
+		
 			#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
-				if (en_an_state [enit] == ENEM_PARALYZED) {
-					en_an_count [enit] --;
-					if (en_an_count [enit] == 0)
-						en_an_state [enit] = 0;
-				}
+				if (en_an_state [enit] != ENEM_PARALYZED)
 			#endif
+			{
 
-			#if defined ENEMIES_MAY_DIE
-				if ((_en_t & 128)
+				// Animate
+				#asm
+						ld  a, (_maincounter)
+						and 3
+						jr  nz, enems_animate_done
+
+						ld  bc, (_enit)
+						ld  b, 0
+
+						ld  hl, _en_an_frame
+						add hl, bc
+						ld  a, (hl)
+						xor 1
+						ld  (hl), a
+
+					.enems_animate_done
+				#endasm
+
+				// Basic linear movement x = x + mx, etc.
+				if (
+					_en_t <= 4
 					#ifdef RANDOM_RESPAWN
-						&& (en_an_fanty_activo [enit] == 0)
+						|| 0 == en_an_fanty_activo [enit]
 					#endif
-				) goto enems_loop_continue;
-			#endif
+					#ifdef ENABLE_MARRULLERS
+						|| (_en_t >= 11 && _en_t <= 14)
+					#endif
+				) {
+					/*
+					_en_x += _en_mx;
+					_en_y += _en_my;
 
-			if (_en_t != 0
-				#if defined USE_TYPE_6 && defined MAKE_TYPE_6
-					|| scenery_info.make_type_6
-				#endif
-			) {
-				en_cx = _en_x;
-				en_cy = _en_y;
-			
-				#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
-					if (en_an_state [enit] != ENEM_PARALYZED)
-				#endif
-				{
+					if (_en_x <= _en_x1) _en_mx = ABS (_en_mx);
+					if (_en_x >= _en_x2) _en_mx = -ABS (_en_mx);
 
-					// Animate
+					if (_en_y <= _en_y1) _en_my = ABS (_en_my);
+					if (_en_y >= _en_y2) _en_my = -ABS (_en_my);
+					*/
 					#asm
-							ld  a, (_maincounter)
-							and 3
-							jr  nz, enems_animate_done
+						
+						// ***************
+						// HORIZONTAL AXIS
+						// ***************
+						.en_linear_horizontal_axis
+							ld  a, (__en_mx)
+							or  a
+							jr  z, en_linear_horizontal_axis_done
 
+							// Move: en_x += _en_mx;
+							ld  c, a
+							ld  a, (__en_x)
+							add c 
+							ld  (__en_x), a
+
+							#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
+								// In this case, marrullers don't care about boundaries.
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_horizontal_axis_done
+							#endif
+						
+						// Now check horz. boundaries
+						.en_linear_horz_bounds
+
+							// Left of x1
+							// _en_x <= _en_x1 -> _en_x1 >= _en_x
+							ld  a, (__en_x)
+							ld  c, a
+							ld  a, (__en_x1)
+							cp  c
+							jr  c, horz_limit_skip_1
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_x1)
+								ld  (__en_x), a
+							#endif
+
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_mx)
+							call _abs_a
+							ld  (__en_mx), a
+
+						.horz_limit_skip_1
+
+							// Right of x2
+							// _en_x >= _en_x2
+							ld  a, (__en_x2)
+							ld  c, a
+							ld  a, (__en_x)
+							cp  c
+							jr  c, horz_limit_skip_2
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_x2)
+								ld  (__en_x), a
+							#endif
+
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_mx)
+							call _abs_a
+							neg
+							ld  (__en_mx), a
+
+						.horz_limit_skip_2
+
+
+						.en_linear_horizontal_axis_done
+
+						// *************
+						// VERTICAL AXIS
+						// *************
+						.en_linear_vertical_axis
+							ld  a, (__en_my) 
+							or  a 
+							jr  z, en_linear_vertical_axis_done
+
+							// Move: _en_y += _en_my;
+							ld  c, a
+							ld  a, (__en_y)
+							add c 
+							ld  (__en_y), a
+
+							#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
+								// In this case, marrullers don't care about boundaries.
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_vertical_axis_done
+							#endif
+
+						// Now check vert. boundaries
+						.en_linear_vert_bounds
+
+							// _en_y <= _en_y1 -> _en_y1 >= _en_y
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (__en_y1)
+							cp  c
+							jr  c, vert_limit_skip_1
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_y1)
+								ld  (__en_y), a
+							#endif
+
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_my)
+							call _abs_a
+							ld  (__en_my), a
+
+						.vert_limit_skip_1
+
+							// _en_y >= _en_y2
+							ld  a, (__en_y2)
+							ld  c, a
+							ld  a, (__en_y)
+							cp  c
+							jr  c, vert_limit_skip_2
+
+							#ifdef ENEMIES_COLLIDE	
+								ld  a, (__en_y2)
+								ld  (__en_y), a
+							#endif
+
+							#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
+								// If marruller: decide a new direction
+								ld  a, (__en_t)
+								cp  11
+								jr  nc, en_linear_decide_for_marrullers
+							#endif
+
+							ld  a, (__en_my)
+							call _abs_a
+							neg
+							ld  (__en_my), a
+
+						.vert_limit_skip_2		
+
+						.en_linear_vertical_axis_done
+
+						#if defined ENABLE_MARRULLERS
+								jr en_linear_done
+							.en_linear_decide_for_marrullers							
+								call _marrullers_select_direction
+								jp _en_bg_collision_end 				// VERY DANGEROUS BUT...
+						#endif
+
+						.en_linear_done
+
+					#endasm
+				}
+
+				#ifdef ENABLE_CUADRATORS
+					if (_en_t >= 7 && _en_t <= 10) {
+
+						#asm
+						// Flipflop tells which axis to update
 							ld  bc, (_enit)
 							ld  b, 0
-
-							ld  hl, _en_an_frame
+							ld  hl, _en_an_ff
 							add hl, bc
 							ld  a, (hl)
-							xor 1
+							or  a
+							jr  z, _cuadrators_update_y							
+
+						._cuadrators_update_x
+						// _en_x += _en_mx;
+							ld  a, (__en_mx)
+							ld  c, a
+							ld  a, (__en_x)
+							add c 
+							ld  (__en_x), a
+
+						.cuadrators_horz_bounds
+							// _en_x <= _en_x1 -> _en_x1 >= _en_x
+							ld  a, (__en_x)
+							ld  c, a
+							ld  a, (__en_x1)
+							cp  c
+							jr  c, cuadrators_limit_skip_1
+
+							ld  a, (__en_mx)
+							call _abs_a
+							ld  (__en_mx), a
+							jr  _cuadrators_flipflop
+
+						.cuadrators_limit_skip_1
+
+							// _en_x >= _en_x2
+							ld  a, (__en_x2)
+							ld  c, a
+							ld  a, (__en_x)
+							cp  c
+							jr  c, _cuadrators_update_done
+
+							ld  a, (__en_mx)
+							call _abs_a
+							neg
+							ld  (__en_mx), a
+							jr  _cuadrators_flipflop
+
+						._cuadrators_update_y
+						// _en_y += _en_my;
+							ld  a, (__en_my)
+							ld  c, a
+							ld  a, (__en_y)
+							add c 
+							ld  (__en_y), a     
+
+						.cuadrators_vert_bounds
+							// _en_y <= _en_y1 -> _en_y1 >= _en_y
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (__en_y1)
+							cp  c
+							jr  c, cuadrators_limit_skip_2
+
+							ld  a, (__en_my)
+							call _abs_a
+							ld  (__en_my), a
+							jr  _cuadrators_flipflop
+
+						.cuadrators_limit_skip_2
+
+							// _en_y >= _en_y2
+							ld  a, (__en_y2)
+							ld  c, a
+							ld  a, (__en_y)
+							cp  c
+							jr  c, _cuadrators_update_done
+
+							ld  a, (__en_my)
+							call _abs_a
+							neg
+							ld  (__en_my), a      
+
+						._cuadrators_flipflop
+							ld  bc, (_enit)
+							ld  b, 0
+							ld  hl, _en_an_ff
+							add hl, bc 
+							ld  a, (hl)
+							xor 1 
 							ld  (hl), a
 
-						.enems_animate_done
-					#endasm
+						._cuadrators_update_done
 
-					// Basic linear movement x = x + mx, etc.
-					if (
-						_en_t <= 4
-						#ifdef RANDOM_RESPAWN
-							|| 0 == en_an_fanty_activo [enit]
+						#ifdef ENEMIES_COLLIDE
+								// Cuadrators don't like collisions with BG!
+								jp _en_bg_collision_end
 						#endif
-						#ifdef ENABLE_MARRULLERS
-							|| (_en_t >= 11 && _en_t <= 14)
-						#endif
-					) {
-						/*
-						_en_x += _en_mx;
-						_en_y += _en_my;
-
-						if (_en_x <= _en_x1) _en_mx = ABS (_en_mx);
-						if (_en_x >= _en_x2) _en_mx = -ABS (_en_mx);
-
-						if (_en_y <= _en_y1) _en_my = ABS (_en_my);
-						if (_en_y >= _en_y2) _en_my = -ABS (_en_my);
-						*/
-						#asm
-							
-							// ***************
-							// HORIZONTAL AXIS
-							// ***************
-							.en_linear_horizontal_axis
-								ld  a, (__en_mx)
-								or  a
-								jr  z, en_linear_horizontal_axis_done
-
-								// Move: en_x += _en_mx;
-								ld  c, a
-								ld  a, (__en_x)
-								add c 
-								ld  (__en_x), a
-
-								#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
-									// In this case, marrullers don't care about boundaries.
-									ld  a, (__en_t)
-									cp  11
-									jr  nc, en_linear_horizontal_axis_done
-								#endif
-							
-							// Now check horz. boundaries
-							.en_linear_horz_bounds
-
-								// Left of x1
-								// _en_x <= _en_x1 -> _en_x1 >= _en_x
-								ld  a, (__en_x)
-								ld  c, a
-								ld  a, (__en_x1)
-								cp  c
-								jr  c, horz_limit_skip_1
-
-								#ifdef ENEMIES_COLLIDE	
-									ld  a, (__en_x1)
-									ld  (__en_x), a
-								#endif
-
-								#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
-									// If marruller: decide a new direction
-									ld  a, (__en_t)
-									cp  11
-									jr  nc, en_linear_decide_for_marrullers
-								#endif
-
-								ld  a, (__en_mx)
-								call _abs_a
-								ld  (__en_mx), a
-
-							.horz_limit_skip_1
-
-								// Right of x2
-								// _en_x >= _en_x2
-								ld  a, (__en_x2)
-								ld  c, a
-								ld  a, (__en_x)
-								cp  c
-								jr  c, horz_limit_skip_2
-
-								#ifdef ENEMIES_COLLIDE	
-									ld  a, (__en_x2)
-									ld  (__en_x), a
-								#endif
-
-								#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
-									// If marruller: decide a new direction
-									ld  a, (__en_t)
-									cp  11
-									jr  nc, en_linear_decide_for_marrullers
-								#endif
-
-								ld  a, (__en_mx)
-								call _abs_a
-								neg
-								ld  (__en_mx), a
-
-							.horz_limit_skip_2
-
-
-							.en_linear_horizontal_axis_done
-
-							// *************
-							// VERTICAL AXIS
-							// *************
-							.en_linear_vertical_axis
-								ld  a, (__en_my) 
-								or  a 
-								jr  z, en_linear_vertical_axis_done
-
-								// Move: _en_y += _en_my;
-								ld  c, a
-								ld  a, (__en_y)
-								add c 
-								ld  (__en_y), a
-
-								#if defined (ENABLE_MARRULLERS) && !defined (MARRULLERS_CONFINED)
-									// In this case, marrullers don't care about boundaries.
-									ld  a, (__en_t)
-									cp  11
-									jr  nc, en_linear_vertical_axis_done
-								#endif
-
-							// Now check vert. boundaries
-							.en_linear_vert_bounds
-
-								// _en_y <= _en_y1 -> _en_y1 >= _en_y
-								ld  a, (__en_y)
-								ld  c, a
-								ld  a, (__en_y1)
-								cp  c
-								jr  c, vert_limit_skip_1
-
-								#ifdef ENEMIES_COLLIDE	
-									ld  a, (__en_y1)
-									ld  (__en_y), a
-								#endif
-
-								#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
-									// If marruller: decide a new direction
-									ld  a, (__en_t)
-									cp  11
-									jr  nc, en_linear_decide_for_marrullers
-								#endif
-
-								ld  a, (__en_my)
-								call _abs_a
-								ld  (__en_my), a
-
-							.vert_limit_skip_1
-
-								// _en_y >= _en_y2
-								ld  a, (__en_y2)
-								ld  c, a
-								ld  a, (__en_y)
-								cp  c
-								jr  c, vert_limit_skip_2
-
-								#ifdef ENEMIES_COLLIDE	
-									ld  a, (__en_y2)
-									ld  (__en_y), a
-								#endif
-
-								#if defined (ENABLE_MARRULLERS) && defined (MARRULLERS_CONFINED)
-									// If marruller: decide a new direction
-									ld  a, (__en_t)
-									cp  11
-									jr  nc, en_linear_decide_for_marrullers
-								#endif
-
-								ld  a, (__en_my)
-								call _abs_a
-								neg
-								ld  (__en_my), a
-
-							.vert_limit_skip_2		
-
-							.en_linear_vertical_axis_done
-
-							#if defined ENABLE_MARRULLERS
-									jr en_linear_done
-								.en_linear_decide_for_marrullers							
-									call _marrullers_select_direction
-									jp _en_bg_collision_end 				// VERY DANGEROUS BUT...
-							#endif
-
-							.en_linear_done
-
-						#endasm
+					#endasm						
 					}
+				#endif
 
-					#ifdef ENABLE_CUADRATORS
-						if (_en_t >= 7 && _en_t <= 10) {
+				// Fanties engine
+				#if defined RANDOM_RESPAWN || defined USE_TYPE_6
+					#include "fantys.h"
+				#endif
 
-							#asm
-							// Flipflop tells which axis to update
-								ld  bc, (_enit)
-								ld  b, 0
-								ld  hl, _en_an_ff
-								add hl, bc
-								ld  a, (hl)
-								or  a
-								jr  z, _cuadrators_update_y							
-
-							._cuadrators_update_x
-							// _en_x += _en_mx;
-								ld  a, (__en_mx)
-								ld  c, a
-								ld  a, (__en_x)
-								add c 
-								ld  (__en_x), a
-
-							.cuadrators_horz_bounds
-								// _en_x <= _en_x1 -> _en_x1 >= _en_x
-								ld  a, (__en_x)
-								ld  c, a
-								ld  a, (__en_x1)
-								cp  c
-								jr  c, cuadrators_limit_skip_1
-
-								ld  a, (__en_mx)
-								call _abs_a
-								ld  (__en_mx), a
-								jr  _cuadrators_flipflop
-
-							.cuadrators_limit_skip_1
-
-								// _en_x >= _en_x2
-								ld  a, (__en_x2)
-								ld  c, a
-								ld  a, (__en_x)
-								cp  c
-								jr  c, _cuadrators_update_done
-
-								ld  a, (__en_mx)
-								call _abs_a
-								neg
-								ld  (__en_mx), a
-								jr  _cuadrators_flipflop
-
-							._cuadrators_update_y
-							// _en_y += _en_my;
-								ld  a, (__en_my)
-								ld  c, a
-								ld  a, (__en_y)
-								add c 
-								ld  (__en_y), a     
-
-							.cuadrators_vert_bounds
-								// _en_y <= _en_y1 -> _en_y1 >= _en_y
-								ld  a, (__en_y)
-								ld  c, a
-								ld  a, (__en_y1)
-								cp  c
-								jr  c, cuadrators_limit_skip_2
-
-								ld  a, (__en_my)
-								call _abs_a
-								ld  (__en_my), a
-								jr  _cuadrators_flipflop
-
-							.cuadrators_limit_skip_2
-
-								// _en_y >= _en_y2
-								ld  a, (__en_y2)
-								ld  c, a
-								ld  a, (__en_y)
-								cp  c
-								jr  c, _cuadrators_update_done
-
-								ld  a, (__en_my)
-								call _abs_a
-								neg
-								ld  (__en_my), a      
-
-							._cuadrators_flipflop
-								ld  bc, (_enit)
-								ld  b, 0
-								ld  hl, _en_an_ff
-								add hl, bc 
-								ld  a, (hl)
-								xor 1 
-								ld  (hl), a
-
-							._cuadrators_update_done
-
-							#ifdef ENEMIES_COLLIDE
-									// Cuadrators don't like collisions with BG!
-									jp _en_bg_collision_end
-							#endif
-						#endasm						
-						}
-					#endif
-
-					// Fanties engine
-					#if defined RANDOM_RESPAWN || defined USE_TYPE_6
-						#include "fantys.h"
-					#endif
-
-					// Check for collisions.
-					#ifdef ENEMIES_COLLIDE			
-						/*
-						en_xx = _en_x >> 4;
-						en_yy = _en_y >> 4;
-						
-						if (_en_mx) {
-							rdi = ctileoff (_en_mx);
-							ptx1 = ptx2 = en_xx + rdi;
-							pty1 = en_yy; 
-							pty2 = (_en_y + 15) >> 4;
-							if ((attr (ptx1, pty1) & 8) || (attr (ptx2, pty2) & 8)) {
-								_en_mx = -_en_mx;
-								_en_x = (en_xx + (rdi ^ 1)) << 4;
-							}
-						}
-						if (_en_my) {
-							rdi = ctileoff (_en_my);
-							ptx1 = en_xx; 
-							ptx2 = (_en_x + 15) >> 4;
-							pty1 = pty2 = en_yy + rdi;
-							if ((attr (ptx1, pty1) & 8) || (attr (ptx2, pty2) & 8)) {
-								_en_my = -_en_my;
-								_en_y = (en_yy + (rdi ^ 1)) << 4;
-							}
-						}
-						*/
-						#asm
-							._en_bg_collision
-								call en_xx_calc
-								call en_yy_calc
-
-								ld  a, (__en_mx)
-								or  a
-								jr  z, _en_bg_collision_horz_done
-
-							._en_bg_collision_horz
-								ld  a, (__en_mx)
-								call __ctileoff
-								ld  (_rdi), a
-
-								ld  c, a
-								ld  a, (_en_xx)
-								add c
-								ld  (_ptx1), a
-								ld  (_ptx2), a
-
-								ld  a, (_en_yy)
-								ld  (_pty1), a
-
-								ld  a, (__en_y)
-								add 15
-								srl a
-								srl a
-								srl a
-								srl a
-								ld  (_pty2), a
-
-								call _en_bg_collision_check
-								or  a
-								jr  z, _en_bg_collision_horz_done
-
-								ld  a, (_en_xx)
-								ld  c, a
-								ld  a, (_rdi)
-								xor 1
-								add c
-								sla a
-								sla a
-								sla a
-								sla a
-								ld  (__en_x), a
-
-								#ifdef ENABLE_MARRULLERS
-									ld  a, (__en_t)
-									cp  11
-									jr  c, _en_bg_col_marrh_done
-									cp  15
-									jr  nc, _en_bg_col_marrh_done
-
-									call _marrullers_select_direction
-									jp  _en_bg_collision_end
-
-								._en_bg_col_marrh_done
-								#endif
-
-								ld  a, (__en_mx)
-								ld  c, a
-								xor a
-								sub c
-								ld  (__en_mx), a
-							
-							._en_bg_collision_horz_done
-
-								call en_xx_calc
-
-								ld  a, (__en_my)
-								or  a
-								jr  z, _en_bg_collision_vert_done
-
-							._en_bg_collision_vert
-								ld  a, (__en_my)
-								call __ctileoff
-								ld  (_rdi), a
-
-								ld  c, a
-								ld  a, (_en_yy)
-								add c
-								ld  (_pty1), a
-								ld  (_pty2), a
-
-								ld  a, (_en_xx)
-								ld  (_ptx1), a
-
-								ld  a, (__en_x)
-								add 15
-								srl a
-								srl a
-								srl a
-								srl a
-								ld  (_ptx2), a
-
-								call _en_bg_collision_check
-								or  a
-								jr  z, _en_bg_collision_vert_done
-
-								ld  a, (_en_yy)
-								ld  c, a
-								ld  a, (_rdi)
-								xor 1
-								add c
-								sla a
-								sla a
-								sla a
-								sla a
-								ld  (__en_y), a
-
-								#ifdef ENABLE_MARRULLERS
-									ld  a, (__en_t)
-									cp  11
-									jr  c, _en_bg_col_marrv_done
-									cp  15
-									jr  nc, _en_bg_col_marrv_done
-
-									call _marrullers_select_direction
-									jr  _en_bg_collision_end
-
-								._en_bg_col_marrv_done
-								#endif
-
-								ld  a, (__en_my)
-								ld  c, a
-								xor a
-								sub c
-								ld  (__en_my), a
-
-							._en_bg_collision_vert_done
-
-								call en_yy_calc
-
-								jr _en_bg_collision_end
-
-							._en_bg_collision_check
-								ld  a, (_ptx1)
-								ld  c, a
-								ld  a, (_pty1)
-								call _attr_enems
-								ld  a, l
-								and ENEMIES_COLLIDE_MASK
-								ret  nz 			// Non zero, A = TRUE
-
-								ld  a, (_ptx2)
-								ld  c, a
-								ld  a, (_pty2)
-								call _attr_enems
-								ld  a, l
-								and ENEMIES_COLLIDE_MASK
-								ret 				// A = result
-
-							.__ctileoff
-								// A signed; A >= 0 -> 1, else 0.
-								bit 7, a
-								jr  z, __ctileoff_1
-
-								xor a
-								ret
-
-							.__ctileoff_1
-								ld  a, 1
-								ret
-
-							.en_xx_calc
-								ld  a, (__en_x)
-								srl a
-								srl a
-								srl a
-								srl a
-								ld  (_en_xx), a
-								ret
-
-							.en_yy_calc
-								ld  a, (__en_y)
-								srl a
-								srl a
-								srl a
-								srl a
-								ld  (_en_yy), a
-								ret
-
-						#endasm
-					#endif
+				// Check for collisions.
+				#ifdef ENEMIES_COLLIDE			
+					/*
+					en_xx = _en_x >> 4;
+					en_yy = _en_y >> 4;
 					
+					if (_en_mx) {
+						rdi = ctileoff (_en_mx);
+						ptx1 = ptx2 = en_xx + rdi;
+						pty1 = en_yy; 
+						pty2 = (_en_y + 15) >> 4;
+						if ((attr (ptx1, pty1) & 8) || (attr (ptx2, pty2) & 8)) {
+							_en_mx = -_en_mx;
+							_en_x = (en_xx + (rdi ^ 1)) << 4;
+						}
+					}
+					if (_en_my) {
+						rdi = ctileoff (_en_my);
+						ptx1 = en_xx; 
+						ptx2 = (_en_x + 15) >> 4;
+						pty1 = pty2 = en_yy + rdi;
+						if ((attr (ptx1, pty1) & 8) || (attr (ptx2, pty2) & 8)) {
+							_en_my = -_en_my;
+							_en_y = (en_yy + (rdi ^ 1)) << 4;
+						}
+					}
+					*/
 					#asm
-					._en_bg_collision_end
-					#endasm
-					
-					enems_calc_frame ();
+						._en_bg_collision
+							call en_xx_calc
+							call en_yy_calc
 
-					#ifdef ENABLE_CUSTOM_ENEMS
-						extra_enems_move ();
-					#endif
-				}
-		
-				// Moving platforms engine:
+							ld  a, (__en_mx)
+							or  a
+							jr  z, _en_bg_collision_horz_done
 
-				#ifndef PLAYER_MOGGY_STYLE	
-					if ( (_en_t == 4 
-						#ifdef ENABLE_CUADRATORS
-							|| _en_t == 10
-						#endif
-						) && gpx >= _en_x - 15 && gpx <= _en_x + 15
-					) {
+						._en_bg_collision_horz
+							ld  a, (__en_mx)
+							call __ctileoff
+							ld  (_rdi), a
 
-						#asm
-							.moving_platforms
-								// if (player.saltando == 0 || player.cont_salto > 4)
-								ld  a, (_player+19) 		// .saltando
-								or  a
-								jr  z, moving_platforms_do
+							ld  c, a
+							ld  a, (_en_xx)
+							add c
+							ld  (_ptx1), a
+							ld  (_ptx2), a
 
-								ld  a, (_player+14)			// .cont_salto
-								cp  5 						// a > 4 === a >= 5
-								jp  c, moving_platforms_done
+							ld  a, (_en_yy)
+							ld  (_pty1), a
 
-							.moving_platforms_do
+							ld  a, (__en_y)
+							add 15
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_pty2), a
 
-							.moving_platforms_vert
-								// Vertical
-								// if (_en_my) 
-								ld  a, (__en_my)
-								or  a
-								jr  z, moving_platforms_vert_done
+							call _en_bg_collision_check
+							or  a
+							jr  z, _en_bg_collision_horz_done
 
-								// Negative/positive
-								bit 7, a
-								jr  z, moving_platforms_vert_down
+							ld  a, (_en_xx)
+							ld  c, a
+							ld  a, (_rdi)
+							xor 1
+							add c
+							sla a
+							sla a
+							sla a
+							sla a
+							ld  (__en_x), a
 
-							.moving_platforms_vert_up
-								// if (gpy + 17 >= _en_y && gpy + 11 <= _en_y)
+							#ifdef ENABLE_MARRULLERS
+								ld  a, (__en_t)
+								cp  11
+								jr  c, _en_bg_col_marrh_done
+								cp  15
+								jr  nc, _en_bg_col_marrh_done
 
-								// gpy + 17 >= _en_y
-								ld  a, (__en_y)
-								ld  c, a
-								ld  a, (_gpy)
-								add 17
-								cp  c
-								jr  c, moving_platforms_vert_done
+								call _marrullers_select_direction
+								jp  _en_bg_collision_end
 
-								// gpy + 11 <= _en_y -> _en_y >= gpy + 11
-								ld  a, (_gpy)
-								add 11
-								ld  c, a
-								ld  a, (__en_y)
-								cp  c
-								jr  c, moving_platforms_vert_done
-
-								call _platform_get_player
-
-								jr  moving_platforms_vert_done
-
-							.moving_platforms_vert_down
-								// if (gpy + 20 >= _en_y && gpy + 13 <= _en_y)
-
-								// gpy + 20 >= _en_y
-								ld  a, (__en_y)
-								ld  c, a
-								ld  a, (_gpy)
-								add 20
-								cp  c
-								jr  c, moving_platforms_vert_done
-
-								// gpy + 13 <= _en_y -> _en_y >= gpy + 13
-								ld  a, (_gpy)
-								add 13
-								ld  c, a
-								ld  a, (__en_y)
-								cp  c
-								jr  c, moving_platforms_vert_done
-
-								call _platform_get_player
-
-							.moving_platforms_vert_done
-
-							.moving_platforms_horz
-								// if (_en_mx != 0 && gpy >= _en_y - 16 && gpy <= _en_y - 11 && player.vy >= 0)
-								ld  a, (__en_mx)
-								or  a
-								jr  z, moving_platforms_done
-
-								// gpy >= _en_y - 16 -> gpy + 16 >= _en_y
-								ld  a, (__en_y)
-								ld  c, a
-								ld  a, (_gpy)
-								add 16
-								cp  c
-								jr  c, moving_platforms_done
-
-								// gpy <= _en_y - 11 -> gpy + 11 <= _en_y -> _en_y >= gpy + 11
-								ld  a, (_gpy)
-								add 11
-								ld  c, a
-								ld  a, (__en_y)
-								cp  c
-								jr  c, moving_platforms_done
-
-								// player.vy >= 0
-								ld  a, (_player+9)		// .vy MSB
-								bit 7, a
-								jr  nz, moving_platforms_done
-
-								call _platform_get_player
-
-							#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
-									// if (en_an_state [enit] != ENEM_PARALYZED)
-									ld  bc, (_enit)
-									ld  b, 0
-									ld  hl, _en_an_state
-									add hl, bc
-									ld  a, (hl)
-									cp  ENEM_PARALYZED
-									jr  z, moving_platforms_done
-							#endif		
-
-								//ptgmx = (_en_mx << 6);
-								ld  a, (__en_mx)
-								call Ashl16_HL
-								call withSign
-								ld  (_ptgmx), hl
-
-							.moving_platforms_done
-
-						#endasm
-					} else
-				#endif			
-				{
-
-					// Swording
-
-					#ifdef ENABLE_SWORD
-						if (s_on && 
-							s_frame >= MIN_SWORD_HIT_FRAME && s_frame < MAX_SWORD_HIT_FRAME
-						) {
-							//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
-							#asm
-									// s_hit_x >= _en_x
-									ld  a, (__en_x)
-									ld  c, a
-									ld  a, (_s_hit_x) 
-									cp  c
-									jp  c, _enems_hit_sword_done
-
-									// s_hit_x <= _en_x + 15 -> _en_x + 15 >= s_hit_x
-									ld  a, (_s_hit_x)
-									ld  c, a
-									ld  a, (__en_x)
-									add 15
-									cp  c
-									jp  c, _enems_hit_sword_done
-
-									// s_hit_y >= _en_y 
-									ld  a, (__en_y)
-									ld  c, a
-									ld  a, (_s_hit_y)
-									cp  c 
-									jp  c, _enems_hit_sword_done
-
-									// s_hit_y <= _en_y + 15 -> _en_y + 15 >= s_hit_y
-									ld  a, (_s_hit_y)
-									ld  c, a
-									ld  a, (__en_y)
-									add 15
-									cp  c
-									jp  c, _enems_hit_sword_done
-							#endasm
-							{	
-								if (1
-								#ifdef PLAYER_MIN_KILLABLE
-									&& _en_t >= PLAYER_MIN_KILLABLE
-								#endif
-								#ifdef PLAYER_MAX_KILLABLE
-									&& _en_t <= PLAYER_MAX_KILLABLE
-								#endif
-								#ifndef PLAYER_MOGGY_STYLE
-									&& _en_t != 4
-								#endif
-								) {
-									// Hit!
-									#ifdef SWORD_CUSTOM_HIT
-										#include "sword_custom_hit.h"
-									#endif
-
-									#ifndef SWORD_DISABLE_HIT
-										play_sfx (2);
-										s_on = 0;
-
-										#ifdef SWORD_PARALYZES
-											en_an_state [enit] = ENEM_PARALYZED;
-											en_an_count [enit] = SWORD_PARALYZES;
-										#endif
-
-										// Kill?
-
-										#if SWORD_LINEAL_DAMAGE != SWORD_FLYING_DAMAGE
-											enems_kill (_en_t == 6 ? SWORD_FLYING_DAMAGE : SWORD_LINEAL_DAMAGE);
-										#else 
-											enems_kill (SWORD_LINEAL_DAMAGE);
-										#endif
-
-									#endif
-
-									goto enems_loop_continue;
-								}
-							}
-							#asm
-								._enems_hit_sword_done
-							#endasm
-						}
-					#endif
-					
-
-					// Collision with enemy
-
-					if (
-						0 == en_tocado && collide_enem () && 
-						(_en_t < 128 
-							#ifdef RANDOM_RESPAWN
-								|| en_an_fanty_activo [enit] == 1
+							._en_bg_col_marrh_done
 							#endif
-						) 
-					) {
-						#ifdef PLAYER_KILLS_ENEMIES
-							if (
-								#ifdef TIGHT_BOUNDING_BOX
-									gpy < _en_y
-								#else
-									gpy <= _en_y - 8 
-								#endif
-								&& player.vy >= 0 
-								#ifdef PLAYER_MIN_KILLABLE
-									&& _en_t >= PLAYER_MIN_KILLABLE
-								#endif
-								#ifdef PLAYER_MAX_KILLABLE
-									&& _en_t <= PLAYER_MAX_KILLABLE
-								#endif
-							) {
-								// Step on enemy and kill it.
-								player.vy = -PLAYER_MAX_VY_SALTANDO;
-								enems_kill (0xff);
-							} else	
-						#endif
-							
-						if (
-							player.estado == EST_NORMAL
-							#ifdef PARALYZED_DONT_KILL
-								&& en_an_state [enit] != ENEM_PARALYZED
-							#endif
-							#ifdef PARALYZED_DONT_KILL_ON_VAR
-								&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
-							#endif
-						) {
-							#ifdef ENEMS_CUSTOM_COLLISION
-								if (enems_custom_collision () == 0)
-							#endif
-							{
-								en_tocado = 1; player.is_dead = 1; play_sfx (2);
-								#ifdef ENABLE_CODE_HOOKS
-									enemy_killer = enit;
-								#endif
-								
-								// We decide which kind of life drain we do:
-								#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT) && (FLYING_ENEMY_HIT != LINEAR_ENEMY_HIT)
-									if (
-										#ifdef RANDOM_RESPAWN
-											en_an_fanty_activo [enit]
-										#endif
-										#if defined RANDOM_RESPAWN && defined USE_TYPE_6
-											||
-										#endif
-										#ifdef USE_TYPE_6
-											_en_t == 6
-										#endif
-									) {
-										player.drain_amount = FLYING_ENEMY_HIT;
-									} else
-								#endif
-								{
-									player.drain_amount = LINEAR_ENEMY_HIT;
-								}
-								player.is_dead = PLAYER_KILLED_BY_ENEM;
-								
-								#ifdef PLAYER_BOUNCES
-									#ifndef PLAYER_MOGGY_STYLE	
-										#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-											if (0 == en_an_fanty_activo [enit]) {
-												// Bouncing!
-												if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
-												if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
-												if (_en_my > 0) player.vy = PLAYER_MAX_VX;
-												if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
-											} else {
-												player.vx = en_an_vx [enit] + en_an_vx [enit];
-												player.vy = en_an_vy [enit] + en_an_vy [enit];
-											}
-										#else
-											// Bouncing!
-											if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-											if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-											if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-											if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-										#endif
-									#else
-										// Bouncing:
-										
-										// x
-										if (_en_mx) {
-											if (gpx < _en_x) player.vx = - (abs (_en_mx << 1) << 7);
-											else player.vx = abs (_en_mx + _en_mx) << 7;
-										}
-										
-										// y
-										if (_en_my) {
-											if (gpy < _en_y) player.vy = - (abs (_en_my << 1) << 7);
-											else player.vy = abs (_en_my + _en_my) << 7;
-										}
-									#endif
-								#endif
 
-								#ifdef ENABLE_FRIGOABABOL
-									player.estado = EST_FRIGOABABOL;
-									player.ct_estado = FRIGO_MAX_FRAMES;
-								#endif				
-							}
-						}
-					}
-					
-					// Enemy update
+							ld  a, (__en_mx)
+							ld  c, a
+							xor a
+							sub c
+							ld  (__en_mx), a
 						
-					#ifdef PLAYER_CAN_FIRE
-						// Collision with bullets
-						#ifdef RANDOM_RESPAWN
-							if (_en_t < 128 || en_an_fanty_activo [enit] == 1)
-						#else
-							if (_en_t < 128)
-						#endif
-						{
-							for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
-								#asm
-										ld  bc, (_en_j)
-										ld  b, 0
+						._en_bg_collision_horz_done
 
-										ld  hl, _bullets_estado
-										add hl, bc
-										ld  a, (hl)
-										or  a
-										jp  z, enems_coll_bullets_continue
+							call en_xx_calc
 
-									// Bullet is active. Collide?
-									// if (bullets_y [en_j] >= _en_y - 4 
+							ld  a, (__en_my)
+							or  a
+							jr  z, _en_bg_collision_vert_done
 
-										ld  a, (__en_y)
-										sub 4
-										ld  d, a
-										ld  hl, _bullets_y
-										add hl, bc
-										ld  a, (hl)
-										cp  d 
-										jp  c, enems_coll_bullets_continue
+						._en_bg_collision_vert
+							ld  a, (__en_my)
+							call __ctileoff
+							ld  (_rdi), a
 
-									// && bullets_y [en_j] <= _en_y + 12 -> _en_y + 12 >= bullets_y [en_j]
-										ld  d, a
-										ld  a, (__en_y)
-										add 12
-										cp  d
-										jp  c, enems_coll_bullets_continue
+							ld  c, a
+							ld  a, (_en_yy)
+							add c
+							ld  (_pty1), a
+							ld  (_pty2), a
 
-									// && bullets_x [en_j] >= _en_x - 4 
-										ld  a, (__en_x)
-										sub 4
-										ld  d, a 
-										ld  hl, _bullets_x
-										add hl, bc 
-										ld  a, (hl) 
-										cp  d 
-										jp  c, enems_coll_bullets_continue
+							ld  a, (_en_xx)
+							ld  (_ptx1), a
 
-									// && bullets_x [en_j] <= _en_x + 12) { -> _en_x + 12 >= bullets_x [en_j]
-										ld  d, a
-										ld  a, (__en_x)
-										add 12
-										cp  d
-										jp  c, enems_coll_bullets_continue
-								#endasm
+							ld  a, (__en_x)
+							add 15
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_ptx2), a
 
-								#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
-									#ifdef RANDOM_RESPAWN	
-										if (en_an_fanty_activo [enit]) 
-									#else
-										if (_en_t == 6)
-									#endif
-									en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
-								#endif
-								
-								bullets_estado [en_j] = 0;
-								
-								enems_kill (1);
-								
-								#asm
-									.enems_coll_bullets_continue
-								#endasm
-							}
-						}
-					#endif
-				}
+							call _en_bg_collision_check
+							or  a
+							jr  z, _en_bg_collision_vert_done
+
+							ld  a, (_en_yy)
+							ld  c, a
+							ld  a, (_rdi)
+							xor 1
+							add c
+							sla a
+							sla a
+							sla a
+							sla a
+							ld  (__en_y), a
+
+							#ifdef ENABLE_MARRULLERS
+								ld  a, (__en_t)
+								cp  11
+								jr  c, _en_bg_col_marrv_done
+								cp  15
+								jr  nc, _en_bg_col_marrv_done
+
+								call _marrullers_select_direction
+								jr  _en_bg_collision_end
+
+							._en_bg_col_marrv_done
+							#endif
+
+							ld  a, (__en_my)
+							ld  c, a
+							xor a
+							sub c
+							ld  (__en_my), a
+
+						._en_bg_collision_vert_done
+
+							call en_yy_calc
+
+							jr _en_bg_collision_end
+
+						._en_bg_collision_check
+							ld  a, (_ptx1)
+							ld  c, a
+							ld  a, (_pty1)
+							call _attr_enems
+							ld  a, l
+							and ENEMIES_COLLIDE_MASK
+							ret  nz 			// Non zero, A = TRUE
+
+							ld  a, (_ptx2)
+							ld  c, a
+							ld  a, (_pty2)
+							call _attr_enems
+							ld  a, l
+							and ENEMIES_COLLIDE_MASK
+							ret 				// A = result
+
+						.__ctileoff
+							// A signed; A >= 0 -> 1, else 0.
+							bit 7, a
+							jr  z, __ctileoff_1
+
+							xor a
+							ret
+
+						.__ctileoff_1
+							ld  a, 1
+							ret
+
+						.en_xx_calc
+							ld  a, (__en_x)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_xx), a
+							ret
+
+						.en_yy_calc
+							ld  a, (__en_y)
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_en_yy), a
+							ret
+
+					#endasm
+				#endif
+				
+				#asm
+				._en_bg_collision_end
+				#endasm
+				
+				enems_calc_frame ();
 
 				#ifdef ENABLE_CUSTOM_ENEMS
-					extra_enems_checks ();
+					extra_enems_move ();
 				#endif
 			}
+	
+			// Moving platforms engine:
+
+			#ifndef PLAYER_MOGGY_STYLE	
+				if ( (_en_t == 4 
+					#ifdef ENABLE_CUADRATORS
+						|| _en_t == 10
+					#endif
+					) && gpx >= _en_x - 15 && gpx <= _en_x + 15
+				) {
+
+					#asm
+						.moving_platforms
+							// if (player.saltando == 0 || player.cont_salto > 4)
+							ld  a, (_player+19) 		// .saltando
+							or  a
+							jr  z, moving_platforms_do
+
+							ld  a, (_player+14)			// .cont_salto
+							cp  5 						// a > 4 === a >= 5
+							jp  c, moving_platforms_done
+
+						.moving_platforms_do
+
+						.moving_platforms_vert
+							// Vertical
+							// if (_en_my) 
+							ld  a, (__en_my)
+							or  a
+							jr  z, moving_platforms_vert_done
+
+							// Negative/positive
+							bit 7, a
+							jr  z, moving_platforms_vert_down
+
+						.moving_platforms_vert_up
+							// if (gpy + 17 >= _en_y && gpy + 11 <= _en_y)
+
+							// gpy + 17 >= _en_y
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (_gpy)
+							add 17
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							// gpy + 11 <= _en_y -> _en_y >= gpy + 11
+							ld  a, (_gpy)
+							add 11
+							ld  c, a
+							ld  a, (__en_y)
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							call _platform_get_player
+
+							jr  moving_platforms_vert_done
+
+						.moving_platforms_vert_down
+							// if (gpy + 20 >= _en_y && gpy + 13 <= _en_y)
+
+							// gpy + 20 >= _en_y
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (_gpy)
+							add 20
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							// gpy + 13 <= _en_y -> _en_y >= gpy + 13
+							ld  a, (_gpy)
+							add 13
+							ld  c, a
+							ld  a, (__en_y)
+							cp  c
+							jr  c, moving_platforms_vert_done
+
+							call _platform_get_player
+
+						.moving_platforms_vert_done
+
+						.moving_platforms_horz
+							// if (_en_mx != 0 && gpy >= _en_y - 16 && gpy <= _en_y - 11 && player.vy >= 0)
+							ld  a, (__en_mx)
+							or  a
+							jr  z, moving_platforms_done
+
+							// gpy >= _en_y - 16 -> gpy + 16 >= _en_y
+							ld  a, (__en_y)
+							ld  c, a
+							ld  a, (_gpy)
+							add 16
+							cp  c
+							jr  c, moving_platforms_done
+
+							// gpy <= _en_y - 11 -> gpy + 11 <= _en_y -> _en_y >= gpy + 11
+							ld  a, (_gpy)
+							add 11
+							ld  c, a
+							ld  a, (__en_y)
+							cp  c
+							jr  c, moving_platforms_done
+
+							// player.vy >= 0
+							ld  a, (_player+9)		// .vy MSB
+							bit 7, a
+							jr  nz, moving_platforms_done
+
+							call _platform_get_player
+
+						#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
+								// if (en_an_state [enit] != ENEM_PARALYZED)
+								ld  bc, (_enit)
+								ld  b, 0
+								ld  hl, _en_an_state
+								add hl, bc
+								ld  a, (hl)
+								cp  ENEM_PARALYZED
+								jr  z, moving_platforms_done
+						#endif		
+
+							//ptgmx = (_en_mx << 6);
+							ld  a, (__en_mx)
+							call Ashl16_HL
+							call withSign
+							ld  (_ptgmx), hl
+
+						.moving_platforms_done
+
+					#endasm
+				} else
+			#endif			
+			{
+
+				// Swording
+
+				#ifdef ENABLE_SWORD
+					if (s_on && 
+						s_frame >= MIN_SWORD_HIT_FRAME && s_frame < MAX_SWORD_HIT_FRAME
+					) {
+						//if (s_hit_x >= _en_x - 15 && s_hit_x <= _en_x + 15 && s_hit_y >= _en_y - 15 && s_hit_y <= _en_y + 15) 
+						#asm
+								// s_hit_x >= _en_x
+								ld  a, (__en_x)
+								ld  c, a
+								ld  a, (_s_hit_x) 
+								cp  c
+								jp  c, _enems_hit_sword_done
+
+								// s_hit_x <= _en_x + 15 -> _en_x + 15 >= s_hit_x
+								ld  a, (_s_hit_x)
+								ld  c, a
+								ld  a, (__en_x)
+								add 15
+								cp  c
+								jp  c, _enems_hit_sword_done
+
+								// s_hit_y >= _en_y 
+								ld  a, (__en_y)
+								ld  c, a
+								ld  a, (_s_hit_y)
+								cp  c 
+								jp  c, _enems_hit_sword_done
+
+								// s_hit_y <= _en_y + 15 -> _en_y + 15 >= s_hit_y
+								ld  a, (_s_hit_y)
+								ld  c, a
+								ld  a, (__en_y)
+								add 15
+								cp  c
+								jp  c, _enems_hit_sword_done
+						#endasm
+						{	
+							if (1
+							#ifdef PLAYER_MIN_KILLABLE
+								&& _en_t >= PLAYER_MIN_KILLABLE
+							#endif
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
+							#ifndef PLAYER_MOGGY_STYLE
+								&& _en_t != 4
+							#endif
+							) {
+								// Hit!
+								#ifdef SWORD_CUSTOM_HIT
+									#include "sword_custom_hit.h"
+								#endif
+
+								#ifndef SWORD_DISABLE_HIT
+									play_sfx (2);
+									s_on = 0;
+
+									#ifdef SWORD_PARALYZES
+										en_an_state [enit] = ENEM_PARALYZED;
+										en_an_count [enit] = SWORD_PARALYZES;
+									#endif
+
+									// Kill?
+
+									#if SWORD_LINEAL_DAMAGE != SWORD_FLYING_DAMAGE
+										enems_kill (_en_t == 6 ? SWORD_FLYING_DAMAGE : SWORD_LINEAL_DAMAGE);
+									#else 
+										enems_kill (SWORD_LINEAL_DAMAGE);
+									#endif
+
+								#endif
+
+								goto enems_loop_continue;
+							}
+						}
+						#asm
+							._enems_hit_sword_done
+						#endasm
+					}
+				#endif
+				
+
+				// Collision with enemy
+
+				if (
+					0 == en_tocado && collide_enem () && 
+					(_en_t < 128 
+						#ifdef RANDOM_RESPAWN
+							|| en_an_fanty_activo [enit] == 1
+						#endif
+					) 
+				) {
+					#ifdef PLAYER_KILLS_ENEMIES
+						if (
+							#ifdef TIGHT_BOUNDING_BOX
+								gpy < _en_y
+							#else
+								gpy <= _en_y - 8 
+							#endif
+							&& player.vy >= 0 
+							#ifdef PLAYER_MIN_KILLABLE
+								&& _en_t >= PLAYER_MIN_KILLABLE
+							#endif
+							#ifdef PLAYER_MAX_KILLABLE
+								&& _en_t <= PLAYER_MAX_KILLABLE
+							#endif
+						) {
+							// Step on enemy and kill it.
+							player.vy = -PLAYER_MAX_VY_SALTANDO;
+							enems_kill (0xff);
+						} else	
+					#endif
+						
+					if (
+						player.estado == EST_NORMAL
+						#ifdef PARALYZED_DONT_KILL
+							&& en_an_state [enit] != ENEM_PARALYZED
+						#endif
+						#ifdef PARALYZED_DONT_KILL_ON_VAR
+							&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
+						#endif
+					) {
+						#ifdef ENEMS_CUSTOM_COLLISION
+							if (enems_custom_collision () == 0)
+						#endif
+						{
+							en_tocado = 1; player.is_dead = 1; play_sfx (2);
+							#ifdef ENABLE_CODE_HOOKS
+								enemy_killer = enit;
+							#endif
+							
+							// We decide which kind of life drain we do:
+							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT) && (FLYING_ENEMY_HIT != LINEAR_ENEMY_HIT)
+								if (
+									#ifdef RANDOM_RESPAWN
+										en_an_fanty_activo [enit]
+									#endif
+									#if defined RANDOM_RESPAWN && defined USE_TYPE_6
+										||
+									#endif
+									#ifdef USE_TYPE_6
+										_en_t == 6
+									#endif
+								) {
+									player.drain_amount = FLYING_ENEMY_HIT;
+								} else
+							#endif
+							{
+								player.drain_amount = LINEAR_ENEMY_HIT;
+							}
+							player.is_dead = PLAYER_KILLED_BY_ENEM;
+							
+							#ifdef PLAYER_BOUNCES
+								#ifndef PLAYER_MOGGY_STYLE	
+									#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
+										if (0 == en_an_fanty_activo [enit]) {
+											// Bouncing!
+											if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
+											if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
+											if (_en_my > 0) player.vy = PLAYER_MAX_VX;
+											if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
+										} else {
+											player.vx = en_an_vx [enit] + en_an_vx [enit];
+											player.vy = en_an_vy [enit] + en_an_vy [enit];
+										}
+									#else
+										// Bouncing!
+										if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+										if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+										if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+										if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+									#endif
+								#else
+									// Bouncing:
+									
+									// x
+									if (_en_mx) {
+										if (gpx < _en_x) player.vx = - (abs (_en_mx << 1) << 7);
+										else player.vx = abs (_en_mx + _en_mx) << 7;
+									}
+									
+									// y
+									if (_en_my) {
+										if (gpy < _en_y) player.vy = - (abs (_en_my << 1) << 7);
+										else player.vy = abs (_en_my + _en_my) << 7;
+									}
+								#endif
+							#endif
+
+							#ifdef ENABLE_FRIGOABABOL
+								player.estado = EST_FRIGOABABOL;
+								player.ct_estado = FRIGO_MAX_FRAMES;
+							#endif				
+						}
+					}
+				}
+				
+				// Enemy update
+					
+				#ifdef PLAYER_CAN_FIRE
+					// Collision with bullets
+					#ifdef RANDOM_RESPAWN
+						if (_en_t < 128 || en_an_fanty_activo [enit] == 1)
+					#else
+						if (_en_t < 128)
+					#endif
+					{
+						for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
+							#asm
+									ld  bc, (_en_j)
+									ld  b, 0
+
+									ld  hl, _bullets_estado
+									add hl, bc
+									ld  a, (hl)
+									or  a
+									jp  z, enems_coll_bullets_continue
+
+								// Bullet is active. Collide?
+								// if (bullets_y [en_j] >= _en_y - 4 
+
+									ld  a, (__en_y)
+									sub 4
+									ld  d, a
+									ld  hl, _bullets_y
+									add hl, bc
+									ld  a, (hl)
+									cp  d 
+									jp  c, enems_coll_bullets_continue
+
+								// && bullets_y [en_j] <= _en_y + 12 -> _en_y + 12 >= bullets_y [en_j]
+									ld  d, a
+									ld  a, (__en_y)
+									add 12
+									cp  d
+									jp  c, enems_coll_bullets_continue
+
+								// && bullets_x [en_j] >= _en_x - 4 
+									ld  a, (__en_x)
+									sub 4
+									ld  d, a 
+									ld  hl, _bullets_x
+									add hl, bc 
+									ld  a, (hl) 
+									cp  d 
+									jp  c, enems_coll_bullets_continue
+
+								// && bullets_x [en_j] <= _en_x + 12) { -> _en_x + 12 >= bullets_x [en_j]
+									ld  d, a
+									ld  a, (__en_x)
+									add 12
+									cp  d
+									jp  c, enems_coll_bullets_continue
+							#endasm
+
+							#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
+								#ifdef RANDOM_RESPAWN	
+									if (en_an_fanty_activo [enit]) 
+								#else
+									if (_en_t == 6)
+								#endif
+								en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
+							#endif
+							
+							bullets_estado [en_j] = 0;
+							
+							enems_kill (1);
+							
+							#asm
+								.enems_coll_bullets_continue
+							#endasm
+						}
+					}
+				#endif
+			}
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_checks ();
+			#endif
 		}
 
 		enems_loop_continue:
 
 		#ifdef RANDOM_RESPAWN
 			// Activate fanty
-
-			if ((_en_t & 128) && en_an_fanty_activo [enit] == 0 && (rand () & 31) == 1) {
-				en_an_fanty_activo [enit] = 1;
-				if (player.y > 5120)
-					en_an_y [enit] = -1024;
-				else
-					en_an_y [enit] = 10240;
-				en_an_x [enit] = (rand () % 240 - 8) << 6;
-				en_an_vx [enit] = en_an_vy [enit] = 0;
-			enems_en_an_calc (2);
-			}
 
 			#asm
 				// Should we create?
