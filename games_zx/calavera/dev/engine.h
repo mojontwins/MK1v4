@@ -891,7 +891,7 @@ void cortina (void) {
 			#endif
 
 			#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
-					ld  a, ENEMIES_LIFE_GAUGE
+					ld  a, ENEMS_LIFE_GAUGE
 				#if defined PACKED_ENEMS
 						ld  (ix+7), a 	// .life
 				#else
@@ -6104,7 +6104,7 @@ void platform_get_player (void) {
 	void enems_kill (unsigned char damage) {
 		// Kill enemy
 
-		#if ENEMIES_LIFE_GAUGE > 1
+		#if ENEMS_LIFE_GAUGE > 1
 			if (_en_life >= damage) {
 				_en_life -= damage;
 			} else {
@@ -6133,13 +6133,9 @@ void platform_get_player (void) {
 				call SPUpdateNow
 			#endasm
 
-			// Makes a delay
-			play_sfx (10);
-		
 		#else
 			// The new stuff is setting up a state and a counter
 			en_an_state [enit] = ENEM_IS_DEAD;
-			en_an_count [enit] = 16;
 		#endif
 
 		#if ENEMS_LIFE_GAUGE > 1
@@ -6148,6 +6144,12 @@ void platform_get_player (void) {
 			if (damage)
 		#endif
 		{
+			#ifndef USE_CLASSIC_ENEMS_KILL
+				en_an_count [enit] = 16;
+			#endif
+
+			play_sfx (10);
+
 			#ifdef USE_CLASSIC_ENEMS_KILL
 				// Sprite empty
 				en_an_next_frame [enit] = sprite_18_a;
@@ -6174,6 +6176,12 @@ void platform_get_player (void) {
 			#ifdef ENABLE_CUSTOM_ENEMS
 				extra_enems_killed ();
 			#endif
+		} else {
+			#ifndef USE_CLASSIC_ENEMS_KILL
+				en_an_count [enit] = 4;
+			#endif
+
+			play_sfx (1);
 		}
 	}
 #endif

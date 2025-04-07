@@ -89,7 +89,7 @@
 #define LEGACY_REFILLS 						// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS					1		// Number of flags. For scripting and stuff.
 //#define PLAYER_DIZZY 						// The Hobbit
-#define ENEMIES_LIFE_GAUGE			5		// Amount of shots/hits needed to kill enemies.
+#define ENEMS_LIFE_GAUGE			5		// Amount of shots/hits needed to kill enemies.
 //#define ENEMIES_MAY_BE_PARALIZED 			// Custom paralyze enemies.
 //#define PARALYZED_DONT_KILL 				// Enemies don't kill while paralyzed
 //#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
@@ -367,7 +367,7 @@
 //#define UNPACKED_MAP						// Full, uncompressed maps. Shadows settings are ignored.
 //#define COLUMN_MAP 						// Do not check horizontal screen flicks
 //#define ROW_MAP 							// Do not check vertical screen flicks
-//#define NO_ALT_BG							// No alternative tile 19 for bg = 0
+#define NO_ALT_BG							// No alternative tile 19 for bg = 0
 //#define NO_MAX_ENEMS						// Less than 3 enems in some screens
 #define PLAYER_ALTERNATE_ANIMATION			// If defined, animation is 1,2,3,1,2,3... 
 //#define TWO_SETS							// If defined, two sets of tiles. Second set is activated if
