@@ -279,7 +279,7 @@ void set_hotspot (unsigned char hn) {
 
 	void hook_init_game (void) {
 		new_level = 1;
-		level = 2;
+		level = 1;
 		phaskey = 0;
 		openlocks = 0;
 	}
@@ -429,6 +429,19 @@ void set_hotspot (unsigned char hn) {
 
 		// Reset this
 		enemy_killer = 0xff;
+	}
+
+	void hook_hotspots (void) {	
+	}
+
+	unsigned char hook_game_over (void) {
+		// Do your shit then return 1 for normal game over.
+		return 1;
+	}
+
+	unsigned char hook_just_died (void) {
+		// Do your shit then return 1 for normal behaviour
+		return 1;
 	}
 
 #endif

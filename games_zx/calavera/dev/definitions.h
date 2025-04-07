@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // definitions.h
 // Contains type definitions and global variables
@@ -20,6 +20,8 @@
 
 #define ENEM_PARALYZED 			32
 
+#define ENEM_IS_DEAD 			128
+
 #define SWORD_TYPE_RIGHT 		0
 #define SWORD_TYPE_LEFT 		1
 #define SWORD_TYPE_UP 			2
@@ -31,6 +33,7 @@
 #define WALL_LEFT 				1
 #define WALL_RIGHT 				2
 #define WALL_UP 				4
+#define WALL_DOWN 				8
 
 #define GENITAL_FACING_RIGHT 	0
 #define GENITAL_FACING_LEFT		1
@@ -45,11 +48,14 @@
 #define PLAYER_KILLED_BY_ENEM 	2
 #define PLAYER_KILLED_BY_EZ 	4
 #define PLAYER_KILLED_BY_SELF 	8
+#define PLAYER_KILLED_BY_BOX 	16
+
+#define BORDER(b) 				asm("ld a,"#b"\nout (254),a")
 
 typedef struct {
-	int x, y, cx;										// 0, 2, 4
-	int vx, vy; 										// 6, 8
-	char g, ax, rx; 									// 10, 11, 12
+	signed int x, y, cx;								// 0, 2, 4
+	signed int vx, vy; 									// 6, 8
+	unsigned char g, ax, rx; 							// 10, 11, 12
 	unsigned char salto, cont_salto; 					// 13, 14
 	unsigned char *current_frame, *next_frame; 			// 15, 17
 	unsigned char saltando; 							// 19
@@ -58,8 +64,8 @@ typedef struct {
 	unsigned char ct_estado; 							// 24
 	unsigned char gotten; 								// 25
 	unsigned char possee; 								// 26
-	char objs, keys; 									// 27, 28
-	int life; 											// 29
+	signed char objs, keys; 							// 27, 28
+	signed int life; 									// 29
 	unsigned char fuel; 								// 31
 	unsigned char killed; 								// 32
 	unsigned char disparando; 							// 33
@@ -72,6 +78,9 @@ typedef struct {
 	unsigned char hovering; 							// 41
 	unsigned char just_hovered; 						// 42
 	unsigned char just_jumped;							// 43
+	unsigned char sword_g;								// 44
+	unsigned char coins;								// 45
+	unsigned char drain_amount; 						// 46
 } INERCIA;
 
 typedef struct {
@@ -115,7 +124,7 @@ unsigned int key_3 = 0x04f7;
 
 void *my_malloc(uint bytes) { return sp_BlockAlloc(0); }
 void *u_malloc = my_malloc;
-void *u_free = sp_FreeBlock;
+void *u_free = NULL; //sp_FreeBlock;
 
 // Sprite structs
 
@@ -146,7 +155,6 @@ INERCIA player;
 	unsigned char bullets_estado [MAX_BULLETS];
 #endif
 signed int ptgmx, ptgmy;
-unsigned char player_just_died;
 
 // Enemies
 
@@ -154,25 +162,27 @@ unsigned char en_an_frame [MAX_ENEMS]				@ 23600;
 unsigned char en_an_count [MAX_ENEMS]				@ (23600 + MAX_ENEMS);
 unsigned char *en_an_current_frame [MAX_ENEMS]		@ (23600 + MAX_ENEMS*2);
 unsigned char *en_an_next_frame [MAX_ENEMS]			@ (23600 + MAX_ENEMS*4);
-unsigned char en_an_morido [MAX_ENEMS] 				@ (23600 + MAX_ENEMS*6);
-signed int en_an_x [MAX_ENEMS] 						@ (23600 + MAX_ENEMS*7);
-signed int en_an_y [MAX_ENEMS]						@ (23600 + MAX_ENEMS*9);
-signed int en_an_vx [MAX_ENEMS]						@ (23600 + MAX_ENEMS*11);
-signed int en_an_vy [MAX_ENEMS]	 					@ (23600 + MAX_ENEMS*13);
-unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (23600 + MAX_ENEMS*15);
-unsigned char en_an_state [MAX_ENEMS]				@ (23600 + MAX_ENEMS*16);
-unsigned char en_an_ff [MAX_ENEMS] 					@ (23600 + MAX_ENEMS*17);
-unsigned char en_an_base_frame [MAX_ENEMS] 			@ (23600 + MAX_ENEMS*18);
+signed int en_an_x [MAX_ENEMS] 						@ (23600 + MAX_ENEMS*6);
+signed int en_an_y [MAX_ENEMS]						@ (23600 + MAX_ENEMS*8);
+signed int en_an_vx [MAX_ENEMS]						@ (23600 + MAX_ENEMS*10);
+signed int en_an_vy [MAX_ENEMS]	 					@ (23600 + MAX_ENEMS*12);
+unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (23600 + MAX_ENEMS*14);
+unsigned char en_an_state [MAX_ENEMS]				@ (23600 + MAX_ENEMS*15);
+unsigned char en_an_ff [MAX_ENEMS] 					@ (23600 + MAX_ENEMS*16);
+unsigned char en_an_base_frame [MAX_ENEMS] 			@ (23600 + MAX_ENEMS*17);
 
 unsigned int enoffs, enoffsmasi;
 unsigned char en_j, en_x, en_y, en_xx, en_yy;
 unsigned char en_cx, en_cy;
-unsigned char en_ccx, en_ccy;
+
 // Only one enemy may hurt the player at once, so we need this flag:
 unsigned char en_tocado = 0; 
 unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
 signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
+#ifdef INDEXED_ENEMS
+	unsigned char n_enems;
+#endif
 unsigned char *_baddies_pointer;
 
 #if defined ENABLE_CODE_HOOKS
@@ -193,8 +203,12 @@ unsigned char map_buff [150] @ 23450;
 
 unsigned char hotspot_x;
 unsigned char hotspot_y;
+unsigned char hotspot_t_r;
 unsigned char hotspot_t;
 unsigned char orig_tile;	// Original background tile
+#ifdef ENABLE_CODE_HOOKS
+	unsigned char hotspot_flag;
+#endif
 
 #ifdef ENABLE_CODE_HOOKS
 	unsigned char latest_hotspot;	
@@ -208,6 +222,7 @@ unsigned char orig_tile;	// Original background tile
 
 unsigned char isrc           @ 23296;
 unsigned char ay_player_on   @ 23297;
+unsigned char ay_counter     @ 23298;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
@@ -215,6 +230,11 @@ unsigned char ay_player_on   @ 23297;
 	#endif
 #endif
 unsigned char n_pant, on_pant;
+unsigned char pant_just_rendered;	// Will be 1 for 1 frame if just entered a new screen in hook_init_mainloop
+
+#ifdef DIE_AND_RESPAWN
+	unsigned char safe_n_pant, safe_x, safe_y;
+#endif
 
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 	unsigned char f_zone_ac;
@@ -253,11 +273,6 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_on, s_type;
 	unsigned char s_x, s_y, s_frame;
 	unsigned char s_hit_x, s_hit_y;
-
-	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
-	#ifndef SWORD_STAB
-		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
-	#endif
 #endif
 
 // Breakable
@@ -267,6 +282,9 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char b_f [MAX_BREAKABLE];
 	unsigned char b_x [MAX_BREAKABLE];
 	unsigned char b_y [MAX_BREAKABLE];
+	#ifdef BREAKABLE_SPAWN_ONLY_IF
+		unsigned char b_was [MAX_BREAKABLE];
+	#endif
 #endif
 
 // Aux
@@ -285,16 +303,20 @@ unsigned char coins_old;
 unsigned char success;
 unsigned char rdi;
 signed int rdj;
-unsigned char rda;
 unsigned char rdx, rdy;
-unsigned char gpit, enit, pad0, pad1, pad_this_frame;
+unsigned char gpit, enit, pad0, pad1 = 0, pad_this_frame = 0;
 unsigned char gpx, gpy, gpxx, gpyy;
-int gpcx, gpcy;
+signed int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
 unsigned char _x, _y, _t, _n;
 unsigned char _x2, _y2;
 unsigned char wall;
+unsigned char rda, rdb, rdmt;
+
+#if defined USE_SIGHT_DISTANCE || defined ENABLE_COCOS
+	unsigned char cx1, cy1, cx2, cy2;
+#endif
 
 #if defined RLE_MAP
 	unsigned char rdc, rdn;
@@ -365,3 +387,4 @@ void init_player_values (void);
 unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
+void enems_kill (unsigned char damage);

@@ -3,6 +3,9 @@
 set game=calavera
 
 echo Making %game%
+
+if [%1]==[justcompile] goto :compile
+
 rem ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 10 6 15 10 15 > nul
 ..\utils\rle62map_sp.exe in=..\map\mapa.MAP out=mapa.h size=10,6 tlock=99 scrsize=15,10 mk1h=mapa.h nodecos > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin inverted:0 > nul
@@ -23,10 +26,14 @@ rem ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
 ..\utils\apack.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\apack.exe ..\gfx\ending.scr ending.bin  > nul
 
+:compile
+
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
 zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
+if %errorlevel% neq 0 goto :error
+
 ..\utils\printsize.exe %game%.bin
 ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
 ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
@@ -34,5 +41,14 @@ zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
 
 echo Output: %game%.tap
 
+if [%1]==[noclean] goto :end 
+if [%2]==[noclean] goto :end 
+
 del ..\gfx\*.scr > nul
 del *.bin >nul
+goto :end 
+
+:error
+echo ERROR
+
+:end

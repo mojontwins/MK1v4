@@ -5,9 +5,14 @@
 // I. General configuration
 // ============================================================================
 
+//#define CUSTOM_SCREEN_CONNECTIONS 			// Uses code in custom_screen_connections.h
+
 //#define MODE_128K_DUAL					// Uses AY Routines in RAM1 if on 128K mode.
 //#define MIN_FAPS_PER_FRAME		2		// Limits the max # of fps to 50/N
 //#define DECOMPRESSOR_ZX0					// User Einar Saukas' ZX0 rather than aplib
+//#define COMPRESSED_TS 			2		// See manual!
+
+//#define TALL_PLAYER					// Main character is 16x24
 
 // Arkos support. Get the addresses from ogt/RAM1.map.txt after compiling RAM1.bin
 
@@ -49,6 +54,11 @@
 
 #define ENABLE_CODE_HOOKS					// Hooks @ init, entering game, screen & loop @ custom.h
 #define ENABLE_CUSTOM_ENEMS 				// Hooks for custom enemies @ custom.h
+//#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS	// Call `custom.h/get_cell_n ()` for linear
+//#define ENEMS_CUSTOM_CELLS 				// Include custom_enem_cells.h
+//#define ENEMS_CUSTOM_COLLISION 			// Normal code will only be ran if enems_custom_collision returns 0
+//#define CUSTOM_MAP_POINTER_CALCULATOR 	// Calculate gp_gen yourself in custom_map_pointer_calculator @ custom.h
+//#define CUSTOM_FLICK_SCREEN_HANDLER		// Change n_pant yourselfcustom_flick_screen_handler @ custom.h
 
 // ============================================================================
 // II. Engine type
@@ -85,9 +95,13 @@
 //#define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 //#define ENEMIES_COLLIDE_MASK 		8
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
+//#define DIE_AND_RESPAWN 					// Respawn the player on the latest safe spot (side view)
+//#define SAFE_SPOT_ON_ENTERING 			// Safe spot is only updated when entering a new screen
 
 #define PACKED_ENEMS 						// Packed XY1, XY2 format.
 #define FIXED_ENEMS_LIMITS 					// x1, x2, y1, y2 won't change.
+//#define INDEXED_ENEMS 					// Good if you have lots screens with less than MAX_ENEMS
+#define USE_CLASSIC_ENEMS_KILL				// Killing enemies pauses the action i.e. the classic shit
 
 // Coins engine
 // ------------
@@ -101,6 +115,7 @@
 //#define COINS_DEACTIVABLE					// Coins can be hidden.
 //#define COINS_SCRIPTING 					// Run script when player gets coin
 //#define COINS_PERSISTENT	 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes
+//#define COINS_SMALL_BB 					// Much smaller collision BB
 
 // Fixed screens engine
 // --------------------
@@ -152,6 +167,12 @@
 //#define SWORD_HIT_FRAME 			2		// Frame to render 0-3 (for side view)
 //#define GENITAL_HIT_FRAMES 				// Add 4 cells to the spriteset in genital
 //#define SWORD_STAB 				5		// Rather than swing, stab at height N
+//#define SWORD_DEPLETES 					// Can only hit when player.sword_g > 0 & decs
+//#define SWORD_CUSTOM_HIT 					// use code @ sword_custom_hit.h before default
+//#define SWORD_DISABLE_HIT 				// Disable default hit code.
+//#define SWORD_OFFS 				-4 		// If defined, Added to sword X (value for looking right)
+//#define SWORD_W 					12 		// For horizontal, LOGICAL width of the sprite (introduced for Ninjajar LL CPC)
+//#define SWORD_WIDE 						// For horizontal, sprite is 8x8 rather than 4x8.
 
 // Breakable
 // ---------
@@ -160,6 +181,7 @@
 //#define MAX_BREAKABLE_FRAMES 		8 		// N = frames to display this tile:
 //#define BREAKABLE_BREAKING_TILE 	45		// display this for N frames
 //#define BREAKABLE_ERASE_TILE 		0		// The substitute by this tile.
+//#define BREAKABLE_SPAWN_ONLY_IF 	12		// If defined, spawn only if broken tile is N.
 //#define BREAKABLE_SPAWN_CHANCE  	3 		// Must be a power of 2 - 1, ifdef there's a chance to spawn...
 //#define BREAKABLE_SPAWN_TILE    	46 		// Throw this tile if rand() & chance == 1.
 //#define BREAKABLE_PERSISTENT 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
@@ -204,13 +226,17 @@
 //#define HIDDEN_CAN_MOVE 					// Originally, if you are moving you are not hidden. Override.
 #define RANDOM_RESPAWN						// If defined, automatic flying enemies spawn on killed enemies
 //#define USE_TYPE_6						// If defined, type 6 enemies are enabled.
+//#define PLAYER_MAY_BE_INVISIBLE	
 //#define USE_SIGHT_DISTANCE				// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE			120		
 #define FANTY_MAX_V 				256 	// Flying enemies max speed.
+#define FANTY_V_RETREATING 			128		// Flying eneimes speed when retreating (USE_SIGHT_DISTANCE / PLAYER_CAN_HIDE)
 #define FANTY_A 					12		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE			10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 //#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
+//#define FANTY_REMEMBER_POSITION 			// Don't reset fanty to x1, y1 on entering.
+//#define FANTY_FACING
 
 // Quadrators
 // ----------
@@ -221,6 +247,7 @@
 // ---------------------------------
 
 //#define ENABLE_MARRULLERS 				// Enable MARRULLERS, enemy type 11-14
+//#define MARRULLERS_CONFINED 				// Marrullers will never touch the borders of the screen
 
 // Scripting
 // ---------
@@ -238,6 +265,7 @@
 // ---------
 
 //#define PLAYER_MOGGY_STYLE				// Enable top view.
+//#define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
 //#define LOOK_AT_THE_CAMERA				// Use "walk down" cell if player is idle
 //#define PLAYER_NO_INERTIA					// Disable inertia
 //#define PLAYER_CONST_V			256		// Constant speed
@@ -245,18 +273,27 @@
 // Side view:
 // ----------
 
+//#define PLAYER_CUSTOM_VERT_AXIS 			// Do it yourself!
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 #define SHORT_PLAYER 						// Bounding box 12x16
-#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
 //#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
 //#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+#define BETTER_VERTICAL_CONNECTIONS			// Better vertical connections in side view, but heavier
+//#define CHANGE_FACING_LIKE_ALEX			// Floor: L/R sets facing. Air: VX sets facing
+
+#define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
+#define TIGHT_LOWER 				4
+#define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
+
 //#define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
 //#define RAMIRO_HOVER 						// press down to hover
 //#define HOVER_WITH_JUMP_ALSO 				// use jump to hover as well
+
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
 //#define JETPAC_DRAINS_LIFE				// If defined, flying drains life.
 //#define JETPAC_DRAIN_RATIO		3		// Drain 1 each X frames.
 //#define JETPAC_DRAIN_OFFSET		8		// Drain after X frames.
+
 //#define PLAYER_KILLS_ENEMIES			  	// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 		3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define PLAYER_MAX_KILLABLE 		6 		// Only kill enemies if id <= PLAYER_MAX_KILLABLE
@@ -342,6 +379,7 @@
 // Stupid animated tiles
 //#define ENABLE_ANIMATED_TILES 			// Enables them
 //#define ANIMATED_TILE 			11 		// Which tile. Alternates with N + 16
+//#define ANIMATED_NEXT			 			// Alternate with N + 1 rather than N + 16
 //#define MAX_ANIMATED_TILES 		16 		// Must be a power of two
 
 #define NO_MASKS 					sp_OR_SPRITE	// make it sp_XOR_SPRITE or sp_OR_SPRITE
@@ -402,9 +440,28 @@
 // 32 = Breakable
 // 64 = Quicksands
 
+// 10 = PUSHABLE!
+
 unsigned char comportamiento_tiles [] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0,
     0, 0, 4, 8, 8, 4, 8, 8, 4, 4, 8, 0, 0, 2, 0, 0,
     0, 0, 4, 4, 0, 8, 2, 2, 2, 2, 8, 0, 2, 2, 2, 0
 };
+
+// Sword offset. See the manual if you wanna change those
+// Default values are
+// #define MAX_SWORD_FRAMES 9
+// swoffs_x ->  8, 10, 12, 14, 16, 16, 14, 13, 10
+// swoffs_y ->  2,  2,  2,  3,  4,  4,  5,  6,  7
+
+#define NUM_SWORD_FRAMES 4
+#define MIN_SWORD_HIT_FRAME 0
+#define MAX_SWORD_HIT_FRAME 2
+
+#ifdef ENABLE_SWORD
+	unsigned char swoffs_x [] = {  8, 16, 13, 10 };
+#endif
+#if defined ENABLE_SWORD && !defined SWORD_STAB
+	unsigned char swoffs_y [] = {  2,  2,  2,  3,  4,  4,  5,  6,  7};
+#endif
 

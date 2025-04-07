@@ -87,7 +87,7 @@
 			add hl, bc 
 			ld  a, (hl) 
 			or  a 
-			jr  z, fantys_end
+			jp  z, fantys_end
 
 			jr  fantys_pursuing
 		.fanty_not_random_respawn
@@ -474,10 +474,12 @@
 	//                          MOVE WITH VELOCITY
 	// ********************************************************************
 
+	#if defined USE_TYPE_6
 		// if (scenery_info.allow_type_6)
 		ld  a, (_scenery_info + 3) 		// scenery_info.allow_type_6
 		or  a
 		jp  z, fantys_end
+	#endif
 
 	// X AXIS
 

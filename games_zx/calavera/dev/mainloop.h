@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
@@ -8,10 +8,15 @@
 	#include "custom_screen_connections.h"
 #endif
 
+#ifdef TALL_PLAYER
+	#define MAIN_SPRITE_HEIGHT 4
+#else
+	#define MAIN_SPRITE_HEIGHT 3
+#endif
+
 void main (void) {
 	#asm
 			di 
-			ld  sp, STACK_ADDR
 
 		#ifdef MODE_128K_DUAL
 				xor a
@@ -53,19 +58,63 @@ void main (void) {
 					ld  a, 1
 					ld  (_ay_player_on), a
 			#endif
+		#else
+			ld  sp, STACK_ADDR
 		#endif
+
+			call musicstart
 	#endasm
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-		sp_InitIM2 (0xf1f1);
-		sp_CreateGenericISR (0xf1f1);
-		sp_RegisterHook (255, ISR);
+		#asm
+				ld  bc, 0xf1f1 
+				call SPInitIM2
+
+				ld  de, 0xf1f1
+				call SPCreateGenericISR
+
+				ld  l, 255
+				ld  bc, _ISR 
+				call SPRegisterHook
+		#endasm
 	#endif
 
 	// splib2 initialization
-	sp_Initialize (7, 0);
-	sp_Border (BLACK);
+	//sp_Initialize (7, 0);
+	#asm
+			ld de, 0
+			call SPInitialize
+	#endasm
+
+	BORDER(0);
 	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
+
+	// Compressed tileset
+	#ifdef COMPRESSED_TS
+		#if COMPRESSED_TS == 1
+			#asm
+				.decompress_ts
+					ld hl, _tilesetc 
+					ld de, _tileset
+					#ifdef DECOMPRESSOR_ZX0
+						call dzx0_standard
+					#else
+						call depack
+					#endif
+			#endasm
+		#elif COMPRESSED_TS == 2
+			#asm
+				.decompress_ts
+					ld hl, _tilesetc 
+					ld de, _tileset+512
+					#ifdef DECOMPRESSOR_ZX0
+						call dzx0_standard
+					#else
+						call depack
+					#endif
+			#endasm	
+		#endif
+	#endif
 
 	#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
 		#asm
@@ -103,30 +152,61 @@ void main (void) {
 	
 	// Sprite creation
 	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (NO_MASKS, 3, sprite_2_a, 1);
+		sp_player = sp_CreateSpr (NO_MASKS, MAIN_SPRITE_HEIGHT, sprite_2_a, 1);
 		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
+		sp_AddColSpr (sp_player, sprite_2_b);	// This is a dummy and will be overwritten later
 		player.current_frame = player.next_frame = sprite_2_a;
 		
 		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 			sp_moviles [rdi] = sp_CreateSpr(NO_MASKS, 3, sprite_9_a, 1);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);	// This is a dummy and will be overwritten later	
 			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#else
-		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1);
+		sp_player = sp_CreateSpr (sp_MASK_SPRITE, MAIN_SPRITE_HEIGHT, sprite_2_a, 1);
 		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
+		sp_AddColSpr (sp_player, sprite_2_b);	// This is a dummy and will be overwritten later
 		player.current_frame = player.next_frame = sprite_2_a;
 		
 		for (rdi = 0; rdi < MAX_ENEMS; rdi ++) {
 			sp_moviles [rdi] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2);
 			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);
-			sp_AddColSpr (sp_moviles [rdi], sprite_9_c);	
+			sp_AddColSpr (sp_moviles [rdi], sprite_9_b);	// This is a dummy and will be overwritten later	
 			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#endif
+
+	// Create a virtual, non existent third column for sprites.
+	
+	#asm
+		.fix_sprites
+			#ifdef TALL_PLAYER
+				ld  b, 8
+			#else
+				ld  b, 6
+			#endif
+			ld  hl, (_sp_player) 			// Sprite base pointer
+			call _fix_sprites
+
+			ld  de, _sp_moviles
+			ld  b, MAX_ENEMS 
+
+		.fix_sprites_rep1
+			push bc
+			ld  a, (de)
+			ld  l, a
+			inc de 
+			ld  a, (de)
+			ld  h, a
+			inc de 
+
+			ld  b, 6
+			call _fix_sprites
+
+			pop bc 
+			djnz fix_sprites_rep1
+	#endasm
 
 	#ifdef PLAYER_CAN_FIRE
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
@@ -245,12 +325,21 @@ void main (void) {
 			ld  (_on_pant), a
 		#endasm
 
+		#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE 
+			#if defined SAFE_SPOT_ON_ENTERING
+			safe_n_pant = 0xff;
+			#else
+				#asm
+						call die_and_respawn_save
+				#endasm
+			#endif
+		#endif
+		
 		while (playing) {
 			#ifdef ENABLE_CODE_HOOKS
 				hook_init_mainloop ();
+				pant_just_rendered = 0;
 			#endif
-
-			player_just_died = 0;
 
 			// Update SCR
 
@@ -270,6 +359,11 @@ void main (void) {
 
 					ld  a, (_n_pant)
 					ld  (_on_pant), a
+
+					#ifdef ENABLE_CODE_HOOKS
+						ld  a, 1
+						ld  (_pant_just_rendered), a
+					#endif
 				.ml_ud_skip
 			#endasm
 
@@ -291,13 +385,19 @@ void main (void) {
 						#ifdef ONLY_ONE_OBJECT
 							draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 						#else
-							draw_2_digits (OBJECTS_X, OBJECTS_Y, 
+							#asm 
+									ld  a, OBJECTS_X 
+									ld  (__x), a 
+									ld  a, OBJECTS_Y 
+									ld  (__y), a 
+									ld  a, (_player + 27)		// player.objs
 								#ifdef REVERSE_OBJECT_COUNT
-									PLAYER_NUM_OBJETOS - player.objs
-								#else
-									player.objs
+									ld  c, a 
+									ld  a, PLAYER_NUM_OBJETOS
+									sub c
 								#endif
-							);
+									call draw_2_digits_shortcut
+							#endasm
 						#endif
 					#endif
 					objs_old = player.objs;
@@ -306,19 +406,52 @@ void main (void) {
 			
 			#ifdef LIFE_X
 				if (player.life != life_old) {
-					if (player.life > 0) pti = (unsigned char) player.life; else pti = 0;
+					#asm
+							ld  hl, (_player + 29) 				// player.life, 16 bits signed
+							bit 7, h 
+							jr  z, draw_life_do
+
+							ld  hl, 0 							// life < 0 -> 0
+							
+						.draw_life_do
+
 					#ifdef DRAW_HI_DIGIT
-						sp_PrintAtInv (LIFE_H_Y, LIFE_H_X, 71, 16 + pti / 100);
+							ex  de, hl 
+							ld  hl, 100 
+							call l_div_u  						// Result in DE, what we need in E
+							
+							ld  a, LIFE_H_Y
+							ld  c, LIFE_H_X 
+							ld  d, 71 
+
+							call SPPrintAtInv
+
+							ld  hl, (_player + 29) 				// player.life, 16 bits signed
 					#endif
-					draw_2_digits (LIFE_X, LIFE_Y, pti);
+
+							ld  a, LIFE_X 
+							ld  (__x), a 
+							ld  a, LIFE_Y 
+							ld  (__y), a 
+							ld  a, l
+							call draw_2_digits_shortcut
+					#endasm
+
 					life_old = player.life;
 				}
 			#endif
 
 			#if !defined DEACTIVATE_KEYS && defined KEYS_X
 				if (player.keys != keys_old) {
-					draw_2_digits (KEYS_X, KEYS_Y, player.keys);
-					keys_old = player.keys;
+					#asm
+						ld  a, KEYS_X 
+						ld  (__x), a 
+						ld  a, KEYS_Y 
+						ld  (__y), a 
+						ld  a, (_player + 28)		// player.objs
+						ld  (_keys_old), a 
+						call draw_2_digits_shortcut
+					#endasm
 				}
 			#endif
 
@@ -344,10 +477,17 @@ void main (void) {
 			#endif
 
 			#if defined USE_COINS && defined COINS_X
+				#ifdef COIN_FLAG
 				if (flags [COIN_FLAG] != coins_old) {
 					draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
 					coins_old = flags [COIN_FLAG];
 				}
+				#else
+					if (player.coins != coins_old) {
+						draw_2_digits (COINS_X, COINS_Y, player.coins);
+						coins_old = player.coins;
+					}
+				#endif
 			#endif
 
 			#asm
@@ -456,6 +596,10 @@ void main (void) {
 				latest_hotspot = 0;
 			#endif
 
+			// Copy stored hotspot for this screen to hotspot_t
+			// So hotspot_t can be tinkered with in the hook
+			hotspot_t = hotspot_t_r;
+
 			//if (gpx >= hotspot_x - 15 && gpx <= hotspot_x + 15 && gpy >= hotspot_y - 15 && gpy <= hotspot_y + 15) 
 			#asm
 					// gpx >= hotspot_x - 15 -> gpx + 15 >= hotspot_x
@@ -464,7 +608,7 @@ void main (void) {
 					ld  a, (_gpx) 
 					add 12
 					cp  c
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 
 					// gpx <= hotspot_x + 15 -> hotspot_x + 15 >= gpx
 					ld  a, (_gpx)
@@ -472,7 +616,7 @@ void main (void) {
 					ld  a, (_hotspot_x)
 					add 12
 					cp  c
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 
 					// gpy >= hotspot_y - 15 -> gpy + 15 >= hotspot_y
 					ld  a, (_hotspot_y)
@@ -480,7 +624,7 @@ void main (void) {
 					ld  a, (_gpy)
 					add 12
 					cp  c 
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 
 					// gpy <= hotspot_y + 15 -> hotspot_y + 15 >= gpy
 					ld  a, (_gpy)
@@ -488,13 +632,27 @@ void main (void) {
 					ld  a, (_hotspot_y)
 					add 12
 					cp  c
-					jp  c, _hotspots_done
+					jp  c, _hotspots_else
 			#endasm
 			{	
 				#ifdef ENABLE_CODE_HOOKS
+					if (hotspot_flag == 0) 
+				#endif
+				{
+					#ifdef ENABLE_CODE_HOOKS
+						hotspot_flag = 1;
+					#endif
+
+					#ifdef ENABLE_CODE_HOOKS
 					latest_hotspot = hotspot_t;
 				#endif
 					
+					#ifdef ENABLE_CODE_HOOKS
+						// You may override hotspot_t or whatever:
+						hook_hotspots ();
+					#endif
+						
+					if(hotspot_t) {
 				rdi = 0;
 				#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
 					switch (hotspot_t) {
@@ -539,10 +697,27 @@ void main (void) {
 				
 				if (rdi != 1)  {
 					draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
-					hotspot_x = hotspot_y = 240;
+							hotspot_y = 240;
 					hotspots [n_pant].act = rdi;
 				}
 			}
+				}
+
+				#ifdef ENABLE_CODE_HOOKS
+					#asm
+						jr _hotspots_done
+					#endasm
+				#endif
+			} 
+
+			#asm
+				._hotspots_else
+			#endasm
+
+			#ifdef ENABLE_CODE_HOOKS
+				hotspot_flag = 0;
+			#endif
+
 			#asm
 				._hotspots_done
 			#endasm
@@ -584,7 +759,11 @@ void main (void) {
 
 						call qtile_do
 						ld  a, l 	// HL 
+					#ifdef ANIMATED_NEXT
+							xor 0x01 	// Flip bit 1
+					#else	
 						xor 0x10 	// Flip bit 4
+					#endif
 						ld  (__t), a
 						
 						ld  de, _comportamiento_tiles
@@ -633,22 +812,16 @@ void main (void) {
 				.skipupd
 			#endasm
 			
-			// Dead enemies
-
-			#ifdef PLAYER_CAN_FIRE
-				for (rdi = 0; rdi < 3; rdi ++)
-					if (en_an_morido [rdi] == 1) {
-						play_sfx (1);
-						en_an_morido [rdi] = 0;
-					} 	
-			#endif
-
-			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER)
+			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER) || defined(PLAYER_DIZZY)
 				// Flickering
 				#asm
 					.player_flicker_done_check
 						ld  a, (_player + 23)		// player.estado
+						#ifdef PLAYER_DIZZY
+							and EST_PARP | EST_DIZZY
+						#else
 						and EST_PARP
+						#endif
 						jr  z, player_flicker_check_done
 
 						ld  a, (_player + 24) 		// player.ct_estado
@@ -688,7 +861,16 @@ void main (void) {
 
 			// Flick screen
 
-			#ifndef FIXED_SCREENS
+			#ifdef FIXED_SCREENS
+				// Do nothing
+
+			#elif defined CUSTOM_FLICK_SCREEN_HANDLER
+				// Defined in custom.h, Changes n_pant when it's needed.
+				custom_flick_screen_handler ();
+
+			#else
+				// Default flick screen code.
+
 				#ifndef COLUMN_MAP
 					if (gpx == 0 && player.vx < 0) {
 						#asm
@@ -852,27 +1034,63 @@ void main (void) {
 				}				
 			#endif
 
-			// Dead player
+			// Dead player new code!
+
 			if (player.is_dead) {
+				#asm
+					.player_is_dead
+				#endasm
+
 				player.is_dead = 0;
-				if (player.life > 0) {
+				player.life -= player.drain_amount;
+
+				if (
+					#ifdef ENABLE_CODE_HOOKS
+						hook_just_died () &&
+					#endif
+					#ifdef FIRING_DRAINS_LIFE
+						player.is_dead != PLAYER_KILLED_BY_SELF &&
+					#endif
+					#ifndef DEACTIVATE_EVIL_ZONE
+						player.is_dead != PLAYER_KILLED_BY_EZ &&
+					#endif
+					player.life > 0
+				) {
+
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
-							draw_scr ();
-							init_player_values ();
 							#ifdef FIXED_SCREENS
 								player.killed = 0;
 								malotes [enoffs].t = malotes [enoffs].t & 15;
 								malotes [enoffs + 1].t = malotes [enoffs + 1].t & 15;
 								malotes [enoffs + 2].t = malotes [enoffs + 2].t & 15;
 							#endif
-						#else	
-							draw_scr_background ();
-							init_player_values ();
 						#endif
-					#endif
-					#ifdef RESPAWN_FLICKER
+							init_player_values ();
+						on_pant = 0xff;
+
+					#elif defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE						
+						#asm
+								ld  a, (_safe_n_pant)
+								ld  (_n_pant), a 
+								ld  a, 0xff
+								ld  (_on_pant), a
+								ld  a, (_safe_x)
+								ld  (_gpx), a
+								call Ashl16_HL
+								ld  (_player), hl 		// player.x
+								ld  a, (_safe_y)
+								ld  (_gpy), a
+								call Ashl16_HL
+								ld  (_player + 2), hl 	// player.y
+								ld  hl, 0
+								ld  (_player + 6), hl
+								ld  (_player + 8), hl
+						#endasm
+						#endif
+
+					#if defined RESPAWN_FLICKER || defined PLAYER_FLICKERS
 						player_flicker ();
 					#endif
 				}
@@ -888,9 +1106,14 @@ void main (void) {
 					|| game_loop_flag == 2
 				#endif
 			) {
+				#ifdef ENABLE_CODE_HOOKS
+					if (hook_game_over ())
+				#endif
+				{
 				saca_a_todo_el_mundo_de_aqui ();				
 				game_over ();
 				playing = 0;
+				}
 			}
 			
 			#ifdef USE_SUICIDE_KEY
