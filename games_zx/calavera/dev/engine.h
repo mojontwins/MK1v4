@@ -7239,20 +7239,20 @@ void mueve_bicharracos (void) {
 
 		enems_loop_continue:
 
-			#ifdef RANDOM_RESPAWN
-				// Activate fanty
+		#ifdef RANDOM_RESPAWN
+			// Activate fanty
 
 			#asm
 				// Should we create?
+				.enems_create_rr
 
 					ld  a, (__en_t) 
 					and 128 
 					jr  z, enems_create_fanty_done 
 
 					call _rand 
+					ld  a, l
 					and 31 
-					xor a 
-					or  l 
 					jr  nz, enems_create_fanty_done
 
 					ld  bc, (_enit) 
@@ -7276,17 +7276,21 @@ void mueve_bicharracos (void) {
 					ld  b, h 
 					ld  c, l 			// We'll be indexing 16 bits from now on
 					
+
+					ld  a, (_gpy) 
+					cp  120 
+					xor a
+					jr  nc, fanty_create_set_y
+					ld  a, 144
+
+				.fanty_create_set_y
+					ld  (__en_y), a 
+					call Ashl16_HL
+					ex  de, hl
+
 					ld  hl, _en_an_y 
 					add hl, bc 
 
-					ld  de, 0
-					ld  a, (_gpy) 
-					cp  120 
-					jr  nc, fanty_create_set_y
-
-					ld  de, 144*64
-
-				.fanty_create_set_y
 					ld  (hl), e 
 					inc hl 
 					ld  (hl), d 
@@ -7298,6 +7302,7 @@ void mueve_bicharracos (void) {
 					ld  a, l 
 					cp  224
 					jr  nc, fanty_create_pick_x 	// Well, meh
+					ld  (__en_x), a
 					call Ashl16_HL 
 					ex  de, hl 			// DE = rand (240) * 64
 
@@ -7328,7 +7333,7 @@ void mueve_bicharracos (void) {
 
 				.enems_create_fanty_done
 			#endasm
-			#endif
+		#endif
 
 		#asm		
 			.enems_update_values_and_exit
@@ -7421,89 +7426,91 @@ void mueve_bicharracos (void) {
 
 			ld  a, (hl)
 			ld  (__en_life), a
-			#endif
+	#endif
 
 		ret
 
 	.enems_update_values_store
 
-				// Those values are stored in this order:
-				// x, y, x1, y1, x2, y2, mx, my, t[, life]
+		// Those values are stored in this order:
+		// x, y, x1, y1, x2, y2, mx, my, t[, life]
 
-				ld  hl, (__baddies_pointer) 		// Restore pointer
+		ld  hl, (__baddies_pointer) 		// Restore pointer
 
-				ld  a, (__en_x)
+		ld  a, (__en_x)
+		ld  (hl), a
+		inc hl
+
+		ld  a, (__en_y)
+		ld  (hl), a
+		inc hl
+
+	#ifdef PACKED_ENEMS
+		#ifdef FIXED_ENEMS_LIMITS
+				inc hl
+				inc hl
+		#else
+				ld  a, (__en_x1)
+				ld  b, a
+				ld  a, (__en_y1)
+				srl a
+				srl a
+				srl a
+				srl a
+				or  b
 				ld  (hl), a
 				inc hl
 
-				ld  a, (__en_y)
+				ld  a, (__en_x2)
+				ld  b, a
+				ld  a, (__en_y2)
+				srl a
+				srl a
+				srl a
+				srl a
+				or  b
+				ld  (hl), a
+				inc hl					
+		#endif
+	#else
+		#ifdef FIXED_ENEMS_LIMITS
+				ld  bc, 4
+				add hl, bc
+		#else
+				ld  a, (__en_x1)
 				ld  (hl), a
 				inc hl
 
-			#ifdef PACKED_ENEMS
-				#ifdef FIXED_ENEMS_LIMITS
-					inc hl
-					inc hl
-				#else
-					ld  a, (__en_x1)
-					ld  b, a
-					ld  a, (__en_y1)
-					srl a
-					srl a
-					srl a
-					srl a
-					or  b
-					ld  (hl), a
-					inc hl
-
-					ld  a, (__en_x2)
-					ld  b, a
-					ld  a, (__en_y2)
-					srl a
-					srl a
-					srl a
-					srl a
-					or  b
-					ld  (hl), a
-					inc hl					
-				#endif
-			#else
-				#ifdef FIXED_ENEMS_LIMITS
-					ld  bc, 4
-					add hl, bc
-				#else
-					ld  a, (__en_x1)
-					ld  (hl), a
-					inc hl
-	
-					ld  a, (__en_y1)
-					ld  (hl), a
-					inc hl
-	
-					ld  a, (__en_x2)
-					ld  (hl), a
-					inc hl
-	
-					ld  a, (__en_y2)
-					ld  (hl), a
-					inc hl
-				#endif
-			#endif
-				ld  a, (__en_mx)
+				ld  a, (__en_y1)
 				ld  (hl), a
 				inc hl
 
-				ld  a, (__en_my)
+				ld  a, (__en_x2)
 				ld  (hl), a
 				inc hl
 
-				ld  a, (__en_t)
+				ld  a, (__en_y2)
 				ld  (hl), a
 				inc hl
+		#endif
+	#endif
+
+		ld  a, (__en_mx)
+		ld  (hl), a
+		inc hl
+
+		ld  a, (__en_my)
+		ld  (hl), a
+		inc hl
+
+		ld  a, (__en_t)
+		ld  (hl), a
+		inc hl
 
 	#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
-				ld  a, (__en_life)
-				ld  (hl), a
-			#endif
+			ld  a, (__en_life)
+			ld  (hl), a
+	#endif
+
 		ret
-		#endasm	
+#endasm	

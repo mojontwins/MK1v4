@@ -8,7 +8,6 @@
 #asm 	
 	#ifdef USE_TYPE_6
 		// Is this enemy a fanty?
-
 			ld  a, (__en_t)
 			cp  6
 			jp  nz, fantys_end
@@ -34,7 +33,7 @@
 			call _player_hidden 
 			ld  a, l 
 			ld  iyh, a
-
+/*
 		#ifdef RANDOM_RESPAWN
 				// Self modifying code.
 				// ld HL, NN -> 21 L H
@@ -52,6 +51,7 @@
 				ld  (fanty_A_mod_3 + 1), hl
 				ld  (fanty_A_mod_4 + 1), hl
 		#endif
+*/
 	#endif
 
 		ld  bc, (_enit)
@@ -75,13 +75,6 @@
 	#ifdef RANDOM_RESPAWN
 		// If RANDOM_RESPAWN is set, any en_t becomes a fanty if en_an_fanty_activo is set for that enemy.
 
-		#ifdef USE_TYPE_6
-			// But fanties are always fanties so
-				ld  a, (__en_t) 
-				cp  6
-				jr  z, fanty_not_random_respawn
-		#endif
-
 			// if (!fanty_activo) goto .end
 			ld  hl, _en_an_fanty_activo
 			add hl, bc 
@@ -89,7 +82,6 @@
 			or  a 
 			jp  z, fantys_end
 
-			jr  fantys_pursuing
 		.fanty_not_random_respawn
 	#endif
 
@@ -599,7 +591,7 @@
 		ex  de, hl
 		call HLshr6_A
 		ld  (__en_y), a
-
+/*
 	#ifdef RANDOM_RESPAWN
 		// Make fanty blink when next to the edges of the screen
 		// Make invisible if close and even x or even y
@@ -655,7 +647,7 @@
 
 		.fanty_rr_done
 	#endif		
-
+*/
 	#ifdef FANTY_FACING
 			ld  bc, (_enit)
 			ld  b, 0 

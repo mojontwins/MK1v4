@@ -31,7 +31,7 @@ rem ..\utils\sprcnvbin8.exe ..\gfx\sprite_sword.png sprite_sword.bin 4 > nul
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
-zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
+zcc +zx -vn -m churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin
