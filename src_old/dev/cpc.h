@@ -903,3 +903,72 @@ void __FASTCALL__ cpc_HardPause (unsigned char n) {
 			jr  nz, cpc_HardPause_outer
 	#endasm
 }
+
+void __FASTCALL__ enems_en_an_calc (unsigned char n) {
+	// Fastcall so n is in HL
+	#asm
+			ld  b, l 		// B = n
+			sla b 			// B = n << 1
+
+			// Get pointer to enem in IX
+			// Won't trash BC
+			ld  d, SP_ENEMS_BASE
+			call _get_pointer_to_enem_or_coco
+
+			// And now get index to spriteset mappings
+			ld  a, b
+		#ifdef ENEMS_OFFSET
+				add ENEMS_OFFSET
+		#endif
+			ld  hl, (_enit)
+			ld  h, 0 
+			ld  de, _en_an_base_frame 
+			add hl, de 			// HL ->en_an_base_frame [enit]
+			ld  (hl), a 		// en_an_base_frame [enit] = (n << 1) + ENEMS_OFFSET
+
+			// sp_sw struct is 16 bytes wide. This is easy
+			// 0   2   4      6   7   8  9  10 11 12      14
+			// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+
+			// sm_cox, sm_coy are byte arrays
+			ld  b, 0 
+			ld  c, a 			// BC = index
+			
+			// sp_sw [rda].cox = sm_cox [rdb];
+			ld  hl, _sm_cox 
+			add hl, bc 
+			ld  a, (hl) 		// A = sm_cox [rdb]
+			ld  (ix + 6), a 	// sp_sw[...].cox
+
+			// sp_sw [rda].coy = sm_coy [rdb];
+			ld  hl, _sm_coy 
+			add hl, bc 
+			ld  a, (hl) 		// A = sm_coy [rdb]
+			add (ix + 7), a 	// sp_sw[...].coy
+
+			// sm_invfunc, sm_updfunc are 16 bit arrays
+			// We'll never have more than 128 sprite faces
+			sla c 				// BC = A*2
+	
+			// sp_sw [rda].invfunc = sm_invfunc [rdb];
+			ld  hl, _sm_invfunc 
+			add hl, bc 			// HL -> sm_invfunc [rdb]
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl) 
+			ld  (ix + 12), e 
+			ld  (ix + 13), d 	// Write 16 bits
+
+			// sp_sw [rda].updfunc = sm_updfunc [rdb];
+			ld  hl, _sm_updfunc 
+			add hl, bc 
+			ld  e, (hl) 
+			inc hl 
+			ld  d, (hl) 
+			ld  d, (hl) 
+			ld  (ix + 14), e 
+			ld  (ix + 15), d 	// Write 16 bits			
+		
+			jr _enems_calc_frame
+	#endasm
+}

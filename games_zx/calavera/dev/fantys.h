@@ -57,7 +57,7 @@
 		ld  bc, (_enit)
 		ld  b, 0
 
-	#ifdef FANTY_FACING
+	#ifdef FANTY_FACING || defined RANDOM_RESPAWN
 			ld  hl, _en_an_frame 
 			add hl, bc 
 			ld  a, (hl)
@@ -648,7 +648,7 @@
 		.fanty_rr_done
 	#endif		
 */
-	#ifdef FANTY_FACING
+	#ifdef FANTY_FACING || RANDOM_RESPAWN
 			ld  bc, (_enit)
 			ld  b, 0 
 			ld  hl, _en_an_frame

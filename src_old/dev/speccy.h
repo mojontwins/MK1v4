@@ -663,3 +663,21 @@ void fix_sprites() {
 		.vtc_fin
 	#endasm
 }
+
+void __FASTCALL__ enems_en_an_calc (unsigned char n) {
+	// Fastcall so n is in HL
+	#asm
+			ld  a, l 		// B = n
+			sla a 			// B = n << 1
+		#ifdef ENEMS_OFFSET
+				add ENEMS_OFFSET
+		#endif
+			ld  hl, (_enit)
+			ld  h, 0 
+			ld  de, _en_an_base_frame 
+			add hl, de 			// HL ->en_an_base_frame [enit]
+			ld  (hl), a 		// en_an_base_frame [enit] = (n << 1) + ENEMS_OFFSET
+			
+			jr _enems_calc_frame
+	#endasm
+}

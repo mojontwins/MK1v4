@@ -6868,7 +6868,6 @@ void mueve_bicharracos (void) {
 						#endasm
 					}
 				#endif
-				
 
 				// Collision with enemy
 
