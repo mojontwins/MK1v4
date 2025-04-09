@@ -28,13 +28,10 @@
 #endif
 #include "enems.h"
 #include "engine.h"
-#include "pres.h"
-#include "mainloop.h"
-
-// Y el main
-
-void main (void) {
-	do_game ();
-}
-
+#include "extern.h"
+#ifdef ACTIVATE_SCRIPTING
+	#include "msc.h"
+#endif
+#include "pantallas.h"
+#include "mainloop.h" 	// Main is here!
 #include "music.h"

@@ -3,6 +3,468 @@
 
 // Pestecé specific shit (most of it)
 
+#include <cpcrslib.h>
+
+// We are using some stuff from CPCRSLIB directly
+#asm
+	// Imports
+
+		XREF _nametable
+		XREF tabla_teclas
+		LIB cpc_KeysData
+		LIB cpc_UpdTileTable
+		LIB cpc_InvalidateRect
+		LIB cpc_TestKeyboard
+
+	// Exports
+
+		XDEF viewport_x
+		XDEF viewport_y
+
+		defc viewport_x = VIEWPORT_X
+		defc viewport_y = VIEWPORT_Y
+#endasm
+
+/*
+	CPC Memory map
+	
+	0100 tilemap
+	0400 ejecutable
+	8800 descomprimir canción
+	9000 buffer
+	C000 pantalla (a trozos)
+	C600 room buffers
+	CE00 dirty cells (tiles_tocados)
+	D600 arrays
+	DF80 buffers WYZ
+	E600 sprite structures
+	FE00 LUT
+*/
+
+// Number of sprites and handy macros
+
+// Shortcuts
+#if defined PLAYER_KILLS_ENEMIES || defined PLAYER_CAN_FIRE || defined BOXES_KILL_ENEMIES || defined ENABLE_SWORD
+	#define ENEMIES_MAY_DIE
+#endif
+
+#ifndef PLAYER_CAN_FIRE
+	#ifdef MAX_BULLETS
+		#undef MAX_BULLETS
+	#endif
+	#define MAX_BULLETS 0
+#endif
+
+#ifdef ENABLE_SWORD
+	#define SWORD_SW_SPRITE_ON 1
+#else
+	#define SWORD_SW_SPRITE_ON 0
+#endif
+
+#ifdef SHOW_LEVEL_INFO
+	#define NEEDS_BLACKOUT_AREA
+#endif
+
+#if defined COINS_PERSISTENT || defined BREAKABLE_PERSISTENT
+	#define ENABLE_PERSISTENCE
+#endif
+
+#define SW_SPRITES_ALL 		1 + MAX_ENEMS + MAX_BULLETS + SWORD_SW_SPRITE_ON + MAX_CUSTOM_SW_SPRITES
+
+#define SP_PLAYER 			0
+#define SP_ENEMS_BASE 		1
+#define SP_BULLETS_BASE 	(SP_ENEMS_BASE + MAX_ENEMS)
+#define SP_SWORD_BASE 		(SP_BULLETS_BASE + MAX_BULLETS)
+#define SP_COCOS_BASE 		(SP_SWORD_BASE + SWORD_SW_SPRITE_ON)
+#define SP_CUSTOM_BASE		(SP_COCOS_BASE + MAX_ENEMS)
+
+#ifdef SOUND_NONE
+	#define AY_INIT()        ;
+	#define AY_PLAY_SOUND(a) ;
+	#define play_sfx(a)      ;
+	#define AY_STOP_SOUND()  ;
+	#define AY_PLAY_MUSIC(a) ;
+#elif defined SOUND_WYZ
+	#define AY_INIT()        wyz_init ()
+	#define AY_PLAY_SOUND(a) wyz_play_sound (a)
+	#define play_sfx(a)      wyz_play_sound (a)
+	#define AY_STOP_SOUND()  wyz_stop_sound ()
+	#define AY_PLAY_MUSIC(a) wyz_play_music (a)
+#endif		
+
+#ifdef MODE_1
+	// P_0 P_1 P_2 P_3
+	// 1 0 1 0 1 0 1 0
+	// 3 7 2 6 1 5 0 4
+	#define BLACK_COLOUR_BYTE (BLACK_PEN>>1)|((BLACK_PEN>>1)<<1)\
+								|((BLACK_PEN>>1)<<2)|((BLACK_PEN>>1)<<3)\
+								|((BLACK_PEN&1)<<4)|((BLACK_PEN&1)<<5)\
+								|((BLACK_PEN&1)<<6)|((BLACK_PEN&1)<<7)
+#else
+	// PIXEL 0  PIXEL 1
+	// 3 2 1 0  3 2 1 0
+	// 1 5 3 7  0 4 2 6
+	#define BLACK_COLOUR_BYTE ((BLACK_PEN>>3)&1)|(((BLACK_PEN>>3)&1)<<1)\
+								|(((BLACK_PEN>>1)&1)<<2)|(((BLACK_PEN>>1)&1)<<3)\
+								|(((BLACK_PEN>>2)&1)<<4)|(((BLACK_PEN>>2)&1)<<5)\
+								|((BLACK_PEN&1)<<6)|((BLACK_PEN&1)<<7)
+#endif
+
+extern unsigned char trpixlutc [0];
+
+#asm
+	; LUT for transparent pixels in sprites
+	; taken from CPCTelera
+	._trpixlutc
+		BINARY "trpixlutc.bin"
+#endasm
+
+#define BORDER(b) 				cpc_Border((b))
+
+// Controller
+
+// How keys work (in sideview)
+// - If player can't fire, BUTTON_A will JUMP.
+// - If player can fire, and USE_TWO_BUTTONS is DEFINED, BUTTON_A will FIRE, BUTTON_B will JUMP
+// - If player can fire, and USE_TWO_BUTTONS is DEFINED, BUTTON_A will FIRE, ÛP will JUMP
+
+// To define different keys, the first two hex digits are the COLUMN, the next the ROW
+// (Adapt. from cpctelera docs @ https://lronaldo.github.io/cpctelera/files/keyboard/keyboard-txt.html)
+/*
+=========================================================================================================
+|     |                                       column                                                    |
+|     |-------------------------------------------------------------------------------------------------|
+| row |     40      |     41     |  42   | 43  | 44  | 45   |     46       | 47  |   48     |    49     |
+|=====|=============|============|=======|=====|=====|======|==============|=====|==========|===========|
+| 80  | f.          | f0         | Ctrl  | > , | < . | Space| V            | X   | Z        | Del       |
+| 40  | Enter       | f2         | ` \   | ? / | M   | N    | B            | C   | Caps Lock| Unused    |
+| 20  | f3          | f1         | Shift | * : | K   | J    | F Joy1_Fire1 | D   | A        | Joy0_Fire1|
+| 10  | f6          | f5         | f4    | + ; | L   | H    | G Joy1_Fire2 | S   | Tab      | Joy0_Fire2|
+| 08  | f9          | f8         | } ]   | P   | I   | Y    | T Joy1_Right | W   | Q        | Joy0_Right|
+| 04  | Cursor Down | f7         | Return| | @ | O   | U    | R Joy1_Left  | E   | Esc      | Joy0_Left |
+| 02  | Cursor Right| Copy       | { [   | = - | ) 9 | ' 7  | % 5 Joy1_Down| # 3 | " 2      | Joy0_Down |
+| 01  | Cursor Up   | Cursor Left| Clr   | £ ^ | _ 0 | ( 8  | & 6 Joy1_Up  | $ 4 | ! 1      | Joy0_Up   |
+=========================================================================================================
+*/
+
+//#define USE_TWO_BUTTONS					// Alternate keyboard scheme for two-buttons games
+
+extern unsigned char def_keys [0];
+#asm
+	._def_keys
+		defw $4404 		; LEFT     O
+		defw $4308 		; RIGHT    P
+		defw $4808 		; UP       Q
+		defw $4820 		; DOWN     A
+
+		defw $4580 		; BUTTON_A SPACE
+		defw $4808 		; BUTTON_B Q
+
+		defw $4801 		; KEY_AUX3 1
+		defw $4802 		; KEY_AUX4 2
+
+		defw $4880		; KEY_AUX1 Z
+		defw $4780 		; KEY_AUX2 X
+
+		defw $4204		; KEY_ENTER
+		defw $4804		; KEY_ESC	
+#endasm
+
+extern unsigned char def_keys_joy [0];
+#asm
+	._def_keys_joy
+		defw 0x4904, 0x4908, 0x4901, 0x4902, 0x4910, 0x4920
+		defw 0x4801, 0x4802, 0x4880, 0x4780, 0x4204, 0x4804
+#endasm
+
+#define KEY_M 0x4440
+#define KEY_S 0x4710
+
+#define KEY_1 0x4801
+#define KEY_2 0x4802
+
+#define KEY_LEFT 		0
+#define KEY_RIGHT		1
+#define KEY_UP  		2
+#define KEY_DOWN 		3
+#define KEY_BUTTON_A	4
+#define KEY_BUTTON_B	5
+#define KEY_AUX3 		6
+#define KEY_AUX4 		7
+#define KEY_AUX1		8
+#define KEY_AUX2		9
+#define KEY_ENTER		10
+#define KEY_ESC			11
+
+#define sp_LEFT           0x01
+#define sp_RIGHT          0x02
+#define sp_UP             0x04		
+#define sp_DOWN           0x08
+#define sp_FIRE           0x10
+#define sp_FIRE2          0x20
+#define sp_AUX3           0x40
+#define sp_AUX4           0x80
+
+// Sprite structs
+
+typedef struct sprite {
+	unsigned int sp0;			// 0
+	unsigned int sp1; 			// 2
+	unsigned int coord0;
+	signed char cox, coy;		// 6 7
+	unsigned char cx, cy; 		// 8 9
+	unsigned char ox, oy;		// 10 11
+	void *invfunc;				// 12
+	void *updfunc;				// 14
+} SPR;
+
+SPR sp_sw [SW_SPRITES_ALL] 					@ BASE_SPRITES;
+unsigned char *spr_next [SW_SPRITES_ALL] 	@ BASE_SPRITES + (SW_SPRITES_ALL)*16;
+unsigned char spr_on [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*18;
+unsigned char spr_x [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*19;
+unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
+
+unsigned char isr_player_on;
+unsigned char wyz_beat_ct;
+
+void system_init (void) {
+	// Inits shit
+
+		AY_INIT ();
+
+	#asm
+		di
+		
+		ld  hl, 0xC000
+		xor a
+		ld  (hl), a
+		ld  de, 0xC001
+		ld  bc, 0x3DFF
+		ldir
+		
+		ld  a, 195
+		ld  (0x38), a
+		ld  hl, _isr
+		ld  (0x39), hl
+		jp  isr_done
+
+	._isr
+		push af 
+		
+		ld  a, (isr_c1)
+		inc a
+		cp  6
+		jr  c, _skip_ay_player
+
+		ld  a, (isr_c2)
+		inc a
+		ld  (isr_c2), a
+
+	#ifdef SOUND_WYZ
+			ld  a, (_isr_player_on)
+			or  a
+			jr  z, _skip_ay_player
+
+			push hl
+			push de
+			push bc
+			push ix
+			push iy
+
+			call WYZ_PLAYER_ISR
+
+			pop iy
+			pop ix
+			pop bc
+			pop de 
+			pop hl
+
+	#endif
+
+		xor a
+
+	._skip_ay_player 
+		ld  (isr_c1), a	
+		
+		pop af
+		ei
+		ret
+
+	.isr_c1 
+		defb 0
+	.isr_c2
+		defb 0
+
+	.isr_done
+	#endasm
+	
+	// Border 0
+
+	cpc_Border (0x54);
+	
+	// Decompress LUT in place
+
+	//unpack ((unsigned int) (trpixlutc), BASE_LUT);
+	#asm
+			ld  hl, _trpixlutc
+			ld  de, BASE_LUT
+			call depack
+	#endasm
+
+	blackout ();
+	pal_set (my_inks);
+	
+	// Set mode
+
+	#ifdef MODE_1
+		cpc_SetMode (1);
+	#else
+		cpc_SetMode (0);
+	#endif
+
+	// Set tweaked mode 
+	// (thanks Augusto Ruiz for the code & explanations!)
+	
+	#asm
+			; Horizontal chars (32), CRTC REG #1
+			ld    b, 0xbc
+			ld    c, 1			; REG = 1
+			out   (c), c
+			inc   b
+			ld    c, 32			; VALUE = 32
+			out   (c), c
+
+			; Horizontal pos (42), CRTC REG #2
+			ld    b, 0xbc
+			ld    c, 2			; REG = 2
+			out   (c), c
+			inc   b
+			ld    c, 42			; VALUE = 42
+			out   (c), c
+
+			; Vertical chars (24), CRTC REG #6
+			ld    b, 0xbc
+			ld    c, 6			; REG = 6
+			out   (c), c
+			inc   b
+			ld    c, 24			; VALUE = 24
+			out   (c), c
+	#endasm
+
+	// Sprite creation
+
+	// Player 
+
+	// sp_sw struct is 16 bytes wide. This is easy
+	// 0   2   4      6   7   8  9  10 11 12      14
+	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+
+	#asm
+		.sprite_creation
+
+			ld  ix, #(BASE_SPRITES+(SP_PLAYER*16))
+			
+			ld  a, (_sm_cox) 			// sm_cox [0]
+			ld  (ix + 6), a
+
+			ld  a, (_sm_coy) 			// sm_coy [0]
+			ld  (ix + 7), a
+
+			ld  hl, (_sm_invfunc)		// sm_invfunc [0]
+			ld  (ix + 13), h
+			ld  (ix + 12), l
+
+			ld  hl, (_sm_updfunc)		// sm_updfunc [0]
+			ld  (ix + 15), h
+			ld  (ix + 14), l
+
+			ld  hl, _sprite_18_a
+			ld  (ix + 1), h
+			ld  (ix + 0), l
+
+			ld  (ix + 3), h
+			ld  (ix + 2), l			
+	#endasm
+
+	// Enemies
+
+	#asm
+			ld  ix, #(BASE_SPRITES+(SP_ENEMS_BASE*16))
+			ld  de, 16
+
+			ld  b, MAX_ENEMS
+
+		.sp_sw_init_enems_loop
+			ld  hl, cpc_PutSpTileMap8x16Px			// sm_invfunc [0]
+			ld  (ix + 13), h
+			ld  (ix + 12), l
+
+			ld  hl, cpc_PutTrSp8x16TileMap2bPx 		// sm_updfunc [0]
+			ld  (ix + 15), h
+			ld  (ix + 14), l	
+
+			add ix, de
+			djnz sp_sw_init_enems_loop		
+	#endasm
+
+	// Bullets
+
+	#ifdef PLAYER_CAN_FIRE
+		#asm
+				ld  ix, #(BASE_SPRITES+(SP_BULLETS_BASE*16))
+				ld  de, 16
+
+				ld  b, MAX_BULLETS
+
+			.sp_sw_init_bullets_loop
+				xor a
+				ld  (ix + 6), a
+				ld  (ix + 7), a
+
+				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
+				ld  (ix + 13), h
+				ld  (ix + 12), l
+
+				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
+				ld  (ix + 15), h
+				ld  (ix + 14), l	
+
+				ld  hl, _sprite_19_a 					// sm_sprptr [0]
+				ld  (ix + 1), h
+				ld  (ix + 0), l
+
+				ld  (ix + 3), h
+				ld  (ix + 2), l		
+
+				add ix, de
+				djnz sp_sw_init_bullets_loop
+		#endasm
+	#endif		
+
+	// Turn off all sprites
+
+	#asm
+			ld  ix, BASE_SPRITES
+			ld  de, 16
+			ld  b, SW_SPRITES_ALL
+
+		.sp_sw_init_turnoff_loop			
+			ld  a, #((VIEWPORT_X*8)/4)
+			ld  (ix + 10), a
+			
+			ld  a, #(VIEWPORT_Y*8)
+			ld  (ix + 11), a 
+
+			add ix, de
+			djnz sp_sw_init_turnoff_loop
+	#endasm	
+
+	#asm
+		ei
+	#endasm
+
+}
+
 void _tile_address (void) {
 	#asm
 			ld  a, (__y)
