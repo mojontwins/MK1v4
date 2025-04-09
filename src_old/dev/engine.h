@@ -505,31 +505,6 @@ void init_hotspots (void) {
 #if !defined UNPACKED_MAP
 	void draw_and_advance (void) {
 		#asm
-			#ifdef ENABLE_ANIMATED_TILES
-					ld  a, (__n)
-					cp  ANIMATED_TILE
-					jr  nz, _animated_tiles_add_done
-
-					ld  hl, (_animated_ptr)
-					
-					// Encode Y, X in nibbles
-					ld  a, (_rdx)
-					srl a 				
-					ld  b, a 			// b = X / 2 = 0000XXXX
-					ld  a, (_rdy)
-					;and 0xfe            // xxxYYYY0
-					sla a
-					sla a
-					sla a 				// YYYY0000
-					or  b 				// YYYYXXXX
-
-					ld  (hl), a
-					inc hl
-					ld  (_animated_ptr), hl
-
-				._animated_tiles_add_done
-			#endif
-
 				ld  bc, (__n)
 				ld  b, 0
 				ld  hl, _comportamiento_tiles
@@ -745,6 +720,125 @@ void draw_scr_background (void) {
 				rdy += 2;
 			}
 		}
+	#elif defined RLE_MAP
+		// RLE'd map, inserted as an insert from a future age
+
+		#asm
+			._draw_scr_rle
+				
+			._draw_scr_loop
+				ld  a, (_rdi)
+				cp  150
+				jr  z, _draw_scr_loop_done
+
+				ld  hl, (_gp_gen)
+				ld  a, (hl)
+				inc hl
+				ld  (_gp_gen), hl
+				
+				ld  (_rdn), a
+
+			#if RLE_MAP == 44
+				and 0x0f
+			#elif RLE_MAP == 53
+				and 0x1f
+			#else
+				and 0x3f
+			#endif			
+
+			#ifdef MAPPED_TILESETS
+				ld  hl, (_tileset_mappings)
+				add a, l
+				ld  l, a
+				jr  nc, dsl_noinc
+				inc h
+			.dsl_noinc
+				ld  a, (hl)
+			#endif
+
+				ld  (_rdc), a
+
+			._draw_scr_advance_loop
+				ld  a, (_rdn)
+			#if RLE_MAP == 44
+				cp  0x10
+			#elif RLE_MAP == 53			
+				cp  0x20
+			#else
+				cp  0x40
+			#endif
+
+				jr  c, _draw_scr_advance_loop_done
+
+			#if RLE_MAP == 44
+				sub 0x10
+			#elif RLE_MAP == 53
+				sub 0x20
+			#else
+				sub 0x40
+			#endif
+				ld  (_rdn), a
+
+				call _advance_worm
+
+				// That's it!
+
+				jr _draw_scr_advance_loop
+
+			._draw_scr_advance_loop_done
+				call _advance_worm
+
+				jr _draw_scr_loop
+
+				#ifndef NO_ALT_BG
+					.no_alt_bg_subst
+						or  a
+						ret  nz
+
+						call _rand
+						ld  a, l
+						and 15
+						cp  2
+						jr  nc, draw_scr_alt_no
+
+						ld  a, 19
+						ret
+
+					.draw_scr_alt_no
+						xor a
+						ret
+				#endif
+
+			._advance_worm
+				ld  a, (_rdc)
+
+				#ifndef NO_ALT_BG
+					call no_alt_bg_subst
+				#endif
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+					call coins_check
+				#endif
+
+				ld  (__n), a
+				call _draw_and_advance
+				ret
+
+				#if defined USE_COINS && defined COINS_DEACTIVABLE
+					.coins_check
+						cp  COIN_TILE
+						ret  nz
+
+						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
+						or  a
+						ret  nz
+
+						ld  a, COIN_TILE_DEACT_SUBS					
+						ret
+				#endif
+
+			._draw_scr_loop_done
+		#endasm		
 	#else
 		// PACKED map, every byte packs two tiles.
 
@@ -895,3 +989,4 @@ void draw_scr_background (void) {
 		#endasm
 	#endif	
 }
+
