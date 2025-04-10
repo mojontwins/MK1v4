@@ -14,16 +14,17 @@ if [%1]==[justcompile] goto :compile
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
 ..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
-..\utils\zx0.exe ..\gfx\title.scr title.bin  > nul
-..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul
-..\utils\zx0.exe ..\gfx\ending.scr ending.bin  > nul
+..\utils\zx0.exe ..\gfx\title.scr titlec.bin  > nul
+..\utils\zx0.exe ..\gfx\marco.scr marcoc.bin  > nul
+..\utils\zx0.exe ..\gfx\ending.scr endingc.bin  > nul
 
 :compile 
 
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
-zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
+zcc +zx -m -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
+zcc +zx -a -vn churromain.c -o %game%.asm -lsplib2 -zorg=24200  > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

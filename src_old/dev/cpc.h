@@ -1428,6 +1428,7 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 			ld  (ix + 14), e 
 			ld  (ix + 15), d 	// Write 16 bits			
 		
-			jr _enems_calc_frame
+			jp _enems_calc_frame
 	#endasm
 }
+

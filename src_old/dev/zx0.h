@@ -13,7 +13,7 @@
 	;   .HL source address (compressed data)
 	;   .DE destination address (decompressing)
 	; -----------------------------------------------------------------------------
-
+	.depack
 	.dzx0_standard
 	        ld      bc, $ffff               ; preserve default offset 1
 	        push    bc

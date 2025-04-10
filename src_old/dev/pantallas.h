@@ -72,7 +72,7 @@ void game_over (void) {
 	#endasm
 	draw_rectangle ();	
 	draw_text (11, 12, 
-		#ifdef CPC
+		#ifndef CPC
 			71, 
 		#endif
 		"GAME OVER!");

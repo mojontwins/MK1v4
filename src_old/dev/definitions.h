@@ -190,6 +190,7 @@ unsigned char bitmask [] = {
 	1, 2, 4, 8, 16, 32, 64, 128
 };
 
+unsigned char rand (void);
 void fall_box (void);
 void move_tile (unsigned char act);
 void init_falling_box_buffer (void);

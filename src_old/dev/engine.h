@@ -1061,6 +1061,56 @@ void draw_scr_background (void) {
 	#endif	
 }
 
+void enems_calc_frame (void) {
+	// en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
+	#asm
+			ld  a, (_enit)
+			sla a
+			ld  b, 0
+			ld  c, a
+			ld  hl, _en_an_next_frame
+			add hl, bc
+		
+			push hl 		// en_an_next_frame [enit]
+			
+			ld  bc, (_enit)
+			ld  b, 0
+			
+			ld  hl, _en_an_frame
+			add hl, bc
+			ld  a, (hl)
+
+		#ifdef RANDOM_RESPAWN
+				// 0xff means invisible
+				cp  0xff 
+				jr  z, enems_calc_frame_invisible
+		#endif
+
+			ld  hl, _en_an_base_frame
+			add hl, bc
+			add a, (hl)
+
+			sla a 			// This will work in 8 bit. Always few frames max.			
+			ld  c, a 		// B is already 0
+			ld  hl, _enem_cells
+
+			add hl, bc 		// HL -> enem_cells [...]
+			pop de 			// DE -> en_an_next_frame [enit]
+
+			ldi
+			ldi
+
+		#ifdef RANDOM_RESPAWN
+				ret
+			.enems_calc_frame_invisible
+				pop de 			// DE -> en_an_next_frame [enit]
+				ld  (de), _sprite_18_a % 256
+				inc de 
+				ld  (de), _sprite_18_a / 256
+		#endif
+	#endasm
+}
+
 void draw_scr (void) {
 	// This function draws and sets up current screen.
 

@@ -34,7 +34,7 @@
 	#include "extrasprites.h"
 #endif
 #include "enems.h"
-/*
+
 #include "engine.h"
 #include "extern.h"
 #ifdef ACTIVATE_SCRIPTING
@@ -43,5 +43,3 @@
 #include "pantallas.h"
 #include "mainloop.h" 	// Main is here!
 #include "music.h"
-*/
-void main(void){}
