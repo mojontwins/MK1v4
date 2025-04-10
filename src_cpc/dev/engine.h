@@ -5920,28 +5920,30 @@ void draw_scr (void) {
 	}
 #endif
 
-void platform_get_player (void) {
-	#asm
-			ld  a, 1
-			ld  (_player+25), a 		// .gotten
-			ld  a, (__en_y)
-			sub 16
-			ld  (_gpy), a 
-			call Ashl16_HL
-			ld  (_player+2), hl 		// .y
-			ld  hl, 0
-			ld  (_player+8), hl 		// .vy
-			srl a
-			srl a
-			srl a
-			srl a
-			ld  (_gpyy), a 
-			ld  a, (__en_my)
-			call Ashl16_HL
-			call withSign
-			ld  (_ptgmy), hl
-	#endasm
-}
+#ifndef PLAYER_MOGGY_STYLE
+	void platform_get_player (void) {
+		#asm
+				ld  a, 1
+				ld  (_player+25), a 		// .gotten
+				ld  a, (__en_y)
+				sub 16
+				ld  (_gpy), a 
+				call Ashl16_HL
+				ld  (_player+2), hl 		// .y
+				ld  hl, 0
+				ld  (_player+8), hl 		// .vy
+				srl a
+				srl a
+				srl a
+				srl a
+				ld  (_gpyy), a 
+				ld  a, (__en_my)
+				call Ashl16_HL
+				call withSign
+				ld  (_ptgmy), hl
+		#endasm
+	}
+#endif
 
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
 	void enems_kill (unsigned char damage) {

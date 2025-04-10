@@ -45,7 +45,7 @@ void game_ending (void) {
 		espera_activa (500);
 		AY_STOP_SOUND ();
 	#else
-		for (x = 0; x < 4; x ++) {
+		for (gpit = 0; gpit < 4; gpit ++) {
 			peta_el_beeper (7);
 			peta_el_beeper (2);
 		}
@@ -71,7 +71,11 @@ void game_over (void) {
 			ld  (__y2), a
 	#endasm
 	draw_rectangle ();	
-	draw_text (11, 12, "GAME OVER!");
+	draw_text (11, 12, 
+		#ifdef CPC
+			71, 
+		#endif
+		"GAME OVER!");
 	
 	#ifdef CPC
 		cpc_UpdateNow (0);

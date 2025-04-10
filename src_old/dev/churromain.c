@@ -7,26 +7,34 @@
 
 #include "config.h"
 
-// Cosas del juego:
+#define MAX_ENEMS 3
+#define MAX_FLAGS 16
 
+#if defined PLAYER_KILLS_ENEMIES || defined PLAYER_CAN_FIRE
+	#define ENEMIES_MAY_DIE
+#endif
+
+// Cosas del juego:
+#include "tileset.h"
+#include "sprites.h"
+
+#include "definitions.h"
 #ifdef CPC
 	#include "cpc.h"
 #else
 	#include "speccy.h"
 #endif
-#include "definitions.h"
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h" 
 #endif
 #include "zx0.h"
 #include "pantallas.h"
 #include "mapa.h"
-#include "tileset.h"
-#include "sprites.h"
 #if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 	#include "extrasprites.h"
 #endif
 #include "enems.h"
+/*
 #include "engine.h"
 #include "extern.h"
 #ifdef ACTIVATE_SCRIPTING
@@ -35,3 +43,5 @@
 #include "pantallas.h"
 #include "mainloop.h" 	// Main is here!
 #include "music.h"
+*/
+void main(void){}

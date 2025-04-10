@@ -808,7 +808,7 @@ void main (void) {
 					ld  a, (_on_pant)
 					cp  c
 					jr  nz, skipupd
-				call SPUpdateNow
+					call SPUpdateNow
 				.skipupd
 			#endasm
 			

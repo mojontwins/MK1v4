@@ -61,9 +61,6 @@
 #define STACK_ADDR 			61936
 #define AD_FREE				61440-(NUMBLOCKS*15)
 
-#define BASE_ROOM_BUFFERS	23300
-#define BASE_ARRAYS 		23600
-
 #define BORDER(b) 				asm("ld a,"#b"\nout (254),a")
 
 // Controller
@@ -172,7 +169,7 @@ void system_init (void) {
 
 	// Sprite creation
 	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (NO_MASKS, MAIN_SPRITE_HEIGHT, sprite_2_a, 1);
+		sp_player = sp_CreateSpr (NO_MASKS, 3, sprite_2_a, 1);
 		sp_AddColSpr (sp_player, sprite_2_b);
 		sp_AddColSpr (sp_player, sprite_2_b);	// This is a dummy and will be overwritten later
 		player.current_frame = player.next_frame = sprite_2_a;
@@ -184,7 +181,7 @@ void system_init (void) {
 			en_an_current_frame [rdi] = sprite_9_a;
 		}
 	#else
-		sp_player = sp_CreateSpr (sp_MASK_SPRITE, MAIN_SPRITE_HEIGHT, sprite_2_a, 1);
+		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1);
 		sp_AddColSpr (sp_player, sprite_2_b);
 		sp_AddColSpr (sp_player, sprite_2_b);	// This is a dummy and will be overwritten later
 		player.current_frame = player.next_frame = sprite_2_a;
@@ -1133,11 +1130,9 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 	
 */
 
-void peta_el_beeper (unsigned char n) {
-	// Cargar en A el valor de n
-	asm_int [0] = n;
+void __FASTCALL__ peta_el_beeper (unsigned char n) {
 	#asm
-		ld a, (_asm_int)
+		ld a, l
 		call playsfx
 	#endasm
 }

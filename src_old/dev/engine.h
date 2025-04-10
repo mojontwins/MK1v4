@@ -3,6 +3,100 @@
 
 // engine.h
 
+void qtile (unsigned char x, unsigned char y) {
+	#asm
+			ld  hl, 4
+			add hl, sp
+			ld  c, (hl) 	// x
+		
+			dec hl
+			dec hl
+			ld  a, (hl) 	// y
+
+			// If you put x in C and y in A you can call here
+			
+		.qtile_do	
+			ld  b, a
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			add c
+
+			ld  d, 0
+			ld  e, a
+			ld  hl, _map_buff
+			add hl, de
+
+			ld  l, (hl)
+			ld  h, 0
+	#endasm
+}
+
+void attr (char x, char y) {
+	#asm
+			ld  hl, 4
+			add hl, sp
+			ld  c, (hl) 	// x
+
+			dec hl
+			dec hl
+			ld  a, (hl) 	// y
+			
+			// If you put x in C and y in A you can call here
+			
+		._attr_2
+			// A = y, C = x
+			cp  10
+			jr  c, _attr_1
+
+			ld  hl, 0
+			ret
+
+		._attr_1
+			ld  b, a 		// save y
+			ld  a, c 		// x
+			cp  15
+			jr  c, _attr_1b
+			ld  hl, 0
+			ret
+
+			// If you put x in C and y in A you can use this entry point for enemies
+
+		._attr_enems
+			cp  10
+			jr  c, _attr_enems_skip_1
+			ld  hl, 8
+			ret
+		._attr_enems_skip_1
+			ld  b, a
+			ld  a, c
+			cp  15
+			jr  c, _attr_1b
+			ld  hl, 8
+			ret
+
+		._attr_1b
+			ld  a, b 		// restore y
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			add c
+
+			ld  d, 0
+			ld  e, a
+			ld  hl, _map_attr
+			add hl, de
+			ld  l, (hl)
+
+		._attr_end
+			ld  h, 0
+	#endasm
+}
+
 #define BOUNDING_SIZE 12
 unsigned char collide_enem (void) {
 	#asm
@@ -214,29 +308,17 @@ unsigned int __FASTCALL__ abs (int n) {
 			// 0  1  2    3    4   5   6   7
 			// x, y, xy1, xy2, mx, my, t[, life]
 
-			ld  bc, TOTAL_EXISTING_ENEMS
-			#if defined PACKED_ENEMS
-				#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
-					ld  de, 8
-				#else
-					ld  de, 7
-				#endif
-			#else
-				#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+			#if (defined PLAYER_CAN_FIRE && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 					ld  de, 10
-				#else
+			#else
 					ld  de, 9
-				#endif
 			#endif
-			ld  ix, _malotes
+	
+				ld  ix, _malotes
 			
 			.init_malotes_loop
 				// Clear 'enem is dead' flag				
-			#if defined PACKED_ENEMS
-					ld  a, (ix+6) 	// .t
-			#else
-					ld  a, (ix+8) 	// .t
-			#endif
+				ld  a, (ix+8) 	// .t
 				and 127
 				
 			#ifdef RANDOM_RESPAWN
@@ -247,19 +329,11 @@ unsigned int __FASTCALL__ abs (int n) {
 				.init_malotes_not_5
 			#endif
 
-			#if defined PACKED_ENEMS
-					ld  (ix+6), a 	// .t
-			#else
-					ld  (ix+8), a 	// .t
-			#endif
-
-			#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+				ld  (ix+8), a 	// .t
+			
+			#if (defined PLAYER_CAN_FIRE && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 					ld  a, ENEMIES_LIFE_GAUGE
-				#if defined PACKED_ENEMS
-						ld  (ix+7), a 	// .life
-				#else
-						ld  (ix+9), a 	// .life
-				#endif
+					ld  (ix+9), a 	// .life
 			#endif
 
 				add ix, de
@@ -386,6 +460,22 @@ void adjust_to_tile_y (void) {
 	#endasm
 }
 
+#ifdef PLAYER_FLICKERS
+	void player_flicker (void) {
+		/*
+		player.estado = EST_PARP;
+		player.ct_estado = PLAYER_FLICKERS;
+		*/
+
+		#asm
+				ld  a, EST_PARP 
+				ld  (_player + 23), a 	// player.estado
+				ld  a, PLAYER_FLICKERS 
+				ld  (_player + 24), a 	// player.ct_estado
+		#endasm
+	}
+#endif
+
 #ifdef PLAYER_PUSH_BOXES
 	void move_tile_with_check (void) {
 		// Moves to x0, y0 to x1, y1 if x1, y1 is walkable
@@ -395,10 +485,6 @@ void adjust_to_tile_y (void) {
 			peta_el_beeper (2);
 		}
 	}
-#endif
-
-#ifndef DEACTIVATE_KEYS
-
 #endif
 
 void move (void) {
@@ -411,6 +497,7 @@ void move (void) {
 
 	#ifdef PLAYER_MOGGY_STYLE
 		// Read keyboard and apply A/R to VY
+
 	#else
 		// Apply gravity
 
@@ -478,9 +565,9 @@ void init_player_values (void) {
 			ld  (_player+24),a 					// .ct_estado
 			ld  (_player+36),a 					// .is_dead
 
-	#ifdef PLAYER_MOGGY_STYLE
+		#ifdef PLAYER_MOGGY_STYLE
 				ld  a, GENITAL_FACING_DOWN
-	#endif
+		#endif
 
 			ld (_player+22),a 					// .facing
 	#endasm
@@ -695,7 +782,7 @@ void draw_scr_background (void) {
 			ld  (_rdi), a
 	#endasm
 
-	if defined (UNPACKED_MAP)
+	#ifdef UNPACKED_MAP
 		gp_gen = mapa + (n_pant * 150);
 	#else
 		gp_gen = mapa + (n_pant * 75);
@@ -917,21 +1004,6 @@ void draw_scr_background (void) {
 						ld  a, c
 						ret
 				#endif
-
-				#if defined USE_COINS && defined COINS_DEACTIVABLE
-					.coins_check
-						cp  COIN_TILE
-						ret  nz
-
-						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
-						or  a
-						ret  nz
-
-						ld  a, COIN_TILE_DEACT_SUBS					
-						ret
-
-				#endif
-
 			.draw_scr_bg_loop_end
 		#endasm
 	#endif	
@@ -1075,19 +1147,45 @@ void draw_scr (void) {
 	}
 #endif	
 
+#ifndef PLAYER_MOGGY_STYLE
+	void platform_get_player (void) {
+		#asm
+				ld  a, 1
+				ld  (_player+25), a 		// .gotten
+				ld  a, (__en_y)
+				sub 16
+				ld  (_gpy), a 
+				call Ashl16_HL
+				ld  (_player+2), hl 		// .y
+				ld  hl, 0
+				ld  (_player+8), hl 		// .vy
+				srl a
+				srl a
+				srl a
+				srl a
+				ld  (_gpyy), a 
+				ld  a, (__en_my)
+				call Ashl16_HL
+				call withSign
+				ld  (_ptgmy), hl
+		#endasm
+	}
+#endif
+
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES
 	void enems_kill (unsigned char damage) {
 		// Kill enemy
 
 		#if ENEMIES_LIFE_GAUGE > 1
-		if (_en_life >= damage) {
-			_en_life -= damage;
-		} else {
-			_en_life = 0;
-		}
+			if (_en_life >= damage) {
+				_en_life -= damage;
+			} else {
+				_en_life = 0;
+			}
 		#endif
 
 		// Update frame
+		
 		en_an_next_frame [enit] = sprite_17_a;											
 												
 		#asm
@@ -1098,8 +1196,9 @@ void draw_scr (void) {
 				call _render_this_enemy
 		#endasm
 
+		// Show changes
+		
 		#ifdef CPC
-			// Show changes
 			cpc_UpdateNow (1);
 		#asm 
 			call SPUpdateNow
@@ -2005,17 +2104,6 @@ void mueve_bicharracos (unsigned char n_pant) {
 
 							call _platform_get_player
 
-						#if (defined ENABLE_SWORD && defined SWORD_PARALYZES) || defined (ENEMIES_MAY_BE_PARALIZED)
-								// if (en_an_state [enit] != ENEM_PARALYZED)
-								ld  bc, (_enit)
-								ld  b, 0
-								ld  hl, _en_an_state
-								add hl, bc
-								ld  a, (hl)
-								cp  ENEM_PARALYZED
-								jr  z, moving_platforms_done
-						#endif		
-
 							//ptgmx = (_en_mx << 6);
 							ld  a, (__en_mx)
 							call Ashl16_HL
@@ -2055,87 +2143,56 @@ void mueve_bicharracos (unsigned char n_pant) {
 						} else	
 					#endif
 						
-					if (
-						player.estado == EST_NORMAL
-						#ifdef PARALYZED_DONT_KILL
-							&& en_an_state [enit] != ENEM_PARALYZED
-						#endif
-						#ifdef PARALYZED_DONT_KILL_ON_VAR
-							&& (en_an_state [enit] != ENEM_PARALYZED || paralyzed_dont_kill == 0)
-						#endif
-					) {
-						#ifdef ENEMS_CUSTOM_COLLISION
-							if (enems_custom_collision () == 0)
+					if (player.estado == EST_NORMAL) {
+						en_tocado = 1; player.is_dead = 1; play_sfx (2);
+						
+						// We decide which kind of life drain we do:
+						#ifdef RANDOM_RESPAWN
+							if (en_an_fanty_activo [enit]) {
+								player.drain_amount = FLYING_ENEMY_HIT;
+							} else
 						#endif
 						{
-							en_tocado = 1; player.is_dead = 1; play_sfx (2);
-							#ifdef ENABLE_CODE_HOOKS
-								enemy_killer = enit;
-							#endif
-							
-							// We decide which kind of life drain we do:
-							#if (defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)) && defined(FLYING_ENEMY_HIT) && (FLYING_ENEMY_HIT != LINEAR_ENEMY_HIT)
-								if (
-									#ifdef RANDOM_RESPAWN
-										en_an_fanty_activo [enit]
-									#endif
-									#if defined RANDOM_RESPAWN && defined USE_TYPE_6
-										||
-									#endif
-									#ifdef USE_TYPE_6
-										_en_t == 6
-									#endif
-								) {
-									player.drain_amount = FLYING_ENEMY_HIT;
-								} else
-							#endif
-							{
-								player.drain_amount = LINEAR_ENEMY_HIT;
-							}
-							player.is_dead = PLAYER_KILLED_BY_ENEM;
-							
-							#ifdef PLAYER_BOUNCES
-								#ifndef PLAYER_MOGGY_STYLE	
-									#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
-										if (0 == en_an_fanty_activo [enit]) {
-											// Bouncing!
-											if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
-											if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
-											if (_en_my > 0) player.vy = PLAYER_MAX_VX;
-											if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
-										} else {
-											player.vx = en_an_vx [enit] + en_an_vx [enit];
-											player.vy = en_an_vy [enit] + en_an_vy [enit];
-										}
-									#else
-										// Bouncing!
-										if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-										if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-										if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-										if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-									#endif
-								#else
-									// Bouncing:
-									
-									// x
-									if (_en_mx) {
-										if (gpx < _en_x) player.vx = - (abs (_en_mx << 1) << 7);
-										else player.vx = abs (_en_mx + _en_mx) << 7;
-									}
-									
-									// y
-									if (_en_my) {
-										if (gpy < _en_y) player.vy = - (abs (_en_my << 1) << 7);
-										else player.vy = abs (_en_my + _en_my) << 7;
-									}
-								#endif
-							#endif
-
-							#ifdef ENABLE_FRIGOABABOL
-								player.estado = EST_FRIGOABABOL;
-								player.ct_estado = FRIGO_MAX_FRAMES;
-							#endif				
+							player.drain_amount = LINEAR_ENEMY_HIT;
 						}
+						player.is_dead = PLAYER_KILLED_BY_ENEM;
+						
+						#ifdef PLAYER_BOUNCES
+							#ifndef PLAYER_MOGGY_STYLE	
+								#if defined(RANDOM_RESPAWN)
+									if (0 == en_an_fanty_activo [enit]) {
+										// Bouncing!
+										if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
+										if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
+										if (_en_my > 0) player.vy = PLAYER_MAX_VX;
+										if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
+									} else {
+										player.vx = en_an_vx [enit] + en_an_vx [enit];
+										player.vy = en_an_vy [enit] + en_an_vy [enit];
+									}
+								#else
+									// Bouncing!
+									if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+									if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+									if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
+									if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+								#endif
+							#else
+								// Bouncing:
+								
+								// x
+								if (_en_mx) {
+									if (gpx < _en_x) player.vx = - (abs (_en_mx << 1) << 7);
+									else player.vx = abs (_en_mx + _en_mx) << 7;
+								}
+								
+								// y
+								if (_en_my) {
+									if (gpy < _en_y) player.vy = - (abs (_en_my << 1) << 7);
+									else player.vy = abs (_en_my + _en_my) << 7;
+								}
+							#endif
+						#endif
 					}
 				}
 
@@ -2194,14 +2251,11 @@ void mueve_bicharracos (unsigned char n_pant) {
 									cp  d
 									jp  c, enems_coll_bullets_continue
 							#endasm
-
-							#if defined (RANDOM_RESPAWN) || defined (USE_TYPE_6)	
-								#ifdef RANDOM_RESPAWN	
-									if (en_an_fanty_activo [enit]) 
-								#else
-									if (_en_t == 6)
-								#endif
-								en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
+							
+							#ifdef RANDOM_RESPAWN	
+								if (en_an_fanty_activo [enit]) {
+									en_an_vx [enit] += (bullets_mx [en_j] > 0 ? 128 : -128);
+								}
 							#endif
 							
 							bullets_estado [en_j] = 0;

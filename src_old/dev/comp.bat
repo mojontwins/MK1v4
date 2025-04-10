@@ -3,6 +3,9 @@
 set game=lala3
 
 echo Making %game%
+
+if [%1]==[justcompile] goto :compile
+
 ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 15 packed  > nul
 ..\utils\ts2bin.exe ..\gfx\font.png ..\gfx\work.png tileset.bin 7 > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
@@ -15,10 +18,14 @@ echo Making %game%
 ..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul
 ..\utils\zx0.exe ..\gfx\ending.scr ending.bin  > nul
 
+:compile 
+
 rem echo Making script
 rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
 zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
+if %errorlevel% neq 0 goto :error
+
 ..\utils\printsize.exe %game%.bin
 ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
 ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
@@ -26,5 +33,14 @@ zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
 
 echo Output: %game%.tap
 
+if [%1]==[noclean] goto :end 
+if [%2]==[noclean] goto :end 
+
 del ..\gfx\*.scr > nul
 del *.bin >nul
+goto :end 
+
+:error
+echo ERROR
+
+:end
