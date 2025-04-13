@@ -45,7 +45,7 @@
 		bit 7, a
 		ret z
 		neg
-
+		ret
 #endasm
 
 unsigned char *player_cells [] = {
@@ -542,7 +542,84 @@ void adjust_to_tile_y (void) {
 	}
 #endif
 
+unsigned char cm_two_points (void) {
+	/*
+	if (_x > 14 || _y > 9) at1 = 0; 
+	else at1 = map_attr [_x + (_y << 4) - _y];
+
+	if (_x2 > 14 || _y2 > 9) at2 = 0; 
+	else at2 = map_attr [_x2 + (_y2 << 4) - _y2];
+	*/
+	#asm
+			ld  a, (__x)
+			cp  15
+			jr  nc, _cm_two_points_at1_reset
+
+			ld  a, (__y)
+			cp  10
+			jr  c, _cm_two_points_at1_do
+
+		._cm_two_points_at1_reset
+			xor a
+			jr  _cm_two_points_at1_done
+
+		._cm_two_points_at1_do
+			ld  a, (__y)
+			ld  b, a
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			ld  b, a
+			ld  a, (__x)
+			add b
+			ld  e, a
+			ld  d, 0
+			ld  hl, _map_attr
+			add hl, de
+			ld  a, (hl)
+
+		._cm_two_points_at1_done
+			ld (_at1), a
+
+			ld  a, (__x2)
+			cp  15
+			jr  nc, _cm_two_points_at2_reset
+
+			ld  a, (__y2)
+			cp  10
+			jr  c, _cm_two_points_at2_do
+
+		._cm_two_points_at2_reset
+			xor a
+			jr  _cm_two_points_at2_done
+
+		._cm_two_points_at2_do
+			ld  a, (__y2)
+			ld  b, a
+			sla a
+			sla a
+			sla a
+			sla a
+			sub b
+			ld  b, a
+			ld  a, (__x2)
+			add b
+			ld  e, a
+			ld  d, 0
+			ld  hl, _map_attr
+			add hl, de
+			ld  a, (hl)
+
+		._cm_two_points_at2_done
+			ld (_at2), a
+	#endasm
+}
+
 void move (void) {
+	hit = 0; 
+
 	// Move player
 	pad_read ();
 
@@ -552,30 +629,236 @@ void move (void) {
 
 	#ifdef PLAYER_MOGGY_STYLE
 		// Read keyboard and apply A/R to VY
+		if ((pad0 & sp_UP) && (pad0 & sp_DOWN)) {
+			if (player.vy > 0) player.vy -= PLAYER_RX;
+			else if (player.vy < 0) player.vy += PLAYER_RX;
+		} else {
+			if ((pad0 & sp_UP) == 0) {
+				player.vy -= PLAYER_AX;
+				if (player.vy > PLAYER_MAX_VX) player.vy = PLAYER_MAX_VX;
+				player.frame = GENITAL_FACING_UP;
+			}
 
+			if ((pad0 & sp_DOWN) == 0) {
+				player.vy += PLAYER_AX;
+				if (player.vy < -PLAYER_MAX_VX) player.vy = -PLAYER_MAX_VX;
+				player.frame = GENITAL_FACING_DOWN;
+			}
+		}
 	#else
 		// Apply gravity
+		player.vy += PLAYER_G;
+		if (player.vy > PLAYER_MAX_VY_CAYENDO) player.vy = PLAYER_MAX_VY_CAYENDO;
 
 		#ifdef PLAYER_HAS_JUMP
 			// Make jump
+			if (
+				#ifdef PLAYER_CAN_FIRE
+					((pad_this_frame & sp_UP) == 0)
+				#else
+					((pad_this_frame & sp_FIRE) == 0)
+				#endif
+				&& player.saltando == 0 && (player.possee || player.gotten)
+			) {
+				player.saltando = 1;
+				player.cont_salto = 0;
+				peta_el_beeper (3);
+			}
+
+			if (
+				#ifdef PLAYER_CAN_FIRE
+					((pad0 & sp_UP) == 0)
+				#else
+					((pad0 & sp_FIRE) == 0)
+				#endif
+			) {
+				if (player.saltando) {
+					player.cont_salto ++; if (player.cont_salto == 8) player.saltando = 0;
+					player.vy -= PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto >> 1);
+				}
+			} else {
+				player.saltando = 0;
+			}
+
 		#elif defined PLAYER_HAS_JETPAC
 			// Make jetpac
 		#endif
 	#endif 
 
+	player.y += player.vy;
+	if (player.y < 0) player.y = 0;
+	if (player.y > 144*64) player.y = 144*64;
+
+	#asm
+			ld  hl, (_player + 2)		// player.y
+			call HLshr6_A
+			ld  (_gpy), A
+	#endasm
+
 	// Collide vertical.
 	// Includes evil tile detection, open lock & push boxes
+	#ifndef PLAYER_MOGGY_STYLE
+		player.possee = 0;
+	#endif
+	rdj = (player.vy + ptgmy);
+
+	#ifdef PLAYER_MOGGY_STYLE
+		if (rdj != 0)
+	#endif 
+	{
+		_x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
+		if (rdj >= 0) {
+			// Collide down
+
+			_y = _y2 = (gpy + 15) >> 4;
+			cm_two_points ();
+
+			if (
+				#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS
+					(at1 & 12) || (at2 & 12)
+				#else
+					if ((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
+				#endif
+			) {
+				player.vy = 0;
+				#asm 
+						ld  a, (_gpy)
+						and 0xf0 
+						ld  (_gpy), a 
+						call Ashl16_HL
+						ld  (_player + 2), HL 	// player.y
+				#endasm
+				#ifndef PLAYER_MOGGY_STYLE
+					player.possee = 1;
+				#endif
+			}
+
+		} else if (rdj < 0) {
+			// Collide up
+
+			_y = _y2 = (gpy + 4) >> 4;
+			cm_two_points ();
+
+			if ((at1 & 8) || (at2 & 8)) {
+				player.vy = 0;
+				#asm 
+						ld  a, (_gpy)
+						and 0xf0
+						add 12 
+						ld  (_gpy), a 
+						call Ashl16_HL
+						ld  (_player + 2), HL 
+				#endasm 
+			}
+		}
+
+		#ifndef DEACTIVATE_EVIL_TILE
+			if ((at1 & 1) || (at2 & 1)) {
+				hit = 1;
+			}
+		#endif
+	}
 
 	// =================================================
 	//                     Horizontal
 	// =================================================
 
 	// Read keyboard and apply A/R to VX
+	// Read keyboard and apply A/R to VY
+	
+	if ((pad0 & sp_LEFT) && (pad0 & sp_RIGHT)) {
+		if (player.vx > 0) player.vx -= PLAYER_RX;
+		else if (player.vx < 0) player.vx += PLAYER_RX;
+	} else {
+		if ((pad0 & sp_LEFT) == 0) {
+			player.vx -= PLAYER_AX;
+			if (player.vx > PLAYER_MAX_VX) player.vx = PLAYER_MAX_VX;
+			player.frame = GENITAL_FACING_LEFT;
+		}
+
+		if ((pad0 & sp_RIGHT) == 0) {
+			player.vx += PLAYER_AX;
+			if (player.vx < -PLAYER_MAX_VX) player.vx = -PLAYER_MAX_VX;
+			player.frame = GENITAL_FACING_RIGHT;
+		}
+	}
+
+	player.x += player.vx;
+
+	#ifndef PLAYER_MOGGY_STYLE
+		player.x += ptgmx;
+	#endif
+
+	if (player.x < 0) player.x = 0;
+	if (player.x > 224*64) player.x = 224*64;
+
+	#asm
+			ld  hl, (_player)		// player.x
+			call HLshr6_A
+			ld  (_gpx), A
+	#endasm
 
 	// Collide horizontal.
 	// Includes evil tile detection, open lock & push boxes
+	rdj = player.vx + ptgmx;
+	if (rdj != 0) {
+		_y = (gpy + 4) >> 4; _y2 = (gpy + 15) >> 4;
+		if (player.vx > 0) {
+			// Collide right
 
-	// Horizontal
+			_x = _x2 = (gpx + 11) >> 4;
+			cm_two_points ();
+
+			if ((at1 & 8) || (at2 & 8)) {
+				player.vx = 0;
+				#asm 
+						ld  a, (_gpx)
+						and 0xf0 
+						add 4
+						ld  (_gpx), a 
+						call Ashl16_HL
+						ld  (_player), HL 	// player.x
+				#endasm
+			}
+
+		} else if (rdj < 0) {
+			// Collide left
+
+			_x = _x2 = (gpx + 4) >> 4;
+			cm_two_points ();
+
+			if ((at1 & 8) || (at2 & 8)) {
+				player.vx = 0;
+				#asm 
+						ld  a, (_gpx)
+						and 0xf0
+						add 12 
+						ld  (_gpx), a 
+						call Ashl16_HL
+						ld  (_player), HL 
+				#endasm 
+			}
+		}
+
+		#ifndef DEACTIVATE_EVIL_TILE
+			if ((at1 & 1) || (at2 & 1)) {
+				hit = 1;
+			}
+		#endif
+	}
+
+	// Evil tile hit?
+	if (hit) {
+		// change sign of velocity with higher magnitude
+		if (abs (player.vx) > abs (player.vy)) {
+			player.vx = -player.vx;
+		} else {
+			player.vy = -player.vy;
+		}
+
+		player.drain_amount = 1;
+		player.is_dead = PLAYER_KILLED_BY_BG;
+	}
 
 	// =================================================
 	//                       Extras
@@ -1221,14 +1504,14 @@ void draw_scr (void) {
 				ld  (_enoffsmasi), hl 		// enoffsmasi = enit + enoffs;
 		#endasm
 
-		_en_t = malotes [enoffsmasi].t - 1;
+		_en_t = malotes [enoffsmasi].t;
 
 		switch (_en_t) {
 			case 1:
 			case 2:
 			case 3:
 			case 4:
-				enems_en_an_calc (_en_t);
+				enems_en_an_calc (_en_t - 1);
 				break;
 			default:
 				en_an_next_frame [enit] = sprite_18_a;
@@ -1366,7 +1649,7 @@ void mueve_bicharracos (void) {
 	// This function moves the active enemies.
 	en_tocado = 0;
 	player.gotten = 0;
-	ptgmx =  ptgmy = 0;
+	ptgmx = ptgmy = 0;
 	
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		enoffsmasi = enoffs + enit;
@@ -1950,166 +2233,168 @@ void mueve_bicharracos (void) {
 				#endasm 
 			#endif
 
-			// Check for collisions.
-			#asm
-				._en_bg_collision
-					call en_xx_calc
-					call en_yy_calc
+			#ifdef PLAYER_PUSH_BOXES
+				// Check for collisions.
+				#asm
+					._en_bg_collision
+						call en_xx_calc
+						call en_yy_calc
 
-					ld  a, (__en_mx)
-					or  a
-					jr  z, _en_bg_collision_horz_done
+						ld  a, (__en_mx)
+						or  a
+						jr  z, _en_bg_collision_horz_done
 
-				._en_bg_collision_horz
-					ld  a, (__en_mx)
-					call __ctileoff
-					ld  (_rdi), a
+					._en_bg_collision_horz
+						ld  a, (__en_mx)
+						call __ctileoff
+						ld  (_rdi), a
 
-					ld  c, a
-					ld  a, (_en_xx)
-					add c
-					ld  (_ptx1), a
-					ld  (_ptx2), a
+						ld  c, a
+						ld  a, (_en_xx)
+						add c
+						ld  (_ptx1), a
+						ld  (_ptx2), a
 
-					ld  a, (_en_yy)
-					ld  (_pty1), a
+						ld  a, (_en_yy)
+						ld  (_pty1), a
 
-					ld  a, (__en_y)
-					add 15
-					srl a
-					srl a
-					srl a
-					srl a
-					ld  (_pty2), a
+						ld  a, (__en_y)
+						add 15
+						srl a
+						srl a
+						srl a
+						srl a
+						ld  (_pty2), a
 
-					call _en_bg_collision_check
-					or  a
-					jr  z, _en_bg_collision_horz_done
+						call _en_bg_collision_check
+						or  a
+						jr  z, _en_bg_collision_horz_done
 
-					ld  a, (_en_xx)
-					ld  c, a
-					ld  a, (_rdi)
-					xor 1
-					add c
-					sla a
-					sla a
-					sla a
-					sla a
-					ld  (__en_x), a
+						ld  a, (_en_xx)
+						ld  c, a
+						ld  a, (_rdi)
+						xor 1
+						add c
+						sla a
+						sla a
+						sla a
+						sla a
+						ld  (__en_x), a
 
-					ld  a, (__en_mx)
-					ld  c, a
-					xor a
-					sub c
-					ld  (__en_mx), a
-				
-				._en_bg_collision_horz_done
+						ld  a, (__en_mx)
+						ld  c, a
+						xor a
+						sub c
+						ld  (__en_mx), a
+					
+					._en_bg_collision_horz_done
 
-					call en_xx_calc
+						call en_xx_calc
 
-					ld  a, (__en_my)
-					or  a
-					jr  z, _en_bg_collision_vert_done
+						ld  a, (__en_my)
+						or  a
+						jr  z, _en_bg_collision_vert_done
 
-				._en_bg_collision_vert
-					ld  a, (__en_my)
-					call __ctileoff
-					ld  (_rdi), a
+					._en_bg_collision_vert
+						ld  a, (__en_my)
+						call __ctileoff
+						ld  (_rdi), a
 
-					ld  c, a
-					ld  a, (_en_yy)
-					add c
-					ld  (_pty1), a
-					ld  (_pty2), a
+						ld  c, a
+						ld  a, (_en_yy)
+						add c
+						ld  (_pty1), a
+						ld  (_pty2), a
 
-					ld  a, (_en_xx)
-					ld  (_ptx1), a
+						ld  a, (_en_xx)
+						ld  (_ptx1), a
 
-					ld  a, (__en_x)
-					add 15
-					srl a
-					srl a
-					srl a
-					srl a
-					ld  (_ptx2), a
+						ld  a, (__en_x)
+						add 15
+						srl a
+						srl a
+						srl a
+						srl a
+						ld  (_ptx2), a
 
-					call _en_bg_collision_check
-					or  a
-					jr  z, _en_bg_collision_vert_done
+						call _en_bg_collision_check
+						or  a
+						jr  z, _en_bg_collision_vert_done
 
-					ld  a, (_en_yy)
-					ld  c, a
-					ld  a, (_rdi)
-					xor 1
-					add c
-					sla a
-					sla a
-					sla a
-					sla a
-					ld  (__en_y), a
+						ld  a, (_en_yy)
+						ld  c, a
+						ld  a, (_rdi)
+						xor 1
+						add c
+						sla a
+						sla a
+						sla a
+						sla a
+						ld  (__en_y), a
 
-					ld  a, (__en_my)
-					ld  c, a
-					xor a
-					sub c
-					ld  (__en_my), a
+						ld  a, (__en_my)
+						ld  c, a
+						xor a
+						sub c
+						ld  (__en_my), a
 
-				._en_bg_collision_vert_done
+					._en_bg_collision_vert_done
 
-					call en_yy_calc
+						call en_yy_calc
 
-					jr _en_bg_collision_end
+						jr _en_bg_collision_end
 
-				._en_bg_collision_check
-					ld  a, (_ptx1)
-					ld  c, a
-					ld  a, (_pty1)
-					call _attr_enems
-					ld  a, l
-					and ENEMIES_COLLIDE_MASK
-					ret  nz 			// Non zero, A = TRUE
+					._en_bg_collision_check
+						ld  a, (_ptx1)
+						ld  c, a
+						ld  a, (_pty1)
+						call _attr_enems
+						ld  a, l
+						and ENEMIES_COLLIDE_MASK
+						ret  nz 			// Non zero, A = TRUE
 
-					ld  a, (_ptx2)
-					ld  c, a
-					ld  a, (_pty2)
-					call _attr_enems
-					ld  a, l
-					and ENEMIES_COLLIDE_MASK
-					ret 				// A = result
+						ld  a, (_ptx2)
+						ld  c, a
+						ld  a, (_pty2)
+						call _attr_enems
+						ld  a, l
+						and ENEMIES_COLLIDE_MASK
+						ret 				// A = result
 
-				.__ctileoff
-					// A signed; A >= 0 -> 1, else 0.
-					bit 7, a
-					jr  z, __ctileoff_1
+					.__ctileoff
+						// A signed; A >= 0 -> 1, else 0.
+						bit 7, a
+						jr  z, __ctileoff_1
 
-					xor a
-					ret
+						xor a
+						ret
 
-				.__ctileoff_1
-					ld  a, 1
-					ret
+					.__ctileoff_1
+						ld  a, 1
+						ret
 
-				.en_xx_calc
-					ld  a, (__en_x)
-					srl a
-					srl a
-					srl a
-					srl a
-					ld  (_en_xx), a
-					ret
+					.en_xx_calc
+						ld  a, (__en_x)
+						srl a
+						srl a
+						srl a
+						srl a
+						ld  (_en_xx), a
+						ret
 
-				.en_yy_calc
-					ld  a, (__en_y)
-					srl a
-					srl a
-					srl a
-					srl a
-					ld  (_en_yy), a
-					ret
+					.en_yy_calc
+						ld  a, (__en_y)
+						srl a
+						srl a
+						srl a
+						srl a
+						ld  (_en_yy), a
+						ret
 
-				._en_bg_collision_end
+					._en_bg_collision_end
 
-			#endasm
+				#endasm
+			#endif
 
 			enems_calc_frame ();
 

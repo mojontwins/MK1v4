@@ -13,7 +13,7 @@
 
 #define MAP_W						6		//
 #define MAP_H						5		// Map dimmensions in screens
-#define SCR_INICIO					25		// Initial screen
+#define SCR_INICIO					24		// Initial screen
 #define PLAYER_INI_X				2		//
 #define PLAYER_INI_Y				2		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
@@ -77,6 +77,7 @@
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
 //#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
+#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 
 // ============================================================================
 // III. Screen configuration
@@ -85,17 +86,17 @@
 // This sections defines how stuff is rendered, where to show counters, etcetera
 
 #define VIEWPORT_X					1		//
-#define VIEWPORT_Y					0		// Viewport character coordinates
+#define VIEWPORT_Y					2		// Viewport character coordinates
 #define LIFE_X						4		//
-#define LIFE_Y						21		// Life gauge counter character coordinates
-#define OBJECTS_X					12		//
-#define OBJECTS_Y					21		// Objects counter character coordinates
-#define OBJECTS_ICON_X				9		// 
-#define OBJECTS_ICON_Y				21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-#define KEYS_X						28		//
-#define KEYS_Y						21		// Keys counter character coordinates
-#define KILLED_X					20		//
-#define KILLED_Y					21		// Kills counter character coordinates
+#define LIFE_Y						0		// Life gauge counter character coordinates
+#define OBJECTS_X					11		//
+#define OBJECTS_Y					0		// Objects counter character coordinates
+//#define OBJECTS_ICON_X			9		// 
+//#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
+#define KEYS_X						17		//
+#define KEYS_Y						0		// Keys counter character coordinates
+//#define KILLED_X					20		//
+//#define KILLED_Y					21		// Kills counter character coordinates
 
 // Graphic FX, uncomment which applies...
 

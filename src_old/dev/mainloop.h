@@ -14,7 +14,11 @@ void main (void) {
 	
 		#ifndef DIRECT_TO_PLAY
 			blackout ();
-
+			#ifndef CPC
+				#asm
+					call SPUpdateNow
+				#endasm 
+			#endif
 			#asm
 					ld  hl, _s_marco
 					call _unpack_screen

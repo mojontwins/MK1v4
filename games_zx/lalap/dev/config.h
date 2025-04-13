@@ -288,8 +288,8 @@
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 //#define REVERSE_OBJECT_COUNT 				// Count from PLAYER_NUM_OBJETOS to 0
 
-#define KEYS_X						30		//
-#define KEYS_Y						16		// Keys counter character coordinates
+#define KEYS_X						17		//
+#define KEYS_Y						0		// Keys counter character coordinates
 
 //#define SHOW_KILLED
 //#define SHOW_TOTAL

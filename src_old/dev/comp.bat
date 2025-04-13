@@ -34,14 +34,14 @@ if %errorlevel% neq 0 goto :error
 
 echo Output: %game%.tap
 
+:error
+echo ERROR
+
 if [%1]==[noclean] goto :end 
 if [%2]==[noclean] goto :end 
 
 del ..\gfx\*.scr > nul
 del *.bin >nul
 goto :end 
-
-:error
-echo ERROR
 
 :end

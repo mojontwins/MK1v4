@@ -91,6 +91,8 @@ INERCIA player;
 	unsigned char bspr_it;
 #endif
 signed int ptgmx, ptgmy;
+unsigned char at1, at2;
+unsigned char hit;
 
 // Enemies
 
@@ -185,6 +187,7 @@ unsigned char pti, ptj;
 unsigned char *gp_gen, *gp_gen_org, *gp_gen_alt;
 unsigned char t_alt;
 unsigned char prxx, pryy;
+
 
 unsigned char bitmask [] = {
 	1, 2, 4, 8, 16, 32, 64, 128
