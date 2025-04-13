@@ -1,5 +1,11 @@
 
 void main (void) {
+	#ifndef CPC
+		#asm 
+			ld  sp, STACK_ADDR
+		#endasm 
+	#endif
+
 	system_init ();
 
 	while (1) {
@@ -207,14 +213,14 @@ void main (void) {
 									#ifdef ONLY_ONE_OBJECT
 										if (player.objs == 0) {
 											player.objs ++;
-											play_sfx (6);	
+											peta_el_beeper (6);	
 										} else {
 											rdi = 1;
-											play_sfx (1);	
+											peta_el_beeper (1);	
 										}
 									#else
 										player.objs ++;
-										play_sfx (6);
+										peta_el_beeper (6);
 										#ifdef OBJECT_COUNT
 											flags [OBJECT_COUNT] ++;
 										#endif
@@ -225,7 +231,7 @@ void main (void) {
 							#ifndef DEACTIVATE_KEYS
 								case HOTSPOT_TYPE_KEY:
 									player.keys ++;
-									play_sfx (6);
+									peta_el_beeper (6);
 									break;
 							#endif						
 						}
@@ -317,7 +323,7 @@ void main (void) {
 					// Any scripts to run in this screen?
 					script = f_scripts [n_pant];
 					run_script ();
-					//if (!script_something_done) play_sfx (9);
+					//if (!script_something_done) peta_el_beeper (9);
 					
 				}
 			#endif
@@ -420,7 +426,9 @@ void main (void) {
 
 				player.is_dead = 0;
 				player.life -= player.drain_amount;
-				player_flicker ();
+				#ifdef PLAYER_FLICKERS
+					player_flicker ();
+				#endif
 			}
 
 			// Game over condition

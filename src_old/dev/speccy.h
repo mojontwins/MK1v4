@@ -130,7 +130,6 @@ void system_init (void) {
 	// Inits shit
 	#asm
 			di 
-			ld  sp, STACK_ADDR
 
 			ld  bc, 0xf1f1 
 			call SPInitIM2
@@ -149,7 +148,7 @@ void system_init (void) {
 
 	BORDER(0);
 	sp_AddMemory (0, NUMBLOCKS, 14, AD_FREE);
-
+	
 		// Define keys and default controls
 	joyfunc = sp_JoyKeyboard;
 
@@ -209,11 +208,7 @@ void system_init (void) {
 	
 	#asm
 		.fix_sprites
-			#ifdef TALL_PLAYER
-				ld  b, 8
-			#else
-				ld  b, 6
-			#endif
+			ld  b, 6
 			ld  hl, (_sp_player) 			// Sprite base pointer
 			call _fix_sprites
 
@@ -788,6 +783,298 @@ void draw_rectangle (void) {
 			ld  hl, __y
 			inc (hl)
 			jr  dr_outter_loop
+	#endasm
+}
+
+void render_this_enemy (void) {
+	#asm
+			// sp_moviles [enit] = sp_moviles + enit*2
+			ld  a, (_enit)
+			sla a
+			ld  c, a
+			ld  b, 0 				// BC = offset to [enit] in 16bit arrays
+			ld  hl, _sp_moviles
+			add hl, bc
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl)
+			push de						
+			pop ix
+
+			// Clipping rectangle
+			ld  iy, vpClipStruct
+
+			// Animation
+			// en_an_next_frame [enit] - en_an_current_frame [enit]
+			ld  hl, _en_an_current_frame
+			add hl, bc 				// HL -> en_an_current_frame [enit]
+			ld  e, (hl)
+			inc hl 
+			ld  d, (hl) 			// DE = en_an_current_frame [enit]
+
+			ld  hl, _en_an_next_frame
+			add hl, bc 				// HL -> en_an_next_frame [enit]
+			ld  a, (hl)
+			inc hl
+			ld  h, (hl)
+			ld  l, a 				// HL = en_an_next_frame [enit]
+
+			or  a 					// clear carry
+			sbc hl, de 				// en_an_next_frame [enit] - en_an_current_frame [enit]
+
+			push bc 				// Save for later
+
+			ld  b, h
+			ld  c, l 				// ** BC = animate bitdef **	
+
+			//VIEWPORT_Y + (rdy >> 3), VIEWPORT_X + (rdx >> 3)
+			ld  a, (_rdy)					
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_Y
+			ld h, a
+
+			ld  a, (_rdx)
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_X
+			ld  l, a
+
+			// rdx & 7, rdy & 7
+			ld  a, (_rdx)
+			and 7
+			ld  d, a
+
+			ld  a, (_rdy)
+			and 7
+			ld  e, a
+
+			call SPMoveSprAbs
+
+			// en_an_current_frame [enit] = en_an_next_frame [enit];
+
+			pop bc 					// Retrieve index
+
+			ld  hl, _en_an_current_frame
+			add hl, bc
+			ex  de, hl 				// DE -> en_an_current_frame [enit]	
+
+			ld  hl, _en_an_next_frame
+			add hl, bc 				// HL -> en_an_next_frame [enit]
+
+			ldi
+			ldi
+	#endasm
+}
+
+
+void render_all_sprites (void) {
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+		#asm
+				ld  hl, (_enoffs)
+				ld  bc, (_enit)
+				ld  b, 0
+				add hl, bc
+				
+				call _calc_baddies_pointer
+
+				// malotes struct is:
+				// x, y, x1, y1, x2, y2, mx, my, t[, life]
+
+				ld  a, (hl)
+				ld  (_rdx), a 
+				inc hl 
+
+				ld  a, (hl)
+				ld  (_rdy), a 
+
+				call _render_this_enemy
+		#endasm
+	}
+
+	#ifdef TALL_PLAYER
+		rdy = gpy - 8;
+	#else
+		rdy = gpy; 
+	#endif
+
+	#asm
+			ld  a, (_player + 23)		// player.estado
+			and EST_PARP 
+			jr  z, render_player_on_screen
+
+			ld  a, (_half_life)
+			or  a 
+			jr  nz, render_player_on_screen
+		
+		.render_player_off_screen
+			ld  a, 240
+			jr  render_player_set_x 
+		
+		.render_player_on_screen
+			ld  a, (_gpx) 
+
+		.render_player_set_x
+			ld  (_rdx), a 
+
+		.render_player
+			ld  ix, (_sp_player)
+			ld  iy, vpClipStruct
+
+			ld  hl, (_player + 17)			// player.next_frame
+			ld  de, (_player + 15) 			// player.current_frame
+			or  a
+			sbc hl, de
+			ld  b, h
+			ld  c, l
+
+			ld  a, (_rdy)
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_Y
+			ld  h, a 
+
+			ld  a, (_rdx)
+			srl a
+			srl a
+			srl a
+			add VIEWPORT_X
+			ld  l, a 
+			
+			ld  a, (_rdx)
+			and 7
+			ld  d, a
+
+			ld  a, (_rdy)
+			and 7
+			ld  e, a
+
+			call SPMoveSprAbs
+	#endasm
+
+	player.current_frame = player.next_frame;
+
+	#ifdef PLAYER_CAN_FIRE
+		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
+			if (bullets_estado [rdi]) {
+				rdx = bullets_x [rdi]; rdy = bullets_y [rdi];
+
+				#asm
+						ld  a, (_rdi)
+						sla a
+						ld  c, a
+						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
+						ld  hl, _sp_bullets
+						add hl, bc
+						ld  e, (hl)
+						inc hl 
+						ld  d, (hl)
+						push de						
+						pop ix
+
+						ld  iy, vpClipStruct
+						ld  bc, 0
+
+						ld  a, (_rdy)
+						srl a
+						srl a
+						srl a
+						add VIEWPORT_Y
+						ld  h, a
+
+						ld  a, (_rdx)
+						srl a
+						srl a
+						srl a
+						add VIEWPORT_X
+						ld  l, a
+
+						ld  a, (_rdx)
+						and 7
+						ld  d, a 
+
+						ld  a, (_rdy)
+						and 7
+						ld  e, a 
+						
+						call SPMoveSprAbs
+				#endasm				
+			} else {
+				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
+				#asm
+						ld  a, (_rdi)
+						sla a
+						ld  c, a
+						ld  b, 0 				// BC = offset to [gpit] in 16bit arrays
+						ld  hl, _sp_bullets
+						add hl, bc
+						ld  e, (hl)
+						inc hl 
+						ld  d, (hl)
+						push de						
+						pop ix
+
+						ld  iy, vpClipStruct
+						ld  bc, 0
+
+						ld  hl, 0xfefe
+						ld  de, 0 
+						
+						call SPMoveSprAbs
+				#endasm
+			}
+		}
+	#endif
+}
+
+void saca_a_todo_el_mundo_de_aqui (void) {
+	// ¡Saca a todo el mundo de aquí!
+	#asm
+			ld  ix, (_sp_player)
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+			call SPMoveSprAbs
+	
+			xor a
+		.hide_sprites_enems_loop
+			ld  (_gpit), a
+
+			sla a
+			ld  c, a
+			ld  b, 0
+			ld  hl, _sp_moviles
+			add hl, bc
+			ld  e, (hl)
+			inc hl
+			ld  d, (hl)
+			push de
+			pop ix
+
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+
+			call SPMoveSprAbs
+
+			ld  a, (_gpit)
+			inc a
+			cp  MAX_ENEMS
+			jr  nz, hide_sprites_enems_loop
+
+		#ifdef ENABLE_SWORD
+			ld  ix, (_sp_sword)
+			ld  iy, vpClipStruct
+			ld  bc, 0
+			ld  hl, 0xfefe	// -2, -2
+			ld  de, 0
+			call SPMoveSprAbs			
+		#endif
 	#endasm
 }
 

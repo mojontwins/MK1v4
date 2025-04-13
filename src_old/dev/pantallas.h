@@ -7,11 +7,11 @@ extern unsigned char s_ending [];
 	._s_title
 		BINARY "titlec.bin"
 	._s_marco
-#endasm
+
 	#ifndef DIRECT_TO_PLAY
 			BINARY "marcoc.bin"
 	#endif
-#asm
+			
 	._s_ending
 		BINARY "endingc.bin"
 #endasm
@@ -84,6 +84,6 @@ void game_over (void) {
 		#asm 
 				call SPUpdateNow
 		#endasm
-		beepet (); play_sfx (10);
+		peta_el_beeper (10);
 	#endif
 }

@@ -17,6 +17,7 @@
 // Cosas del juego:
 #include "tileset.h"
 #include "sprites.h"
+#include "extrasprites.h"
 
 #include "definitions.h"
 #ifdef CPC
@@ -28,7 +29,6 @@
 	#include "msc-config.h" 
 #endif
 #include "zx0.h"
-#include "pantallas.h"
 #include "mapa.h"
 #if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 	#include "extrasprites.h"

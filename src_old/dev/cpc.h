@@ -78,13 +78,13 @@
 #ifdef SOUND_NONE
 	#define AY_INIT()        ;
 	#define AY_PLAY_SOUND(a) ;
-	#define play_sfx(a)      ;
+	#define peta_el_beeper(a)      ;
 	#define AY_STOP_SOUND()  ;
 	#define AY_PLAY_MUSIC(a) ;
 #elif defined SOUND_WYZ
 	#define AY_INIT()        wyz_init ()
 	#define AY_PLAY_SOUND(a) wyz_play_sound (a)
-	#define play_sfx(a)      wyz_play_sound (a)
+	#define peta_el_beeper(a)      wyz_play_sound (a)
 	#define AY_STOP_SOUND()  wyz_stop_sound ()
 	#define AY_PLAY_MUSIC(a) wyz_play_music (a)
 #endif		
@@ -1177,6 +1177,166 @@ void draw_rectangle (void) {
 
 			call cpc_InvalidateRect
 	#endasm
+}
+
+void render_this_enemy (void) {
+	// sp_sw struct is 16 bytes wide. This is easy
+	// 0   2   4      6   7   8  9  10 11 12      14
+	// sp0 sp1 coord0 cox coy cx cy ox oy invfunc updfunc
+	#asm
+			ld  d, SP_ENEMS_BASE
+			call _get_pointer_to_enem_or_coco
+
+			// sp_sw [rda].cx = (rdx + VIEWPORT_X * 8 + sp_sw [rda].cox) >> 1;
+			ld  a, (_rdx)
+			add #(VIEWPORT_X*8)
+			add (ix + 6)
+			#ifndef MODE_1
+				srl a
+			#endif
+			ld  (ix + 8), a
+
+			// sp_sw [rda].cy = (rdy + VIEWPORT_Y * 8 + sp_sw [rda].coy);
+			ld  a, (_rdy) 
+			add #(VIEWPORT_Y*8)
+			add (ix + 7)
+			ld  (ix + 9), a
+
+			// sp_sw [rda].sp0 = (int) (en_an_next_frame [enit]);
+			ld  a, (_enit)
+			sla a
+			ld  b, 0
+			ld  c, a
+			ld  hl, _en_an_next_frame			
+			add hl, bc
+			ld  a, (hl)
+			inc hl
+			ld  h, (hl)
+			ld  l, a
+
+			ld (ix + 0), l
+			ld (ix + 1), h
+	#endasm
+}
+
+void render_all_sprites (void) {
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+		#asm
+				ld  hl, (_enoffs)
+				ld  bc, (_enit)
+				ld  b, 0
+				add hl, bc
+				
+				call _calc_baddies_pointer
+
+				ld  a, (hl)
+				ld  (_rdx), a 
+				inc hl 
+
+				ld  a, (hl)
+				ld  (_rdy), a 
+
+				call _render_this_enemy
+		#endasm
+	}
+
+	#asm 
+			ld  a, (_gpy)
+			ld  (_rdy), a 
+
+			ld  a, (_player + 23)		// player.estado
+			and EST_PARP 
+			jr  z, render_player_on_screen
+
+			ld  a, (_half_life)
+			or  a 
+			jr  nz, render_player_on_screen
+		
+		.render_player_off_screen
+			ld  a, 240
+			jr  render_player_set_x 
+		
+		.render_player_on_screen
+			ld  a, (_gpx) 
+
+		.render_player_set_x
+			ld  (_rdx), a 
+
+		.render_player
+			ld  ix, #(BASE_SPRITES + (SP_PLAYER*16))
+
+			// sp_sw [SP_PLAYER].cx = (gpx + VIEWPORT_X*8 + sp_sw [SP_PLAYER].cox) >> 1;
+			ld  a, (_gpx)
+			add #(VIEWPORT_X*8)
+			add (ix + 6)
+			#ifndef MODE_1
+				srl a
+			#endif
+			ld  (ix + 8), a
+
+			// sp_sw [SP_PLAYER].cy = (gpy + VIEWPORT_Y*8 + sp_sw [SP_PLAYER].coy);
+			ld  a, (_gpy)
+			add #(VIEWPORT_Y*8)
+			add (ix + 7)
+			ld  (ix + 9), a
+
+			// if ( (player.estado & EST_PARP) && half_life ) 
+			ld  a, (_player + 23) 		// player.estado
+			and EST_PARP
+			jr  z, player_render_graphic
+
+			ld  a, (_half_life)
+			or  a
+			jr  z, player_render_graphic
+
+		.player_render_empty
+			ld  hl, _sprite_18_a
+			jr  player_render_set_sp0
+
+		.player_render_graphic
+			ld  hl, (_player + 17)		// player.next_frame
+
+		.player_render_set_sp0
+			ld  (ix + 0), l
+			ld  (ix + 1), h
+	#endasm
+
+	player.current_frame = player.next_frame;
+	
+	#ifdef PLAYER_CAN_FIRE
+		bspr_it = SP_BULLETS_BASE;
+		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
+			if (bullets_estado [rdi]) {
+				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
+				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
+			} else {
+				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
+				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 2;
+				sp_sw [bspr_it].cy = (VIEWPORT_Y * 8);
+				sp_sw [bspr_it].sp0 = (int) (SPRFR_EMPTY);
+			}
+			bspr_it ++;
+		}
+	#endif
+}
+
+void saca_a_todo_el_mundo_de_aqui (void) {
+	#asm
+			ld  de, 15
+			ld  b, SW_SPRITES_ALL
+			ld  hl, BASE_SPRITES
+		.clear_sprites_loop
+			ld  a, #(_sprite_18_a%256)
+			ld  (hl), a
+			inc hl
+			ld  a, #(_sprite_18_a/256)
+			ld  (hl), a 
+			add hl, de
+			djnz clear_sprites_loop
+	#endasm
+
+	// Old version is crap
 }
 
 // cpc_UpdateNow () - Updates the screen.

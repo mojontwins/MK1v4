@@ -3,7 +3,62 @@
 
 // engine.h
 
-void qtile (unsigned char x, unsigned char y) {
+#ifndef ENEMIES_COLLIDE_MASK
+	#define ENEMIES_COLLIDE_MASK 9
+#endif
+
+#asm
+	.HLshr6_A
+		// HL shr 6 -> CCBBBBBB AAxxxxxx -> BBBBBBAA
+		sla h 
+		sla h 			// BBBBBB00
+
+		ld  a, l 
+		rlca
+		rlca 
+		and 0x03 		// 000000AA
+
+		or  h 			// BBBBBBAA
+		ret 
+
+	.Ashl16_HL
+		// A shl 6 -> BBBBBBAA -> 00BBBBBB AA000000
+		ld  l, 0
+
+		ld  h, a
+		srl h 			// H = 0BBBBBBA, C = A
+		rr  l 			// L = A0000000
+		srl h 			// H = 00BBBBBB, C = A
+		rr  l 			// L = AA000000
+		ret
+
+	.withSign
+		// To be called after Ashl16_HL to copy sign & extend
+		bit 7, a
+		ret z
+		ld  a, $C0 		// 11000000
+		or  h
+		ld  h, a 
+		ret
+
+	._abs_a
+		bit 7, a
+		ret z
+		neg
+
+#endasm
+
+unsigned char *player_cells [] = {
+	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
+	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+};
+
+unsigned char *enem_cells [] = {
+	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+};
+
+unsigned char qtile (unsigned char x, unsigned char y) {
 	#asm
 			ld  hl, 4
 			add hl, sp
@@ -34,7 +89,7 @@ void qtile (unsigned char x, unsigned char y) {
 	#endasm
 }
 
-void attr (char x, char y) {
+unsigned char attr (unsigned char x, unsigned char y) {
 	#asm
 			ld  hl, 4
 			add hl, sp
@@ -251,7 +306,7 @@ unsigned int __FASTCALL__ abs (int n) {
 
 					xor a 
 					ld  (hl), a
-					jr  .clear_cerrojo_loop_done
+					jr  clear_cerrojo_loop_done
 
 				.clear_cerrojo_loop_continue
 					inc hl
@@ -261,7 +316,7 @@ unsigned int __FASTCALL__ abs (int n) {
 			#endasm
 
 			player.keys --;
-			play_sfx (8);
+			peta_el_beeper (8);
 		}
 	}
 
@@ -406,7 +461,7 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (hl), a 			// bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;				
 		#endasm
 
-		play_sfx (9);
+		peta_el_beeper (9);
 		#ifdef FIRING_DRAINS_LIFE
 			player.drain_amount = FIRING_DRAIN_AMOUNT;
 			player.is_dead = PLAYER_KILLED_BY_SELF;
@@ -570,6 +625,21 @@ void init_player_values (void) {
 		#endif
 
 			ld (_player+22),a 					// .facing
+	#endasm
+}
+
+void init_player (void) {
+	// Initialize player with initial values.
+	// (hence the initialize thing)
+	init_player_values ();
+
+	#asm
+			ld  hl, PLAYER_LIFE
+			ld  (_player+29), hl 				// .life
+			xor a
+			ld  (_player+27), a 				// .objs
+			ld  (_player+28), a 				// .keys
+			ld  (_player+32), a 				// .killed
 	#endasm
 }
 
@@ -1250,9 +1320,9 @@ void draw_scr (void) {
 		
 		#ifdef CPC
 			cpc_UpdateNow (1);
-		#asm 
+		#else 
 			call SPUpdateNow
-		#endasm
+		#endif
 
 		#if ENEMS_LIFE_GAUGE > 1
 			if (_en_life == 0) 
@@ -1287,12 +1357,12 @@ void draw_scr (void) {
 				#endif
 			#endif
 		} else {
-			play_sfx (1);
+			peta_el_beeper (1);
 		}
 	}
 #endif
 
-void mueve_bicharracos (unsigned char n_pant) {
+void mueve_bicharracos (void) {
 	// This function moves the active enemies.
 	en_tocado = 0;
 	player.gotten = 0;
@@ -1371,10 +1441,8 @@ void mueve_bicharracos (unsigned char n_pant) {
 						cp  c
 						jr  c, horz_limit_skip_1
 
-						#ifdef ENEMIES_COLLIDE	
-							ld  a, (__en_x1)
-							ld  (__en_x), a
-						#endif
+						ld  a, (__en_x1)
+						ld  (__en_x), a
 
 						ld  a, (__en_mx)
 						call _abs_a
@@ -1390,10 +1458,8 @@ void mueve_bicharracos (unsigned char n_pant) {
 						cp  c
 						jr  c, horz_limit_skip_2
 
-						#ifdef ENEMIES_COLLIDE	
-							ld  a, (__en_x2)
-							ld  (__en_x), a
-						#endif
+						ld  a, (__en_x2)
+						ld  (__en_x), a
 
 						ld  a, (__en_mx)
 						call _abs_a
@@ -1428,10 +1494,8 @@ void mueve_bicharracos (unsigned char n_pant) {
 						cp  c
 						jr  c, vert_limit_skip_1
 
-						#ifdef ENEMIES_COLLIDE	
-							ld  a, (__en_y1)
-							ld  (__en_y), a
-						#endif
+						ld  a, (__en_y1)
+						ld  (__en_y), a
 
 						ld  a, (__en_my)
 						call _abs_a
@@ -1446,10 +1510,8 @@ void mueve_bicharracos (unsigned char n_pant) {
 						cp  c
 						jr  c, vert_limit_skip_2
 
-						#ifdef ENEMIES_COLLIDE	
-							ld  a, (__en_y2)
-							ld  (__en_y), a
-						#endif
+						ld  a, (__en_y2)
+						ld  (__en_y), a
 
 						ld  a, (__en_my)
 						call _abs_a
@@ -2194,17 +2256,9 @@ void mueve_bicharracos (unsigned char n_pant) {
 					#endif
 						
 					if (player.estado == EST_NORMAL) {
-						en_tocado = 1; player.is_dead = 1; play_sfx (2);
+						en_tocado = 1; player.is_dead = 1; peta_el_beeper (2);
 						
-						// We decide which kind of life drain we do:
-						#ifdef RANDOM_RESPAWN
-							if (en_an_fanty_activo [enit]) {
-								player.drain_amount = FLYING_ENEMY_HIT;
-							} else
-						#endif
-						{
-							player.drain_amount = LINEAR_ENEMY_HIT;
-						}
+						player.drain_amount = 1;
 						player.is_dead = PLAYER_KILLED_BY_ENEM;
 						
 						#ifdef PLAYER_BOUNCES
@@ -2422,6 +2476,29 @@ void mueve_bicharracos (unsigned char n_pant) {
 }
 
 #asm
+	._calc_baddies_pointer
+		#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+			add hl, hl 				// x2
+			ld  d, h
+			ld  e, l 				// DE = x2
+			add hl, hl 				// x4
+			add hl, hl 				// x8
+
+			add hl, de 				// HL = x8 + x2 = x10
+		#else
+			ld  d, h
+			ld  e, l 				// DE = x1
+			add hl, hl 				// x2
+			add hl, hl 				// x4
+			add hl, hl 				// x8
+
+			add hl, de 				// HL = x8 + x1 = x9
+		#endif
+
+		ld  de, _malotes
+		add hl, de
+		ret
+
 	.enems_get_values
 		// Those values are stored in this order:
 		// x, y, x1, y1, x2, y2, mx, my, t[, life]

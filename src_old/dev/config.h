@@ -11,17 +11,17 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						5		//
-#define MAP_H						4		// Map dimmensions in screens
-#define SCR_INICIO					15		// Initial screen
+#define MAP_W						6		//
+#define MAP_H						5		// Map dimmensions in screens
+#define SCR_INICIO					25		// Initial screen
 #define PLAYER_INI_X				2		//
-#define PLAYER_INI_Y				7		// Initial tile coordinates
-#define SCR_FIN 					99		// Last screen. 99 = deactivated.
-#define PLAYER_FIN_X				99		//
-#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			99		// Objects to get to finish game
-#define PLAYER_LIFE 				15		// Max and starting life gauge.
-#define PLAYER_REFILL				1		// Life recharge
+#define PLAYER_INI_Y				2		// Initial tile coordinates
+//#define SCR_FIN 					99		// Last screen. 99 = deactivated.
+//#define PLAYER_FIN_X				99		//
+//#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
+#define PLAYER_NUM_OBJETOS			25		// Objects to get to finish game
+#define PLAYER_LIFE 				99		// Max and starting life gauge.
+#define PLAYER_REFILL				10		// Life recharge
 
 // ============================================================================
 // II. Engine type
@@ -36,7 +36,7 @@
 // -------------------
 
 //#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
-#define DIRECT_TO_PLAY						// If defined, title screen is also the game frame.
+//#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
 //#define DEACTIVATE_KEYS					// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS				// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
@@ -51,7 +51,7 @@
 //#define PLAYER_BULLET_SPEED 		8		// Pixels/frame. 
 //#define MAX_BULLETS 				3		// Max number of bullets on screen. Be careful!.
 //#define PLAYER_BULLET_Y_OFFSET	4		// vertical offset from the player's top.
-//#define ENEMIES_LIFE_GAUGE		5		// Amount of shots needed to kill enemies.
+//#define ENEMS_LIFE_GAUGE			5		// Amount of shots needed to kill enemies.
 
 //#define RANDOM_RESPAWN					// If defined, automatic flying enemies spawn on killed enemies
 //#define FANTY_MAX_V 				256 	// Flying enemies max speed.
@@ -120,8 +120,8 @@
 #define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
 
 #define PLAYER_VY_INICIAL_SALTO 64		// Initial junp velocity (64/64 = 1 píxel/frame)
-#define PLAYER_MAX_VY_SALTANDO	256 	// Max jump velocity (320/64 = 5 píxels/frame)
-#define PLAYER_INCR_SALTO		32		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
+#define PLAYER_MAX_VY_SALTANDO	320 	// Max jump velocity (320/64 = 5 píxels/frame)
+#define PLAYER_INCR_SALTO		48		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
 #define PLAYER_INCR_JETPAC		32		// Vertical jetpac gauge
 #define PLAYER_MAX_VY_JETPAC	256 	// Max vertical jetpac speed
@@ -146,19 +146,19 @@
 // 8 = Full obstacle (blocks player from all directions)
 
 #ifndef UNPACKED_MAP
-// Fill this array for normal, packed maps. The second row
-// is defined if you want to use tiles 20-31 in your scripts.
-// Remove it if you are not using extra tiles at all. And remember
-// that tiles 16 to 19 MUST be 0.
-unsigned char comportamiento_tiles [] = {
-	0, 0, 8, 4, 0, 8, 8, 4, 4, 8, 8, 0, 0, 0, 0, 8,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+	// Fill this array for normal, packed maps. The second row
+	// is defined if you want to use tiles 20-31 in your scripts.
+	// Remove it if you are not using extra tiles at all. And remember
+	// that tiles 16 to 19 MUST be 0.
+	unsigned char comportamiento_tiles [] = {
+		0, 8, 8, 0, 0, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	};
 #else
-// Fill this array if you are using unpacked maps.
-unsigned char comportamiento_tiles [] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0,
-	0, 0, 4, 8, 8, 4, 8, 8, 4, 4, 8, 0, 0, 2, 0, 0,
-	0, 0, 4, 4, 0, 8, 2, 2, 2, 2, 8, 0, 2, 2, 2, 8	
-};
+	// Fill this array if you are using unpacked maps.
+	unsigned char comportamiento_tiles [] = {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0,
+		0, 0, 4, 8, 8, 4, 8, 8, 4, 4, 8, 0, 0, 2, 0, 0,
+		0, 0, 4, 4, 0, 8, 2, 2, 2, 2, 8, 0, 2, 2, 2, 8	
+	};
 #endif

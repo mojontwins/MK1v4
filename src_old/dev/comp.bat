@@ -28,7 +28,7 @@ zcc +zx -a -vn churromain.c -o %game%.asm -lsplib2 -zorg=24200  > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin
-..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
+..\utils\bas2tap.exe -q -e -a10 -s"%game%" system/loader.bas %game%.tap  > nul
 ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.bin  > nul
 ..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
 

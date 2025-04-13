@@ -206,3 +206,5 @@ unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
 void enems_kill (unsigned char damage);
+unsigned char qtile (unsigned char x, unsigned char y);
+unsigned char attr (unsigned char x, unsigned char y);
