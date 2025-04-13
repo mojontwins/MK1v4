@@ -71,9 +71,9 @@ MALOTE malotes [] = {
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 11
- 	{16, 48, 0x13, 0x48, 2, 2, 10},
+ 	{16, 112, 0x17, 0x47, 2, 0, 4},
  	{192, 64, 0xC4, 0x78, -2, 2, 8},
- 	{0, 0, 0x00, 0x00, 0, 0, 0},
+ 	{16, 16, 0x11, 0x15, 0, 2, 0},
 
 	// Pantalla 12
  	{80, 16, 0x41, 0x51, 0, 0, 3},
@@ -106,7 +106,7 @@ MALOTE malotes [] = {
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 18
- 	{32, 64, 0x24, 0xD6, 2, 2, 10},
+ 	{16, 64, 0x14, 0xD4, 1, 0, 4},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
@@ -181,8 +181,8 @@ MALOTE malotes [] = {
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 33
- 	{16, 96, 0x16, 0xA8, 2, 2, 8},
- 	{192, 16, 0xC1, 0xA5, -1, 1, 8},
+ 	{16, 96, 0x16, 0xA8, 2, 2, 2},
+ 	{192, 16, 0xA1, 0xC5, -1, 1, 2},
  	{0, 0, 0x00, 0x00, 0, 0, 0},
 
 	// Pantalla 34
@@ -229,13 +229,12 @@ MALOTE malotes [] = {
 
 #define N_ENEMS_TYPE_0 61
 #define N_ENEMS_TYPE_1 2
-#define N_ENEMS_TYPE_2 10
+#define N_ENEMS_TYPE_2 12
 #define N_ENEMS_TYPE_3 7
 #define N_ENEMS_TYPE_5 0
 #define N_ENEMS_TYPE_6 0
 #define N_ENEMS_TYPE_7 2
-#define N_ENEMS_TYPE_8 11
-#define N_ENEMS_TYPE_10 2
+#define N_ENEMS_TYPE_8 9
 #define N_ENEMS_TYPE_11 8
 #define N_ENEMS_TYPE_12 15
 #define N_ENEMS_TYPE_13 3

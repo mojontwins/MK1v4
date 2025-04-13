@@ -1529,11 +1529,20 @@ void bilbos_hangover (void) {
 
 					} else {
 						// If lose -> one life less, throw right	
-						on_pant = 0xff;						
-						player.x = 12*16*64;
-						gpx = 12*16;
-						player.vx = 256;
-						player.is_dead = 1;
+						
+						#asm
+								ld  hl, 2*16*64
+								ld  (_player), hl 		// player.x
+								ld  hl, 6*16*64
+								ld  (_player + 2), hl 	// player.y
+								ld  hl, 0
+								ld  (_player + 6), hl 	// player.vx
+								ld  (_player + 8), hl 	// player.vy
+								ld  a, 1
+								ld  (_player + 36), a 	// player.is_dead
+								ld  a, 6
+								ld  (_n_pant), a
+						#endasm
 					}
 
 				} 

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Mar 24 11:00:40 2025
+;	Module compile time: Sun Apr 13 14:35:25 2025
 
 
 
@@ -1971,12 +1971,12 @@
 	defb	0
 	defb	2
 	defb	16
-	defb	48
-	defb	19
-	defb	72
+	defb	112
+	defb	23
+	defb	71
 	defb	2
-	defb	2
-	defb	10
+	defb	0
+	defb	4
 	defb	192
 	defb	64
 	defb	116
@@ -2048,8 +2048,8 @@
 	defb	0
 	defb	2
 	defb	80
-	defb	32
-	defb	82
+	defb	48
+	defb	83
 	defb	119
 	defb	1
 	defb	1
@@ -2061,13 +2061,13 @@
 	defb	2
 	defb	2
 	defb	7
-	defb	32
+	defb	16
 	defb	64
-	defb	36
-	defb	214
-	defb	2
-	defb	2
-	defb	10
+	defb	20
+	defb	212
+	defb	1
+	defb	0
+	defb	4
 	defb	176
 	defb	80
 	defb	101
@@ -2235,14 +2235,14 @@
 	defb	168
 	defb	2
 	defb	2
-	defb	8
+	defb	2
 	defb	192
 	defb	16
 	defb	161
 	defb	197
 	defb	-1
 	defb	1
-	defb	8
+	defb	2
 	defb	112
 	defb	112
 	defb	115
@@ -6178,9 +6178,6 @@
 	pop	bc
 	ld	hl,1	;const
 	call	_wyz_play_music
-	ld	hl,6 % 256	;const
-	ld	a,l
-	ld	(_n_pant),a
 	ret
 
 
@@ -6330,7 +6327,7 @@
 	jp interact_and_ret
 	.room_05
 	ld a, (_gpx)
-	cp 11*16
+	cp 12*16
 	ret nc
 	ld a, (_smaug_talk)
 	or a
@@ -6368,6 +6365,7 @@
 	call	_pokemon_combat
 	ld	hl,3	;const
 	call	_wyz_play_music
+	call	_recuadrius
 	ld a, (_pk_win)
 	or a
 	jr z, pokemon_lose
@@ -6376,16 +6374,17 @@
 	ld (_game_loop_flag), a
 	ret
 	.pokemon_lose
-	dec a
-	ld (_on_pant), a
-	ld hl, 12*16*64
+	ld hl, 2*16*64
 	ld (_player), hl
-	ld a, 12*16
-	ld (_gpx), a
-	ld hl, 256
+	ld hl, 6*16*64
+	ld (_player + 2), hl
+	ld hl, 0
 	ld (_player + 6), hl
+	ld (_player + 8), hl
 	ld a, 1
-	ld (_player + 26), a
+	ld (_player + 36), a
+	ld a, 6
+	ld (_n_pant), a
 	ret
 	.room_12
 	ld a, (_gallumb_flag)

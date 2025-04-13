@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Mar 21 10:49:16 2025
+;	Module compile time: Sun Apr 13 14:34:35 2025
 
 
 
@@ -2041,12 +2041,12 @@
 	defb	0
 	defb	0
 	defb	16
-	defb	48
-	defb	19
-	defb	72
+	defb	112
+	defb	23
+	defb	71
 	defb	2
-	defb	2
-	defb	10
+	defb	0
+	defb	4
 	defb	192
 	defb	64
 	defb	196
@@ -2054,12 +2054,12 @@
 	defb	-2
 	defb	2
 	defb	8
+	defb	16
+	defb	16
+	defb	17
+	defb	21
 	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
+	defb	2
 	defb	0
 	defb	80
 	defb	16
@@ -2187,13 +2187,13 @@
 	defb	0
 	defb	0
 	defb	0
-	defb	32
+	defb	16
 	defb	64
-	defb	36
-	defb	214
-	defb	2
-	defb	2
-	defb	10
+	defb	20
+	defb	212
+	defb	1
+	defb	0
+	defb	4
 	defb	0
 	defb	0
 	defb	0
@@ -2508,14 +2508,14 @@
 	defb	168
 	defb	2
 	defb	2
-	defb	8
+	defb	2
 	defb	192
 	defb	16
-	defb	193
-	defb	165
+	defb	161
+	defb	197
 	defb	-1
 	defb	1
-	defb	8
+	defb	2
 	defb	0
 	defb	0
 	defb	0
@@ -5038,11 +5038,11 @@
 	defm "PLACAJE%    "
 	._a_leechseed defb 0, 229, 2, 1
 	defm "DRENADORAS% "
-	._a_vinewhip defb 35, 255, 1, 0
+	._a_vinewhip defb 35, 255, 2, 0
 	defm "LATIGO CEPA%"
 	._a_scratch defb 40, 255, 20, 0
 	defm "ARA/AZO%    "
-	._a_ember defb 40, 255, 10, 2
+	._a_ember defb 40, 127, 10, 2
 	defm "BRASAS%     "
 	._a_leer defb 0, 255, 5, 4
 	defm "MALICIOSO%  "
@@ -7000,7 +7000,7 @@
 	jp	i_138
 .i_158
 	ld	a,(_gpx)
-	cp	#(192 % 256)
+	cp	#(176 % 256)
 	jp	z,i_159
 	jp	nc,i_159
 	ld	hl,(_smaug_talk)
@@ -7027,7 +7027,6 @@
 	call	_pokemon_combat
 	ld	hl,3 % 256	;const
 	call	_wyz_play_music
-	call	_recuadrius
 	ld	a,(_pk_win)
 	and	a
 	jp	z,i_161
@@ -7036,16 +7035,17 @@
 	ld	(_game_loop_flag),a
 	jp	i_162
 .i_161
-	ld	a,#(255 % 256 % 256)
-	ld	(_on_pant),a
-	ld	hl,_player+6
-	ld	(hl),#(256 % 256)
-	inc	hl
-	ld	(hl),#(256 / 256)
-	ld	hl,_player+36
-	ld	(hl),#(1 % 256 % 256)
-	ld	l,(hl)
-	ld	h,0
+	ld hl, 2*16*64
+	ld (_player), hl
+	ld hl, 6*16*64
+	ld (_player + 2), hl
+	ld hl, 0
+	ld (_player + 6), hl
+	ld (_player + 8), hl
+	ld a, 1
+	ld (_player + 36), a
+	ld a, 6
+	ld (_n_pant), a
 .i_162
 .i_159
 	jp	i_138

@@ -1627,12 +1627,19 @@ void bilbos_hangover (void) {
 
 			.pokemon_lose
 				// If lose -> one life less, throw right
-				dec a 					// A = 0-1 = 255
-				ld  (_on_pant), a 
-				ld  hl, 256
+
+				ld  hl, 2*16*64
+				ld  (_player), hl 		// player.x
+				ld  hl, 6*16*64
+				ld  (_player + 2), hl 	// player.y
+				ld  hl, 0
 				ld  (_player + 6), hl 	// player.vx
-				ld  a, 1 
-				ld  (_player + 26), a 	// player.is_dead
+				ld  (_player + 8), hl 	// player.vy
+				ld  a, 1
+				ld  (_player + 36), a 	// player.is_dead
+				ld  a, 6
+				ld  (_n_pant), a
+
 				ret
 
 		// ********************************************************************
