@@ -115,6 +115,16 @@ unsigned char isrc           @ 23296;
 unsigned char ay_player_on   @ 23297;
 unsigned char ay_counter     @ 23298;
 
+unsigned char *player_cells [] = {
+	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
+	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+};
+
+unsigned char *enem_cells [] = {
+	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+};
+
 #asm
 	defw 0	// 2 bytes libres
 #endasm

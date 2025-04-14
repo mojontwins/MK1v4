@@ -48,14 +48,8 @@
 		ret
 #endasm
 
-unsigned char *player_cells [] = {
-	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
-	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
-};
-
-unsigned char *enem_cells [] = {
-	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+unsigned char player_walk_cycle [] = {
+	0, 1, 2, 1
 };
 
 unsigned char qtile (unsigned char x, unsigned char y) {
@@ -249,24 +243,9 @@ unsigned int __FASTCALL__ abs (int n) {
 }
 
 #ifndef DEACTIVATE_KEYS
-	void check_and_clear_cerrojo (unsigned char x, unsigned char y) {
-		// search & toggle
-		
-		#asm
-				ld  hl, 4
-				add hl, sp
-				ld  a, (hl)
-				ld  (__x), a
-				ld  (_rdx), a
-				ld  c, a
-				dec hl
-				dec hl
-				ld  a, (hl)
-				ld  (__y), a
-				ld  (_rdy), a
-		#endasm 
-
-		if (qtile (_x, _y) == 15) {
+	void check_and_clear_cerrojo (void) {
+		// search & toggle @ rdx, rdy
+		if (qtile (rdx, rdy) == 15 && player.keys) {
 
 			#asm
 					xor a
@@ -274,12 +253,11 @@ unsigned int __FASTCALL__ abs (int n) {
 					ld  a, (_comportamiento_tiles)	;; beh [0]
 					ld  (__n), a
 
-					call set_map_tile_do
-
 					ld  a, (_rdx)
-					ld  (__x), a
+					ld  (__x), a 
 					ld  a, (_rdy)
 					ld  (__y), a
+					call set_map_tile_do
 
 				// The cerrojos struct is db np, x, y st
 					ld  b, MAX_CERROJOS
@@ -296,11 +274,11 @@ unsigned int __FASTCALL__ abs (int n) {
 					cp  c
 					jr  nz, clear_cerrojo_loop_continue
 
-					ld  a, (__x)
+					ld  a, (_rdx)
 					cp  d 
 					jr  nz, clear_cerrojo_loop_continue
 
-					ld  a, (__y)
+					ld  a, (_rdy)
 					cp  e 
 					jr  nz, clear_cerrojo_loop_continue
 
@@ -617,6 +595,52 @@ unsigned char cm_two_points (void) {
 	#endasm
 }
 
+#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
+	void check_lock_or_box_horz (void) {
+		rdx = _x; rdy = (gpy + 8) >> 4;
+		rda = qtile (rdx, rdy);
+
+		#if defined PLAYER_PUSH_BOXES
+			x0 = rdx; y0 = y1 = rdy;
+			if (player.vx > 0) {
+				x1 = x0 + 1;
+			} else {
+				x1 = x0 - 1;
+			}
+
+			move_tile_with_check ();
+		#endif
+
+		#if !defined DEACTIVATE_KEYS
+			if (rda == 15) {
+				check_and_clear_cerrojo ();
+			}
+		#endif
+	}
+
+	void check_lock_or_box_vert (void) {
+		rdx = (gpx + 8) >> 4; rdy = _y;
+		rda = qtile (rdx, rdy);
+
+		#if !defined DEACTIVATE_KEYS
+			if (rda == 15) {
+				check_and_clear_cerrojo ();
+			}
+		#endif
+
+		#if defined PLAYER_PUSH_BOXES && defined PLAYER_MOGGY_STYLE
+			x0 = x1 = rdx; y0 = rdy;
+			if (player.vy > 0) {
+				y1 = y0 + 1;
+			} else {
+				y1 = y0 - 1;
+			}
+
+			move_tile_with_check ();
+		#endif
+	}
+#endif
+
 void move (void) {
 	hit = 0; 
 
@@ -630,19 +654,24 @@ void move (void) {
 	#ifdef PLAYER_MOGGY_STYLE
 		// Read keyboard and apply A/R to VY
 		if ((pad0 & sp_UP) && (pad0 & sp_DOWN)) {
-			if (player.vy > 0) player.vy -= PLAYER_RX;
-			else if (player.vy < 0) player.vy += PLAYER_RX;
+			if (player.vy > 0) {
+				player.vy -= PLAYER_RX;
+				if (player.vy < 0) player.vy = 0;
+			} else if (player.vy < 0) {
+				player.vy += PLAYER_RX;
+				if (player.vy > 0) player.vy = 0;
+			}
 		} else {
 			if ((pad0 & sp_UP) == 0) {
 				player.vy -= PLAYER_AX;
-				if (player.vy > PLAYER_MAX_VX) player.vy = PLAYER_MAX_VX;
-				player.frame = GENITAL_FACING_UP;
+				if (player.vy < -PLAYER_MAX_VX) player.vy = -PLAYER_MAX_VX;
+				player.facing = GENITAL_FACING_UP;
 			}
 
 			if ((pad0 & sp_DOWN) == 0) {
 				player.vy += PLAYER_AX;
-				if (player.vy < -PLAYER_MAX_VX) player.vy = -PLAYER_MAX_VX;
-				player.frame = GENITAL_FACING_DOWN;
+				if (player.vy > PLAYER_MAX_VX) player.vy = +PLAYER_MAX_VX;
+				player.facing = GENITAL_FACING_DOWN;
 			}
 		}
 	#else
@@ -673,8 +702,9 @@ void move (void) {
 				#endif
 			) {
 				if (player.saltando) {
+					player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto >> 1));
+					if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
 					player.cont_salto ++; if (player.cont_salto == 8) player.saltando = 0;
-					player.vy -= PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto >> 1);
 				}
 			} else {
 				player.saltando = 0;
@@ -697,17 +727,11 @@ void move (void) {
 
 	// Collide vertical.
 	// Includes evil tile detection, open lock & push boxes
-	#ifndef PLAYER_MOGGY_STYLE
-		player.possee = 0;
-	#endif
-	rdj = (player.vy + ptgmy);
 
-	#ifdef PLAYER_MOGGY_STYLE
-		if (rdj != 0)
-	#endif 
-	{
+	rdj = (player.vy + ptgmy);
+	if (rdj != 0) {
 		_x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
-		if (rdj >= 0) {
+		if (rdj > 0) {
 			// Collide down
 
 			_y = _y2 = (gpy + 15) >> 4;
@@ -720,6 +744,10 @@ void move (void) {
 					if ((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
 				#endif
 			) {
+				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+					check_lock_or_box_vert ();
+				#endif
+
 				player.vy = 0;
 				#asm 
 						ld  a, (_gpy)
@@ -740,6 +768,10 @@ void move (void) {
 			cm_two_points ();
 
 			if ((at1 & 8) || (at2 & 8)) {
+				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+					check_lock_or_box_vert ();
+				#endif
+
 				player.vy = 0;
 				#asm 
 						ld  a, (_gpy)
@@ -759,6 +791,12 @@ void move (void) {
 		#endif
 	}
 
+	#ifndef PLAYER_MOGGY_STYLE
+		_y = _y2 = (gpy + 16) >> 4;
+		cm_two_points ();
+		player.possee = (at1 & 12) || (at2 & 12);
+	#endif
+
 	// =================================================
 	//                     Horizontal
 	// =================================================
@@ -767,19 +805,32 @@ void move (void) {
 	// Read keyboard and apply A/R to VY
 	
 	if ((pad0 & sp_LEFT) && (pad0 & sp_RIGHT)) {
-		if (player.vx > 0) player.vx -= PLAYER_RX;
-		else if (player.vx < 0) player.vx += PLAYER_RX;
+		if (player.vx > 0) {
+			player.vx -= PLAYER_RX;
+			if (player.vx < 0) player.vx = 0;
+		} else if (player.vx < 0) {
+			player.vx += PLAYER_RX;
+			if (player.vx > 0) player.vx = 0;
+		}
 	} else {
 		if ((pad0 & sp_LEFT) == 0) {
 			player.vx -= PLAYER_AX;
-			if (player.vx > PLAYER_MAX_VX) player.vx = PLAYER_MAX_VX;
-			player.frame = GENITAL_FACING_LEFT;
+			if (player.vx < -PLAYER_MAX_VX) player.vx = -PLAYER_MAX_VX;
+			#ifdef PLAYER_MOGGY_STYLE
+				player.facing = GENITAL_FACING_LEFT;
+			#else
+				player.facing = 4;
+			#endif
 		}
 
 		if ((pad0 & sp_RIGHT) == 0) {
 			player.vx += PLAYER_AX;
-			if (player.vx < -PLAYER_MAX_VX) player.vx = -PLAYER_MAX_VX;
-			player.frame = GENITAL_FACING_RIGHT;
+			if (player.vx > PLAYER_MAX_VX) player.vx = PLAYER_MAX_VX;
+			#ifdef PLAYER_MOGGY_STYLE
+				player.facing = GENITAL_FACING_RIGHT;
+			#else
+				player.facing = 0;
+			#endif
 		}
 	}
 
@@ -806,10 +857,14 @@ void move (void) {
 		if (player.vx > 0) {
 			// Collide right
 
-			_x = _x2 = (gpx + 11) >> 4;
+			_x = _x2 = (gpx + 12) >> 4;
 			cm_two_points ();
 
 			if ((at1 & 8) || (at2 & 8)) {
+				#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
+					check_lock_or_box_horz ();
+				#endif
+
 				player.vx = 0;
 				#asm 
 						ld  a, (_gpx)
@@ -828,6 +883,10 @@ void move (void) {
 			cm_two_points ();
 
 			if ((at1 & 8) || (at2 & 8)) {
+				#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
+					check_lock_or_box_horz ();
+				#endif
+
 				player.vx = 0;
 				#asm 
 						ld  a, (_gpx)
@@ -847,10 +906,13 @@ void move (void) {
 		#endif
 	}
 
+	// bigger vx or vy?
+	rdi = abs (player.vx) > abs (player.vy);
+
 	// Evil tile hit?
 	if (hit) {
 		// change sign of velocity with higher magnitude
-		if (abs (player.vx) > abs (player.vy)) {
+		if (rdi) {
 			player.vx = -player.vx;
 		} else {
 			player.vy = -player.vy;
@@ -876,6 +938,26 @@ void move (void) {
 	//                       Select frame
 	// =================================================
 
+	#ifdef PLAYER_MOGGY_STYLE
+		player.frame = player.facing + (((rdi ? gpx : gpy) >> 3) & 1); 
+	#else
+		if (!(player.possee || player.gotten)) {
+			player.frame = player.facing + 3;
+		} else {
+			if (player.vx && !player.gotten) {
+				player.frame = player.facing + 
+				#ifdef PLAYER_ALTERNATE_ANIMATION
+					(gpx >> 3) % 3;
+				#else
+					player_walk_cycle[((gpx >> 3) & 1)];
+				#endif
+			} else {
+				player.frame = player.facing + 1;
+			}
+		}
+	#endif
+
+	player.next_frame = player_cells [player.frame];
 }
 
 void init_player_values (void) {
@@ -1024,26 +1106,26 @@ void hotspot_paint (void) {
 			ld  a, 240
 			ld  (_hotspot_y), a 
 			xor a
-			ld  (_hotspot_t_r), a
+			ld  (_hotspot_t_r), a 					// Hotspot type set to 0
 
 			call _calc_hotspot_ptr
 			
 			ld  ix, _hotspots
-			add ix, de
+			add ix, de 								// ix points to current room's hotspot
 
 			// Struct is xy, tipo, act
 
 			ld  a, (ix+2) 		// .act
 			cp  1
-			jr  nz, hotspot_paint_act_skip
+			jr  nz, hotspot_paint_act_skip 			// If taken, jump to skip
 
 			ld  a, (ix+1)		// .tipo
 			or  a
-			jr  z, hotspot_paint_act_skip
+			jr  z, hotspot_paint_act_skip 			// If 0 (no hotspot) jump to skip
 
-			ld  (_hotspot_t_r), a
+			ld  (_hotspot_t_r), a 					// save hotspot type
 
-		.hotspot_paint_act_skip
+		.hotspot_paint_act_skip 					
 
 		#if !defined DEACTIVATE_REFILLS 
 				ld  a, (ix+2) 		// .act

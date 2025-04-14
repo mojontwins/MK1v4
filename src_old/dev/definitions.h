@@ -21,9 +21,9 @@
 #define WALL_DOWN 				8
 
 #define GENITAL_FACING_RIGHT 	0
-#define GENITAL_FACING_LEFT		1
-#define GENITAL_FACING_UP 		2
-#define GENITAL_FACING_DOWN 	3
+#define GENITAL_FACING_LEFT		2
+#define GENITAL_FACING_UP 		4
+#define GENITAL_FACING_DOWN 	6
 
 #define HOTSPOT_TYPE_OBJECT 	1
 #define HOTSPOT_TYPE_KEY 		2
@@ -194,10 +194,6 @@ unsigned char bitmask [] = {
 };
 
 unsigned char rand (void);
-void fall_box (void);
-void move_tile (unsigned char act);
-void init_falling_box_buffer (void);
-unsigned char can_move_box (void);
 void do_extern_action (unsigned char n);
 void saca_a_todo_el_mundo_de_aqui (void);
 void render_all_sprites (void);
@@ -206,7 +202,6 @@ void draw_scr_background (void);
 void draw_scr (void);
 void init_player_values (void); 
 unsigned char rand (void);
-unsigned char player_hidden (void);
 void espera_activa (int espera);
 void enems_kill (unsigned char damage);
 unsigned char qtile (unsigned char x, unsigned char y);

@@ -17,12 +17,32 @@ extern unsigned char s_ending [];
 #endasm
 
 void title_screen (void) {
+	#ifndef CPC
+		#asm 
+			call SPUpdateNow
+		#endasm
+	#endif
+
 	blackout ();
 	#asm
 			ld  hl, _s_title
 			call _unpack_screen
 	#endasm
 	
+	draw_text (12, 12, 
+		#ifndef CPC 
+			4,
+		#endif
+	"MK1 V3.2");
+
+	#ifdef CPC
+		cpc_UpdateNow (0);
+	#else 
+		#asm 
+				call SPUpdateNow
+		#endasm
+	#endif
+
 	select_controls ();
 }
 
@@ -42,7 +62,7 @@ void game_ending (void) {
 	#ifdef CPC
 		cpc_ShowTileMap (1);
 		AY_PLAY_MUSIC (0);
-		espera_activa (500);
+		espera_activa (5000);
 		AY_STOP_SOUND ();
 	#else
 		for (gpit = 0; gpit < 4; gpit ++) {
@@ -51,7 +71,7 @@ void game_ending (void) {
 		}
 		peta_el_beeper (9);
 		
-		espera_activa (500);
+		espera_activa (5000);
 	#endif
 }
 
@@ -85,5 +105,6 @@ void game_over (void) {
 				call SPUpdateNow
 		#endasm
 		peta_el_beeper (10);
+		espera_activa (500);
 	#endif
 }

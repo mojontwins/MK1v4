@@ -4,6 +4,7 @@
 // config.h 
 
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
+#define BLACK_PEN		 			1		// For CPC, which pen is black?
 
 // ============================================================================
 // I. General configuration
@@ -101,10 +102,11 @@
 // Graphic FX, uncomment which applies...
 
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
-#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
+//#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
 //#define NO_MASKS						// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
+#define NO_ALT_BG 						// No subs 0 for 19 at random
 
 // ============================================================================
 // IV. Player movement configuration
@@ -120,9 +122,9 @@
 #define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
 #define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
 
-#define PLAYER_VY_INICIAL_SALTO 64		// Initial junp velocity (64/64 = 1 píxel/frame)
-#define PLAYER_MAX_VY_SALTANDO	320 	// Max jump velocity (320/64 = 5 píxels/frame)
-#define PLAYER_INCR_SALTO		48		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
+#define PLAYER_VY_INICIAL_SALTO 192		// Initial junp velocity (64/64 = 1 píxel/frame)
+#define PLAYER_MAX_VY_SALTANDO	312 	// Max jump velocity (320/64 = 5 píxels/frame)
+#define PLAYER_INCR_SALTO		32		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
 #define PLAYER_INCR_JETPAC		32		// Vertical jetpac gauge
 #define PLAYER_MAX_VY_JETPAC	256 	// Max vertical jetpac speed
@@ -130,8 +132,8 @@
 // IV.2. Horizontal (side view) or general (top view) movement.
 
 #define PLAYER_MAX_VX			256 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX				24		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX				24		// Friction (32/64 = 0,5 píxels/frame^2)
+#define PLAYER_AX				48		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX				64		// Friction (32/64 = 0,5 píxels/frame^2)
 
 // ============================================================================
 // V. Tile behaviour

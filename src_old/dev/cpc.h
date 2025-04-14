@@ -25,6 +25,26 @@
 		defc viewport_y = VIEWPORT_Y
 #endasm
 
+unsigned char isr_player_on;
+unsigned char wyz_beat_ct;
+
+#define WYZ_FX_CHANNEL 1
+#define AY_INIT()        wyz_init ()
+#define AY_PLAY_SOUND(a) wyz_play_sound (a)
+#define play_sfx(a)      wyz_play_sound (a)
+#define AY_STOP_SOUND()  wyz_stop_sound ()
+#define AY_PLAY_MUSIC(a) wyz_play_music (a)
+
+#include "cpc/pal.h"
+#include "cpc/spriteset_mappings.h"
+
+#include "wyz/efectos.h"
+#include "wyz/instrumentos.h"
+#include "wyz/songs.h"
+#include "wyz/wyz_player.h"
+
+#define peta_el_beeper wyz_play_sound
+
 /*
 	CPC Memory map
 	
@@ -64,6 +84,10 @@
 
 #if defined COINS_PERSISTENT || defined BREAKABLE_PERSISTENT
 	#define ENABLE_PERSISTENCE
+#endif
+
+#ifndef MAX_CUSTOM_SW_SPRITES
+	#define MAX_CUSTOM_SW_SPRITES 0
 #endif
 
 #define SW_SPRITES_ALL 		1 + MAX_ENEMS + MAX_BULLETS + SWORD_SW_SPRITE_ON + MAX_CUSTOM_SW_SPRITES
@@ -221,8 +245,58 @@ unsigned char spr_on [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*18;
 unsigned char spr_x [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*19;
 unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
 
-unsigned char isr_player_on;
-unsigned char wyz_beat_ct;
+extern unsigned char *player_cells [0];
+#asm
+	._player_cells 
+		defw SPRITE_00, SPRITE_01, SPRITE_02, SPRITE_03
+		defw SPRITE_04, SPRITE_05, SPRITE_06, SPRITE_07
+#endasm
+
+extern unsigned char *enem_cells [0];
+#asm
+	._enem_cells
+		defw SPRITE_08, SPRITE_09, SPRITE_0A, SPRITE_0B
+		defw SPRITE_0C, SPRITE_0D, SPRITE_0E, SPRITE_0F
+#endasm
+
+void blackout (void) {
+	rda = BLACK_COLOUR_BYTE;
+	#asm
+			ld  a, 0xc0
+		.bo_l1
+			ld  h, a
+			ld  l, 0
+			ld  b, a
+			ld  a, (_rda)
+			ld  (hl), a
+			ld  a, b
+			ld  d, a
+			ld  e, 1
+			ld  bc, 0x5ff
+			ldir
+
+			add 8
+			jr  nz, bo_l1
+	#endasm
+}
+
+void __FASTCALL__ cpc_Border (unsigned char b) {
+	#asm
+			ld 	a, l
+			ld  bc, 0x7F11
+			out (c), c
+			out (c), a
+	#endasm
+}
+
+void pal_set (unsigned char *pal) {
+	#ifdef MODE_1
+		gpit = 4;
+	#else
+		gpit = 16;
+	#endif
+	while (gpit --) cpc_SetColour (gpit, pal[gpit]);
+}
 
 void system_init (void) {
 	// Inits shit
@@ -1059,67 +1133,11 @@ void step () {
 	// Write somethimg :-/
 }
 
-void blackout (void) {
-	rda = BLACK_COLOUR_BYTE;
-	#asm
-			ld  a, 0xc0
-		.bo_l1
-			ld  h, a
-			ld  l, 0
-			ld  b, a
-			ld  a, (_rda)
-			ld  (hl), a
-			ld  a, b
-			ld  d, a
-			ld  e, 1
-			ld  bc, 0x5ff
-			ldir
-
-			add 8
-			jr  nz, bo_l1
-	#endasm
-}
-
 void unpack_screen (void) {
 	#asm
 			ld  de, BASE_SUPERBUFF
 			call depack 
 	#endasm 
-}
-
-void select_controls (void) {
-	cpc_UpdScr ();
-	cpc_ShowTileMap (1);
-
-	AY_PLAY_MUSIC (0);
-
-	#asm
-		.title_loop
-			call _pad_read 
-			
-			ld  a, (_pad_this_frame) 
-			and sp_AUX3 
-			jr  nz, title_not_aux3
-
-			ld  hl, _def_keys
-			jr  copy_keys_to_extern
-			
-		.title_not_aux3
-
-			ld  a, (_pad_this_frame) 
-			and sp_AUX4
-			jr  nz, title_loop
-
-			ld  hl, _def_keys_joy
-
-		// Copy keys to extern 
-	
-		.copy_keys_to_extern
-			ld  de, cpc_KeysData + 12
-			ld  bc, 24
-			ldir
-	#endasm
-	AY_STOP_SOUND ();
 }
 
 void draw_rectangle (void) {	
@@ -1492,24 +1510,6 @@ void cpc_UpdateNow (unsigned char sprites) {
 	#endasm
 }
 
-void __FASTCALL__ cpc_Border (unsigned char b) {
-	#asm
-			ld 	a, l
-			ld  bc, 0x7F11
-			out (c), c
-			out (c), a
-	#endasm
-}
-
-void pal_set (unsigned char *pal) {
-	#ifdef MODE_1
-		gpit = 4;
-	#else
-		gpit = 16;
-	#endif
-	while (gpit --) cpc_SetColour (gpit, pal[gpit]);
-}
-
 void __FASTCALL__ cpc_HardPause (unsigned char n) {
 	#asm
 			ld  a, l
@@ -1520,6 +1520,25 @@ void __FASTCALL__ cpc_HardPause (unsigned char n) {
 			djnz cpc_HardPause_inner
 			dec a
 			jr  nz, cpc_HardPause_outer
+	#endasm
+}
+
+void get_pointer_to_enem_or_coco (void) {
+	// D = SP_ENEMS_BASE or SP_COCOS_BASE
+	// In -> _enit, spr base in D, out -> pointer in IX
+	#asm
+			ld  a, (_enit)
+			add d
+			ld  h, 0
+			ld  l, a
+			add hl, hl
+			add hl, hl
+			add hl, hl
+			add hl, hl 		// x16
+			ld  de, BASE_SPRITES
+			add hl, de
+			push hl
+			pop ix
 	#endasm
 }
 
@@ -1592,3 +1611,37 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 	#endasm
 }
 
+void select_controls (void) {
+	cpc_UpdScr ();
+	cpc_ShowTileMap (1);
+
+	AY_PLAY_MUSIC (0);
+
+	#asm
+		.title_loop
+			call _pad_read 
+			
+			ld  a, (_pad_this_frame) 
+			and sp_AUX3 
+			jr  nz, title_not_aux3
+
+			ld  hl, _def_keys
+			jr  copy_keys_to_extern
+			
+		.title_not_aux3
+
+			ld  a, (_pad_this_frame) 
+			and sp_AUX4
+			jr  nz, title_loop
+
+			ld  hl, _def_keys_joy
+
+		// Copy keys to extern 
+	
+		.copy_keys_to_extern
+			ld  de, cpc_KeysData + 12
+			ld  bc, 24
+			ldir
+	#endasm
+	AY_STOP_SOUND ();
+}

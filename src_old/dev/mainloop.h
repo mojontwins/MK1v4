@@ -23,6 +23,9 @@ void main (void) {
 					ld  hl, _s_marco
 					call _unpack_screen
 			#endasm
+			#ifdef CPC
+				cpc_ShowTileMap (1);
+			#endif
 		#endif
 
 		// Let's do it.
@@ -257,7 +260,7 @@ void main (void) {
 			// Render to screen
 
 			#ifdef CPC
-				if (n_pant == on_pant) cpc_UpdateNow (1);
+				cpc_UpdateNow (1);
 			#else
 				#asm
 					.ml_min_faps_loop
@@ -271,11 +274,6 @@ void main (void) {
 						xor a
 						ld  (_isrc), a
 
-						ld  a, (_n_pant)
-						ld  c, a
-						ld  a, (_on_pant)
-						cp  c
-						jr  nz, skipupd
 						call SPUpdateNow
 					.skipupd
 				#endasm

@@ -15,9 +15,15 @@
 #endif
 
 // Cosas del juego:
-#include "tileset.h"
-#include "sprites.h"
-#include "extrasprites.h"
+#ifdef CPC
+	#include "cpc/tileset.h"
+	#include "cpc/sprites.h"
+	#include "cpc/extrasprites.h"
+#else
+	#include "speccy/tileset.h"
+	#include "speccy/sprites.h"
+	#include "speccy/extrasprites.h"
+#endif
 
 #include "definitions.h"
 #ifdef CPC
