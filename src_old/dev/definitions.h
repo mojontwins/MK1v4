@@ -165,7 +165,7 @@ unsigned char coins_old;
 #endif
 unsigned char success;
 unsigned char rdi;
-signed int rdj;
+signed int pvx_total, pvy_total;
 unsigned char rdx, rdy;
 unsigned char gpit, enit, pad0, pad1 = 0, pad_this_frame = 0;
 unsigned char gpx, gpy, gpxx, gpyy;

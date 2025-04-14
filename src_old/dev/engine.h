@@ -728,10 +728,10 @@ void move (void) {
 	// Collide vertical.
 	// Includes evil tile detection, open lock & push boxes
 
-	rdj = (player.vy + ptgmy);
-	if (rdj != 0) {
+	pvy_total = (player.vy + ptgmy);
+	if (pvy_total != 0) {
 		_x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
-		if (rdj > 0) {
+		if (pvy_total > 0) {
 			// Collide down
 
 			_y = _y2 = (gpy + 15) >> 4;
@@ -761,7 +761,7 @@ void move (void) {
 				#endif
 			}
 
-		} else if (rdj < 0) {
+		} else if (pvy_total < 0) {
 			// Collide up
 
 			_y = _y2 = (gpy + 4) >> 4;
@@ -851,10 +851,10 @@ void move (void) {
 
 	// Collide horizontal.
 	// Includes evil tile detection, open lock & push boxes
-	rdj = player.vx + ptgmx;
-	if (rdj != 0) {
+	pvx_total = player.vx + ptgmx;
+	if (pvx_total != 0) {
 		_y = (gpy + 4) >> 4; _y2 = (gpy + 15) >> 4;
-		if (player.vx > 0) {
+		if (pvx_total > 0) {
 			// Collide right
 
 			_x = _x2 = (gpx + 12) >> 4;
@@ -876,7 +876,7 @@ void move (void) {
 				#endasm
 			}
 
-		} else if (rdj < 0) {
+		} else if (pvx_total < 0) {
 			// Collide left
 
 			_x = _x2 = (gpx + 4) >> 4;
@@ -902,25 +902,28 @@ void move (void) {
 		#ifndef DEACTIVATE_EVIL_TILE
 			if ((at1 & 1) || (at2 & 1)) {
 				hit = 1;
+				player.vy = pvy_total;
 			}
 		#endif
 	}
 
 	// bigger vx or vy?
-	rdi = abs (player.vx) > abs (player.vy);
+	#ifndef DEACTIVATE_EVIL_TILE
+		rdi = abs (pvx_total) > abs (pvy_total);
 
-	// Evil tile hit?
-	if (hit) {
-		// change sign of velocity with higher magnitude
-		if (rdi) {
-			player.vx = -player.vx;
-		} else {
-			player.vy = -player.vy;
+		// Evil tile hit?
+		if (hit) {
+			// change sign of velocity with higher magnitude
+			if (rdi) {
+				player.vx = -pvx_total;
+			} else {
+				player.vy = -pvy_total;
+			}
+
+			player.drain_amount = 1;
+			player.is_dead = PLAYER_KILLED_BY_BG;
 		}
-
-		player.drain_amount = 1;
-		player.is_dead = PLAYER_KILLED_BY_BG;
-	}
+	#endif
 
 	// =================================================
 	//                       Extras

@@ -89,11 +89,13 @@ void game_over (void) {
 			ld  (__x2), a
 			ld  a, 13
 			ld  (__y2), a
+			ld  a, 72
+			ld  (__t), a
 	#endasm
 	draw_rectangle ();	
 	draw_text (11, 12, 
 		#ifndef CPC
-			71, 
+			64+1*8+7, 
 		#endif
 		"GAME OVER!");
 	

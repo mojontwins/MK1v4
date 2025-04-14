@@ -154,7 +154,7 @@
 	// Remove it if you are not using extra tiles at all. And remember
 	// that tiles 16 to 19 MUST be 0.
 	unsigned char comportamiento_tiles [] = {
-		0, 8, 8, 0, 0, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8,
+		0, 8, 8, 0, 0, 8, 8, 9, 8, 8, 8, 8, 8, 8, 8, 8,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	};
 #else
