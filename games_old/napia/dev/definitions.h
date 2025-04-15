@@ -90,7 +90,9 @@ INERCIA player;
 	unsigned char bullets_estado [MAX_BULLETS];
 	unsigned char bspr_it;
 #endif
+
 signed int ptgmx, ptgmy;
+signed int pvx_total, pvy_total;
 unsigned char at1, at2;
 unsigned char hit;
 
@@ -110,8 +112,7 @@ unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*16);
 unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*17);
 
 unsigned int enoffs, enoffsmasi;
-unsigned char en_j, en_x, en_y, en_xx, en_yy;
-unsigned char en_cx, en_cy;
+unsigned char en_j, en_xx, en_yy;
 
 // Only one enemy may hurt the player at once, so we need this flag:
 unsigned char en_tocado = 0; 
@@ -152,23 +153,18 @@ unsigned char flags [MAX_FLAGS];
 
 // Aux
 
-unsigned int asm_int;
 unsigned int seed;
 unsigned char half_life;
-unsigned char jetpac_frame_counter;
 unsigned char playing;
 unsigned char maincounter;
 unsigned char objs_old, keys_old, life_old, killed_old, item_old, ezg_old;
 unsigned char coins_old;
-#ifdef REENTER_ON_ALL_OBJECTS
-	unsigned char reentered;
-#endif
 unsigned char success;
 unsigned char rdi;
-signed int pvx_total, pvy_total;
+
 unsigned char rdx, rdy;
 unsigned char gpit, enit, pad0, pad1 = 0, pad_this_frame = 0;
-unsigned char gpx, gpy, gpxx, gpyy;
+unsigned char gpx, gpy;
 signed int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;

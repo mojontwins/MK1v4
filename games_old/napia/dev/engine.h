@@ -461,41 +461,12 @@ unsigned int __FASTCALL__ abs (int n) {
 			if ( player.possee && player.vx == 0 )
 		#endif
 		{
-			//if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-			if (attr ((gpx + 8) >> 4, gpyy) & 2)
+			if (attr ((gpx + 8) >> 4, gpy + 8) >> 4) & 2)
 				return 1;
 		}
 		return 0;
 	}
 #endif
-
-void adjust_to_tile_x (void) {
-	// gpx = gpxx << 4; player.x = gpx << 6;
-	#asm
-			ld  a, (_gpxx)
-			sla a
-			sla a
-			sla a
-			sla a
-			ld  (_gpx), a
-			call Ashl16_HL
-			ld  (_player), hl
-	#endasm
-}
-
-void adjust_to_tile_y (void) {
-	// gpy = gpyy << 4; player.y = gpy << 6;
-	#asm
-			ld a, (_gpyy)
-			sla a
-			sla a
-			sla a
-			sla a
-			ld  (_gpy), a
-			call Ashl16_HL
-			ld  (_player+2), hl
-	#endasm
-}
 
 #ifdef PLAYER_FLICKERS
 	void player_flicker (void) {
@@ -1656,7 +1627,6 @@ void draw_scr (void) {
 				srl a
 				srl a
 				srl a
-				ld  (_gpyy), a 
 				ld  a, (__en_my)
 				call Ashl16_HL
 				call withSign
@@ -1759,8 +1729,6 @@ void mueve_bicharracos (void) {
 		#endif
 
 		if (_en_t != 0) {
-			en_cx = _en_x;
-			en_cy = _en_y;
 
 			// Animate
 			#asm

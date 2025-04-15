@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Apr 15 14:10:37 2025
+;	Module compile time: Tue Apr 15 15:56:35 2025
 
 
 
@@ -3742,32 +3742,6 @@
 
 
 
-._adjust_to_tile_x
-	ld a, (_gpxx)
-	sla a
-	sla a
-	sla a
-	sla a
-	ld (_gpx), a
-	call Ashl16_HL
-	ld (_player), hl
-	ret
-
-
-
-._adjust_to_tile_y
-	ld a, (_gpyy)
-	sla a
-	sla a
-	sla a
-	sla a
-	ld (_gpy), a
-	call Ashl16_HL
-	ld (_player+2), hl
-	ret
-
-
-
 ._cm_two_points
 	ld a, (__x)
 	cp 15
@@ -5003,7 +4977,6 @@
 	srl a
 	srl a
 	srl a
-	ld (_gpyy), a
 	ld a, (__en_my)
 	call Ashl16_HL
 	call withSign
@@ -5039,17 +5012,11 @@
 	add	hl,de
 	ld	(_enoffsmasi),hl
 	call enems_get_values
-	ld	a,(__en_t)
-	and	a
+	ld	hl,(__en_t)
+	ld	h,0
+	ld	a,h
+	or	l
 	jp	z,i_110
-	ld	hl,(__en_x)
-	ld	h,0
-	ld	a,l
-	ld	(_en_cx),a
-	ld	hl,(__en_y)
-	ld	h,0
-	ld	a,l
-	ld	(_en_cy),a
 	ld a, (_maincounter)
 	and 3
 	jr nz, enems_animate_done
@@ -5898,8 +5865,6 @@
 ._half_life	defs	1
 .__en_mx	defs	1
 .__en_my	defs	1
-._en_cx	defs	1
-._en_cy	defs	1
 ._flags	defs	16
 ._gp_gen_alt	defs	2
 ._en_xx	defs	1
@@ -5922,8 +5887,6 @@
 ._pad0	defs	1
 ._n_pant	defs	1
 ._en_j	defs	1
-._en_x	defs	1
-._en_y	defs	1
 ._enit	defs	1
 ._gpcx	defs	2
 ._gpcy	defs	2
@@ -5933,8 +5896,6 @@
 ._playing	defs	1
 ._seed	defs	2
 ._objs_old	defs	1
-._gpxx	defs	1
-._gpyy	defs	1
 ._maincounter	defs	1
 ._rdmt	defs	1
 ._ptx1	defs	1
@@ -5956,7 +5917,6 @@
 ._idx	defs	2
 ._hit	defs	1
 ._player	defs	47
-._jetpac_frame_counter	defs	1
 ._rda	defs	1
 ._rdb	defs	1
 ._rdc	defs	1
@@ -5971,7 +5931,6 @@
 ._pti	defs	1
 ._ptj	defs	1
 ._enoffsmasi	defs	2
-._asm_int	defs	2
 ._pant_just_rendered	defs	1
 .__baddies_pointer	defs	2
 ._orig_tile	defs	1
@@ -6023,13 +5982,9 @@
 	LIB	cpc_SetMode
 	LIB	cpc_ClrScr
 	XDEF	_get_pointer_to_enem_or_coco
-	XDEF	_en_cx
-	XDEF	_en_cy
 	LIB	cpc_SetModo
-	XDEF	_adjust_to_tile_x
 	LIB	cpc_PutMaskSpriteTileMap2b
 	LIB	cpc_PutTrSpriteTileMap2b
-	XDEF	_adjust_to_tile_y
 	XDEF	_en_an_state
 	defc	_en_an_state	=	54829
 	XDEF	_flags
@@ -6143,8 +6098,6 @@
 	XDEF	_en_an_ff
 	defc	_en_an_ff	=	54832
 	LIB	cpc_RLI
-	XDEF	_en_x
-	XDEF	_en_y
 	XDEF	_system_init
 	XDEF	_draw_rectangle
 	LIB	cpc_RRI
@@ -6183,9 +6136,7 @@
 	XDEF	_rand
 	XDEF	_seed
 	XDEF	_objs_old
-	XDEF	_gpxx
 	LIB	cpc_DeleteKeys
-	XDEF	_gpyy
 	XDEF	_maincounter
 	XDEF	_rdmt
 	XDEF	_ptx1
@@ -6240,7 +6191,6 @@
 	XDEF	_player
 	XDEF	_en_an_y
 	defc	_en_an_y	=	54808
-	XDEF	_jetpac_frame_counter
 	LIB	cpc_UpdateTileMap
 	XDEF	_rda
 	XDEF	_rdb
@@ -6284,7 +6234,6 @@
 	LIB	cpc_UpdScrAddresses
 	XDEF	_tspatterns
 	XDEF	_check_lock_or_box_vert
-	XDEF	_asm_int
 	XDEF	_hotspot_paint
 	XDEF	_pant_just_rendered
 	XDEF	__baddies_pointer
