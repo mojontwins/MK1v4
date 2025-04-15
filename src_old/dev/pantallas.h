@@ -37,6 +37,7 @@ void title_screen (void) {
 
 	#ifdef CPC
 		cpc_UpdateNow (0);
+		AY_PLAY_MUSIC (0);
 	#else 
 		#asm 
 				call SPUpdateNow

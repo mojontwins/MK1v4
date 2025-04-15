@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Apr 14 18:15:28 2025
+;	Module compile time: Mon Apr 14 20:48:53 2025
 
 
 
@@ -1734,6 +1734,20 @@
 	ld a, (isr_c2)
 	inc a
 	ld (isr_c2), a
+	ld a, (_isr_player_on)
+	or a
+	jr z, _skip_ay_player
+	push hl
+	push de
+	push bc
+	push ix
+	push iy
+	call WYZ_PLAYER_ISR
+	pop iy
+	pop ix
+	pop bc
+	pop de
+	pop hl
 	xor a
 	._skip_ay_player
 	ld (isr_c1), a
@@ -9697,6 +9711,8 @@
 	push	hl
 	call	_cpc_UpdateNow
 	pop	bc
+	ld	hl,0	;const
+	call	_wyz_play_music
 	call	_select_controls
 	ret
 

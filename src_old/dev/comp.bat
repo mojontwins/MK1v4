@@ -14,7 +14,7 @@ if [%1]==[justcompile] goto :compile
 if [%om%]==[cpc] goto :cpc
 
 ..\utils\ts2bin.exe ..\gfx\%om%\font.png ..\gfx\%om%\work.png tileset.bin 7 > nul
-..\utils\sprcnv.exe ..\gfx\%om%\sprites.png sprites.h  > nul
+..\utils\sprcnv.exe ..\gfx\%om%\sprites.png speccy\sprites.h  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\title.png ..\gfx\%om%\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\marco.png ..\gfx\%om%\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\ending.png ..\gfx\%om%\ending.scr  > nul

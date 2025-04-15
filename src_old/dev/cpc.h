@@ -99,20 +99,6 @@ unsigned char wyz_beat_ct;
 #define SP_COCOS_BASE 		(SP_SWORD_BASE + SWORD_SW_SPRITE_ON)
 #define SP_CUSTOM_BASE		(SP_COCOS_BASE + MAX_ENEMS)
 
-#ifdef SOUND_NONE
-	#define AY_INIT()        ;
-	#define AY_PLAY_SOUND(a) ;
-	#define peta_el_beeper(a)      ;
-	#define AY_STOP_SOUND()  ;
-	#define AY_PLAY_MUSIC(a) ;
-#elif defined SOUND_WYZ
-	#define AY_INIT()        wyz_init ()
-	#define AY_PLAY_SOUND(a) wyz_play_sound (a)
-	#define peta_el_beeper(a)      wyz_play_sound (a)
-	#define AY_STOP_SOUND()  wyz_stop_sound ()
-	#define AY_PLAY_MUSIC(a) wyz_play_music (a)
-#endif		
-
 #ifdef MODE_1
 	// P_0 P_1 P_2 P_3
 	// 1 0 1 0 1 0 1 0
@@ -304,34 +290,33 @@ void system_init (void) {
 		AY_INIT ();
 
 	#asm
-		di
-		
-		ld  hl, 0xC000
-		xor a
-		ld  (hl), a
-		ld  de, 0xC001
-		ld  bc, 0x3DFF
-		ldir
-		
-		ld  a, 195
-		ld  (0x38), a
-		ld  hl, _isr
-		ld  (0x39), hl
-		jp  isr_done
+			di
+			
+			ld  hl, 0xC000
+			xor a
+			ld  (hl), a
+			ld  de, 0xC001
+			ld  bc, 0x3DFF
+			ldir
+			
+			ld  a, 195
+			ld  (0x38), a
+			ld  hl, _isr
+			ld  (0x39), hl
+			jp  isr_done
 
-	._isr
-		push af 
-		
-		ld  a, (isr_c1)
-		inc a
-		cp  6
-		jr  c, _skip_ay_player
+		._isr
+			push af 
+			
+			ld  a, (isr_c1)
+			inc a
+			cp  6
+			jr  c, _skip_ay_player
 
-		ld  a, (isr_c2)
-		inc a
-		ld  (isr_c2), a
+			ld  a, (isr_c2)
+			inc a
+			ld  (isr_c2), a
 
-	#ifdef SOUND_WYZ
 			ld  a, (_isr_player_on)
 			or  a
 			jr  z, _skip_ay_player
@@ -350,23 +335,21 @@ void system_init (void) {
 			pop de 
 			pop hl
 
-	#endif
+			xor a
 
-		xor a
+		._skip_ay_player 
+			ld  (isr_c1), a	
+			
+			pop af
+			ei
+			ret
 
-	._skip_ay_player 
-		ld  (isr_c1), a	
-		
-		pop af
-		ei
-		ret
+		.isr_c1 
+			defb 0
+		.isr_c2
+			defb 0
 
-	.isr_c1 
-		defb 0
-	.isr_c2
-		defb 0
-
-	.isr_done
+		.isr_done
 	#endasm
 	
 	// Border 0

@@ -7,6 +7,10 @@
 	#define ENEMIES_COLLIDE_MASK 9
 #endif
 
+#ifndef HOTSPOTS_FIRST_TILE
+	#define HOTSPOTS_FIRST_TILE 16
+#endif
+
 #asm
 	.HLshr6_A
 		// HL shr 6 -> CCBBBBBB AAxxxxxx -> BBBBBBAA
@@ -1202,7 +1206,7 @@ void hotspot_paint (void) {
 			ld  b, a
 			cp  3
 			
-			ld  a, 16
+			ld  a, HOTSPOTS_FIRST_TILE
 			jr  z, hotspot_paint_set_t
 
 			add b
