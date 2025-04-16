@@ -443,7 +443,7 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (hl), a 			// bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;				
 		#endasm
 
-		peta_el_beeper (9);
+		peta_el_beeper (6);
 		#ifdef FIRING_DRAINS_LIFE
 			player.drain_amount = FIRING_DRAIN_AMOUNT;
 			player.is_dead = PLAYER_KILLED_BY_SELF;
@@ -461,41 +461,12 @@ unsigned int __FASTCALL__ abs (int n) {
 			if ( player.possee && player.vx == 0 )
 		#endif
 		{
-			//if (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15) != 0) )	
-			if (attr ((gpx + 8) >> 4, gpyy) & 2)
+			if (attr ((gpx + 8) >> 4, gpy + 8) >> 4) & 2)
 				return 1;
 		}
 		return 0;
 	}
 #endif
-
-void adjust_to_tile_x (void) {
-	// gpx = gpxx << 4; player.x = gpx << 6;
-	#asm
-			ld  a, (_gpxx)
-			sla a
-			sla a
-			sla a
-			sla a
-			ld  (_gpx), a
-			call Ashl16_HL
-			ld  (_player), hl
-	#endasm
-}
-
-void adjust_to_tile_y (void) {
-	// gpy = gpyy << 4; player.y = gpy << 6;
-	#asm
-			ld a, (_gpyy)
-			sla a
-			sla a
-			sla a
-			sla a
-			ld  (_gpy), a
-			call Ashl16_HL
-			ld  (_player+2), hl
-	#endasm
-}
 
 #ifdef PLAYER_FLICKERS
 	void player_flicker (void) {
@@ -745,7 +716,7 @@ void move (void) {
 				#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS
 					(at1 & 12) || (at2 & 12)
 				#else
-					if ((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
+					((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
 				#endif
 			) {
 				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
@@ -816,6 +787,7 @@ void move (void) {
 			player.vx += PLAYER_RX;
 			if (player.vx > 0) player.vx = 0;
 		}
+		thrusting = 0;
 	} else {
 		if ((pad0 & sp_LEFT) == 0) {
 			player.vx -= PLAYER_AX;
@@ -836,6 +808,7 @@ void move (void) {
 				player.facing = 0;
 			#endif
 		}
+		thrusting = 1;
 	}
 
 	player.x += player.vx;
@@ -951,7 +924,8 @@ void move (void) {
 		if (!(player.possee || player.gotten)) {
 			player.frame = player.facing + 3;
 		} else {
-			if (player.vx && !player.gotten) {
+			//if ((player.vx != 0) && !player.gotten) {
+			if (thrusting) {
 				player.frame = player.facing + 
 				#ifdef PLAYER_ALTERNATE_ANIMATION
 					(gpx >> 3) % 3;
@@ -1224,7 +1198,24 @@ void draw_scr_background (void) {
 			ld  (_rdi), a
 	#endasm
 
-	#ifdef UNPACKED_MAP
+	#ifdef RLE_MAP
+		#asm
+			._draw_scr_get_scr_address
+				// Full 16 bits calculation
+				ld  hl, (_n_pant)
+				ld  h, 0
+				add hl, hl
+				ld  de, _mapa
+
+				add hl, de 		; HL = map + (n_pant << 1)
+				ld  e, (hl)
+				inc hl
+				ld  d, (hl) 	; DE = index
+				ld  hl, _mapa
+				add hl, de      ; HL = map + index
+				ld  (_gp_gen), hl		
+		#endasm
+	#elif defined UNPACKED_MAP
 		gp_gen = mapa + (n_pant * 150);
 	#else
 		gp_gen = mapa + (n_pant * 75);
@@ -1329,7 +1320,7 @@ void draw_scr_background (void) {
 						cp  2
 						jr  nc, draw_scr_alt_no
 
-						ld  a, 19
+						ld  a, HOTSPOTS_FIRST_TILE + 3
 						ret
 
 					.draw_scr_alt_no
@@ -1344,26 +1335,9 @@ void draw_scr_background (void) {
 					call no_alt_bg_subst
 				#endif
 
-				#if defined USE_COINS && defined COINS_DEACTIVABLE
-					call coins_check
-				#endif
-
 				ld  (__n), a
 				call _draw_and_advance
 				ret
-
-				#if defined USE_COINS && defined COINS_DEACTIVABLE
-					.coins_check
-						cp  COIN_TILE
-						ret  nz
-
-						ld  a, (_scenery_info + 0) 	// scenery_info.showcoins
-						or  a
-						ret  nz
-
-						ld  a, COIN_TILE_DEACT_SUBS					
-						ret
-				#endif
 
 			._draw_scr_loop_done
 		#endasm		
@@ -1439,7 +1413,7 @@ void draw_scr_background (void) {
 						or  a
 						ret  nz
 
-						ld  a, 19
+						ld  a, HOTSPOTS_FIRST_TILE + 3
 						ret
 
 					.draw_scr_alt_no
@@ -1655,7 +1629,6 @@ void draw_scr (void) {
 				srl a
 				srl a
 				srl a
-				ld  (_gpyy), a 
 				ld  a, (__en_my)
 				call Ashl16_HL
 				call withSign
@@ -1702,7 +1675,7 @@ void draw_scr (void) {
 			if (damage)
 		#endif
 		{
-			peta_el_beeper (10);
+			peta_el_beeper (0);
 
 			#ifdef CPC
 				cpc_HardPause (10);
@@ -1758,8 +1731,6 @@ void mueve_bicharracos (void) {
 		#endif
 
 		if (_en_t != 0) {
-			en_cx = _en_x;
-			en_cy = _en_y;
 
 			// Animate
 			#asm

@@ -7,7 +7,7 @@
 		ld  b, 0x7f
 		ld  a, 0
 		out (c), a
-		ld  a, 0x58	// 0b0100000 OR 18 (FF800080)
+		ld  a, 0x5A	// 0b0100000 OR 1A (FF80FF00)
 		out (c), a
 		ld  a, 1
 		out (c), a

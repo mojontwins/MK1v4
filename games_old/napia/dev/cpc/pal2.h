@@ -7,19 +7,19 @@
 		ld  b, 0x7f
 		ld  a, 0
 		out (c), a
-		ld  a, 0x45	// 0b0100000 OR 5 (FFFF0080)
+		ld  a, 0x44	// 0b0100000 OR 4 (FF000080)
 		out (c), a
 		ld  a, 1
 		out (c), a
-		ld  a, 0x5C	// 0b0100000 OR 1C (FF800000)
+		ld  a, 0x46	// 0b0100000 OR 6 (FF008080)
 		out (c), a
 		ld  a, 2
 		out (c), a
-		ld  a, 0x4A	// 0b0100000 OR A (FFFFFF00)
+		ld  a, 0x4E	// 0b0100000 OR E (FFFF8000)
 		out (c), a
 		ld  a, 3
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x43	// 0b0100000 OR 3 (FFFFFF80)
 		out (c), a
 		ret
 #endasm

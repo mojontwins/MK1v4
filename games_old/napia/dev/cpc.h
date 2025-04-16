@@ -346,8 +346,12 @@ void system_init (void) {
 			call WYZ_PLAYER_ISR
 
 		#if defined MODE_1 && defined AUTO_SPLIT
-			// Set hud pal
-			call pal_hud
+				// Set hud pal
+				ld  a, (_playing)
+				or  a 
+				jr  z, isr_nohud
+				call pal_hud
+			.isr_nohud
 		#endif
 
 			xor a
@@ -367,8 +371,14 @@ void system_init (void) {
 		#if defined MODE_1 && defined AUTO_SPLIT
 	
 			._set_game_pal
+				ld  a, (_playing)
+				or  a 
+				jr  z, isr_nosplit
+			
+			.inject_pal
 				call pal_general						// This will be modified, don't worry :)
 	
+			.isr_nosplit
 				ld  a, RASTER_SPLIT
 				jr  _skip_ay_player
 		#endif
@@ -396,10 +406,8 @@ void system_init (void) {
 
 	blackout ();
 
-	#if defined MODE_1 && defined AUTO_SPLIT
+	#if !(defined MODE_1 && defined AUTO_SPLIT)
 		#asm
-				call pal_general
-		#else
 				call my_inks
 		#endasm
 	#endif
@@ -1547,7 +1555,7 @@ void cpc_UpdateNow (unsigned char sprites) {
 				inc hl 
 				ld  h, (hl)
 				ld  l, a 
-				ld  (_set_game_pal + 1), hl
+				ld  (inject_pal + 1), hl
 			.change_palette_done
 		#endasm
 	#endif

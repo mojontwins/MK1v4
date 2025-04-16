@@ -11,7 +11,7 @@ void main (void) {
 	while (1) {
 		// Here the title screen
 		title_screen ();
-	
+
 		#ifndef DIRECT_TO_PLAY
 			blackout ();
 			#ifndef CPC
@@ -30,7 +30,6 @@ void main (void) {
 
 		// Let's do it.
 		playing = 1;
-
 
 		init_player ();
 
@@ -211,7 +210,7 @@ void main (void) {
 			{
 				if(hotspot_t) {
 					rdi = 0;
-					#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS 
+					#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS || !defined DEACTIVATE_REFILLS 
 						switch (hotspot_t) {
 							#ifndef DEACTIVATE_OBJECTS
 								case HOTSPOT_TYPE_OBJECT:
@@ -225,7 +224,7 @@ void main (void) {
 										}
 									#else
 										player.objs ++;
-										peta_el_beeper (6);
+										peta_el_beeper (7);
 										#ifdef OBJECT_COUNT
 											flags [OBJECT_COUNT] ++;
 										#endif
@@ -236,9 +235,19 @@ void main (void) {
 							#ifndef DEACTIVATE_KEYS
 								case HOTSPOT_TYPE_KEY:
 									player.keys ++;
-									peta_el_beeper (6);
+									peta_el_beeper (8);
 									break;
-							#endif						
+							#endif	
+
+							#ifndef DEACTIVATE_REFILLS
+								case HOTSPOT_TYPE_REFILL:
+									player.life += PLAYER_REFILL;
+									if (player.life > 99)
+										player.life = 99;
+									rdi = 2;
+									peta_el_beeper (9);
+									break;
+							#endif					
 						}
 					#endif
 					
@@ -414,8 +423,8 @@ void main (void) {
 			){
 				saca_a_todo_el_mundo_de_aqui ();
 				cortina ();
-				game_ending ();
 				playing = 0;
+				game_ending ();
 			}
 
 			// Dead player

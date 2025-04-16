@@ -767,7 +767,7 @@ void main (void) {
 						
 					if(hotspot_t) {
 						rdi = 0;
-						#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS
+						#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS || !defined DEACTIVATE_REFILLS
 							switch (hotspot_t) {
 								#ifndef DEACTIVATE_OBJECTS
 									case HOTSPOT_TYPE_OBJECT:

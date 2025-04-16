@@ -716,7 +716,7 @@ void move (void) {
 				#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS
 					(at1 & 12) || (at2 & 12)
 				#else
-					if ((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
+					((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
 				#endif
 			) {
 				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
@@ -787,6 +787,7 @@ void move (void) {
 			player.vx += PLAYER_RX;
 			if (player.vx > 0) player.vx = 0;
 		}
+		thrusting = 0;
 	} else {
 		if ((pad0 & sp_LEFT) == 0) {
 			player.vx -= PLAYER_AX;
@@ -807,6 +808,7 @@ void move (void) {
 				player.facing = 0;
 			#endif
 		}
+		thrusting = 1;
 	}
 
 	player.x += player.vx;
@@ -922,7 +924,8 @@ void move (void) {
 		if (!(player.possee || player.gotten)) {
 			player.frame = player.facing + 3;
 		} else {
-			if ((player.vx != 0) && !player.gotten) {
+			//if ((player.vx != 0) && !player.gotten) {
+			if (thrusting) {
 				player.frame = player.facing + 
 				#ifdef PLAYER_ALTERNATE_ANIMATION
 					(gpx >> 3) % 3;

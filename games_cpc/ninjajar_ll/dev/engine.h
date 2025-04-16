@@ -5970,6 +5970,7 @@ void draw_scr (void) {
 	}
 #endif
 
+#ifndef PLAYER_MOGGY_STYLE
 void platform_get_player (void) {
 	#asm
 			ld  a, 1
@@ -5992,6 +5993,7 @@ void platform_get_player (void) {
 			ld  (_ptgmy), hl
 	#endasm
 }
+#endif
 
 #if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES || defined ENABLE_SWORD || defined BOXES_KILL_ENEMIES
 	void enems_kill (unsigned char damage) {

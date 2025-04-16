@@ -5,7 +5,7 @@
 
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
-#define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
+//#define AUTO_SPLIT 						// For CPC, but hud must be 32 raster on top and MODE 1
 
 // ============================================================================
 // I. General configuration
@@ -105,6 +105,7 @@
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
+//#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
 //#define NO_MASKS						// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
@@ -149,20 +150,18 @@
 // 4 = Platform (only stops player if falling on it)
 // 8 = Full obstacle (blocks player from all directions)
 
-#ifndef UNPACKED_MAP
-	// Fill this array for normal, packed maps. The second row
-	// is defined if you want to use tiles 20-31 in your scripts.
-	// Remove it if you are not using extra tiles at all. And remember
-	// that tiles 16 to 19 MUST be 0.
-	unsigned char comportamiento_tiles [] = {
-		0, 8, 8, 0, 0, 8, 8, 9, 8, 8, 8, 8, 8, 8, 8, 8,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	};
-#else
-	// Fill this array if you are using unpacked maps.
-	unsigned char comportamiento_tiles [] = {
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0,
-		0, 0, 4, 8, 8, 4, 8, 8, 4, 4, 8, 0, 0, 2, 0, 0,
-		0, 0, 4, 4, 0, 8, 2, 2, 2, 2, 8, 0, 2, 2, 2, 8	
-	};
+unsigned char comportamiento_tiles [] = {
+	0, 8, 8, 0, 0, 8, 8, 9, 8, 8, 8, 8, 8, 8, 8, 8,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+
+// On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes
+// Then change cpc/palmap.h
+#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+
+	#include "cpc/pal0.h"
+	#include "cpc/pal1.h"
+	#include "cpc/pal2.h"
+	#include "cpc/pal3.h"
+
 #endif

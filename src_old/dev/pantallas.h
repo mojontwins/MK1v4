@@ -17,6 +17,12 @@ extern unsigned char s_ending [];
 #endasm
 
 void title_screen (void) {
+	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+		#asm
+			call pal_general
+		#endasm
+	#endif
+
 	#ifndef CPC
 		#asm 
 			call SPUpdateNow
@@ -48,6 +54,12 @@ void title_screen (void) {
 }
 
 void game_ending (void) {
+	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+		#asm
+			call pal_general
+		#endasm
+	#endif
+
 	#ifdef SPECCY 
 		#asm 
 			call SPUpdateNow

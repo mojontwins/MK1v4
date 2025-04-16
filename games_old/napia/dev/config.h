@@ -5,7 +5,7 @@
 
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
-#define AUTO_SPLIT
+#define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
 
 // ============================================================================
 // I. General configuration
@@ -79,7 +79,7 @@
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
 //#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
-#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
+//#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 
 // ============================================================================
 // III. Screen configuration

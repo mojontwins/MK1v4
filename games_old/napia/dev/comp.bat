@@ -1,14 +1,14 @@
 @echo off
 
 set game=napia3
-set om=cpc
+set om=speccy
 set mode=1
 
 echo Making %game%
 
 if [%1]==[justcompile] goto :compile
 
-..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=4,7 scrsize=15,10 tlock=15 mk1h=mapa.h fixmappy > nul
+..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=4,7 scrsize=15,10 tlock=15 mk1h=mapa.h mk1locks fixmappy > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 
 if [%om%]==[cpc] goto :cpc

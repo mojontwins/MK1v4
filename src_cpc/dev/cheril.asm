@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Apr 07 12:24:16 2025
+;	Module compile time: Wed Apr 16 11:46:33 2025
 
 
 
@@ -8230,15 +8230,6 @@
 
 
 
-._player_flicker
-	ld a, 2
-	ld (_player + 23), a
-	ld a, 50
-	ld (_player + 24), a
-	ret
-
-
-
 ._move
 	ld	hl,(_player)
 	ld	(_gpcx),hl
@@ -9770,29 +9761,6 @@
 
 
 
-._platform_get_player
-	ld a, 1
-	ld (_player+25), a
-	ld a, (__en_y)
-	sub 16
-	ld (_gpy), a
-	call Ashl16_HL
-	ld (_player+2), hl
-	ld hl, 0
-	ld (_player+8), hl
-	srl a
-	srl a
-	srl a
-	srl a
-	ld (_gpyy), a
-	ld a, (__en_my)
-	call Ashl16_HL
-	call withSign
-	ld (_ptgmy), hl
-	ret
-
-
-
 ._mueve_bicharracos
 	ld	a,#(0 % 256 % 256)
 	ld	(_en_tocado),a
@@ -10857,18 +10825,6 @@
 	call	_cpc_UpdateNow
 	pop	bc
 .i_136
-	.player_flicker_done_check
-	ld a, (_player + 23)
-	and 2
-	jr z, player_flicker_check_done
-	ld a, (_player + 24)
-	dec a
-	jr nz, player_flicker_ct_write
-	xor a
-	ld (_player + 23), a
-	.player_flicker_ct_write
-	ld (_player + 24), a
-	.player_flicker_check_done
 	ld	a,(_gpx)
 	cp	#(0 % 256)
 	jp	nz,i_138
@@ -10996,7 +10952,7 @@
 	or	h
 	jp	m,i_153
 	or	l
-	call	nz,_player_flicker
+	jp	z,i_153
 .i_153
 .i_152
 	ld	hl,(_player+29)
@@ -11432,7 +11388,6 @@
 	LIB	cpc_PutSpTileMap8x16
 	LIB	cpc_PutSpTileMap8x24
 	XDEF	_tileset
-	XDEF	_player_flicker
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask
 	LIB	cpc_ReadTile
@@ -11460,7 +11415,6 @@
 	XDEF	_coins_old
 	XDEF	_do_extern_action
 	XDEF	_ram_destination
-	XDEF	_platform_get_player
 	XDEF	_en_an_count
 	defc	_en_an_count	=	54787
 	LIB	cpc_GetTiles

@@ -95,6 +95,7 @@ signed int ptgmx, ptgmy;
 signed int pvx_total, pvy_total;
 unsigned char at1, at2;
 unsigned char hit;
+unsigned char thrusting;
 
 // Enemies
 
