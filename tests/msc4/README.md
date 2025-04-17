@@ -18,3 +18,8 @@ Need to thing about this DEEPLY.
 On startup : Write the address of flags, player object, set tile / set map tile functions, current screen buffers, hotspot data. On entering, update a pointer to the current screen enemies.
 
 Most of that stuff is static so maybe I could patch it in before assembling using the MAP file output by the compiler to extract the addresses.
+
+# MSC 4 For legacy
+
+An interpreter more suited for no extra RAM systems should also be easy to craft. The idea would be generating a z88dk assembly file.
+
