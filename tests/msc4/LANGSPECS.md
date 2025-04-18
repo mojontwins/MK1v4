@@ -129,14 +129,14 @@ Voy a reservar espacio para 8 scripts especiales por si esto tiene ampliación. 
     Add. Offset to.
     0    ENTERING GAME
     2    ENTERING ANY
-    4    PRESS_FIRE AT ANY
-    6    PLAYER_GETS_COIN
-    8    PLAYER_KILLS_ENEMY
+    4    PRESS FIRE AT ANY
+    6    PLAYER GETS_COIN
+    8    PLAYER KILLS_ENEMY
     10
     12
     14
     16   ENTERING SCREEN 0
-    18   PRESS_FIRE AT SCREEN 0
+    18   PRESS FIRE AT SCREEN 0
     20   ...
 ```
 El el compiler tendré un array de 256 cadenas con todas las secciones calculadas.
@@ -177,17 +177,27 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $26 : PLAYER STILL
 
 * $30 X Y T : TILE AT (X, Y) = T
-* $31 X Y T : TILE BEH (X, Y) = T
+* $31 X Y T : BEH AT (X, Y) = T
 
 * $F0 : TRUE
 
 ## Actions 
 
-* $00 A B . FLAGS[A] = B
+* $00 A B : FLAGS[A] = B
 * $10 A B : FLAGS[A] += B !
 * $11 A B : FLAGS[A] -= B
 
-* 
+* $20 X Y T : SET TILE (X, Y) = T
+* $21 X Y B : SET BEH (X, Y) = B
+
+* $E0 N : SOUND N
+* $E1 : SHOW
+* $E2 : RECHARGE
+* $E4 N M : EXTERN N M
+* $E5 N : PAUSE N
+
+* $F0 : WIN GAME
+* $F1 : GAME OVER
 
 # Haciendo esto
 

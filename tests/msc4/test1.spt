@@ -6,9 +6,9 @@
 		INC $4, 2
 	END 
 
-
 	IF 2 = $3
 	THEN
 		INC $2,2
+		SET TILE(4,4)=10
 	END
 	

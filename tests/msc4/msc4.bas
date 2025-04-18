@@ -14,6 +14,10 @@ Dim Shared As Integer curAliasIndex = 0
 
 Dim Shared As Integer AU (255), CU (255)
 
+Dim Shared As Integer sectOffs (255)
+Dim Shared As UByte sectBinary (16383)
+Dim Shared As Integer binIdx
+
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
 	' Overwriting what's in `from`.
@@ -381,9 +385,15 @@ Function processIf (linea As String) As String
 						' $30 X Y T
 						code = buildCond (4, Chr (&H30), pVal (tokens (3)), pVal (tokens (4)), pVal (tokens (6)))
 
-					Case "beh"
+				End Select
+
+			Case "beh"
+
+				Select Case lCase (tokens (2))
+					Case "at"
 						' $31 X Y T
 						code = buildCond (4, Chr (&H31), pVal (tokens (3)), pVal (tokens (4)), pVal (tokens (6)))
+
 				End Select
 
 		End Select
@@ -395,7 +405,7 @@ End Function
 
 Function processCommand (linea As String) As String
 	Dim As String code = ""
-	Dim As String cmd 
+	Dim As String cmd, scmd 
 
 	parseScriptLine linea
 
@@ -404,11 +414,13 @@ Function processCommand (linea As String) As String
 		If correctLvalue (tokens (0)) And isNumberOrVar (tokens (2)) Then
 			code = buildAction (3, Chr(&H00), lVal (tokens(0)), pVal (tokens (2)))
 		Else
-			SyntaxError
+			syntaxError
 		End If
 	End If
 
 	cmd = lCase (tokens (0))
+	scmd = lCase (tokens (1))
+
 	Select Case cmd
 		Case "inc"
 			' INC $A B
@@ -416,7 +428,7 @@ Function processCommand (linea As String) As String
 			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
 				code = buildAction (3, Chr(&H10), lVal (tokens (1)), pVal (tokens (2)))
 			Else
-				SyntaxError
+				syntaxError
 			End If
 
 		Case "dec"
@@ -425,40 +437,84 @@ Function processCommand (linea As String) As String
 			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
 				code = buildAction (3, Chr(&H11), lVal (tokens (1)), pVal (tokens (2)))
 			Else
-				SyntaxError
+				syntaxError
 			End If
 
 		Case "add"
 			' First deprecated construct add flags x y -> inc $X $Y 
-			If lCase (tokens (1)) = "flags" Then 
+			If scmd = "flags" Then 
 				code = buildAction (3, Chr (&H10), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
 
 			ElseIf correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
 				' Alias for inc 
 				code = buildAction (3, Chr(&H10), lVal (tokens (1)), pVal (tokens (2)))
 			Else
-				SyntaxError
+				syntaxError
 			End If 
 
 		Case "sub"
 			' First deprecated construct sub flags x y -> dec $X $Y 
-			If lCase (tokens (1)) = "flags" Then 
+			If scmd = "flags" Then 
 				code = buildAction (3, Chr (&H11), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
 
 			ElseIf correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
 				' Alias for inc 
 				code = buildAction (3, Chr(&H11), lVal (tokens (1)), pVal (tokens (2)))
 			Else
-				SyntaxError
-			End If 
+				syntaxError
+			End If '
 
 		Case "set"
-			' SET $A = B
-			If correctLvalue (tokens (1)) And tokens (2) = "=" And isNumberOrVar (tokens (3)) Then
+			If scmd = "tile" Then
+				' SET TILE X Y = N
+				code = buildAction (4, Chr (&H20), pVal (tokens(2)), pVal (tokens (3)), pVal (tokens (5)))
+
+			ElseIf scmd = "beh" Then
+				' SET BEH X Y = N
+				code = buildAction (4, Chr (&H21), pVal (tokens(2)), pVal (tokens (3)), pVal (tokens (5)))
+
+			ElseIf correctLvalue (tokens (1)) And tokens (2) = "=" And isNumberOrVar (tokens (3)) Then
+				' SET $A = B
 				code = buildAction (3, Chr(&H00), lVal (tokens(1)), pVal (tokens (3)))
 			Else
+				syntaxError
+			End If
 
-				SyntaxError
+		Case "sound"
+			' SOUND N
+			' $E0 N
+			code = buildAction (2, Chr (&HE0), pVal (tokens(1)))
+
+		Case "show"
+			' $E1
+			code = buildAction (1, Chr (&HE1))
+
+		Case "recharge"
+			' $E2
+			code = buildAction (1, Chr (&HE2))
+
+		Case "extern"
+			' EXTERN N M
+			' $E4 N M'
+			code = buildAction (3, Chr (&HE4), pVal (tokens(1)), pVal (tokens (2)))
+
+		Case "pause"
+			' PAUSE N
+			' $E5 N
+			code = buildAction (2, Chr (&HE5), pVal (tokens(1)))
+
+		Case "game"
+			If scmd = "over" then 
+				code = buildAction (1, Chr (&HF0))
+			Else 
+				syntaxError
+			End If
+
+		Case "win"
+			If scmd = "game" Then  
+				code = buildAction (1, Chr (&HF1))
+			Else 
+				syntaxError
 			End If
 
 	End Select 
@@ -469,10 +525,10 @@ End Function
 Function processCurrentSection (fIn As Integer) As String 
 	Dim sectionCode As String
 	Dim clausule As String
-	Dim terminado As Integer
-	Dim wrong As Integer
-	Dim state As Integer
-	Dim linea As String
+	Dim As Integer terminado
+	Dim As Integer wrong
+	Dim As Integer state
+	Dim As String linea, lineaLc
 
 	terminado = 0
 	wrong = 0
@@ -480,11 +536,12 @@ Function processCurrentSection (fIn As Integer) As String
 
 	While Not terminado And Not Eof (fIn)
 		linea = readNewLine (fIn)
+		lineaLc = lCase (linea)
 
 		If linea = "" Then 
 			' Skip 
 
-		ElseIf linea = "END" Then
+		ElseIf lineaLc = "end" Then
 			' If we are fetching -> this section has ended.
 			' If we are reading conditions -> wrong
 			' If we are reading actions -> this clausule has ended.'
@@ -504,7 +561,7 @@ Function processCurrentSection (fIn As Integer) As String
 				state = 0
 			End If 
 
-		ElseIf linea = "THEN" Then
+		ElseIf lineaLc = "then" Then
 			' If we are fetching or reading actions -> wrong
 			' Else  change to state 2
 			If state = 1 Then 
@@ -517,7 +574,7 @@ Function processCurrentSection (fIn As Integer) As String
 				Print "Unexpected THEN @ " & curLineNo
 			End If
 
-		ElseIf Len (linea) > 3 And Left (linea, 3) = "IF " Then 
+		ElseIf Len (lineaLc) > 3 And Left (lineaLc, 3) = "if " Then 
 			' Only valid when fetching or reading conditions
 			If state = 2 Then 
 				wrong = -1: terminado = -1
@@ -538,9 +595,72 @@ Function processCurrentSection (fIn As Integer) As String
 	Return sectionCode 
 End Function
 
+Function startsWith (haysTack As String, spec As String) Then 
+	Dim As Integer i
+	Dim As String m, n
+
+	If spec = haysTack Return -1
+	If Len (spec) > Len (haysTack) Return 0
+
+	For i = 1 To Len(spec) 
+		m = Mid (haysTack, i, 1)
+		n = Mid (spec, i, 1)
+
+		If Not (m = n Or ((m = "_" And n = " ") Or (m = " " And n = "_"))) Then
+			Return 0
+		End If
+	Next i
+
+	Return -1
+End Function 
+
+Sub copyToBin (String section)
+	Dim As Integer i 
+
+	For i = 1 To Len (section) 	
+		sectBinary (binIdx) = Asc (Mid (section, i, 1))
+		binIdx = binIdx + 1
+	Next i
+
+Sub processScript (fIn As Integer)
+	Dim As String linea
+	Dim As Integer section 
+
+	While Not Eof (fIn) 
+		linea = readNewLine (fIn)
+		section = -1
+
+		If startsWith (linea, "entering screen") Or startsWith (linea, "press fire at screen") Then 
+			' Find comma separated list
+
+		Else
+			' Special sections
+
+			If startsWith (linea, "entering game") Then
+				section = 0
+
+			ElseIf startsWith (linea, "entering any") Then 
+				section = 1
+			
+			ElseIf startsWith (linea, "press fire at any") Then
+				section = 2
+			
+			ElseIf startsWith (linea, "player gets coin") Then
+				section = 3
+			
+			ElseIf startsWith (linea, "player kills enemy") Then 
+				section = 4
+			
+			End If
+		End If
+	Wend 
+End Sub
+
 curLineNo = 0
+binIdx = 0
 
-printBinStr processCommand("%ANTONIO = 4"): Print
-printBinStr processCommand("SET FLAG 0 = 4"): Print 
-printBinStr processCommand("SET %ANTONIO = 4"): Print
-
+Dim As Integer fIn
+fIn = FreeFile
+Open "test1.spt" For Input As #fIn
+printBinStr processCurrentSection (fIn)
+Close #fIn
