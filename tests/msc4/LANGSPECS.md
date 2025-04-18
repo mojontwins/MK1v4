@@ -68,6 +68,11 @@ Como los valores que se manejan en un juego puede ser como máximo 240 (posició
 $FE = NPANT = n_pant
 $FD = PLAYER_X = gpx
 $FC = PLAYER_Y = gpy
+$FB = ENEMS_KILLED = player.killed
+$FA = OBJS = player.objs
+$F9 = LIFE = player.life
+
+CUIDAO - Esto debe poder funcionar como LVALUE así que ¿deben ser $FF $F0, etc ?
 
 El intérprete debe reconocer las y codificar el flag correcto. Luego el intérprete debería resolverlas al valor del motor.
 
@@ -90,13 +95,15 @@ Aún tengo que decidir cómo voy a organizar las diferentes secciones, aunque lo
 
 * Entre valores y flags, = < >= !=
 * Sobre `PLAYER`
-    - AT X, Y -> el centro de sprite toca tile X, Y
+    - AT X, Y -> el centro de sprite está tile X, Y
+    - TOUCHES X, Y -> Cualquier punto del jugador toca X, Y
     - IN_X X1, X2 -> player completamente dentro de X1, X2
     - IN_Y Y1, Y2 -> player completamente dentro de Y1, Y2
-    - HAS X [SELECTED] -> (futuro) tiene X en los items y está seleccionado
     - FALLING
     - NOT FALLING -> el jugador cae o no.
     - STILL -> vx y vy valen 0
+    - HAS X [SELECTED] -> (futuro) tiene X en los items y está seleccionado
+    - JUST_PUSHED -> (futuro), acaba de pulsar. Ver 3.99.X para implementar
 
 ## Comandos
 
@@ -161,11 +168,26 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $03 A B : A >= B
 * $04 A B : A <> B
 
+* $20 X Y : PLAYER TOUCHES (X, Y)
+* $21 X1 X2: PLAYER IN_X (X1, X2)
+* $22 Y1 Y2: PLAYER IN_Y (Y1, Y2)
+* $23 X Y : PLAYER AT (X, Y)
+* $24 : PLAYER FALLING
+* $25 : PLAYER NOT_FALLING
+* $26 : PLAYER STILL
+
+* $30 X Y T : TILE AT (X, Y) = T
+* $31 X Y T : TILE BEH (X, Y) = T
+
+* $F0 : TRUE
 
 ## Actions 
 
-* $01 A B : FLAGS[A] += B
-* $02 A B : FLAGS[A] -= B
+* $00 A B . FLAGS[A] = B
+* $10 A B : FLAGS[A] += B !
+* $11 A B : FLAGS[A] -= B
+
+* 
 
 # Haciendo esto
 
