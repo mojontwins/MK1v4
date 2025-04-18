@@ -14,51 +14,51 @@ Con esta codificación por ejemplo `ADD FLAGS x, y` y `SUB FLAGS x, y` serían a
 Also, compiler verá igual `FLAG n` y `$n`. Las comas en el código será obviables.  `INC FLAG 3, 4` == `INC $3 4`.  
 
 ```asm
-	;; ******************
-	;; Auxiliary routines
-	;; ******************
+    ;; ******************
+    ;; Auxiliary routines
+    ;; ******************
 
-	;; Reads a byte from pointer, inc pointer, return value in A
-	.read_byte
-		ld  hl, (script)
-		ld  a, (hl) 
-		inc hl 
-		ld  (script), hl
-		ret 
+    ;; Reads a byte from pointer, inc pointer, return value in A
+    .read_byte
+        ld  hl, (script)
+        ld  a, (hl) 
+        inc hl 
+        ld  (script), hl
+        ret 
 
-	;; Reads a value (may be recursive flag), inc pointer, return value in A
-	;; New flags encoding is $FF means next value is flag (can be $FF, etc)
-	.read_vbyte
-		call read_byte 
-		cp  0xff 
-		jr  z, read_vbyte_rec
-		ret 
+    ;; Reads a value (may be recursive flag), inc pointer, return value in A
+    ;; New flags encoding is $FF means next value is flag (can be $FF, etc)
+    .read_vbyte
+        call read_byte 
+        cp  0xff 
+        jr  z, read_vbyte_rec
+        ret 
 
-	.read_vbyte_rec
-		call read_vbyte 
-		ld  d, 0 
-		ld  e, a 
-		ld  hl, _flags 
-		add hl, de 
-		ld  a, (hl)
-		ret 
+    .read_vbyte_rec
+        call read_vbyte 
+        ld  d, 0 
+        ld  e, a 
+        ld  hl, _flags 
+        add hl, de 
+        ld  a, (hl)
+        ret 
 
-	.read_x_y 
-		call read_vbyte 
-		ld  (sc_x), a 
-		call read_vbyte
-		ld  (sc_y), a 
-		ret 
+    .read_x_y 
+        call read_vbyte 
+        ld  (sc_x), a 
+        call read_vbyte
+        ld  (sc_y), a 
+        ret 
 
-	;; Read flag index and value, returns pointer in HL and value in A.
-	.read_i_v
-		call read_vbyte  		; Read flag index
-		ld  c, a 
-		ld  b, 0 
-		call read_vbyte 		; Read value
-		ld  hl, _flags
-		add hl, bc  			; HL -> FLAGS[X]
-		ret
+    ;; Read flag index and value, returns pointer in HL and value in A.
+    .read_i_v
+        call read_vbyte         ; Read flag index
+        ld  c, a 
+        ld  b, 0 
+        call read_vbyte         ; Read value
+        ld  hl, _flags
+        add hl, bc              ; HL -> FLAGS[X]
+        ret
 ```
 
 Para que el compilador sea fácil de programar y modificar, me haré un `outputAssembly` que pueda recibir una cadena con las lineas partidas por `|`, por ejemplo, y que saque a la salida el código debidamente indentado.
@@ -90,13 +90,13 @@ Aún tengo que decidir cómo voy a organizar las diferentes secciones, aunque lo
 
 * Entre valores y flags, = < >= !=
 * Sobre `PLAYER`
-	- AT X, Y -> el centro de sprite toca tile X, Y
-	- IN_X X1, X2 -> player completamente dentro de X1, X2
-	- IN_Y Y1, Y2 -> player completamente dentro de Y1, Y2
-	- HAS X [SELECTED] -> (futuro) tiene X en los items y está seleccionado
-	- FALLING
-	- NOT FALLING -> el jugador cae o no.
-	- STILL -> vx y vy valen 0
+    - AT X, Y -> el centro de sprite toca tile X, Y
+    - IN_X X1, X2 -> player completamente dentro de X1, X2
+    - IN_Y Y1, Y2 -> player completamente dentro de Y1, Y2
+    - HAS X [SELECTED] -> (futuro) tiene X en los items y está seleccionado
+    - FALLING
+    - NOT FALLING -> el jugador cae o no.
+    - STILL -> vx y vy valen 0
 
 ## Comandos
 
@@ -104,23 +104,70 @@ Aún tengo que decidir cómo voy a organizar las diferentes secciones, aunque lo
 * DEC F, V: FLAG [F] -= V
 * TILE X, Y = 
 
+# Varios scripts por juego i.e. multinivel
+
+Es necesario poder procesar varios scripts a la vez y generar un único intérprete. Cada script debería tener su índice para permitir que dada la dirección del script se pueda obtener acceso a todas sus secciones. El hecho de necesitar procesarlos todos juntos viene de que el intérprete deberá poder manejarlos todos, y éste se compone de forma dinámica.
+
+Podría tener una lista de scripts en `in=` y que msc4 generase un `XXX.bin` por cada uno, pero que sólo generase un msci.asm global para todos.
+
+El problema de esto es que yo me las veía muy feliz generando las diferentes secciones del script y usando etiquietas en el ensamble para encontrarlas, pero a ver cómo lo hago en un binario puro sin tener que recurrir a la baratada de pasar el número de pantallas total.
+
+Había pensado en dos niveles de índice pero no es necesario si reordeno un poco cómo van los scripts.
+
+Voy a reservar espacio para 8 scripts especiales por si esto tiene ampliación. Luego tendremos `8 + n_pant * 2` y `9 + n_pant * 2` para los `ENTERING` y `PRESS_FIRE` de cada pantalla. Sabiendo el numero más alto de n_pant que aparece en el script el compilador podrá calcular los offsets.
+
+`main_scrpt_pointer` apuntará al binario que contendrá un índice:
+
+```
+    Add. Offset to.
+    0    ENTERING GAME
+    2    ENTERING ANY
+    4    PRESS_FIRE AT ANY
+    6    PLAYER_GETS_COIN
+    8    PLAYER_KILLS_ENEMY
+    10
+    12
+    14
+    16   ENTERING SCREEN 0
+    18   PRESS_FIRE AT SCREEN 0
+    20   ...
+```
+El el compiler tendré un array de 256 cadenas con todas las secciones calculadas.
+
 # El bytecode
 
 Una clausula deberá ser
 
-	COND1 COND2 COND3 FF ACT1 ACT2 ACT3 FF
+    COND1 COND2 COND3 FF ACT1 ACT2 ACT3 FF
 
 El tema es ver como hacer "skip". El original precalculaba los tamaños. Así se podía saltar fácilmente a la siguiente cláusula.
 
 ```
-	7 COND1 COND2 FF ACT1 ACT2 ACT3 FF 10 COND1 ETC...
-	  |                                |
-	  +-- Estamos aquí tras leer size. Añadimos esto a pointer
-	                                   |
-	                                   +---- y llegamos aquí
+    7 COND1 COND2 FF ACT1 ACT2 ACT3 FF 10 COND1 ETC...
+      |                                |
+      +-- Estamos aquí tras leer size. Añadimos esto a pointer
+                                       |
+                                       +---- y llegamos aquí
 ```
 
 Así que primero tengo que hacer una cadena binaria codificando la cláusula, ver la longitud, y concatenarla al principio.
 
 Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos terminado la sección.
+
+## Conditions
+
+* $01 A B : A = B
+* $02 A B : A < B
+* $03 A B : A >= B
+* $04 A B : A <> B
+
+
+## Actions 
+
+* $01 A B : FLAGS[A] += B
+* $02 A B : FLAGS[A] -= B
+
+# Haciendo esto
+
+Primero voy a crear la parte de intérprete que compile una sección hasta `END`, con todas las cláusulas que se encuentre, y genere una cadena con la sección completa.
 

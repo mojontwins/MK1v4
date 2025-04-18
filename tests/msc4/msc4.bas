@@ -12,6 +12,8 @@ Dim Shared As Integer curLineNo
 Dim Shared As String aliases (128)
 Dim Shared As Integer curAliasIndex = 0
 
+Dim Shared As Integer AU (255), CU (255)
+
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
 	' Overwriting what's in `from`.
@@ -27,6 +29,14 @@ Sub debugPrintTokens
 		Print "T" & index & "=[" & tokens(index) & "]"
 		index = index + 1
 	Wend
+End Sub
+
+Sub printBinStr (s As String)
+	Dim As Integer i
+	For i = 1 To Len (s) 
+		Print Hex (Asc (Mid (s, i, 1)), 2) & " ";
+	Next i
+	Print
 End Sub
 
 Function addOrResolveAlias (salias As String) As Integer
@@ -59,7 +69,7 @@ Sub parseScriptLine (linea As String)
 	Dim As String indirec
 	Dim As String m
 
-	If debug Then Print "Parsing: " & linea
+	'If debug Then Print "Parsing: " & linea
 
 	' Preprocess so = <= >= < > != <> don't need whitespace.
 	quotes = 0
@@ -120,11 +130,29 @@ Sub parseScriptLine (linea As String)
 		i = i + 1
 	Wend
 
-	If debug Then debugPrintTokens: Print
+	'If debug Then debugPrintTokens: Print
 End Sub
 
 Function correctLvalue (s As String) As Integer
 	Return s <> "" And Left (s, 1) = "$"
+End Function
+
+Function isNumberOrVar (s As String) As Integer
+	Dim As Integer i
+	Dim As String m 
+
+	If correctLvalue (s) Then Return -1 
+
+	For i = 1 To Len (s)
+		m = Mid (s, i, 1)
+		If m < "0" Or m > "9" Then return 0 
+	Next i 
+
+	Return -1
+End Function
+
+Function isComp (s As String) As Integer
+	return s = "=" Or s = "!=" Or s = "<>" Or s = "<" Or s =">" Or s = "<=" Or s =">="
 End Function
 
 Sub writeAssemblyString (fOut As Integer, s As String)
@@ -169,13 +197,241 @@ Sub writeAssemblyString (fOut As Integer, s As String)
 		End if
 		i = i + 1
 	Wend
-
 End Sub
 
-parseScriptLine "SET FLAG 5=3"
-parseScriptLine "SWAP FLAG 4, FLAG FLAG 5 # Swap these values!"
-parseScriptLine "IF %OBJECT = FLAG %ITEM"
-parseScriptLine "INC FLAG %OBJECT, 1"
-parseScriptLine "IF N_PANT = $2"
+Function readNewLine (fIn As Integer) As String
+	Dim As String linea
+	
+	Line Input #fIn, linea 
+	linea = Trim (linea, Any chr (32) + chr (9))
+	curLineNo = curLineNo + 1
 
-writeAssemblyString 0, ";; IF a = b|;; 14 v1 v2|.c_opcode_14|call read_vbyte|ld  b, a|call read_vbyte|cp  b|jr  nz, set_break_and_ret|ret"
+	'If debug Then Print curLineNo & ": " & linea
+
+	Return linea
+End Function
+
+Function pVal (expresion As String) As String 
+	If Len (expresion) > 1 And Left (expresion, 1) = "$" Then 
+		Return Chr (&HFF) & pVal (Right (expresion, Len (expresion) - 1)) 
+	Else
+		If Val (expresion) <= 240 Then 
+			Return Chr (Val (expresion)) 
+		Else 
+			Print "Wrong value @ " & curLineNo
+		End If
+	End If
+End Function
+
+Function lVal (expresion As String) As String
+	' Used for lValues such as $A = B, so first $ is ignored.
+	If correctLvalue (expresion) Then 
+		Return pVal (Right (expresion, Len (expresion) - 1))
+	Else
+		Print "Expecting lValue @ " & curLineNo
+	End If
+End Function
+
+Function buildCond CDecl (count As Integer, ...) As String
+	Dim As String code = ""
+	Dim As Integer i
+	Dim As String b
+
+	Dim As Any Ptr arg = VA_First ()
+
+	For i = 1 To count
+		b = *VA_Arg (arg, ZString Ptr)
+		code = code & b
+
+		arg = VA_Next (arg, ZString Ptr)
+	Next i
+
+	If Len (code) >= 1 Then
+		CU (Asc (Left (code, 1))) = -1
+	End If
+
+	'If debug Then Print "BuildCond ";: printBinStr (code)
+
+	Return code
+End Function
+
+Function buildAction CDecl (ByVal count As Integer, ...) As String
+	Dim As String code = ""
+	Dim As Integer i
+	Dim As String b
+
+	Dim As Any Ptr arg = VA_First ()
+
+	For i = 1 To count
+		b = *VA_Arg (arg, ZString Ptr)
+		code = code & b
+
+		arg = VA_Next (arg, ZString Ptr)
+	Next i
+
+	If Len (code) >= 1 Then
+		AU (Asc (Left (code, 1))) = -1
+	End If
+
+	'If debug Then Print "BuildAction ";: printBinStr (code)
+
+	Return code
+End Function
+
+Sub syntaxError 
+	Print "Syntax error at " & curLineNo
+End Sub
+
+Function processIf (linea As String) As String
+	Dim As String code = ""
+	parseScriptLine linea	
+
+	' Detect numeric conditions IF a OP b 
+	If isNumberOrVar (tokens (1)) And isComp (tokens(2)) And isNumberOrVar (tokens (3)) Then
+		Select Case tokens (2)
+			Case "=" 
+				' $01 A B
+				code = buildCond (3, Chr(&H01), pVal (tokens (1)), pVal (tokens (3)))
+
+			Case "<":
+				' $02 A B
+				code = buildCond (3, Chr(&H02), pVal (tokens (1)), pVal (tokens (3)))
+
+			Case ">" 
+				' $02 B A 
+				code = buildCond (3, Chr(&H02), pVal (tokens (3)), pVal (tokens (1)))
+
+			Case ">="
+				' $03 A B
+				code = buildCond (3, Chr(&H03), pVal (tokens (1)), pVal (tokens (3)))
+
+			Case "<="
+				' $03 B A
+				code = buildCond (3, Chr(&H03), pVal (tokens (3)), pVal (tokens (1)))
+
+			Case "<>", "!="
+				' $04 A B
+				code = buildCond (3, Chr(&H04), pVal (tokens (1)), pVal (tokens (3)))
+		End Select
+
+	' Detect player conditions
+	ElseIf tokens (1) = "PLAYER" Then
+
+	End If
+
+	Return code 
+End Function
+
+Function processCommand (linea As String) As String
+	Dim As String code = ""
+	Dim As String cmd 
+
+	parseScriptLine linea 
+
+	cmd = lCase (tokens (0))
+	Select Case cmd
+		Case "inc"
+			' INC $A B
+			' $01 A B
+			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
+				code = buildAction (3, Chr(&H01), lVal (tokens (1)), pVal (tokens (2)))
+			Else
+				SyntaxError
+			End If
+
+		Case "dec"
+			' DEC $A B
+			' $02 A B 
+			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
+				code = buildAction (3, Chr(&H02), lVal (tokens (1)), pVal (tokens (2)))
+			Else
+				SyntaxError
+			End If
+
+	End Select 
+
+	Return code 
+End Function
+
+Function processCurrentSection (fIn As Integer) As String 
+	Dim sectionCode As String
+	Dim clausule As String
+	Dim terminado As Integer
+	Dim wrong As Integer
+	Dim state As Integer
+	Dim linea As String
+
+	terminado = 0
+	wrong = 0
+	state = 0 			' 0 = fetching, 1 = conditions, 2 = actions
+
+	While Not terminado And Not Eof (fIn)
+		linea = readNewLine (fIn)
+
+		If linea = "" Then 
+			' Skip 
+
+		ElseIf linea = "END" Then
+			' If we are fetching -> this section has ended.
+			' If we are reading conditions -> wrong
+			' If we are reading actions -> this clausule has ended.'
+			If state = 0 Then 
+				terminado = -1
+			ElseIf state = 1 Then 
+				wrong = -1: terminado = -1
+				Print "Unexpected END @ " & curLineNo
+			Else 
+				' Write current clausule
+				sectionCode = sectionCode & Chr (Len (clausule) + 1) & clausule
+				
+				' New clausule
+				clausule = ""
+				
+				' Back to fetching
+				state = 0
+			End If 
+
+		ElseIf linea = "THEN" Then
+			' If we are fetching or reading actions -> wrong
+			' Else  change to state 2
+			If state = 1 Then 
+				' Write FF to signal "end of section" to the interpreter
+				clausule = clausule & Chr (&HFF)
+
+				state = 2
+			Else 
+				wrong = -1: terminado = -1
+				Print "Unexpected THEN @ " & curLineNo
+			End If
+
+		ElseIf Len (linea) > 3 And Left (linea, 3) = "IF " Then 
+			' Only valid when fetching or reading conditions
+			If state = 2 Then 
+				wrong = -1: terminado = -1
+				Print "Unexpected IF @ " & curLineNo
+			Else 
+				state = 1
+
+				' Process IF
+				clausule = clausule & processIf (linea)
+			End If
+
+		Else 
+			' Commands
+			clausule = clausule & processCommand (linea)
+		End If
+	Wend
+
+	Return sectionCode 
+End Function
+
+curLineNo = 0
+
+Dim As Integer fIn
+
+fIn = FreeFile
+Open "test1.spt" For Input As #fIn
+
+printBinStr processCurrentSection (fIn)
+
+Close fIn
