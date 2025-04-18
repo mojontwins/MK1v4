@@ -173,6 +173,10 @@ unsigned char _x2, _y2;
 unsigned char wall;
 unsigned char rda, rdb, rdmt;
 
+#ifdef PLAYER_PUSH_BOXES
+	unsigned char x0, y0, x1, y1;
+#endif
+
 #if defined RLE_MAP
 	unsigned char rdc, rdn;
 #endif

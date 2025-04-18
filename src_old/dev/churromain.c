@@ -36,6 +36,9 @@
 #endif
 #include "zx0.h"
 #include "mapa.h"
+#if MAX_CERROJOS == 0
+	#define DEACTIVATE_KEYS
+#endif
 #if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
 	#include "extrasprites.h"
 #endif

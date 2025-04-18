@@ -9,6 +9,7 @@ echo Making %game%
 if [%1]==[justcompile] goto :compile
 
 ..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=5,5 scrsize=15,10 tlock=15 mk1h=mapa.h mk1locks fixmappy > nul
+rem ..\utils\mapcnv.exe ..\map\mapa.map mapa.h 5 5 15 10 15 packed fixmappy > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 
 if [%om%]==[cpc] goto :cpc
