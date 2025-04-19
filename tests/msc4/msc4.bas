@@ -110,17 +110,17 @@ Sub parseScriptLine (linea As String)
 	i = 0: While i < uBound (tokens) And tokens (i) <> ""
 		If Len(tokens(i)) > 1 And Left (tokens (i), 1) = "%" Then 
 			tokens (i) = "$" & addOrResolveAlias (Right (tokens (i), Len (tokens (i)) - 1))
-		ElseIf tokens(i) = "NPANT" Or tokens (i) = "N_PANT" Then
+		ElseIf Ucase(tokens(i)) = "NPANT" Or Ucase(tokens (i)) = "N_PANT" Then
 			tokens (i) = "$254"
-		ElseIf tokens (i) = "PLAYER_X" Then 
+		ElseIf Ucase(tokens (i)) = "PLAYER_X" Then 
 			tokens (i) = "$253"
-		ElseIf tokens (i) = "PLAYER_Y" Then 
+		ElseIf Ucase(tokens (i)) = "PLAYER_Y" Then 
 			tokens (i) = "$252"
-		ElseIf tokens (i) = "ENEMS_KILLED" Then 
+		ElseIf Ucase(tokens (i)) = "ENEMS_KILLED" Then 
 			tokens (i) = "$251" 
-		ElseIf tokens (i) = "OBJS" Then
+		ElseIf Ucase(tokens (i)) = "OBJS" Then
 			tokens (i) = "$250"
-		ElseIf tokens (i) = "LIFE" Then
+		ElseIf Ucase(tokens (i)) = "LIFE" Then
 			tokens (i) = "$249"
 		End If
 
@@ -233,7 +233,7 @@ Function pVal (expresion As String) As String
 	If Len (expresion) > 1 And Left (expresion, 1) = "$" Then 
 		Return Chr (&HFF) & pVal (Right (expresion, Len (expresion) - 1)) 
 	Else
-		If Val (expresion) <= 240 Then 
+		If Val (expresion) <= 254 Then 
 			Return Chr (Val (expresion)) 
 		Else 
 			Print "Wrong value @ " & curLineNo
@@ -357,9 +357,6 @@ Function processIf (linea As String) As String
 				' Detect player conditions
 
 				Select Case lCase (tokens (2))
-					Case "touches"
-						' $20 X Y
-						code = buildCond (3, Chr (&H20), pVal (tokens (3)), pVal (tokens (4)))
 
 					Case "in_x"
 						' $21 X Y
@@ -369,6 +366,7 @@ Function processIf (linea As String) As String
 						' $22 X Y
 						code = buildCond (3, Chr (&H22), pVal (tokens (3)), pVal (tokens (4)))
 					
+					Case "touches"
 					Case "at"
 						' $23 X Y
 						code = buildCond (3, Chr (&H23), pVal (tokens (3)), pVal (tokens (4)))

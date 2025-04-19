@@ -130,8 +130,8 @@ Voy a reservar espacio para 8 scripts especiales por si esto tiene ampliación. 
     0    ENTERING GAME
     2    ENTERING ANY
     4    PRESS FIRE AT ANY
-    6    PLAYER GETS_COIN
-    8    PLAYER KILLS_ENEMY
+    6    PLAYER GETS COIN
+    8    PLAYER KILLS ENEMY
     10
     12
     14
@@ -168,7 +168,6 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $03 A B : A >= B
 * $04 A B : A <> B
 
-* $20 X Y : PLAYER TOUCHES (X, Y)
 * $21 X1 X2: PLAYER IN_X (X1, X2)
 * $22 Y1 Y2: PLAYER IN_Y (Y1, Y2)
 * $23 X Y : PLAYER AT (X, Y)
@@ -202,4 +201,3 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 # Haciendo esto
 
 Primero voy a crear la parte de intérprete que compile una sección hasta `END`, con todas las cláusulas que se encuentre, y genere una cadena con la sección completa.
-
