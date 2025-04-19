@@ -69,20 +69,20 @@ jr script_do
 	
 	;; IF A = B
 	cp  0x01
-	jr  nz, opcode_01_end
-.opcode_01
+	jr  nz, copcode_01_end
+.copcode_01
 	call read_vbyte
 	ld  b, a
 	call read_vbyte
 	cp  b
 	jp  nz, skip_clausule
 	jp  script_clausule
-.opcode_01_end
+.copcode_01_end
 
 	;; IF A < B
 	cp  0x02
-	jr  nz, opcode_02_end
-.opcode_02
+	jr  nz, copcode_02_end
+.copcode_02
 	call read_vbyte
 	ld  c, a
 	call read_vbyte
@@ -91,12 +91,12 @@ jr script_do
 	cp  b
 	jp  nc, skip_clausule
 	jp  script_clausule
-.opcode_02_end
+.copcode_02_end
 
 	;; IF A >= B
 	cp  0x03
-	jr  nz, opcode_03_end
-.opcode_03
+	jr  nz, copcode_03_end
+.copcode_03
 	call read_vbyte
 	ld  c, a
 	call read_vbyte
@@ -105,24 +105,24 @@ jr script_do
 	cp  b
 	jp  c, skip_clausule
 	jp  script_clausule
-.opcode_03_end
+.copcode_03_end
 
 	;; IF A <> B
 	cp  0x04
-	jr  nz, opcode_01_end
-.opcode_04
+	jr  nz, copcode_01_end
+.copcode_04
 	call read_vbyte
 	ld  b, a
 	call read_vbyte
 	cp  b
 	jp  z, skip_clausule
 	jp  script_clausule
-.opcode_04_end
+.copcode_04_end
 
 	;; IF PLAYER IN_X (X1, X2)
 	cp  0x21
-	jr  nz, opcode_21_end
-.opcode_21
+	jr  nz, copcode_21_end
+.copcode_21
 	;; gpx < X1 -> exit
 	call read_vbyte
 	ld  c, a 
@@ -136,12 +136,12 @@ jr script_do
 	cp  c
 	jp  c, skip_clausule
 	jp  script_clausule
-.opcode_21_end
+.copcode_21_end
 
 	;; IF PLAYER IN_Y (Y1, Y2)
 	cp  0x22
-	jr  nz, opcode_22_end
-.opcode_22
+	jr  nz, copcode_22_end
+.copcode_22
 	;; gpy < Y1 -> exit
 	call read_vbyte
 	ld  c, a 
@@ -155,11 +155,11 @@ jr script_do
 	cp  c
 	jp  c, skip_clausule
 	jp  script_clausule
-.opcode_22_end
+.copcode_22_end
 
 	;; IF PLAYER AT (X, Y)
 	cp  0x23
-	jr  nz, opcode_23_end
+	jr  nz, copcode_23_end
 .opcode23
 	;; (gpx + 8) >> 4 != X -> exit
 	ld  a, (_gpx)
@@ -184,34 +184,34 @@ jr script_do
 	cp  c 
 	jp  nz, skip_clausule
 	jp  script_clausule
-.opcode_23_end
+.copcode_23_end
 
 	;; IF PLAYER FALLING
 	cp  0x24
-	jr  nz, opcode_24_end
-.opcode_24
+	jr  nz, copcode_24_end
+.copcode_24
 	;; Player falling if not possee
 	ld  a, (_player_possee)
 	or  a
 	jp  z, skip_clausule
 	jp  script_clausule
-.opcode_24_end
+.copcode_24_end
 
 	;; IF PLAYER NOT FALLING
 	cp  0x25
-	jr  nz, opcode_25_end
-.opcode_25
+	jr  nz, copcode_25_end
+.copcode_25
 	;; Player not falling if possee
 	ld  a, (_player_possee)
 	or  a
 	jp  nz, skip_clausule
 	jp  script_clausule
-.opcode_25_end
+.copcode_25_end
 
 	;; PLAYER_STILL
 	cp  0x26
-	jr  nz, opcode_26_end
-.opcode_26
+	jr  nz, copcode_26_end
+.copcode_26
 	ld  a, (_player_vx)
 	ld  hl, (_player_vx + 1)
 	or  (hl)
@@ -221,12 +221,12 @@ jr script_do
 	or  (hl)
 	jp  nz, skip_clausule
 	jp  script_clausule
-.opcode_26_end
+.copcode_26_end
 
 	;; TILE AT (X, Y) = T
 	cp  0x30
-	jr  nz, opcode_30_end
-.opcode_30
+	jr  nz, copcode_30_end
+.copcode_30
 	call read_x_y
 	ld  a, (sc_x)
 	ld  c, a
@@ -237,12 +237,12 @@ jr script_do
 	cp  c
 	jp  nz, skip_clausule
 	jp  script_clausule
-.opcode_30_end
+.copcode_30_end
 
 	;; BEH AT (X, Y) = T
 	cp  0x31
-	jr  nz, opcode_31_end
-.opcode_31
+	jr  nz, copcode_31_end
+.copcode_31
 	call read_x_y
 	ld  a, (sc_x)
 	ld  c, a
@@ -253,7 +253,7 @@ jr script_do
 	cp  c
 	jp  nz, skip_clausule
 	jp  script_clausule
-.opcode_31_end
+.copcode_31_end
 
 	;; UNKNOWN
 	jp  script_clausule
@@ -273,9 +273,89 @@ jr script_do
 
 	;;; Decode OPCODE & jump to interpreter
 
-	
+	;; FLAGS[N] = V
+	cp  0x00
+	jr  nz, aopcode_00_end
+.aopcode_00
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  (hl), a
+	jp  script_actions
+.aopcode_00_end
 
-	jr  script_actions
+	;; FLAGS[N] += V
+	cp  0x01
+	jr  nz, aopcode_01_end
+.aopcode_01
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  b, (hl)
+	add a 
+	ld  (hl), a
+	jp  script_actions
+.aopcode_01_end
+
+	;; FLAGS[N] -= V
+	cp  0x02
+	jr  nz, aopcode_02_end
+.aopcode_02
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  b, (hl)
+	sub a 
+	ld  (hl), a
+	jp  script_actions
+.aopcode_02_end
+
+	;; SET TILE (X, Y) = T
+	cp  0x20
+	jr  nz, aopcode_20_end
+.aopcode_20
+	call read_x_y
+	call read_vbyte 
+	
+	; set_map_tile_do needs
+	; _x, _y -> coordinates,
+	; _t -> tile number, 
+	; _n -> tile beh
+	ld  (__t), a 
+	ld  b, 0
+	ld  c, a 
+	ld  hl, _comportamiento_tiles 
+	add hl, bc 
+	ld  a, (hl)
+	ld  (__n), a
+	ld  a, (sc_x)
+	ld  (__x), a
+	ld  c, a 
+	dl  a, (sc_y)
+	ld  (__y), a 
+	call set_map_tile_do
+	jp  script_actions
+.aopcode_20_end
+
+	;; SET BEH (X, Y) = B
+	cp  0x21
+	jr  nz, aopcode_21_end
+.aopcode_21
+	call read_x_y 
+	ld  a, (sc_x)
+	ld  c, a 
+	ld  a, (sc_y)
+	ld  b, a 
+	sla a 
+	sla a 
+	sla a
+	sla a 
+	sub b 
+	add c
+	ld  b, 0
+	ld  c, a
+	call read_vbyte
+	ld  hl, _map_attr
+	add hl, bc 
+	ld  (hl), a
+	jp  script_actions
+.aopcode_21_end
+
+
 
 ;; Reads a byte from pointer, inc pointer, return value in A
 .read_byte

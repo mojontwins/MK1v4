@@ -198,6 +198,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $F0 : WIN GAME
 * $F1 : GAME OVER
 
+TODO: `PRINT_TILE_AT`
+
 # Haciendo esto
 
 Primero voy a crear la parte de intérprete que compile una sección hasta `END`, con todas las cláusulas que se encuentre, y genere una cadena con la sección completa.
