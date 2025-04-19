@@ -1,5 +1,5 @@
 ' General text parsing routines
-' Copyleft 2016 The Mojon Twins
+' Copyleft 2016,2025 The Mojon Twins
 
 ' I'm sick of cut'n'paste the same functions over and over.
 ' I should've done this long time ago.
@@ -126,6 +126,7 @@ Sub parseTokenizeString (inString As String, tokens () As String, ignore As Stri
 	Dim As Integer i, l, windex, quotes
 
 	parseCleanTokens tokens ()
+	ignore = ignore & " "
 
 	inString = inString + " "
 	l = Len (inString)
@@ -141,12 +142,9 @@ Sub parseTokenizeString (inString As String, tokens () As String, ignore As Stri
 		Else 
 			If Instr (break, m) Then
 				Exit For
-			'ElseIf Instr (ignore, m) Then
-				' ignore
 			ElseIf m = Chr (34) Then
 				quotes = -1
-			'ElseIf m = " " Then
-			ElseIf m = " " Or Instr (ignore, m) Then
+			ElseIf Instr (ignore, m) Then
 				If tokens (windex) <> "" Then 
 					If windex < uBound (tokens) Then
 						windex = windex + 1

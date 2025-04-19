@@ -4,9 +4,9 @@
 #include "mtparser.bi"
 #include "cmdlineparser.bi"
 
-Dim Shared As Integer debug = -1
+Dim Shared As Integer debug = 0
 
-Dim Shared As String tokens (63)
+Dim Shared As String tokens (255)
 Dim Shared As Integer curLineNo
 
 Dim Shared As String aliases (128)
@@ -16,7 +16,8 @@ Dim Shared As Integer AU (255), CU (255)
 
 Dim Shared As Integer sectOffs (255)
 Dim Shared As UByte sectBinary (16383)
-Dim Shared As Integer binIdx
+Dim Shared As UByte mainBinary (18000)
+Dim Shared As Integer sectBinIdx, mainBinIdx
 
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
@@ -147,18 +148,25 @@ Function correctLvalue (s As String) As Integer
 	Return s <> "" And Left (s, 1) = "$"
 End Function
 
-Function isNumberOrVar (s As String) As Integer
+Function isNumber (s As String) As Integer
+	' there're better ways but this is safe
 	Dim As Integer i
 	Dim As String m 
-
-	If correctLvalue (s) Then Return -1 
-
+	
 	For i = 1 To Len (s)
 		m = Mid (s, i, 1)
 		If m < "0" Or m > "9" Then return 0 
 	Next i 
 
 	Return -1
+End Function
+
+Function isNumberOrVar (s As String) As Integer
+
+	If correctLvalue (s) Then Return -1 
+	If isNumber (s) Then Return -1
+
+	Return 0
 End Function
 
 Function isComp (s As String) As Integer
@@ -550,7 +558,10 @@ Function processCurrentSection (fIn As Integer) As String
 			ElseIf state = 1 Then 
 				wrong = -1: terminado = -1
 				Print "Unexpected END @ " & curLineNo
-			Else 
+			Else
+				' Write  END to current clausule
+				clausule = clausule & Chr (&HFF)
+
 				' Write current clausule
 				sectionCode = sectionCode & Chr (Len (clausule) + 1) & clausule
 				
@@ -595,72 +606,183 @@ Function processCurrentSection (fIn As Integer) As String
 	Return sectionCode 
 End Function
 
-Function startsWith (haysTack As String, spec As String) Then 
-	Dim As Integer i
-	Dim As String m, n
+Function startsWith (haysTack () As String, spec As String) As Integer 
+	Dim as String specTokens (uBound (tokens))
+	Dim as Integer i 
 
-	If spec = haysTack Return -1
-	If Len (spec) > Len (haysTack) Return 0
+	parseTokenizeString spec, specTokens (), "", ""
 
-	For i = 1 To Len(spec) 
-		m = Mid (haysTack, i, 1)
-		n = Mid (spec, i, 1)
+	While i < uBound(tokens) And specTokens (i) <> ""
+		If tokens (i) <> specTokens (i) Then Return 0
 
-		If Not (m = n Or ((m = "_" And n = " ") Or (m = " " And n = "_"))) Then
-			Return 0
-		End If
-	Next i
+		i = i + 1
+	Wend
 
 	Return -1
 End Function 
 
-Sub copyToBin (String section)
+Sub writeToSectBinary (section As String)
 	Dim As Integer i 
 
 	For i = 1 To Len (section) 	
-		sectBinary (binIdx) = Asc (Mid (section, i, 1))
-		binIdx = binIdx + 1
+		sectBinary (sectBinIdx) = Asc (Mid (section, i, 1))
+		sectBinIdx = sectBinIdx + 1
 	Next i
+End Sub 
+
+Sub WriteToMainBin (b As uByte)
+	mainBinary (mainBinIdx) = b
+	mainBinIdx = mainBinIdx + 1
+End Sub
 
 Sub processScript (fIn As Integer)
 	Dim As String linea
-	Dim As Integer section 
+	Dim As String sectionBytecode
+	Dim As Integer section, i, lastSection
+	Dim As Integer listToken, cError
+	Dim As Integer sectOffset
+	Dim As String listRooms (127)
+
+	sectBinIdx = 0
+	lastSection = 0
+
+	For i = 0 To uBound (sectOffs)
+		sectOffs (i) = -1
+	Next i
 
 	While Not Eof (fIn) 
 		linea = readNewLine (fIn)
-		section = -1
+		parseTokenizeString lcase (linea), tokens (), ",_()[]", "#"
+		
+		If linea <> "" And tokens (0) <> "" Then
+			If debug Then 
+				Print "==========================================" 
+				Print "LINEA " & linea
+				debugPrintTokens
+			End If
 
-		If startsWith (linea, "entering screen") Or startsWith (linea, "press fire at screen") Then 
-			' Find comma separated list
+			listRooms (0) = ""
+			cError = 0
 
-		Else
-			' Special sections
+			If startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
+				' Find comma separated list
+				If tokens (0) = "entering" Then 
+					listToken = 2 
+					sectOffset = 8
+				Else 
+					listToken = 4
+					sectOffset = 9
+				End If
 
-			If startsWith (linea, "entering game") Then
-				section = 0
+				' Now adjust. 
+				' Enter is 8 + N * 2
+				' Fire is 9 + N * 2
+				i = 0: While i + listToken < uBound (tokens) And tokens (i + listToken) <> ""
+					listRooms (i) = tokens (i + listToken)
+					If isNumber (listRooms (i)) Then 
+						listRooms (i) = Str (Val (listRooms (i)) * 2 + sectOffset)
+					End If
+					i = i + 1
+				Wend
+			Else
+				' Special sections
+				section = -1
 
-			ElseIf startsWith (linea, "entering any") Then 
-				section = 1
-			
-			ElseIf startsWith (linea, "press fire at any") Then
-				section = 2
-			
-			ElseIf startsWith (linea, "player gets coin") Then
-				section = 3
-			
-			ElseIf startsWith (linea, "player kills enemy") Then 
-				section = 4
-			
+				If startsWith (tokens (), "entering game") Then
+					section = 0
+
+				ElseIf startsWith (tokens (), "entering any") Then 
+					section = 1
+				
+				ElseIf startsWith (tokens (), "press fire at any") Then
+					section = 2
+				
+				ElseIf startsWith (tokens (), "player gets coin") Then
+					section = 3
+				
+				ElseIf startsWith (tokens (), "player kills enemy") Then 
+					section = 4
+				
+				End If
+
+				listRooms (0) = Str(section)
+				listRooms (1) = ""
+			End If
+
+			' Write current binary address to index
+			i = 0: While i < uBound (listRooms) And listRooms (i) <> ""
+				If isNumber (listRooms (i)) Then
+					section = Val (listRooms (i))
+					If section > lastSection Then lastSection = section
+					If debug Then Print "Adding " & sectBinIdx & " @ sect " & section
+					sectOffs (section) = sectBinIdx
+				Else
+					Print "Wrong section at " & curLineNo
+					cError = -1
+				End If
+
+				i = i + 1
+			Wend
+
+			If Not cError Then 
+				' Parse current section
+				sectionBytecode = processCurrentSection (fIn)
+
+				' Write to binary
+				writeToSectBinary sectionBytecode
 			End If
 		End If
-	Wend 
+	Wend
+
+	' Output binary = minimal index with adjusted offsets, then main binary 
+	' Index size = 2 * (1 + max Index). Also write index
+
+	mainBinIdx = 0
+
+	For i = 0 To lastSection
+		If sectOffs (i) < 0 Then 
+			sectOffs (i) = 0 
+		Else 
+			sectOffs (i) = sectOffs (i) + 2 * (lastSection + 1)
+		End If
+		WriteToMainBin sectOffs (i) Mod 256
+		WriteToMainBin sectOffs (i) \ 256
+	Next i 
+
+	Print "Index section: " & mainBinIdx & " bytes"
+
+	' Copy binary
+	For i = 0 To sectBinIdx - 1
+		WriteToMainBin sectBinary (i)
+	Next i
+
+	Print "Bytecode section: " & sectBinIdx & " bytes"
+
+End Sub
+
+Sub writeScript (fName As String)
+	Dim As Integer i, fOut 
+
+	fOut = FreeFile
+	Kill fName
+	Open fName For Output As #fOut
+
+	For i = 0 To mainBinIdx - 1
+		Put #fOut, , mainBinary (i)
+	Next i 
+
+	Print "Wrote " & mainBinIdx & " bytes to " & fName
+	Close fOut
 End Sub
 
 curLineNo = 0
-binIdx = 0
 
-Dim As Integer fIn
+Dim As Integer fIn, fOut
+
 fIn = FreeFile
 Open "test1.spt" For Input As #fIn
-printBinStr processCurrentSection (fIn)
+processScript (fIn)
 Close #fIn
+
+writeScript "test1.spt.bin"
+
