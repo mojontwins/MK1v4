@@ -198,6 +198,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $F0 : WIN GAME
 * $F1 : GAME OVER
 
+* $F2 : BREAK"
+
 TODO: `PRINT_TILE_AT`
 
 # Haciendo esto

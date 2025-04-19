@@ -523,6 +523,11 @@ Function processCommand (linea As String) As String
 				syntaxError
 			End If
 
+		Case "break"
+			' BREAK
+			' $F2
+			code = buildAction (1, Chr (&HF2))'
+
 	End Select 
 
 	Return code 

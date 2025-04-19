@@ -1,5 +1,7 @@
 org $C000
 
+defc PLAYER_LIFE=99
+
 jr script_do
 
 ;; Test. You can poke here
@@ -325,7 +327,7 @@ jr script_do
 	ld  a, (sc_x)
 	ld  (__x), a
 	ld  c, a 
-	dl  a, (sc_y)
+	ld  a, (sc_y)
 	ld  (__y), a 
 	call set_map_tile_do
 	jp  script_actions
@@ -355,7 +357,92 @@ jr script_do
 	jp  script_actions
 .aopcode_21_end
 
+	;; SOUND N
+	cp  0xE0
+	jr  nz, aopcode_E0_end
+.aopcode_E0
+	call read_vbyte
+	ld  h, 0
+	ld  l, a 
+	call _peta_el_beeper
+	jp  script_actions
+.aopcode_E0_end
 
+	;; SHOW
+	cp  0xE1
+	jr  nz, aopcode_E1_end
+.aopcode_E1
+	call SPUpdateNow
+	jp  script_actions
+.aopcode_E1_end
+
+	;; RECHARGE
+	cp  0xE2
+	jr  nz, aopcode_E2_end
+.aopcode_E2
+	ld  a, PLAYER_LIFE
+	ld  (_player_life), a
+	jp script_actions
+.aopcode_E2_end
+
+	;; EXTERN N M
+	cp  0xE4
+	jr  nz, aopcode_E4_end
+.aopcode_E4
+	call read_x_y
+	ld  a, (sc_x)
+	ld  h, 0
+	ld  l, a 
+	push hl
+	ld  a, (sc_y)
+	ld  h, 0
+	ld  l, a 
+	push hl
+	call _do_extern_action
+	pop bc
+	pop bc
+	jp script_actions
+.aopcode_E4_end
+
+	;; PAUSE N
+	cp  0xE5
+	jr  nz, aopcode_E5_end
+.aopcode_E5
+	call read_vbyte
+	ld  b, a
+.aopcode_E5_loop
+	halt
+	djnz aopcode_E5_loop
+	jp script_actions
+.aopcode_E5_end
+
+	;; WIN GAME
+	cp  0xf0 
+	jr  nz, aopcode_F0_end
+.aopcode_F0
+	ld  a, 1
+	ld  (_script_result), a
+	ret
+.aopcode_F0_end
+
+	;; GAME OVER
+	cp  0xf1 
+	jr  nz, aopcode_F1_end
+.aopcode_F1
+	ld  a, 2
+	ld  (_script_result), a
+	ret
+.aopcode_F1_end
+
+	;; BREAK
+	cp  0xf2
+	jr  nz, aopcode_F2_end
+.aopcode_F2
+	ret
+.aopcode_F2_end
+
+	;; UNKNOWN
+	jp script_actions
 
 ;; Reads a byte from pointer, inc pointer, return value in A
 .read_byte
@@ -450,3 +537,15 @@ jr script_do
 ._player_vx defw 0
 ._attr_2
 .qtile_do
+.set_map_tile_do
+.__x
+.__y
+.__t
+.__n
+._comportamiento_tiles
+._map_attr
+._peta_el_beeper
+.SPUpdateNow
+
+._do_extern_action
+._script_result
