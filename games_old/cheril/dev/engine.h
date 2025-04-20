@@ -664,9 +664,9 @@ void move (void) {
 				if (player.vy > PLAYER_MAX_VX) player.vy = +PLAYER_MAX_VX;
 				player.facing = GENITAL_FACING_DOWN;
 			}
-		}
 
 		thrusting = 1;
+		}
 	#else
 		// Apply gravity
 		player.vy += PLAYER_G;
@@ -1612,6 +1612,7 @@ void draw_scr (void) {
 			init_bullets ();
 		#endif
 	}
+
 }
 
 #ifdef PLAYER_CAN_FIRE

@@ -31,7 +31,6 @@ void main (void) {
 		// Let's do it.
 		playing = 1;
 
-
 		init_player ();
 
 		init_hotspots ();
@@ -269,6 +268,7 @@ void main (void) {
 
 			#ifdef CPC
 				cpc_UpdateNow (1);
+
 			#else
 				#asm
 					.ml_min_faps_loop

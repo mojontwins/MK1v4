@@ -90,6 +90,7 @@ INERCIA player;
 	unsigned char bullets_estado [MAX_BULLETS];
 	unsigned char bspr_it;
 #endif
+
 signed int ptgmx, ptgmy;
 signed int pvx_total, pvy_total;
 unsigned char at1, at2;
@@ -187,7 +188,6 @@ unsigned char pti, ptj;
 unsigned char *gp_gen, *gp_gen_org, *gp_gen_alt;
 unsigned char t_alt;
 unsigned char prxx, pryy;
-
 
 unsigned char bitmask [] = {
 	1, 2, 4, 8, 16, 32, 64, 128

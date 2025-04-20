@@ -120,8 +120,10 @@ unsigned char attr (unsigned char x, unsigned char y) {
 		._attr_enems
 			cp  10
 			jr  c, _attr_enems_skip_1
+
 			ld  hl, 8
 			ret
+
 		._attr_enems_skip_1
 			ld  b, a
 			ld  a, c
@@ -487,11 +489,19 @@ unsigned int __FASTCALL__ abs (int n) {
 #ifdef PLAYER_PUSH_BOXES
 	void move_tile_with_check (void) {
 		// Moves to x0, y0 to x1, y1 if x1, y1 is walkable
-		if (attr (x1, y1) == 0) {
+		#asm
+				ld  a, (_x1)
+				ld  c, a 
+				ld  a, (_y1)
+				call _attr_enems 
+				xor a 
+				or l 
+				ret nz
+		#endasm
 			set_map_tile (x0, y0, 0, 0);
 			set_map_tile (x1, y1, 14, 8);
 			peta_el_beeper (2);
-		}
+
 	}
 #endif
 
@@ -576,14 +586,16 @@ unsigned char cm_two_points (void) {
 		rda = qtile (rdx, rdy);
 
 		#if defined PLAYER_PUSH_BOXES
-			x0 = rdx; y0 = y1 = rdy;
-			if (player.vx > 0) {
-				x1 = x0 + 1;
-			} else {
-				x1 = x0 - 1;
+			if (rda == 14) {
+				x0 = rdx; y0 = y1 = rdy;
+				if (player.vx > 0) {
+					x1 = x0 + 1;
+				} else {
+					x1 = x0 - 1;
+				}
+	
+				move_tile_with_check ();
 			}
-
-			move_tile_with_check ();
 		#endif
 
 		#if !defined DEACTIVATE_KEYS
@@ -597,21 +609,23 @@ unsigned char cm_two_points (void) {
 		rdx = (gpx + 8) >> 4; rdy = _y;
 		rda = qtile (rdx, rdy);
 
+		#if defined PLAYER_PUSH_BOXES && defined PLAYER_MOGGY_STYLE
+			if (rda == 14) {
+				x0 = x1 = rdx; y0 = rdy;
+				if (player.vy > 0) {
+					y1 = y0 + 1;
+				} else {
+					y1 = y0 - 1;
+				}
+	
+				move_tile_with_check ();
+			}
+		#endif
+
 		#if !defined DEACTIVATE_KEYS
 			if (rda == 15) {
 				check_and_clear_cerrojo ();
 			}
-		#endif
-
-		#if defined PLAYER_PUSH_BOXES && defined PLAYER_MOGGY_STYLE
-			x0 = x1 = rdx; y0 = rdy;
-			if (player.vy > 0) {
-				y1 = y0 + 1;
-			} else {
-				y1 = y0 - 1;
-			}
-
-			move_tile_with_check ();
 		#endif
 	}
 #endif
@@ -636,6 +650,8 @@ void move (void) {
 				player.vy += PLAYER_RX;
 				if (player.vy > 0) player.vy = 0;
 			}
+
+			thrusting = 0;
 		} else {
 			if ((pad0 & sp_UP) == 0) {
 				player.vy -= PLAYER_AX;
@@ -648,6 +664,8 @@ void move (void) {
 				if (player.vy > PLAYER_MAX_VX) player.vy = +PLAYER_MAX_VX;
 				player.facing = GENITAL_FACING_DOWN;
 			}
+			
+			thrusting = 1;
 		}
 	#else
 		// Apply gravity
@@ -919,7 +937,8 @@ void move (void) {
 	// =================================================
 
 	#ifdef PLAYER_MOGGY_STYLE
-		player.frame = player.facing + (((rdi ? gpx : gpy) >> 3) & 1); 
+		player.frame = player.facing;
+		if (thrusting) player.frame += (((rdi ? gpx : gpy) >> 3) & 1); 
 	#else
 		if (!(player.possee || player.gotten)) {
 			player.frame = player.facing + 3;
@@ -1792,6 +1811,8 @@ void mueve_bicharracos (void) {
 						call _abs_a
 						ld  (__en_mx), a
 
+						jr  horz_limit_skip_2
+
 					.horz_limit_skip_1
 
 						// Right of x2
@@ -1813,6 +1834,59 @@ void mueve_bicharracos (void) {
 					.horz_limit_skip_2
 
 					.en_linear_horizontal_axis_done
+
+					#ifdef PLAYER_PUSH_BOXES
+						// Check for collisions.
+						._en_bg_collision_horz
+							ld  a, (__en_mx)
+							or  a
+							jr  z, _en_bg_collision_horz_done
+
+							call __ctileoff
+							ld  (_rdi), a
+							ld  c, a
+
+							call en_xx_calc
+							call en_yy_calc
+
+							ld  a, (_en_xx)
+							add c
+							ld  (_ptx1), a
+							ld  (_ptx2), a
+
+							ld  a, (_en_yy)
+							ld  (_pty1), a
+
+							ld  a, (__en_y)
+							add 15
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_pty2), a
+
+							call _en_bg_collision_check
+							or  a
+							jr  z, _en_bg_collision_horz_done
+
+							ld  a, (_en_xx)
+							ld  c, a
+							ld  a, (_rdi)
+							xor 1
+							add c
+							sla a
+							sla a
+							sla a
+							sla a
+							ld  (__en_x), a
+
+							ld  a, (__en_mx)
+							neg
+							ld  (__en_mx), a
+						
+						._en_bg_collision_horz_done
+
+					#endif
 
 					// *************
 					// VERTICAL AXIS
@@ -1845,6 +1919,8 @@ void mueve_bicharracos (void) {
 						call _abs_a
 						ld  (__en_my), a
 
+						jr  vert_limit_skip_2
+
 					.vert_limit_skip_1
 
 						// _en_y >= _en_y2
@@ -1865,6 +1941,58 @@ void mueve_bicharracos (void) {
 					.vert_limit_skip_2		
 
 					.en_linear_vertical_axis_done
+
+					#ifdef PLAYER_PUSH_BOXES
+						// Check for collisions.
+						._en_bg_collision_vert
+							ld  a, (__en_my)
+							or  a
+							jr  z, _en_bg_collision_vert_done
+
+							call __ctileoff
+							ld  (_rdi), a
+							ld  c, a
+
+							call en_xx_calc
+							call en_yy_calc
+
+							ld  a, (_en_yy)
+							add c
+							ld  (_pty1), a
+							ld  (_pty2), a
+
+							ld  a, (_en_xx)
+							ld  (_ptx1), a
+
+							ld  a, (__en_x)
+							add 15
+							srl a
+							srl a
+							srl a
+							srl a
+							ld  (_ptx2), a
+
+							call _en_bg_collision_check
+							or  a
+							jr  z, _en_bg_collision_vert_done
+
+							ld  a, (_en_yy)
+							ld  c, a
+							ld  a, (_rdi)
+							xor 1
+							add c
+							sla a
+							sla a
+							sla a
+							sla a
+							ld  (__en_y), a
+
+							ld  a, (__en_my)
+							neg
+							ld  (__en_my), a
+
+						._en_bg_collision_vert_done
+					#endif
 
 					.en_linear_done
 
@@ -2292,169 +2420,6 @@ void mueve_bicharracos (void) {
 						ld  a, ixl 
 						ld  (hl), a
 				#endasm 
-			#endif
-
-			#ifdef PLAYER_PUSH_BOXES
-				// Check for collisions.
-				#asm
-					._en_bg_collision
-						call en_xx_calc
-						call en_yy_calc
-
-						ld  a, (__en_mx)
-						or  a
-						jr  z, _en_bg_collision_horz_done
-
-					._en_bg_collision_horz
-						ld  a, (__en_mx)
-						call __ctileoff
-						ld  (_rdi), a
-
-						ld  c, a
-						ld  a, (_en_xx)
-						add c
-						ld  (_ptx1), a
-						ld  (_ptx2), a
-
-						ld  a, (_en_yy)
-						ld  (_pty1), a
-
-						ld  a, (__en_y)
-						add 15
-						srl a
-						srl a
-						srl a
-						srl a
-						ld  (_pty2), a
-
-						call _en_bg_collision_check
-						or  a
-						jr  z, _en_bg_collision_horz_done
-
-						ld  a, (_en_xx)
-						ld  c, a
-						ld  a, (_rdi)
-						xor 1
-						add c
-						sla a
-						sla a
-						sla a
-						sla a
-						ld  (__en_x), a
-
-						ld  a, (__en_mx)
-						ld  c, a
-						xor a
-						sub c
-						ld  (__en_mx), a
-					
-					._en_bg_collision_horz_done
-
-						call en_xx_calc
-
-						ld  a, (__en_my)
-						or  a
-						jr  z, _en_bg_collision_vert_done
-
-					._en_bg_collision_vert
-						ld  a, (__en_my)
-						call __ctileoff
-						ld  (_rdi), a
-
-						ld  c, a
-						ld  a, (_en_yy)
-						add c
-						ld  (_pty1), a
-						ld  (_pty2), a
-
-						ld  a, (_en_xx)
-						ld  (_ptx1), a
-
-						ld  a, (__en_x)
-						add 15
-						srl a
-						srl a
-						srl a
-						srl a
-						ld  (_ptx2), a
-
-						call _en_bg_collision_check
-						or  a
-						jr  z, _en_bg_collision_vert_done
-
-						ld  a, (_en_yy)
-						ld  c, a
-						ld  a, (_rdi)
-						xor 1
-						add c
-						sla a
-						sla a
-						sla a
-						sla a
-						ld  (__en_y), a
-
-						ld  a, (__en_my)
-						ld  c, a
-						xor a
-						sub c
-						ld  (__en_my), a
-
-					._en_bg_collision_vert_done
-
-						call en_yy_calc
-
-						jr _en_bg_collision_end
-
-					._en_bg_collision_check
-						ld  a, (_ptx1)
-						ld  c, a
-						ld  a, (_pty1)
-						call _attr_enems
-						ld  a, l
-						and ENEMIES_COLLIDE_MASK
-						ret  nz 			// Non zero, A = TRUE
-
-						ld  a, (_ptx2)
-						ld  c, a
-						ld  a, (_pty2)
-						call _attr_enems
-						ld  a, l
-						and ENEMIES_COLLIDE_MASK
-						ret 				// A = result
-
-					.__ctileoff
-						// A signed; A >= 0 -> 1, else 0.
-						bit 7, a
-						jr  z, __ctileoff_1
-
-						xor a
-						ret
-
-					.__ctileoff_1
-						ld  a, 1
-						ret
-
-					.en_xx_calc
-						ld  a, (__en_x)
-						srl a
-						srl a
-						srl a
-						srl a
-						ld  (_en_xx), a
-						ret
-
-					.en_yy_calc
-						ld  a, (__en_y)
-						srl a
-						srl a
-						srl a
-						srl a
-						ld  (_en_yy), a
-						ret
-
-					._en_bg_collision_end
-
-				#endasm
 			#endif
 
 			enems_calc_frame ();
@@ -3013,4 +2978,55 @@ void mueve_bicharracos (void) {
 		ld  (hl), a
 	#endif
 		ret
+
+	#ifdef PLAYER_PUSH_BOXES
+
+		._en_bg_collision_check
+			ld  a, (_ptx1)
+			ld  c, a
+			ld  a, (_pty1)
+			call _attr_enems
+			ld  a, l
+			and ENEMIES_COLLIDE_MASK
+			ret  nz 			// Non zero, A = TRUE
+
+			ld  a, (_ptx2)
+			ld  c, a
+			ld  a, (_pty2)
+			call _attr_enems
+			ld  a, l
+			and ENEMIES_COLLIDE_MASK
+			ret 				// A = result
+
+		.__ctileoff
+			// A signed; A >= 0 -> 1, else 0.
+			bit 7, a
+			jr  z, __ctileoff_1
+
+			xor a
+			ret
+
+		.__ctileoff_1
+			ld  a, 1
+			ret
+
+		.en_xx_calc
+			ld  a, (__en_x)
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (_en_xx), a
+			ret
+
+		.en_yy_calc
+			ld  a, (__en_y)
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (_en_yy), a
+			ret
+
+	#endif
 #endasm
