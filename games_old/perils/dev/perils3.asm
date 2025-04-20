@@ -281,7 +281,6 @@ XDEF _script_result
 .copcode_31_end
 
 	;; UNKNOWN
-	
 	jp  script_clausule
 
 .skip_clausule

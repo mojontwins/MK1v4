@@ -35,15 +35,15 @@ unsigned char wyz_beat_ct;
 #define AY_STOP_SOUND()  wyz_stop_sound ()
 #define AY_PLAY_MUSIC(a) wyz_play_music (a)
 
-#include "cpc/pal.h"
+#ifndef AUTO_SPLIT
+	#include "cpc/pal.h"
+#endif
 #include "cpc/spriteset_mappings.h"
 
 #include "wyz/efectos.h"
 #include "wyz/instrumentos.h"
 #include "wyz/songs.h"
 #include "wyz/wyz_player.h"
-
-#define peta_el_beeper wyz_play_sound
 
 /*
 	CPC Memory map
@@ -602,6 +602,20 @@ void _tile_address (void) {
 			; DE = buffer address
 	#endasm
 }
+
+#ifdef USE_AUTO_TILE_SHADOWS
+	unsigned char attr_mk2 (void) {
+		// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
+		// if (cx1 < 0 || cy1 < 0 || cx1 > 14 || cy1 > 9) return 0;
+		// return map_attr [cx1 + (cy1 << 4) - cy1];
+		#asm
+				ld  a, (_cx1)
+				ld  c, a 
+				ld  a, (_cy1)
+				jp  _attr_enems
+		#endasm
+	}
+#endif
 
 void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 	//_x = x; _y = y; _t = t;

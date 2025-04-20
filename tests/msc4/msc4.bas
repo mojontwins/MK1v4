@@ -783,9 +783,9 @@ curLineNo = 0
 Dim As Integer fIn, fOut
 
 fIn = FreeFile
-Open "test1.spt" For Input As #fIn
+Open "perils.spt" For Input As #fIn
 processScript (fIn)
 Close #fIn
 
-writeScript "test1.spt.bin"
+writeScript "perils.spt.bin"
 

@@ -7,6 +7,18 @@
 
 #include "config.h"
 
+#asm
+	XDEF _attr_2
+	XDEF qtile_do
+	XDEF set_map_tile_do
+	XDEF _peta_el_beeper
+	#ifdef CPC
+		XDEF _cpc_UpdateNow
+	#else
+		XDEF SPUpdateNow
+	#endif
+#endasm
+
 #define MAX_ENEMS 3
 #define MAX_FLAGS 16
 
@@ -32,23 +44,16 @@
 	#include "speccy.h"
 #endif
 #ifdef ACTIVATE_SCRIPTING
-	#include "msc-config.h" 
+	#include "msc4i.h" 
 #endif
 #include "zx0.h"
 #include "mapa.h"
 #if MAX_CERROJOS == 0
 	#define DEACTIVATE_KEYS
 #endif
-#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
-	#include "extrasprites.h"
-#endif
 #include "enems.h"
 
 #include "engine.h"
-#include "extern.h"
-#ifdef ACTIVATE_SCRIPTING
-	#include "msc.h"
-#endif
 #include "pantallas.h"
 #include "mainloop.h" 	// Main is here!
 #include "music.h"

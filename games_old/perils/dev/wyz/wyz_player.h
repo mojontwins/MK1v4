@@ -31,7 +31,7 @@ void __FASTCALL__ wyz_play_music (unsigned char m) {
 	#endasm
 }
 
-void __FASTCALL__ wyz_play_sound (unsigned char s) {
+void __FASTCALL__ peta_el_beeper (unsigned char s) {
 	#asm
 		; Sound number is in L
 		ld  a, l

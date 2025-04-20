@@ -1,6 +1,6 @@
 @echo off
 
-set game=lala3
+set game=perils3
 set om=cpc
 set mode=1
 
@@ -31,9 +31,9 @@ goto :compile
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal.png prefix=inks0 out=%om%\pal0.h silent > nul 
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal_hud.png prefix=pal_hud out=%om%\pal_hud.h silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal_general.png prefix=pal_general out=%om%\pal_general.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal.png prefix=inks0 out=%om%\pal0.h silent > nul 
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal_hud.png prefix=pal_hud out=%om%\pal_hud.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal_general.png prefix=pal_general out=%om%\pal_general.h silent > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\marco.png out=marco.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\ending.png out=ending.bin silent > nul
@@ -49,8 +49,8 @@ rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
 
 if [%om%]==[cpc] goto :cpc
 
-zcc +zx -m -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
-zcc +zx -a -vn churromain.c -o %game%.asm -lsplib2 -zorg=24200  > nul
+zcc +zx -m -vn churromain.c msc4i.asm -o %game%.bin -lsplib2 -zorg=24200  > nul
+zcc +zx -a -vn churromain.c msc4i.asm -o %game%.asm -lsplib2 -zorg=24200  > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin
@@ -64,11 +64,11 @@ goto :noerror
 
 :cpc
 ..\utils\pasmo.exe system\cpc_TrPixLutM%mode%.asm trpixlut.bin
-..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul
+..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul 2> nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
-zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c msc4i.asm -DCPC -DMODE_%mode% > nul
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c msc4i.asm -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

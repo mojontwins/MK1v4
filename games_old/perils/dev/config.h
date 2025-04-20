@@ -5,7 +5,7 @@
 
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
-//#define AUTO_SPLIT 						// For CPC, but hud must be 32 raster on top and MODE 1
+#define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
 
 // ============================================================================
 // I. General configuration
@@ -37,7 +37,7 @@
 // General directives:
 // -------------------
 
-//#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
+#define PLAYER_PUSH_BOXES 					// If defined, tile #14 is pushable
 #define DIRECT_TO_PLAY						// If defined, title screen is also the game frame.
 //#define DEACTIVATE_KEYS					// If defined, keys are not present.
 #define DEACTIVATE_OBJECTS					// If defined, objects are not present.
@@ -63,8 +63,8 @@
 // Scripting
 // ---------
 
-//#define ACTIVATE_SCRIPTING				// Activates msc scripting and flag related stuff.
-//#define SCRIPTING_DOWN					// Use DOWN as the action key.
+#define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
+#define SCRIPTING_DOWN						// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 
 // Top view:
@@ -77,7 +77,7 @@
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
-//#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
+#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 #define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 
@@ -155,17 +155,12 @@
 // 8 = Full obstacle (blocks player from all directions)
 
 unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 0, 0, 8, 8, 9, 8, 8, 8, 8, 8, 8, 8, 8,
+	0, 0, 0, 0, 8, 8, 8, 8, 0, 8, 0, 0, 9, 8, 8, 8,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes
 // Then change cpc/palmap.h
 #if defined CPC && defined MODE_1 && defined AUTO_SPLIT
-
 	#include "cpc/pal0.h"
-	#include "cpc/pal1.h"
-	#include "cpc/pal2.h"
-	#include "cpc/pal3.h"
-
 #endif

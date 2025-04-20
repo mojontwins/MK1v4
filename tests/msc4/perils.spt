@@ -1,7 +1,7 @@
 ENTERING SCREEN 20
 	IF TRUE 
 	THEN
-		SET TILE (1, 8) = 20	# Draw door
+		SET TILE (1, 8) = 17	# Draw door
 	END
 
 	IF ENEMS_KILLED = 60 		# Remove blockade
