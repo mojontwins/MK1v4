@@ -134,7 +134,7 @@ XDEF _script_result
 
 	;; IF A <> B
 	cp  0x04
-	jr  nz, copcode_01_end
+	jr  nz, copcode_04_end
 .copcode_04
 	call read_vbyte
 	ld  b, a
@@ -281,7 +281,7 @@ XDEF _script_result
 .copcode_31_end
 
 	;; UNKNOWN
-	
+
 	jp  script_clausule
 
 .skip_clausule
@@ -543,6 +543,7 @@ XDEF _script_result
 ;; Read flag index and value, returns pointer in HL and value in A.
 .read_i_v
 	call read_vbyte  		; Read flag index
+	
 	ld  c, a 
 	ld  b, 0 
 	call read_vbyte 		; Read value

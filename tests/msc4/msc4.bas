@@ -4,7 +4,7 @@
 #include "mtparser.bi"
 #include "cmdlineparser.bi"
 
-Dim Shared As Integer debug = 0
+Dim Shared As Integer debug = -1
 
 Dim Shared As String tokens (255)
 Dim Shared As Integer curLineNo
@@ -783,9 +783,9 @@ curLineNo = 0
 Dim As Integer fIn, fOut
 
 fIn = FreeFile
-Open "perils.spt" For Input As #fIn
+Open "test1.spt" For Input As #fIn
 processScript (fIn)
 Close #fIn
 
-writeScript "perils.spt.bin"
+writeScript "test1.spt.bin"
 

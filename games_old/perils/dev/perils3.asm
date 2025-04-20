@@ -134,7 +134,7 @@ XDEF _script_result
 
 	;; IF A <> B
 	cp  0x04
-	jr  nz, copcode_01_end
+	jr  nz, copcode_04_end
 .copcode_04
 	call read_vbyte
 	ld  b, a
@@ -281,6 +281,7 @@ XDEF _script_result
 .copcode_31_end
 
 	;; UNKNOWN
+
 	jp  script_clausule
 
 .skip_clausule

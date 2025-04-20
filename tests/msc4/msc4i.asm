@@ -1,254 +1,478 @@
-;; MSC 4 Interpreter for MK1v4 [ZX] v0.1.20250307
-;; Copyleft 2025 by The Mojon Twins
+defc PLAYER_LIFE=99 ;; Find a way to solve this
 
-;; Preprocess to fill in symbols from zcc map file
-;; Assemble resulting file to $C000 and load to extended RAM
+; Import. We need this:
+XREF _flags
+XREF _n_pant
+XREF _gpx
+XREF _gpy
+XREF _player
+XREF _attr_2
+XREF qtile_do
+XREF set_map_tile_do
+XREF __x
+XREF __y
+XREF __t
+XREF __n
+XREF _comportamiento_tiles
+XREF _map_attr
+XREF _peta_el_beeper
+XREF _cpc_UpdateNow
+XREF _do_extern_action
 
-;; z80asm -m -b msc41.asm script.asm
+XDEF _script_do
+XDEF _script_n
+XDEF _script_result
 
-org $C000
+._script_n
+	defw 0
+._script_result
+	defb 0
 
-;; ***************************************
-;; Externals (functions & data in low ram)
-;; ***************************************
+; Script pointer
+.script
+	defw 0
 
-;; PRINTER
-;; =======
-	;defc _attr                  @@_ATTR
-	;defc _qtile                 @@_QTILE
-	;defc _draw_coloured_tile    @@_DRAW_COLOURED_TILE
-	;defc _set_map_tile          @@_SET_MAP_TILE
-	;defc _msc_extern            @@_MSC_EXTERN 
-	;defc _espera_activa         @@_ESPERA_ACTIVA 
+; Skip to next clausule
+.skip
+	defw 0
 
-;; DATA
-;; ====
-	;defc _player                @@_PLAYER 
-	;defc _flags                 @@_FLAGS 
-	;defc _n_pant                @@_N_PANT 
-	;defc _map_attr              @@_MAP_ATTR 
-	;defc _map_buff              @@_MAP_BUFF 
-	;defc _set_fire_zone         @@_SET_FIRE_ZONE 
-	;defc _scenery_info          @@_SCENERY_INFO
+; Coordinate pair 
+.sc_x
+	defb 0 
+.sc_y
+	defb 0
 
-;; COMMUNICATION
-;; ============= 
-	;defc _script_result         @@_SCRIPT_RESULT 
-	;defc _script_something_done @@_SCRIPT_SOMETHING_DONE 
+; Control 
+.sc_terminado
+	defb 0
 
-;; SCRIPTS 
-;; =======
-XREF scripts_e 
-XREF scripts_f 
-XREF script_get_coin
-XREF script_kill_enemy
-XREF script_e_any
-XREF script_e_game
-XREF script_f_any
+._script_do
 
-;; **************************
-;; Main routine / entry point
-;; **************************
+	; Point to offset in script index
+	ld  hl, (_script_n)
+	add hl, hl
+	ld  bc, script_bytecode
+	add hl, bc
 
-;; Main interpreter.
-;  A: script type
-;     0: ENTERING 
-;     1: PRESS_FIRE 
-;     2: PLAYER_GETS_COIN
-;     3: PLAYER_KILLS_ENEMY
-;  B: screen number.
-;     FF: ANY (for ENTERING / PRESS_FIRE)
-;     FE: GAME (for ENTERING)
+	; Read offset
+	ld  a, (hl)
+	inc hl 
+	ld  h, (hl)
+	ld  l, a 
 
-.msc 
+	;  If zero do abort
+	or  h 
+	ret z
 
-	;; First, make a script pointer
-	cp  0 
-	jr  z, mk_entering_pointer
-	cp  1
-	jr  z, mk_fire_pointer
-	cp  2
-	jr  z, mk_getcoin_pointer
-	cp  3
-	jr  z, mk_killenemy_pointer
-	ret 
+	; Make & store pointer
+	add hl, bc
+	ld  (script), hl
 
-.mk_entering_pointer 
-	ld  a, b 
-	cp  $FE 				; Entering game
-	jr  nz, mk_e_p_0
-	ld  hl, script_e_game 
-	jr  mk_pointer 
+.script_loop
+	; Calculate address of next clausule
 
-.mk_e_p_0
-	cp  $FF
-	jr  nz, mk_e_p_1
-	ld  hl, script_e_any 
-	jr  mk_pointer 
+	;ld  hl, (script)
+	push hl 
 
-.mk_e_p_1
+	call read_byte 		; A = clausule size
+	ld  b, 0 
+	ld  c, a 
 
-	ld  hl, scripts_e 
-	jr  mk_screen_pointer 
+	pop hl 
+	add hl, bc 
+	ld  (skip), hl	
 
-.mk_fire_pointer 
-	ld  hl, scripts_f 
-	jr  mk_screen_pointer 
+; Process conditions
+.script_clausule
+	call read_byte 		;A = opcode
 
+	; If we get to 0xFF (THEN), jump to actions
+	cp  0xFF
+	jp  z, script_actions
 
-.mk_pointer 
-	ld  (script), hl 
-
-.run_script
-	call read_byte
-
-	ret 
-
-.set_break_and_ret 
-	ld  a, 1 
-	ld  (sc_terminado), a 
-	ret 
-
-;; **********
-;; Conditions
-;; **********
-
-;; IF a = b  
-;; 14 v1 v2 
-.c_opcode_14
-	call read_vbyte 
-	ld  b, a 				; Save for later 
-	call read_vbyte 
-	cp  b
-	jr  nz, set_break_and_ret
-	ret 
-
-;; IF a < b 
-;; 15 v1 v2
-.c_opcode_15
-	call read_vbyte 
-	ld  c, a 				; Save for later 
-	call read_vbyte 
-	ld  b, a 
-	ld  a, c 
-	cp  b
-	jr  nc, set_break_and_ret
-	ret 
-
-;; IF a >= b 
-;; 16 v1 v2
-.c_opcode_16
-	call read_vbyte 
-	ld  c, a 				; Save for later 
-	call read_vbyte 
-	ld  b, a 
-	ld  a, c 
-	cp  b
-	jr  c, set_break_and_ret
-	ret 	
+	;;; Decode OPCODE & jump to interpreter
 	
-;; IF a <> b
-;; 17 v1 v2 
-.c_opcode_17
-	call read_vbyte 
-	ld  b, a 				; Save for later 
-	call read_vbyte 
+	;; IF A = B
+	cp  0x01
+	jr  nz, copcode_01_end
+.copcode_01
+	call read_vbyte
+	ld  b, a
+	call read_vbyte
 	cp  b
-	jr  z, set_break_and_ret
-	ret 
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_01_end
 
-;; IF TRUE
-;; F0 
-.c_opcode_F0
-	ret 
+	;; IF A < B
+	cp  0x02
+	jr  nz, copcode_02_end
+.copcode_02
+	call read_vbyte
+	ld  c, a
+	call read_vbyte
+	ld  b, a
+	ld  a, c
+	cp  b
+	jp  nc, skip_clausule
+	jp  script_clausule
+.copcode_02_end
 
-;; *******
-;; Actions
-;; *******
+	;; IF A >= B
+	cp  0x03
+	jr  nz, copcode_03_end
+.copcode_03
+	call read_vbyte
+	ld  c, a
+	call read_vbyte
+	ld  b, a
+	ld  a, c
+	cp  b
+	jp  c, skip_clausule
+	jp  script_clausule
+.copcode_03_end
 
-;; SET FLAG x = n 
-;; 01 x n 
-.c_opcode_01 
-	call read_i_v 			; HL -> FLAGS[X], A -> Value 
-	ld  (hl), a 
-	ret 
+	;; IF A <> B
+	cp  0x04
+	jr  nz, copcode_04_end
+.copcode_04
+	call read_vbyte
+	ld  b, a
+	call read_vbyte
+	cp  b
+	jp  z, skip_clausule
+	jp  script_clausule
+.copcode_04_end
 
-;; INC FLAG x, n 
-;; 10 x n 
-.c_opcode_10 
-	call read_i_v 			; HL -> FLAGS[X], A -> Value 
-	ld  b, (hl)  			; B = FLAGS[X]
-	add a 
-	ld  (hl), a 
-	ret 
-
-;; DEC FLAG x, n
-;; 11 x n 
-.c_opcode_11
-	call read_i_v 			; HL -> FLAGS[X], A -> Value 
-	ld  b, (hl) 			; B = FLAGS[X]
-	sub a 
-	ld  (hl), a 
-	ret 
-
-;; ADD FLAGS x, y 
-;; 12 x y 
-	call read_i_v 			; HL -> FLAGS[X], A -> Y
-	push hl 
-	ld  d, (hl) 			; D = FLAGS[X]
-	ld  b, 0 
+	;; IF PLAYER IN_X (X1, X2)
+	cp  0x21
+	jr  nz, copcode_21_end
+.copcode_21
+	;; gpx < X1 -> exit
+	call read_vbyte
 	ld  c, a 
-	ld  hl, _flags 
-	add hl, bc 				; HL -> FLAGS[Y]
-	ld  a, (hl) 
-	add d 
-	pop hl 
-	ld  (hl), a 
-	ret
-
-;; SUB FLAGS x, y 
-;; 13 x y 
-	call read_i_v 			; HL -> FLAGS[X], A -> Y
-	push hl 
-	ld  d, (hl) 			; D = FLAGS[X]
-	ld  b, 0 
+	ld  a, (_gpx)
+	cp  c
+	jp  c, skip_clausule
+	;; X2 < gpx -> exit
+	ld  a, (_gpx)
 	ld  c, a 
-	ld  hl, _flags 
-	add hl, bc 				; HL -> FLAGS[Y]
-	ld  e, (hl) 			; E = FLAGS[Y]
-	ld  a, d                ; A = FLAGS[X]
-	sub e                   ; A = FLAGS[X] - FLAGS[Y]
-	pop hl 
-	ld  (hl), a 
-	ret
+	call read_vbyte
+	cp  c
+	jp  c, skip_clausule
+	jp  script_clausule
+.copcode_21_end
 
-;; SWAP FLAGS x, y 
-	call read_vbyte  		; Read flag index
+	;; IF PLAYER IN_Y (Y1, Y2)
+	cp  0x22
+	jr  nz, copcode_22_end
+.copcode_22
+	;; gpy < Y1 -> exit
+	call read_vbyte
 	ld  c, a 
-	ld  b, 0 
-	ld  hl, _flags 
-	add hl, bc 				; HL -> FLAGS[X]
-	push hl 
-
-	call read_vbyte  		; Read flag index
+	ld  a, (_gpy)
+	cp  c
+	jp  c, skip_clausule
+	;; Y2 < gpy -> exit
+	ld  a, (_gpy)
 	ld  c, a 
-	ld  b, 0 
-	ld  hl, _flags 
-	add hl, bc  			; HL -> FLAGS[Y]
-	pop de   				; DE -> FLAGS[X]
+	call read_vbyte
+	cp  c
+	jp  c, skip_clausule
+	jp  script_clausule
+.copcode_22_end
 
-	ld  b, (hl)
-	ld  a, (de)
+	;; IF PLAYER AT (X, Y)
+	cp  0x23
+	jr  nz, copcode_23_end
+.opcode23
+	;; (gpx + 8) >> 4 != X -> exit
+	ld  a, (_gpx)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld  a, c
+	call read_vbyte
+	cp  c 
+	jp  nz, skip_clausule
+	;; (gpy + 8) >> 4 != Y -> exit
+	ld  a, (_gpy)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld  a, c
+	call read_vbyte
+	cp  c 
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_23_end
+
+	;; IF PLAYER FALLING
+	cp  0x24
+	jr  nz, copcode_24_end
+.copcode_24
+	;; Player falling if not possee
+	ld  a, (_player + 26) 	; player.possee
+	or  a
+	jp  z, skip_clausule
+	jp  script_clausule
+.copcode_24_end
+
+	;; IF PLAYER NOT FALLING
+	cp  0x25
+	jr  nz, copcode_25_end
+.copcode_25
+	;; Player not falling if possee
+	ld  a, (_player + 16)	; player.possee
+	or  a
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_25_end
+
+	;; PLAYER_STILL
+	cp  0x26
+	jr  nz, copcode_26_end
+.copcode_26
+	ld  a, (_player + 6) 	; player.vx LSB
+	ld  hl, (_player + 7)	; player.vx MSB
+	or  (hl)
+	ld  hl, (_player + 8) 	; player.vy LSB
+	or  (hl)
+	ld  hl, (_player + 9) 	; player.vy MSB
+	or  (hl)
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_26_end
+
+	;; TILE AT (X, Y) = T
+	cp  0x30
+	jr  nz, copcode_30_end
+.copcode_30
+	call read_x_y
+	ld  a, (sc_x)
+	ld  c, a
+	ld  a, (sc_y)
+	call _attr_2
+	ld  c, l 
+	call read_vbyte
+	cp  c
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_30_end
+
+	;; BEH AT (X, Y) = T
+	cp  0x31
+	jr  nz, copcode_31_end
+.copcode_31
+	call read_x_y
+	ld  a, (sc_x)
+	ld  c, a
+	ld  a, (sc_y)
+	call qtile_do
+	ld  c, l 
+	call read_vbyte
+	cp  c
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_31_end
+
+	;; UNKNOWN
+
+	jp  script_clausule
+
+.skip_clausule
+	ld  hl, (skip)
+	ld  (script), hl
+	jp  script_loop
+
+; Process actions
+.script_actions
+	call read_byte 		;A = opcode
+
+	; If we get to 0xFF (END), exit
+	cp  0xFF
+	ret z
+
+	;;; Decode OPCODE & jump to interpreter
+	;;; TODO : point HL to special vars in assigns
+
+	;; FLAGS[N] = V
+	cp  0x00
+	jr  nz, aopcode_00_end
+.aopcode_00
+	call read_i_v		; HL -> FLAGS[N], A -> V
 	ld  (hl), a
-	ld  a, b 
-	ld  (de), a
+	jp  script_actions
+.aopcode_00_end
+
+	;; FLAGS[N] += V
+	cp  0x01
+	jr  nz, aopcode_01_end
+.aopcode_01
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  b, (hl)
+	add a 
+	ld  (hl), a
+	jp  script_actions
+.aopcode_01_end
+
+	;; FLAGS[N] -= V
+	cp  0x02
+	jr  nz, aopcode_02_end
+.aopcode_02
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  b, (hl)
+	sub a 
+	ld  (hl), a
+	jp  script_actions
+.aopcode_02_end
+
+	;; SET TILE (X, Y) = T
+	cp  0x20
+	jr  nz, aopcode_20_end
+.aopcode_20
+	call read_x_y
+	call read_vbyte 
+	
+	; set_map_tile_do needs
+	; _x, _y -> coordinates,
+	; _t -> tile number, 
+	; _n -> tile beh
+	ld  (__t), a 
+	ld  b, 0
+	ld  c, a 
+	ld  hl, _comportamiento_tiles 
+	add hl, bc 
+	ld  a, (hl)
+	ld  (__n), a
+	ld  a, (sc_x)
+	ld  (__x), a
+	ld  c, a 
+	ld  a, (sc_y)
+	ld  (__y), a 
+	call set_map_tile_do
+	jp  script_actions
+.aopcode_20_end
+
+	;; SET BEH (X, Y) = B
+	cp  0x21
+	jr  nz, aopcode_21_end
+.aopcode_21
+	call read_x_y 
+	ld  a, (sc_x)
+	ld  c, a 
+	ld  a, (sc_y)
+	ld  b, a 
+	sla a 
+	sla a 
+	sla a
+	sla a 
+	sub b 
+	add c
+	ld  b, 0
+	ld  c, a
+	call read_vbyte
+	ld  hl, _map_attr
+	add hl, bc 
+	ld  (hl), a
+	jp  script_actions
+.aopcode_21_end
+
+	;; SOUND N
+	cp  0xE0
+	jr  nz, aopcode_E0_end
+.aopcode_E0
+	call read_vbyte
+	ld  h, 0
+	ld  l, a 
+	call _peta_el_beeper
+	jp  script_actions
+.aopcode_E0_end
+
+	;; SHOW
+	cp  0xE1
+	jr  nz, aopcode_E1_end
+.aopcode_E1
+	ld  hl, 1
+	push hl 
+	call _cpc_UpdateNow
+	pop bc
+	jp  script_actions
+.aopcode_E1_end
+
+	;; RECHARGE
+	cp  0xE2
+	jr  nz, aopcode_E2_end
+.aopcode_E2
+	ld  a, PLAYER_LIFE
+	ld  (_player + 29), a 	; player.life LSB
+	xor a 
+	ld  (_player + 30), a 	; player.life MSB
+	jp script_actions
+.aopcode_E2_end
+
+	;; EXTERN N M
+	cp  0xE4
+	jr  nz, aopcode_E4_end
+.aopcode_E4
+	call read_x_y
+	ld  a, (sc_x)
+	ld  h, 0
+	ld  l, a 
+	push hl
+	ld  a, (sc_y)
+	ld  h, 0
+	ld  l, a 
+	push hl
+	call _do_extern_action
+	pop bc
+	pop bc
+	jp script_actions
+.aopcode_E4_end
+
+	;; PAUSE N
+	cp  0xE5
+	jr  nz, aopcode_E5_end
+.aopcode_E5
+	call read_vbyte
+	ld  b, a
+.aopcode_E5_loop
+	halt
+	djnz aopcode_E5_loop
+	jp script_actions
+.aopcode_E5_end
+
+	;; WIN GAME
+	cp  0xf0 
+	jr  nz, aopcode_F0_end
+.aopcode_F0
+	ld  a, 1
+	ld  (_script_result), a
 	ret
+.aopcode_F0_end
 
+	;; GAME OVER
+	cp  0xf1 
+	jr  nz, aopcode_F1_end
+.aopcode_F1
+	ld  a, 2
+	ld  (_script_result), a
+	ret
+.aopcode_F1_end
 
+	;; BREAK
+	cp  0xf2
+	jr  nz, aopcode_F2_end
+.aopcode_F2
+	ret
+.aopcode_F2_end
 
-;; ******************
-;; Auxiliary routines
-;; ******************
+	;; UNKNOWN
+	jp script_actions
 
 ;; Reads a byte from pointer, inc pointer, return value in A
 .read_byte
@@ -267,13 +491,47 @@ XREF script_f_any
 	ret 
 
 .read_vbyte_rec
-	call read_vbyte 
+	call read_vbyte
+
+	;; Special
+	cp  0xFE
+	jr  z, rvb_set_n_pant
+	cp  0xFD
+	jr  z, rvb_set_gpx
+	cp  0xFC
+	jr  z, rvb_set_gpy
+	cp  0xFB
+	jr  z, rvb_set_player_killed
+	cp  0xFA
+	jr  z, rvb_set_player_objs
+	cp  0xF9
+	jr  z, rvb_set_player_life
+	
 	ld  d, 0 
 	ld  e, a 
 	ld  hl, _flags 
 	add hl, de 
 	ld  a, (hl)
 	ret 
+
+.rvb_set_n_pant 
+	ld  a, (_n_pant)
+	ret
+.rvb_set_gpx
+	ld  a, (_gpx)
+	ret
+.rvb_set_gpy
+	ld  a, (_gpy)
+	ret
+.rvb_set_player_killed
+	ld  a, (_player + 32) 	; player.killed
+	ret
+.rvb_set_player_objs
+	ld  a, (_player + 27) 	; player.objs
+	ret
+.rvb_set_player_life
+	ld  a, (_player + 29) 	; player.life MSB
+	ret
 
 .read_x_y 
 	call read_vbyte 
@@ -292,19 +550,6 @@ XREF script_f_any
 	add hl, bc  			; HL -> FLAGS[X]
 	ret
 
-;; *********
-;; Variables
-;; *********
+.script_bytecode
+	BINARY "perils.spt.bin"
 
-; Current script pointer 
-.script         defw 0
-
-; Coordinate pair 
-.sc_x           defb 0 
-.sc_y           defb 0
-
-; Control 
-.sc_terminado   defb 0 
-
-;; REMOVE 
-._flags defs 128
