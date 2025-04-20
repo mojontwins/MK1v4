@@ -543,12 +543,51 @@ XDEF _script_result
 ;; Read flag index and value, returns pointer in HL and value in A.
 .read_i_v
 	call read_vbyte  		; Read flag index
-	ld  c, a 
-	ld  b, 0 
+	ld  c, a
 	call read_vbyte 		; Read value
+	ld  (sc_y), a 
+	
+	ld  a, c  				; C = flag index
+	;; Special
+	cp  0xFE
+	jr  z, riv_set_n_pant
+	cp  0xFD
+	jr  z, riv_set_gpx
+	cp  0xFC
+	jr  z, riv_set_gpy
+	cp  0xFB
+	jr  z, riv_set_player_killed
+	cp  0xFA
+	jr  z, riv_set_player_objs
+	cp  0xF9
+	jr  z, riv_set_player_life
+
+	ld  b, 0 				; BC = flag index
 	ld  hl, _flags
-	add hl, bc  			; HL -> FLAGS[X]
+	add hl, bc 				; HL -> FLAGS [X]
+
+.read_i_v_cont
+	ld  a, (sc_y) 			; A = value
 	ret
+
+.riv_set_n_pant
+	ld  hl, _n_pant
+	jr  read_i_v_cont
+.riv_set_gpx
+	ld  hl, _gpx
+	jr  read_i_v_cont
+.riv_set_gpy
+	ld  hl, _gpy
+	jr  read_i_v_cont
+.riv_set_player_killed
+	ld  hl, _player + 32	; player.killed
+	jr  read_i_v_cont
+.riv_set_player_objs
+	ld  hl, _player + 27	; player.objs
+	jr  read_i_v_cont
+.riv_set_player_life
+	ld  hl, _player + 29	; player.life LSB
+	jr  read_i_v_cont
 
 .script_bytecode
 	BINARY "perils.spt.bin"
