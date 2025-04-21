@@ -1,6 +1,6 @@
 defc PLAYER_LIFE=99 ;; Find a way to solve this
 
-; Import. We need this:
+; Imports
 XREF _flags
 XREF _n_pant
 XREF _gpx
@@ -16,9 +16,12 @@ XREF __n
 XREF _comportamiento_tiles
 XREF _map_attr
 XREF _peta_el_beeper
-XREF _cpc_UpdateNow
 XREF _do_extern_action
 
+; Target CPC
+XREF _cpc_UpdateNow
+
+; Exports
 XDEF _script_do
 XDEF _script_n
 XDEF _script_result
@@ -91,7 +94,8 @@ XDEF _script_result
 	jp  z, script_actions
 
 	;;; Decode OPCODE & jump to interpreter
-	
+
+	;; OPCODE 0x01	
 	;; IF A = B
 	cp  0x01
 	jr  nz, copcode_01_end
@@ -104,6 +108,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_01_end
 
+	;; OPCODE 0x02
 	;; IF A < B
 	cp  0x02
 	jr  nz, copcode_02_end
@@ -117,7 +122,8 @@ XDEF _script_result
 	jp  nc, skip_clausule
 	jp  script_clausule
 .copcode_02_end
-
+	
+	;; OPCODE 0x03
 	;; IF A >= B
 	cp  0x03
 	jr  nz, copcode_03_end
@@ -132,6 +138,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_03_end
 
+	;; OPCODE 0x04
 	;; IF A <> B
 	cp  0x04
 	jr  nz, copcode_04_end
@@ -144,6 +151,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_04_end
 
+	;; OPCODE 0x21
 	;; IF PLAYER IN_X (X1, X2)
 	cp  0x21
 	jr  nz, copcode_21_end
@@ -163,6 +171,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_21_end
 
+	;; OPCODE 0x22
 	;; IF PLAYER IN_Y (Y1, Y2)
 	cp  0x22
 	jr  nz, copcode_22_end
@@ -182,6 +191,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_22_end
 
+	;; OPCODE 0x23
 	;; IF PLAYER AT (X, Y)
 	cp  0x23
 	jr  nz, copcode_23_end
@@ -211,6 +221,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_23_end
 
+	;; OPCODE 0x24
 	;; IF PLAYER FALLING
 	cp  0x24
 	jr  nz, copcode_24_end
@@ -222,6 +233,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_24_end
 
+	;; OPCODE 0x25
 	;; IF PLAYER NOT FALLING
 	cp  0x25
 	jr  nz, copcode_25_end
@@ -233,6 +245,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_25_end
 
+	;; OPCODE 0x26
 	;; PLAYER_STILL
 	cp  0x26
 	jr  nz, copcode_26_end
@@ -248,6 +261,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_26_end
 
+	;; OPCODE 0x30
 	;; TILE AT (X, Y) = T
 	cp  0x30
 	jr  nz, copcode_30_end
@@ -264,6 +278,7 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_30_end
 
+	;; OPCODE 0x31
 	;; BEH AT (X, Y) = T
 	cp  0x31
 	jr  nz, copcode_31_end
@@ -280,8 +295,12 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_31_end
 
-	;; UNKNOWN
+	;; OPCODE 0xF0
+	;; TRUE
+	cp  0xf0
+	jr  z, script_clausule
 
+	;; UNKNOWN
 	jp  script_clausule
 
 .skip_clausule
@@ -298,8 +317,8 @@ XDEF _script_result
 	ret z
 
 	;;; Decode OPCODE & jump to interpreter
-	;;; TODO : point HL to special vars in assigns
 
+	;; OPCODE 0x00
 	;; FLAGS[N] = V
 	cp  0x00
 	jr  nz, aopcode_00_end
@@ -309,6 +328,7 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_00_end
 
+	;; OPCODE 0x01
 	;; FLAGS[N] += V
 	cp  0x01
 	jr  nz, aopcode_01_end
@@ -320,6 +340,7 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_01_end
 
+	;; OPCODE 0x02
 	;; FLAGS[N] -= V
 	cp  0x02
 	jr  nz, aopcode_02_end
@@ -331,17 +352,13 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_02_end
 
+	;; OPCODE 0x20
 	;; SET TILE (X, Y) = T
 	cp  0x20
 	jr  nz, aopcode_20_end
 .aopcode_20
 	call read_x_y
 	call read_vbyte 
-	
-	; set_map_tile_do needs
-	; _x, _y -> coordinates,
-	; _t -> tile number, 
-	; _n -> tile beh
 	ld  (__t), a 
 	ld  b, 0
 	ld  c, a 
@@ -358,6 +375,7 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_20_end
 
+	;; OPCODE 0x21
 	;; SET BEH (X, Y) = B
 	cp  0x21
 	jr  nz, aopcode_21_end
@@ -382,6 +400,7 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_21_end
 
+	;; OPCODE 0xE0
 	;; SOUND N
 	cp  0xE0
 	jr  nz, aopcode_E0_end
@@ -393,6 +412,7 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_E0_end
 
+	;; OPCODE 0xE1
 	;; SHOW
 	cp  0xE1
 	jr  nz, aopcode_E1_end
@@ -404,6 +424,7 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_E1_end
 
+	;; OPCODE 0xE2
 	;; RECHARGE
 	cp  0xE2
 	jr  nz, aopcode_E2_end
@@ -415,6 +436,7 @@ XDEF _script_result
 	jp script_actions
 .aopcode_E2_end
 
+	;; OPCODE 0xE4
 	;; EXTERN N M
 	cp  0xE4
 	jr  nz, aopcode_E4_end
@@ -434,6 +456,7 @@ XDEF _script_result
 	jp script_actions
 .aopcode_E4_end
 
+	;; OPCODE 0xE5
 	;; PAUSE N
 	cp  0xE5
 	jr  nz, aopcode_E5_end
@@ -446,6 +469,7 @@ XDEF _script_result
 	jp script_actions
 .aopcode_E5_end
 
+	;; OPCODE 0xF0
 	;; WIN GAME
 	cp  0xf0 
 	jr  nz, aopcode_F0_end
@@ -455,6 +479,7 @@ XDEF _script_result
 	ret
 .aopcode_F0_end
 
+	;; OPCODE 0xF1
 	;; GAME OVER
 	cp  0xf1 
 	jr  nz, aopcode_F1_end
@@ -464,6 +489,7 @@ XDEF _script_result
 	ret
 .aopcode_F1_end
 
+	;; OPCODE 0xF2
 	;; BREAK
 	cp  0xf2
 	jr  nz, aopcode_F2_end
@@ -543,12 +569,51 @@ XDEF _script_result
 ;; Read flag index and value, returns pointer in HL and value in A.
 .read_i_v
 	call read_vbyte  		; Read flag index
-	ld  c, a 
-	ld  b, 0 
+	ld  c, a
 	call read_vbyte 		; Read value
+	ld  (sc_y), a 
+	
+	ld  a, c  				; C = flag index
+	;; Special
+	cp  0xFE
+	jr  z, riv_set_n_pant
+	cp  0xFD
+	jr  z, riv_set_gpx
+	cp  0xFC
+	jr  z, riv_set_gpy
+	cp  0xFB
+	jr  z, riv_set_player_killed
+	cp  0xFA
+	jr  z, riv_set_player_objs
+	cp  0xF9
+	jr  z, riv_set_player_life
+
+	ld  b, 0 				; BC = flag index
 	ld  hl, _flags
-	add hl, bc  			; HL -> FLAGS[X]
+	add hl, bc 				; HL -> FLAGS [X]
+
+.read_i_v_cont
+	ld  a, (sc_y) 			; A = value
 	ret
+
+.riv_set_n_pant
+	ld  hl, _n_pant
+	jr  read_i_v_cont
+.riv_set_gpx
+	ld  hl, _gpx
+	jr  read_i_v_cont
+.riv_set_gpy
+	ld  hl, _gpy
+	jr  read_i_v_cont
+.riv_set_player_killed
+	ld  hl, _player + 32	; player.killed
+	jr  read_i_v_cont
+.riv_set_player_objs
+	ld  hl, _player + 27	; player.objs
+	jr  read_i_v_cont
+.riv_set_player_life
+	ld  hl, _player + 29	; player.life LSB
+	jr  read_i_v_cont
 
 .script_bytecode
 	BINARY "perils.spt.bin"
