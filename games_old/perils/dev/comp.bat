@@ -44,13 +44,17 @@ goto :compile
 
 :compile 
 
-rem echo Making script
-rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
+echo Making script
+cd ..\script
+..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm
+copy script.spt.bin ..\dev > nul
+move msc4i.asm ..\dev > nul
+cd ..\dev
 
 if [%om%]==[cpc] goto :cpc
 
-zcc +zx -m -vn churromain.c msc4i.asm -o %game%.bin -lsplib2 -zorg=24200  > nul
-zcc +zx -a -vn churromain.c msc4i.asm -o %game%.asm -lsplib2 -zorg=24200  > nul
+zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
+zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin
@@ -67,8 +71,8 @@ goto :noerror
 ..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul 2> nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c msc4i.asm -DCPC -DMODE_%mode% > nul
-zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c msc4i.asm -DCPC -DMODE_%mode% > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

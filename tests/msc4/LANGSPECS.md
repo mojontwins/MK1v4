@@ -66,9 +66,9 @@ Para que el compilador sea fácil de programar y modificar, me haré un `outputA
 Como los valores que se manejan en un juego puede ser como máximo 240 (posición X mayor) y $FF marca indirección, tenemos aún 13 variables especiales:
 
 $FE = NPANT = n_pant
-$FD = PLAYER_X = gpx
-$FC = PLAYER_Y = gpy
-$FB = ENEMS_KILLED = player.killed
+$FD = PX = gpx
+$FC = PY = gpy
+$FB = KILLED = player.killed
 $FA = OBJS = player.objs
 $F9 = LIFE = player.life
 
@@ -205,3 +205,7 @@ TODO: `PRINT_TILE_AT`
 # Haciendo esto
 
 Primero voy a crear la parte de intérprete que compile una sección hasta `END`, con todas las cláusulas que se encuentre, y genere una cadena con la sección completa.
+
+## El número de pantallas
+
+Pensaba que era posible obviar que el compilador supiera el número máximo de pantallas pero no es posible. Hace falta para el índice. Se especificará como parámetro de msc4 pero además podrá modificarse desde el propios cript con ROOMS = N como directiva especial.

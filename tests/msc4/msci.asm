@@ -140,11 +140,6 @@
 	jp  script_clausule
 .copcode_23_end
 
-;; OPCODE 0xF0
-;; TRUE
-	cp  0xf0
-	jr  z, script_clausule
-
 ;; UNKNOWN
 	jp  script_clausule
 
@@ -162,6 +157,16 @@
 	ret z
 
 ;;; Decode OPCODE & jump to interpreter
+
+;; OPCODE 0x00
+;; FLAGS[N] = V
+	cp  0x00
+	jr  nz, aopcode_00_end
+.aopcode_00
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  (hl), a
+	jp  script_actions
+.aopcode_00_end
 
 ;; OPCODE 0x20
 ;; SET TILE (X, Y) = T
@@ -218,44 +223,25 @@
 .read_vbyte_rec
 	call read_vbyte
 
-;; Special
+; NPANT RVALUE
 	cp  0xFE
-	jr  z, rvb_set_n_pant
-	cp  0xFD
-	jr  z, rvb_set_gpx
-	cp  0xFC
-	jr  z, rvb_set_gpy
+	jr  nz, rvb_set_n_pant_done
+	ld  a, (_n_pant)
+	ret
+.rvb_set_n_pant_done
+
+; KILLED RVALUE
 	cp  0xFB
-	jr  z, rvb_set_player_killed
-	cp  0xFA
-	jr  z, rvb_set_player_objs
-	cp  0xF9
-	jr  z, rvb_set_player_life
+	jr  nz, rvb_set_player_killed_done
+	ld  a, (_player + 32) 	; player.killed
+	ret
+.rvb_set_player_killed_done
 
 	ld  d, 0
 	ld  e, a
 	ld  hl, _flags
 	add hl, de
 	ld  a, (hl)
-	ret
-
-.rvb_set_n_pant
-	ld  a, (_n_pant)
-	ret
-.rvb_set_gpx
-	ld  a, (_gpx)
-	ret
-.rvb_set_gpy
-	ld  a, (_gpy)
-	ret
-.rvb_set_player_killed
-	ld  a, (_player + 32) 	; player.killed
-	ret
-.rvb_set_player_objs
-	ld  a, (_player + 27) 	; player.objs
-	ret
-.rvb_set_player_life
-	ld  a, (_player + 29) 	; player.life MSB
 	ret
 
 .read_x_y
@@ -273,19 +259,13 @@
 	ld  (sc_y), a
 
 	ld  a, c  				; C = flag index
-;; Special
-	cp  0xFE
-	jr  z, riv_set_n_pant
-	cp  0xFD
-	jr  z, riv_set_gpx
-	cp  0xFC
-	jr  z, riv_set_gpy
+
+; KILLED LVALUE
 	cp  0xFB
-	jr  z, riv_set_player_killed
-	cp  0xFA
-	jr  z, riv_set_player_objs
-	cp  0xF9
-	jr  z, riv_set_player_life
+	jr  nz, riv_set_player_killed_done
+	ld  hl, _player + 32	; player.killed
+	jr  read_i_v_cont
+.riv_set_player_killed_done
 
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags
@@ -294,23 +274,4 @@
 .read_i_v_cont
 	ld  a, (sc_y) 			; A = value
 	ret
-
-.riv_set_n_pant
-	ld  hl, _n_pant
-	jr  read_i_v_cont
-.riv_set_gpx
-	ld  hl, _gpx
-	jr  read_i_v_cont
-.riv_set_gpy
-	ld  hl, _gpy
-	jr  read_i_v_cont
-.riv_set_player_killed
-	ld  hl, _player + 32	; player.killed
-	jr  read_i_v_cont
-.riv_set_player_objs
-	ld  hl, _player + 27	; player.objs
-	jr  read_i_v_cont
-.riv_set_player_life
-	ld  hl, _player + 29	; player.life LSB
-	jr  read_i_v_cont
 

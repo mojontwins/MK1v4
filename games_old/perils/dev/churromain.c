@@ -8,6 +8,7 @@
 #include "config.h"
 
 #asm
+	XDEF script_bytecode
 	XDEF _attr_2
 	XDEF qtile_do
 	XDEF set_map_tile_do

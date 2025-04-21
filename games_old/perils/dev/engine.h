@@ -917,6 +917,8 @@ void move (void) {
 				player.vy = -pvy_total;
 			}
 
+			peta_el_beeper (2);
+
 			player.drain_amount = 1;
 			player.is_dead = PLAYER_KILLED_BY_BG;
 		}

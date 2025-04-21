@@ -15,7 +15,7 @@ Dim Shared As Integer curLineNo
 Dim Shared As String aliases (128)
 Dim Shared As Integer curAliasIndex = 0
 
-Dim Shared As Integer AU (255), CU (255)
+Dim Shared As Integer AU (255), CU (255), LV (255), RV (255)
 
 Dim Shared As Integer sectOffs (255)
 Dim Shared As UByte sectBinary (16383)
@@ -26,6 +26,7 @@ Dim Shared As Integer outV = 3
 Dim Shared AS Integer outT = SPECCY
 
 Dim Shared As String interpreterFn
+Dim Shared As Integer maxPants
 
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
@@ -120,11 +121,11 @@ Sub parseScriptLine (linea As String)
 			tokens (i) = "$" & addOrResolveAlias (Right (tokens (i), Len (tokens (i)) - 1))
 		ElseIf Ucase(tokens(i)) = "NPANT" Or Ucase(tokens (i)) = "N_PANT" Then
 			tokens (i) = "$254"
-		ElseIf Ucase(tokens (i)) = "PLAYER_X" Then 
+		ElseIf Ucase(tokens (i)) = "PX" Then 
 			tokens (i) = "$253"
-		ElseIf Ucase(tokens (i)) = "PLAYER_Y" Then 
+		ElseIf Ucase(tokens (i)) = "PY" Then 
 			tokens (i) = "$252"
-		ElseIf Ucase(tokens (i)) = "ENEMS_KILLED" Then 
+		ElseIf Ucase(tokens (i)) = "KILLED" Then 
 			tokens (i) = "$251" 
 		ElseIf Ucase(tokens (i)) = "OBJS" Then
 			tokens (i) = "$250"
@@ -242,6 +243,19 @@ Function pVal (expresion As String) As String
 		Return Chr (&HFF) & pVal (Right (expresion, Len (expresion) - 1)) 
 	Else
 		If Val (expresion) <= 254 Then 
+			RV (Val (expresion)) = -1
+			Return Chr (Val (expresion)) 
+		Else 
+			Print "Wrong value @ " & curLineNo
+		End If
+	End If
+End Function
+
+Function lValR(expresion As String) As String 
+	If Len (expresion) > 1 And Left (expresion, 1) = "$" Then 
+		Return Chr (&HFF) & pVal (Right (expresion, Len (expresion) - 1)) 
+	Else
+		If Val (expresion) <= 254 Then 
 			Return Chr (Val (expresion)) 
 		Else 
 			Print "Wrong value @ " & curLineNo
@@ -250,9 +264,12 @@ Function pVal (expresion As String) As String
 End Function
 
 Function lVal (expresion As String) As String
+	Dim As String value
 	' Used for lValues such as $A = B, so first $ is ignored.
-	If correctLvalue (expresion) Then 
-		Return pVal (Right (expresion, Len (expresion) - 1))
+	If correctLvalue (expresion) Then
+		value = lValR (Right (expresion, Len (expresion) - 1))
+		LV (Asc (Right (value, 1))) = -1
+		Return value
 	Else
 		Print "Expecting lValue @ " & curLineNo
 	End If
@@ -649,14 +666,13 @@ End Sub
 Sub processScript (fIn As Integer)
 	Dim As String linea
 	Dim As String sectionBytecode
-	Dim As Integer section, i, lastSection
+	Dim As Integer section, i
 	Dim As Integer listToken, cError
 	Dim As Integer sectOffset
 	Dim As String listRooms (127)
 
 	sectBinIdx = 0
-	lastSection = 0
-
+	
 	For i = 0 To uBound (sectOffs)
 		sectOffs (i) = -1
 	Next i
@@ -675,7 +691,10 @@ Sub processScript (fIn As Integer)
 			listRooms (0) = ""
 			cError = 0
 
-			If startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
+			If tokens (0) = "rooms" Then 
+				maxPants = Val(tokens (2))
+
+			ElseIf startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
 				' Find comma separated list
 				If tokens (0) = "entering" Then 
 					listToken = 2 
@@ -724,7 +743,6 @@ Sub processScript (fIn As Integer)
 			i = 0: While i < uBound (listRooms) And listRooms (i) <> ""
 				If isNumber (listRooms (i)) Then
 					section = Val (listRooms (i))
-					If section > lastSection Then lastSection = section
 					If debug Then Print "Adding " & sectBinIdx & " @ sect " & section
 					sectOffs (section) = sectBinIdx
 				Else
@@ -745,16 +763,18 @@ Sub processScript (fIn As Integer)
 		End If
 	Wend
 
-	' Output binary = minimal index with adjusted offsets, then main binary 
-	' Index size = 2 * (1 + max Index). Also write index
+	' Output binary = index with adjusted offsets, then main binary 
+	' Index size = 2 * (8 + max_pants). Also write index
 
 	mainBinIdx = 0
 
-	For i = 0 To lastSection
+	If maxPants = 0 Then Print "WARNING! undefined # of rooms! The script won't work!"
+
+	For i = 0 To 8 + maxPants * 2 - 1
 		If sectOffs (i) < 0 Then 
 			sectOffs (i) = 0 
 		Else 
-			sectOffs (i) = sectOffs (i) + 2 * (lastSection + 1)
+			sectOffs (i) = sectOffs (i) + (8 + maxPants * 2) * 2
 		End If
 		WriteToMainBin sectOffs (i) Mod 256
 		WriteToMainBin sectOffs (i) \ 256
@@ -789,12 +809,13 @@ End Sub
 Sub usage
 	Print "usage:"
 	Print ""
-	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx [interpreter=msci.asm]"
+	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N [interpreter=msci.asm]"
 	Print "         in is [a list of|the] input filename."
 	Print "           msc4 will generate a f.bin per input,"
 	Print "           but only one common interpreter."
 	Print "         v is the MK1 base version, 3, 4, or 5"
 	Print "         target is the target OM (zx or cpc)"
+	Print "         rooms is the total of rooms in the map"
 	Print "         interpreter for custom interpreter filename"
 End Sub
 
@@ -824,6 +845,7 @@ outT = SPECCY: If sclpGetValue("target") = "cpc" Then outT = CPC
 
 i = 0: While i < 127 And fileIns(i) <> ""
 	curLineNo = 0
+	maxPants = Val (sclpGetValue ("rooms"))
 
 	fIn = FreeFile
 	Open fileIns(i) For Input As #fIn
@@ -884,7 +906,7 @@ If CU(&H25) Then writeAssemblyString fOut, ";; OPCODE 0x25|;; IF PLAYER NOT FALL
 If CU(&H26) Then writeAssemblyString fOut, ";; OPCODE 0x26|;; PLAYER_STILL|cp  0x26|jr  nz, copcode_26_end|.copcode_26|ld  a, (_player + 6) 	; player.vx LSB|ld  hl, (_player + 7)	; player.vx MSB|or  (hl)|ld  hl, (_player + 8) 	; player.vy LSB|or  (hl)|ld  hl, (_player + 9) 	; player.vy MSB|or  (hl)|jp  nz, skip_clausule|jp  script_clausule|.copcode_26_end"
 If CU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; TILE AT (X, Y) = T|cp  0x30|jr  nz, copcode_30_end|.copcode_30|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call _attr_2|ld  c, l|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_30_end"
 If CU(&H31) Then writeAssemblyString fOut, ";; OPCODE 0x31|;; BEH AT (X, Y) = T|cp  0x31|jr  nz, copcode_31_end|.copcode_31|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call qtile_do|ld  c, l|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_31_end"
-If CU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; TRUE|cp  0xf0|jr  z, script_clausule"
+'If CU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; TRUE|cp  0xf0|jr  z, script_clausule"
 
 ''
 
@@ -922,14 +944,23 @@ writeAssemblyString fOut, ";; UNKNOWN|jp script_actions"
 writeAssemblyString fOut, ";; Reads a byte from pointer, inc pointer, return value in A|.read_byte|ld  hl, (script)|ld  a, (hl)|inc hl|ld  (script), hl|ret"
 writeAssemblyString fOut, ";; Reads a value (may be recursive flag), inc pointer, return value in A|;; New flags encoding is $FF means next value is flag (can be $FF, etc)|.read_vbyte|call read_byte|cp  0xff|jr  z, read_vbyte_rec|ret"
 writeAssemblyString fOut, ".read_vbyte_rec|call read_vbyte"
-writeAssemblyString fOut, ";; Special|cp  0xFE|jr  z, rvb_set_n_pant|cp  0xFD|jr  z, rvb_set_gpx|cp  0xFC|jr  z, rvb_set_gpy|cp  0xFB|jr  z, rvb_set_player_killed|cp  0xFA|jr  z, rvb_set_player_objs|cp  0xF9|jr  z, rvb_set_player_life"
+If RV(&HFE) Then writeAssemblyString fOut, "; NPANT RVALUE|cp  0xFE|jr  nz, rvb_set_n_pant_done|ld  a, (_n_pant)|ret|.rvb_set_n_pant_done"
+If RV(&HFD) Then writeAssemblyString fOut, "; PX RVALUE|cp  0xFD|jr  nz, rvb_set_gpx_done|ld  a, (_gpx)|ret|.rvb_set_gpx_done"
+If RV(&HFC) Then writeAssemblyString fOut, "; PY RVALUE|cp  0xFC|jr  nz, rvb_set_gpy_done|ld  a, (_gpy)|ret|.rvb_set_gpy_done"
+If RV(&HFB) Then writeAssemblyString fOut, "; KILLED RVALUE|cp  0xFB|jr  nz, rvb_set_player_killed_done|ld  a, (_player + 32) 	; player.killed|ret|.rvb_set_player_killed_done"
+If RV(&HFA) Then writeAssemblyString fOut, "; OBJS RVALUE|cp  0xFA|jr  nz, rvb_set_player_objs_done|ld  a, (_player + 27) 	; player.objs|ret|.rvb_set_player_objs_done"
+If RV(&HF9) Then writeAssemblyString fOut, "; LIFE RVALUE|cp  0xF9|jr  nz, rvb_set_player_life_done|ld  a, (_player + 29) 	; player.life MSB|ret|.rvb_set_player_life_done"
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
-writeAssemblyString fOut, ".rvb_set_n_pant|ld  a, (_n_pant)|ret|.rvb_set_gpx|ld  a, (_gpx)|ret|.rvb_set_gpy|ld  a, (_gpy)|ret|.rvb_set_player_killed|ld  a, (_player + 32) 	; player.killed|ret|.rvb_set_player_objs|ld  a, (_player + 27) 	; player.objs|ret|.rvb_set_player_life|ld  a, (_player + 29) 	; player.life MSB|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
 writeAssemblyString fOut, ";; Read flag index and value, returns pointer in HL and value in A.|.read_i_v|call read_vbyte  		; Read flag index|ld  c, a|call read_vbyte 		; Read value|ld  (sc_y), a"
-writeAssemblyString fOut, "ld  a, c  				; C = flag index|;; Special|cp  0xFE|jr  z, riv_set_n_pant|cp  0xFD|jr  z, riv_set_gpx|cp  0xFC|jr  z, riv_set_gpy|cp  0xFB|jr  z, riv_set_player_killed|cp  0xFA|jr  z, riv_set_player_objs|cp  0xF9|jr  z, riv_set_player_life"
+writeAssemblyString fOut, "ld  a, c  				; C = flag index"
+If LV(&HFE) Then writeAssemblyString fOut, "; NPANT LVALUE|cp  0xFE|jr  nz, riv_set_n_pant_done|ld  hl, _n_pant|jr  read_i_v_cont|.riv_set_n_pant_done"
+If LV(&HFD) Then writeAssemblyString fOut, "; PX LVALUE|cp  0xFD|jr  nz, riv_set_gpx_done|ld  hl, _gpx|jr  read_i_v_cont|.riv_set_gpx_done"
+If LV(&HFC) Then writeAssemblyString fOut, "; PY LVALUE|cp  0xFC|jr  nz, riv_set_gpy_done|ld  hl, _gpy|jr  read_i_v_cont|.riv_set_gpy_done"
+If LV(&HFB) Then writeAssemblyString fOut, "; KILLED LVALUE|cp  0xFB|jr  nz, riv_set_player_killed_done|ld  hl, _player + 32	; player.killed|jr  read_i_v_cont|.riv_set_player_killed_done"
+If LV(&HFA) Then writeAssemblyString fOut, "; OBJS LVALUE|cp  0xFA|jr  nz, riv_set_player_objs_done|ld  hl, _player + 27	; player.objs|jr  read_i_v_cont|.riv_set_player_objs_done"
+If LV(&HF9) Then writeAssemblyString fOut, "; LIFE LVALUE|cp  0xF9|jr  nz, riv_set_player_life_done|ld  hl, _player + 29	; player.life LSB|jr  read_i_v_cont|.riv_set_player_life_done"
 writeAssemblyString fOut, "ld  b, 0 				; BC = flag index|ld  hl, _flags|add hl, bc 				; HL -> FLAGS [X]"
 writeAssemblyString fOut, ".read_i_v_cont|ld  a, (sc_y) 			; A = value|ret"
-writeAssemblyString fOut, ".riv_set_n_pant|ld  hl, _n_pant|jr  read_i_v_cont|.riv_set_gpx|ld  hl, _gpx|jr  read_i_v_cont|.riv_set_gpy|ld  hl, _gpy|jr  read_i_v_cont|.riv_set_player_killed|ld  hl, _player + 32	; player.killed|jr  read_i_v_cont|.riv_set_player_objs|ld  hl, _player + 27	; player.objs|jr  read_i_v_cont|.riv_set_player_life|ld  hl, _player + 29	; player.life LSB|jr  read_i_v_cont"
 
 Close #fOut

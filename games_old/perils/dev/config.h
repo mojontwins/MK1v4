@@ -6,6 +6,7 @@
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
 #define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
+#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
 
 // ============================================================================
 // I. General configuration

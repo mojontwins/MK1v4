@@ -347,9 +347,11 @@ void system_init (void) {
 
 		#if defined MODE_1 && defined AUTO_SPLIT
 				// Set hud pal
-				ld  a, (_playing)
-				or  a 
-				jr  z, isr_nohud
+			#ifndef ALWAYS_SPLIT
+					ld  a, (_playing)
+					or  a 
+					jr  z, isr_nohud
+			#endif
 				call pal_hud
 			.isr_nohud
 		#endif
@@ -371,9 +373,11 @@ void system_init (void) {
 		#if defined MODE_1 && defined AUTO_SPLIT
 	
 			._set_game_pal
-				ld  a, (_playing)
-				or  a 
-				jr  z, isr_nosplit
+			#ifndef ALWAYS_SPLIT
+					ld  a, (_playing)
+					or  a 
+					jr  z, isr_nosplit
+			#endif
 			
 			.inject_pal
 				call pal_general						// This will be modified, don't worry :)

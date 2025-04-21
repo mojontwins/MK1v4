@@ -18,9 +18,16 @@ extern unsigned char s_ending [];
 
 void title_screen (void) {
 	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
-		#asm
-			call pal_general
-		#endasm
+		#ifdef ALWAYS_SPLIT
+			#asm
+					ld  hl, pal_general
+					ld  (inject_pal + 1), hl
+			#endasm 
+		#else
+			#asm
+					call pal_general
+			#endasm
+		#endif
 	#endif
 
 	#ifndef CPC
@@ -55,9 +62,16 @@ void title_screen (void) {
 
 void game_ending (void) {
 	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
-		#asm
-			call pal_general
-		#endasm
+		#ifdef ALWAYS_SPLIT
+			#asm
+					ld  hl, pal_general
+					ld  (inject_pal + 1), hl
+			#endasm 
+		#else
+			#asm
+					call pal_general
+			#endasm
+		#endif
 	#endif
 
 	#ifdef SPECCY 

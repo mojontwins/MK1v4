@@ -12,8 +12,13 @@
 extern unsigned char script_n;
 extern unsigned char script_result;
 
-void script_do ();
+extern void script_do (void);
 
 void do_extern_action (unsigned char n, unsigned char m) {
 
 }
+
+#asm
+	.script_bytecode
+		BINARY "script.spt.bin"
+#endasm
