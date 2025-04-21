@@ -694,71 +694,74 @@ Sub processScript (fIn As Integer)
 			If tokens (0) = "rooms" Then 
 				maxPants = Val(tokens (2))
 
-			ElseIf startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
-				' Find comma separated list
-				If tokens (0) = "entering" Then 
-					listToken = 2 
-					sectOffset = 8
-				Else 
-					listToken = 4
-					sectOffset = 9
+			Else
+				If startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
+					' Find comma separated list
+					If tokens (0) = "entering" Then 
+						listToken = 2 
+						sectOffset = 8
+					Else 
+						listToken = 4
+						sectOffset = 9
+					End If
+
+					' Now adjust. 
+					' Enter is 8 + N * 2
+					' Fire is 9 + N * 2
+					i = 0: While i + listToken < uBound (tokens) And tokens (i + listToken) <> ""
+						listRooms (i) = tokens (i + listToken)
+						If isNumber (listRooms (i)) Then 
+							listRooms (i) = Str (Val (listRooms (i)) * 2 + sectOffset)
+						End If
+						i = i + 1
+					Wend
+				Else
+					' Special sections
+					section = -1
+
+					If startsWith (tokens (), "entering game") Then
+						section = 0
+
+					ElseIf startsWith (tokens (), "entering any") Then 
+						section = 1
+					
+					ElseIf startsWith (tokens (), "press fire at any") Then
+						section = 2
+					
+					ElseIf startsWith (tokens (), "player gets coin") Then
+						section = 3
+					
+					ElseIf startsWith (tokens (), "player kills enemy") Then 
+						section = 4
+					
+					End If
+
+					listRooms (0) = Str(section)
+					listRooms (1) = ""
 				End If
 
-				' Now adjust. 
-				' Enter is 8 + N * 2
-				' Fire is 9 + N * 2
-				i = 0: While i + listToken < uBound (tokens) And tokens (i + listToken) <> ""
-					listRooms (i) = tokens (i + listToken)
-					If isNumber (listRooms (i)) Then 
-						listRooms (i) = Str (Val (listRooms (i)) * 2 + sectOffset)
+				' Write current binary address to index
+				i = 0: While i < uBound (listRooms) And listRooms (i) <> ""
+					If isNumber (listRooms (i)) Then
+						section = Val (listRooms (i))
+						If debug Then Print "Adding " & sectBinIdx & " @ sect " & section
+						sectOffs (section) = sectBinIdx
+					Else
+						Print "Wrong section at " & curLineNo
+						cError = -1
 					End If
+
 					i = i + 1
 				Wend
-			Else
-				' Special sections
-				section = -1
 
-				If startsWith (tokens (), "entering game") Then
-					section = 0
+				If Not cError Then 
+					' Parse current section
+					sectionBytecode = processCurrentSection (fIn)
+					If debug Then Print "Bytecode: ";: printBinStr sectionBytecode
 
-				ElseIf startsWith (tokens (), "entering any") Then 
-					section = 1
-				
-				ElseIf startsWith (tokens (), "press fire at any") Then
-					section = 2
-				
-				ElseIf startsWith (tokens (), "player gets coin") Then
-					section = 3
-				
-				ElseIf startsWith (tokens (), "player kills enemy") Then 
-					section = 4
-				
+					' Write to binary
+					writeToSectBinary sectionBytecode
 				End If
-
-				listRooms (0) = Str(section)
-				listRooms (1) = ""
-			End If
-
-			' Write current binary address to index
-			i = 0: While i < uBound (listRooms) And listRooms (i) <> ""
-				If isNumber (listRooms (i)) Then
-					section = Val (listRooms (i))
-					If debug Then Print "Adding " & sectBinIdx & " @ sect " & section
-					sectOffs (section) = sectBinIdx
-				Else
-					Print "Wrong section at " & curLineNo
-					cError = -1
-				End If
-
-				i = i + 1
-			Wend
-
-			If Not cError Then 
-				' Parse current section
-				sectionBytecode = processCurrentSection (fIn)
-
-				' Write to binary
-				writeToSectBinary sectionBytecode
 			End If
 		End If
 	Wend

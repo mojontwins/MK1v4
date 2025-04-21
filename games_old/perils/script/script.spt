@@ -1,19 +1,12 @@
 ROOMS = 24
 
-ENTERING GAME
-	IF TRUE
-	THEN
-		KILLED = 0
-	END 
-END
-
 ENTERING SCREEN 20
 	IF TRUE 
 	THEN
 		SET TILE (1, 8) = 17	# Draw door
 	END
 
-	IF ENEMS_KILLED = 60 		# Remove blockade
+	IF ENEMS_KILLED = 1 		# Remove blockade
 	THEN
 		SET TILE (2, 7) = 0
 		SET TILE (2, 8) = 0
@@ -29,7 +22,7 @@ END
 
 PLAYER KILLS ENEMY
 	IF NPANT = 20
-	IF KILLED = 60
+	IF KILLED = 1
 	THEN 
 		SET TILE (2, 7) = 0
 		SET TILE (2, 8) = 0

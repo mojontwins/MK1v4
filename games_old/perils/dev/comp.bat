@@ -46,7 +46,7 @@ goto :compile
 
 echo Making script
 cd ..\script
-..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm
+..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm debug
 copy script.spt.bin ..\dev > nul
 move msc4i.asm ..\dev > nul
 cd ..\dev

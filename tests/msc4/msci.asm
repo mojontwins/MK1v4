@@ -260,13 +260,6 @@
 
 	ld  a, c  				; C = flag index
 
-; KILLED LVALUE
-	cp  0xFB
-	jr  nz, riv_set_player_killed_done
-	ld  hl, _player + 32	; player.killed
-	jr  read_i_v_cont
-.riv_set_player_killed_done
-
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags
 	add hl, bc 				; HL -> FLAGS [X]

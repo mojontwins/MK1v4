@@ -158,16 +158,6 @@
 
 ;;; Decode OPCODE & jump to interpreter
 
-;; OPCODE 0x00
-;; FLAGS[N] = V
-	cp  0x00
-	jr  nz, aopcode_00_end
-.aopcode_00
-	call read_i_v		; HL -> FLAGS[N], A -> V
-	ld  (hl), a
-	jp  script_actions
-.aopcode_00_end
-
 ;; OPCODE 0x20
 ;; SET TILE (X, Y) = T
 	cp  0x20
@@ -259,13 +249,6 @@
 	ld  (sc_y), a
 
 	ld  a, c  				; C = flag index
-
-; KILLED LVALUE
-	cp  0xFB
-	jr  nz, riv_set_player_killed_done
-	ld  hl, _player + 32	; player.killed
-	jr  read_i_v_cont
-.riv_set_player_killed_done
 
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags
