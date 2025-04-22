@@ -936,6 +936,34 @@ void move (void) {
 		#endif
 	#endif
 
+	#ifdef ACTIVATE_SCRIPTING
+		#asm 
+				ld  a, (_gpx)
+				add 8
+				srl a 
+				srl a 
+				srl a 
+				srl a 
+				ld  c, a 
+
+				ld  a, (_gpy)
+				add 8
+				srl a 
+				srl a 
+				srl a 
+				srl a 
+				
+				call _attr_2 
+				ld  a, 128
+				and a 
+				jr  z, nospecial
+
+				ld  hl, SC_SPECIAL_TILE_TOUCHED
+				call _script
+			.nospecial
+		#endasm 
+	#endif
+
 	// =================================================
 	//                       Select frame
 	// =================================================
@@ -1605,12 +1633,10 @@ void draw_scr (void) {
 
 		#ifdef ACTIVATE_SCRIPTING
 			// Run "ENTERING ANY" script (if available)
-			script_n = SC_ENTERING_ANY;
-			script_do ();
+			script (SC_ENTERING_ANY);
 
 			// Run "ENTERING" script for THIS screen (if available)
-			script_n = SC_ENTERING_SCREEN + (n_pant << 1);
-			script_do ();
+			script (SC_ENTERING_SCREEN + (n_pant << 1));
 		#endif
 
 		#ifdef PLAYER_CAN_FIRE
@@ -1716,8 +1742,7 @@ void draw_scr (void) {
 			player.killed ++;
 
 			#ifdef ACTIVATE_SCRIPTING
-				script_n = SC_PLAYER_KILLS_ENEMY;
-				script_do ();
+				script (SC_PLAYER_KILLS_ENEMY);
 			#endif								
 
 			#ifdef RANDOM_RESPAWN								

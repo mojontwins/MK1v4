@@ -155,9 +155,11 @@
 // 4 = Platform (only stops player if falling on it)
 // 8 = Full obstacle (blocks player from all directions)
 
+// 128|N = Special tile (scripting)
+
 unsigned char comportamiento_tiles [] = {
 	0, 0, 0, 0, 8, 8, 8, 8, 0, 8, 0, 0, 9, 8, 8, 8,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	0,128,128,0,128,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes

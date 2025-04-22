@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Apr 16 23:39:53 2025
+;	Module compile time: Tue Apr 22 12:32:19 2025
 
 
 
@@ -115,18 +115,1237 @@
 ;	SECTION	code
 
 
-	XDEF _ts
-	XDEF tiles
 	._tileset
-	.tiles
-	._font
-	BINARY "font.bin"
-	._tspatterns
-	BINARY "work.bin"
-	._sprites
-	BINARY "sprites.bin"
+	BINARY "tileset.bin"
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_1_a
+	defb 2, 248
+	defb 5, 240
+	defb 10, 224
+	defb 5, 224
+	defb 9, 224
+	defb 69, 0
+	defb 8, 0
+	defb 86, 0
+	defb 44, 128
+	defb 16, 196
+	defb 24, 192
+	defb 27, 192
+	defb 3, 248
+	defb 3, 248
+	defb 3, 248
+	defb 3, 248
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_1_b
+	defb 160, 15
+	defb 84, 3
+	defb 168, 3
+	defb 100, 3
+	defb 104, 3
+	defb 240, 15
+	defb 64, 15
+	defb 224, 15
+	defb 0, 7
+	defb 0, 15
+	defb 12, 3
+	defb 36, 3
+	defb 96, 31
+	defb 96, 31
+	defb 96, 31
+	defb 176, 15
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_1_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_2_a
+	defb 1, 252
+	defb 2, 248
+	defb 5, 240
+	defb 2, 240
+	defb 36, 16
+	defb 66, 0
+	defb 40, 0
+	defb 17, 132
+	defb 0, 252
+	defb 0, 248
+	defb 3, 240
+	defb 7, 240
+	defb 103, 0
+	defb 94, 1
+	defb 64, 63
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_2_b
+	defb 80, 7
+	defb 170, 1
+	defb 84, 1
+	defb 178, 1
+	defb 180, 1
+	defb 248, 7
+	defb 32, 7
+	defb 152, 3
+	defb 198, 1
+	defb 126, 1
+	defb 0, 15
+	defb 136, 7
+	defb 28, 3
+	defb 6, 241
+	defb 7, 240
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_2_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_3_a
+	defb 5, 240
+	defb 42, 192
+	defb 21, 192
+	defb 38, 192
+	defb 22, 192
+	defb 15, 240
+	defb 2, 240
+	defb 7, 240
+	defb 0, 224
+	defb 0, 240
+	defb 48, 192
+	defb 36, 192
+	defb 6, 248
+	defb 6, 248
+	defb 6, 248
+	defb 13, 240
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_3_b
+	defb 64, 31
+	defb 160, 15
+	defb 80, 7
+	defb 160, 7
+	defb 144, 7
+	defb 162, 0
+	defb 16, 0
+	defb 106, 0
+	defb 52, 1
+	defb 8, 35
+	defb 24, 3
+	defb 216, 3
+	defb 192, 31
+	defb 192, 31
+	defb 192, 31
+	defb 192, 31
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_3_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_4_a
+	defb 10, 224
+	defb 85, 128
+	defb 42, 128
+	defb 77, 128
+	defb 45, 128
+	defb 31, 224
+	defb 4, 224
+	defb 25, 192
+	defb 99, 128
+	defb 126, 128
+	defb 0, 240
+	defb 17, 224
+	defb 56, 192
+	defb 96, 143
+	defb 224, 15
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_4_b
+	defb 128, 63
+	defb 64, 31
+	defb 160, 15
+	defb 64, 15
+	defb 36, 8
+	defb 66, 0
+	defb 20, 0
+	defb 136, 33
+	defb 0, 63
+	defb 0, 31
+	defb 192, 15
+	defb 224, 15
+	defb 230, 0
+	defb 122, 128
+	defb 2, 252
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_4_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_5_a
+	defb 0, 248
+	defb 5, 240
+	defb 10, 224
+	defb 21, 192
+	defb 10, 192
+	defb 20, 192
+	defb 10, 192
+	defb 21, 192
+	defb 10, 192
+	defb 48, 128
+	defb 38, 128
+	defb 55, 128
+	defb 51, 128
+	defb 0, 204
+	defb 1, 252
+	defb 0, 252
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_5_b
+	defb 0, 63
+	defb 64, 31
+	defb 160, 15
+	defb 80, 7
+	defb 168, 3
+	defb 0, 3
+	defb 168, 3
+	defb 80, 1
+	defb 166, 0
+	defb 6, 0
+	defb 48, 1
+	defb 112, 7
+	defb 0, 15
+	defb 96, 15
+	defb 96, 15
+	defb 112, 7
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_5_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_6_a
+	defb 0, 252
+	defb 2, 248
+	defb 5, 240
+	defb 10, 224
+	defb 21, 192
+	defb 0, 192
+	defb 21, 192
+	defb 10, 128
+	defb 101, 0
+	defb 96, 0
+	defb 12, 128
+	defb 14, 224
+	defb 0, 240
+	defb 6, 240
+	defb 6, 240
+	defb 14, 224
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_6_b
+	defb 0, 31
+	defb 160, 15
+	defb 80, 7
+	defb 168, 3
+	defb 80, 3
+	defb 40, 3
+	defb 80, 3
+	defb 168, 3
+	defb 80, 3
+	defb 12, 1
+	defb 100, 1
+	defb 236, 1
+	defb 204, 1
+	defb 0, 51
+	defb 128, 63
+	defb 0, 63
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_6_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_7_a
+	defb 0, 248
+	defb 5, 240
+	defb 10, 224
+	defb 17, 192
+	defb 5, 192
+	defb 21, 192
+	defb 11, 192
+	defb 16, 192
+	defb 3, 192
+	defb 48, 128
+	defb 38, 128
+	defb 55, 128
+	defb 51, 128
+	defb 3, 200
+	defb 3, 248
+	defb 7, 240
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_7_b
+	defb 0, 63
+	defb 64, 15
+	defb 32, 7
+	defb 144, 7
+	defb 200, 3
+	defb 208, 3
+	defb 232, 3
+	defb 144, 1
+	defb 110, 0
+	defb 6, 0
+	defb 48, 0
+	defb 112, 7
+	defb 96, 15
+	defb 0, 31
+	defb 64, 31
+	defb 0, 63
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_7_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_8_a
+	defb 0, 252
+	defb 2, 240
+	defb 4, 224
+	defb 9, 224
+	defb 19, 192
+	defb 11, 192
+	defb 23, 192
+	defb 9, 128
+	defb 118, 0
+	defb 96, 0
+	defb 12, 0
+	defb 14, 224
+	defb 6, 240
+	defb 0, 248
+	defb 2, 248
+	defb 0, 252
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_8_b
+	defb 0, 31
+	defb 160, 15
+	defb 80, 7
+	defb 136, 3
+	defb 160, 3
+	defb 168, 3
+	defb 208, 3
+	defb 8, 3
+	defb 192, 3
+	defb 12, 1
+	defb 100, 1
+	defb 236, 1
+	defb 204, 1
+	defb 192, 19
+	defb 192, 31
+	defb 224, 15
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_8_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_9_a
+	defb 0, 248
+	defb 7, 240
+	defb 15, 224
+	defb 31, 192
+	defb 15, 192
+	defb 27, 192
+	defb 14, 192
+	defb 7, 224
+	defb 0, 240
+	defb 15, 224
+	defb 19, 192
+	defb 29, 192
+	defb 1, 224
+	defb 4, 240
+	defb 12, 224
+	defb 8, 225
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_9_b
+	defb 0, 31
+	defb 224, 15
+	defb 240, 7
+	defb 248, 3
+	defb 248, 3
+	defb 232, 3
+	defb 184, 3
+	defb 112, 7
+	defb 0, 15
+	defb 224, 15
+	defb 224, 15
+	defb 224, 15
+	defb 224, 15
+	defb 176, 7
+	defb 144, 7
+	defb 24, 3
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_9_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_10_a
+	defb 0, 248
+	defb 7, 240
+	defb 15, 224
+	defb 31, 192
+	defb 31, 192
+	defb 23, 192
+	defb 29, 192
+	defb 14, 224
+	defb 0, 240
+	defb 7, 240
+	defb 7, 240
+	defb 7, 240
+	defb 7, 240
+	defb 13, 224
+	defb 9, 224
+	defb 24, 192
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_10_b
+	defb 0, 31
+	defb 224, 15
+	defb 240, 7
+	defb 248, 3
+	defb 240, 3
+	defb 216, 3
+	defb 112, 3
+	defb 224, 7
+	defb 0, 15
+	defb 240, 7
+	defb 200, 3
+	defb 184, 3
+	defb 128, 7
+	defb 32, 15
+	defb 48, 7
+	defb 16, 135
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_10_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_11_a
+	defb 0, 255
+	defb 3, 252
+	defb 4, 248
+	defb 8, 240
+	defb 16, 224
+	defb 17, 224
+	defb 19, 224
+	defb 19, 224
+	defb 51, 192
+	defb 65, 128
+	defb 160, 0
+	defb 80, 32
+	defb 80, 32
+	defb 145, 96
+	defb 16, 224
+	defb 16, 224
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_11_b
+	defb 0, 255
+	defb 224, 31
+	defb 16, 15
+	defb 168, 7
+	defb 4, 3
+	defb 228, 3
+	defb 84, 3
+	defb 244, 3
+	defb 6, 1
+	defb 225, 0
+	defb 5, 0
+	defb 5, 0
+	defb 6, 1
+	defb 136, 7
+	defb 132, 3
+	defb 132, 3
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_11_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_12_a
+	defb 0, 255
+	defb 7, 248
+	defb 8, 240
+	defb 21, 224
+	defb 32, 192
+	defb 39, 192
+	defb 42, 192
+	defb 47, 192
+	defb 96, 128
+	defb 135, 0
+	defb 160, 0
+	defb 160, 0
+	defb 96, 128
+	defb 17, 224
+	defb 33, 192
+	defb 33, 192
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_12_b
+	defb 0, 255
+	defb 192, 63
+	defb 32, 31
+	defb 16, 15
+	defb 8, 7
+	defb 136, 7
+	defb 200, 7
+	defb 200, 7
+	defb 204, 3
+	defb 130, 1
+	defb 5, 0
+	defb 10, 4
+	defb 10, 4
+	defb 137, 6
+	defb 8, 7
+	defb 8, 7
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_12_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_13_a
+	defb 0, 255
+	defb 96, 158
+	defb 125, 128
+	defb 56, 192
+	defb 103, 144
+	defb 14, 240
+	defb 5, 144
+	defb 38, 128
+	defb 39, 128
+	defb 53, 128
+	defb 30, 192
+	defb 7, 224
+	defb 3, 248
+	defb 2, 224
+	defb 30, 192
+	defb 16, 193
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_13_b
+	defb 0, 255
+	defb 6, 121
+	defb 190, 1
+	defb 28, 3
+	defb 230, 9
+	defb 160, 15
+	defb 224, 13
+	defb 2, 8
+	defb 242, 0
+	defb 246, 0
+	defb 12, 1
+	defb 248, 3
+	defb 252, 1
+	defb 196, 1
+	defb 68, 17
+	defb 6, 176
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_13_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_14_a
+	defb 0, 255
+	defb 96, 158
+	defb 125, 128
+	defb 56, 192
+	defb 103, 144
+	defb 5, 240
+	defb 7, 176
+	defb 64, 16
+	defb 79, 0
+	defb 111, 0
+	defb 48, 128
+	defb 31, 192
+	defb 63, 128
+	defb 35, 128
+	defb 34, 136
+	defb 96, 13
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_14_b
+	defb 0, 255
+	defb 6, 121
+	defb 190, 1
+	defb 28, 3
+	defb 230, 9
+	defb 112, 15
+	defb 160, 9
+	defb 100, 1
+	defb 228, 1
+	defb 172, 1
+	defb 120, 3
+	defb 224, 7
+	defb 192, 31
+	defb 64, 7
+	defb 120, 3
+	defb 8, 131
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_14_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_15_a
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 248
+	defb 7, 240
+	defb 14, 224
+	defb 28, 193
+	defb 28, 192
+	defb 15, 224
+	defb 7, 192
+	defb 48, 128
+	defb 96, 15
+	defb 112, 3
+	defb 60, 128
+	defb 31, 192
+	defb 7, 224
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_15_b
+	defb 0, 199
+	defb 56, 131
+	defb 84, 1
+	defb 120, 3
+	defb 224, 3
+	defb 124, 1
+	defb 0, 131
+	defb 0, 127
+	defb 128, 15
+	defb 240, 3
+	defb 124, 1
+	defb 30, 128
+	defb 14, 224
+	defb 30, 0
+	defb 248, 1
+	defb 192, 7
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_15_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_16_a
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 254
+	defb 0, 248
+	defb 7, 240
+	defb 14, 224
+	defb 28, 192
+	defb 31, 192
+	defb 7, 224
+	defb 24, 192
+	defb 48, 135
+	defb 56, 129
+	defb 30, 192
+	defb 15, 224
+	defb 3, 240
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_16_b
+	defb 0, 255
+	defb 0, 143
+	defb 112, 7
+	defb 168, 3
+	defb 240, 7
+	defb 192, 7
+	defb 248, 3
+	defb 0, 7
+	defb 0, 31
+	defb 224, 7
+	defb 248, 3
+	defb 60, 1
+	defb 28, 193
+	defb 56, 3
+	defb 240, 7
+	defb 128, 15
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	._sprite_16_c
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	._sprite_18_a
-	defs 96, 0
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	._sprite_18_b
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	._sprite_18_c
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
+	defb 0, 255, 0, 255, 0, 255, 0, 255
 ;	SECTION	text
 
 ._en_tocado
@@ -178,1571 +1397,309 @@
 ;	SECTION	code
 
 
-	XREF _nametable
-	XREF tabla_teclas
-	LIB cpc_KeysData
-	LIB cpc_UpdTileTable
-	LIB cpc_InvalidateRect
-	LIB cpc_TestKeyboard
-	XDEF viewport_x
-	XDEF viewport_y
-	defc viewport_x = 0
-	defc viewport_y = 2
-	.my_inks
-	ld b, 0x7f
-	ld a, 0
-	out (c), a
-	ld a, 0x5C
-	out (c), a
-	ld a, 1
-	out (c), a
-	ld a, 0x54
-	out (c), a
-	ld a, 2
-	out (c), a
-	ld a, 0x56
-	out (c), a
-	ld a, 3
-	out (c), a
-	ld a, 0x5B
-	out (c), a
-	ret
+	LIB SPInvalidate
+	LIB SPCompDListAddr
+	LIB SPMoveSprAbs
+	LIB SPTileArray
+	LIB SPPrintAtInv
+	LIB SPUpdateNow
+	LIB SPInitialize
+	LIB SPNullSprPtr
+	LIB SPRegisterHook
+	LIB SPCreateGenericISR
+	LIB SPInitIM2
+	LIB SPInitialize
+	LIB SPCreateSpr
+	XREF SProtatetblInitialize
+	XREF SPDisplayList
 ;	SECTION	text
 
-._sm_cox
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-;	SECTION	code
-
-
-;	SECTION	text
-
-._sm_coy
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-;	SECTION	code
-
-
-;	SECTION	text
-
-._sm_invfunc
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
-	defw	cpc_PutSpTileMap16x16PxM1
+._keys
+	defw	383
+	defw	479
+	defw	735
+	defw	509
+	defw	507
 
 ;	SECTION	code
 
 ;	SECTION	text
 
-._sm_updfunc
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-	defw	cpc_PutTrSp16x16TileMap2bPxM1
-
+._key_1
+	defw	503
 ;	SECTION	code
 
-	._sm_sprptr
-	defw _sprites + 0x0000, _sprites + 0x0040, _sprites + 0x0080, _sprites + 0x00C0
-	defw _sprites + 0x0100, _sprites + 0x0140, _sprites + 0x0180, _sprites + 0x01C0
-	defw _sprites + 0x0200, _sprites + 0x0240, _sprites + 0x0280, _sprites + 0x02C0
-	defw _sprites + 0x0300, _sprites + 0x0340, _sprites + 0x0380, _sprites + 0x03C0
-	.EFECTO0
-	.EFECTO5
-	defb 0xE8, 0x1B, 0x00
-	defb 0x5F, 0x0F, 0x00
-	defb 0xE2, 0x0F, 0x00
-	defb 0x56, 0x0F, 0x00
-	defb 0xF6, 0x0F, 0x00
-	defb 0x14, 0x0E, 0x00
-	defb 0x64, 0x0E, 0x00
-	defb 0x62, 0x0D, 0x00
-	defb 0xD0, 0x0D, 0x00
-	defb 0xF1, 0x0C, 0x00
-	defb 0xFF
-	.EFECTO1
-	.EFECTO4
-	defb 0xE8, 0x1B, 0x00
-	defb 0x5F, 0x0F, 0x00
-	defb 0xA6, 0x0F, 0x00
-	defb 0x00, 0x00, 0x00
-	defb 0x80, 0x0F, 0x00
-	defb 0xFF
-	.EFECTO2
-	defb 0xE8, 0x1B, 0x00
-	defb 0x5F, 0x0F, 0x00
-	defb 0xE2, 0x0F, 0x00
-	defb 0x56, 0x0F, 0x00
-	defb 0xF6, 0x0F, 0x00
-	defb 0x14, 0x0E, 0x00
-	defb 0x64, 0x0E, 0x00
-	defb 0x62, 0x0D, 0x00
-	defb 0xD0, 0x0D, 0x00
-	defb 0xF1, 0x0C, 0x00
-	defb 0xFF
-	.EFECTO3
-	defb 0xE8, 0x1B, 0x00
-	defb 0xB4, 0x0F, 0x00
-	defb 0xA0, 0x0E, 0x00
-	defb 0x90, 0x0D, 0x00
-	defb 0x87, 0x0D, 0x00
-	defb 0x78, 0x0C, 0x00
-	defb 0x6C, 0x0B, 0x00
-	defb 0x60, 0x0A, 0x00
-	defb 0x5A, 0x09, 0x00
-	defb 0xFF
-	.EFECTO6
-	defb 0x1F, 0x0B, 0x00
-	defb 0xAF, 0x0F, 0x00
-	defb 0x8A, 0x0F, 0x00
-	defb 0x71, 0x0F, 0x00
-	defb 0x64, 0x0F, 0x00
-	defb 0x3E, 0x0C, 0x00
-	defb 0x25, 0x0C, 0x00
-	defb 0x25, 0x0C, 0x00
-	defb 0x25, 0x0C, 0x00
-	defb 0x25, 0x0A, 0x00
-	defb 0x4B, 0x0A, 0x00
-	defb 0x4B, 0x0A, 0x00
-	defb 0x4B, 0x0A, 0x00
-	defb 0x3E, 0x08, 0x00
-	defb 0x3E, 0x08, 0x00
-	defb 0x3E, 0x08, 0x00
-	defb 0x71, 0x08, 0x00
-	defb 0x3E, 0x07, 0x00
-	defb 0x25, 0x05, 0x00
-	defb 0x25, 0x02, 0x00
-	defb 0xFF
-	.EFECTO7
-	defb 0x1F, 0x0B, 0x00
-	defb 0x5A, 0x0F, 0x00
-	defb 0x3C, 0x0F, 0x00
-	defb 0x1E, 0x0A, 0x00
-	defb 0x2D, 0x0A, 0x00
-	defb 0x5A, 0x05, 0x00
-	defb 0x3C, 0x05, 0x00
-	defb 0x1E, 0x04, 0x00
-	defb 0x2D, 0x02, 0x00
-	defb 0xB4, 0x01, 0x00
-	defb 0xFF
-	.EFECTO8
-	defb 0x1F, 0x0B, 0x00
-	defb 0x5A, 0x0F, 0x00
-	defb 0x3C, 0x0F, 0x00
-	defb 0x1E, 0x0A, 0x00
-	defb 0x2D, 0x0A, 0x00
-	defb 0x5A, 0x05, 0x00
-	defb 0x3C, 0x05, 0x00
-	defb 0x1E, 0x04, 0x00
-	defb 0x2D, 0x02, 0x00
-	defb 0xB4, 0x01, 0x00
-	defb 0xFF
-	.EFECTO9
-	defb 0x25, 0x1C, 0x00
-	defb 0x3A, 0x0F, 0x00
-	defb 0x2D, 0x0F, 0x00
-	defb 0xE2, 0x0F, 0x00
-	defb 0xBC, 0x0F, 0x00
-	defb 0x96, 0x0D, 0x00
-	defb 0x4B, 0x0D, 0x00
-	defb 0x32, 0x0D, 0x00
-	defb 0x3A, 0x0D, 0x00
-	defb 0x2D, 0x0D, 0x00
-	defb 0xE2, 0x0D, 0x00
-	defb 0xBC, 0x0D, 0x00
-	defb 0x96, 0x0D, 0x00
-	defb 0x4B, 0x0D, 0x00
-	defb 0x32, 0x0D, 0x00
-	defb 0x3A, 0x0D, 0x00
-	defb 0x2D, 0x0C, 0x00
-	defb 0xE2, 0x0C, 0x00
-	defb 0xBC, 0x0C, 0x00
-	defb 0x96, 0x0B, 0x00
-	defb 0x4B, 0x0B, 0x00
-	defb 0x32, 0x0B, 0x00
-	defb 0x3A, 0x0B, 0x00
-	defb 0x2D, 0x0B, 0x00
-	defb 0xE2, 0x0B, 0x00
-	defb 0xBC, 0x0B, 0x00
-	defb 0x96, 0x0B, 0x00
-	defb 0x4B, 0x0A, 0x00
-	defb 0x32, 0x0A, 0x00
-	defb 0x3A, 0x0A, 0x00
-	defb 0x2D, 0x09, 0x00
-	defb 0xE2, 0x09, 0x00
-	defb 0xBC, 0x08, 0x00
-	defb 0x96, 0x08, 0x00
-	defb 0x4B, 0x08, 0x00
-	defb 0x32, 0x07, 0x00
-	defb 0x3A, 0x07, 0x00
-	defb 0x2D, 0x06, 0x00
-	defb 0xE2, 0x06, 0x00
-	defb 0xBC, 0x06, 0x00
-	defb 0x96, 0x05, 0x00
-	defb 0x4B, 0x05, 0x00
-	defb 0x32, 0x05, 0x00
-	defb 0x3A, 0x04, 0x00
-	defb 0x2D, 0x04, 0x00
-	defb 0xE2, 0x03, 0x00
-	defb 0xBC, 0x03, 0x00
-	defb 0x96, 0x03, 0x00
-	defb 0x4B, 0x03, 0x00
-	defb 0x32, 0x02, 0x00
-	defb 0x3A, 0x01, 0x00
-	defb 0x2D, 0x01, 0x00
-	defb 0xE2, 0x01, 0x00
-	defb 0xBC, 0x01, 0x00
-	defb 0xFF
-	; Tabla de instrumentos
-	.TABLA_PAUTAS
-	defw PAUTA_0,PAUTA_1,PAUTA_2,PAUTA_3,PAUTA_4,PAUTA_5
-	; Tabla de efectos
-	.TABLA_SONIDOS
-	defw SONIDO0,SONIDO1,SONIDO2,SONIDO3
-	;Pautas (instrumentos)
-	;Instrumento 'Piano'
-	.PAUTA_0
-	defb 47,0,15,0,13,0,11,0,4,0,129
-	;Instrumento 'PICC'
-	.PAUTA_1
-	defb 77,0,6,0,8,0,13,0,8,0,6,0,12,0,7,0,3,0,129
-	;Instrumento 'Flauta vol bajo'
-	.PAUTA_2
-	defb 12,0,9,0,7,0,9,0,11,0,9,0,10,0,10,0,8,0,10,0,129
-	;Instrumento 'Flauta'
-	.PAUTA_3
-	defb 10,0,12,0,13,0,13,0,13,0,12,0,11,0,11,0,11,0,10,0,10,0,10,0,10,0,10,0,9,0,9,0,9,0,9,0,9,0,138
-	;Instrumento 'Picc vol 2'
-	.PAUTA_4
-	defb 71,0,6,0,7,0,6,0,5,0,129
-	;Instrumento 'Eco'
-	.PAUTA_5
-	defb 6,0,8,0,9,0,8,0,7,0,6,0,129
-	;Efectos
-	;Efecto 'bass drum'
-	.SONIDO0
-	defb 209,62,0,186,92,0,255
-	;Efecto 'drum'
-	.SONIDO1
-	defb 139,46,0,232,43,8,255
-	;Efecto 'hithat'
-	.SONIDO2
-	defb 0,11,1,0,6,1,255
-	;Efecto 'bass drum vol 2'
-	.SONIDO3
-	defb 186,58,0,0,102,0,162,131,0,255
-	;Frecuencias para las notas
-	._00_title_mus_bin
-	BINARY "../ogt/00_title.mus.bin"
-	._01_ingame_mus_bin
-	BINARY "../ogt/01_ingame.mus.bin"
-	._wyz_songs
-	defw _00_title_mus_bin, _01_ingame_mus_bin
 
-._wyz_init
+;	SECTION	text
+
+._key_2
+	defw	759
+;	SECTION	code
+
+
+;	SECTION	text
+
+._key_3
+	defw	1271
+;	SECTION	code
+
+
+
+._my_malloc
 	ld	hl,0 % 256	;const
-	ld	a,l
-	ld	(_isr_player_on),a
-	call WYZPLAYER_INIT
+	push	hl
+	call	sp_BlockAlloc
+	pop	bc
 	ret
 
 
+;	SECTION	text
 
-._wyz_play_music
-	add hl, hl
-	ld de, _wyz_songs
-	add hl, de
-	ld a, (hl)
-	inc hl
-	ld h, (hl)
-	ld l, a
-	ld de, 0x8800
-	call depack
-	ld a, 0
-	call CARGA_CANCION
-	ld a, 1
-	ld (_isr_player_on), a
-	ret
+._u_malloc
+	defw	_my_malloc
 
+;	SECTION	code
 
+;	SECTION	text
 
-._wyz_play_sound
-	; Sound number is in L
-	ld a, l
-	ld b, 1
-	call INICIA_EFECTO
-	ret
+._u_free
+	defw	0
 
+;	SECTION	code
 
+;	SECTION	text
 
-._wyz_stop_sound
-	call PLAYER_OFF
-	xor a
-	ld (_isr_player_on), a
-	ret
+._spritesClipValues
+	defb	2
+	defb	0
+	defb	20
+	defb	30
 
+;	SECTION	code
 
-	; 1 PSG proPLAYER V 0.47c - WYZ 19.03.2016
-	; (WYZTracker 2.0 o superior)
-	.WYZPLAYER_INIT
-	CALL PLAYER_OFF
-	LD DE, 0x0020 ; No. BYTES RESERVADOS POR CANAL
-	LD HL, 0xDF80 ;* RESERVAR MEMORIA PARA BUFFER DE SONIDO!!!!!
-	LD (CANAL_A), HL
-	ADD HL, DE
-	LD (CANAL_B), HL
-	ADD HL, DE
-	LD (CANAL_C), HL
-	ADD HL, DE
-	LD (CANAL_P), HL
-	RET
-	.INICIO
-	.WYZ_PLAYER_ISR
-	CALL ROUT
-	LD HL,PSG_REG
-	LD DE,PSG_REG_SEC
-	LD BC,14
-	LDIR
-	CALL REPRODUCE_SONIDO
-	CALL PLAY
-	JP REPRODUCE_EFECTO
-	; REPRODUCE UN SONIDO POR EL CANAL ESPECIFICADO
-	; IN
-	; A = NUMERO DE SONIDO
-	; B = CANAL
-	.INICIA_SONIDO
-	LD HL, TABLA_SONIDOS
-	CALL EXT_WORD
-	LD (PUNTERO_SONIDO), DE
-	LD HL, INTERR
-	SET 2, (HL)
-	; na_th_an :: Percussion channel is fixed to 1
-	;LD A, 1
-	;LD HL, TABLA_DATOS_CANAL_SFX
-	;CALL EXT_WORD
-	;LD (SONIDO_REGS), DE
-	RET
-	; REPRODUCE UN FX POR EL CANAL ESPECIFICADO
-	; IN
-	; A = NUMERO DE SONIDO
-	; B = CANAL
-	.INICIA_EFECTO
-	LD HL, TABLA_EFECTOS
-	CALL EXT_WORD
-	LD (PUNTERO_EFECTO), DE
-	LD HL, INTERR
-	SET 3, (HL)
-	LD A, B
-	LD HL, TABLA_DATOS_CANAL_SFX
-	CALL EXT_WORD
-	LD (EFECTO_REGS), DE
-	RET
-	;REPRODUCE EFECTOS DE SONIDO
-	.REPRODUCE_SONIDO
-	LD HL, INTERR
-	BIT 2,(HL) ;ESTA ACTIVADO EL EFECTO?
-	RET Z
-	LD HL, (SONIDO_REGS)
-	PUSH HL
-	POP IX
-	LD HL, (PUNTERO_SONIDO)
-	CALL REPRODUCE_SONIDO_O_EFECTO
-	OR A
-	JR Z, REPRODUCE_SONIDO_LIMPIA_BIT
-	LD (PUNTERO_SONIDO), HL
-	RET
-	.REPRODUCE_SONIDO_LIMPIA_BIT
-	LD HL, INTERR
-	RES 2, (HL)
-	RET
-	.REPRODUCE_EFECTO
-	LD HL, INTERR
-	BIT 3, (HL)
-	RET Z
-	LD HL, (EFECTO_REGS)
-	PUSH HL
-	POP IX
-	LD HL, (PUNTERO_EFECTO)
-	CALL REPRODUCE_SONIDO_O_EFECTO
-	OR A
-	JR Z, REPRODUCE_EFECTO_LIMPIA_BIT
-	LD (PUNTERO_EFECTO), HL
-	RET
-	.REPRODUCE_EFECTO_LIMPIA_BIT
-	LD HL, INTERR
-	RES 3, (HL)
-	RET
-	.REPRODUCE_SONIDO_O_EFECTO
-	LD A,(HL)
-	CP 0xFF
-	JR Z,FIN_SONIDO
-	LD E, (IX+0) ; IX+0 -> SFX_L LO
-	LD D, (IX+1) ; IX+1 -> SFX_L HI
-	LD (DE),A
-	INC HL
-	LD A,(HL)
-	RRCA
-	RRCA
-	RRCA
-	RRCA
-	AND 00001111B
-	LD E, (IX+2) ; IX+2 -> SFX_H LO
-	LD D, (IX+3) ; IX+3 -> SFX_H HI
-	LD (DE),A
-	LD A,(HL)
-	AND 00001111B
-	LD E, (IX+4) ; IX+4 -> SFX_V LO
-	LD D, (IX+5) ; IX+5 -> SFX_V HI
-	LD (DE),A
-	INC HL
-	LD A,(HL)
-	LD B,A
-	BIT 7,A ;09.08.13 BIT MAS SIGINIFICATIVO ACTIVA ENVOLVENTES
-	JR Z,NO_ENVOLVENTES_SONIDO
-	LD A,0x12
-	LD (DE),A
-	INC HL
-	LD A,(HL)
-	LD (PSG_REG_SEC+11),A
-	INC HL
-	LD A,(HL)
-	LD (PSG_REG_SEC+12),A
-	INC HL
-	LD A,(HL)
-	CP 1
-	JR Z,NO_ENVOLVENTES_SONIDO ;NO ESCRIBE LA ENVOLVENTE SI SU VALOR ES 1
-	LD (PSG_REG_SEC+13),A
-	.NO_ENVOLVENTES_SONIDO
-	LD A,B
-	AND 0x7F ; RES 7,A ; AND A
-	JR Z,NO_RUIDO
-	LD (PSG_REG_SEC+6),A
-	LD A, (IX+6) ; IX+6 -> SFX_MIX
-	JR SI_RUIDO
-	.NO_RUIDO XOR A
-	LD (PSG_REG_SEC+6),A
-	LD A,10111000B
-	.SI_RUIDO LD (PSG_REG_SEC+7),A
-	INC HL
-	LD A, 1
-	RET
-	.FIN_SONIDO
-	LD A,(ENVOLVENTE_BACK) ;NO RESTAURA LA ENVOLVENTE SI ES 0
-	AND A
-	JR Z,FIN_NOPLAYER
-	;xor a ; ***
-	LD (PSG_REG_SEC+13),A ;08.13 RESTAURA LA ENVOLVENTE TRAS EL SFX
-	.FIN_NOPLAYER
-	LD A,10111000B
-	LD (PSG_REG_SEC+7),A
-	XOR A
-	RET
-	;VUELCA BUFFER DE SONIDO AL PSG
-	.ROUT
-	LD A,(PSG_REG+13)
-	AND A ;ES CERO?
-	JR Z,NO_BACKUP_ENVOLVENTE
-	LD (ENVOLVENTE_BACK),A ;08.13 / GUARDA LA ENVOLVENTE EN EL BACKUP
-	XOR A
-	.NO_BACKUP_ENVOLVENTE
-	;VUELCA BUFFER DE SONIDO AL PSG
-	LD HL,PSG_REG_SEC
-	.LOUT
-	CALL WRITEPSGHL
-	INC A
-	CP 13
-	JR NZ,LOUT
-	LD A,(HL)
-	AND A
-	RET Z
-	LD A,13
-	CALL WRITEPSGHL
-	XOR A
-	LD (PSG_REG+13),A
-	LD (PSG_REG_SEC+13),A
-	RET
-	;; A = REGISTER
-	;; (HL) = VALUE
-	.WRITEPSGHL
-	LD B,0xF4
-	OUT (C),A
-	LD BC,0xF6C0
-	OUT (C),C
-	DEFB 0xED
-	DEFB 0x71
-	LD B,0xF5
-	OUTI
-	LD BC,0xF680
-	OUT (C),C
-	DEFB 0xED
-	DEFB 0x71
-	RET
-	;PLAYER OFF
-	.PLAYER_OFF
-	XOR A ;***** IMPORTANTE SI NO HAY MUSICA ****
-	LD (INTERR),A
-	;LD (FADE),A ;solo si hay fade out
-	.CLEAR_PSG_BUFFER
-	LD HL,PSG_REG
-	LD DE,PSG_REG+1
-	LD BC,14
-	LD (HL),A
-	LDIR
-	LD A,10111000B ; **** POR SI ACASO ****
-	LD (PSG_REG+7),A
-	LD HL,PSG_REG
-	LD DE,PSG_REG_SEC
-	LD BC,14
-	LDIR
-	JP ROUT
-	;CARGA UNA CANCION
-	;.IN(A)=N∫ DE CANCION
-	.CARGA_CANCION
-	LD HL,INTERR ;CARGA CANCION
-	SET 1,(HL) ;REPRODUCE CANCION
-	LD HL,SONG
-	LD (HL),A ;N∫ A
-	;DECODIFICAR
-	;IN-> INTERR 0 ON
-	; SONG
-	;CARGA CANCION SI/NO
-	.DECODE_SONG
-	LD A,(SONG)
-	;LEE CABECERA DE LA CANCION
-	;BYTE 0=TEMPO
-	LD HL,TABLA_SONG
-	CALL EXT_WORD
-	LD A,(DE)
-	LD (TEMPO),A
-	DEC A
-	LD (TTEMPO),A
-	;HEADER BYTE 1
-	;[-|-|-|-| 3-1 | 0 ]
-	;[-|-|-|-|FX CHN|LOOP]
-	INC DE ;LOOP 1=ON/0=OFF?
-	LD A,(DE)
-	BIT 0,A
-	JR Z,NPTJP0
-	LD HL,INTERR
-	SET 4,(HL)
-	;SELECCION DEL CANAL DE EFECTOS DE RITMO
-	.NPTJP0
-	AND 00000110B
-	RRA
-	;LD (SELECT_CANAL_P),A
-	PUSH DE
-	; na_th_an :: Percussion channel is fixed to 1
-	;LD HL, TABLA_DATOS_CANAL_SFX
-	;CALL EXT_WORD
-	;LD (SONIDO_REGS), DE
-	POP HL
-	INC HL ;2 BYTES RESERVADOS
-	INC HL
-	INC HL
-	;BUSCA Y GUARDA INICIO DE LOS CANALES EN EL MODULO MUS (OPTIMIZAR****************)
-	;A—ADE OFFSET DEL LOOP
-	PUSH HL ;IX INICIO OFFSETS LOOP POR CANAL
-	POP IX
-	LD DE,0x0008 ;HASTA INICIO DEL CANAL A
-	ADD HL,DE
-	LD (PUNTERO_P_DECA),HL ;GUARDA PUNTERO INICIO CANAL
-	LD E,(IX+0)
-	LD D,(IX+1)
-	ADD HL,DE
-	LD (PUNTERO_L_DECA),HL ;GUARDA PUNTERO INICIO LOOP
-	CALL BGICMODBC1
-	LD (PUNTERO_P_DECB),HL
-	LD E,(IX+2)
-	LD D,(IX+3)
-	ADD HL,DE
-	LD (PUNTERO_L_DECB),HL
-	CALL BGICMODBC1
-	LD (PUNTERO_P_DECC),HL
-	LD E,(IX+4)
-	LD D,(IX+5)
-	ADD HL,DE
-	LD (PUNTERO_L_DECC),HL
-	CALL BGICMODBC1
-	LD (PUNTERO_P_DECP),HL
-	LD E,(IX+6)
-	LD D,(IX+7)
-	ADD HL,DE
-	LD (PUNTERO_L_DECP),HL
-	;LEE DATOS DE LAS NOTAS
-	;[|][|||||] LONGITUD\NOTA
-	.INIT_DECODER
-	LD DE,(CANAL_A)
-	LD (PUNTERO_A),DE
-	LD HL,(PUNTERO_P_DECA)
-	CALL DECODE_CANAL ;CANAL A
-	LD (PUNTERO_DECA),HL
-	LD DE,(CANAL_B)
-	LD (PUNTERO_B),DE
-	LD HL,(PUNTERO_P_DECB)
-	CALL DECODE_CANAL ;CANAL B
-	LD (PUNTERO_DECB),HL
-	LD DE,(CANAL_C)
-	LD (PUNTERO_C),DE
-	LD HL,(PUNTERO_P_DECC)
-	CALL DECODE_CANAL ;CANAL C
-	LD (PUNTERO_DECC),HL
-	LD DE,(CANAL_P)
-	LD (PUNTERO_P),DE
-	LD HL,(PUNTERO_P_DECP)
-	CALL DECODE_CANAL ;CANAL P
-	LD (PUNTERO_DECP),HL
-	RET
-	;BUSCA INICIO DEL CANAL
-	.BGICMODBC1
-	LD E,0x3F ;CODIGO INSTRUMENTO 0
-	.BGICMODBC2
-	XOR A ;BUSCA EL BYTE 0
-	LD B,0xFF ;EL MODULO DEBE TENER UNA LONGITUD MENOR DE 0xFF00 ... o_O!
-	CPIR
-	DEC HL
-	DEC HL
-	LD A,E ;ES EL INSTRUMENTO 0??
-	CP (HL)
-	INC HL
-	INC HL
-	JR Z,BGICMODBC2
-	DEC HL
-	DEC HL
-	DEC HL
-	LD A,E ;ES VOLUMEN 0??
-	CP (HL)
-	INC HL
-	INC HL
-	INC HL
-	JR Z,BGICMODBC2
-	RET
-	;DECODIFICA NOTAS DE UN CANAL
-	;IN (DE)=DIRECCION DESTINO
-	;NOTA=0 FIN CANAL
-	;NOTA=1 SILENCIO
-	;NOTA=2 PUNTILLO
-	;NOTA=3 COMANDO I
-	.DECODE_CANAL
-	LD A,(HL)
-	AND A ;FIN DEL CANAL?
-	JR Z,FIN_DEC_CANAL
-	CALL GETLEN
-	CP 00000001B ;ES SILENCIO?
-	JR NZ,NO_SILENCIO
-	OR 0x40 ; SET 6,A
-	JR NO_MODIFICA
-	.NO_SILENCIO
-	CP 00111110B ;ES PUNTILLO?
-	JR NZ,NO_PUNTILLO
-	OR A
-	RRC B
-	XOR A
-	JR NO_MODIFICA
-	.NO_PUNTILLO
-	CP 00111111B ;ES COMANDO?
-	JR NZ,NO_MODIFICA
-	BIT 0,B ;COMADO=INSTRUMENTO?
-	JR Z,NO_INSTRUMENTO
-	LD A,11000001B ;CODIGO DE INSTRUMENTO
-	LD (DE),A
-	INC HL
-	INC DE
-	LDI ;N∫ DE INSTRUMENTO
-	; LD A,(HL)
-	; LD (DE),A
-	; INC DE
-	; INC HL
-	LDI ;VOLUMEN RELATIVO DEL INSTRUMENTO
-	; LD A,(HL)
-	; LD (DE),A
-	; INC DE
-	; INC HL
-	JR DECODE_CANAL
-	.NO_INSTRUMENTO
-	BIT 2,B
-	JR Z,NO_ENVOLVENTE
-	LD A,11000100B ;CODIGO ENVOLVENTE
-	LD (DE),A
-	INC DE
-	INC HL
-	LDI
-	; LD A,(HL)
-	; LD (DE),A
-	; INC DE
-	; INC HL
-	JR DECODE_CANAL
-	.NO_ENVOLVENTE
-	BIT 1,B
-	JR Z,NO_MODIFICA
-	LD A,11000010B ;CODIGO EFECTO
-	LD (DE),A
-	INC HL
-	INC DE
-	LD A,(HL)
-	CALL GETLEN
-	.NO_MODIFICA
-	LD (DE),A
-	INC DE
-	XOR A
-	DJNZ NO_MODIFICA
-	OR 0x81 ; SET 7,A ; SET 0,A
-	LD (DE),A
-	INC DE
-	INC HL
-	RET ;** JR DECODE_CANAL
-	.FIN_DEC_CANAL
-	OR 0x80 ; SET 7,A
-	LD (DE),A
-	INC DE
-	RET
-	.GETLEN
-	LD B,A
-	AND 00111111B
-	PUSH AF
-	LD A,B
-	AND 11000000B
-	RLCA
-	RLCA
-	INC A
-	LD B,A
-	LD A,10000000B
-	.DCBC0
-	RLCA
-	DJNZ DCBC0
-	LD B,A
-	POP AF
-	RET
-	;PLAY _______________________________
-	.PLAY
-	LD HL,INTERR ;PLAY BIT 1 ON?
-	BIT 1,(HL)
-	RET Z
-	;TEMPO
-	LD HL,TTEMPO ;CONTADOR TEMPO
-	INC (HL)
-	LD A,(TEMPO)
-	CP (HL)
-	JR NZ,PAUTAS
-	LD (HL),0
-	;INTERPRETA
-	; Lee una nueva linea. Yo voy a incrementar dos contadores:
-	; uno de lineas. Otro se incrementar· cada 4 lineas. …ste lo "reflejarÈ" en low ram.
-	ld a, (LINE_COUNTER)
-	inc a
-	cp 4
-	jr nz, nonewblack
-	; Incrementamos esto en low RAM
-	ld hl, _wyz_beat_ct
+	.fsClipStruct defb 0, 24, 0, 32
+	.vpClipStruct defb 2, 2 + 20, 0, 0 + 30
+;	SECTION	text
+
+._player_cells
+	defw	_sprite_1_a
+	defw	_sprite_2_a
+	defw	_sprite_3_a
+	defw	_sprite_4_a
+	defw	_sprite_5_a
+	defw	_sprite_6_a
+	defw	_sprite_7_a
+	defw	_sprite_8_a
+
+;	SECTION	code
+
+;	SECTION	text
+
+._enem_cells
+	defw	_sprite_9_a
+	defw	_sprite_10_a
+	defw	_sprite_11_a
+	defw	_sprite_12_a
+	defw	_sprite_13_a
+	defw	_sprite_14_a
+	defw	_sprite_15_a
+	defw	_sprite_16_a
+
+;	SECTION	code
+
+	defw 0
+
+._ISR
+	ld hl, _isrc
 	inc (hl)
-	xor a
-	nonewblack:
-	ld (LINE_COUNTER), a
-	LD IY,PSG_REG
-	LD IX,PUNTERO_A
-	LD BC,PSG_REG+8
-	CALL LOCALIZA_NOTA
-	LD IY,PSG_REG+2
-	LD IX,PUNTERO_B
-	LD BC,PSG_REG+9
-	CALL LOCALIZA_NOTA
-	LD IY,PSG_REG+4
-	LD IX,PUNTERO_C
-	LD BC,PSG_REG+10
-	CALL LOCALIZA_NOTA
-	LD IX,PUNTERO_P ;EL CANAL DE EFECTOS ENMASCARA OTRO CANAL
-	CALL LOCALIZA_EFECTO
-	;PAUTAS
-	.PAUTAS
-	LD IY,PSG_REG+0
-	LD IX,PUNTERO_P_A
-	LD HL,PSG_REG+8
-	CALL PAUTA ;PAUTA CANAL A
-	LD IY,PSG_REG+2
-	LD IX,PUNTERO_P_B
-	LD HL,PSG_REG+9
-	CALL PAUTA ;PAUTA CANAL B
-	LD IY,PSG_REG+4
-	LD IX,PUNTERO_P_C
-	LD HL,PSG_REG+10
-	JP PAUTA ;PAUTA CANAL C
-	;LOCALIZA NOTA CANAL A
-	;IN (PUNTERO_A)
-	;LOCALIZA NOTA CANAL A
-	;IN (PUNTERO_A)
-	.LOCALIZA_NOTA
-	LD L,(IX+PUNTERO_A-PUNTERO_A) ;HL=(PUNTERO_A_C_B)
-	LD H,(IX+PUNTERO_A-PUNTERO_A+1)
-	LD A,(HL)
-	AND 11000000B ;COMANDO?
-	CP 11000000B
-	JR NZ,LNJP0
-	;BIT(0)=INSTRUMENTO
-	.COMANDOS
-	LD A,(HL)
-	BIT 0,A ;INSTRUMENTO
-	JR Z,COM_EFECTO
-	INC HL
-	LD A,(HL) ;N∫ DE PAUTA
-	INC HL
-	LD E,(HL)
-	PUSH HL ;;TEMPO ******************
-	LD HL,TEMPO
-	BIT 5,E
-	JR Z,NO_DEC_TEMPO
-	DEC (HL)
-	.NO_DEC_TEMPO
-	BIT 6,E
-	JR Z,NO_INC_TEMPO
-	INC (HL)
-	.NO_INC_TEMPO
-	RES 5,E ;SIEMPRE RESETEA LOS BITS DE TEMPO
-	RES 6,E
-	POP HL
-	LD (IX+VOL_INST_A-PUNTERO_A),E ;REGISTRO DEL VOLUMEN RELATIVO
-	INC HL
-	LD (IX+PUNTERO_A-PUNTERO_A),L
-	LD (IX+PUNTERO_A-PUNTERO_A+1),H
-	LD HL,TABLA_PAUTAS
-	CALL EXT_WORD
-	LD (IX+PUNTERO_P_A0-PUNTERO_A),E
-	LD (IX+PUNTERO_P_A0-PUNTERO_A+1),D
-	LD (IX+PUNTERO_P_A-PUNTERO_A),E
-	LD (IX+PUNTERO_P_A-PUNTERO_A+1),D
-	LD L,C
-	LD H,B
-	RES 4,(HL) ;APAGA EFECTO ENVOLVENTE
-	XOR A
-	LD (PSG_REG_SEC+13),A
-	LD (PSG_REG+13),A
-	;LD (ENVOLVENTE_BACK),A ;08.13 / RESETEA EL BACKUP DE LA ENVOLVENTE
-	JR LOCALIZA_NOTA
-	.COM_EFECTO
-	BIT 1,A ;EFECTO DE SONIDO
-	JR Z,COM_ENVOLVENTE
-	INC HL
-	LD A,(HL)
-	INC HL
-	LD (IX+PUNTERO_A-PUNTERO_A),L
-	LD (IX+PUNTERO_A-PUNTERO_A+1),H
-	JP INICIA_SONIDO
-	.COM_ENVOLVENTE
-	BIT 2,A
-	RET Z ;IGNORA - ERROR
-	INC HL
-	LD A,(HL) ;CARGA CODIGO DE ENVOLVENTE
-	LD (ENVOLVENTE),A
-	INC HL
-	LD (IX+PUNTERO_A-PUNTERO_A),L
-	LD (IX+PUNTERO_A-PUNTERO_A+1),H
-	LD L,C
-	LD H,B
-	LD (HL),00010000B ;ENCIENDE EFECTO ENVOLVENTE
-	JR LOCALIZA_NOTA
-	.LNJP0
-	LD A,(HL)
-	INC HL
-	BIT 7,A
-	JR Z,NO_FIN_CANAL_A ;
-	BIT 0,A
-	JR Z,FIN_CANAL_A
-	.FIN_NOTA_A
-	LD E,(IX+CANAL_A-PUNTERO_A)
-	LD D,(IX+CANAL_A-PUNTERO_A+1) ;PUNTERO BUFFER AL INICIO
-	LD (IX+PUNTERO_A-PUNTERO_A),E
-	LD (IX+PUNTERO_A-PUNTERO_A+1),D
-	LD L,(IX+PUNTERO_DECA-PUNTERO_A) ;CARGA PUNTERO DECODER
-	LD H,(IX+PUNTERO_DECA-PUNTERO_A+1)
-	PUSH BC
-	CALL DECODE_CANAL ;DECODIFICA CANAL
-	POP BC
-	LD (IX+PUNTERO_DECA-PUNTERO_A),L ;GUARDA PUNTERO DECODER
-	LD (IX+PUNTERO_DECA-PUNTERO_A+1),H
-	JP LOCALIZA_NOTA
-	.FIN_CANAL_A
-	LD HL,INTERR ;LOOP?
-	BIT 4,(HL)
-	JR NZ,FCA_CONT
-	POP AF
-	JP PLAYER_OFF
-	.FCA_CONT
-	LD L,(IX+PUNTERO_L_DECA-PUNTERO_A) ;CARGA PUNTERO INICIAL DECODER
-	LD H,(IX+PUNTERO_L_DECA-PUNTERO_A+1)
-	LD (IX+PUNTERO_DECA-PUNTERO_A),L
-	LD (IX+PUNTERO_DECA-PUNTERO_A+1),H
-	JR FIN_NOTA_A
-	.NO_FIN_CANAL_A
-	LD (IX+PUNTERO_A-PUNTERO_A),L ;(PUNTERO_A_B_C)=HL GUARDA PUNTERO
-	LD (IX+PUNTERO_A-PUNTERO_A+1),H
-	AND A ;NO REPRODUCE NOTA SI NOTA=0
-	JR Z,FIN_RUTINA
-	BIT 6,A ;SILENCIO?
-	JR Z,NO_SILENCIO_A
-	LD A,(BC)
-	AND 00010000B
-	JR NZ,SILENCIO_ENVOLVENTE
-	XOR A
-	LD (BC),A ;RESET VOLUMEN DEL CORRESPODIENTE CHIP
-	LD (IY+0),A
-	LD (IY+1),A
-	RET
-	.SILENCIO_ENVOLVENTE
-	LD A,0xFF
-	LD (PSG_REG+11),A
-	LD (PSG_REG+12),A
-	XOR A
-	LD (PSG_REG+13),A
-	LD (IY+0),A
-	LD (IY+1),A
-	RET
-	.NO_SILENCIO_A
-	LD (IX+REG_NOTA_A-PUNTERO_A),A ;REGISTRO DE LA NOTA DEL CANAL
-	CALL NOTA ;REPRODUCE NOTA
-	LD L,(IX+PUNTERO_P_A0-PUNTERO_A) ;HL=(PUNTERO_P_A0) RESETEA PAUTA
-	LD H,(IX+PUNTERO_P_A0-PUNTERO_A+1)
-	LD (IX+PUNTERO_P_A-PUNTERO_A),L ;(PUNTERO_P_A)=HL
-	LD (IX+PUNTERO_P_A-PUNTERO_A+1),H
-	.FIN_RUTINA
-	RET
-	;LOCALIZA EFECTO
-	;IN HL=(PUNTERO_P)
-	.LOCALIZA_EFECTO
-	LD L,(IX+0) ;HL=(PUNTERO_P)
-	LD H,(IX+1)
-	LD A,(HL)
-	CP 11000010B
-	JR NZ,LEJP0
-	INC HL
-	LD A,(HL)
-	INC HL
-	LD (IX+00),L
-	LD (IX+01),H
-	JP INICIA_SONIDO
-	.LEJP0
-	INC HL
-	BIT 7,A
-	JR Z,NO_FIN_CANAL_P ;
-	BIT 0,A
-	JR Z,FIN_CANAL_P
-	.FIN_NOTA_P
-	LD DE,(CANAL_P)
-	LD (IX+0),E
-	LD (IX+1),D
-	LD HL,(PUNTERO_DECP) ;CARGA PUNTERO DECODER
-	PUSH BC
-	CALL DECODE_CANAL ;DECODIFICA CANAL
-	POP BC
-	LD (PUNTERO_DECP),HL ;GUARDA PUNTERO DECODER
-	JP LOCALIZA_EFECTO
-	.FIN_CANAL_P
-	LD HL,(PUNTERO_L_DECP) ;CARGA PUNTERO INICIAL DECODER
-	LD (PUNTERO_DECP),HL
-	JR FIN_NOTA_P
-	.NO_FIN_CANAL_P
-	LD (IX+0),L ;(PUNTERO_A_B_C)=HL GUARDA PUNTERO
-	LD (IX+1),H
-	RET
-	; PAUTA DE LOS 3 CANALES
-	; .IN(IX):PUNTERO DE LA PAUTA
-	; (HL):REGISTRO DE VOLUMEN
-	; (IY):REGISTROS DE FRECUENCIA
-	; FORMATO PAUTA
-	; 7 6 5 4 3-0 3-0
-	; BYTE 1 [LOOP|OCT-1|OCT+1|ORNMT|VOL] - BYTE 2 [ | | | |PITCH/NOTA]
-	.PAUTA
-	BIT 4,(HL) ;SI LA ENVOLVENTE ESTA ACTIVADA NO ACTUA PAUTA
-	RET NZ
-	LD A,(IY+0)
-	LD B,(IY+1)
-	OR B
-	RET Z
-	PUSH HL
-	.PCAJP4
-	LD L,(IX+0)
-	LD H,(IX+1)
-	LD A,(HL)
-	BIT 7,A ;LOOP / EL RESTO DE BITS NO AFECTAN
-	JR Z,PCAJP0
-	AND 00011111B ;M¡XIMO LOOP PAUTA (0,32)X2!!!-> PARA ORNAMENTOS
-	RLCA ;X2
-	LD D,0
-	LD E,A
-	SBC HL,DE
-	LD A,(HL)
-	.PCAJP0
-	BIT 6,A ;OCTAVA -1
-	JR Z,PCAJP1
-	LD E,(IY+0)
-	LD D,(IY+1)
-	AND A
-	RRC D
-	RR E
-	LD (IY+0),E
-	LD (IY+1),D
-	JR PCAJP2
-	.PCAJP1
-	BIT 5,A ;OCTAVA +1
-	JR Z,PCAJP2
-	LD E,(IY+0)
-	LD D,(IY+1)
-	AND A
-	RLC E
-	RL D
-	LD (IY+0),E
-	LD (IY+1),D
-	.PCAJP2
-	LD A,(HL)
-	BIT 4,A
-	JR NZ,PCAJP6 ;ORNAMENTOS SELECCIONADOS
-	INC HL ;______________________ FUNCION PITCH DE FRECUENCIA__________________
-	PUSH HL
-	LD E,A
-	LD A,(HL) ;PITCH DE FRECUENCIA
-	LD L,A
-	AND A
-	LD A,E
-	JR Z,ORNMJP1
-	LD A,(IY+0) ;SI LA FRECUENCIA ES 0 NO HAY PITCH
-	ADD A,(IY+1)
-	AND A
-	LD A,E
-	JR Z,ORNMJP1
-	BIT 7,L
-	JR Z,ORNNEG
-	LD H,0xFF
-	JR PCAJP3
-	.ORNNEG
-	LD H,0
-	.PCAJP3
-	LD E,(IY+0)
-	LD D,(IY+1)
-	ADC HL,DE
-	LD (IY+0),L
-	LD (IY+1),H
-	JR ORNMJP1
-	.PCAJP6
-	INC HL ;______________________ FUNCION ORNAMENTOS__________________
-	PUSH HL
-	PUSH AF
-	LD A,(IX+REG_NOTA_A-PUNTERO_P_A) ;RECUPERA REGISTRO DE NOTA EN EL CANAL
-	LD E,(HL) ;
-	ADC E ;+- NOTA
-	CALL TABLA_NOTAS
-	POP AF
-	.ORNMJP1
-	POP HL
-	INC HL
-	LD (IX+0),L
-	LD (IX+1),H
-	.PCAJP5
-	POP HL
-	LD B,(IX+VOL_INST_A-PUNTERO_P_A) ;VOLUMEN RELATIVO
-	ADD B
-	JP P,PCAJP7
-	LD A,1 ;NO SE EXTIGUE EL VOLUMEN
-	.PCAJP7
-	AND 00001111B ;VOLUMEN FINAL MODULADO
-	LD (HL),A
-	RET
-	;NOTA - REPRODUCE UNA NOTA
-	;IN (A)=CODIGO DE LA NOTA
-	; (IY)=REGISTROS DE FRECUENCIA
-	.NOTA
-	LD L,C
-	LD H,B
-	BIT 4,(HL)
-	LD B,A
-	JR NZ,EVOLVENTES
-	LD A,B
-	.TABLA_NOTAS
-	LD HL,DATOS_NOTAS ;BUSCA FRECUENCIA
-	CALL EXT_WORD
-	LD (IY+0),E
-	LD (IY+1),D
-	RET
-	;IN (A)=CODIGO DE LA ENVOLVENTE
-	; (IY)=REGISTRO DE FRECUENCIA
-	.EVOLVENTES
-	LD HL,DATOS_NOTAS
-	;SUB 12
-	RLCA ;X2
-	LD D,0
-	LD E,A
-	ADD HL,DE
-	LD E,(HL)
-	INC HL
-	LD D,(HL)
-	PUSH DE
-	LD A,(ENVOLVENTE) ;FRECUENCIA DEL CANAL ON/OFF
-	RRA
-	JR NC,FRECUENCIA_OFF
-	LD (IY+0),E
-	LD (IY+1),D
-	JR CONT_ENV
-	.FRECUENCIA_OFF
-	LD DE,0x0000
-	LD (IY+0),E
-	LD (IY+1),D
-	;CALCULO DEL RATIO (OCTAVA ARRIBA)
-	.CONT_ENV
-	POP DE
-	PUSH AF
-	PUSH BC
-	AND 00000011B
-	LD B,A
-	;INC B
-	;AND A ;1/2
-	RR D
-	RR E
-	.CRTBC0
-	;AND A ;1/4 - 1/8 - 1/16
-	RR D
-	RR E
-	DJNZ CRTBC0
-	LD A,E
-	LD (PSG_REG+11),A
-	LD A,D
-	AND 00000011B
-	LD (PSG_REG+12),A
-	POP BC
-	POP AF ;SELECCION FORMA DE ENVOLVENTE
-	RRA
-	AND 00000110B ;0x08,0x0A,0x0C,0x0E
-	ADD 8
-	LD (PSG_REG+13),A
-	LD (ENVOLVENTE_BACK),A
-	RET
-	;EXTRAE UN WORD DE UNA TABLA
-	;.IN(HL)=DIRECCION TABLA
-	; (A)= POSICION
-	;OUT(DE)=WORD
-	.EXT_WORD
-	LD D,0
-	RLCA
-	LD E,A
-	ADD HL,DE
-	LD E,(HL)
-	INC HL
-	LD D,(HL)
-	RET
-	;TABLA DE DATOS DEL SELECTOR DEL CANAL DE EFECTOS DE RITMO
-	.TABLA_DATOS_CANAL_SFX
-	defw SELECT_CANAL_A,SELECT_CANAL_B,SELECT_CANAL_C
-	;BYTE 0:SFX_L
-	;BYTE 1:SFX_H
-	;BYTE 2:SFX_V
-	;BYTE 3:SFX_MIX
-	.SELECT_CANAL_A
-	defw PSG_REG_SEC+0, PSG_REG_SEC+1, PSG_REG_SEC+8
-	defb 10110001B
-	.SELECT_CANAL_B
-	defw PSG_REG_SEC+2, PSG_REG_SEC+3, PSG_REG_SEC+9
-	defb 10101010B
-	.SELECT_CANAL_C
-	defw PSG_REG_SEC+4, PSG_REG_SEC+5, PSG_REG_SEC+10
-	defb 10011100B
-	;_______________________________
-	.INTERR
-	defb 0 ;INTERRUPTORES 1=ON 0=OFF
-	;BIT 0=CARGA CANCION ON/OFF
-	;BIT 1=PLAYER ON/OFF
-	;BIT 2=EFECTOS ON/OFF
-	;BIT 3=SFX ON/OFF
-	;BIT 4=LOOP
-	;MUSICA **** EL ORDEN DE LAS VARIABLES ES FIJO ******
-	.SONG defb 0 ;DBN∫ DE CANCION
-	.TEMPO defb 0 ;DB TEMPO
-	.TTEMPO defb 0 ;DB CONTADOR TEMPO
-	.PUNTERO_A defw 0 ;DW PUNTERO DEL CANAL A
-	.PUNTERO_B defw 0 ;DW PUNTERO DEL CANAL B
-	.PUNTERO_C defw 0 ;DW PUNTERO DEL CANAL C
-	.CANAL_A defw 0 ;DW DIRECION DE INICIO DE LA MUSICA A
-	.CANAL_B defw 0 ;DW DIRECION DE INICIO DE LA MUSICA B
-	.CANAL_C defw 0 ;DW DIRECION DE INICIO DE LA MUSICA C
-	.PUNTERO_P_A defw 0 ;DW PUNTERO PAUTA CANAL A
-	.PUNTERO_P_B defw 0 ;DW PUNTERO PAUTA CANAL B
-	.PUNTERO_P_C defw 0 ;DW PUNTERO PAUTA CANAL C
-	.PUNTERO_P_A0 defw 0 ;DW INI PUNTERO PAUTA CANAL A
-	.PUNTERO_P_B0 defw 0 ;DW INI PUNTERO PAUTA CANAL B
-	.PUNTERO_P_C0 defw 0 ;DW INI PUNTERO PAUTA CANAL C
-	.PUNTERO_P_DECA defw 0 ;DW PUNTERO DE INICIO DEL DECODER CANAL A
-	.PUNTERO_P_DECB defw 0 ;DW PUNTERO DE INICIO DEL DECODER CANAL B
-	.PUNTERO_P_DECC defw 0 ;DW PUNTERO DE INICIO DEL DECODER CANAL C
-	.PUNTERO_DECA defw 0 ;DW PUNTERO DECODER CANAL A
-	.PUNTERO_DECB defw 0 ;DW PUNTERO DECODER CANAL B
-	.PUNTERO_DECC defw 0 ;DW PUNTERO DECODER CANAL C
-	.PUNTERO_EFECTO defw 0 ;DW PUNTERO DEL SONIDO QUE SE REPRODUCE
-	.REG_NOTA_A defb 0 ;DB REGISTRO DE LA NOTA EN EL CANAL A
-	.VOL_INST_A defb 0 ;DB VOLUMEN RELATIVO DEL INSTRUMENTO DEL CANAL A
-	.REG_NOTA_B defb 0 ;DB REGISTRO DE LA NOTA EN EL CANAL B
-	.VOL_INST_B defb 0 ;DB VOLUMEN RELATIVO DEL INSTRUMENTO DEL CANAL B ;VACIO
-	.REG_NOTA_C defb 0 ;DB REGISTRO DE LA NOTA EN EL CANAL C
-	.VOL_INST_C defb 0 ;DB VOLUMEN RELATIVO DEL INSTRUMENTO DEL CANAL C
-	.PUNTERO_L_DECA defw 0 ;DW PUNTERO DE INICIO DEL LOOP DEL DECODER CANAL A
-	.PUNTERO_L_DECB defw 0 ;DW PUNTERO DE INICIO DEL LOOP DEL DECODER CANAL B
-	.PUNTERO_L_DECC defw 0 ;DW PUNTERO DE INICIO DEL LOOP DEL DECODER CANAL C
-	;CANAL DE EFECTOS DE RITMO - ENMASCARA OTRO CANAL
-	.PUNTERO_P defw 0 ;DW PUNTERO DEL CANAL EFECTOS
-	.CANAL_P defw 0 ;DW DIRECION DE INICIO DE LOS EFECTOS
-	.PUNTERO_P_DECP defw 0 ;DW PUNTERO DE INICIO DEL DECODER CANAL P
-	.PUNTERO_DECP defw 0 ;DW PUNTERO DECODER CANAL P
-	.PUNTERO_L_DECP defw 0 ;DW PUNTERO DE INICIO DEL LOOP DEL DECODER CANAL P
-	;SELECT_CANAL_P defb INTERR+0x36 ;DB SELECCION DE CANAL DE EFECTOS DE RITMO
-	.SFX_L defw 0 ;DW DIRECCION BUFFER EFECTOS DE RITMO REGISTRO BAJO
-	.SFX_H defw 0 ;DW DIRECCION BUFFER EFECTOS DE RITMO REGISTRO ALTO
-	.SFX_V defw 0 ;DW DIRECCION BUFFER EFECTOS DE RITMO REGISTRO VOLUMEN
-	.SFX_MIX defw 0 ;DW DIRECCION BUFFER EFECTOS DE RITMO REGISTRO MIXER
-	;EFECTOS DE SONIDO
-	.N_SONIDO defb 0 ;DB : NUMERO DE SONIDO
-	.PUNTERO_SONIDO defw 0 ;DW : PUNTERO DEL SONIDO QUE SE REPRODUCE
-	.EFECTO_REGS defw 0
-	.SONIDO_REGS defw SELECT_CANAL_B ; na_th_an :: Percussion channel is fixed to 1
-	;DB (13) BUFFERs DE REGISTROS DEL PSG
-	.PSG_REG defs 16
-	.PSG_REG_SEC defs 16
-	.ENVOLVENTE
-	defb 0 ;DB : FORMA DE LA ENVOLVENTE
-	;BIT 0 : FRECUENCIA CANAL ON/OFF
-	;BIT 1-2 : RATIO
-	;BIT 3-3 : FORMA
-	.ENVOLVENTE_BACK defb 0 ;.defb BACKUP DE LA FORMA DE LA ENVOLENTE
-	.DATOS_NOTAS
-	defw 0x0000, 0x0000
-	defw 964,910,859,811,766,722,682,644,608,573
-	defw 541,511,482,455,430,405,383,361,341,322
-	defw 304,287,271,255,241,228,215,203,191,180
-	defw 170,161,152,143,135,128,121,114,107,101
-	defw 96,90,85,81,76,72,68,64,60,57
-	defw 54,51,48,45,43,40,38,36,34,32
-	.TABLA_SONG
-	defw 0x8800
-	.TABLA_EFECTOS
-	defw EFECTO0, EFECTO1, EFECTO2, EFECTO3, EFECTO4, EFECTO5, EFECTO6, EFECTO7
-	defw EFECTO8, EFECTO9
-	.LINE_COUNTER
-	defb 0
-	; LUT for transparent pixels in sprites
-	; taken from CPCTelera
-	._trpixlutc
-	BINARY "trpixlutc.bin"
-	._def_keys
-	defw $4404 ; LEFT O
-	defw $4308 ; RIGHT P
-	defw $4808 ; UP Q
-	defw $4820 ; DOWN A
-	defw $4580 ; BUTTON_A SPACE
-	defw $4808 ; BUTTON_B Q
-	defw $4801 ; KEY_AUX3 1
-	defw $4802 ; KEY_AUX4 2
-	defw $4880 ; KEY_AUX1 Z
-	defw $4780 ; KEY_AUX2 X
-	defw $4204 ; KEY_ENTER
-	defw $4804 ; KEY_ESC
-	._def_keys_joy
-	defw 0x4904, 0x4908, 0x4901, 0x4902, 0x4910, 0x4920
-	defw 0x4801, 0x4802, 0x4880, 0x4780, 0x4204, 0x4804
-	._player_cells
-	defw (_sprites + 0x0000), (_sprites + 0x0040), (_sprites + 0x0080), (_sprites + 0x00C0)
-	defw (_sprites + 0x0100), (_sprites + 0x0140), (_sprites + 0x0180), (_sprites + 0x01C0)
-	._enem_cells
-	defw (_sprites + 0x0200), (_sprites + 0x0240), (_sprites + 0x0280), (_sprites + 0x02C0)
-	defw (_sprites + 0x0300), (_sprites + 0x0340), (_sprites + 0x0380), (_sprites + 0x03C0)
-
-._blackout
-	ld	hl,240 % 256	;const
-	ld	a,l
-	ld	(_rda),a
-	ld a, 0xc0
-	.bo_l1
-	ld h, a
-	ld l, 0
-	ld b, a
-	ld a, (_rda)
-	ld (hl), a
-	ld a, b
-	ld d, a
-	ld e, 1
-	ld bc, 0x5ff
-	ldir
-	add 8
-	jr nz, bo_l1
-	ret
-
-
-
-._cpc_Border
-	ld a, l
-	ld bc, 0x7F11
-	out (c), c
-	out (c), a
 	ret
 
 
 
 ._system_init
-	call	_wyz_init
 	di
-	ld hl, 0xC000
-	xor a
-	ld (hl), a
-	ld de, 0xC001
-	ld bc, 0x3DFF
-	ldir
-	ld a, 195
-	ld (0x38), a
-	ld hl, _isr
-	ld (0x39), hl
-	ld b,0xf5
-	.wait_vsync
-	in a,(c)
-	rra
-	jp nc,wait_vsync
-	xor a
-	ld (isr_c1), a
-	jp isr_done
-	._isr
-	push af
-	push hl
-	push de
-	push bc
-	push ix
-	push iy
-	ld a, (isr_c1)
-	inc a
-	cp 6
-	jr c, _skip_ay_player
-	ld a, (isr_c2)
-	inc a
-	ld (isr_c2), a
-	ld a, (_isr_player_on)
-	or a
-	jr z, _skip_ay_player
-	call WYZ_PLAYER_ISR
-	xor a
-	._skip_ay_player
-	ld (isr_c1), a
-	pop iy
-	pop ix
-	pop bc
-	pop de
-	pop hl
-	pop af
+	ld bc, 0xf1f1
+	call SPInitIM2
+	ld de, 0xf1f1
+	call SPCreateGenericISR
+	ld l, 255
+	ld bc, _ISR
+	call SPRegisterHook
+	ld de, 0
+	call SPInitialize
 	ei
-	ret
-	.isr_c1
-	defb 0
-	.isr_c2
-	defb 0
-	.isr_done
-	ld	hl,84	;const
-	call	_cpc_Border
-	ld hl, _trpixlutc
-	ld de, 0xF800 + 0x600
-	call depack
-	call	_blackout
-	call my_inks
-	ld	hl,1	;const
-	call	cpc_SetMode
-	; Horizontal chars (32), CRTC REG #1
-	ld b, 0xbc
-	ld c, 1 ; REG = 1
-	out (c), c
-	inc b
-	ld c, 32 ; VALUE = 32
-	out (c), c
-	; Horizontal pos (42), CRTC REG #2
-	ld b, 0xbc
-	ld c, 2 ; REG = 2
-	out (c), c
-	inc b
-	ld c, 42 ; VALUE = 42
-	out (c), c
-	; Vertical chars (24), CRTC REG #6
-	ld b, 0xbc
-	ld c, 6 ; REG = 6
-	out (c), c
-	inc b
-	ld c, 24 ; VALUE = 24
-	out (c), c
-	.sprite_creation
-	ld ix, #(0xE000 + 0x600+(0*16))
-	ld a, (_sm_cox)
-	ld (ix + 6), a
-	ld a, (_sm_coy)
-	ld (ix + 7), a
-	ld hl, (_sm_invfunc)
-	ld (ix + 13), h
-	ld (ix + 12), l
-	ld hl, (_sm_updfunc)
-	ld (ix + 15), h
-	ld (ix + 14), l
-	ld hl, _sprite_18_a
-	ld (ix + 1), h
-	ld (ix + 0), l
-	ld (ix + 3), h
-	ld (ix + 2), l
-	ld ix, #(0xE000 + 0x600+(1*16))
-	ld de, 16
+	ld a,0
+	out (254),a
+	ld	hl,0 % 256	;const
+	push	hl
+	ld	hl,40 % 256	;const
+	push	hl
+	ld	hl,14	;const
+	push	hl
+	ld	hl,60840	;const
+	push	hl
+	call	sp_AddMemory
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	ld	hl,sp_JoyKeyboard
+	ld	(_joyfunc),hl
+	ld b, 0
+	ld hl, SPTileArray
+	ld de, _tileset
+	.load_tileset_loop
+	ld (hl), e
+	inc h
+	ld (hl), d
+	dec h
+	inc hl
+	inc de
+	inc de
+	inc de
+	inc de
+	inc de
+	inc de
+	inc de
+	inc de
+	djnz load_tileset_loop
+	ld	hl,_spritesClipValues
+	ld	(_spritesClip),hl
+	ld	hl,0 % 256	;const
+	push	hl
+	ld	hl,3 % 256	;const
+	push	hl
+	ld	hl,_sprite_2_a
+	push	hl
+	ld	hl,1 % 256	;const
+	push	hl
+	call	sp_CreateSpr
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	ld	(_sp_player),hl
+	push	hl
+	ld	hl,_sprite_2_b
+	push	hl
+	call	sp_AddColSpr
+	pop	bc
+	pop	bc
+	ld	hl,(_sp_player)
+	push	hl
+	ld	hl,_sprite_2_b
+	push	hl
+	call	sp_AddColSpr
+	pop	bc
+	pop	bc
+	ld	hl,_player+15
+	push	hl
+	ld	hl,_player+17
+	push	hl
+	ld	hl,_sprite_2_a
+	pop	de
+	call	l_pint
+	pop	de
+	call	l_pint
+	ld	hl,0 % 256	;const
+	ld	a,l
+	ld	(_rdi),a
+	jp	i_19
+.i_17
+	ld	hl,_rdi
+	ld	a,(hl)
+	inc	(hl)
+.i_19
+	ld	a,(_rdi)
+	cp	#(3 % 256)
+	jp	z,i_18
+	jp	nc,i_18
+	ld	hl,_sp_moviles
+	push	hl
+	ld	hl,(_rdi)
+	ld	h,0
+	add	hl,hl
+	pop	de
+	add	hl,de
+	push	hl
+	ld	hl,0 % 256	;const
+	push	hl
+	ld	hl,3 % 256	;const
+	push	hl
+	ld	hl,_sprite_9_a
+	push	hl
+	ld	hl,2 % 256	;const
+	push	hl
+	call	sp_CreateSpr
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	de
+	call	l_pint
+	ld	hl,_sp_moviles
+	push	hl
+	ld	hl,(_rdi)
+	ld	h,0
+	add	hl,hl
+	pop	de
+	add	hl,de
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	push	de
+	ld	hl,_sprite_9_b
+	push	hl
+	call	sp_AddColSpr
+	pop	bc
+	pop	bc
+	ld	hl,_sp_moviles
+	push	hl
+	ld	hl,(_rdi)
+	ld	h,0
+	add	hl,hl
+	pop	de
+	add	hl,de
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	push	de
+	ld	hl,_sprite_9_b
+	push	hl
+	call	sp_AddColSpr
+	pop	bc
+	pop	bc
+	ld	hl,_en_an_current_frame
+	push	hl
+	ld	hl,(_rdi)
+	ld	h,0
+	add	hl,hl
+	pop	de
+	add	hl,de
+	push	hl
+	ld	hl,_sprite_9_a
+	pop	de
+	call	l_pint
+	jp	i_17
+.i_18
+	.fix_sprites
+	ld b, 6
+	ld hl, (_sp_player)
+	call _fix_sprites
+	ld de, _sp_moviles
 	ld b, 3
-	.sp_sw_init_enems_loop
-	ld hl, cpc_PutSpTileMap8x16Px
-	ld (ix + 13), h
-	ld (ix + 12), l
-	ld hl, cpc_PutTrSp8x16TileMap2bPx
-	ld (ix + 15), h
-	ld (ix + 14), l
-	add ix, de
-	djnz sp_sw_init_enems_loop
-	ld ix, 0xE000 + 0x600
-	ld de, 16
-	ld b, 1 + 3 + 0 + 0 + 0
-	.sp_sw_init_turnoff_loop
-	ld a, #((0*8)/4)
-	ld (ix + 10), a
-	ld a, #(2*8)
-	ld (ix + 11), a
-	add ix, de
-	djnz sp_sw_init_turnoff_loop
-	ei
-	ret
-
-
-
-.__tile_address
-	ld a, (__y)
-	add a, a ; 2 4
-	add a, a ; 4 4
-	add a, a ; 8 4
-	ld h, 0 ; 2
-	ld l, a ; 4
-	add hl, hl ; 16 11
-	add hl, hl ; 32 11
-	; 44 t-states
-	; HL = _y * 32
-	ld de, (__x)
-	ld d, 0
-	add hl, de
-	; HL = _y * 32 + _x
-	ld de, _nametable
-	add hl, de
-	ex de, hl
-	; DE = buffer address
+	.fix_sprites_rep1
+	push bc
+	ld a, (de)
+	ld l, a
+	inc de
+	ld a, (de)
+	ld h, a
+	inc de
+	ld b, 6
+	call _fix_sprites
+	pop bc
+	djnz fix_sprites_rep1
 	ret
 
 
@@ -1762,35 +1719,69 @@
 	ld a, (hl)
 	ld (__t), a
 	._draw_coloured_tile_do
-	call __tile_address ; DE = buffer address
+	ld a, (__x)
+	ld c, a
+	ld a, (__y)
+	call SPCompDListAddr
 	ex de, hl
 	ld a, (__t)
 	sla a
 	sla a
 	add 64
-	ld (hl), a
-	inc hl
-	inc a
-	ld (hl), a
-	ld bc, 31
+	ld hl, _tileset + 2048
+	ld b, 0
+	ld c, a
 	add hl, bc
-	inc a
-	ld (hl), a
+	ld c, a
+	ld a, (hl)
+	ld (de), a
+	inc de
 	inc hl
+	ld a, c
+	ld (de), a
+	inc de
 	inc a
-	ld (hl), a
+	ld c, a
+	inc de
+	inc de
+	ld a, (hl)
+	ld (de), a
+	inc de
+	inc hl
+	ld a, c
+	ld (de), a
+	inc a
+	ex de, hl
+	ld bc, 123
+	add hl, bc
+	ex de, hl
+	ld c, a
+	ld a, (hl)
+	ld (de), a
+	inc de
+	inc hl
+	ld a, c
+	ld (de), a
+	inc de
+	inc a
+	ld c, a
+	inc de
+	inc de
+	ld a, (hl)
+	ld (de), a
+	inc de
+	ld a, c
+	ld (de), a
 	ld a, (__x)
+	ld c, a
+	inc a
 	ld e, a
 	ld a, (__y)
+	ld b, a
+	inc a
 	ld d, a
-	call cpc_UpdTileTable
-	inc e
-	call cpc_UpdTileTable
-	dec e
-	inc d
-	call cpc_UpdTileTable
-	inc e
-	call cpc_UpdTileTable
+	ld iy, fsClipStruct
+	call SPInvalidate
 	ret
 
 
@@ -1846,14 +1837,11 @@
 	ret
 
 
+;	SECTION	text
 
-._invalidate_viewport
-	ld B, 2
-	ld C, 0
-	ld D, 2+19
-	ld E, 0+29
-	call cpc_InvalidateRect
-	ret
+._clr2d
+	defm	"G"
+;	SECTION	code
 
 
 
@@ -1875,30 +1863,32 @@
 	ld hl, 10
 	call l_div_u
 	ld a, e
-	add 16
 	ld (__n), a
 	ld a, l
 	add 16
-	ld (__t), a
-	call __tile_address ; DE = buffer address
-	ld a, (__t)
-	ld (de), a
-	inc de
-	ld a, (__n)
-	ld (de), a
-	ld a, (__x)
 	ld e, a
-	ld a, (__y)
+	ld a, (_clr2d)
 	ld d, a
-	call cpc_UpdTileTable
-	inc e
-	call cpc_UpdTileTable
+	ld a, (__x)
+	ld c, a
+	ld a, (__y)
+	call SPPrintAtInv
+	ld a, (__n)
+	add 16
+	ld e, a
+	ld a, (_clr2d)
+	ld d, a
+	ld a, (__x)
+	inc a
+	ld c, a
+	ld a, (__y)
+	call SPPrintAtInv
 	ret
 
 
 
 ._draw_text
-	ld hl, 6
+	ld hl, 8
 	add hl, sp
 	ld a, (hl)
 	ld (__x), a
@@ -1908,42 +1898,53 @@
 	ld a, (hl)
 	ld (__y), a
 	dec hl
+	dec hl
+	ld a, (hl)
+	ld (__n), a
+	dec hl
 	ld a, (hl)
 	dec hl
 	ld l, (hl)
 	ld h, a
-	.draw_text_pre_loop
-	push hl
-	xor a
-	ld (__n), a ; Strlen
-	call __tile_address ; DE = buffer address
-	pop hl
 	.draw_text_loop
-	ld a, (hl)
-	or a
-	jr z, print_str_inv
-	cp 0x25
-	jr z, draw_text_loop
-	sub 32
-	ld (de), a
-	inc hl
-	inc de
-	ld a, (__n)
-	inc a
-	ld (__n), a
-	jr draw_text_loop
-	.print_str_inv
-	; Invalidate cells based upon strlen.
-	ld a, (__y)
-	ld b, a
-	ld d, a
 	ld a, (__x)
 	ld c, a
+	inc a
+	ld (__x), a
 	ld a, (__n)
-	add c
-	dec a
+	ld d, a
+	ld a, (hl)
+	or a
+	ret z
+	inc hl
+	cp 0x25
+	jr z, draw_text_nl
+	sub 32
 	ld e, a
-	call cpc_InvalidateRect
+	ld a, (__y)
+	push hl
+	call SPPrintAtInv
+	pop hl
+	jr draw_text_loop
+	.draw_text_nl
+	ld a, (__t)
+	ld (__x), a
+	ld a, (__y)
+	inc a
+	ld (__y), a
+	jr draw_text_loop
+	ret
+
+
+
+._any_key
+	ld hl, 0
+	xor a
+	in a, (0xfe)
+	and 0x1f
+	cp 0x1f
+	ret z
+	ld l, 1
 	ret
 
 
@@ -1953,30 +1954,24 @@
 	ld	h,0
 	ld	a,l
 	ld	(_pad_this_frame),a
-	ld hl, cpc_KeysData + 12
-	xor a
-	ld (_pad0), a
-	ld b, 1
-	pad_read_loop:
-	push bc
-	ld d, (hl)
-	inc hl
-	ld a, (hl)
-	inc hl
-	call cpc_TestKeyboard
-	and d
-	pop bc
-	jr z, pad_read_not_pressed
-	ld a, (_pad0)
-	or b
-	ld (_pad0), a
-	.pad_read_not_pressed
-	sla b
-	jr nz, pad_read_loop
-	ld a, (_pad0)
-	cpl
-	ld (_pad0), a
-	ld (_pad1), a
+	ld	hl,(_joyfunc)
+	push	hl
+	ld	hl,_keys
+	pop	de
+	ld	bc,i_21
+	push	hl
+	push	bc
+	push	de
+	ld	a,1
+	ret
+.i_21
+	pop	bc
+	ld	h,0
+	ld	a,l
+	ld	(_pad0),a
+	ld	h,0
+	ld	a,l
+	ld	(_pad1),a
 	ld	hl,(_pad_this_frame)
 	ld	h,0
 	call	l_com
@@ -1992,120 +1987,276 @@
 
 
 ._espera_activa
-.i_14
-	call	_pad_read
-	halt
-	halt
-	halt
-	halt
-	halt
-	halt
-	ld	a,(_pad_this_frame)
-	ld	e,a
-	ld	d,0
-	ld	hl,255	;const
-	call	l_ne
-	jp	c,i_13
-.i_15
-.i_12
+	call	_any_key
+	ld	h,0
+	ld	a,l
+	ld	(_pti),a
+.i_22
 	pop	de
 	pop	hl
 	dec	hl
 	push	hl
 	push	de
+	inc	hl
 	ld	a,h
 	or	l
-	jp	nz,i_14
-.i_13
+	jp	z,i_23
+	halt
+	call	_any_key
+	ld	h,0
+	ld	a,l
+	ld	(_ptj),a
+	and	a
+	jp	z,i_25
+	ld	a,(_pti)
+	cp	#(0 % 256)
+	jr	z,i_26_i_25
+.i_25
+	jp	i_24
+.i_26_i_25
+	jp	i_23
+.i_24
+	ld	hl,(_ptj)
+	ld	h,0
+	ld	a,l
+	ld	(_pti),a
+	jp	i_22
+.i_23
 	ret
 
 
 
 ._cortina
+	;; Antes que nada vamos a limpiar el PAPER de toda la pantalla
+	;; para que no queden artefactos feos
+	ld de, 22528 ; Apuntamos con DE a la zona de atributos
+	ld b, 3 ; Procesamos 3 tercios
+	.clearb1
+	push bc
+	ld b, 255 ; Procesamos los 256 atributos de cada tercio
+	.clearb2
+	ld a, (de) ; Nos traemos un atributo
+	and 199 ; Le hacemos la m√°scara 11000111 y dejamos PAPER a 0
+	ld (de), a ; Y lo volvemos a poner
+	inc de ; Siguiente atributo
+	djnz clearb2
+	pop bc
+	djnz clearb1
+	;; Y ahora el c√≥digo original que escrib√≠ para UWOL:
+	ld a, 8
+	.repitatodo
+	ld c, a ; Salvamos el contador de "repitatodo" en 'c'
+	ld hl, 16384
+	ld a, 12
+	.bucle
+	ld b, a ; Salvamos el contador de "bucle" en 'b'
+	ld a, 255
+	.bucle1
+	sla (hl)
+	inc hl
+	dec a
+	jr nz, bucle1
+	ld a, 255
+	.bucle2
+	srl (hl)
+	inc hl
+	dec a
+	jr nz, bucle2
+	ld a, b ; Restituimos el contador de "bucle" a 'a'
+	dec a
+	jr nz, bucle
+	ld a, c ; Restituimos el contador de "repitatodo" a 'a'
+	dec a
+	jr nz, repitatodo
 	ret
 
 
 
 ._step
+	ld a, 16
+	out (254), a
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	xor 16
+	out (254), a
+	ret
+
+
+
+._blackout
+	.blackout
+	ld hl, 22528
+	ld de, 22529
+	ld bc, 767
+	xor a
+	ld (hl), a
+	ldir
+	ret
 	ret
 
 
 
 ._unpack_screen
-	ld de, 0x9000
+	ld de, 16384
 	call depack
 	ret
 
 
 
+._select_controls
+	; Music generated by beepola
+	; call musicstart
+.i_27
+	ld	hl,(_key_1)
+	push	hl
+	call	sp_KeyPressed
+	pop	bc
+	ld	a,h
+	or	l
+	jp	z,i_29
+	ld	hl,sp_JoyKeyboard
+	ld	(_joyfunc),hl
+	jp	i_28
+.i_29
+	ld	hl,(_key_2)
+	push	hl
+	call	sp_KeyPressed
+	pop	bc
+	ld	a,h
+	or	l
+	jp	z,i_31
+	ld	hl,sp_JoyKempston
+	ld	(_joyfunc),hl
+	jp	i_28
+.i_31
+	ld	hl,(_key_3)
+	push	hl
+	call	sp_KeyPressed
+	pop	bc
+	ld	a,h
+	or	l
+	jp	z,i_33
+	ld	hl,sp_JoySinclair1
+	ld	(_joyfunc),hl
+	jp	i_28
+.i_33
+.i_32
+.i_30
+	jp	i_27
+.i_28
+.i_34
+	ret
+
+
+
 ._draw_rectangle
-	call __tile_address
-	ld a, (__y2)
-	inc a
-	ld hl, __y
-	sub (hl)
-	ld b, a
-	ld a, (__x)
-	add 31
-	ld hl, __x2
-	sub (hl)
-	dec a
-	ld (__n), a
-	.draw_rectangle_it1
-	push bc
-	ld a, (__x)
-	ld b, a
-	.draw_rectangle_it2
-	xor a
-	ld (de), a
-	inc de
-	inc b
-	ld a, (__x2)
-	inc a
-	cp b
-	jr nc, draw_rectangle_it2
-	ld hl, (__n)
-	ld h, 0
-	add hl, de
-	ex de, hl
-	pop bc
-	djnz draw_rectangle_it1
-	ld a, (__y)
-	ld b, a
 	ld a, (__x)
 	ld c, a
-	ld a, (__y2)
-	ld d, a
+	ld a, (__y)
+	ld b, a
 	ld a, (__x2)
 	ld e, a
-	call cpc_InvalidateRect
+	ld a, (__y2)
+	ld d, a
+	ld iy, fsClipStruct
+	call SPInvalidate
+	.dr_outter_loop
+	ld a, (__y)
+	ld b, a
+	ld a, (__y2)
+	cp b
+	ret c
+	ld a, (__x)
+	ld c, a
+	ld a, (__y)
+	call SPCompDListAddr
+	ld a, (__x)
+	ld b, a
+	ld a, (__x2)
+	inc a
+	sub b
+	ld b, a
+	.dr_inner_loop
+	ld a, (__t)
+	ld (hl), a
+	inc hl
+	xor a
+	ld (hl), a
+	inc hl
+	inc hl
+	inc hl
+	djnz dr_inner_loop
+	.dr_outter_loop_continue
+	ld hl, __y
+	inc (hl)
+	jr dr_outter_loop
 	ret
 
 
 
 ._render_this_enemy
-	ld d, 1
-	call _get_pointer_to_enem_or_coco
-	ld a, (_rdx)
-	add #(0*8)
-	add (ix + 6)
-	ld (ix + 8), a
-	ld a, (_rdy)
-	add #(2*8)
-	add (ix + 7)
-	ld (ix + 9), a
 	ld a, (_enit)
 	sla a
-	ld b, 0
 	ld c, a
+	ld b, 0
+	ld hl, _sp_moviles
+	add hl, bc
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
+	push de
+	pop ix
+	ld iy, vpClipStruct
+	ld hl, _en_an_current_frame
+	add hl, bc
+	ld e, (hl)
+	inc hl
+	ld d, (hl)
 	ld hl, _en_an_next_frame
 	add hl, bc
 	ld a, (hl)
 	inc hl
 	ld h, (hl)
 	ld l, a
-	ld (ix + 0), l
-	ld (ix + 1), h
+	or a
+	sbc hl, de
+	push bc
+	ld b, h
+	ld c, l
+	ld a, (_rdy)
+	srl a
+	srl a
+	srl a
+	add 2
+	ld h, a
+	ld a, (_rdx)
+	srl a
+	srl a
+	srl a
+	add 0
+	ld l, a
+	ld a, (_rdx)
+	and 7
+	ld d, a
+	ld a, (_rdy)
+	and 7
+	ld e, a
+	call SPMoveSprAbs
+	pop bc
+	ld hl, _en_an_current_frame
+	add hl, bc
+	ex de, hl
+	ld hl, _en_an_next_frame
+	add hl, bc
+	ldi
+	ldi
 	ret
 
 
@@ -2114,18 +2265,18 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_18
-.i_16
+	jp	i_37
+.i_35
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_18
+.i_37
 	ld	a,(_enit)
 	ld	e,a
 	ld	d,0
 	ld	hl,3	;const
 	call	l_ult
-	jp	nc,i_17
+	jp	nc,i_36
 	ld hl, (_enoffs)
 	ld bc, (_enit)
 	ld b, 0
@@ -2137,10 +2288,12 @@
 	ld a, (hl)
 	ld (_rdy), a
 	call _render_this_enemy
-	jp	i_16
-.i_17
-	ld a, (_gpy)
-	ld (_rdy), a
+	jp	i_35
+.i_36
+	ld	hl,(_gpy)
+	ld	h,0
+	ld	a,l
+	ld	(_rdy),a
 	ld a, (_player + 23)
 	and 2
 	jr z, render_player_on_screen
@@ -2155,29 +2308,33 @@
 	.render_player_set_x
 	ld (_rdx), a
 	.render_player
-	ld ix, #(0xE000 + 0x600 + (0*16))
-	ld a, (_gpx)
-	add #(0*8)
-	add (ix + 6)
-	ld (ix + 8), a
-	ld a, (_gpy)
-	add #(2*8)
-	add (ix + 7)
-	ld (ix + 9), a
-	ld a, (_player + 23)
-	and 2
-	jr z, player_render_graphic
-	ld a, (_half_life)
-	or a
-	jr z, player_render_graphic
-	.player_render_empty
-	ld hl, _sprite_18_a
-	jr player_render_set_sp0
-	.player_render_graphic
+	ld ix, (_sp_player)
+	ld iy, vpClipStruct
 	ld hl, (_player + 17)
-	.player_render_set_sp0
-	ld (ix + 0), l
-	ld (ix + 1), h
+	ld de, (_player + 15)
+	or a
+	sbc hl, de
+	ld b, h
+	ld c, l
+	ld a, (_rdy)
+	srl a
+	srl a
+	srl a
+	add 2
+	ld h, a
+	ld a, (_rdx)
+	srl a
+	srl a
+	srl a
+	add 0
+	ld l, a
+	ld a, (_rdx)
+	and 7
+	ld d, a
+	ld a, (_rdy)
+	and 7
+	ld e, a
+	call SPMoveSprAbs
 	ld	de,_player+15
 	ld	hl,(_player+17)
 	call	l_pint
@@ -2186,211 +2343,338 @@
 
 
 ._saca_a_todo_el_mundo_de_aqui
-	ld de, 15
-	ld b, 1 + 3 + 0 + 0 + 0
-	ld hl, 0xE000 + 0x600
-	.clear_sprites_loop
-	ld a, #(_sprite_18_a%256)
-	ld (hl), a
-	inc hl
-	ld a, #(_sprite_18_a/256)
-	ld (hl), a
-	add hl, de
-	djnz clear_sprites_loop
-	ret
-
-
-
-._cpc_UpdateNow
-	ld	hl,2	;const
-	add	hl,sp
-	ld	l,(hl)
-	ld	h,0
-	ld	a,h
-	or	l
-	jp	z,i_19
+	ld ix, (_sp_player)
+	ld iy, vpClipStruct
+	ld bc, 0
+	ld hl, 0xfefe
+	ld de, 0
+	call SPMoveSprAbs
+	xor a
+	.hide_sprites_enems_loop
+	ld (_gpit), a
+	sla a
+	ld c, a
 	ld b, 0
-	._cpc_screen_update_inv_loop
-	push bc
-	ld a, b
-	sla a
-	sla a
-	sla a
-	sla a
-	ld d, 0
-	ld e, a
-	ld hl, _sp_sw
-	add hl, de
-	ld b, h
-	ld c, l
-	ld de, _cpc_screen_update_inv_ret
-	push de
-	ld de, 12
-	add hl, de
+	ld hl, _sp_moviles
+	add hl, bc
 	ld e, (hl)
 	inc hl
 	ld d, (hl)
 	push de
-	ld h, b
-	ld l, c
-	ret
-	._cpc_screen_update_inv_ret
-	pop bc
-	inc b
-	ld a, b
-	cp 1 + 3 + 0 + 0 + 0
-	jr nz, _cpc_screen_update_inv_loop
-.i_19
-	._cpc_screen_update_upd_buffer
-	call cpc_UpdScr
-	ld	hl,2	;const
-	add	hl,sp
-	ld	l,(hl)
-	ld	h,0
-	ld	a,h
-	or	l
-	jp	z,i_20
-	ld b, 1 + 3 + 0 + 0 + 0
-	._cpc_screen_update_upd_loop
-	dec b
-	push bc
-	ld a, b
-	sla a
-	sla a
-	sla a
-	sla a
-	ld d, 0
-	ld e, a
-	ld hl, _sp_sw
-	add hl, de
-	ld b, h
-	ld c, l
-	ld de, _cpc_screen_update_upd_ret
-	push de
-	ld de, 14
-	add hl, de
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	push de
-	ld h, b
-	ld l, c
-	ret
-	._cpc_screen_update_upd_ret
-	pop bc
-	xor a
-	or b
-	jr nz, _cpc_screen_update_upd_loop
-	._cpc_screen_update_done
-.i_20
-	.ml_min_faps_loop
-	ld a, (isr_c2)
-	cp 2
-	jr c, ml_min_faps_loop
-	.ml_min_faps_loop_end
-	xor a
-	ld (isr_c2), a
-	call cpc_ShowTouchedTiles
-	call cpc_ResetTouchedTiles
-	ret
-
-
-
-._cpc_HardPause
-	ld a, l
-	.cpc_HardPause_outer
-	ld b, 6
-	.cpc_HardPause_inner
-	halt
-	djnz cpc_HardPause_inner
-	dec a
-	jr nz, cpc_HardPause_outer
-	ret
-
-
-
-._get_pointer_to_enem_or_coco
-	ld a, (_enit)
-	add d
-	ld h, 0
-	ld l, a
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	ld de, 0xE000 + 0x600
-	add hl, de
-	push hl
 	pop ix
+	ld iy, vpClipStruct
+	ld bc, 0
+	ld hl, 0xfefe
+	ld de, 0
+	call SPMoveSprAbs
+	ld a, (_gpit)
+	inc a
+	cp 3
+	jr nz, hide_sprites_enems_loop
+	ret
+
+
+
+._fix_sprites
+	.vtc
+	ld c, 0
+	ld a, 6
+	add a, l
+	ld l, a
+	jp nc, vtc_noinc1
+	inc h
+	.vtc_noinc1
+	.vtc_loop
+	ld a, (hl)
+	or a
+	jr z, vtc_fin
+	inc hl
+	ld l, (hl)
+	ld h, a
+	push hl
+	ld a, c
+	cp b
+	jr c, vtc_next
+	ld a, 7
+	add a, l
+	ld l, a
+	jp nc, vtc_noinc2
+	inc h
+	.vtc_noinc2
+	ld (hl), SPNullSprPtr%256
+	inc hl
+	ld (hl), SPNullSprPtr/256
+	.vtc_next
+	inc c
+	pop hl
+	jr vtc_loop
+	.vtc_fin
 	ret
 
 
 
 ._enems_en_an_calc
-	ld b, l
-	sla b
-	ld d, 1
-	call _get_pointer_to_enem_or_coco
-	ld a, b
+	ld a, l
+	sla a
 	ld hl, (_enit)
 	ld h, 0
 	ld de, _en_an_base_frame
 	add hl, de
 	ld (hl), a
-	ld b, 0
-	ld c, a
-	ld hl, _sm_cox
-	add hl, bc
-	ld a, (hl)
-	ld (ix + 6), a
-	ld hl, _sm_coy
-	add hl, bc
-	ld a, (hl)
-	add (ix + 7), a
-	sla c
-	ld hl, _sm_invfunc
-	add hl, bc
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	ld (ix + 12), e
-	ld (ix + 13), d
-	ld hl, _sm_updfunc
-	add hl, bc
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	ld d, (hl)
-	ld (ix + 14), e
-	ld (ix + 15), d
 	jp _enems_calc_frame
 	ret
 
 
+	.playsfx
+	;di
+	ld l,a
+	ld h,0
+	add hl,hl
+	ld de,proclist
+	add hl,de
+	ld a,(hl)
+	inc hl
+	ld h,(hl)
+	ld l,a
+	ld de,0
+	jp (hl)
+	.sound1 ;enemy destroyed
+	ex de,hl
+	ld bc,500
+	.sound1l0
+	ld a,(hl)
+	and 16
+	out ($FE),a
+	ld e,a
+	inc a
+	sla a
+	sla a
+	.sound1l1
+	dec a
+	jr nz,sound1l1
+	out ($FE),a
+	ld a,e
+	inc a
+	add a,a
+	add a,a
+	add a,a
+	.sound1l2
+	dec a
+	jr nz,sound1l2
+	ld a,b
+	inc hl
+	dec bc
+	ld a,b
+	or c
+	jr nz,sound1l0
+	;ei
+	ret
+	.sound2 ;enemy hit
+	ex de,hl
+	ld bc,40*256+100
+	.sound2l0
+	ld a,(hl)
+	and 16
+	out ($FE),a
+	inc hl
+	ld a,c
+	.sound2l1
+	dec a
+	jr nz,sound2l1
+	out ($FE),a
+	ld a,c
+	.sound2l2
+	dec a
+	jr nz,sound2l2
+	djnz sound2l0
+	;ei
+	ret
+	.sound3 ;something
+	ex de,hl
+	ld b,100
+	ld de,$1020
+	.sound3l0
+	ld a,(hl)
+	and d
+	out ($FE),a
+	inc hl
+	ld a,e
+	.sound3l0a
+	dec a
+	jr nz,sound3l0a
+	djnz sound3l0
+	ld b,250
+	.sound3l1
+	ld a,(hl)
+	and d
+	out ($FE),a
+	inc hl
+	ld a,2
+	.sound3l2
+	dec a
+	jr nz,sound3l2
+	xor a
+	out ($FE),a
+	ld a,e
+	.sound3l3
+	dec a
+	jr nz,sound3l3
+	djnz sound3l1
+	;ei
+	ret
+	.sound4 ;jump
+	ld bc,20*256+250
+	.sound4l0
+	ld a,16
+	out ($FE),a
+	ld a,4
+	.sound4l1
+	dec a
+	jr nz,sound4l1
+	out ($FE),a
+	ld a,c
+	.sound4l2
+	dec a
+	jr nz,sound4l2
+	dec c
+	dec c
+	djnz sound4l0
+	;ei
+	ret
+	.sound5 ;player hit
+	ex de,hl
+	ld bc,100*256+16
+	.sound5l0
+	ld a,(hl)
+	and c
+	out ($FE),a
+	inc hl
+	ld a,110
+	sub b
+	ld e,a
+	and c
+	out ($FE),a
+	.sound5l1
+	dec e
+	jr nz,sound5l1
+	djnz sound5l0
+	;ei
+	ret
+	.sound6 ;enemy destroyed 2
+	ex de,hl
+	ld bc,20*256+16
+	.sound6l0
+	ld a,(hl)
+	inc hl
+	and c
+	out ($FE),a
+	xor a
+	.sound6l0a
+	dec a
+	jr nz,sound6l0a
+	djnz sound6l0
+	.sound6l1
+	ld a,(hl)
+	inc hl
+	and c
+	out ($FE),a
+	.sound6l2
+	dec a
+	jr nz,sound6l2
+	djnz sound6l1
+	;ei
+	ret
+	.sound7 ;shot
+	ex de,hl
+	ld bc,100*256
+	.sound7l0
+	ld a,(hl)
+	inc hl
+	or c
+	and 16
+	out ($FE),a
+	ld a,(hl)
+	srl a
+	srl a
+	.sound7l1
+	dec a
+	jr nz,sound7l1
+	ld a,c
+	add a,4
+	ld c,a
+	djnz sound7l0
+	;ei
+	ret
+	.sound8 ;take item
+	ld a,200
+	jr soundItem
+	.sound9
+	ld a,175
+	jr soundItem
+	.sound10
+	ld a,100
+	.soundItem
+	ld (frq),a
+	ld b,4
+	ld d,128
+	.sound8l2
+	push bc
+	;.frq=$+1
+	; ld bc,2*256+200
+	defb #01 ;ld bc
+	.frq
+	defb 200 ;+200
+	defb 2 ;2*256
+	.sound8l0
+	push bc
+	ld b,50
+	.sound8l1
+	xor 16
+	and 16
+	out ($FE),a
+	ld e,a
+	ld a,d
+	.sound8l2b
+	dec a
+	jr nz,sound8l2b
+	out ($FE),a
+	ld a,129
+	sub d
+	.sound8l3
+	dec a
+	jr nz,sound8l3
+	ld a,e
+	ld e,c
+	.sound8l4
+	dec e
+	jr nz,sound8l4
+	djnz sound8l1
+	pop bc
+	ld a,c
+	sub 16
+	ld c,a
+	djnz sound8l0
+	pop bc
+	srl d
+	srl d
+	djnz sound8l2
+	;ei
+	ret
+	.proclist
+	defw sound1
+	defw sound2
+	defw sound3
+	defw sound4
+	defw sound5
+	defw sound6
+	defw sound7
+	defw sound8
+	defw sound9
+	defw sound10
 
-._select_controls
-	call	cpc_UpdScr
-	ld	hl,1	;const
-	call	cpc_ShowTileMap
-	ld	hl,0	;const
-	call	_wyz_play_music
-	.title_loop
-	call _pad_read
-	ld a, (_pad_this_frame)
-	and 0x40
-	jr nz, title_not_aux3
-	ld hl, _def_keys
-	jr copy_keys_to_extern
-	.title_not_aux3
-	ld a, (_pad_this_frame)
-	and 0x80
-	jr nz, title_loop
-	ld hl, _def_keys_joy
-	.copy_keys_to_extern
-	ld de, cpc_KeysData + 12
-	ld bc, 24
-	ldir
-	call	_wyz_stop_sound
+._peta_el_beeper
+	ld a, l
+	call playsfx
 	ret
 
 
@@ -2939,7 +3223,7 @@
 	defb	28
 
 	defm	""
-	defb	23
+	defb	17
 
 	defm	"wrA"
 	defb	204
@@ -2968,19 +3252,10 @@
 	defm	""
 	defb	7
 
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"`"
 	defb	2
 
-	defm	"L"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"L``"
 	defb	241
 
 	defm	""
@@ -3130,10 +3405,7 @@
 	defm	""
 	defb	0
 
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"P"
 	defb	192
 
 	defm	""
@@ -3169,11 +3441,8 @@
 	defm	""
 	defb	187
 
-	defm	""
-	defb	192
-
-	defm	""
-	defb	192
+	defm	"P"
+	defb	197
 
 	defm	""
 	defb	204
@@ -3182,7 +3451,7 @@
 	defb	17
 
 	defm	""
-	defb	17
+	defb	225
 
 	defm	""
 	defb	17
@@ -3199,11 +3468,8 @@
 	defm	""
 	defb	204
 
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
+	defm	"Q"
+	defb	225
 
 	defm	""
 	defb	17
@@ -3277,13 +3543,10 @@
 	defm	""
 	defb	153
 
-	defm	""
-	defb	155
+	defm	"[wwwww"
+	defb	25
 
-	defm	"wwwwwy"
-	defb	153
-
-	defm	""
+	defm	"i"
 	defb	185
 
 	defm	""
@@ -3328,7 +3591,7 @@
 	defm	""
 	defb	183
 
-	defm	"www"
+	defm	"wwq"
 	defb	153
 
 	defm	""
@@ -3347,10 +3610,10 @@
 	defb	187
 
 	defm	""
-	defb	187
+	defb	181
 
 	defm	"y"
-	defb	153
+	defb	149
 
 	defm	"y"
 	defb	153
@@ -3365,12 +3628,9 @@
 	defb	17
 
 	defm	""
-	defb	139
+	defb	21
 
-	defm	""
-	defb	183
-
-	defm	"w"
+	defm	"Ww"
 	defb	153
 
 	defm	""
@@ -3406,10 +3666,7 @@
 	defm	""
 	defb	187
 
-	defm	""
-	defb	177
-
-	defm	""
+	defm	"Q"
 	defb	151
 
 	defm	""
@@ -3904,7 +4161,10 @@
 	defm	""
 	defb	204
 
-	defm	"wwC"
+	defm	""
+	defb	23
+
+	defm	"wC"
 	defb	12
 
 	defm	""
@@ -3913,10 +4173,7 @@
 	defm	""
 	defb	203
 
-	defm	""
-	defb	17
-
-	defm	""
+	defm	"Q"
 	defb	28
 
 	defm	""
@@ -3968,12 +4225,9 @@
 	defb	187
 
 	defm	""
-	defb	0
+	defb	14
 
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"P"
 	defb	192
 
 	defm	""
@@ -3989,7 +4243,7 @@
 	defb	17
 
 	defm	""
-	defb	176
+	defb	190
 
 	defm	""
 	defb	0
@@ -4013,7 +4267,7 @@
 	defb	27
 
 	defm	""
-	defb	0
+	defb	14
 
 	defm	""
 	defb	0
@@ -4028,7 +4282,7 @@
 	defb	0
 
 	defm	""
-	defb	0
+	defb	14
 
 	defm	""
 	defb	0
@@ -4192,10 +4446,7 @@
 	defm	""
 	defb	17
 
-	defm	""
-	defb	27
-
-	defm	""
+	defm	"["
 	defb	187
 
 	defm	""
@@ -4241,7 +4492,7 @@
 	defb	187
 
 	defm	""
-	defb	187
+	defb	177
 
 	defm	""
 	defb	153
@@ -4286,7 +4537,7 @@
 	defb	153
 
 	defm	""
-	defb	153
+	defb	149
 
 	defm	"y"
 	defb	145
@@ -4294,8 +4545,8 @@
 	defm	""
 	defb	183
 
-	defm	"wwwww"
-	defb	145
+	defm	"wwwwq"
+	defb	150
 
 	defm	""
 	defb	155
@@ -4319,7 +4570,7 @@
 	defb	153
 
 	defm	""
-	defb	153
+	defb	149
 
 	defm	""
 	defb	187
@@ -8072,15 +8323,15 @@
 	ld	de,15	;const
 	ex	de,hl
 	call	l_eq
-	jp	nc,i_27
+	jp	nc,i_44
 	ld	hl,_player+28
 	call	l_gchar
 	ld	a,h
 	or	l
-	jr	nz,i_28_i_27
-.i_27
-	jp	i_26
-.i_28_i_27
+	jr	nz,i_45_i_44
+.i_44
+	jp	i_43
+.i_45_i_44
 	xor a
 	ld (__t), a
 	ld a, (_comportamiento_tiles) ;; beh [0]
@@ -8122,9 +8373,9 @@
 	pop	de
 	ld	a,l
 	ld	(de),a
-	ld	hl,8	;const
-	call	_wyz_play_sound
-.i_26
+	ld	hl,8 % 256	;const
+	call	_peta_el_beeper
+.i_43
 	ret
 
 
@@ -8156,7 +8407,7 @@
 	ld	hl,(_y0)
 	ld	h,0
 	push	hl
-	ld	hl,0	;const
+	ld	hl,0 % 256	;const
 	push	hl
 	push	hl
 	call	_set_map_tile
@@ -8170,17 +8421,17 @@
 	ld	hl,(_y1)
 	ld	h,0
 	push	hl
-	ld	hl,14	;const
+	ld	hl,14 % 256	;const
 	push	hl
-	ld	hl,8	;const
+	ld	hl,8 % 256	;const
 	push	hl
 	call	_set_map_tile
 	pop	bc
 	pop	bc
 	pop	bc
 	pop	bc
-	ld	hl,2	;const
-	call	_wyz_play_sound
+	ld	hl,2 % 256	;const
+	call	_peta_el_beeper
 	ret
 
 
@@ -8272,7 +8523,7 @@
 	ld	a,l
 	ld	(_rda),a
 	cp	#(14 % 256)
-	jp	nz,i_29
+	jp	nz,i_46
 	ld	hl,(_rdx)
 	ld	h,0
 	ld	a,l
@@ -8287,33 +8538,33 @@
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	m,i_30
+	jp	m,i_47
 	or	l
-	jp	z,i_30
+	jp	z,i_47
 	ld	hl,(_x0)
 	ld	h,0
 	inc	hl
 	ld	h,0
 	ld	a,l
 	ld	(_x1),a
-	jp	i_31
-.i_30
+	jp	i_48
+.i_47
 	ld	hl,(_x0)
 	ld	h,0
 	dec	hl
 	ld	h,0
 	ld	a,l
 	ld	(_x1),a
-.i_31
+.i_48
 	call	_move_tile_with_check
-.i_29
+.i_46
 	ld	a,(_rda)
 	ld	e,a
 	ld	d,0
 	ld	hl,15	;const
 	call	l_eq
 	call	c,_check_and_clear_cerrojo
-.i_32
+.i_49
 	ret
 
 
@@ -8346,7 +8597,7 @@
 	ld	a,l
 	ld	(_rda),a
 	cp	#(14 % 256)
-	jp	nz,i_33
+	jp	nz,i_50
 	ld	hl,(_rdx)
 	ld	h,0
 	ld	a,l
@@ -8361,33 +8612,33 @@
 	ld	hl,(_player+8)
 	xor	a
 	or	h
-	jp	m,i_34
+	jp	m,i_51
 	or	l
-	jp	z,i_34
+	jp	z,i_51
 	ld	hl,(_y0)
 	ld	h,0
 	inc	hl
 	ld	h,0
 	ld	a,l
 	ld	(_y1),a
-	jp	i_35
-.i_34
+	jp	i_52
+.i_51
 	ld	hl,(_y0)
 	ld	h,0
 	dec	hl
 	ld	h,0
 	ld	a,l
 	ld	(_y1),a
-.i_35
+.i_52
 	call	_move_tile_with_check
-.i_33
+.i_50
 	ld	a,(_rda)
 	ld	e,a
 	ld	d,0
 	ld	hl,15	;const
 	call	l_eq
 	call	c,_check_and_clear_cerrojo
-.i_36
+.i_53
 	ret
 
 
@@ -8399,21 +8650,21 @@
 	call	_pad_read
 	ld	hl,_pad0
 	ld	a,(hl)
-	and	#(4 % 256)
-	jp	z,i_38
+	rrca
+	jp	nc,i_55
 	ld	hl,_pad0
 	ld	a,(hl)
-	and	#(8 % 256)
-	jr	nz,i_39_i_38
-.i_38
-	jp	i_37
-.i_39_i_38
+	and	#(2 % 256)
+	jr	nz,i_56_i_55
+.i_55
+	jp	i_54
+.i_56_i_55
 	ld	hl,(_player+8)
 	xor	a
 	or	h
-	jp	m,i_40
+	jp	m,i_57
 	or	l
-	jp	z,i_40
+	jp	z,i_57
 	ld	hl,_player+8
 	push	hl
 	call	l_gint	;
@@ -8424,16 +8675,16 @@
 	ld	hl,(_player+8)
 	xor	a
 	or	h
-	jp	p,i_41
+	jp	p,i_58
 	ld	hl,0	;const
 	ld	(_player+8),hl
-.i_41
-	jp	i_42
-.i_40
+.i_58
+	jp	i_59
+.i_57
 	ld	hl,(_player+8)
 	xor	a
 	or	h
-	jp	p,i_43
+	jp	p,i_60
 	ld	hl,_player+8
 	push	hl
 	call	l_gint	;
@@ -8444,23 +8695,23 @@
 	ld	hl,(_player+8)
 	xor	a
 	or	h
-	jp	m,i_44
+	jp	m,i_61
 	or	l
-	jp	z,i_44
+	jp	z,i_61
 	ld	hl,0	;const
 	ld	(_player+8),hl
-.i_44
-.i_43
-.i_42
+.i_61
+.i_60
+.i_59
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_thrusting),a
-	jp	i_45
-.i_37
+	jp	i_62
+.i_54
 	ld	hl,_pad0
 	ld	a,(hl)
-	and	#(4 % 256)
-	jp	nz,i_46
+	rrca
+	jp	c,i_63
 	ld	hl,_player+8
 	push	hl
 	call	l_gint	;
@@ -8472,17 +8723,17 @@
 	ld	de,65280	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_47
+	jp	nc,i_64
 	ld	hl,65280	;const
 	ld	(_player+8),hl
-.i_47
+.i_64
 	ld	hl,_player+22
 	ld	(hl),#(4 % 256 % 256)
-.i_46
+.i_63
 	ld	hl,_pad0
 	ld	a,(hl)
-	and	#(8 % 256)
-	jp	nz,i_48
+	and	#(2 % 256)
+	jp	nz,i_65
 	ld	hl,_player+8
 	push	hl
 	call	l_gint	;
@@ -8494,18 +8745,17 @@
 	ld	de,256	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_49
+	jp	nc,i_66
 	ld	hl,256	;const
 	ld	(_player+8),hl
-.i_49
+.i_66
 	ld	hl,_player+22
 	ld	(hl),#(6 % 256 % 256)
-	ld	l,(hl)
-	ld	h,0
-.i_48
-.i_45
-	ld	a,#(1 % 256 % 256)
+.i_65
+	ld	hl,1 % 256	;const
+	ld	a,l
 	ld	(_thrusting),a
+.i_62
 	ld	hl,_player+1+1
 	push	hl
 	ld	e,(hl)
@@ -8518,18 +8768,18 @@
 	ld	hl,(_player+1+1)
 	xor	a
 	or	h
-	jp	p,i_50
+	jp	p,i_67
 	ld	hl,0	;const
 	ld	(_player+1+1),hl
-.i_50
+.i_67
 	ld	hl,(_player+1+1)
 	ld	de,9216	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_51
+	jp	nc,i_68
 	ld	hl,9216	;const
 	ld	(_player+1+1),hl
-.i_51
+.i_68
 	ld hl, (_player + 2)
 	call HLshr6_A
 	ld (_gpy), A
@@ -8539,7 +8789,7 @@
 	ld	(_pvy_total),hl
 	ld	a,h
 	or	l
-	jp	z,i_52
+	jp	z,i_69
 	ld	hl,(_gpx)
 	ld	h,0
 	ld	bc,4
@@ -8563,9 +8813,9 @@
 	ld	hl,(_pvy_total)
 	xor	a
 	or	h
-	jp	m,i_53
+	jp	m,i_70
 	or	l
-	jp	z,i_53
+	jp	z,i_70
 	ld	hl,(_gpy)
 	ld	h,0
 	ld	bc,15
@@ -8583,12 +8833,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(12 % 256)
-	jp	nz,i_55
+	jp	nz,i_72
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(12 % 256)
-	jp	z,i_54
-.i_55
+	jp	z,i_71
+.i_72
 	call	_check_lock_or_box_vert
 	ld	hl,0	;const
 	ld	(_player+8),hl
@@ -8597,13 +8847,13 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), HL
-.i_54
-	jp	i_57
-.i_53
+.i_71
+	jp	i_74
+.i_70
 	ld	hl,(_pvy_total)
 	xor	a
 	or	h
-	jp	p,i_58
+	jp	p,i_75
 	ld	hl,(_gpy)
 	ld	h,0
 	ld	bc,4
@@ -8621,12 +8871,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	nz,i_60
+	jp	nz,i_77
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	z,i_59
-.i_60
+	jp	z,i_76
+.i_77
 	call	_check_lock_or_box_vert
 	ld	hl,0	;const
 	ld	(_player+8),hl
@@ -8636,40 +8886,40 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), HL
-.i_59
-.i_58
-.i_57
+.i_76
+.i_75
+.i_74
 	ld	hl,_at1
 	ld	a,(hl)
 	rrca
-	jp	c,i_63
+	jp	c,i_80
 	ld	hl,_at2
 	ld	a,(hl)
 	rrca
-	jp	nc,i_62
-.i_63
+	jp	nc,i_79
+.i_80
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_hit),a
-.i_62
-.i_52
+.i_79
+.i_69
 	ld	hl,_pad0
 	ld	a,(hl)
-	rrca
-	jp	nc,i_66
+	and	#(4 % 256)
+	jp	z,i_83
 	ld	hl,_pad0
 	ld	a,(hl)
-	and	#(2 % 256)
-	jr	nz,i_67_i_66
-.i_66
-	jp	i_65
-.i_67_i_66
+	and	#(8 % 256)
+	jr	nz,i_84_i_83
+.i_83
+	jp	i_82
+.i_84_i_83
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	m,i_68
+	jp	m,i_85
 	or	l
-	jp	z,i_68
+	jp	z,i_85
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8680,16 +8930,16 @@
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	p,i_69
+	jp	p,i_86
 	ld	hl,0	;const
 	ld	(_player+6),hl
-.i_69
-	jp	i_70
-.i_68
+.i_86
+	jp	i_87
+.i_85
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	p,i_71
+	jp	p,i_88
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8700,23 +8950,23 @@
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	m,i_72
+	jp	m,i_89
 	or	l
-	jp	z,i_72
+	jp	z,i_89
 	ld	hl,0	;const
 	ld	(_player+6),hl
-.i_72
-.i_71
-.i_70
+.i_89
+.i_88
+.i_87
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_thrusting),a
-	jp	i_73
-.i_65
+	jp	i_90
+.i_82
 	ld	hl,_pad0
 	ld	a,(hl)
-	rrca
-	jp	c,i_74
+	and	#(4 % 256)
+	jp	nz,i_91
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8728,17 +8978,17 @@
 	ld	de,65280	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_75
+	jp	nc,i_92
 	ld	hl,65280	;const
 	ld	(_player+6),hl
-.i_75
+.i_92
 	ld	hl,_player+22
 	ld	(hl),#(2 % 256 % 256)
-.i_74
+.i_91
 	ld	hl,_pad0
 	ld	a,(hl)
-	and	#(2 % 256)
-	jp	nz,i_76
+	and	#(8 % 256)
+	jp	nz,i_93
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8750,17 +9000,17 @@
 	ld	de,256	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_77
+	jp	nc,i_94
 	ld	hl,256	;const
 	ld	(_player+6),hl
-.i_77
+.i_94
 	ld	hl,_player+22
 	ld	(hl),#(0 % 256 % 256)
-.i_76
+.i_93
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_thrusting),a
-.i_73
+.i_90
 	ld	hl,_player
 	push	hl
 	ld	e,(hl)
@@ -8773,18 +9023,18 @@
 	ld	hl,(_player)
 	xor	a
 	or	h
-	jp	p,i_78
+	jp	p,i_95
 	ld	hl,0	;const
 	ld	(_player),hl
-.i_78
+.i_95
 	ld	hl,(_player)
 	ld	de,14336	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_79
+	jp	nc,i_96
 	ld	hl,14336	;const
 	ld	(_player),hl
-.i_79
+.i_96
 	ld hl, (_player)
 	call HLshr6_A
 	ld (_gpx), A
@@ -8794,7 +9044,7 @@
 	ld	(_pvx_total),hl
 	ld	a,h
 	or	l
-	jp	z,i_80
+	jp	z,i_97
 	ld	hl,(_gpy)
 	ld	h,0
 	ld	bc,4
@@ -8818,9 +9068,9 @@
 	ld	hl,(_pvx_total)
 	xor	a
 	or	h
-	jp	m,i_81
+	jp	m,i_98
 	or	l
-	jp	z,i_81
+	jp	z,i_98
 	ld	hl,(_gpx)
 	ld	h,0
 	ld	bc,12
@@ -8838,12 +9088,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	nz,i_83
+	jp	nz,i_100
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	z,i_82
-.i_83
+	jp	z,i_99
+.i_100
 	call	_check_lock_or_box_horz
 	ld	hl,0	;const
 	ld	(_player+6),hl
@@ -8853,13 +9103,13 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player), HL
-.i_82
-	jp	i_85
-.i_81
+.i_99
+	jp	i_102
+.i_98
 	ld	hl,(_pvx_total)
 	xor	a
 	or	h
-	jp	p,i_86
+	jp	p,i_103
 	ld	hl,(_gpx)
 	ld	h,0
 	ld	bc,4
@@ -8877,12 +9127,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	nz,i_88
+	jp	nz,i_105
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	z,i_87
-.i_88
+	jp	z,i_104
+.i_105
 	call	_check_lock_or_box_horz
 	ld	hl,0	;const
 	ld	(_player+6),hl
@@ -8892,25 +9142,25 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player), HL
-.i_87
-.i_86
-.i_85
+.i_104
+.i_103
+.i_102
 	ld	hl,_at1
 	ld	a,(hl)
 	rrca
-	jp	c,i_91
+	jp	c,i_108
 	ld	hl,_at2
 	ld	a,(hl)
 	rrca
-	jp	nc,i_90
-.i_91
+	jp	nc,i_107
+.i_108
 	ld	a,#(1 % 256 % 256)
 	ld	(_hit),a
 	ld	de,_player+8
 	ld	hl,(_pvy_total)
 	call	l_pint
-.i_90
-.i_80
+.i_107
+.i_97
 	ld	hl,(_pvx_total)
 	call	_abs
 	push	hl
@@ -8925,30 +9175,30 @@
 	ld	(_rdi),a
 	ld	a,(_hit)
 	and	a
-	jp	z,i_93
+	jp	z,i_110
 	ld	a,(_rdi)
 	and	a
-	jp	z,i_94
+	jp	z,i_111
 	ld	hl,_player+6
 	push	hl
 	ld	hl,(_pvx_total)
 	call	l_neg
 	pop	de
 	call	l_pint
-	jp	i_95
-.i_94
+	jp	i_112
+.i_111
 	ld	hl,_player+8
 	push	hl
 	ld	hl,(_pvy_total)
 	call	l_neg
 	pop	de
 	call	l_pint
-.i_95
+.i_112
 	ld	hl,_player+46
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,_player+36
 	ld	(hl),#(1 % 256 % 256)
-.i_93
+.i_110
 	ld	hl,_player+20
 	push	hl
 	ld	hl,_player+22
@@ -8957,7 +9207,7 @@
 	ld	(de),a
 	ld	a,(_thrusting)
 	and	a
-	jp	z,i_96
+	jp	z,i_113
 	ld	hl,_player+20
 	push	hl
 	ld	l,(hl)
@@ -8965,14 +9215,14 @@
 	push	hl
 	ld	a,(_rdi)
 	and	a
-	jp	z,i_97
+	jp	z,i_114
 	ld	hl,(_gpx)
 	ld	h,0
-	jp	i_98
-.i_97
+	jp	i_115
+.i_114
 	ld	hl,(_gpy)
 	ld	h,0
-.i_98
+.i_115
 	ex	de,hl
 	ld	l,#(3 % 256)
 	call	l_asr_u
@@ -8984,7 +9234,7 @@
 	pop	de
 	ld	a,l
 	ld	(de),a
-.i_96
+.i_113
 	ld	hl,_player+17
 	push	hl
 	ld	hl,_player_cells
@@ -9336,18 +9586,18 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_101
-.i_99
+	jp	i_118
+.i_116
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_101
+.i_118
 	ld	a,(_enit)
 	ld	e,a
 	ld	d,0
 	ld	hl,3	;const
 	call	l_ult
-	jp	nc,i_100
+	jp	nc,i_117
 	ld bc, (_enit)
 	xor a
 	ld b, a
@@ -9381,27 +9631,27 @@
 	ld	(__en_t),a
 	ld	hl,(__en_t)
 	ld	h,0
-.i_104
+.i_121
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_105
+	jp	z,i_122
 	cp	#(2% 256)
-	jp	z,i_106
+	jp	z,i_123
 	cp	#(3% 256)
-	jp	z,i_107
+	jp	z,i_124
 	cp	#(4% 256)
-	jp	z,i_108
-	jp	i_109
-.i_105
-.i_106
-.i_107
-.i_108
+	jp	z,i_125
+	jp	i_126
+.i_122
+.i_123
+.i_124
+.i_125
 	ld	hl,(__en_t)
 	ld	h,0
 	dec	hl
 	call	_enems_en_an_calc
-	jp	i_103
-.i_109
+	jp	i_120
+.i_126
 	ld	hl,_en_an_next_frame
 	push	hl
 	ld	hl,(_enit)
@@ -9413,9 +9663,9 @@
 	ld	hl,_sprite_18_a
 	pop	de
 	call	l_pint
-.i_103
-	jp	i_99
-.i_100
+.i_120
+	jp	i_116
+.i_117
 	ret
 
 
@@ -9431,16 +9681,16 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_112
-.i_110
+	jp	i_129
+.i_127
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_112
+.i_129
 	ld	a,(_enit)
 	cp	#(3 % 256)
-	jp	z,i_111
-	jp	nc,i_111
+	jp	z,i_128
+	jp	nc,i_128
 	ld	de,(_enoffs)
 	ld	hl,(_enit)
 	ld	h,0
@@ -9451,7 +9701,7 @@
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_113
+	jp	z,i_130
 	ld a, (_maincounter)
 	and 3
 	jr nz, enems_animate_done
@@ -9468,7 +9718,7 @@
 	ld	d,0
 	ld	hl,4	;const
 	call	l_ule
-	jp	nc,i_114
+	jp	nc,i_131
 	.en_linear_horizontal_axis
 	ld a, (__en_mx)
 	or a
@@ -9616,33 +9866,33 @@
 	ld (__en_my), a
 	._en_bg_collision_vert_done
 	.en_linear_done
-.i_114
+.i_131
 	call	_enems_calc_frame
 	ld	hl,(_en_tocado)
 	ld	h,0
 	ld	de,0
 	call	l_eq
-	jp	nc,i_116
+	jp	nc,i_133
 	call	_collide_enem
 	ld	a,h
 	or	l
-	jp	z,i_116
+	jp	z,i_133
 	ld	a,(__en_t)
 	cp	#(128 % 256)
-	jp	z,i_116
-	jr	c,i_117_i_116
-.i_116
-	jp	i_115
-.i_117_i_116
+	jp	z,i_133
+	jr	c,i_134_i_133
+.i_133
+	jp	i_132
+.i_134_i_133
 	ld	a,(_player+23)
 	and	a
-	jp	nz,i_118
+	jp	nz,i_135
 	ld	a,#(1 % 256 % 256)
 	ld	(_en_tocado),a
 	ld	hl,_player+36
 	ld	(hl),#(1 % 256 % 256)
-	ld	hl,2	;const
-	call	_wyz_play_sound
+	ld	hl,2 % 256	;const
+	call	_peta_el_beeper
 	ld	hl,_player+46
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,_player+36
@@ -9651,14 +9901,14 @@
 	call	l_gchar
 	ld	a,h
 	or	l
-	jp	z,i_119
+	jp	z,i_136
 	ld	hl,(_gpx)
 	ld	h,0
 	ex	de,hl
 	ld	hl,(__en_x)
 	ld	h,0
 	call	l_ult
-	jp	nc,i_120
+	jp	nc,i_137
 	ld	hl,_player+6
 	push	hl
 	ld	hl,__en_mx
@@ -9671,8 +9921,8 @@
 	call	l_neg
 	pop	de
 	call	l_pint
-	jp	i_121
-.i_120
+	jp	i_138
+.i_137
 	ld	hl,_player+6
 	push	hl
 	ld	hl,__en_mx
@@ -9688,20 +9938,20 @@
 	call	l_asl
 	pop	de
 	call	l_pint
-.i_121
-.i_119
+.i_138
+.i_136
 	ld	hl,__en_my
 	call	l_gchar
 	ld	a,h
 	or	l
-	jp	z,i_122
+	jp	z,i_139
 	ld	hl,(_gpy)
 	ld	h,0
 	ex	de,hl
 	ld	hl,(__en_y)
 	ld	h,0
 	call	l_ult
-	jp	nc,i_123
+	jp	nc,i_140
 	ld	hl,_player+8
 	push	hl
 	ld	hl,__en_my
@@ -9714,8 +9964,8 @@
 	call	l_neg
 	pop	de
 	call	l_pint
-	jp	i_124
-.i_123
+	jp	i_141
+.i_140
 	ld	hl,_player+8
 	push	hl
 	ld	hl,__en_my
@@ -9731,16 +9981,16 @@
 	call	l_asl
 	pop	de
 	call	l_pint
-.i_124
-.i_122
-.i_118
-.i_115
-.i_113
-.i_125
+.i_141
+.i_139
+.i_135
+.i_132
+.i_130
+.i_142
 	.enems_update_values_and_exit
 	call enems_update_values_store
-	jp	i_110
-.i_111
+	jp	i_127
+.i_128
 	ret
 
 
@@ -9866,12 +10116,15 @@
 	BINARY "endingc.bin"
 
 ._title_screen
+	call SPUpdateNow
 	call	_blackout
 	ld hl, _s_title
 	call _unpack_screen
-	ld	hl,12	;const
+	ld	hl,12 % 256	;const
 	push	hl
-	ld	hl,13	;const
+	ld	hl,13 % 256	;const
+	push	hl
+	ld	hl,4 % 256	;const
 	push	hl
 	ld	hl,i_1+0
 	push	hl
@@ -9879,12 +10132,8 @@
 	pop	bc
 	pop	bc
 	pop	bc
-	ld	hl,0	;const
-	push	hl
-	call	_cpc_UpdateNow
 	pop	bc
-	ld	hl,0	;const
-	call	_wyz_play_music
+	call SPUpdateNow
 	call	_select_controls
 	ret
 
@@ -9894,21 +10143,36 @@
 	call	_blackout
 	ld hl, _s_ending
 	call _unpack_screen
-	ld	hl,1	;const
-	call	cpc_ShowTileMap
-	ld	hl,0	;const
-	call	_wyz_play_music
+	ld	hl,0 % 256	;const
+	ld	a,l
+	ld	(_gpit),a
+	jp	i_145
+.i_143
+	ld	hl,_gpit
+	ld	a,(hl)
+	inc	(hl)
+.i_145
+	ld	a,(_gpit)
+	cp	#(4 % 256)
+	jp	z,i_144
+	jp	nc,i_144
+	ld	hl,7 % 256	;const
+	call	_peta_el_beeper
+	ld	hl,2 % 256	;const
+	call	_peta_el_beeper
+	jp	i_143
+.i_144
+	ld	hl,9 % 256	;const
+	call	_peta_el_beeper
 	ld	hl,5000	;const
 	push	hl
 	call	_espera_activa
 	pop	bc
-	call	_wyz_stop_sound
 	ret
 
 
 
 ._game_over
-	call	_wyz_stop_sound
 	ld a, 10
 	ld (__x), a
 	ld a, 11
@@ -9920,9 +10184,11 @@
 	ld a, 72
 	ld (__t), a
 	call	_draw_rectangle
-	ld	hl,11	;const
+	ld	hl,11 % 256	;const
 	push	hl
-	ld	hl,12	;const
+	ld	hl,12 % 256	;const
+	push	hl
+	ld	hl,79 % 256	;const
 	push	hl
 	ld	hl,i_1+9
 	push	hl
@@ -9930,10 +10196,10 @@
 	pop	bc
 	pop	bc
 	pop	bc
-	ld	hl,0	;const
-	push	hl
-	call	_cpc_UpdateNow
 	pop	bc
+	call SPUpdateNow
+	ld	hl,10 % 256	;const
+	call	_peta_el_beeper
 	ld	hl,500	;const
 	push	hl
 	call	_espera_activa
@@ -9943,8 +10209,9 @@
 
 
 ._main
+	ld sp, 61936
 	call	_system_init
-.i_126
+.i_146
 	call	_title_screen
 	ld	hl,1 % 256	;const
 	ld	a,l
@@ -9968,14 +10235,12 @@
 	ld (_ezg_old), a
 	ld (_coins_old), a
 	ld (_on_pant), a
-	ld	hl,1	;const
-	call	_wyz_play_music
-.i_128
+.i_148
 	ld	hl,(_playing)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_129
+	jp	z,i_149
 	ld a, (_n_pant)
 	ld c, a
 	ld a, (_on_pant)
@@ -9993,10 +10258,10 @@
 	ld	hl,(_objs_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_130
-	ld	hl,30	;const
+	jp	nc,i_150
+	ld	hl,30 % 256	;const
 	push	hl
-	ld	hl,12	;const
+	ld	hl,12 % 256	;const
 	push	hl
 	ld	hl,_player+27
 	call	l_gchar
@@ -10011,31 +10276,31 @@
 	ld	h,0
 	ld	a,l
 	ld	(_objs_old),a
-.i_130
+.i_150
 	ld	de,(_player+29)
 	ld	hl,(_life_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_131
+	jp	nc,i_151
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	m,i_132
+	jp	m,i_152
 	or	l
-	jp	z,i_132
+	jp	z,i_152
 	ld	hl,(_player+29)
 	ld	h,0
 	ld	a,l
 	ld	(_pti),a
-	jp	i_133
-.i_132
+	jp	i_153
+.i_152
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_pti),a
-.i_133
-	ld	hl,30	;const
+.i_153
+	ld	hl,30 % 256	;const
 	push	hl
-	ld	hl,8	;const
+	ld	hl,8 % 256	;const
 	push	hl
 	ld	hl,(_pti)
 	ld	h,0
@@ -10048,14 +10313,14 @@
 	ld	h,0
 	ld	a,l
 	ld	(_life_old),a
-.i_131
+.i_151
 	ld	hl,_player+28
 	call	l_gchar
 	ex	de,hl
 	ld	hl,(_keys_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_134
+	jp	nc,i_154
 	ld a, 30
 	ld (__x), a
 	ld a, 16
@@ -10063,7 +10328,7 @@
 	ld a, (_player + 28)
 	ld (_keys_old), a
 	call draw_2_digits_shortcut
-.i_134
+.i_154
 	ld hl, _maincounter
 	inc (hl)
 	ld a, (_half_life)
@@ -10102,21 +10367,21 @@
 	jp c, _hotspots_else
 	ld	a,(_hotspot_t)
 	and	a
-	jp	z,i_135
+	jp	z,i_155
 	ld	a,#(0 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,(_hotspot_t)
 	ld	h,0
-.i_138
+.i_158
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_139
+	jp	z,i_159
 	cp	#(2% 256)
-	jp	z,i_140
+	jp	z,i_160
 	cp	#(3% 256)
-	jp	z,i_141
-	jp	i_137
-.i_139
+	jp	z,i_161
+	jp	i_157
+.i_159
 	ld	hl,_player+27
 	push	hl
 	call	l_gchar
@@ -10124,10 +10389,10 @@
 	pop	de
 	ld	a,l
 	ld	(de),a
-	ld	hl,7	;const
-	call	_wyz_play_sound
-	jp	i_137
-.i_140
+	ld	hl,7 % 256	;const
+	call	_peta_el_beeper
+	jp	i_157
+.i_160
 	ld	hl,_player+28
 	push	hl
 	call	l_gchar
@@ -10135,10 +10400,10 @@
 	pop	de
 	ld	a,l
 	ld	(de),a
-	ld	hl,8	;const
-	call	_wyz_play_sound
-	jp	i_137
-.i_141
+	ld	hl,8 % 256	;const
+	call	_peta_el_beeper
+	jp	i_157
+.i_161
 	ld	hl,_player+29
 	push	hl
 	call	l_gint	;
@@ -10150,18 +10415,18 @@
 	ld	de,99	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_142
+	jp	nc,i_162
 	ld	hl,99	;const
 	ld	(_player+29),hl
-.i_142
+.i_162
 	ld	a,#(2 % 256 % 256)
 	ld	(_rdi),a
-	ld	hl,9	;const
-	call	_wyz_play_sound
-.i_137
+	ld	hl,9 % 256	;const
+	call	_peta_el_beeper
+.i_157
 	ld	a,(_rdi)
 	cp	#(1 % 256)
-	jp	z,i_143
+	jp	z,i_163
 	ld	a,(_hotspot_x)
 	ld	e,a
 	ld	d,0
@@ -10169,6 +10434,7 @@
 	call	l_asr_u
 	ld	de,0
 	add	hl,de
+	ld	h,0
 	push	hl
 	ld	a,(_hotspot_y)
 	ld	e,a
@@ -10177,6 +10443,7 @@
 	call	l_asr_u
 	ld	de,2
 	add	hl,de
+	ld	h,0
 	push	hl
 	ld	hl,(_orig_tile)
 	ld	h,0
@@ -10206,25 +10473,32 @@
 	ld	(de),a
 	ld	l,a
 	ld	h,0
-.i_143
-.i_135
+.i_163
+.i_155
 	._hotspots_else
 	._hotspots_done
-	ld	hl,1	;const
-	push	hl
-	call	_cpc_UpdateNow
-	pop	bc
+	.ml_min_faps_loop
+	ld a, (_isrc)
+	cp 2
+	jr nc, ml_min_faps_loop_end
+	halt
+	jr ml_min_faps_loop
+	.ml_min_faps_loop_end
+	xor a
+	ld (_isrc), a
+	call SPUpdateNow
+	.skipupd
 	ld	a,(_gpx)
 	cp	#(0 % 256)
-	jp	nz,i_145
+	jp	nz,i_165
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jr	c,i_146_i_145
-.i_145
-	jp	i_144
-.i_146_i_145
+	jr	c,i_166_i_165
+.i_165
+	jp	i_164
+.i_166_i_165
 	ld hl, _n_pant
 	dec (hl)
 	ld a, 224
@@ -10232,19 +10506,19 @@
 	ld hl, #(224*64)
 	ld (_player), hl
 	.flick_left_done
-	jp	i_147
-.i_144
+	jp	i_167
+.i_164
 	ld	a,(_gpx)
 	cp	#(224 % 256)
-	jp	nz,i_149
+	jp	nz,i_169
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_150_i_149
-.i_149
-	jp	i_148
-.i_150_i_149
+	jr	c,i_170_i_169
+.i_169
+	jp	i_168
+.i_170_i_169
 	ld hl, _n_pant
 	inc (hl)
 	xor a
@@ -10252,25 +10526,25 @@
 	ld hl, 0
 	ld (_player), hl
 	.flick_right_done
-.i_148
-.i_147
+.i_168
+.i_167
 	ld	a,(_gpy)
 	cp	#(0 % 256)
-	jp	nz,i_152
+	jp	nz,i_172
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_152
+	jp	nc,i_172
 	ld	a,(_n_pant)
 	cp	#(5 % 256)
-	jr	z,i_152_uge
-	jp	c,i_152
-.i_152_uge
-	jr	i_153_i_152
-.i_152
-	jp	i_151
-.i_153_i_152
+	jr	z,i_172_uge
+	jp	c,i_172
+.i_172_uge
+	jr	i_173_i_172
+.i_172
+	jp	i_171
+.i_173_i_172
 	ld a, (_n_pant)
 	sub 5
 	ld (_n_pant), a
@@ -10279,19 +10553,19 @@
 	ld hl, #(144*64)
 	ld (_player+2), hl
 	.flick_up_done
-	jp	i_154
-.i_151
+	jp	i_174
+.i_171
 	ld	a,(_gpy)
 	cp	#(144 % 256)
-	jp	nz,i_156
+	jp	nz,i_176
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_157_i_156
-.i_156
-	jp	i_155
-.i_157_i_156
+	jr	c,i_177_i_176
+.i_176
+	jp	i_175
+.i_177_i_176
 	ld a, (_n_pant)
 	add 5
 	ld (_n_pant), a
@@ -10300,26 +10574,26 @@
 	ld hl, 0
 	ld (_player+2),hl
 	.flick_down_done
-.i_155
-.i_154
+.i_175
+.i_174
 	ld	hl,_player+27
 	call	l_gchar
 	ld	de,13	;const
 	ex	de,hl
 	call	l_eq
-	jp	nc,i_158
+	jp	nc,i_178
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_cortina
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_game_ending
-.i_158
+.i_178
 	ld	hl,(_player+36)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_159
+	jp	z,i_179
 	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
@@ -10337,23 +10611,23 @@
 	sbc	hl,de
 	pop	de
 	call	l_pint
-.i_159
+.i_179
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	p,i_160
+	jp	p,i_180
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_160
+.i_180
 	xor a
 	ld (_pant_just_rendered), a
-	jp	i_128
-.i_129
-	jp	i_126
-.i_127
+	jp	i_148
+.i_149
+	jp	i_146
+.i_147
 	ret
 
 
@@ -10377,12 +10651,13 @@
 .__en_t	defs	1
 .__en_x	defs	1
 .__en_y	defs	1
-._isr_player_on	defs	1
+._sp_moviles	defs	6
 .__en_x1	defs	1
 .__en_x2	defs	1
 .__en_y1	defs	1
 .__en_y2	defs	1
 ._hotspot_t	defs	1
+._spritesClip	defs	2
 ._hotspot_x	defs	1
 ._hotspot_y	defs	1
 ._half_life	defs	1
@@ -10396,7 +10671,6 @@
 ._killed_old	defs	1
 ._thrusting	defs	1
 ._ezg_old	defs	1
-._wyz_beat_ct	defs	1
 ._t_alt	defs	1
 ._x0	defs	1
 ._x1	defs	1
@@ -10409,6 +10683,7 @@
 ._life_old	defs	1
 ._ptgmx	defs	2
 ._ptgmy	defs	2
+._sp_player	defs	2
 ._gp_gen	defs	2
 ._on_pant	defs	1
 ._enoffs	defs	2
@@ -10418,6 +10693,7 @@
 ._enit	defs	1
 ._gpcx	defs	2
 ._gpcy	defs	2
+._joyfunc	defs	2
 ._rdt1	defs	1
 ._rdt2	defs	1
 ._gpit	defs	1
@@ -10446,14 +10722,14 @@
 ._hit	defs	1
 ._player	defs	47
 ._rda	defs	1
-._rdb	defs	1
 ._gpx	defs	1
-._gpy	defs	1
-._rdd	defs	1
 ._rdi	defs	1
+._gpy	defs	1
 ._keys_old	defs	1
 ._rdx	defs	1
 ._rdy	defs	1
+._rdd	defs	1
+._rdb	defs	1
 ._pti	defs	1
 ._ptj	defs	1
 ._enoffsmasi	defs	2
@@ -10468,206 +10744,230 @@
 
 ; --- Start of Scope Defns ---
 
+	LIB	sp_GetKey
+	LIB	sp_BlockAlloc
 	XDEF	__en_t
 	XDEF	__en_x
 	XDEF	__en_y
-	XDEF	_isr_player_on
+	LIB	sp_ScreenStr
+	XDEF	_ay_player_on
+	defc	_ay_player_on	=	23297
 	XDEF	_hotspots
 	XDEF	_draw_scr
-	XDEF	_spr_next
-	defc	_spr_next	=	58944
-	XDEF	_wyz_play_music
-	XDEF	_trpixlutc
-	LIB	cpc_PrintGphStrXY
-	XDEF	_sm_invfunc
-	LIB	cpc_PutSpTileMap12x24CA
-	LIB	cpc_PrintGphStrStdXY
+	LIB	sp_PixelUp
+	LIB	sp_JoyFuller
+	XDEF	_clr2d
+	LIB	sp_MouseAMXInit
+	LIB	sp_MouseAMX
 	XDEF	_saca_a_todo_el_mundo_de_aqui
 	XDEF	_set_map_tile
-	XDEF	_sprites
-	LIB	cpc_PutTiles
+	XDEF	_sp_moviles
 	XDEF	__en_x1
 	XDEF	__en_x2
 	XDEF	__en_y1
 	XDEF	__en_y2
-	XDEF	_def_keys
+	XDEF	_u_malloc
+	LIB	sp_Validate
+	LIB	sp_SetMousePosAMX
+	LIB	sp_HashAdd
 	XDEF	_cortina
-	LIB	cpc_PrintGphStrM12X
+	LIB	sp_Border
+	LIB	sp_Inkey
 	XDEF	_enems_kill
 	XDEF	_en_an_base_frame
-	defc	_en_an_base_frame	=	54835
+	defc	_en_an_base_frame	=	23651
 	XDEF	_hotspot_t
-	XDEF	_wyz_play_sound
+	XDEF	_spritesClip
 	XDEF	_hotspot_x
 	XDEF	_hotspot_y
 	XDEF	_player_walk_cycle
 	XDEF	_half_life
 	XDEF	__en_mx
 	XDEF	__en_my
-	LIB	cpc_ShowScrTileMap
-	LIB	cpc_SetMode
-	LIB	cpc_ClrScr
-	XDEF	_get_pointer_to_enem_or_coco
-	LIB	cpc_SetModo
-	LIB	cpc_PutMaskSpriteTileMap2b
-	LIB	cpc_PutTrSpriteTileMap2b
+	LIB	sp_CreateSpr
+	LIB	sp_MoveSprAbs
+	LIB	sp_AddMemory
+	LIB	sp_BlockCount
 	XDEF	_en_an_state
-	defc	_en_an_state	=	54829
+	defc	_en_an_state	=	23645
 	XDEF	_flags
-	LIB	cpc_SetInkGphStr
-	XDEF	_mueve_bicharracos
+	LIB	sp_PrintAt
+	LIB	sp_Pause
 	XDEF	_gp_gen_alt
-	LIB	cpc_PutTrSp8x16TileMap2bGPxP
-	LIB	cpc_PutTrSp8x24TileMap2bGPxP
-	LIB	cpc_ShowTouchedTiles2
-	LIB	cpc_SetTile
+	XDEF	_mueve_bicharracos
+	LIB	sp_ListFirst
+	LIB	sp_HeapSiftUp
+	LIB	sp_ListCount
+	LIB	sp_Heapify
 	XDEF	_en_xx
 	XDEF	_malotes
 	XDEF	_en_yy
 	XDEF	_draw_text
-	LIB	cpc_PutSpTileMap8x8PxM1
-	LIB	cpc_PutSpTileMap16x16PxM1
-	LIB	cpc_PutSpTileMap16x24PxM1
-	LIB	cpc_CollSp
-	LIB	cpc_PutMaskSp4x16
+	XDEF	_key_1
+	XDEF	_key_2
+	XDEF	_key_3
+	LIB	sp_MoveSprRel
 	XDEF	_gp_gen_org
 	XDEF	_blackout
+	LIB	sp_TileArray
+	LIB	sp_MouseSim
 	XDEF	_map_buff
-	defc	_map_buff	=	50838
-	LIB	cpc_PrintGphStrStd
-	XDEF	_cpc_Border
+	defc	_map_buff	=	23450
+	LIB	sp_BlockFit
+	LIB	sp_HeapExtract
+	LIB	sp_HuffExtract
 	XDEF	_killed_old
+	LIB	sp_SetMousePosSim
 	XDEF	_thrusting
+	LIB	sp_ClearRect
 	XDEF	_ezg_old
+	LIB	sp_HuffGetState
 	XDEF	_map_attr
-	defc	_map_attr	=	50688
-	XDEF	_invalidate_viewport
-	LIB	cpc_ShowTileMap
-	LIB	cpc_PutTile2x8
+	defc	_map_attr	=	23300
+	LIB	sp_ListAppend
+	LIB	sp_ListCreate
+	LIB	sp_ListConcat
 	XDEF	_pad_read
-	XDEF	_wyz_beat_ct
 	XDEF	_t_alt
-	LIB	cpc_PutTrSp8x8TileMap2bPxM1
-	LIB	cpc_PutTrSp16x16TileMap2bPxM1
-	LIB	cpc_PutTrSp16x24TileMap2bPxM1
-	LIB	cpc_ShowScrTileMap2
-	LIB	cpc_Uncrunch
-	XDEF	_cpc_UpdateNow
+	LIB	sp_JoyKempston
+	LIB	sp_UpdateNow
+	LIB	sp_MouseKempston
+	LIB	sp_PrintString
+	LIB	sp_PixelDown
+	LIB	sp_MoveSprAbsC
+	LIB	sp_PixelLeft
 	XDEF	_x0
 	XDEF	_x1
 	XDEF	_y0
 	XDEF	_y1
 	XDEF	_espera_activa
-	LIB	cpc_SpRLM1
+	LIB	sp_InitAlloc
+	LIB	sp_DeleteSpr
 	XDEF	__n
+	LIB	sp_JoyTimexEither
 	XDEF	_unpack_screen
-	XDEF	_title_screen
 	XDEF	_en_an_fanty_activo
-	defc	_en_an_fanty_activo	=	54826
+	defc	_en_an_fanty_activo	=	23642
+	XDEF	_title_screen
 	XDEF	__t
 	XDEF	__x
 	XDEF	__y
-	XDEF	_wyz_init
 	XDEF	_life_old
-	LIB	cpc_PrintGphStrXY2X
-	LIB	cpc_PutTrSp4x8TileMap2bG
-	LIB	cpc_PutTrSp8x16TileMap2bG
-	LIB	cpc_PutTrSp8x24TileMap2bG
-	LIB	cpc_SpRRM1
+	LIB	sp_Invalidate
+	LIB	sp_CreateGenericISR
+	LIB	sp_JoyKeyboard
 	XDEF	_enems_en_an_calc
-	XDEF	_sm_sprptr
-	LIB	cpc_PrintGphStrXYM1
-	LIB	cpc_UpdScrP
-	LIB	cpc_PutSpriteXOR
-	LIB	cpc_PutTrSp16x16TileMap2bGPxM1
-	LIB	cpc_TestKey
-	LIB	cpc_PutSprite
-	LIB	cpc_PutSpTileMap4x8
-	LIB	cpc_PutSpTileMap
-	LIB	cpc_InitTileMap
+	LIB	sp_FreeBlock
+	LIB	sp_PrintAtDiff
+	XDEF	_peta_el_beeper
 	XDEF	_s_marco
-	LIB	cpc_PutSpTileMap8x16Px
-	LIB	cpc_PutSpTileMap8x24Px
-	XDEF	_sp_sw
-	defc	_sp_sw	=	58880
+	XDEF	_sprite_10_a
+	XDEF	_sprite_10_b
+	XDEF	_sprite_10_c
+	XDEF	_sprite_11_a
+	XDEF	_sprite_11_b
+	XDEF	_sprite_11_c
+	XDEF	_sprite_12_a
+	XDEF	_sprite_12_b
+	XDEF	_sprite_12_c
+	XDEF	_sprite_13_a
+	XDEF	_sprite_13_b
+	XDEF	_sprite_13_c
+	XDEF	_sprite_14_a
+	XDEF	_sprite_14_b
+	XDEF	_sprite_14_c
+	XDEF	_sprite_15_a
+	XDEF	_sprite_15_b
+	XDEF	_sprite_15_c
+	XDEF	_ptgmx
+	XDEF	_sprite_16_a
+	XDEF	_sprite_16_b
+	XDEF	_sprite_16_c
+	XDEF	_ptgmy
+	XDEF	_en_an_current_frame
+	defc	_en_an_current_frame	=	23606
+	XDEF	_qtile
+	LIB	sp_RegisterHookLast
+	LIB	sp_RemoveHook
+	XDEF	_sprite_18_a
+	LIB	sp_IntLargeRect
+	LIB	sp_IntPtLargeRect
+	LIB	sp_GetCharAddr
+	LIB	sp_HashDelete
+	XDEF	_init_cerrojos
 	XDEF	_cm_two_points
 	XDEF	_draw_and_advance
-	LIB	cpc_TouchTileXY
-	XDEF	_ptgmx
-	XDEF	_ptgmy
-	LIB	cpc_SetTouchTileXY
-	XDEF	_qtile
-	XDEF	_init_cerrojos
-	XDEF	_en_an_current_frame
-	defc	_en_an_current_frame	=	54790
-	XDEF	_sprite_18_a
+	LIB	sp_MoveSprRelC
+	LIB	sp_InitIM2
+	XDEF	_sp_player
 	XDEF	_init_player
 	XDEF	_gp_gen
-	XDEF	_spr_x
-	defc	_spr_x	=	58956
-	XDEF	_spr_y
-	defc	_spr_y	=	58960
+	LIB	sp_GetTiles
+	XDEF	_fix_sprites
+	XDEF	_spritesClipValues
 	XDEF	_on_pant
+	LIB	sp_Pallette
+	LIB	sp_WaitForNoKey
 	XDEF	_render_this_enemy
 	XDEF	_enoffs
-	LIB	cpc_PutSpTr
 	XDEF	_pad_this_frame
-	LIB	cpc_PutTrSp12x24TileMap2bGCA
-	LIB	cpc_DisableFirmware
-	LIB	cpc_EnableFirmware
+	LIB	sp_JoySinclair1
+	LIB	sp_JoySinclair2
+	LIB	sp_ListPrepend
+	LIB	sp_GetAttrAddr
 	XDEF	_enem_cells
-	LIB	cpc_PrintGphStrXYM12X
-	LIB	cpc_SetInk
+	LIB	sp_HashCreate
 	XDEF	_pad0
 	XDEF	_pad1
-	XDEF	__tile_address
 	XDEF	_n_pant
-	LIB	cpc_UpdScrM1P
-	XDEF	_def_keys_joy
+	LIB	sp_Random32
+	LIB	sp_ListInsert
+	LIB	sp_ListFree
 	XDEF	_en_j
-	LIB	cpc_SetBorder
 	XDEF	_en_an_ff
-	defc	_en_an_ff	=	54832
-	LIB	cpc_RLI
+	defc	_en_an_ff	=	23648
 	XDEF	_system_init
 	XDEF	_draw_rectangle
-	LIB	cpc_RRI
-	LIB	cpc_GetSp
-	LIB	cpc_PutTrSp4x8TileMap2bGPx
-	LIB	cpc_PutTrSp8x16TileMap2bGPx
+	XDEF	_ISR
+	LIB	sp_IntRect
+	LIB	sp_ListLast
+	LIB	sp_ListCurr
 	XDEF	_enit
-	LIB	cpc_PutTrSp8x24TileMap2bGPx
-	LIB	cpc_SpUpdX
-	LIB	cpc_SpUpdY
-	LIB	cpc_PutTile4x16
 	XDEF	_collide_enem
 	XDEF	_main
 	XDEF	_mapa
+	LIB	sp_ListSearch
+	LIB	sp_WaitForKey
 	XDEF	_draw_coloured_tile
 	XDEF	_attr
-	XDEF	_player_cells
-	LIB	cpc_ResetTouchedTiles
+	LIB	sp_Wait
+	LIB	sp_GetScrnAddr
+	LIB	sp_PutTiles
 	XDEF	_gpcx
 	XDEF	_gpcy
-	LIB	cpc_ShowTouchedTiles
+	XDEF	_joyfunc
 	XDEF	_rdt1
 	XDEF	_rdt2
+	XDEF	_player_cells
 	XDEF	_s_title
 	XDEF	_gpit
 	XDEF	_playing
 	XDEF	_en_an_vx
-	defc	_en_an_vx	=	54814
+	defc	_en_an_vx	=	23630
 	XDEF	_en_an_vy
-	defc	_en_an_vy	=	54820
-	LIB	cpc_PutMaskSp2x8
-	XDEF	_sm_updfunc
-	LIB	cpc_ScanKeyboard
-	LIB	cpc_SetColour
+	defc	_en_an_vy	=	23636
+	LIB	sp_RemoveDList
+	LIB	sp_ListNext
+	LIB	sp_HuffDecode
+	XDEF	_keys
 	XDEF	_enems_calc_frame
 	XDEF	_rand
+	LIB	sp_Swap
 	XDEF	_seed
+	XDEF	_isrc
+	defc	_isrc	=	23296
 	XDEF	_objs_old
-	LIB	cpc_DeleteKeys
+	LIB	sp_ListPrev
 	XDEF	_maincounter
 	XDEF	_rdmt
 	XDEF	_ptx1
@@ -10675,123 +10975,146 @@
 	XDEF	_pty1
 	XDEF	_pty2
 	XDEF	_move
-	LIB	cpc_PutMaskSpTileMap2b
-	LIB	cpc_PutTrSpTileMap2b
 	XDEF	_wall
-	LIB	cpc_PutORSpTileMap2b
-	LIB	cpc_PutSpTileMap2b
-	LIB	cpc_PutCpSpTileMap2b
-	LIB	cpc_UpdScr
-	LIB	cpc_PutTrSp4x8TileMap2b
-	LIB	cpc_PutTrSp8x16TileMap2b
-	LIB	cpc_PutTrSp8x24TileMap2b
+	LIB	sp_RegisterHook
+	LIB	sp_ListRemove
+	LIB	sp_ListTrim
+	LIB	sp_MoveSprAbsNC
 	XDEF	_check_and_clear_cerrojo
+	LIB	sp_HuffDelete
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
-	defc	_en_an_next_frame	=	54796
+	defc	_en_an_next_frame	=	23612
 	XDEF	_pvx_total
 	XDEF	_hotspot_t_r
-	LIB	cpc_ScrollLeft0
 	XDEF	_at1
 	XDEF	_at2
 	XDEF	__x2
 	XDEF	__y2
-	LIB	cpc_AnyKeyPressed
+	LIB	sp_ListAdd
+	LIB	sp_KeyPressed
 	XDEF	_step
 	XDEF	__en_life
-	XDEF	_cpc_HardPause
-	LIB	cpc_AssignKey
+	LIB	sp_PrintAtInv
 	XDEF	_prxx
-	XDEF	_calc_hotspot_ptr
+	LIB	sp_CompDListAddr
 	XDEF	_pryy
-	LIB	cpc_TouchTiles
-	LIB	cpc_PutSpTileMap4x8Px
+	XDEF	_calc_hotspot_ptr
+	XDEF	_u_free
 	XDEF	_abs
-	LIB	cpc_ScrollRight0
-	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
+	LIB	sp_CharRight
 	XDEF	_game_ending
-	LIB	cpc_UnExo
 	XDEF	_pvy_total
+	LIB	sp_InstallISR
 	XDEF	_item_old
-	LIB	cpc_SetInkGphStrM1
+	LIB	sp_HuffAccumulate
+	LIB	sp_HuffSetState
 	XDEF	_idx
 	XDEF	_hit
 	XDEF	_en_an_x
-	defc	_en_an_x	=	54802
+	defc	_en_an_x	=	23618
 	XDEF	_player
 	XDEF	_en_an_y
-	defc	_en_an_y	=	54808
-	LIB	cpc_UpdateTileMap
+	defc	_en_an_y	=	23624
+	XDEF	_sprite_1_a
+	XDEF	_sprite_1_b
+	XDEF	_sprite_1_c
+	XDEF	_ay_counter
+	defc	_ay_counter	=	23298
+	XDEF	_sprite_2_a
+	XDEF	_sprite_2_b
+	XDEF	_sprite_2_c
 	XDEF	_rda
-	XDEF	_rdb
+	XDEF	_sprite_3_a
+	XDEF	_sprite_3_b
+	XDEF	_sprite_3_c
 	XDEF	_gpx
-	XDEF	_gpy
-	XDEF	_rdd
-	LIB	cpc_PutSpTileMap8x8Px
+	XDEF	_sprite_4_a
+	XDEF	_sprite_4_b
+	XDEF	_sprite_4_c
 	XDEF	_rdi
-	XDEF	_keys_old
-	XDEF	_init_player_values
+	XDEF	_sprite_5_a
+	XDEF	_sprite_5_b
+	XDEF	_sprite_5_c
+	XDEF	_gpy
+	XDEF	_sprite_6_a
+	XDEF	_sprite_6_b
+	XDEF	_sprite_6_c
+	XDEF	_sprite_7_a
+	XDEF	_sprite_7_b
+	XDEF	_sprite_7_c
 	XDEF	_en_tocado
-	LIB	cpc_TestKeyF
-	LIB	cpc_PutTrSp16x16TileMap2bGPxM1P
-	LIB	cpc_PutTrSp16x24TileMap2bGPxM1P
+	XDEF	_sprite_8_a
+	XDEF	_sprite_8_b
+	XDEF	_sprite_8_c
+	XDEF	_keys_old
+	XDEF	_sprite_9_a
+	XDEF	_sprite_9_b
+	XDEF	_sprite_9_c
 	XDEF	_rdx
 	XDEF	_rdy
-	XDEF	_sm_cox
-	XDEF	_sm_coy
+	XDEF	_rdd
+	XDEF	_rdb
+	XDEF	_tileset
+	XDEF	_pti
+	XDEF	_ptj
+	XDEF	_comportamiento_tiles
+	XDEF	_init_player_values
+	LIB	sp_Initialize
+	LIB	sp_SwapEndian
+	LIB	sp_ComputePos
+	LIB	sp_JoyTimexLeft
+	LIB	sp_JoyTimexRight
+	LIB	sp_SetMousePosKempston
+	XDEF	_bitmask
+	LIB	sp_CharDown
+	LIB	sp_CharLeft
+	LIB	sp_PixelRight
+	LIB	sp_HeapSiftDown
+	LIB	sp_HuffCreate
+	LIB	sp_HuffEncode
 	XDEF	_draw_2_digits
+	XDEF	_move_tile_with_check
 	XDEF	_check_lock_or_box_horz
 	XDEF	_init_hotspots
-	LIB	cpc_PutTrSp4x8TileMap2bPx
-	XDEF	_pti
-	XDEF	_tileset
-	XDEF	_ptj
-	LIB	cpc_PutTrSp8x8TileMap2bPx
-	XDEF	_comportamiento_tiles
-	LIB	cpc_PutTrSp8x16TileMap2bPx
-	LIB	cpc_PutTrSp8x24TileMap2bPx
-	LIB	cpc_PutSpTileMap8x16
-	LIB	cpc_PutSpTileMap8x24
-	XDEF	_move_tile_with_check
-	XDEF	_wyz_stop_sound
-	XDEF	_bitmask
-	LIB	cpc_ReadTile
-	LIB	cpc_PutMaskSprite
 	XDEF	_enoffsmasi
-	LIB	cpc_PutSpTileMapO
-	LIB	cpc_PutSp
-	LIB	cpc_UpdScrAddresses
-	XDEF	_tspatterns
+	LIB	sp_IntIntervals
+	XDEF	_my_malloc
+	LIB	sp_inp
+	LIB	sp_IterateSprChar
 	XDEF	_check_lock_or_box_vert
+	LIB	sp_AddColSpr
+	LIB	sp_outp
 	XDEF	_hotspot_paint
 	XDEF	_pant_just_rendered
+	LIB	sp_IntPtInterval
+	LIB	sp_RegisterHookFirst
 	XDEF	__baddies_pointer
-	LIB	cpc_TouchTileSpXY
-	LIB	cpc_SuperbufferAddress
-	LIB	cpc_GetScrAddress
-	XDEF	_wyz_songs
-	LIB	cpc_PutMaskSp
+	LIB	sp_HashLookup
+	XDEF	_any_key
+	LIB	sp_PFill
+	LIB	sp_HashRemove
+	LIB	sp_CharUp
 	XDEF	_orig_tile
 	XDEF	_en_an_frame
-	defc	_en_an_frame	=	54784
+	defc	_en_an_frame	=	23600
 	XDEF	_success
-	LIB	cpc_RedefineKey
+	LIB	sp_MoveSprRelNC
 	XDEF	_coins_old
 	XDEF	_do_extern_action
 	XDEF	_en_an_count
-	defc	_en_an_count	=	54787
+	defc	_en_an_count	=	23603
 	XDEF	_render_all_sprites
-	LIB	cpc_GetTiles
-	XDEF	_spr_on
-	defc	_spr_on	=	58952
-	LIB	cpc_PutSpXOR
-	LIB	cpc_PrintStr
+	LIB	sp_IterateDList
 	XDEF	_draw_scr_background
-	LIB	cpc_PrintGphStr2X
 	XDEF	_select_controls
 	XDEF	_game_over
-	LIB	cpc_PrintGphStrM1
+	LIB	sp_LookupKey
+	LIB	sp_HeapAdd
+	LIB	sp_CompDirtyAddr
+	LIB	sp_EmptyISR
+	LIB	sp_StackSpace
 
 
 ; --- End of Scope Defns ---

@@ -57,8 +57,7 @@ void main (void) {
 			#endif
 		
 			// Execute "ENTERING GAME" script
-			script_n = SC_ENTERING_GAME;
-			script_do ();
+			script (SC_ENTERING_GAME);
 		#endif
 
 		half_life = 0;
@@ -324,8 +323,8 @@ void main (void) {
 					#endif
 				) {	
 					// Any scripts to run in this screen?
-					script_do ();
-					script_n = SC_PRESS_FIRE_AT_SCREEN + (n_pant << 1);
+					script (SC_PRESS_FIRE_AT_ANY);
+					script (SC_PRESS_FIRE_AT_SCREEN + (n_pant << 1));
 				}
 			#endif
 

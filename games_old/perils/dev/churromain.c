@@ -7,19 +7,6 @@
 
 #include "config.h"
 
-#asm
-	XDEF script_bytecode
-	XDEF _attr_2
-	XDEF qtile_do
-	XDEF set_map_tile_do
-	XDEF _peta_el_beeper
-	#ifdef CPC
-		XDEF _cpc_UpdateNow
-	#else
-		XDEF SPUpdateNow
-	#endif
-#endasm
-
 #define MAX_ENEMS 3
 #define MAX_FLAGS 16
 

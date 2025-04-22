@@ -1,9 +1,20 @@
-# Cosas que recordar
+# Cheril Perils v3
 
-## Raster split para paletas en modo 1
+El original usa 2 llaves para dos cerrojos. Como los cerrojos son viejos lo podemos hacer más interesante si cada viejo quiere una cosa, específicamente.
 
-Si hacemos el juego en modo 1 queremos raster split hay que hacer las siguientes cosas:
+Sólo podremos llevar un objeto cada vez.
 
-* `#define AUTO_SPLIT`.
-* Convertir las paletas en el modo `palasassembly` de `mkts_om`.
-* Tener las paletas pal_general y pal_hud en formato assembly, incluir las paletas custom en `config.h` y montar un array para ver qué paleta lleva cada pantalla en `cpc/palmap.h`
+Screen 0:
+	- Bra @ 7, 1
+	- "V" balloon @ 6, 4
+	- Detect fire @ 6, 5
+	- Clear viejo @ 7, 5
+
+Screen 3
+	- Kni @ 4, 2
+
+Screen 22
+	- "0" balloon @ 2, 7
+	- Detect Fire @ 2, 8
+	- Clear viejo @ 3, 8
+

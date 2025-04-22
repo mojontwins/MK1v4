@@ -1,5 +1,58 @@
 ROOMS = 24
 
+ENTERING GAME
+	IF TRUE
+	THEN
+		# Initalize "carrying", 1 = knickers, 2 = bra
+		%CARRYING = 0
+
+		# Also bra & knickers not taken
+		%BRA = 0
+		%KNICKERS = 0
+
+		# Viehos
+		%VIEHO1 = 0
+		%VIEHO2 = 0
+
+		# Clear HUD
+		PRINT TILE (7, 0) = 0
+	END
+END
+
+# Screen 0 has a vieho and the bra
+# The bra should have beh 128.
+
+ENTERING SCREEN 0
+	IF %BRA = 0
+	THEN
+		SET TILE (7, 1) = 18
+	END
+
+	IF %VIEHO1 = 0
+	THEN
+		SET TILE (7, 5) = 15
+		SET TILE (6, 4) = 22
+	END
+END
+
+# Interact with vieho
+
+PRESS FIRE AT SCREEN 0
+	IF PLAYER TOUCHES (6,5)
+	IF %VIEHO1 = 0
+	IF %CARRYING = 1
+	THEN 
+		%CARRYING = 0
+		%VIEHO1 = 1
+		PRINT TILE (7, 0) = 0
+		SET TILE (7, 5) = 0
+		SET TILE (6, 4) = 0
+		SOUND 6
+	END 
+END 
+
+# Exit ?
+
 ENTERING SCREEN 20
 	IF TRUE 
 	THEN
@@ -13,16 +66,73 @@ ENTERING SCREEN 20
 	END 
 END
 
-PRESS FIRE AT SCREEN 20
-	IF PLAYER AT 1, 8
+# Screen 22 also has a vieho
+
+ENTERING SCREEN 22
+	IF %VIEHO2 = 1
+	THEN 
+		SET TILE (3, 8) = 0
+	END
+
+	IF %VIEHO2 = 0
+	THEN
+		SET TILE (3, 8) = 15
+		SET TILE (2, 7) = 21
+	END
+END
+
+# Interact with vieho
+
+PRESS FIRE AT SCREEN 22
+	IF PLAYER TOUCHES (2,8)
+	IF %VIEHO2 = 0
+	IF %CARRYING = 2
+	THEN 
+		%CARRYING = 0
+		%VIEHO2 = 1
+		PRINT TILE (7, 0) = 0
+		SET TILE (2, 7) = 0
+		SET TILE (3, 8) = 0
+		SOUND 6
+	END 
+END 
+
+# Special tiles
+
+SPECIAL TILE TOUCHED
+	IF NPANT = 0
+	IF %CARRYING = 0
+	IF %BRA = 0
+	THEN
+		# Get bra
+		%BRA = 1
+		SET TILE (7, 1) = 0
+		%CARRYING = 2
+		PRINT TILE (7, 0) = 18
+	END 
+
+	IF NPANT = 3
+	IF %CARRYING = 0
+	IF %KNICKERS = 0
+	THEN
+		# Get knickers
+		%KNICKERS = 1
+		SET TILE (4, 2) = 0
+		%CARRYING = 1
+		PRINT TILE (7, 0) = 20
+	END
+
+	IF NPANT = 20	
 	THEN
 		WIN GAME
 	END
-END 
+END
+
+# If last enemy is killed while on screen 20, show
 
 PLAYER KILLS ENEMY
 	IF NPANT = 20
-	IF KILLED = 1
+	IF KILLED = 60
 	THEN 
 		SET TILE (2, 7) = 0
 		SET TILE (2, 8) = 0

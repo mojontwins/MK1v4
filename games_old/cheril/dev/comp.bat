@@ -1,7 +1,7 @@
 @echo off
 
 set game=bosque3
-set om=cpc
+set om=speccy
 set mode=1
 
 echo Making %game%

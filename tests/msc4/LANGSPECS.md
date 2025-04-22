@@ -71,6 +71,11 @@ $FC = PY = gpy
 $FB = KILLED = player.killed
 $FA = OBJS = player.objs
 $F9 = LIFE = player.life
+$F8 = TX = (gpx + 8) >> 4 
+$F7 = TY = (gpy + 8) >> 4
+$F6 = TN = qtile (gpx + 8, gpy + 8)
+
+Asignar a F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING.
 
 CUIDAO - Esto debe poder funcionar como LVALUE así que ¿deben ser $FF $F0, etc ?
 
@@ -132,7 +137,7 @@ Voy a reservar espacio para 8 scripts especiales por si esto tiene ampliación. 
     4    PRESS FIRE AT ANY
     6    PLAYER GETS COIN
     8    PLAYER KILLS ENEMY
-    10
+    10   SPECIAL TILE TOUCHED
     12
     14
     16   ENTERING SCREEN 0
@@ -169,7 +174,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $04 A B : A <> B
 
 * $21 X1 X2: PLAYER IN_X (X1, X2)
-* $22 Y1 Y2: PLAYER IN_Y (Y1, Y2)
+* $22 Y1 Y2: PLAYER IN_Y (Y1, Y2) (!) Better use PX / PY or TX / TY.
 * $23 X Y : PLAYER AT (X, Y)
 * $24 : PLAYER FALLING
 * $25 : PLAYER NOT_FALLING
@@ -180,6 +185,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 
 * $F0 : TRUE
 
+(!) 
+
 ## Actions 
 
 * $00 A B : FLAGS[A] = B
@@ -188,6 +195,9 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 
 * $20 X Y T : SET TILE (X, Y) = T
 * $21 X Y B : SET BEH (X, Y) = B
+
+* $50 PRINT TILE AT (X, Y) = T
+* $51 SET FIRE ZONE [TILES] X1, Y1, X2, Y2  [TODO]
 
 * $E0 N : SOUND N
 * $E1 : SHOW
@@ -200,7 +210,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 
 * $F2 : BREAK"
 
-TODO: `PRINT_TILE_AT`
+TODO: WARP TO
 
 # Haciendo esto
 

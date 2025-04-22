@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Apr 21 19:08:14 2025
+;	Module compile time: Tue Apr 22 15:58:00 2025
 
 
 
@@ -68,16 +68,16 @@
 	defb	0
 
 	defm	""
-	defb	0
+	defb	128
+
+	defm	""
+	defb	128
 
 	defm	""
 	defb	0
 
 	defm	""
-	defb	0
-
-	defm	""
-	defb	0
+	defb	128
 
 	defm	""
 	defb	0
@@ -134,12 +134,6 @@
 	ld a, 0x4B
 	out (c), a
 	ret
-	XDEF script_bytecode
-	XDEF _attr_2
-	XDEF qtile_do
-	XDEF set_map_tile_do
-	XDEF _peta_el_beeper
-	XDEF _cpc_UpdateNow
 	XDEF _ts
 	XDEF tiles
 	._tileset
@@ -2663,6 +2657,38 @@
 	ret
 
 
+
+._script
+	ld a, l
+	ld (_script_n), a
+	ld a, (_gpx)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_script_tx), a
+	ld c, a
+	ld a, (_gpy)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_script_ty), a
+	call qtile_do
+	ld a, l
+	ld (_script_tn), a
+	jp _script_do
+	ret
+
+
+	XDEF script_bytecode
+	XDEF _attr_2
+	XDEF qtile_do
+	XDEF set_map_tile_do
+	XDEF _peta_el_beeper
+	XDEF _cpc_UpdateNow
 	.script_bytecode
 	BINARY "script.spt.bin"
 	; -----------------------------------------------------------------------------
@@ -2735,10 +2761,7 @@
 	defm	""
 	defb	0
 
-	defm	""
-	defb	5
-
-	defm	""
+	defm	"P"
 	defb	0
 
 	defm	""
@@ -2754,7 +2777,22 @@
 	defb	0
 
 	defm	""
+	defb	5
+
+	defm	""
 	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"R"
+	defb	34
+
+	defm	" "
+	defb	221
 
 	defm	"P"
 	defb	0
@@ -2762,56 +2800,41 @@
 	defm	""
 	defb	0
 
-	defm	"R"
+	defm	""
+	defb	5
+
+	defm	""
 	defb	34
+
+	defm	""
+	defb	34
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	5
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"]"
+	defb	210
 
 	defm	" "
 	defb	0
 
 	defm	""
-	defb	5
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	5
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
 	defb	221
 
 	defm	""
 	defb	221
-
-	defm	""
-	defb	221
-
-	defm	"R"
-	defb	34
-
-	defm	" "
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	15
 
 	defm	""
 	defb	0
@@ -2829,13 +2852,13 @@
 	defb	0
 
 	defm	""
-	defb	13
+	defb	0
 
 	defm	""
-	defb	221
+	defb	0
 
 	defm	""
-	defb	221
+	defb	0
 
 	defm	""
 	defb	0
@@ -2844,12 +2867,18 @@
 	defb	34
 
 	defm	" "
+	defb	221
+
+	defm	""
+	defb	208
+
+	defm	""
 	defb	0
 
-	defm	"P"
+	defm	""
 	defb	0
 
-	defm	"P"
+	defm	""
 	defb	5
 
 	defm	""
@@ -2858,14 +2887,11 @@
 	defm	" "
 	defb	0
 
-	defm	""
-	defb	5
+	defm	"X"
+	defb	144
 
 	defm	""
-	defb	0
-
-	defm	""
-	defb	5
+	defb	144
 
 	defm	""
 	defb	0
@@ -2876,28 +2902,34 @@
 	defm	""
 	defb	0
 
-	defm	"DDDDE"
+	defm	""
+	defb	5
+
+	defm	""
+	defb	137
+
+	defm	""
+	defb	152
+
+	defm	""
+	defb	144
+
+	defm	""
+	defb	5
+
+	defm	""
 	defb	34
 
 	defm	""
 	defb	0
 
 	defm	""
-	defb	1
+	defb	4
 
-	defm	""
-	defb	170
+	defm	"D"
+	defb	136
 
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
+	defm	"HD"
 	defb	0
 
 	defm	""
@@ -2910,9 +2942,6 @@
 	defb	34
 
 	defm	" "
-	defb	0
-
-	defm	""
 	defb	0
 
 	defm	""
@@ -2920,6 +2949,9 @@
 
 	defm	""
 	defb	2
+
+	defm	""
+	defb	34
 
 	defm	"%"
 	defb	34
@@ -2940,22 +2972,22 @@
 	defb	0
 
 	defm	""
-	defb	0
+	defb	34
 
 	defm	"R "
 	defb	0
 
 	defm	"p"
+	defb	0
+
+	defm	""
 	defb	13
 
 	defm	""
-	defb	221
+	defb	0
 
 	defm	""
-	defb	221
-
-	defm	""
-	defb	221
+	defb	5
 
 	defm	""
 	defb	34
@@ -2963,7 +2995,7 @@
 	defm	""
 	defb	0
 
-	defm	""
+	defm	"p"
 	defb	0
 
 	defm	""
@@ -2976,51 +3008,9 @@
 	defb	0
 
 	defm	""
-	defb	0
-
-	defm	"R"
-	defb	0
+	defb	210
 
 	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	5
-
-	defm	""
-	defb	7
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"P"
 	defb	0
 
 	defm	""
@@ -3041,16 +3031,7 @@
 	defm	""
 	defb	5
 
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"w"
-	defb	0
-
-	defm	"DDDD"
+	defm	"'"
 	defb	0
 
 	defm	""
@@ -3060,18 +3041,63 @@
 	defb	0
 
 	defm	""
-	defb	10
+	defb	0
 
 	defm	""
-	defb	170
+	defb	0
 
 	defm	""
-	defb	170
-
-	defm	""
-	defb	170
+	defb	221
 
 	defm	"P"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	208
+
+	defm	""
+	defb	5
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"ww"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"P"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	"DDD@"
 	defb	0
 
 	defm	""
@@ -3210,7 +3236,7 @@
 	defb	0
 
 	defm	""
-	defb	144
+	defb	151
 
 	defm	""
 	defb	0
@@ -3272,17 +3298,23 @@
 	defm	""
 	defb	0
 
-	defm	"i"
+	defm	""
+	defb	6
+
+	defm	""
 	defb	153
 
 	defm	"f"
 	defb	153
 
 	defm	"f`"
-	defb	7
+	defb	0
 
-	defm	"f"
-	defb	136
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
 
 	defm	""
 	defb	137
@@ -3302,10 +3334,10 @@
 	defm	""
 	defb	0
 
-	defm	"h"
-	defb	136
-
 	defm	""
+	defb	0
+
+	defm	"h"
 	defb	136
 
 	defm	""
@@ -3320,10 +3352,7 @@
 	defm	""
 	defb	153
 
-	defm	""
-	defb	136
-
-	defm	""
+	defm	"h"
 	defb	136
 
 	defm	""
@@ -3416,20 +3445,8 @@
 	defm	""
 	defb	9
 
-	defm	"h"
-	defb	136
-
 	defm	""
 	defb	136
-
-	defm	"b "
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
 
 	defm	""
 	defb	136
@@ -3438,7 +3455,16 @@
 	defb	136
 
 	defm	""
-	defb	134
+	defb	146
+
+	defm	")fff"
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	137
 
 	defm	"R"
 	defb	0
@@ -3446,44 +3472,29 @@
 	defm	""
 	defb	0
 
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	""
+	defm	"DDDDE"
 	defb	221
 
 	defm	""
-	defb	208
+	defb	0
 
 	defm	""
 	defb	1
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	"S"
-	defb	0
+	defb	13
 
 	defm	""
 	defb	0
@@ -3492,67 +3503,67 @@
 	defb	26
 
 	defm	""
-	defb	170
+	defb	186
 
 	defm	""
-	defb	170
+	defb	186
 
 	defm	""
-	defb	170
+	defb	186
 
 	defm	""
-	defb	165
+	defb	181
 
 	defm	"0"
 	defb	0
 
 	defm	""
-	defb	13
+	defb	1
 
 	defm	""
-	defb	220
+	defb	170
 
 	defm	""
-	defb	204
+	defb	170
 
 	defm	""
-	defb	221
+	defb	170
 
 	defm	""
-	defb	221
+	defb	170
 
 	defm	"S "
 	defb	0
 
 	defm	""
-	defb	26
+	defb	221
 
 	defm	""
-	defb	170
+	defb	204
 
 	defm	""
-	defb	170
+	defb	205
 
 	defm	""
-	defb	170
+	defb	221
 
 	defm	""
-	defb	165
+	defb	213
 
 	defm	"2"
 	defb	34
 
 	defm	"!"
-	defb	171
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	"S"
 	defb	34
@@ -3632,19 +3643,7 @@
 	defm	""
 	defb	221
 
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	""
+	defm	"DDDE"
 	defb	0
 
 	defm	""
@@ -3657,13 +3656,13 @@
 	defb	10
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	"P"
 	defb	0
@@ -3675,34 +3674,28 @@
 	defb	0
 
 	defm	""
-	defb	170
+	defb	171
 
 	defm	""
-	defb	170
+	defb	171
 
 	defm	""
-	defb	170
+	defb	171
 
 	defm	""
 	defb	165
 
-	defm	""
+	defm	"wp"
 	defb	0
 
 	defm	""
-	defb	0
+	defb	10
 
 	defm	""
-	defb	0
+	defb	170
 
 	defm	""
-	defb	13
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	205
+	defb	170
 
 	defm	""
 	defb	170
@@ -3717,13 +3710,13 @@
 	defb	34
 
 	defm	""
-	defb	170
+	defb	221
 
 	defm	""
-	defb	170
+	defb	204
 
 	defm	""
-	defb	170
+	defb	218
 
 	defm	""
 	defb	165
@@ -3738,13 +3731,13 @@
 	defb	34
 
 	defm	"*"
-	defb	186
+	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	"P"
 	defb	0
@@ -3780,25 +3773,22 @@
 	defb	186
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	"P"
 	defb	0
 
-	defm	""
-	defb	2
-
-	defm	""
+	defm	"w"
 	defb	34
 
 	defm	""
 	defb	170
 
 	defm	""
-	defb	170
+	defb	169
 
 	defm	""
 	defb	170
@@ -3819,13 +3809,13 @@
 	defb	204
 
 	defm	""
-	defb	221
+	defb	141
 
 	defm	""
 	defb	170
 
 	defm	"P"
-	defb	2
+	defb	7
 
 	defm	""
 	defb	34
@@ -3875,10 +3865,10 @@
 	defm	""
 	defb	0
 
-	defm	""
-	defb	3
+	defm	"s"
+	defb	0
 
-	defm	"p"
+	defm	""
 	defb	2
 
 	defm	""
@@ -3890,7 +3880,7 @@
 	defm	" "
 	defb	2
 
-	defm	" 0"
+	defm	" 7"
 	defb	0
 
 	defm	""
@@ -3992,17 +3982,11 @@
 	defm	"0"
 	defb	0
 
-	defm	""
-	defb	2
-
-	defm	"0"
+	defm	"b2 "
 	defb	0
 
 	defm	""
-	defb	0
-
-	defm	""
-	defb	0
+	defb	6
 
 	defm	""
 	defb	3
@@ -4011,34 +3995,28 @@
 	defb	0
 
 	defm	""
-	defb	0
+	defb	6
 
 	defm	""
 	defb	34
 
 	defm	""
-	defb	0
+	defb	150
 
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"h"
+	defm	"ffh"
 	defb	136
 
 	defm	""
 	defb	136
 
-	defm	"b "
+	defm	"b)"
 	defb	0
 
 	defm	""
 	defb	0
 
 	defm	""
-	defb	6
+	defb	9
 
 	defm	"f"
 	defb	136
@@ -4050,27 +4028,30 @@
 	defb	0
 
 	defm	""
+	defb	144
+
+	defm	""
+	defb	144
+
+	defm	""
 	defb	0
 
-	defm	"`"
-	defb	0
+	defm	""
+	defb	152
 
-	defm	"h"
+	defm	""
 	defb	134
 
 	defm	""
 	defb	136
 
 	defm	"`"
-	defb	0
+	defb	9
 
 	defm	""
-	defb	6
+	defb	9
 
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"`"
 	defb	6
 
 	defm	""
@@ -4095,7 +4076,7 @@
 	defb	136
 
 	defm	""
-	defb	136
+	defb	134
 
 	defm	"`"
 	defb	0
@@ -4114,15 +4095,66 @@
 
 	defm	""
 	defb	134
+
+	defm	"i"
+	defb	0
+
+	defm	""
+	defb	9
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	134
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	134
+
+	defm	""
+	defb	136
+
+	defm	"gw"
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	134
+
+	defm	"h"
+	defb	136
+
+	defm	""
+	defb	134
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	152
+
+	defm	""
+	defb	136
 
 	defm	"f"
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	136
+	defb	134
 
 	defm	""
 	defb	136
@@ -4133,58 +4165,7 @@
 	defm	""
 	defb	134
 
-	defm	""
-	defb	136
-
-	defm	"g"
-	defb	9
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	134
-
-	defm	""
-	defb	6
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"`fh"
-	defb	136
-
-	defm	""
-	defb	134
-
-	defm	"fffR"
+	defm	"iffR"
 	defb	34
 
 	defm	""
@@ -4338,10 +4319,10 @@
 	defb	0
 
 	defm	"@"
-	defb	4
+	defb	9
 
 	defm	""
-	defb	4
+	defb	9
 
 	defm	""
 	defb	0
@@ -4362,10 +4343,10 @@
 	defb	17
 
 	defm	""
-	defb	17
+	defb	129
 
 	defm	""
-	defb	17
+	defb	129
 
 	defm	""
 	defb	17
@@ -4380,7 +4361,43 @@
 	defb	209
 
 	defm	""
-	defb	22
+	defb	25
+
+	defm	""
+	defb	34
+
+	defm	"r"
+	defb	34
+
+	defm	" "
+	defb	0
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	146
+
+	defm	""
+	defb	34
+
+	defm	"r"
+	defb	34
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	152
 
 	defm	""
 	defb	34
@@ -4392,43 +4409,13 @@
 	defb	34
 
 	defm	" "
-	defb	0
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	"b"
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	" "
-	defb	0
+	defb	144
 
 	defm	""
 	defb	0
 
 	defm	""
-	defb	34
-
-	defm	"f"
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	" "
-	defb	0
-
-	defm	"f"
-	defb	0
-
-	defm	"b"
-	defb	34
+	defb	152
 
 	defm	""
 	defb	34
@@ -4437,16 +4424,16 @@
 	defb	34
 
 	defm	""
-	defb	0
+	defb	34
+
+	defm	"p"
+	defb	8
 
 	defm	""
-	defb	0
+	defb	144
 
 	defm	""
-	defb	0
-
-	defm	""
-	defb	2
+	defb	8
 
 	defm	""
 	defb	34
@@ -4464,21 +4451,18 @@
 	defb	0
 
 	defm	""
-	defb	0
+	defb	8
 
 	defm	""
 	defb	0
 
 	defm	""
-	defb	0
+	defb	128
 
 	defm	""
 	defb	34
 
-	defm	"#"
-	defb	0
-
-	defm	""
+	defm	"#p"
 	defb	0
 
 	defm	""
@@ -4562,8 +4546,8 @@
 	defm	""
 	defb	0
 
-	defm	""
-	defb	3
+	defm	"#"
+	defb	34
 
 	defm	""
 	defb	0
@@ -4571,19 +4555,10 @@
 	defm	""
 	defb	0
 
-	defm	""
+	defm	"`0"
 	defb	0
 
-	defm	""
-	defb	0
-
-	defm	"0"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"0"
+	defm	"b0"
 	defb	0
 
 	defm	""
@@ -4596,7 +4571,7 @@
 	defb	0
 
 	defm	""
-	defb	0
+	defb	9
 
 	defm	""
 	defb	3
@@ -4604,7 +4579,10 @@
 	defm	""
 	defb	0
 
-	defm	"p"
+	defm	""
+	defb	7
+
+	defm	""
 	defb	0
 
 	defm	""
@@ -4613,7 +4591,7 @@
 	defm	"0"
 	defb	2
 
-	defm	" 0"
+	defm	"`0"
 	defb	0
 
 	defm	""
@@ -4628,10 +4606,7 @@
 	defm	""
 	defb	34
 
-	defm	""
-	defb	34
-
-	defm	""
+	defm	")"
 	defb	3
 
 	defm	""
@@ -4652,7 +4627,7 @@
 	defm	""
 	defb	34
 
-	defm	" 0"
+	defm	"`0"
 	defb	0
 
 	defm	""
@@ -4667,10 +4642,7 @@
 	defm	""
 	defb	34
 
-	defm	""
-	defb	34
-
-	defm	""
+	defm	"&"
 	defb	3
 
 	defm	""
@@ -4682,7 +4654,10 @@
 	defm	""
 	defb	34
 
-	defm	"'wwp0"
+	defm	"'ww"
+	defb	144
+
+	defm	"0"
 	defb	0
 
 	defm	""
@@ -4697,10 +4672,7 @@
 	defm	""
 	defb	34
 
-	defm	""
-	defb	34
-
-	defm	""
+	defm	"&"
 	defb	3
 
 	defm	""
@@ -4718,7 +4690,7 @@
 	defm	""
 	defb	34
 
-	defm	" 0"
+	defm	"`7"
 	defb	0
 
 	defm	""
@@ -4733,10 +4705,10 @@
 	defm	""
 	defb	2
 
-	defm	" "
-	defb	6
+	defm	"&h"
+	defb	152
 
-	defm	"i"
+	defm	""
 	defb	136
 
 	defm	""
@@ -4751,11 +4723,8 @@
 	defm	""
 	defb	153
 
-	defm	"`i"
-	defb	136
-
-	defm	""
-	defb	136
+	defm	"f"
+	defb	152
 
 	defm	""
 	defb	136
@@ -4767,9 +4736,18 @@
 	defb	152
 
 	defm	""
+	defb	136
+
+	defm	""
+	defb	152
+
+	defm	""
 	defb	134
 
-	defm	"&"
+	defm	""
+	defb	152
+
+	defm	""
 	defb	136
 
 	defm	"h"
@@ -4784,43 +4762,10 @@
 	defm	""
 	defb	136
 
-	defm	"bh"
+	defm	"i"
 	defb	136
 
 	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	134
-
-	defm	"&"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	134
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"bl"
 	defb	136
 
 	defm	""
@@ -4838,7 +4783,25 @@
 	defm	""
 	defb	134
 
-	defm	"v"
+	defm	"h"
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	134
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	"i"
 	defb	200
 
 	defm	""
@@ -4850,10 +4813,37 @@
 	defm	""
 	defb	136
 
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	134
+
+	defm	""
+	defb	156
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
 	defm	"h"
 	defb	136
 
-	defm	"bl"
+	defm	"i"
+	defb	200
+
+	defm	""
 	defb	136
 
 	defm	""
@@ -4871,7 +4861,7 @@
 	defm	""
 	defb	134
 
-	defm	"&"
+	defm	"l"
 	defb	204
 
 	defm	""
@@ -4887,9 +4877,9 @@
 	defb	136
 
 	defm	""
-	defb	140
+	defb	137
 
-	defm	"`ffff"
+	defm	"fffff"
 	defb	136
 
 	defm	""
@@ -4916,11 +4906,14 @@
 	defm	""
 	defb	4
 
-	defm	"J"
+	defm	""
+	defb	154
+
+	defm	""
 	defb	170
 
 	defm	""
-	defb	164
+	defb	170
 
 	defm	""
 	defb	170
@@ -4928,17 +4921,8 @@
 	defm	"R "
 	defb	0
 
-	defm	"DD"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"E "
-	defb	0
-
-	defm	""
-	defb	4
+	defm	"H"
+	defb	154
 
 	defm	""
 	defb	170
@@ -4947,25 +4931,7 @@
 	defb	170
 
 	defm	""
-	defb	170
-
-	defm	"JP"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"J"
-	defb	186
-
-	defm	""
-	defb	186
-
-	defm	""
-	defb	186
-
-	defm	""
-	defb	181
+	defb	165
 
 	defm	" "
 	defb	0
@@ -4973,13 +4939,7 @@
 	defm	""
 	defb	4
 
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
+	defm	"DJ"
 	defb	170
 
 	defm	""
@@ -4991,17 +4951,50 @@
 	defm	""
 	defb	0
 
+	defm	"H"
+	defb	138
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	164
+
+	defm	"E "
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	139
+
+	defm	""
+	defb	171
+
+	defm	""
+	defb	171
+
+	defm	""
+	defb	171
+
+	defm	"P"
+	defb	0
+
+	defm	""
+	defb	0
+
 	defm	"J"
-	defb	186
+	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	181
+	defb	165
 
 	defm	""
 	defb	0
@@ -5013,16 +5006,16 @@
 	defb	4
 
 	defm	""
-	defb	170
+	defb	171
 
 	defm	""
-	defb	170
+	defb	171
 
 	defm	""
-	defb	170
+	defb	171
 
 	defm	""
-	defb	170
+	defb	171
 
 	defm	"R"
 	defb	0
@@ -5030,28 +5023,28 @@
 	defm	""
 	defb	0
 
-	defm	"DD"
-	defb	204
+	defm	"J"
+	defb	170
 
-	defm	"DE"
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	165
+
+	defm	""
 	defb	34
 
 	defm	" "
-	defb	1
+	defb	4
 
-	defm	""
-	defb	170
+	defm	"DL"
+	defb	196
 
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
+	defm	"D"
 	defb	170
 
 	defm	""
@@ -5090,15 +5083,6 @@
 	defm	""
 	defb	0
 
-	defm	"DDDD"
-	defb	0
-
-	defm	"0"
-	defb	0
-
-	defm	""
-	defb	10
-
 	defm	""
 	defb	170
 
@@ -5107,24 +5091,6 @@
 
 	defm	""
 	defb	170
-
-	defm	"@"
-	defb	3
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	171
-
-	defm	""
-	defb	171
-
-	defm	""
-	defb	171
 
 	defm	""
 	defb	164
@@ -5135,50 +5101,80 @@
 	defm	"0"
 	defb	0
 
-	defm	""
-	defb	10
-
-	defm	""
+	defm	"z"
 	defb	170
 
 	defm	""
 	defb	170
 
 	defm	""
-	defb	170
+	defb	169
 
 	defm	"B#"
+	defb	34
+
+	defm	""
 	defb	0
 
-	defm	" "
-	defb	171
-
-	defm	""
-	defb	171
-
-	defm	""
-	defb	171
-
-	defm	""
-	defb	164
+	defm	"DDD"
+	defb	137
 
 	defm	""
 	defb	34
 
-	defm	""
+	defm	"2"
 	defb	34
 
-	defm	" "
+	defm	""
 	defb	10
 
 	defm	""
-	defb	170
+	defb	186
+
+	defm	""
+	defb	186
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	146
+
+	defm	"#"
+	defb	34
+
+	defm	""
+	defb	34
 
 	defm	""
 	defb	170
 
 	defm	""
 	defb	170
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	132
+
+	defm	""
+	defb	34
+
+	defm	""
+	defb	34
+
+	defm	""
+	defb	34
+
+	defm	"*"
+	defb	186
+
+	defm	""
+	defb	186
+
+	defm	""
+	defb	186
 
 	defm	"B"
 	defb	34
@@ -5186,40 +5182,28 @@
 	defm	""
 	defb	34
 
-	defm	""
-	defb	0
+	defm	" "
+	defb	170
 
-	defm	"DD"
+	defm	""
+	defb	170
+
+	defm	""
 	defb	170
 
 	defm	""
 	defb	164
 
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
+	defm	"ww"
 	defb	0
 
 	defm	""
-	defb	10
+	defb	4
 
-	defm	""
+	defm	"DD"
 	defb	170
 
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	18
-
-	defm	" "
+	defm	"B "
 	defb	0
 
 	defm	""
@@ -5228,10 +5212,7 @@
 	defm	""
 	defb	3
 
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"p"
 	defb	0
 
 	defm	""
@@ -5246,13 +5227,7 @@
 	defm	""
 	defb	3
 
-	defm	""
-	defb	0
-
-	defm	""
-	defb	34
-
-	defm	" "
+	defm	"`2 "
 	defb	0
 
 	defm	""
@@ -5264,7 +5239,7 @@
 	defm	""
 	defb	0
 
-	defm	"0'w"
+	defm	"6ww"
 	defb	34
 
 	defm	" "
@@ -5276,10 +5251,7 @@
 	defm	""
 	defb	3
 
-	defm	""
-	defb	2
-
-	defm	""
+	defm	"b"
 	defb	34
 
 	defm	"'"
@@ -5294,7 +5266,7 @@
 	defm	""
 	defb	0
 
-	defm	"0"
+	defm	"6"
 	defb	2
 
 	defm	""
@@ -5315,10 +5287,7 @@
 	defm	""
 	defb	3
 
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"`"
 	defb	0
 
 	defm	"0w"
@@ -5327,7 +5296,7 @@
 	defm	""
 	defb	7
 
-	defm	"p0"
+	defm	"p9"
 	defb	12
 
 	defm	""
@@ -5349,7 +5318,7 @@
 	defb	3
 
 	defm	""
-	defb	0
+	defb	144
 
 	defm	""
 	defb	0
@@ -5366,7 +5335,10 @@
 	defm	""
 	defb	0
 
-	defm	"0"
+	defm	""
+	defb	153
+
+	defm	""
 	defb	0
 
 	defm	""
@@ -5384,7 +5356,7 @@
 	defm	""
 	defb	7
 
-	defm	"r "
+	defm	"w`"
 	defb	0
 
 	defm	"0"
@@ -5399,13 +5371,10 @@
 	defm	""
 	defb	34
 
-	defm	""
-	defb	34
+	defm	")f"
+	defb	153
 
 	defm	""
-	defb	6
-
-	defm	"i"
 	defb	150
 
 	defm	"i"
@@ -5417,7 +5386,10 @@
 	defm	""
 	defb	150
 
-	defm	"`i"
+	defm	"i"
+	defb	152
+
+	defm	""
 	defb	136
 
 	defm	""
@@ -5432,10 +5404,7 @@
 	defm	"h"
 	defb	150
 
-	defm	""
-	defb	6
-
-	defm	""
+	defm	"h"
 	defb	136
 
 	defm	""
@@ -5453,7 +5422,10 @@
 	defm	""
 	defb	136
 
-	defm	"`h"
+	defm	"i"
+	defb	136
+
+	defm	""
 	defb	136
 
 	defm	""
@@ -5468,10 +5440,7 @@
 	defm	""
 	defb	134
 
-	defm	""
-	defb	6
-
-	defm	""
+	defm	"h"
 	defb	136
 
 	defm	""
@@ -5484,9 +5453,15 @@
 	defb	136
 
 	defm	""
+	defb	152
+
+	defm	""
+	defb	150
+
+	defm	""
 	defb	136
 
-	defm	"`h"
+	defm	""
 	defb	136
 
 	defm	""
@@ -5502,12 +5477,9 @@
 	defb	136
 
 	defm	""
-	defb	134
+	defb	137
 
-	defm	""
-	defb	6
-
-	defm	""
+	defm	"h"
 	defb	136
 
 	defm	""
@@ -5522,7 +5494,10 @@
 	defm	""
 	defb	136
 
-	defm	"bh"
+	defm	"f"
+	defb	136
+
+	defm	""
 	defb	136
 
 	defm	""
@@ -5540,7 +5515,7 @@
 	defm	""
 	defb	134
 
-	defm	"&"
+	defm	"h"
 	defb	136
 
 	defm	""
@@ -5553,30 +5528,21 @@
 	defb	136
 
 	defm	""
+	defb	137
+
+	defm	"fiif"
 	defb	136
 
-	defm	"bfff"
-	defb	136
+	defm	""
+	defb	134
 
-	defm	"fffR"
+	defm	"f"
+	defb	150
+
+	defm	"R"
 	defb	34
 
-	defm	" "
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	21
-
-	defm	""
+	defm	" DDDDE"
 	defb	34
 
 	defm	""
@@ -5595,7 +5561,7 @@
 	defb	0
 
 	defm	""
-	defb	4
+	defb	0
 
 	defm	"R"
 	defb	34
@@ -5681,11 +5647,14 @@
 	defm	""
 	defb	0
 
-	defm	"DDA"
+	defm	"DA"
 	defb	17
 
 	defm	""
-	defb	21
+	defb	17
+
+	defm	""
+	defb	197
 
 	defm	""
 	defb	0
@@ -5709,7 +5678,7 @@
 	defb	202
 
 	defm	"]"
-	defb	221
+	defb	208
 
 	defm	""
 	defb	0
@@ -5736,31 +5705,10 @@
 	defb	34
 
 	defm	""
-	defb	1
+	defb	4
 
-	defm	""
-	defb	171
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	186
-
-	defm	""
-	defb	171
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	161
+	defm	"DDDDDDJ"
+	defb	164
 
 	defm	""
 	defb	34
@@ -5769,9 +5717,18 @@
 	defb	0
 
 	defm	""
-	defb	4
+	defb	1
 
-	defm	"DDDB "
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	"B "
 	defb	0
 
 	defm	""
@@ -5811,7 +5768,7 @@
 	defb	0
 
 	defm	""
-	defb	0
+	defb	2
 
 	defm	""
 	defb	26
@@ -5856,7 +5813,7 @@
 	defb	0
 
 	defm	""
-	defb	26
+	defb	202
 
 	defm	""
 	defb	186
@@ -5874,7 +5831,7 @@
 	defb	0
 
 	defm	""
-	defb	10
+	defb	12
 
 	defm	""
 	defb	170
@@ -5892,7 +5849,7 @@
 	defb	0
 
 	defm	""
-	defb	170
+	defb	202
 
 	defm	""
 	defb	170
@@ -5910,12 +5867,9 @@
 	defb	0
 
 	defm	""
-	defb	10
+	defb	4
 
-	defm	""
-	defb	20
-
-	defm	"DDB"
+	defm	"DDDB"
 	defb	0
 
 	defm	""
@@ -5945,7 +5899,10 @@
 	defm	""
 	defb	34
 
-	defm	" "
+	defm	""
+	defb	144
+
+	defm	""
 	defb	0
 
 	defm	"0"
@@ -5957,16 +5914,10 @@
 	defm	""
 	defb	34
 
-	defm	""
+	defm	"&"
 	defb	34
 
-	defm	""
-	defb	0
-
-	defm	""
-	defb	3
-
-	defm	""
+	defm	"#"
 	defb	0
 
 	defm	""
@@ -5981,10 +5932,7 @@
 	defm	""
 	defb	34
 
-	defm	" wp"
-	defb	0
-
-	defm	""
+	defm	"bwr "
 	defb	0
 
 	defm	""
@@ -5993,85 +5941,28 @@
 	defm	""
 	defb	34
 
-	defm	""
-	defb	34
+	defm	"&"
+	defb	2
 
-	defm	""
-	defb	0
-
-	defm	""
-	defb	3
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"#"
 	defb	34
 
 	defm	" "
 	defb	0
 
-	defm	"0w"
-	defb	0
-
 	defm	""
 	defb	0
 
 	defm	""
-	defb	3
-
-	defm	"0"
-	defb	0
+	defb	34
 
 	defm	""
-	defb	3
+	defb	144
 
 	defm	""
-	defb	0
+	defb	2
 
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	192
-
-	defm	"3"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"0"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	3
-
-	defm	"0"
-	defb	0
-
-	defm	""
-	defb	3
-
-	defm	""
+	defm	"2w"
 	defb	0
 
 	defm	""
@@ -6080,19 +5971,7 @@
 	defm	""
 	defb	7
 
-	defm	"w3"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"0"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"w"
 	defb	0
 
 	defm	""
@@ -6101,17 +5980,86 @@
 	defm	""
 	defb	34
 
-	defm	"&if"
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"6"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	224
+
+	defm	""
+	defb	6
+
+	defm	"0"
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	14
+
+	defm	""
+	defb	0
+
+	defm	"c"
+	defb	0
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	34
+
+	defm	""
+	defb	34
+
+	defm	"f"
+	defb	153
+
+	defm	"f"
+	defb	34
+
+	defm	"f"
+	defb	150
+
+	defm	"i"
 	defb	152
 
 	defm	""
-	defb	134
+	defb	136
 
 	defm	""
 	defb	153
 
-	defm	"fbi"
-	defb	137
+	defm	"ff"
+	defb	152
+
+	defm	""
+	defb	153
 
 	defm	""
 	defb	152
@@ -6128,7 +6076,28 @@
 	defm	""
 	defb	150
 
-	defm	"&"
+	defm	""
+	defb	152
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	"f"
 	defb	136
 
 	defm	""
@@ -6146,25 +6115,10 @@
 	defm	""
 	defb	136
 
-	defm	"bh"
-	defb	136
-
 	defm	""
-	defb	136
+	defb	137
 
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	134
-
-	defm	"&"
+	defm	"h"
 	defb	136
 
 	defm	""
@@ -6182,7 +6136,55 @@
 	defm	""
 	defb	136
 
-	defm	"`h"
+	defm	"f"
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	134
+
+	defm	""
+	defb	150
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	137
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	144
+
+	defm	""
+	defb	150
+
+	defm	""
 	defb	136
 
 	defm	""
@@ -6201,45 +6203,6 @@
 	defb	134
 
 	defm	""
-	defb	9
-
-	defm	"h"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"`"
-	defb	9
-
-	defm	"ff"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	134
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
 	defb	0
 
 	defm	""
@@ -6254,17 +6217,26 @@
 	defm	""
 	defb	136
 
-	defm	"b"
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	146
+
+	defm	""
 	defb	34
 
 	defm	""
-	defb	0
+	defb	153
 
 	defm	""
-	defb	0
+	defb	153
 
 	defm	""
-	defb	6
+	defb	150
 
 	defm	""
 	defb	136
@@ -6278,53 +6250,8 @@
 	defm	"R"
 	defb	34
 
-	defm	" "
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	""
+	defm	" DDDDE"
 	defb	34
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	"DDDDP"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	208
 
 	defm	""
 	defb	0
@@ -6333,16 +6260,16 @@
 	defb	1
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
 	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	"P"
 	defb	0
@@ -6354,6 +6281,27 @@
 	defb	26
 
 	defm	""
+	defb	186
+
+	defm	""
+	defb	171
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	181
+
+	defm	""
+	defb	208
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
 	defb	170
 
 	defm	""
@@ -6363,18 +6311,36 @@
 	defb	170
 
 	defm	""
-	defb	165
+	defb	170
+
+	defm	"P"
+	defb	0
 
 	defm	""
+	defb	0
+
+	defm	"DDDDE"
 	defb	0
 
 	defm	""
 	defb	0
 
 	defm	""
-	defb	4
+	defb	1
 
-	defm	"DDDDm"
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	"m"
 	defb	208
 
 	defm	""
@@ -6384,16 +6350,16 @@
 	defb	26
 
 	defm	""
-	defb	170
+	defb	186
+
+	defm	""
+	defb	171
 
 	defm	""
 	defb	170
 
 	defm	""
-	defb	170
-
-	defm	""
-	defb	160
+	defb	176
 
 	defm	""
 	defb	12
@@ -6405,16 +6371,16 @@
 	defb	1
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
 	defb	170
 
 	defm	""
-	defb	186
+	defb	170
 
 	defm	""
-	defb	171
+	defb	170
 
 	defm	""
 	defb	0
@@ -6431,16 +6397,13 @@
 	defm	""
 	defb	170
 
-	defm	"wwwwwwwy"
+	defm	"gwwwwwwy"
 	defb	153
 
 	defm	""
 	defb	153
 
-	defm	""
-	defb	161
-
-	defm	"DDD"
+	defm	"DDDD"
 	defb	0
 
 	defm	""
@@ -6450,9 +6413,12 @@
 	defb	0
 
 	defm	""
-	defb	4
+	defb	10
 
-	defm	"E"
+	defm	""
+	defb	165
+
+	defm	""
 	defb	170
 
 	defm	""
@@ -6504,27 +6470,18 @@
 	defb	16
 
 	defm	""
+	defb	7
+
+	defm	"wwDDDD@"
 	defb	0
 
 	defm	""
 	defb	0
 
-	defm	""
-	defb	0
-
-	defm	""
+	defm	"*"
 	defb	170
 
-	defm	"DDD@"
-	defb	0
-
 	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	"J"
 	defb	170
 
 	defm	""
@@ -6578,16 +6535,13 @@
 	defm	""
 	defb	16
 
-	defm	""
+	defm	"`"
 	defb	0
 
 	defm	""
 	defb	0
 
-	defm	""
-	defb	0
-
-	defm	"wwwwww"
+	defm	"wwwwwv"
 	defb	0
 
 	defm	""
@@ -6612,58 +6566,67 @@
 	defb	151
 
 	defm	"w"
-	defb	0
-
-	defm	""
-	defb	3
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
+	defb	2
 
 	defm	""
 	defb	34
 
-	defm	" "
-	defb	0
+	defm	""
+	defb	34
 
-	defm	"0"
-	defb	0
-
-	defm	"ii"
+	defm	"&"
 	defb	153
 
-	defm	"f"
-	defb	0
+	defm	""
+	defb	153
+
+	defm	"b"
+	defb	34
 
 	defm	""
-	defb	3
+	defb	34
 
 	defm	""
-	defb	0
+	defb	34
+
+	defm	""
+	defb	34
 
 	defm	"h"
-	defb	137
-
-	defm	""
 	defb	136
 
 	defm	""
 	defb	137
 
-	defm	""
-	defb	144
+	defm	"f"
+	defb	2
 
-	defm	"`0"
-	defb	9
+	defm	""
+	defb	34
+
+	defm	""
+	defb	34
+
+	defm	"h"
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	137
+
+	defm	""
+	defb	151
+
+	defm	"r"
+	defb	34
+
+	defm	")"
+	defb	136
+
+	defm	""
+	defb	152
 
 	defm	""
 	defb	136
@@ -6672,16 +6635,10 @@
 	defb	136
 
 	defm	""
-	defb	136
+	defb	34
 
 	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	3
+	defb	34
 
 	defm	"i"
 	defb	136
@@ -6696,49 +6653,49 @@
 	defb	136
 
 	defm	""
+	defb	130
+
+	defm	""
+	defb	34
+
+	defm	"&"
+	defb	136
+
+	defm	"h"
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	34
+
+	defm	"h"
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
+	defb	136
+
+	defm	""
 	defb	128
 
 	defm	""
 	defb	0
 
-	defm	"h"
-	defb	136
-
-	defm	"h"
-	defb	136
-
 	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	"f"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	152
+	defb	6
 
 	defm	""
 	defb	136
@@ -6756,7 +6713,7 @@
 	defb	0
 
 	defm	""
-	defb	15
+	defb	0
 
 	defm	""
 	defb	136
@@ -6777,10 +6734,10 @@
 	defb	34
 
 	defm	""
-	defb	0
+	defb	153
 
 	defm	""
-	defb	0
+	defb	153
 
 	defm	"h"
 	defb	136
@@ -6822,10 +6779,10 @@
 	defb	134
 
 	defm	"h"
-	defb	153
+	defb	144
 
 	defm	""
-	defb	153
+	defb	0
 
 	defm	""
 	defb	152
@@ -6837,7 +6794,7 @@
 	defb	136
 
 	defm	""
-	defb	136
+	defb	137
 
 	defm	""
 	defb	150
@@ -6846,10 +6803,10 @@
 	defb	136
 
 	defm	""
-	defb	136
+	defb	153
 
 	defm	""
-	defb	136
+	defb	152
 
 	defm	""
 	defb	136
@@ -6938,20 +6895,6 @@
 	defm	"fgwwwwwww"
 ;	SECTION	code
 
-
-;	SECTION	text
-
-._cerrojos
-	defb	0
-	defb	11
-	defb	4
-	defb	0
-	defb	22
-	defb	3
-	defb	8
-	defb	0
-
-;	SECTION	code
 
 ;	SECTION	text
 
@@ -7883,89 +7826,6 @@
 
 
 
-._check_and_clear_cerrojo
-	ld	hl,(_rdx)
-	ld	h,0
-	push	hl
-	ld	hl,(_rdy)
-	ld	h,0
-	push	hl
-	call	_qtile
-	pop	bc
-	pop	bc
-	ld	de,15	;const
-	ex	de,hl
-	call	l_eq
-	jp	nc,i_33
-	ld	hl,_player+28
-	call	l_gchar
-	ld	a,h
-	or	l
-	jr	nz,i_34_i_33
-.i_33
-	jp	i_32
-.i_34_i_33
-	xor a
-	ld (__t), a
-	ld a, (_comportamiento_tiles) ;; beh [0]
-	ld (__n), a
-	ld a, (_rdx)
-	ld (__x), a
-	ld a, (_rdy)
-	ld (__y), a
-	call set_map_tile_do
-	ld b, 2
-	ld hl, _cerrojos
-	.clear_cerrojo_loop
-	ld c, (hl)
-	inc hl
-	ld d, (hl)
-	inc hl
-	ld e, (hl)
-	inc hl
-	ld a, (_n_pant)
-	cp c
-	jr nz, clear_cerrojo_loop_continue
-	ld a, (_rdx)
-	cp d
-	jr nz, clear_cerrojo_loop_continue
-	ld a, (_rdy)
-	cp e
-	jr nz, clear_cerrojo_loop_continue
-	xor a
-	ld (hl), a
-	jr clear_cerrojo_loop_done
-	.clear_cerrojo_loop_continue
-	inc hl
-	djnz clear_cerrojo_loop
-	.clear_cerrojo_loop_done
-	ld	hl,_player+28
-	push	hl
-	call	l_gchar
-	dec	hl
-	pop	de
-	ld	a,l
-	ld	(de),a
-	ld	hl,8	;const
-	call	_peta_el_beeper
-.i_32
-	ret
-
-
-
-._init_cerrojos
-	ld b, 2
-	ld hl, _cerrojos + 3
-	ld de, 4
-	ld a, 1
-	.init_cerrojos_loop
-	ld (hl), a
-	add hl, de
-	djnz init_cerrojos_loop
-	ret
-
-
-
 ._init_malotes
 	ld bc, 72
 	ld de, 9
@@ -8122,7 +7982,7 @@
 	ld	a,l
 	ld	(_rda),a
 	cp	#(14 % 256)
-	jp	nz,i_35
+	jp	nz,i_31
 	ld	hl,(_rdx)
 	ld	h,0
 	ld	a,l
@@ -8137,33 +7997,26 @@
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	m,i_36
+	jp	m,i_32
 	or	l
-	jp	z,i_36
+	jp	z,i_32
 	ld	hl,(_x0)
 	ld	h,0
 	inc	hl
 	ld	h,0
 	ld	a,l
 	ld	(_x1),a
-	jp	i_37
-.i_36
+	jp	i_33
+.i_32
 	ld	hl,(_x0)
 	ld	h,0
 	dec	hl
 	ld	h,0
 	ld	a,l
 	ld	(_x1),a
-.i_37
+.i_33
 	call	_move_tile_with_check
-.i_35
-	ld	a,(_rda)
-	ld	e,a
-	ld	d,0
-	ld	hl,15	;const
-	call	l_eq
-	call	c,_check_and_clear_cerrojo
-.i_38
+.i_31
 	ret
 
 
@@ -8195,12 +8048,6 @@
 	ld	h,0
 	ld	a,l
 	ld	(_rda),a
-	ld	e,a
-	ld	d,0
-	ld	hl,15	;const
-	call	l_eq
-	call	c,_check_and_clear_cerrojo
-.i_39
 	ret
 
 
@@ -8221,45 +8068,45 @@
 	ld	de,512	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_40
+	jp	nc,i_34
 	ld	hl,512	;const
 	ld	(_player+8),hl
-.i_40
+.i_34
 	ld	hl,_pad_this_frame
 	ld	a,(hl)
 	and	#(16 % 256)
 	cp	#(0 % 256)
 	ld	hl,0
-	jp	nz,i_42
+	jp	nz,i_36
 	inc	hl
 	ld	a,(_player+19)
 	cp	#(0 % 256)
-	jp	nz,i_42
+	jp	nz,i_36
 	ld	a,(_player+26)
 	and	a
-	jp	nz,i_43
+	jp	nz,i_37
 	ld	a,(_player+25)
 	and	a
-	jp	z,i_42
-.i_43
-	jr	i_45_i_42
-.i_42
-	jp	i_41
-.i_45_i_42
+	jp	z,i_36
+.i_37
+	jr	i_39_i_36
+.i_36
+	jp	i_35
+.i_39_i_36
 	ld	hl,_player+19
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,_player+14
 	ld	(hl),#(0 % 256 % 256)
 	ld	hl,3	;const
 	call	_peta_el_beeper
-.i_41
+.i_35
 	ld	hl,_pad0
 	ld	a,(hl)
 	and	#(16 % 256)
-	jp	nz,i_46
+	jp	nz,i_40
 	ld	a,(_player+19)
 	and	a
-	jp	z,i_47
+	jp	z,i_41
 	ld	hl,_player+8
 	push	hl
 	ld	e,(hl)
@@ -8285,26 +8132,26 @@
 	ld	de,65280	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_48
+	jp	nc,i_42
 	ld	hl,65280	;const
 	ld	(_player+8),hl
-.i_48
+.i_42
 	ld	hl,_player+14
 	inc	(hl)
 	ld	a,(hl)
 	cp	#(8 % 256)
-	jp	nz,i_49
+	jp	nz,i_43
 	ld	hl,_player+19
 	ld	(hl),#(0 % 256 % 256)
 	ld	l,(hl)
 	ld	h,0
-.i_49
-.i_47
-	jp	i_50
-.i_46
+.i_43
+.i_41
+	jp	i_44
+.i_40
 	ld	hl,_player+19
 	ld	(hl),#(0 % 256 % 256)
-.i_50
+.i_44
 	ld	hl,_player+1+1
 	push	hl
 	ld	e,(hl)
@@ -8317,18 +8164,18 @@
 	ld	hl,(_player+1+1)
 	xor	a
 	or	h
-	jp	p,i_51
+	jp	p,i_45
 	ld	hl,0	;const
 	ld	(_player+1+1),hl
-.i_51
+.i_45
 	ld	hl,(_player+1+1)
 	ld	de,9216	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_52
+	jp	nc,i_46
 	ld	hl,9216	;const
 	ld	(_player+1+1),hl
-.i_52
+.i_46
 	ld hl, (_player + 2)
 	call HLshr6_A
 	ld (_gpy), A
@@ -8338,7 +8185,7 @@
 	ld	(_pvy_total),hl
 	ld	a,h
 	or	l
-	jp	z,i_53
+	jp	z,i_47
 	ld	hl,(_gpx)
 	ld	h,0
 	ld	bc,4
@@ -8362,9 +8209,9 @@
 	ld	hl,(_pvy_total)
 	xor	a
 	or	h
-	jp	m,i_54
+	jp	m,i_48
 	or	l
-	jp	z,i_54
+	jp	z,i_48
 	ld	hl,(_gpy)
 	ld	h,0
 	ld	bc,15
@@ -8382,12 +8229,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(12 % 256)
-	jp	nz,i_56
+	jp	nz,i_50
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(12 % 256)
-	jp	z,i_55
-.i_56
+	jp	z,i_49
+.i_50
 	ld	hl,0	;const
 	ld	(_player+8),hl
 	ld a, (_gpy)
@@ -8399,13 +8246,13 @@
 	ld	(hl),#(1 % 256 % 256)
 	ld	l,(hl)
 	ld	h,0
-.i_55
-	jp	i_58
-.i_54
+.i_49
+	jp	i_52
+.i_48
 	ld	hl,(_pvy_total)
 	xor	a
 	or	h
-	jp	p,i_59
+	jp	p,i_53
 	ld	hl,(_gpy)
 	ld	h,0
 	ld	bc,4
@@ -8423,12 +8270,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	nz,i_61
+	jp	nz,i_55
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	z,i_60
-.i_61
+	jp	z,i_54
+.i_55
 	ld	hl,0	;const
 	ld	(_player+8),hl
 	ld a, (_gpy)
@@ -8437,23 +8284,23 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), HL
-.i_60
-.i_59
-.i_58
+.i_54
+.i_53
+.i_52
 	ld	hl,_at1
 	ld	a,(hl)
 	rrca
-	jp	c,i_64
+	jp	c,i_58
 	ld	hl,_at2
 	ld	a,(hl)
 	rrca
-	jp	nc,i_63
-.i_64
+	jp	nc,i_57
+.i_58
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_hit),a
-.i_63
-.i_53
+.i_57
+.i_47
 	ld	hl,(_gpy)
 	ld	h,0
 	ld	bc,16
@@ -8473,36 +8320,36 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(12 % 256)
-	jp	nz,i_66
+	jp	nz,i_60
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(12 % 256)
-	jp	nz,i_66
+	jp	nz,i_60
 	ld	hl,0	;const
-	jr	i_67
-.i_66
+	jr	i_61
+.i_60
 	ld	hl,1	;const
-.i_67
+.i_61
 	pop	de
 	ld	a,l
 	ld	(de),a
 	ld	hl,_pad0
 	ld	a,(hl)
 	rrca
-	jp	nc,i_69
+	jp	nc,i_63
 	ld	hl,_pad0
 	ld	a,(hl)
 	and	#(2 % 256)
-	jr	nz,i_70_i_69
-.i_69
-	jp	i_68
-.i_70_i_69
+	jr	nz,i_64_i_63
+.i_63
+	jp	i_62
+.i_64_i_63
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	m,i_71
+	jp	m,i_65
 	or	l
-	jp	z,i_71
+	jp	z,i_65
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8513,16 +8360,16 @@
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	p,i_72
+	jp	p,i_66
 	ld	hl,0	;const
 	ld	(_player+6),hl
-.i_72
-	jp	i_73
-.i_71
+.i_66
+	jp	i_67
+.i_65
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	p,i_74
+	jp	p,i_68
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8533,23 +8380,23 @@
 	ld	hl,(_player+6)
 	xor	a
 	or	h
-	jp	m,i_75
+	jp	m,i_69
 	or	l
-	jp	z,i_75
+	jp	z,i_69
 	ld	hl,0	;const
 	ld	(_player+6),hl
-.i_75
-.i_74
-.i_73
+.i_69
+.i_68
+.i_67
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_thrusting),a
-	jp	i_76
-.i_68
+	jp	i_70
+.i_62
 	ld	hl,_pad0
 	ld	a,(hl)
 	rrca
-	jp	c,i_77
+	jp	c,i_71
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8561,17 +8408,17 @@
 	ld	de,65280	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_78
+	jp	nc,i_72
 	ld	hl,65280	;const
 	ld	(_player+6),hl
-.i_78
+.i_72
 	ld	hl,_player+22
 	ld	(hl),#(4 % 256 % 256)
-.i_77
+.i_71
 	ld	hl,_pad0
 	ld	a,(hl)
 	and	#(2 % 256)
-	jp	nz,i_79
+	jp	nz,i_73
 	ld	hl,_player+6
 	push	hl
 	call	l_gint	;
@@ -8583,17 +8430,17 @@
 	ld	de,256	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_80
+	jp	nc,i_74
 	ld	hl,256	;const
 	ld	(_player+6),hl
-.i_80
+.i_74
 	ld	hl,_player+22
 	ld	(hl),#(0 % 256 % 256)
-.i_79
+.i_73
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_thrusting),a
-.i_76
+.i_70
 	ld	hl,_player
 	push	hl
 	ld	e,(hl)
@@ -8615,18 +8462,18 @@
 	ld	hl,(_player)
 	xor	a
 	or	h
-	jp	p,i_81
+	jp	p,i_75
 	ld	hl,0	;const
 	ld	(_player),hl
-.i_81
+.i_75
 	ld	hl,(_player)
 	ld	de,14336	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_82
+	jp	nc,i_76
 	ld	hl,14336	;const
 	ld	(_player),hl
-.i_82
+.i_76
 	ld hl, (_player)
 	call HLshr6_A
 	ld (_gpx), A
@@ -8636,7 +8483,7 @@
 	ld	(_pvx_total),hl
 	ld	a,h
 	or	l
-	jp	z,i_83
+	jp	z,i_77
 	ld	hl,(_gpy)
 	ld	h,0
 	ld	bc,4
@@ -8660,9 +8507,9 @@
 	ld	hl,(_pvx_total)
 	xor	a
 	or	h
-	jp	m,i_84
+	jp	m,i_78
 	or	l
-	jp	z,i_84
+	jp	z,i_78
 	ld	hl,(_gpx)
 	ld	h,0
 	ld	bc,12
@@ -8680,12 +8527,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	nz,i_86
+	jp	nz,i_80
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	z,i_85
-.i_86
+	jp	z,i_79
+.i_80
 	call	_check_lock_or_box_horz
 	ld	hl,0	;const
 	ld	(_player+6),hl
@@ -8695,13 +8542,13 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player), HL
-.i_85
-	jp	i_88
-.i_84
+.i_79
+	jp	i_82
+.i_78
 	ld	hl,(_pvx_total)
 	xor	a
 	or	h
-	jp	p,i_89
+	jp	p,i_83
 	ld	hl,(_gpx)
 	ld	h,0
 	ld	bc,4
@@ -8719,12 +8566,12 @@
 	ld	hl,_at1
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	nz,i_91
+	jp	nz,i_85
 	ld	hl,_at2
 	ld	a,(hl)
 	and	#(8 % 256)
-	jp	z,i_90
-.i_91
+	jp	z,i_84
+.i_85
 	call	_check_lock_or_box_horz
 	ld	hl,0	;const
 	ld	(_player+6),hl
@@ -8734,25 +8581,25 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player), HL
-.i_90
-.i_89
-.i_88
+.i_84
+.i_83
+.i_82
 	ld	hl,_at1
 	ld	a,(hl)
 	rrca
-	jp	c,i_94
+	jp	c,i_88
 	ld	hl,_at2
 	ld	a,(hl)
 	rrca
-	jp	nc,i_93
-.i_94
+	jp	nc,i_87
+.i_88
 	ld	a,#(1 % 256 % 256)
 	ld	(_hit),a
 	ld	de,_player+8
 	ld	hl,(_pvy_total)
 	call	l_pint
-.i_93
-.i_83
+.i_87
+.i_77
 	ld	hl,(_pvx_total)
 	call	_abs
 	push	hl
@@ -8767,45 +8614,67 @@
 	ld	(_rdi),a
 	ld	a,(_hit)
 	and	a
-	jp	z,i_96
+	jp	z,i_90
 	ld	a,(_rdi)
 	and	a
-	jp	z,i_97
+	jp	z,i_91
 	ld	hl,_player+6
 	push	hl
 	ld	hl,(_pvx_total)
 	call	l_neg
 	pop	de
 	call	l_pint
-	jp	i_98
-.i_97
+	jp	i_92
+.i_91
 	ld	hl,_player+8
 	push	hl
 	ld	hl,(_pvy_total)
 	call	l_neg
 	pop	de
 	call	l_pint
-.i_98
+.i_92
 	ld	hl,2	;const
 	call	_peta_el_beeper
 	ld	hl,_player+46
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,_player+36
 	ld	(hl),#(1 % 256 % 256)
-.i_96
+	ld	l,(hl)
+	ld	h,0
+.i_90
+	ld a, (_gpx)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld c, a
+	ld a, (_gpy)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	call _attr_2
+	ld a, 128
+	and a
+	jr z, nospecial
+	ld hl, 4
+	call _script
+	.nospecial
 	ld	a,(_player+26)
 	and	a
-	jp	nz,i_100
+	jp	nz,i_94
 	ld	a,(_player+25)
 	and	a
-	jp	nz,i_100
+	jp	nz,i_94
 	ld	hl,0	;const
-	jr	i_101
-.i_100
+	jr	i_95
+.i_94
 	ld	hl,1	;const
-.i_101
+.i_95
 	call	l_lneg
-	jp	nc,i_99
+	jp	nc,i_93
 	ld	hl,_player+20
 	push	hl
 	ld	hl,(_player+22)
@@ -8816,11 +8685,11 @@
 	pop	de
 	ld	a,l
 	ld	(de),a
-	jp	i_102
-.i_99
+	jp	i_96
+.i_93
 	ld	a,(_thrusting)
 	and	a
-	jp	z,i_103
+	jp	z,i_97
 	ld	hl,_player+20
 	push	hl
 	ld	hl,(_player+22)
@@ -8845,8 +8714,8 @@
 	pop	de
 	ld	a,l
 	ld	(de),a
-	jp	i_104
-.i_103
+	jp	i_98
+.i_97
 	ld	hl,_player+20
 	push	hl
 	ld	hl,(_player+22)
@@ -8855,8 +8724,8 @@
 	pop	de
 	ld	a,l
 	ld	(de),a
-.i_104
-.i_102
+.i_98
+.i_96
 	ld	hl,_player+17
 	push	hl
 	ld	hl,_player_cells
@@ -9125,40 +8994,6 @@
 	ret
 	.draw_scr_bg_loop_end
 	call	_hotspot_paint
-	ld hl, _cerrojos
-	ld b, 2
-	.draw_scr_bolts_loop
-	; Cerrojos structure is np, x, y, st
-	ld c, (hl) ; np
-	inc hl
-	ld d, (hl) ; x
-	inc hl
-	ld e, (hl) ; y
-	inc hl
-	ld a, (hl) ; st
-	inc hl
-	; Open lock? (st == 0)
-	or a
-	jr nz, draw_scr_bolts_continue
-	; Current screen?
-	ld a, (_n_pant)
-	cp c
-	jr nz, draw_scr_bolts_continue
-	; Clear bolt
-	push bc
-	ld a, d
-	ld c, d ;; Call directly needs C
-	ld (__x), a
-	ld a, e
-	ld (__y), a
-	xor a
-	ld (__t), a
-	ld a, (_comportamiento_tiles) ;; beh [0]
-	ld (__n), a
-	call set_map_tile_do
-	pop bc
-	.draw_scr_bolts_continue
-	djnz draw_scr_bolts_loop
 	ret
 
 
@@ -9207,18 +9042,18 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_107
-.i_105
+	jp	i_101
+.i_99
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_107
+.i_101
 	ld	a,(_enit)
 	ld	e,a
 	ld	d,0
 	ld	hl,3	;const
 	call	l_ult
-	jp	nc,i_106
+	jp	nc,i_100
 	ld bc, (_enit)
 	xor a
 	ld b, a
@@ -9252,27 +9087,27 @@
 	ld	(__en_t),a
 	ld	hl,(__en_t)
 	ld	h,0
-.i_110
+.i_104
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_111
+	jp	z,i_105
 	cp	#(2% 256)
-	jp	z,i_112
+	jp	z,i_106
 	cp	#(3% 256)
-	jp	z,i_113
+	jp	z,i_107
 	cp	#(4% 256)
-	jp	z,i_114
-	jp	i_115
-.i_111
-.i_112
-.i_113
-.i_114
+	jp	z,i_108
+	jp	i_109
+.i_105
+.i_106
+.i_107
+.i_108
 	ld	hl,(__en_t)
 	ld	h,0
 	dec	hl
 	call	_enems_en_an_calc
-	jp	i_109
-.i_115
+	jp	i_103
+.i_109
 	ld	hl,_en_an_next_frame
 	push	hl
 	ld	hl,(_enit)
@@ -9284,11 +9119,9 @@
 	ld	hl,_sprite_18_a
 	pop	de
 	call	l_pint
-.i_109
-	ld	hl,1 % 256	;const
-	ld	a,l
-	ld	(_script_n),a
-	call	_script_do
+.i_103
+	ld	hl,1	;const
+	call	_script
 	ld	a,(_n_pant)
 	ld	e,a
 	ld	d,0
@@ -9296,12 +9129,9 @@
 	call	l_asl
 	ld	de,8
 	add	hl,de
-	ld	h,0
-	ld	a,l
-	ld	(_script_n),a
-	call	_script_do
-	jp	i_105
-.i_106
+	call	_script
+	jp	i_99
+.i_100
 	ret
 
 
@@ -9353,7 +9183,7 @@
 	add	hl,sp
 	ld	a,(hl)
 	and	a
-	jp	z,i_116
+	jp	z,i_110
 	ld	hl,0	;const
 	call	_peta_el_beeper
 	ld	hl,10	;const
@@ -9379,15 +9209,13 @@
 	ld	(__en_t),a
 	ld	hl,_player+32
 	inc	(hl)
-	ld	hl,4 % 256	;const
-	ld	a,l
-	ld	(_script_n),a
-	call	_script_do
-	jp	i_117
-.i_116
+	ld	hl,4	;const
+	call	_script
+	jp	i_111
+.i_110
 	ld	hl,1	;const
 	call	_peta_el_beeper
-.i_117
+.i_111
 	ret
 
 
@@ -9403,16 +9231,16 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_120
-.i_118
+	jp	i_114
+.i_112
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_120
+.i_114
 	ld	a,(_enit)
 	cp	#(3 % 256)
-	jp	z,i_119
-	jp	nc,i_119
+	jp	z,i_113
+	jp	nc,i_113
 	ld	de,(_enoffs)
 	ld	hl,(_enit)
 	ld	h,0
@@ -9422,16 +9250,16 @@
 	ld	hl,__en_t
 	ld	a,(hl)
 	rlca
-	jp	nc,i_121
+	jp	nc,i_115
 	ld	l,a
 	ld	h,0
-	jp	i_122
-.i_121
+	jp	i_116
+.i_115
 	ld	hl,(__en_t)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_123
+	jp	z,i_117
 	ld a, (_maincounter)
 	and 3
 	jr nz, enems_animate_done
@@ -9448,7 +9276,7 @@
 	ld	d,0
 	ld	hl,4	;const
 	call	l_ule
-	jp	nc,i_124
+	jp	nc,i_118
 	.en_linear_horizontal_axis
 	ld a, (__en_mx)
 	or a
@@ -9596,11 +9424,11 @@
 	ld (__en_my), a
 	._en_bg_collision_vert_done
 	.en_linear_done
-.i_124
+.i_118
 	call	_enems_calc_frame
 	ld	a,(__en_t)
 	cp	#(4 % 256)
-	jp	nz,i_126
+	jp	nz,i_120
 	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
@@ -9610,7 +9438,7 @@
 	add	hl,bc
 	pop	de
 	call	l_uge
-	jp	nc,i_126
+	jp	nc,i_120
 	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
@@ -9620,10 +9448,10 @@
 	add	hl,bc
 	pop	de
 	call	l_ule
-	jr	c,i_127_i_126
-.i_126
-	jp	i_125
-.i_127_i_126
+	jr	c,i_121_i_120
+.i_120
+	jp	i_119
+.i_121_i_120
 	.moving_platforms
 	ld a, (_player+19)
 	or a
@@ -9693,24 +9521,24 @@
 	call withSign
 	ld (_ptgmx), hl
 	.moving_platforms_done
-	jp	i_128
-.i_125
+	jp	i_122
+.i_119
 	ld	hl,(_en_tocado)
 	ld	h,0
 	ld	de,0
 	call	l_eq
-	jp	nc,i_130
+	jp	nc,i_124
 	call	_collide_enem
 	ld	a,h
 	or	l
-	jp	z,i_130
+	jp	z,i_124
 	ld	a,(__en_t)
 	cp	#(128 % 256)
-	jp	z,i_130
-	jr	c,i_131_i_130
-.i_130
-	jp	i_129
-.i_131_i_130
+	jp	z,i_124
+	jr	c,i_125_i_124
+.i_124
+	jp	i_123
+.i_125_i_124
 	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
@@ -9720,15 +9548,15 @@
 	add	hl,bc
 	pop	de
 	call	l_ule
-	jp	nc,i_133
+	jp	nc,i_127
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_ge
-	jr	c,i_134_i_133
-.i_133
-	jp	i_132
-.i_134_i_133
+	jr	c,i_128_i_127
+.i_127
+	jp	i_126
+.i_128_i_127
 	ld	hl,_player+8
 	ld	(hl),#(65280 % 256)
 	inc	hl
@@ -9737,11 +9565,11 @@
 	push	hl
 	call	_enems_kill
 	pop	bc
-	jp	i_135
-.i_132
+	jp	i_129
+.i_126
 	ld	a,(_player+23)
 	and	a
-	jp	nz,i_136
+	jp	nz,i_130
 	ld	a,#(1 % 256 % 256)
 	ld	(_en_tocado),a
 	ld	hl,_player+36
@@ -9756,49 +9584,49 @@
 	call	l_gchar
 	xor	a
 	or	h
-	jp	m,i_137
+	jp	m,i_131
 	or	l
-	jp	z,i_137
+	jp	z,i_131
 	ld	hl,512	;const
 	ld	(_player+6),hl
-.i_137
+.i_131
 	ld	hl,__en_mx
 	call	l_gchar
 	xor	a
 	or	h
-	jp	p,i_138
+	jp	p,i_132
 	ld	hl,65024	;const
 	ld	(_player+6),hl
-.i_138
+.i_132
 	ld	hl,__en_my
 	call	l_gchar
 	xor	a
 	or	h
-	jp	m,i_139
+	jp	m,i_133
 	or	l
-	jp	z,i_139
+	jp	z,i_133
 	ld	hl,512	;const
 	ld	(_player+8),hl
-.i_139
+.i_133
 	ld	hl,__en_my
 	call	l_gchar
 	xor	a
 	or	h
-	jp	p,i_140
+	jp	p,i_134
 	ld	hl,65024	;const
 	ld	(_player+8),hl
-.i_140
-.i_136
-.i_135
+.i_134
+.i_130
 .i_129
-.i_128
 .i_123
 .i_122
-.i_141
+.i_117
+.i_116
+.i_135
 	.enems_update_values_and_exit
 	call enems_update_values_store
-	jp	i_118
-.i_119
+	jp	i_112
+.i_113
 	ret
 
 
@@ -10001,14 +9829,13 @@
 
 ._main
 	call	_system_init
-.i_142
+.i_136
 	call	_title_screen
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_init_player
 	call	_init_hotspots
-	call	_init_cerrojos
 	call	_init_malotes
 	ld	a,#(20 % 256 % 256)
 	ld	(_n_pant),a
@@ -10016,10 +9843,8 @@
 	ld	(_maincounter),a
 	ld	a,#(0 % 256 % 256)
 	ld	(_script_result),a
-	ld	hl,0 % 256	;const
-	ld	a,l
-	ld	(_script_n),a
-	call	_script_do
+	ld	hl,0	;const
+	call	_script
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_half_life),a
@@ -10034,12 +9859,12 @@
 	ld (_on_pant), a
 	ld	hl,1	;const
 	call	_wyz_play_music
-.i_144
+.i_138
 	ld	hl,(_playing)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_145
+	jp	z,i_139
 	ld a, (_n_pant)
 	ld c, a
 	ld a, (_on_pant)
@@ -10055,23 +9880,23 @@
 	ld	hl,(_life_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_146
+	jp	nc,i_140
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	m,i_147
+	jp	m,i_141
 	or	l
-	jp	z,i_147
+	jp	z,i_141
 	ld	hl,(_player+29)
 	ld	h,0
 	ld	a,l
 	ld	(_pti),a
-	jp	i_148
-.i_147
+	jp	i_142
+.i_141
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_pti),a
-.i_148
+.i_142
 	ld	hl,4	;const
 	push	hl
 	ld	hl,1	;const
@@ -10087,29 +9912,14 @@
 	ld	h,0
 	ld	a,l
 	ld	(_life_old),a
-.i_146
-	ld	hl,_player+28
-	call	l_gchar
-	ex	de,hl
-	ld	hl,(_keys_old)
-	ld	h,0
-	call	l_ne
-	jp	nc,i_149
-	ld a, 10
-	ld (__x), a
-	ld a, 1
-	ld (__y), a
-	ld a, (_player + 28)
-	ld (_keys_old), a
-	call draw_2_digits_shortcut
-.i_149
+.i_140
 	ld	hl,(_player+32)
 	ld	h,0
 	ex	de,hl
 	ld	hl,(_killed_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_150
+	jp	nc,i_143
 	ld	hl,16	;const
 	push	hl
 	ld	hl,1	;const
@@ -10125,7 +9935,7 @@
 	ld	h,0
 	ld	a,l
 	ld	(_killed_old),a
-.i_150
+.i_143
 	ld hl, _maincounter
 	inc (hl)
 	ld a, (_half_life)
@@ -10164,30 +9974,16 @@
 	jp c, _hotspots_else
 	ld	a,(_hotspot_t)
 	and	a
-	jp	z,i_151
+	jp	z,i_144
 	ld	a,#(0 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,(_hotspot_t)
 	ld	h,0
-.i_154
+.i_147
 	ld	a,l
-	cp	#(2% 256)
-	jp	z,i_155
 	cp	#(3% 256)
-	jp	z,i_156
-	jp	i_153
-.i_155
-	ld	hl,_player+28
-	push	hl
-	call	l_gchar
-	inc	hl
-	pop	de
-	ld	a,l
-	ld	(de),a
-	ld	hl,8	;const
-	call	_peta_el_beeper
-	jp	i_153
-.i_156
+	jp	nz,i_146
+.i_148
 	ld	hl,_player+29
 	inc	(hl)
 	ld	a,(hl)
@@ -10200,18 +9996,18 @@
 	ld	de,99	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_157
+	jp	nc,i_149
 	ld	hl,99	;const
 	ld	(_player+29),hl
-.i_157
+.i_149
 	ld	a,#(2 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,9	;const
 	call	_peta_el_beeper
-.i_153
+.i_146
 	ld	a,(_rdi)
 	cp	#(1 % 256)
-	jp	z,i_158
+	jp	z,i_150
 	ld	a,(_hotspot_x)
 	ld	e,a
 	ld	d,0
@@ -10256,8 +10052,8 @@
 	ld	(de),a
 	ld	l,a
 	ld	h,0
-.i_158
-.i_151
+.i_150
+.i_144
 	._hotspots_else
 	._hotspots_done
 	ld	hl,1	;const
@@ -10276,15 +10072,12 @@
 	.player_flicker_ct_write
 	ld (_player + 24), a
 	.player_flicker_check_done
-	ld	a,(_pad_this_frame)
-	ld	e,a
-	ld	d,0
-	ld	hl,8	;const
-	call	l_and
-	ld	a,h
-	or	l
-	jp	nz,i_159
-	call	_script_do
+	ld	hl,_pad_this_frame
+	ld	a,(hl)
+	and	#(8 % 256)
+	jp	nz,i_151
+	ld	hl,2	;const
+	call	_script
 	ld	a,(_n_pant)
 	ld	e,a
 	ld	d,0
@@ -10292,21 +10085,19 @@
 	call	l_asl
 	ld	de,9
 	add	hl,de
-	ld	h,0
-	ld	a,l
-	ld	(_script_n),a
-.i_159
+	call	_script
+.i_151
 	ld	a,(_gpx)
 	cp	#(0 % 256)
-	jp	nz,i_161
+	jp	nz,i_153
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jr	c,i_162_i_161
-.i_161
-	jp	i_160
-.i_162_i_161
+	jr	c,i_154_i_153
+.i_153
+	jp	i_152
+.i_154_i_153
 	ld hl, _n_pant
 	dec (hl)
 	ld a, 224
@@ -10314,19 +10105,19 @@
 	ld hl, #(224*64)
 	ld (_player), hl
 	.flick_left_done
-	jp	i_163
-.i_160
+	jp	i_155
+.i_152
 	ld	a,(_gpx)
 	cp	#(224 % 256)
-	jp	nz,i_165
+	jp	nz,i_157
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_166_i_165
-.i_165
-	jp	i_164
-.i_166_i_165
+	jr	c,i_158_i_157
+.i_157
+	jp	i_156
+.i_158_i_157
 	ld hl, _n_pant
 	inc (hl)
 	xor a
@@ -10334,25 +10125,25 @@
 	ld hl, 0
 	ld (_player), hl
 	.flick_right_done
-.i_164
-.i_163
+.i_156
+.i_155
 	ld	a,(_gpy)
 	cp	#(0 % 256)
-	jp	nz,i_168
+	jp	nz,i_160
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_168
+	jp	nc,i_160
 	ld	a,(_n_pant)
 	cp	#(4 % 256)
-	jr	z,i_168_uge
-	jp	c,i_168
-.i_168_uge
-	jr	i_169_i_168
-.i_168
-	jp	i_167
-.i_169_i_168
+	jr	z,i_160_uge
+	jp	c,i_160
+.i_160_uge
+	jr	i_161_i_160
+.i_160
+	jp	i_159
+.i_161_i_160
 	ld a, (_n_pant)
 	sub 4
 	ld (_n_pant), a
@@ -10361,19 +10152,19 @@
 	ld hl, #(144*64)
 	ld (_player+2), hl
 	.flick_up_done
-	jp	i_170
-.i_167
+	jp	i_162
+.i_159
 	ld	a,(_gpy)
 	cp	#(144 % 256)
-	jp	nz,i_172
+	jp	nz,i_164
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_173_i_172
-.i_172
-	jp	i_171
-.i_173_i_172
+	jr	c,i_165_i_164
+.i_164
+	jp	i_163
+.i_165_i_164
 	ld a, (_n_pant)
 	add 4
 	ld (_n_pant), a
@@ -10382,26 +10173,26 @@
 	ld hl, 0
 	ld (_player+2),hl
 	.flick_down_done
-.i_171
-.i_170
+.i_163
+.i_162
 	ld	a,(_script_result)
 	ld	e,a
 	ld	d,0
 	ld	hl,1	;const
 	call	l_eq
-	jp	nc,i_174
+	jp	nc,i_166
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_cortina
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_game_ending
-.i_174
+.i_166
 	ld	hl,(_player+36)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_175
+	jp	z,i_167
 	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
@@ -10420,28 +10211,28 @@
 	pop	de
 	call	l_pint
 	call	_player_flicker
-.i_175
+.i_167
 	ld	hl,(_player+29)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	c,i_177
+	jp	c,i_169
 	ld	a,(_script_result)
 	cp	#(2 % 256)
-	jp	nz,i_176
-.i_177
+	jp	nz,i_168
+.i_169
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_176
+.i_168
 	xor a
 	ld (_pant_just_rendered), a
-	jp	i_144
-.i_145
-	jp	i_142
-.i_143
+	jp	i_138
+.i_139
+	jp	i_136
+.i_137
 	ret
 
 
@@ -10529,6 +10320,7 @@
 ._pty1	defs	1
 ._pty2	defs	1
 ._wall	defs	1
+._cerrojos	defs	2
 ._pvx_total	defs	2
 ._hotspot_t_r	defs	1
 ._at1	defs	1
@@ -10712,11 +10504,10 @@
 	XDEF	_ptgmy
 	LIB	cpc_SetTouchTileXY
 	XDEF	_qtile
-	XDEF	_init_cerrojos
+	XDEF	_draw_and_advance
 	XDEF	_sprite_17_a
 	XDEF	_en_an_current_frame
 	defc	_en_an_current_frame	=	54790
-	XDEF	_draw_and_advance
 	XDEF	_sprite_18_a
 	XDEF	_init_player
 	XDEF	_gp_gen
@@ -10803,7 +10594,6 @@
 	LIB	cpc_PutTrSp4x8TileMap2b
 	LIB	cpc_PutTrSp8x16TileMap2b
 	LIB	cpc_PutTrSp8x24TileMap2b
-	XDEF	_check_and_clear_cerrojo
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
 	defc	_en_an_next_frame	=	54796
@@ -10878,10 +10668,11 @@
 	LIB	cpc_PutTrSp8x24TileMap2bPx
 	LIB	cpc_PutSpTileMap8x16
 	LIB	cpc_PutSpTileMap8x24
+	XDEF	_script
 	XDEF	_player_flicker
-	XDEF	_move_tile_with_check
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask
+	XDEF	_move_tile_with_check
 	LIB	cpc_ReadTile
 	LIB	cpc_PutMaskSprite
 	XDEF	_enoffsmasi
@@ -10900,10 +10691,13 @@
 	XDEF	_wyz_songs
 	LIB	cpc_PutMaskSp
 	XDEF	_orig_tile
+	XREF	_script_tn
 	XDEF	_en_an_frame
 	defc	_en_an_frame	=	54784
 	XDEF	_success
 	LIB	cpc_RedefineKey
+	XREF	_script_tx
+	XREF	_script_ty
 	XDEF	_coins_old
 	XDEF	_do_extern_action
 	XDEF	_platform_get_player

@@ -131,6 +131,12 @@ Sub parseScriptLine (linea As String)
 			tokens (i) = "$250"
 		ElseIf Ucase(tokens (i)) = "LIFE" Then
 			tokens (i) = "$249"
+		ElseIf Ucase(tokens (i)) = "TX" then 
+			tokens (i) = "$248"
+		ElseIf Ucase(tokens (i)) = "TY" Then 
+			tokens (i) = "$247"
+		ElseIf Ucase(tokens (i)) = "TN" Then 
+			tokens (i) = "$248"
 		End If
 
 		i = i + 1
@@ -342,6 +348,7 @@ End Sub
 Function processIf (linea As String) As String
 	Dim As String code = ""
 	Dim As String cmd
+	Dim As Integer v1, v2
 	parseScriptLine linea	
 
 	' Detect numeric conditions IF a OP b 
@@ -385,6 +392,7 @@ Function processIf (linea As String) As String
 
 					Case "in_x"
 						' $21 X Y
+						' Otherwise use special OPCODE 20
 						code = buildCond (3, Chr (&H21), pVal (tokens (3)), pVal (tokens (4)))
 					
 					Case "in_y"
@@ -509,6 +517,13 @@ Function processCommand (linea As String) As String
 				code = buildAction (3, Chr(&H00), lVal (tokens(1)), pVal (tokens (3)))
 			Else
 				syntaxError
+			End If
+
+		Case "print"
+			If scmd = "tile" Then 
+				' PRINT TILE X Y = T
+				' $50 X Y T
+				code = buildAction (4, Chr (&H50), pVal (tokens (2)), pVal (tokens (3)), pVal (tokens (5)))
 			End If
 
 		Case "sound"
@@ -733,6 +748,9 @@ Sub processScript (fIn As Integer)
 					
 					ElseIf startsWith (tokens (), "player kills enemy") Then 
 						section = 4
+
+					ElseIf startsWith (tokens (), "special tile touched") Then
+						section = 5
 					
 					End If
 
@@ -867,7 +885,7 @@ fOut = FreeFile
 Open interpreterFn For Output As #fOut
 
 writeAssemblyString fOut, "defc PLAYER_LIFE=99 ;; Find a way to solve this"
-writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action"
+writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action"
 writeAssemblyString fOut, "XREF script_bytecode"
 
 If outT = SPECCY Then
@@ -876,11 +894,12 @@ Else
 	writeAssemblyString fOut, "; Target CPC|XREF _cpc_UpdateNow"
 EndIf
 
-writeAssemblyString fOut, "; Exports|XDEF _script_do|XDEF _script_n|XDEF _script_result"
+writeAssemblyString fOut, "; Exports|XDEF _script_do|XDEF _script_n|XDEF _script_result|XDEF _script_tx|XDEF _script_ty|XDEF _script_tn"
 writeAssemblyString fOut, "._script_n|defw 0|._script_result|defb 0"
 writeAssemblyString fOut, "; Script pointer|.script|defw 0"
 writeAssemblyString fOut, "; Skip to next clausule|.skip|defw 0"
 writeAssemblyString fOut, "; Coordinate pair|.sc_x|defb 0|.sc_y|defb 0"
+writeAssemblyString fOut, "; From the engine|._script_tx|defb 0|._script_ty|defb 0|._script_tn|defb 0"
 writeAssemblyString fOut, "; Control|.sc_terminado|defb 0"
 writeAssemblyString fOut, "._script_do"
 writeAssemblyString fOut, "; Point to offset in script index|ld  hl, (_script_n)|add hl, hl|ld  bc, script_bytecode|add hl, bc"
@@ -926,6 +945,7 @@ If AU(&H01) Then writeAssemblyString fOut, ";; OPCODE 0x01|;; FLAGS[N] += V|cp  
 If AU(&H02) Then writeAssemblyString fOut, ";; OPCODE 0x02|;; FLAGS[N] -= V|cp  0x02|jr  nz, aopcode_02_end|.aopcode_02|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, (hl)|sub a|ld  (hl), a|jp  script_actions|.aopcode_02_end"
 If AU(&H20) Then writeAssemblyString fOut, ";; OPCODE 0x20|;; SET TILE (X, Y) = T|cp  0x20|jr  nz, aopcode_20_end|.aopcode_20|call read_x_y|call read_vbyte|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|ld  a, (sc_x)|ld  (__x), a|ld  c, a|ld  a, (sc_y)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_20_end"
 If AU(&H21) Then writeAssemblyString fOut, ";; OPCODE 0x21|;; SET BEH (X, Y) = B|cp  0x21|jr  nz, aopcode_21_end|.aopcode_21|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|ld  b, a|sla a|sla a|sla a|sla a|sub b|add c|ld  b, 0|ld  c, a|call read_vbyte|ld  hl, _map_attr|add hl, bc|ld  (hl), a|jp  script_actions|.aopcode_21_end"
+If AU(&H50) Then writeAssemblyString fOut, ";; OPCODE 0x50|;; PRINT TILE (X, Y) = N|cp  0x50|jr  nz, aopcode_50_end|.aopcode_50|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call _draw_coloured_tile|pop bc|pop bc|pop bc|.aopcode_50_end"
 If AU(&HE0) Then writeAssemblyString fOut, ";; OPCODE 0xE0|;; SOUND N|cp  0xE0|jr  nz, aopcode_E0_end|.aopcode_E0|call read_vbyte|ld  h, 0|ld  l, a|call _peta_el_beeper|jp  script_actions|.aopcode_E0_end"
 If AU(&HE1) Then 
 	If outT = SPECCY Then
@@ -953,6 +973,9 @@ If RV(&HFC) Then writeAssemblyString fOut, "; PY RVALUE|cp  0xFC|jr  nz, rvb_set
 If RV(&HFB) Then writeAssemblyString fOut, "; KILLED RVALUE|cp  0xFB|jr  nz, rvb_set_player_killed_done|ld  a, (_player + 32) 	; player.killed|ret|.rvb_set_player_killed_done"
 If RV(&HFA) Then writeAssemblyString fOut, "; OBJS RVALUE|cp  0xFA|jr  nz, rvb_set_player_objs_done|ld  a, (_player + 27) 	; player.objs|ret|.rvb_set_player_objs_done"
 If RV(&HF9) Then writeAssemblyString fOut, "; LIFE RVALUE|cp  0xF9|jr  nz, rvb_set_player_life_done|ld  a, (_player + 29) 	; player.life MSB|ret|.rvb_set_player_life_done"
+writeAssemblyString fOut, "; TX RVALUE|cp  0xF8|jr  nz, rvb_set_tx_done|ld  a, (_script_tx)|ret|.rvb_set_tx_done"
+writeAssemblyString fOut, "; TY RVALUE|cp  0xF7|jr  nz, rvb_set_ty_done|ld  a, (_script_ty)|ret|.rvb_set_ty_done"
+writeAssemblyString fOut, "; TILE RVALUE|cp  0xF6|jr  nz, rvb_set_tile_done|ld  a, (_script_tn)|ret|.rvb_set_tile_done"
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
 writeAssemblyString fOut, ";; Read flag index and value, returns pointer in HL and value in A.|.read_i_v|call read_vbyte  		; Read flag index|ld  c, a|call read_vbyte 		; Read value|ld  (sc_y), a"

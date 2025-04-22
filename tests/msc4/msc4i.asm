@@ -9,6 +9,7 @@ XREF _player
 XREF _attr_2
 XREF qtile_do
 XREF set_map_tile_do
+XRED _draw_coloured_tile
 XREF __x
 XREF __y
 XREF __t
@@ -25,6 +26,9 @@ XREF _cpc_UpdateNow
 XDEF _script_do
 XDEF _script_n
 XDEF _script_result
+XDEF _script_tx
+XDEF _script_ty
+XDEF _script_tn
 
 ._script_n
 	defw 0
@@ -43,6 +47,14 @@ XDEF _script_result
 .sc_x
 	defb 0 
 .sc_y
+	defb 0
+
+; From the engine
+._script_tx
+	defb 0
+._script_ty
+	defb 0
+._script_tn
 	defb 0
 
 ; Control 
@@ -395,6 +407,29 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_21_end
 
+	;; OPCODE 0x50
+	;; PRINT TILE (X, Y) = N
+	cp  0x50
+	jr  nz, aopcode_50_end
+.aopcode_50
+	call read_vbyte
+	ld  h, 0
+	ld  l, a 
+	push hl 
+	call read_vbyte
+	ld  h, 0
+	ld  l, a 
+	push hl
+	call read_vbyte
+	ld  h, 0
+	ld  l, a 
+	push hl
+	call _draw_coloured_tile
+	pop bc
+	pop bc
+	pop bc
+.aopcode_50_end
+
 	;; OPCODE 0xE0
 	;; SOUND N
 	cp  0xE0
@@ -555,7 +590,28 @@ XDEF _script_result
 	ld  a, (_player + 29) 	; player.life MSB
 	ret
 .rvb_set_player_life_done
+
+	; TX RVALUE
+	cp  0xF8
+	jr  nz, rvb_set_tx_done
+	ld  a, (_script_tx)
+	ret
+.rvb_set_tx_done
+
+	; TY RVALUE
+	cp  0xF7
+	jr  nz, rvb_set_ty_done
+	ld  a, (_script_ty)
+	ret
+.rvb_set_ty_done
 	
+	; TILE RVALUE
+	cp  0xF6
+	jr  nz, rvb_set_tile_done
+	ld  a, (_script_tn)
+	ret
+.rvb_set_tile_done
+
 	ld  d, 0 
 	ld  e, a 
 	ld  hl, _flags 
