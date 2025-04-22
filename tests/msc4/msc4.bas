@@ -53,26 +53,36 @@ Sub printBinStr (s As String)
 	Print
 End Sub
 
+Sub resetAliases () 
+	Dim i As Integer
+
+	For i = 0 To uBound (aliases)
+		aliases (i) = ""
+	Next i 
+End Sub
+
 Function addOrResolveAlias (salias As String) As Integer
 	Dim i As Integer
 
+	salias = lCase (salias)
+
 	' Find
-	For i = 0 To curAliasIndex - 1
+	For i = 0 To uBound (aliases)
 		If aliases (i) = salias Then 
 			Return i 
 		End If 
 	Next 
 
-	' Not found, add
-	If curAliasIndex < uBound (aliases) Then 
-		aliases (curAliasIndex) = salias 
-		curAliasIndex = curAliasIndex + 1
-		return curAliasIndex - 1
-	Else
-		Print "Warning! Too many aliases, resolving to 0"
-		Return 0
-	End If
+	' Not found, add to 1st unused slot
+	For i = 0 To uBound (aliases)
+		If aliases (i) = "" Then
+			aliases (i) = salias 
+			Return i 
+		End If 
+	Next 
 
+	Print "Warning! Too many aliases, resolving to 0"
+	
 End Function
 
 Sub parseScriptLine (linea As String)
@@ -707,7 +717,18 @@ Sub processScript (fIn As Integer)
 			cError = 0
 
 			If tokens (0) = "rooms" Then 
+				' ROOMS = N
 				maxPants = Val(tokens (2))
+
+			ElseIf tokens (0) = "alias" Then 
+				' ALIAS %A = B
+				If Len (tokens (1)) > 0 And Left (tokens (1), 1) = "%" Then tokens (1) = Right (tokens (1), Len (tokens (1)) - 1)
+				If Len (tokens (1)) > 0 And tokens (2) = "=" And isNumber (tokens (3)) Then
+					aliases (Val (tokens (3))) = lCase (tokens (1))
+					If debug Then Print "Set alias %" & tokens (1) & " for flag $" & tokens (3)
+				Else
+					Print "Wrong alias definition at " & curLineNo
+				End If
 
 			Else
 				If startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
@@ -866,6 +887,7 @@ outT = SPECCY: If sclpGetValue("target") = "cpc" Then outT = CPC
 
 i = 0: While i < 127 And fileIns(i) <> ""
 	curLineNo = 0
+	resetAliases 
 	maxPants = Val (sclpGetValue ("rooms"))
 
 	fIn = FreeFile
