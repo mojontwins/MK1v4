@@ -158,8 +158,7 @@ unsigned int seed;
 unsigned char half_life;
 unsigned char playing;
 unsigned char maincounter;
-unsigned char objs_old, keys_old, life_old, killed_old, item_old, ezg_old;
-unsigned char coins_old;
+unsigned char objs_old, keys_old, life_old, killed_old, flag_old;
 unsigned char success;
 unsigned char rdi;
 

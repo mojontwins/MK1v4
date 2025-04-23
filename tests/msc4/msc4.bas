@@ -28,6 +28,8 @@ Dim Shared AS Integer outT = SPECCY
 Dim Shared As String interpreterFn
 Dim Shared As Integer maxPants
 
+Dim Shared As Integer itemSlot
+
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
 	' Overwriting what's in `from`.
@@ -409,8 +411,7 @@ Function processIf (linea As String) As String
 						' $22 X Y
 						code = buildCond (3, Chr (&H22), pVal (tokens (3)), pVal (tokens (4)))
 					
-					Case "touches"
-					Case "at"
+					Case "touches", "at"
 						' $23 X Y
 						code = buildCond (3, Chr (&H23), pVal (tokens (3)), pVal (tokens (4)))
 					
@@ -530,7 +531,7 @@ Function processCommand (linea As String) As String
 			End If
 
 		Case "get"
-			If smcd = "item" Then
+			If scmd = "item" Then
 				' GET ITEM SET f
 				' $30 F (lvalue)
 				code = buildAction (2, Chr (&H30), lVal (tokens(3)))
@@ -663,6 +664,9 @@ Function processCurrentSection (fIn As Integer) As String
 		End If
 	Wend
 
+	' End of section code.
+	sectionCode = sectionCode & Chr (&HFF)
+
 	Return sectionCode 
 End Function
 
@@ -736,6 +740,10 @@ Sub processScript (fIn As Integer)
 				Else
 					Print "Wrong alias definition at " & curLineNo
 				End If
+
+			ElseIf startsWith (tokens (), "item slot") And tokens (2) = "=" And isNumber (tokens (3)) Then
+				If debug Then Print "Item slot set to " & Val (tokens (3))
+				itemSlot = Val (tokens (3))
 
 			Else
 				If startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
@@ -936,9 +944,10 @@ writeAssemblyString fOut, "; Read offset|ld  a, (hl)|inc hl|ld  h, (hl)|ld  l, a
 writeAssemblyString fOut, ";  If zero do abort|or  h|ret z"
 writeAssemblyString fOut, "; Make & store pointer|add hl, bc|ld  (script), hl"
 writeAssemblyString fOut, ".script_loop|; Calculate address of next clausule"
-writeAssemblyString fOut, ";ld  hl, (script)|push hl"
+writeAssemblyString fOut, "ld  hl, (script)|push hl"
 writeAssemblyString fOut, "call read_byte 		; A = clausule size|ld  b, 0|ld  c, a"
 writeAssemblyString fOut, "pop hl|add hl, bc|ld  (skip), hl"
+writeAssemblyString fOut, "cp  0xFF 			; End of section?|ret z"
 writeAssemblyString fOut, "; Process conditions|.script_clausule|call read_byte 		;A = opcode"
 writeAssemblyString fOut, "; If we get to 0xFF (THEN), jump to actions|cp  0xFF|jp  z, script_actions"
 writeAssemblyString fOut, ";;; Decode OPCODE & jump to interpreter"
@@ -964,7 +973,7 @@ If CU(&H31) Then writeAssemblyString fOut, ";; OPCODE 0x31|;; BEH AT (X, Y) = T|
 writeAssemblyString fOut, ";; UNKNOWN|jp  script_clausule"
 writeAssemblyString fOut, ".skip_clausule|ld  hl, (skip)|ld  (script), hl|jp  script_loop"
 writeAssemblyString fOut, "; Process actions|.script_actions|call read_byte 		;A = opcode"
-writeAssemblyString fOut, "; If we get to 0xFF (END), exit|cp  0xFF|ret z"
+writeAssemblyString fOut, "; If we get to 0xFF (END), jump to next clausule|cp  0xFF|jp  z, script_loop"
 writeAssemblyString fOut, ";;; Decode OPCODE & jump to interpreter"
 
 '' Generate interpreter for ACTIONS
@@ -974,7 +983,7 @@ If AU(&H01) Then writeAssemblyString fOut, ";; OPCODE 0x01|;; FLAGS[N] += V|cp  
 If AU(&H02) Then writeAssemblyString fOut, ";; OPCODE 0x02|;; FLAGS[N] -= V|cp  0x02|jr  nz, aopcode_02_end|.aopcode_02|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, (hl)|sub a|ld  (hl), a|jp  script_actions|.aopcode_02_end"
 If AU(&H20) Then writeAssemblyString fOut, ";; OPCODE 0x20|;; SET TILE (X, Y) = T|cp  0x20|jr  nz, aopcode_20_end|.aopcode_20|call read_x_y|call read_vbyte|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|ld  a, (sc_x)|ld  (__x), a|ld  c, a|ld  a, (sc_y)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_20_end"
 If AU(&H21) Then writeAssemblyString fOut, ";; OPCODE 0x21|;; SET BEH (X, Y) = B|cp  0x21|jr  nz, aopcode_21_end|.aopcode_21|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|ld  b, a|sla a|sla a|sla a|sla a|sub b|add c|ld  b, 0|ld  c, a|call read_vbyte|ld  hl, _map_attr|add hl, bc|ld  (hl), a|jp  script_actions|.aopcode_21_end"
-If AU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; GET ITEM SET $F <- [FILL I]|cp  0x30|jr  nz, aopcode_30_end|.aopcode_30|;; Get LValue: Flag to modify|call read_vbyte|ld  b, 0|ld  c, a|ld  hl, _flags|add hl, bc|; No item in slot?|ld  a, (_flags + ITEM_SLOT)|or  a|jr  nz, aopcode_30_end|; Write 1 to LValue|inc a|ld  (hl), a|; Assign item|ld  a, (_script_tn)|ld  (_flags + ITEM_SLOT), a|; Clear from screen|xor a|ld  (__n), a|ld  (__t), a|ld  a, (_script_tx)|ld  (__x), a|ld  a, (_script_ty)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_30_end"
+If AU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; GET ITEM SET $F|cp  0x30|jr  nz, aopcode_30_end|.aopcode_30|;; Get LValue: Flag to modify|call read_vbyte|ld  b, 0|ld  c, a|ld  hl, _flags|add hl, bc|; No item in slot?|ld  a, (_flags + " & itemSlot & ")|or  a|jr  nz, aopcode_30_end|; Write 1 to LValue|inc a|ld  (hl), a|; Assign item|ld  a, (_script_tn)|ld  (_flags + " & itemSlot & "), a|; Clear from screen|xor a|ld  (__n), a|ld  (__t), a|ld  a, (_script_tx)|ld  (__x), a|ld  a, (_script_ty)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_30_end"
 If AU(&H50) Then writeAssemblyString fOut, ";; OPCODE 0x50|;; PRINT TILE (X, Y) = N|cp  0x50|jr  nz, aopcode_50_end|.aopcode_50|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call _draw_coloured_tile|pop bc|pop bc|pop bc|.aopcode_50_end"
 If AU(&HE0) Then writeAssemblyString fOut, ";; OPCODE 0xE0|;; SOUND N|cp  0xE0|jr  nz, aopcode_E0_end|.aopcode_E0|call read_vbyte|ld  h, 0|ld  l, a|call _peta_el_beeper|jp  script_actions|.aopcode_E0_end"
 If AU(&HE1) Then 

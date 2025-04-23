@@ -28,6 +28,17 @@ void main (void) {
 			#endif
 		#endif
 
+		#ifdef ACTIVATE_SCRIPTING
+			#asm 
+					ld  hl, _flags
+					ld  de, _flags + 1
+					ld  bc, MAX_FLAGS - 1
+					xor a 
+					ld  (hl), a 
+					ldir
+			#endasm
+		#endif
+
 		// Let's do it.
 		playing = 1;
 
@@ -52,10 +63,7 @@ void main (void) {
 		
 		#ifdef ACTIVATE_SCRIPTING		
 			script_result = 0;
-			#ifdef OBJECT_COUNT
-				flags [OBJECT_COUNT] = 0;
-			#endif
-		
+			
 			// Execute "ENTERING GAME" script
 			script (SC_ENTERING_GAME);
 		#endif
@@ -68,9 +76,7 @@ void main (void) {
 			ld  (_life_old), a 
 			ld  (_keys_old), a 
 			ld  (_killed_old), a 
-			ld  (_item_old), a 
-			ld  (_ezg_old), a 
-			ld  (_coins_old), a
+			ld  (_flag_old), a
 			ld  (_on_pant), a
 		#endasm
 
@@ -143,6 +149,13 @@ void main (void) {
 				if (player.killed != killed_old) {
 					draw_2_digits (KILLED_X, KILLED_Y, player.killed);
 					killed_old = player.killed;	
+				}
+			#endif
+
+			#if defined ACTIVATE_SCRIPTING && defined ITEM_X 
+				if (flags [ITEM_FLAG] != flag_old) {
+					draw_coloured_tile (ITEM_X, ITEM_Y, flags [ITEM_FLAG]);
+					flag_old = flags [ITEM_FLAG];
 				}
 			#endif
 

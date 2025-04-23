@@ -225,9 +225,7 @@ Pensaba que era posible obviar que el compilador supiera el número máximo de p
 ## Simple get item aid!
 
 Para simplificar la tramolla de coger items y usarlos en sitios con un sólo slot de inventario (perils), se me ocurre que:
-
-* En el script se hace `ITEM SLOT = I`. Si no se hace, `I = 0`.
-
+GET
 * En el engine haya un `ITEN_X, ITEM_Y, ITEM_FLAG` que puestre el tile en `flags[ITEM_FLAG]` en `(ITEM_X, ITEM_Y)`. `ITEM_FLAG` se pondrá al valor de `I` del paso anterior.
 
 * En el `ENTERING` del script, ponemos un tile `T` con beh 128 en `X, Y` si `$F = 0`.

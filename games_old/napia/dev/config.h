@@ -156,7 +156,7 @@
 // 8 = Full obstacle (blocks player from all directions)
 
 unsigned char comportamiento_tiles [] = {
-	0, 0, 0, 8, 8, 8, 0, 1, 1, 8, 8, 8, 4, 8, 0,10,
+	0, 0, 0, 8, 8, 8, 0, 9, 9, 8, 8, 8, 4, 8, 0,10,
 	8, 8, 8, 8, 0, 0, 8, 8, 0, 0, 8, 8, 8, 0, 0, 0,
 };
 

@@ -18,7 +18,7 @@
 #define MAP_H						6		// Map dimmensions in screens
 #define SCR_INICIO					20		// Initial screen
 #define PLAYER_INI_X				1		//
-#define PLAYER_INI_Y				4		// Initial tile coordinates
+#define PLAYER_INI_Y				2		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
@@ -40,7 +40,7 @@
 
 #define PLAYER_PUSH_BOXES 					// If defined, tile #14 is pushable
 #define DIRECT_TO_PLAY						// If defined, title screen is also the game frame.
-//#define DEACTIVATE_KEYS					// If defined, keys are not present.
+#define DEACTIVATE_KEYS						// If defined, keys are not present.
 #define DEACTIVATE_OBJECTS					// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
 //#define OBJECT_COUNT				1		// Defines which FLAG will be used to store the object count.
@@ -100,10 +100,13 @@
 //#define OBJECTS_Y					0		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			9		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-#define KEYS_X						10		//
-#define KEYS_Y						1		// Keys counter character coordinates
+//#define KEYS_X					10		//
+//#define KEYS_Y					1		// Keys counter character coordinates
 #define KILLED_X					16		//
 #define KILLED_Y					1		// Kills counter character coordinates
+#define ITEM_X 						7		// 
+#define ITEM_Y 						0 		//
+#define ITEM_FLAG 					0 		// Show item @ flag
 
 // Graphic FX, uncomment which applies...
 

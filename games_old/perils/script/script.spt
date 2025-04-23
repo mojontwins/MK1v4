@@ -1,5 +1,6 @@
 ROOMS = 24
-ALIAS %CARRYING = 2
+ITEM SLOT = 0
+ALIAS %CARRYING = 0
 
 ENTERING GAME
 	IF TRUE
@@ -14,9 +15,6 @@ ENTERING GAME
 		# Viehos
 		%VIEHO1 = 0
 		%VIEHO2 = 0
-
-		# Clear HUD
-		PRINT TILE (7, 0) = 0
 	END
 END
 
@@ -45,7 +43,6 @@ PRESS FIRE AT SCREEN 0
 	THEN 
 		%CARRYING = 0
 		%VIEHO1 = 1
-		PRINT TILE (7, 0) = 0
 		SET TILE (7, 5) = 0
 		SET TILE (6, 4) = 0
 		SOUND 6
@@ -60,7 +57,7 @@ ENTERING SCREEN 20
 		SET TILE (1, 8) = 17	# Draw door
 	END
 
-	IF ENEMS_KILLED = 1 		# Remove blockade
+	IF KILLED = 60 				# Remove blockade
 	THEN
 		SET TILE (2, 7) = 0
 		SET TILE (2, 8) = 0
@@ -90,8 +87,7 @@ PRESS FIRE AT SCREEN 22
 	IF %CARRYING = 2
 	THEN 
 		%CARRYING = 0
-		%VIEHO2 = 1
-		PRINT TILE (7, 0) = 0
+		%VIEHO2 = 1		
 		SET TILE (2, 7) = 0
 		SET TILE (3, 8) = 0
 		SOUND 6
@@ -101,31 +97,25 @@ END
 # Special tiles
 
 SPECIAL TILE TOUCHED
-	IF NPANT = 0
-	IF %CARRYING = 0
-	IF %BRA = 0
-	THEN
-		# Get bra
-		%BRA = 1
-		SET TILE (7, 1) = 0
-		%CARRYING = 2
-		PRINT TILE (7, 0) = 18
-	END 
-
-	IF NPANT = 3
-	IF %CARRYING = 0
-	IF %KNICKERS = 0
-	THEN
-		# Get knickers
-		%KNICKERS = 1
-		SET TILE (4, 2) = 0
-		%CARRYING = 1
-		PRINT TILE (7, 0) = 20
-	END
+	# There's a special tile in screen 20.
+	# Touching it should WIN the game.
+	# Otherwise it's an object.
 
 	IF NPANT = 20	
 	THEN
 		WIN GAME
+	END
+
+	# Win game BREAKs, so it's safe to just
+
+	IF TN = 18
+	THEN
+		GET ITEM SET %BRA
+	END
+
+	IF TN = 22
+	THEN
+		GET ITEM SET %KNICKERS
 	END
 END
 
@@ -133,7 +123,7 @@ END
 
 PLAYER KILLS ENEMY
 	IF NPANT = 20
-	IF KILLED = 60
+	IF KILLED = 1
 	THEN 
 		SET TILE (2, 7) = 0
 		SET TILE (2, 8) = 0

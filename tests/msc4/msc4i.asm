@@ -86,7 +86,7 @@ XDEF _script_tn
 .script_loop
 	; Calculate address of next clausule
 
-	;ld  hl, (script)
+	ld  hl, (script)
 	push hl 
 
 	call read_byte 		; A = clausule size
@@ -96,6 +96,9 @@ XDEF _script_tn
 	pop hl 
 	add hl, bc 
 	ld  (skip), hl	
+
+	cp  0xFF 			; End of section?
+	ret z
 
 ; Process conditions
 .script_clausule
@@ -319,9 +322,9 @@ XDEF _script_tn
 .script_actions
 	call read_byte 		;A = opcode
 
-	; If we get to 0xFF (END), exit
+	; If we get to 0xFF (END), jump to next clausule
 	cp  0xFF
-	ret z
+	jp  z, script_loop
 
 	;;; Decode OPCODE & jump to interpreter
 

@@ -88,7 +88,7 @@
 .script_loop
 ; Calculate address of next clausule
 
-;ld  hl, (script)
+	ld  hl, (script)
 	push hl
 
 	call read_byte 		; A = clausule size
@@ -98,6 +98,9 @@
 	pop hl
 	add hl, bc
 	ld  (skip), hl
+
+	cp  0xFF 			; End of section?
+	ret z
 
 ; Process conditions
 .script_clausule
@@ -122,6 +125,36 @@
 	jp  script_clausule
 .copcode_01_end
 
+;; OPCODE 0x23
+;; IF PLAYER AT (X, Y)
+	cp  0x23
+	jr  nz, copcode_23_end
+.opcode23
+;; (gpx + 8) >> 4 != X -> exit
+	ld  a, (_gpx)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld  a, c
+	call read_vbyte
+	cp  c
+	jp  nz, skip_clausule
+;; (gpy + 8) >> 4 != Y -> exit
+	ld  a, (_gpy)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld  a, c
+	call read_vbyte
+	cp  c
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_23_end
+
 ;; UNKNOWN
 	jp  script_clausule
 
@@ -134,9 +167,9 @@
 .script_actions
 	call read_byte 		;A = opcode
 
-; If we get to 0xFF (END), exit
+; If we get to 0xFF (END), jump to next clausule
 	cp  0xFF
-	ret z
+	jp  z, script_loop
 
 ;;; Decode OPCODE & jump to interpreter
 
@@ -173,28 +206,38 @@
 	jp  script_actions
 .aopcode_20_end
 
-;; OPCODE 0x50
-;; PRINT TILE (X, Y) = N
-	cp  0x50
-	jr  nz, aopcode_50_end
-.aopcode_50
+;; OPCODE 0x30
+;; GET ITEM SET $F
+	cp  0x30
+	jr  nz, aopcode_30_end
+.aopcode_30
+;; Get LValue: Flag to modify
 	call read_vbyte
-	ld  h, 0
-	ld  l, a
-	push hl
-	call read_vbyte
-	ld  h, 0
-	ld  l, a
-	push hl
-	call read_vbyte
-	ld  h, 0
-	ld  l, a
-	push hl
-	call _draw_coloured_tile
-	pop bc
-	pop bc
-	pop bc
-.aopcode_50_end
+	ld  b, 0
+	ld  c, a
+	ld  hl, _flags
+	add hl, bc
+; No item in slot?
+	ld  a, (_flags + 0)
+	or  a
+	jr  nz, aopcode_30_end
+; Write 1 to LValue
+	inc a
+	ld  (hl), a
+; Assign item
+	ld  a, (_script_tn)
+	ld  (_flags + 0), a
+; Clear from screen
+	xor a
+	ld  (__n), a
+	ld  (__t), a
+	ld  a, (_script_tx)
+	ld  (__x), a
+	ld  a, (_script_ty)
+	ld  (__y), a
+	call set_map_tile_do
+	jp  script_actions
+.aopcode_30_end
 
 ;; OPCODE 0xE0
 ;; SOUND N

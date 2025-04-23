@@ -955,7 +955,7 @@ void move (void) {
 				
 				call _attr_2 
 				ld  a, 128
-				and a 
+				and l
 				jr  z, nospecial
 
 				ld  hl, SC_SPECIAL_TILE_TOUCHED
