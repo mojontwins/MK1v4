@@ -28,5 +28,26 @@ Como hemos dicho, las diferentes secciones de tu script se lanzarán cuando ocur
 
 ### Las acciones
 
+### Número de pantallas del mapa
+
+### Los alias
+
+### Simple Item Aid
+
+Esto sirve para simplificar la tramolla de coger items y usarlos en sitios con un sólo slot de inventario (perils) y funciona así:
+
+* Usaremos un flag para representar si hemos cogido o no cada item, y otro flag `I` para representar qué item tenemos (0 si no tenemos ninguno).
+
+* En el script se hace `ITEM SLOT = I`. Si no se hace, `I = 0`.
+
+* En el engine haya un `ITEN_X, ITEM_Y, ITEM_FLAG` que puestre el tile en `flags[ITEM_FLAG]` en `(ITEM_X, ITEM_Y)`. `ITEM_FLAG` se pondrá al valor de `I` del paso anterior. Esto obviamente es opcional, es sólo para que se vea en el *hud*.
+
+* En el `ENTERING` del script, pondremos un tile `T` con comportamiento 128 en `X, Y` si `$F = 0`. `F` es el flag que representa este item.
+
+* En el engine se detectará la colisión con comportamiento 128 y se lanzará el script con `TN = T`, y las `TX` / `TY` que registraron la colisión.
+
+* En el `SCRIPT` ejecutamos `GET ITEM SET $F`. Esto comprobará que en `$I` no hay un item (vale 0), y en ese caso establecerá `$I = TN`, pondrá el tile 0 en `TX, TY` y pondrá `$F` a 1.
+
+
 ## Ejemplo
 

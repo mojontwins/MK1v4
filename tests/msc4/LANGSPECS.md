@@ -196,6 +196,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $20 X Y T : SET TILE (X, Y) = T
 * $21 X Y B : SET BEH (X, Y) = B
 
+* $30 F : GET ITEM SET $F (LVALUE!!)
+
 * $50 PRINT TILE AT (X, Y) = T
 * $51 SET FIRE ZONE [TILES] X1, Y1, X2, Y2  [TODO]
 
@@ -219,3 +221,24 @@ Primero voy a crear la parte de intérprete que compile una sección hasta `END`
 ## El número de pantallas
 
 Pensaba que era posible obviar que el compilador supiera el número máximo de pantallas pero no es posible. Hace falta para el índice. Se especificará como parámetro de msc4 pero además podrá modificarse desde el propios cript con ROOMS = N como directiva especial.
+
+## Simple get item aid!
+
+Para simplificar la tramolla de coger items y usarlos en sitios con un sólo slot de inventario (perils), se me ocurre que:
+
+* En el script se hace `ITEM SLOT = I`. Si no se hace, `I = 0`.
+
+* En el engine haya un `ITEN_X, ITEM_Y, ITEM_FLAG` que puestre el tile en `flags[ITEM_FLAG]` en `(ITEM_X, ITEM_Y)`. `ITEM_FLAG` se pondrá al valor de `I` del paso anterior.
+
+* En el `ENTERING` del script, ponemos un tile `T` con beh 128 en `X, Y` si `$F = 0`.
+
+* En el engine se detectará la colisión con beh 128 y se lanzará el script con `TN = T`, y las `TX` / `TY` que registraron la colisión.
+
+* En el `SCRIPT` ejecutamos `GET ITEM SET $F`. Esto comprobará que en `$I` no hay un item (vale 0), y en ese caso establecerá `$I = TN`, pondrá el tile 0 en `TX, TY` y pondrá `$F` a 1.
+
+Necesito implementar:
+
+- En msc4: parser para `ITEM SLOT` y `GET ITEM SET $F` con opcode 30.
+- En msc4i.asm: Código de intérprete para el opcode 52.
+- En engine: código para mostrar en hud.
+

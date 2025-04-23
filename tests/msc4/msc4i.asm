@@ -407,6 +407,39 @@ XDEF _script_tn
 	jp  script_actions
 .aopcode_21_end
 
+	;; OPCODE 0x30
+	;; GET ITEM SET $F <- [FILL I]
+	cp  0x30
+	jr  nz, aopcode_30_end
+.aopcode_30
+	;; Get LValue: Flag to modify
+	call read_vbyte
+	ld  b, 0 
+	ld  c, a 
+	ld  hl, _flags
+	add hl, bc
+	; No item in slot?
+	ld  a, (_flags + ITEM_SLOT)
+	or  a 
+	jr  nz, aopcode_30_end
+	; Write 1 to LValue
+	inc a 
+	ld  (hl), a
+	; Assign item
+	ld  a, (_script_tn)
+	ld  (_flags + ITEM_SLOT), a 
+	; Clear from screen
+	xor a 
+	ld  (__n), a 
+	ld  (__t), a 
+	ld  a, (_script_tx)
+	ld  (__x), a 
+	ld  a, (_script_ty)
+	ld  (__y), a 
+	call set_map_tile_do
+	jp  script_actions
+.aopcode_30_end
+
 	;; OPCODE 0x50
 	;; PRINT TILE (X, Y) = N
 	cp  0x50
