@@ -1108,6 +1108,17 @@ void draw_text (unsigned char x, unsigned char y, char *s) {
 
 			jr  draw_text_loop
 
+		#if defined ACTIVATE_SCRIPTING && defined TEXT_X
+			.draw_line_of_text
+				;; Entry point called from msc4i
+				;; HL should point to string.
+				ld  a, TEXT_X
+				ld  (__x), a
+				ld  a, TEXT_Y
+				ld  (__y), a
+				jr  draw_text_pre_loop
+		#endif
+
 		.print_str_inv
 
 			; Invalidate cells based upon strlen.
@@ -1122,6 +1133,7 @@ void draw_text (unsigned char x, unsigned char y, char *s) {
 			ld  e, a
 			call cpc_InvalidateRect
 	
+
 	#endasm
 }
 

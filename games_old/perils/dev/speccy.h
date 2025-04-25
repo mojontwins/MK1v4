@@ -566,6 +566,20 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			
 			jr  draw_text_loop
 
+		#if defined ACTIVATE_SCRIPTING && defined TEXT_X
+			.draw_line_of_text
+				;; Entry point called from msc4i
+				;; HL should point to string.
+				ld  a, TEXT_X
+				ld  (__t), a 
+				ld  (__x), a
+				ld  a, TEXT_Y
+				ld  (__y), a
+				ld  a, TEXT_A
+				ld  (__n), a 
+				jr  draw_text_loop
+		#endif
+
 		.draw_text_nl
 			ld  a, (__t)
 			ld  (__x), a

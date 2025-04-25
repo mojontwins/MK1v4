@@ -58,9 +58,8 @@ void __FASTCALL__ script (unsigned char a) {
 	XDEF _peta_el_beeper
 	#ifdef CPC
 		XDEF _cpc_UpdateNow
-	#else
-		XDEF SPUpdateNow
 	#endif
+	XDEF draw_line_of_text
 
 	.script_bytecode
 		BINARY "script.spt.bin"

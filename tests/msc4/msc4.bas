@@ -148,7 +148,7 @@ Sub parseScriptLine (linea As String)
 		ElseIf Ucase(tokens (i)) = "TY" Then 
 			tokens (i) = "$247"
 		ElseIf Ucase(tokens (i)) = "TN" Then 
-			tokens (i) = "$248"
+			tokens (i) = "$246"
 		End If
 
 		i = i + 1
@@ -557,6 +557,10 @@ Function processCommand (linea As String) As String
 			' $E2
 			code = buildAction (1, Chr (&HE2))
 
+		Case "text"
+			' $E3 L <TEXT> 0
+			code = buildAction (1, Chr (&HE3)) & Chr(Len(tokens (1))) & tokens (1) & Chr (0)
+
 		Case "extern"
 			' EXTERN N M
 			' $E4 N M'
@@ -922,11 +926,11 @@ fOut = FreeFile
 Open interpreterFn For Output As #fOut
 
 writeAssemblyString fOut, "defc PLAYER_LIFE=99 ;; Find a way to solve this"
-writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action"
+writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text"
 writeAssemblyString fOut, "XREF script_bytecode"
 
 If outT = SPECCY Then
-	writeAssemblyString fOut, "; Target SPECCY|XREF SPUpdateNow"
+	writeAssemblyString fOut, "; Target SPECCY|LIB SPUpdateNow"
 Else
 	writeAssemblyString fOut, "; Target CPC|XREF _cpc_UpdateNow"
 EndIf
@@ -960,7 +964,7 @@ If CU(&H03) Then writeAssemblyString fOut, ";; OPCODE 0x03|;; IF A >= B|cp  0x03
 If CU(&H04) Then writeAssemblyString fOut, ";; OPCODE 0x04|;; IF A <> B|cp  0x04|jr  nz, copcode_04_end|.copcode_04|call read_vbyte|ld  b, a|call read_vbyte|cp  b|jp  z, skip_clausule|jp  script_clausule|.copcode_04_end"
 If CU(&H21) Then writeAssemblyString fOut, ";; OPCODE 0x21|;; IF PLAYER IN_X (X1, X2)|cp  0x21|jr  nz, copcode_21_end|.copcode_21|;; gpx < X1 -> exit|call read_vbyte|ld  c, a|ld  a, (_gpx)|cp  c|jp  c, skip_clausule|;; X2 < gpx -> exit|ld  a, (_gpx)|ld  c, a|call read_vbyte|cp  c|jp  c, skip_clausule|jp  script_clausule|.copcode_21_end"
 If CU(&H22) Then writeAssemblyString fOut, ";; OPCODE 0x22|;; IF PLAYER IN_Y (Y1, Y2)|cp  0x22|jr  nz, copcode_22_end|.copcode_22|;; gpy < Y1 -> exit|call read_vbyte|ld  c, a|ld  a, (_gpy)|cp  c|jp  c, skip_clausule|;; Y2 < gpy -> exit|ld  a, (_gpy)|ld  c, a|call read_vbyte|cp  c|jp  c, skip_clausule|jp  script_clausule|.copcode_22_end"
-If CU(&H23) Then writeAssemblyString fOut, ";; OPCODE 0x23|;; IF PLAYER AT (X, Y)|cp  0x23|jr  nz, copcode_23_end|.opcode23|;; (gpx + 8) >> 4 != X -> exit|ld  a, (_gpx)|add 8|srl a|srl a|srl a|srl a|ld  a, c|call read_vbyte|cp  c|jp  nz, skip_clausule|;; (gpy + 8) >> 4 != Y -> exit|ld  a, (_gpy)|add 8|srl a|srl a|srl a|srl a|ld  a, c|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_23_end"
+If CU(&H23) Then writeAssemblyString fOut, ";; OPCODE 0x23|;; IF PLAYER AT (X, Y)|cp  0x23|jr  nz, copcode_23_end|.opcode23|;; (gpx + 8) >> 4 != X -> exit|ld  a, (_script_tx)|ld  c, a|call read_vbyte|cp  c|jp  nz, skip_clausule|;; (gpy + 8) >> 4 != Y -> exit|ld  a, (_script_ty)|ld  c, a|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_23_end"
 If CU(&H24) Then writeAssemblyString fOut, ";; OPCODE 0x24|;; IF PLAYER FALLING|cp  0x24|jr  nz, copcode_24_end|.copcode_24|;; Player falling if not possee|ld  a, (_player + 26) 	; player.possee|or  a|jp  z, skip_clausule|jp  script_clausule|.copcode_24_end"
 If CU(&H25) Then writeAssemblyString fOut, ";; OPCODE 0x25|;; IF PLAYER NOT FALLING|cp  0x25|jr  nz, copcode_25_end|.copcode_25|;; Player not falling if possee|ld  a, (_player + 16)	; player.possee|or  a|jp  nz, skip_clausule|jp  script_clausule|.copcode_25_end"
 If CU(&H26) Then writeAssemblyString fOut, ";; OPCODE 0x26|;; PLAYER_STILL|cp  0x26|jr  nz, copcode_26_end|.copcode_26|ld  a, (_player + 6) 	; player.vx LSB|ld  hl, (_player + 7)	; player.vx MSB|or  (hl)|ld  hl, (_player + 8) 	; player.vy LSB|or  (hl)|ld  hl, (_player + 9) 	; player.vy MSB|or  (hl)|jp  nz, skip_clausule|jp  script_clausule|.copcode_26_end"
@@ -983,7 +987,7 @@ If AU(&H01) Then writeAssemblyString fOut, ";; OPCODE 0x01|;; FLAGS[N] += V|cp  
 If AU(&H02) Then writeAssemblyString fOut, ";; OPCODE 0x02|;; FLAGS[N] -= V|cp  0x02|jr  nz, aopcode_02_end|.aopcode_02|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, (hl)|sub a|ld  (hl), a|jp  script_actions|.aopcode_02_end"
 If AU(&H20) Then writeAssemblyString fOut, ";; OPCODE 0x20|;; SET TILE (X, Y) = T|cp  0x20|jr  nz, aopcode_20_end|.aopcode_20|call read_x_y|call read_vbyte|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|ld  a, (sc_x)|ld  (__x), a|ld  c, a|ld  a, (sc_y)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_20_end"
 If AU(&H21) Then writeAssemblyString fOut, ";; OPCODE 0x21|;; SET BEH (X, Y) = B|cp  0x21|jr  nz, aopcode_21_end|.aopcode_21|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|ld  b, a|sla a|sla a|sla a|sla a|sub b|add c|ld  b, 0|ld  c, a|call read_vbyte|ld  hl, _map_attr|add hl, bc|ld  (hl), a|jp  script_actions|.aopcode_21_end"
-If AU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; GET ITEM SET $F|cp  0x30|jr  nz, aopcode_30_end|.aopcode_30|;; Get LValue: Flag to modify|call read_vbyte|ld  b, 0|ld  c, a|ld  hl, _flags|add hl, bc|; No item in slot?|ld  a, (_flags + " & itemSlot & ")|or  a|jr  nz, aopcode_30_end|; Write 1 to LValue|inc a|ld  (hl), a|; Assign item|ld  a, (_script_tn)|ld  (_flags + " & itemSlot & "), a|; Clear from screen|xor a|ld  (__n), a|ld  (__t), a|ld  a, (_script_tx)|ld  (__x), a|ld  a, (_script_ty)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_30_end"
+If AU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; GET ITEM SET $F|cp  0x30|jr  nz, aopcode_30_end|.aopcode_30|;; Get LValue: Flag to modify|call read_vbyte|ld  b, 0|ld  c, a|ld  hl, _flags|add hl, bc|; No item in slot?|ld  a, (_flags + " & itemSlot & ")|or  a|jr  nz, aopcode_30_end|; Write 1 to LValue|inc a|ld  (hl), a|; Assign item|ld  a, (_script_tn)|ld  (_flags + " & itemSlot & "), a|; Clear from screen|xor a|ld  (__n), a|ld  (__t), a|ld  a, (_script_tx)|ld  c, a|ld  (__x), a|ld  a, (_script_ty)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_30_end"
 If AU(&H50) Then writeAssemblyString fOut, ";; OPCODE 0x50|;; PRINT TILE (X, Y) = N|cp  0x50|jr  nz, aopcode_50_end|.aopcode_50|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call _draw_coloured_tile|pop bc|pop bc|pop bc|.aopcode_50_end"
 If AU(&HE0) Then writeAssemblyString fOut, ";; OPCODE 0xE0|;; SOUND N|cp  0xE0|jr  nz, aopcode_E0_end|.aopcode_E0|call read_vbyte|ld  h, 0|ld  l, a|call _peta_el_beeper|jp  script_actions|.aopcode_E0_end"
 If AU(&HE1) Then 
@@ -994,6 +998,7 @@ If AU(&HE1) Then
 	End If
 End If
 If AU(&HE2) Then writeAssemblyString fOut, ";; OPCODE 0xE2|;; RECHARGE|cp  0xE2|jr  nz, aopcode_E2_end|.aopcode_E2|ld  a, PLAYER_LIFE|ld  (_player + 29), a 	; player.life LSB|xor a|ld  (_player + 30), a 	; player.life MSB|jp script_actions|.aopcode_E2_end"
+If AU(&HE3) Then writeAssemblyString fOut, ";; OPCODE 0xE3|;; TEXT L <CHARS> 0|cp  0xE3|jr  nz, aopcode_E3_end|.aopcode_E3|call read_byte 			; String length|ld  b, 0|ld  c, a|add hl, bc 				; Move after the string|push hl|ld  hl, (script)|call draw_line_of_text|pop hl 					; Get past the string|jp script_actions|.aopcode_E3_end"
 If AU(&HE4) Then writeAssemblyString fOut, ";; OPCODE 0xE4|;; EXTERN N M|cp  0xE4|jr  nz, aopcode_E4_end|.aopcode_E4|call read_x_y|ld  a, (sc_x)|ld  h, 0|ld  l, a|push hl|ld  a, (sc_y)|ld  h, 0|ld  l, a|push hl|call _do_extern_action|pop bc|pop bc|jp script_actions|.aopcode_E4_end"
 If AU(&HE5) Then writeAssemblyString fOut, ";; OPCODE 0xE5|;; PAUSE N|cp  0xE5|jr  nz, aopcode_E5_end|.aopcode_E5|call read_vbyte|ld  b, a|.aopcode_E5_loop|halt|djnz aopcode_E5_loop|jp script_actions|.aopcode_E5_end"
 If AU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|jr  nz, aopcode_F0_end|.aopcode_F0|ld  a, 1|ld  (_script_result), a|ret|.aopcode_F0_end"
@@ -1014,7 +1019,7 @@ If RV(&HFA) Then writeAssemblyString fOut, "; OBJS RVALUE|cp  0xFA|jr  nz, rvb_s
 If RV(&HF9) Then writeAssemblyString fOut, "; LIFE RVALUE|cp  0xF9|jr  nz, rvb_set_player_life_done|ld  a, (_player + 29) 	; player.life MSB|ret|.rvb_set_player_life_done"
 writeAssemblyString fOut, "; TX RVALUE|cp  0xF8|jr  nz, rvb_set_tx_done|ld  a, (_script_tx)|ret|.rvb_set_tx_done"
 writeAssemblyString fOut, "; TY RVALUE|cp  0xF7|jr  nz, rvb_set_ty_done|ld  a, (_script_ty)|ret|.rvb_set_ty_done"
-writeAssemblyString fOut, "; TILE RVALUE|cp  0xF6|jr  nz, rvb_set_tile_done|ld  a, (_script_tn)|ret|.rvb_set_tile_done"
+writeAssemblyString fOut, "; TN RVALUE|cp  0xF6|jr  nz, rvb_set_tile_done|ld  a, (_script_tn)|ret|.rvb_set_tile_done"
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
 writeAssemblyString fOut, ";; Read flag index and value, returns pointer in HL and value in A.|.read_i_v|call read_vbyte  		; Read flag index|ld  c, a|call read_vbyte 		; Read value|ld  (sc_y), a"

@@ -98,8 +98,8 @@ void main (void) {
 					ld  a, (_n_pant)
 					ld  (_on_pant), a
 
-						ld  a, 1
-						ld  (_pant_just_rendered), a
+					ld  a, 1
+					ld  (_pant_just_rendered), a
 				.ml_ud_skip
 			#endasm
 

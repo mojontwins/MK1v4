@@ -954,10 +954,10 @@ void move (void) {
 				srl a 
 				
 				call _attr_2 
-				ld  a, 128
-				and l
+				ld  a, l
+				and 128
 				jr  z, nospecial
-
+				
 				ld  hl, SC_SPECIAL_TILE_TOUCHED
 				call _script
 			.nospecial
@@ -1595,7 +1595,6 @@ void draw_scr (void) {
 
 	enoffs = n_pant * MAX_ENEMS;
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
-
 		#asm
 				ld  bc, (_enit)
 				xor a
@@ -1630,20 +1629,19 @@ void draw_scr (void) {
 			default:
 				en_an_next_frame [enit] = sprite_18_a;
 		}
-
-		#ifdef ACTIVATE_SCRIPTING
-			// Run "ENTERING ANY" script (if available)
-			script (SC_ENTERING_ANY);
-
-			// Run "ENTERING" script for THIS screen (if available)
-			script (SC_ENTERING_SCREEN + (n_pant << 1));
-		#endif
-
-		#ifdef PLAYER_CAN_FIRE
-			init_bullets ();
-		#endif
 	}
 
+	#ifdef PLAYER_CAN_FIRE
+		init_bullets ();
+	#endif
+
+	#ifdef ACTIVATE_SCRIPTING
+		// Run "ENTERING ANY" script (if available)
+		script (SC_ENTERING_ANY);
+
+		// Run "ENTERING" script for THIS screen (if available)
+		script (SC_ENTERING_SCREEN + (n_pant << 1));
+	#endif
 }
 
 #ifdef PLAYER_CAN_FIRE
@@ -1717,7 +1715,9 @@ void draw_scr (void) {
 		#ifdef CPC
 			cpc_UpdateNow (1);
 		#else 
-			call SPUpdateNow
+			#asm
+				call SPUpdateNow
+			#endasm
 		#endif
 
 		#if ENEMS_LIFE_GAUGE > 1

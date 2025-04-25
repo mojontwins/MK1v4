@@ -18,6 +18,7 @@ XREF _comportamiento_tiles
 XREF _map_attr
 XREF _peta_el_beeper
 XREF _do_extern_action
+XREF draw_line_of_text
 
 ; Target CPC
 XREF _cpc_UpdateNow
@@ -212,24 +213,14 @@ XDEF _script_tn
 	jr  nz, copcode_23_end
 .opcode23
 	;; (gpx + 8) >> 4 != X -> exit
-	ld  a, (_gpx)
-	add 8
-	srl a
-	srl a
-	srl a
-	srl a
-	ld  a, c
+	ld  a, (_script_tx)
+	ld  c, a
 	call read_vbyte
 	cp  c 
 	jp  nz, skip_clausule
 	;; (gpy + 8) >> 4 != Y -> exit
-	ld  a, (_gpy)
-	add 8
-	srl a
-	srl a
-	srl a
-	srl a
-	ld  a, c
+	ld  a, (_script_ty)
+	ld  c, a
 	call read_vbyte
 	cp  c 
 	jp  nz, skip_clausule
@@ -436,6 +427,7 @@ XDEF _script_tn
 	ld  (__n), a 
 	ld  (__t), a 
 	ld  a, (_script_tx)
+	ld  c, a
 	ld  (__x), a 
 	ld  a, (_script_ty)
 	ld  (__y), a 
@@ -501,6 +493,22 @@ XDEF _script_tn
 	ld  (_player + 30), a 	; player.life MSB
 	jp script_actions
 .aopcode_E2_end
+
+	;; OPCODE 0xE3
+	;; TEXT L <CHARS> 0
+	cp  0xE3
+	jr  nz, aopcode_E3_end
+.aopcode_E3
+	call read_byte 			; String length
+	ld  b, 0
+	ld  c, a 
+	add hl, bc 				; Move after the string
+	push hl
+	ld  hl, (script)
+	call draw_line_of_text
+	pop hl 					; Get past the string
+	jp script_actions
+.aopcode_E3_end
 
 	;; OPCODE 0xE4
 	;; EXTERN N M
@@ -641,7 +649,7 @@ XDEF _script_tn
 	ret
 .rvb_set_ty_done
 	
-	; TILE RVALUE
+	; TN RVALUE
 	cp  0xF6
 	jr  nz, rvb_set_tile_done
 	ld  a, (_script_tn)

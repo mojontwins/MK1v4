@@ -54,7 +54,7 @@ cd ..\dev
 if [%om%]==[cpc] goto :cpc
 
 zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
-zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
+zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm msc4i.asm churromain.c -DSPECCY > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Apr 23 14:15:16 2025
+;	Module compile time: Fri Apr 25 18:41:39 2025
 
 
 
@@ -2176,6 +2176,14 @@
 	inc a
 	ld (__n), a
 	jr draw_text_loop
+	.draw_line_of_text
+	;; Entry point called from msc4i
+	;; HL should point to string.
+	ld a, 4
+	ld (__x), a
+	ld a, 3
+	ld (__y), a
+	jr draw_text_pre_loop
 	.print_str_inv
 	; Invalidate cells based upon strlen.
 	ld a, (__y)
@@ -2689,6 +2697,7 @@
 	XDEF set_map_tile_do
 	XDEF _peta_el_beeper
 	XDEF _cpc_UpdateNow
+	XDEF draw_line_of_text
 	.script_bytecode
 	BINARY "script.spt.bin"
 	; -----------------------------------------------------------------------------
@@ -2845,10 +2854,7 @@
 	defm	""
 	defb	34
 
-	defm	""
-	defb	34
-
-	defm	""
+	defm	"b"
 	defb	0
 
 	defm	""
@@ -2884,7 +2890,7 @@
 	defm	""
 	defb	34
 
-	defm	" "
+	defm	"&"
 	defb	0
 
 	defm	"X"
@@ -7133,14 +7139,14 @@
 	defb	1
 	defb	1
 	defb	2
-	defb	128
-	defb	128
+	defb	176
+	defb	48
+	defb	176
+	defb	48
+	defb	176
 	defb	112
-	defb	128
-	defb	128
-	defb	128
-	defb	-1
 	defb	0
+	defb	1
 	defb	3
 	defb	64
 	defb	128
@@ -8656,8 +8662,8 @@
 	srl a
 	srl a
 	call _attr_2
-	ld a, 128
-	and l
+	ld a, l
+	and 128
 	jr z, nospecial
 	ld hl, 5
 	call _script
@@ -8743,7 +8749,7 @@
 
 
 ._init_player_values
-	ld	a,#(16 % 256 % 256)
+	ld	a,#(32 % 256 % 256)
 	ld	(_gpx),a
 	ld	hl,32 % 256	;const
 	ld	a,l
@@ -9120,6 +9126,8 @@
 	pop	de
 	call	l_pint
 .i_103
+	jp	i_99
+.i_100
 	ld	hl,1	;const
 	call	_script
 	ld	a,(_n_pant)
@@ -9130,8 +9138,6 @@
 	ld	de,8
 	add	hl,de
 	call	_script
-	jp	i_99
-.i_100
 	ret
 
 
