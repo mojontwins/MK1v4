@@ -559,7 +559,7 @@ Function processCommand (linea As String) As String
 
 		Case "text"
 			' $E3 L <TEXT> 0
-			code = buildAction (1, Chr (&HE3)) & Chr(Len(tokens (1))) & tokens (1) & Chr (0)
+			code = buildAction (1, Chr (&HE3)) & Chr(1 + Len(tokens (1))) & tokens (1) & Chr (0)
 
 		Case "extern"
 			' EXTERN N M
