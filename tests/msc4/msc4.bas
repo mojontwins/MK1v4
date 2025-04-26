@@ -573,14 +573,14 @@ Function processCommand (linea As String) As String
 
 		Case "game"
 			If scmd = "over" then 
-				code = buildAction (1, Chr (&HF0))
+				code = buildAction (1, Chr (&HF1))
 			Else 
 				syntaxError
 			End If
 
 		Case "win"
 			If scmd = "game" Then  
-				code = buildAction (1, Chr (&HF1))
+				code = buildAction (1, Chr (&HF0))
 			Else 
 				syntaxError
 			End If
@@ -998,7 +998,7 @@ If AU(&HE1) Then
 	End If
 End If
 If AU(&HE2) Then writeAssemblyString fOut, ";; OPCODE 0xE2|;; RECHARGE|cp  0xE2|jr  nz, aopcode_E2_end|.aopcode_E2|ld  a, PLAYER_LIFE|ld  (_player + 29), a 	; player.life LSB|xor a|ld  (_player + 30), a 	; player.life MSB|jp script_actions|.aopcode_E2_end"
-If AU(&HE3) Then writeAssemblyString fOut, ";; OPCODE 0xE3|;; TEXT L <CHARS> 0|cp  0xE3|jr  nz, aopcode_E3_end|.aopcode_E3|call read_byte 			; String length|ld  b, 0|ld  c, a|add hl, bc 				; Move after the string|push hl|ld  hl, (script)|call draw_line_of_text|pop hl 					; Get past the string|jp script_actions|.aopcode_E3_end"
+If AU(&HE3) Then writeAssemblyString fOut, ";; OPCODE 0xE3|;; TEXT L <CHARS> 0|cp  0xE3|jr  nz, aopcode_E3_end|.aopcode_E3|call read_byte 			; String length|ld  b, 0|ld  c, a|add hl, bc 				; Move after the string|push hl|ld  hl, (script)|call draw_line_of_text|pop hl|ld  (script), hl 		; Get past the string|jp script_actions|.aopcode_E3_end"
 If AU(&HE4) Then writeAssemblyString fOut, ";; OPCODE 0xE4|;; EXTERN N M|cp  0xE4|jr  nz, aopcode_E4_end|.aopcode_E4|call read_x_y|ld  a, (sc_x)|ld  h, 0|ld  l, a|push hl|ld  a, (sc_y)|ld  h, 0|ld  l, a|push hl|call _do_extern_action|pop bc|pop bc|jp script_actions|.aopcode_E4_end"
 If AU(&HE5) Then writeAssemblyString fOut, ";; OPCODE 0xE5|;; PAUSE N|cp  0xE5|jr  nz, aopcode_E5_end|.aopcode_E5|call read_vbyte|ld  b, a|.aopcode_E5_loop|halt|djnz aopcode_E5_loop|jp script_actions|.aopcode_E5_end"
 If AU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|jr  nz, aopcode_F0_end|.aopcode_F0|ld  a, 1|ld  (_script_result), a|ret|.aopcode_F0_end"

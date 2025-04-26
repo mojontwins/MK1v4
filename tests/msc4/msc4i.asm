@@ -506,7 +506,8 @@ XDEF _script_tn
 	push hl
 	ld  hl, (script)
 	call draw_line_of_text
-	pop hl 					; Get past the string
+	pop hl 		
+	ld  (script), hl 		; Get past the string			
 	jp script_actions
 .aopcode_E3_end
 

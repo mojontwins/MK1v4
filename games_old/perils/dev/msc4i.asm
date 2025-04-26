@@ -255,19 +255,20 @@
 	push hl
 	ld  hl, (script)
 	call draw_line_of_text
-	pop hl 					; Get past the string
+	pop hl
+	ld  (script), hl 		; Get past the string
 	jp script_actions
 .aopcode_E3_end
 
-;; OPCODE 0xF1
-;; GAME OVER
-	cp  0xf1
-	jr  nz, aopcode_F1_end
-.aopcode_F1
-	ld  a, 2
+;; OPCODE 0xF0
+;; WIN GAME
+	cp  0xf0
+	jr  nz, aopcode_F0_end
+.aopcode_F0
+	ld  a, 1
 	ld  (_script_result), a
 	ret
-.aopcode_F1_end
+.aopcode_F0_end
 
 ;; UNKNOWN
 	jp script_actions

@@ -357,7 +357,7 @@ T3=[$2]
 Parsing: SOUND 7
 T0=[SOUND]
 T1=[7]
-Bytecode: 08 01 FF FE 14 FF F1 FF 0B 01 FF F6 12 FF 30 01 E0 07 FF 0B 01 FF F6 16 FF 30 02 E0 07 FF FF 
+Bytecode: 08 01 FF FE 14 FF F0 FF 0B 01 FF F6 12 FF 30 01 E0 07 FF 0B 01 FF F6 16 FF 30 02 E0 07 FF FF 
 ==========================================
 LINEA PLAYER KILLS ENEMY
 T0=[player]
@@ -369,11 +369,11 @@ T0=[IF]
 T1=[$254]
 T2=[=]
 T3=[20]
-Parsing: IF KILLED = 1
+Parsing: IF KILLED = 60
 T0=[IF]
 T1=[$251]
 T2=[=]
-T3=[1]
+T3=[60]
 Parsing: SET TILE (2, 7) = 0
 T0=[SET]
 T1=[TILE]
@@ -388,7 +388,7 @@ T2=[2]
 T3=[8]
 T4=[=]
 T5=[0]
-Bytecode: 13 01 FF FE 14 01 FF FB 01 FF 20 02 07 00 20 02 08 00 FF FF 
+Bytecode: 13 01 FF FE 14 01 FF FB 3C FF 20 02 07 00 20 02 08 00 FF FF 
 Index section: 112 bytes
 Bytecode section: 326 bytes
 Wrote 438 bytes to script.spt.bin
