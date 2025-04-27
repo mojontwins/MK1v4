@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Apr 18 17:00:41 2025
+;	Module compile time: Sun Apr 27 16:18:06 2025
 
 
 
@@ -631,7 +631,7 @@
 
 
 
-._wyz_play_sound
+._peta_el_beeper
 	; Sound number is in L
 	ld a, l
 	ld b, 1
@@ -7977,7 +7977,7 @@
 	ld	a,l
 	ld	(de),a
 	ld	hl,8	;const
-	call	_wyz_play_sound
+	call	_peta_el_beeper
 .i_26
 	ret
 
@@ -8175,7 +8175,7 @@
 	ld	hl,_player+14
 	ld	(hl),#(0 % 256 % 256)
 	ld	hl,3	;const
-	call	_wyz_play_sound
+	call	_peta_el_beeper
 .i_32
 	ld	hl,_pad0
 	ld	a,(hl)
@@ -8710,6 +8710,8 @@
 	pop	de
 	call	l_pint
 .i_89
+	ld	hl,2	;const
+	call	_peta_el_beeper
 	ld	hl,_player+46
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,_player+36
@@ -9459,7 +9461,7 @@
 	ld	hl,_player+36
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,2	;const
-	call	_wyz_play_sound
+	call	_peta_el_beeper
 	ld	hl,_player+46
 	ld	(hl),#(1 % 256 % 256)
 	ld	hl,_player+36
@@ -9583,11 +9585,6 @@
 	ld (hl), a
 	inc hl
 	ret
-
-._do_extern_action
-	ret
-
-
 	._s_title
 	BINARY "titlec.bin"
 	._s_marco
@@ -9698,9 +9695,7 @@
 	ld (_life_old), a
 	ld (_keys_old), a
 	ld (_killed_old), a
-	ld (_item_old), a
-	ld (_ezg_old), a
-	ld (_coins_old), a
+	ld (_flag_old), a
 	ld (_on_pant), a
 	ld	hl,1	;const
 	call	_wyz_play_music
@@ -9859,7 +9854,7 @@
 	ld	a,l
 	ld	(de),a
 	ld	hl,7	;const
-	call	_wyz_play_sound
+	call	_peta_el_beeper
 	jp	i_136
 .i_139
 	ld	hl,_player+28
@@ -9870,7 +9865,7 @@
 	ld	a,l
 	ld	(de),a
 	ld	hl,8	;const
-	call	_wyz_play_sound
+	call	_peta_el_beeper
 	jp	i_136
 .i_140
 	ld	hl,_player+29
@@ -9891,7 +9886,7 @@
 	ld	a,#(2 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,9	;const
-	call	_wyz_play_sound
+	call	_peta_el_beeper
 .i_136
 	ld	a,(_rdi)
 	cp	#(1 % 256)
@@ -10129,7 +10124,6 @@
 ._gp_gen_org	defs	2
 ._killed_old	defs	1
 ._thrusting	defs	1
-._ezg_old	defs	1
 ._wyz_beat_ct	defs	1
 ._t_alt	defs	1
 .__n	defs	1
@@ -10160,6 +10154,7 @@
 ._ptx2	defs	1
 ._pty1	defs	1
 ._pty2	defs	1
+._flag_old	defs	1
 ._wall	defs	1
 ._pvx_total	defs	2
 ._hotspot_t_r	defs	1
@@ -10171,7 +10166,6 @@
 ._prxx	defs	1
 ._pryy	defs	1
 ._pvy_total	defs	2
-._item_old	defs	1
 ._idx	defs	2
 ._hit	defs	1
 ._player	defs	47
@@ -10182,16 +10176,19 @@
 ._rdd	defs	1
 ._rdi	defs	1
 ._keys_old	defs	1
+._tat	defs	1
 ._rdx	defs	1
 ._rdy	defs	1
 ._pti	defs	1
 ._ptj	defs	1
+._tqt	defs	1
+._tpx	defs	1
+._tpy	defs	1
 ._enoffsmasi	defs	2
 ._pant_just_rendered	defs	1
 .__baddies_pointer	defs	2
 ._orig_tile	defs	1
 ._success	defs	1
-._coins_old	defs	1
 ;	SECTION	code
 
 
@@ -10227,7 +10224,6 @@
 	XDEF	_en_an_base_frame
 	defc	_en_an_base_frame	=	54835
 	XDEF	_hotspot_t
-	XDEF	_wyz_play_sound
 	XDEF	_hotspot_x
 	XDEF	_hotspot_y
 	XDEF	_player_walk_cycle
@@ -10268,7 +10264,6 @@
 	XDEF	_cpc_Border
 	XDEF	_killed_old
 	XDEF	_thrusting
-	XDEF	_ezg_old
 	XDEF	_map_attr
 	defc	_map_attr	=	50688
 	XDEF	_invalidate_viewport
@@ -10311,6 +10306,7 @@
 	LIB	cpc_PutSpTileMap4x8
 	LIB	cpc_PutSpTileMap
 	LIB	cpc_InitTileMap
+	XDEF	_peta_el_beeper
 	XDEF	_s_marco
 	LIB	cpc_PutSpTileMap8x16Px
 	LIB	cpc_PutSpTileMap8x24Px
@@ -10403,11 +10399,12 @@
 	XDEF	_move
 	LIB	cpc_PutMaskSpTileMap2b
 	LIB	cpc_PutTrSpTileMap2b
+	XDEF	_flag_old
 	XDEF	_wall
 	LIB	cpc_PutORSpTileMap2b
 	LIB	cpc_PutSpTileMap2b
-	LIB	cpc_PutCpSpTileMap2b
 	LIB	cpc_UpdScr
+	LIB	cpc_PutCpSpTileMap2b
 	LIB	cpc_PutTrSp4x8TileMap2b
 	LIB	cpc_PutTrSp8x16TileMap2b
 	LIB	cpc_PutTrSp8x24TileMap2b
@@ -10439,7 +10436,6 @@
 	XDEF	_game_ending
 	LIB	cpc_UnExo
 	XDEF	_pvy_total
-	XDEF	_item_old
 	LIB	cpc_SetInkGphStrM1
 	XDEF	_idx
 	XDEF	_hit
@@ -10460,10 +10456,11 @@
 	XDEF	_init_player_values
 	XDEF	_en_tocado
 	LIB	cpc_TestKeyF
+	XDEF	_tat
 	LIB	cpc_PutTrSp16x16TileMap2bGPxM1P
-	LIB	cpc_PutTrSp16x24TileMap2bGPxM1P
 	XDEF	_rdx
 	XDEF	_rdy
+	LIB	cpc_PutTrSp16x24TileMap2bGPxM1P
 	XDEF	_sm_cox
 	XDEF	_sm_coy
 	XDEF	_draw_2_digits
@@ -10483,6 +10480,9 @@
 	XDEF	_bitmask
 	LIB	cpc_ReadTile
 	LIB	cpc_PutMaskSprite
+	XDEF	_tqt
+	XDEF	_tpx
+	XDEF	_tpy
 	XDEF	_enoffsmasi
 	LIB	cpc_PutSpTileMapO
 	LIB	cpc_PutSp
@@ -10502,8 +10502,6 @@
 	defc	_en_an_frame	=	54784
 	XDEF	_success
 	LIB	cpc_RedefineKey
-	XDEF	_coins_old
-	XDEF	_do_extern_action
 	XDEF	_platform_get_player
 	XDEF	_en_an_count
 	defc	_en_an_count	=	54787

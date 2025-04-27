@@ -32,23 +32,16 @@
 	#include "speccy.h"
 #endif
 #ifdef ACTIVATE_SCRIPTING
-	#include "msc-config.h" 
+	#include "msc4i.h" 
 #endif
 #include "zx0.h"
 #include "mapa.h"
 #if MAX_CERROJOS == 0
 	#define DEACTIVATE_KEYS
 #endif
-#if defined(PLAYER_KILLS_ENEMIES) || defined(PLAYER_CAN_FIRE)
-	#include "extrasprites.h"
-#endif
 #include "enems.h"
 
 #include "engine.h"
-#include "extern.h"
-#ifdef ACTIVATE_SCRIPTING
-	#include "msc.h"
-#endif
 #include "pantallas.h"
 #include "mainloop.h" 	// Main is here!
 #include "music.h"

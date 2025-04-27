@@ -945,6 +945,7 @@ void move (void) {
 				srl a 
 				srl a 
 				ld  c, a 
+				ld  (_tpx), a
 
 				ld  a, (_gpy)
 				add 8
@@ -952,12 +953,21 @@ void move (void) {
 				srl a 
 				srl a 
 				srl a 
+				ld  (_tpy), a
 				
 				call _attr_2 
 				ld  a, l
 				and 128
 				jr  z, nospecial
 				
+				ld  (_tat), a
+				ld  a, (_tpx) 
+				ld  c, a
+				ld  a, (_tpy)
+				call qtile_do
+				ld  a, l 
+				ld  (_tqt), a
+
 				ld  hl, SC_SPECIAL_TILE_TOUCHED
 				call _script
 			.nospecial

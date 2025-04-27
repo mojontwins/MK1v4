@@ -467,9 +467,11 @@ Sub extractGlobalPalette (img As Any Ptr)
 End Sub
 
 Sub doPals (img As Any Ptr, prefix As String, outputFn As String)
-	Dim As Integer i, f, c
+	Dim As Integer i, f, c, mc
 
 	extractGlobalPalette img
+
+	mc = 4: If cpcMode = 0 Then mc = 16
 
 	Select Case platform
 		Case PLATFORM_CPC:
@@ -484,7 +486,7 @@ Sub doPals (img As Any Ptr, prefix As String, outputFn As String)
 				Print #f, "#asm"
 				Print #f, "	." & prefix
 				Print #f, "		ld  b, 0x7f"
-				For i = 0 To 3
+				For i = 0 To mc-1
 					c = cpcHWColour (globalPalette (i))
 					Print #f, "		ld  a, " & i
 					Print #f, "		out (c), a"

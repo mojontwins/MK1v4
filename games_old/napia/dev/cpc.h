@@ -35,15 +35,15 @@ unsigned char wyz_beat_ct;
 #define AY_STOP_SOUND()  wyz_stop_sound ()
 #define AY_PLAY_MUSIC(a) wyz_play_music (a)
 
-#include "cpc/pal.h"
+#ifndef AUTO_SPLIT
+	#include "cpc/pal.h"
+#endif
 #include "cpc/spriteset_mappings.h"
 
 #include "wyz/efectos.h"
 #include "wyz/instrumentos.h"
 #include "wyz/songs.h"
 #include "wyz/wyz_player.h"
-
-#define peta_el_beeper wyz_play_sound
 
 /*
 	CPC Memory map
@@ -316,7 +316,7 @@ void system_init (void) {
 			jp  isr_done
 
 		._isr
-			push af
+			push af 
 			push hl
 			push de
 			push bc
@@ -347,9 +347,11 @@ void system_init (void) {
 
 		#if defined MODE_1 && defined AUTO_SPLIT
 				// Set hud pal
-				ld  a, (_playing)
-				or  a 
-				jr  z, isr_nohud
+			#ifndef ALWAYS_SPLIT
+					ld  a, (_playing)
+					or  a 
+					jr  z, isr_nohud
+			#endif
 				call pal_hud
 			.isr_nohud
 		#endif
@@ -371,9 +373,11 @@ void system_init (void) {
 		#if defined MODE_1 && defined AUTO_SPLIT
 	
 			._set_game_pal
-				ld  a, (_playing)
-				or  a 
-				jr  z, isr_nosplit
+			#ifndef ALWAYS_SPLIT
+					ld  a, (_playing)
+					or  a 
+					jr  z, isr_nosplit
+			#endif
 			
 			.inject_pal
 				call pal_general						// This will be modified, don't worry :)
@@ -437,9 +441,9 @@ void system_init (void) {
 			ld    c, 2			; REG = 2
 			out   (c), c
 			inc   b
-			ld    c, 42			; VALUE = 42	
+			ld    c, 42			; VALUE = 42
 			out   (c), c
-				
+
 		#if defined MODE_1 && defined AUTO_SPLIT
 				; Vertical pos (4), CRTC REG #5
 				ld    b, 0xbc
@@ -602,6 +606,20 @@ void _tile_address (void) {
 			; DE = buffer address
 	#endasm
 }
+
+#ifdef USE_AUTO_TILE_SHADOWS
+	unsigned char attr_mk2 (void) {
+		// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
+		// if (cx1 < 0 || cy1 < 0 || cx1 > 14 || cy1 > 9) return 0;
+		// return map_attr [cx1 + (cy1 << 4) - cy1];
+		#asm
+				ld  a, (_cx1)
+				ld  c, a 
+				ld  a, (_cy1)
+				jp  _attr_enems
+		#endasm
+	}
+#endif
 
 void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 	//_x = x; _y = y; _t = t;
@@ -1090,6 +1108,17 @@ void draw_text (unsigned char x, unsigned char y, char *s) {
 
 			jr  draw_text_loop
 
+		#if defined ACTIVATE_SCRIPTING && defined TEXT_X
+			.draw_line_of_text
+				;; Entry point called from msc4i
+				;; HL should point to string.
+				ld  a, TEXT_X
+				ld  (__x), a
+				ld  a, TEXT_Y
+				ld  (__y), a
+				jr  draw_text_pre_loop
+		#endif
+
 		.print_str_inv
 
 			; Invalidate cells based upon strlen.
@@ -1104,6 +1133,7 @@ void draw_text (unsigned char x, unsigned char y, char *s) {
 			ld  e, a
 			call cpc_InvalidateRect
 	
+
 	#endasm
 }
 

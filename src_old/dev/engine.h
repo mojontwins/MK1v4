@@ -347,6 +347,8 @@ unsigned int __FASTCALL__ abs (int n) {
 			// 0  1  2    3    4   5   6   7
 			// x, y, xy1, xy2, mx, my, t[, life]
 
+			ld  bc, TOTAL_EXISTING_ENEMS
+
 			#if (defined PLAYER_CAN_FIRE && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 					ld  de, 10
 			#else
@@ -480,7 +482,7 @@ unsigned int __FASTCALL__ abs (int n) {
 		#asm
 				ld  a, EST_PARP 
 				ld  (_player + 23), a 	// player.estado
-				ld  a, PLAYER_FLICKERS 
+				ld  a, 50 
 				ld  (_player + 24), a 	// player.ct_estado
 		#endasm
 	}
@@ -915,6 +917,8 @@ void move (void) {
 				player.vy = -pvy_total;
 			}
 
+			peta_el_beeper (2);
+
 			player.drain_amount = 1;
 			player.is_dead = PLAYER_KILLED_BY_BG;
 		}
@@ -930,6 +934,44 @@ void move (void) {
 		#else
 			if ((pad_this_frame & sp_FIRE) == 0) fire_bullet ();
 		#endif
+	#endif
+
+	#ifdef ACTIVATE_SCRIPTING
+		#asm 
+				ld  a, (_gpx)
+				add 8
+				srl a 
+				srl a 
+				srl a 
+				srl a 
+				ld  c, a 
+				ld  (_tpx), a
+
+				ld  a, (_gpy)
+				add 8
+				srl a 
+				srl a 
+				srl a 
+				srl a 
+				ld  (_tpy), a
+				
+				call _attr_2 
+				ld  a, l
+				and 128
+				jr  z, nospecial
+				
+				ld  (_tat), a
+				ld  a, (_tpx) 
+				ld  c, a
+				ld  a, (_tpy)
+				call qtile_do
+				ld  a, l 
+				ld  (_tqt), a
+
+				ld  hl, SC_SPECIAL_TILE_TOUCHED
+				call _script
+			.nospecial
+		#endasm 
 	#endif
 
 	// =================================================
@@ -1563,7 +1605,6 @@ void draw_scr (void) {
 
 	enoffs = n_pant * MAX_ENEMS;
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
-
 		#asm
 				ld  bc, (_enit)
 				xor a
@@ -1598,21 +1639,19 @@ void draw_scr (void) {
 			default:
 				en_an_next_frame [enit] = sprite_18_a;
 		}
-
-		#ifdef ACTIVATE_SCRIPTING
-			// Run "ENTERING ANY" script (if available)
-			script = e_scripts [MAP_W * MAP_H + 1];
-			run_script ();
-			// Run "ENTERING" script for THIS screen (if available)
-			script = e_scripts [n_pant];
-			run_script ();
-		#endif
-
-		#ifdef PLAYER_CAN_FIRE
-			init_bullets ();
-		#endif
 	}
 
+	#ifdef PLAYER_CAN_FIRE
+		init_bullets ();
+	#endif
+
+	#ifdef ACTIVATE_SCRIPTING
+		// Run "ENTERING ANY" script (if available)
+		script (SC_ENTERING_ANY);
+
+		// Run "ENTERING" script for THIS screen (if available)
+		script (SC_ENTERING_SCREEN + (n_pant << 1));
+	#endif
 }
 
 #ifdef PLAYER_CAN_FIRE
@@ -1657,7 +1696,7 @@ void draw_scr (void) {
 	}
 #endif
 
-#if defined PLAYER_CAN_FIRE || defined PLAYER_KILLS_ENEMIES
+#if defined ENEMIES_MAY_DIE
 	void enems_kill (unsigned char damage) {
 		// Kill enemy
 
@@ -1686,7 +1725,9 @@ void draw_scr (void) {
 		#ifdef CPC
 			cpc_UpdateNow (1);
 		#else 
-			call SPUpdateNow
+			#asm
+				call SPUpdateNow
+			#endasm
 		#endif
 
 		#if ENEMS_LIFE_GAUGE > 1
@@ -1711,8 +1752,7 @@ void draw_scr (void) {
 			player.killed ++;
 
 			#ifdef ACTIVATE_SCRIPTING
-				script = f_scripts [MAX_SCREENS + 2];
-				run_script ();
+				script (SC_PLAYER_KILLS_ENEMY);
 			#endif								
 
 			#ifdef RANDOM_RESPAWN								

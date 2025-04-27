@@ -24,28 +24,6 @@ void __FASTCALL__ script (unsigned char a) {
 	#asm 
 			ld  a, l 
 			ld  (_script_n), a 
-
-			ld  a, (_gpx)
-			add 8
-			srl a 
-			srl a 
-			srl a 
-			srl a 
-			ld  (_script_tx), a
-			ld  c, a 
-
-			ld  a, (_gpy)
-			add 8
-			srl a 
-			srl a 
-			srl a 
-			srl a 
-			ld  (_script_ty), a
-
-			call qtile_do
-			ld  a, l 
-			ld  (_script_tn), a
-
 			jp _script_do
 	#endasm
 }
@@ -56,10 +34,15 @@ void __FASTCALL__ script (unsigned char a) {
 	XDEF qtile_do
 	XDEF set_map_tile_do
 	XDEF _peta_el_beeper
+	XDEF draw_line_of_text
+	XDEF _tpx
+	XDEF _tpy
+	XDEF _tat 
+	XDEF _tqt
+
 	#ifdef CPC
 		XDEF _cpc_UpdateNow
 	#endif
-	XDEF draw_line_of_text
 
 	.script_bytecode
 		BINARY "script.spt.bin"

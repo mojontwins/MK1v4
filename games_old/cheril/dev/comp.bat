@@ -1,7 +1,7 @@
 @echo off
 
 set game=bosque3
-set om=speccy
+set om=cpc
 set mode=1
 
 echo Making %game%
@@ -43,12 +43,17 @@ goto :compile
 :compile 
 
 rem echo Making script
-rem ..\utils\msc.exe ..\script\script.spt msc.h 25 > nul
+rem cd ..\script
+rem ..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm debug >..\dev\msc.txt
+rem copy script.spt.bin ..\dev > nul
+rem move msc4i.asm ..\dev > nul
+rem cd ..\dev
 
 if [%om%]==[cpc] goto :cpc
 
-zcc +zx -m -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200  > nul
-zcc +zx -a -vn churromain.c -o %game%.asm -lsplib2 -zorg=24200  > nul
+rem Add msc4i.asm to the list of compiled sources if using scripting!
+zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin churromain.c -DSPECCY > nul
+zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm churromain.c -DSPECCY > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin
@@ -62,9 +67,10 @@ goto :noerror
 
 :cpc
 ..\utils\pasmo.exe system\cpc_TrPixLutM%mode%.asm trpixlut.bin
-..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul
+..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul 2> nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
+rem Add msc4i.asm to the list of compiled sources if using scripting!
 zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
 zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error

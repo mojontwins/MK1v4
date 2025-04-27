@@ -6,6 +6,7 @@
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
 #define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
+//#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
 
 // ============================================================================
 // I. General configuration
@@ -86,6 +87,7 @@
 // ============================================================================
 
 // This sections defines how stuff is rendered, where to show counters, etcetera
+// It's good practice to comment what you are not using!
 
 #define VIEWPORT_X					1		//
 #ifdef CPC
@@ -103,6 +105,12 @@
 #define KEYS_Y						0		// Keys counter character coordinates
 //#define KILLED_X					20		//
 //#define KILLED_Y					21		// Kills counter character coordinates
+//#define ITEM_X 					7		// 
+//#define ITEM_Y 					0 		//
+//#define ITEM_FLAG 				0 		// Show item @ flag
+//#define TEXT_X 					4		//
+//#define TEXT_Y					3		// To use TEXT from the script
+//#define TEXT_A 					71      // (Speccy only) text atribute.
 
 // Graphic FX, uncomment which applies...
 
@@ -154,6 +162,8 @@
 // 2 = Walkable and hides.
 // 4 = Platform (only stops player if falling on it)
 // 8 = Full obstacle (blocks player from all directions)
+
+// 128|N = Special tile (scripting)
 
 unsigned char comportamiento_tiles [] = {
 	0, 0, 0, 8, 8, 8, 0, 9, 9, 8, 8, 8, 4, 8, 0,10,

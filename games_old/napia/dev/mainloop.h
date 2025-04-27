@@ -11,7 +11,7 @@ void main (void) {
 	while (1) {
 		// Here the title screen
 		title_screen ();
-
+	
 		#ifndef DIRECT_TO_PLAY
 			blackout ();
 			#ifndef CPC
@@ -26,6 +26,17 @@ void main (void) {
 			#ifdef CPC
 				cpc_ShowTileMap (1);
 			#endif
+		#endif
+
+		#ifdef ACTIVATE_SCRIPTING
+			#asm 
+					ld  hl, _flags
+					ld  de, _flags + 1
+					ld  bc, MAX_FLAGS - 1
+					xor a 
+					ld  (hl), a 
+					ldir
+			#endasm
 		#endif
 
 		// Let's do it.
@@ -52,14 +63,9 @@ void main (void) {
 		
 		#ifdef ACTIVATE_SCRIPTING		
 			script_result = 0;
-			msc_init_all ();
-			#ifdef OBJECT_COUNT
-				flags [OBJECT_COUNT] = 0;
-			#endif
-		
+			
 			// Execute "ENTERING GAME" script
-			script = e_scripts [MAX_SCREENS];
-			run_script ();
+			script (SC_ENTERING_GAME);
 		#endif
 
 		half_life = 0;
@@ -70,9 +76,7 @@ void main (void) {
 			ld  (_life_old), a 
 			ld  (_keys_old), a 
 			ld  (_killed_old), a 
-			ld  (_item_old), a 
-			ld  (_ezg_old), a 
-			ld  (_coins_old), a
+			ld  (_flag_old), a
 			ld  (_on_pant), a
 		#endasm
 
@@ -145,6 +149,13 @@ void main (void) {
 				if (player.killed != killed_old) {
 					draw_2_digits (KILLED_X, KILLED_Y, player.killed);
 					killed_old = player.killed;	
+				}
+			#endif
+
+			#if defined ACTIVATE_SCRIPTING && defined ITEM_X 
+				if (flags [ITEM_FLAG] != flag_old) {
+					draw_coloured_tile (ITEM_X, ITEM_Y, flags [ITEM_FLAG]);
+					flag_old = flags [ITEM_FLAG];
 				}
 			#endif
 
@@ -247,7 +258,7 @@ void main (void) {
 									rdi = 2;
 									peta_el_beeper (9);
 									break;
-							#endif					
+							#endif						
 						}
 					#endif
 					
@@ -268,7 +279,7 @@ void main (void) {
 
 			#ifdef CPC
 				cpc_UpdateNow (1);
-				
+
 			#else
 				#asm
 					.ml_min_faps_loop
@@ -321,20 +332,12 @@ void main (void) {
 						#endif
 					#endif
 					#ifdef SCRIPTING_DOWN
-						#ifdef CPC
-							cpc_TestKey (KEY_DOWN)
-						#else
-							(pad_this_frame & sp_DOWN) == 0
-						#endif
+						(pad_this_frame & sp_DOWN) == 0
 					#endif
 				) {	
-					script = f_scripts [MAX_SCREENS];
-					run_script ();
 					// Any scripts to run in this screen?
-					script = f_scripts [n_pant];
-					run_script ();
-					//if (!script_something_done) peta_el_beeper (9);
-					
+					script (SC_PRESS_FIRE_AT_ANY);
+					script (SC_PRESS_FIRE_AT_SCREEN + (n_pant << 1));
 				}
 			#endif
 
@@ -404,28 +407,30 @@ void main (void) {
 
 			// Win game condition
 			
-			if (
-				#ifdef ACTIVATE_SCRIPTING
-					script_result == 1
-				#else
-					#ifdef PLAYER_NUM_OBJETOS
-						player.objs == PLAYER_NUM_OBJETOS
-					#endif 
-					#if defined PLAYER_NUM_OBJETOS && defined SCR_FIN 
-						&&
+			#if defined ACTIVATE_SCRIPTING || defined PLAYER_NUM_OBJETOS || defined SCR_FIN
+				if (
+					#ifdef ACTIVATE_SCRIPTING
+						script_result == 1
+					#else
+						#ifdef PLAYER_NUM_OBJETOS
+							player.objs == PLAYER_NUM_OBJETOS
+						#endif 
+						#if defined PLAYER_NUM_OBJETOS && defined SCR_FIN 
+							&&
+						#endif
+						#ifdef SCR_FIN	
+							n_pant == pant_final &&
+							(gpx >> 4) == PLAYER_FIN_X &&
+							(gpy >> 4) == PLAYER_FIN_Y
+						#endif
 					#endif
-					#ifdef SCR_FIN	
-						n_pant == pant_final &&
-						(gpx >> 4) == PLAYER_FIN_X &&
-						(gpy >> 4) == PLAYER_FIN_Y
-					#endif
-				#endif
-			){
-				saca_a_todo_el_mundo_de_aqui ();
-				cortina ();
-				playing = 0;
-				game_ending ();
-			}
+				){
+					saca_a_todo_el_mundo_de_aqui ();
+					cortina ();
+					playing = 0;
+					game_ending ();
+				}
+			#endif
 
 			// Dead player
 

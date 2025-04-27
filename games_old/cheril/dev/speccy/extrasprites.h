@@ -19,14 +19,6 @@ extern unsigned char sprite_18_a [];
 	extern unsigned char sprite_19_b [];
 #endif
 
-#ifdef ENABLE_SWORD
-	extern unsigned char sprite_sword [];
-#endif
-
-#ifdef ENABLE_FRIGOABABOL
-	extern unsigned char sprite_frigo [];
-#endif
-
 #ifdef ENEMIES_MAY_DIE
 	#asm
 		._sprite_17_a
@@ -172,19 +164,5 @@ extern unsigned char sprite_18_a [];
 			defb 0, 0
 			defb 0, 0
 			defb 0, 0
-	#endasm
-#endif
-
-#ifdef ENABLE_SWORD
-	#asm
-		._sprite_sword
-			BINARY "sprite_sword.bin"
-	#endasm
-#endif
-
-#ifdef ENABLE_FRIGOABABOL
-	#asm
-		._sprite_frigo
-			BINARY "sprite_frigo.bin"
 	#endasm
 #endif

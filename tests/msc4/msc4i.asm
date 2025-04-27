@@ -5,11 +5,15 @@ XREF _flags
 XREF _n_pant
 XREF _gpx
 XREF _gpy
+XREF _tpx
+XREF _tpy
+XREF _tat
+XREF _tqt
 XREF _player
 XREF _attr_2
 XREF qtile_do
 XREF set_map_tile_do
-XRED _draw_coloured_tile
+XREF _draw_coloured_tile
 XREF __x
 XREF __y
 XREF __t
@@ -27,9 +31,6 @@ XREF _cpc_UpdateNow
 XDEF _script_do
 XDEF _script_n
 XDEF _script_result
-XDEF _script_tx
-XDEF _script_ty
-XDEF _script_tn
 
 ._script_n
 	defw 0
@@ -48,14 +49,6 @@ XDEF _script_tn
 .sc_x
 	defb 0 
 .sc_y
-	defb 0
-
-; From the engine
-._script_tx
-	defb 0
-._script_ty
-	defb 0
-._script_tn
 	defb 0
 
 ; Control 
@@ -213,13 +206,13 @@ XDEF _script_tn
 	jr  nz, copcode_23_end
 .opcode23
 	;; (gpx + 8) >> 4 != X -> exit
-	ld  a, (_script_tx)
+	ld  a, (_tpx)
 	ld  c, a
 	call read_vbyte
 	cp  c 
 	jp  nz, skip_clausule
 	;; (gpy + 8) >> 4 != Y -> exit
-	ld  a, (_script_ty)
+	ld  a, (_tpy)
 	ld  c, a
 	call read_vbyte
 	cp  c 
@@ -420,16 +413,16 @@ XDEF _script_tn
 	inc a 
 	ld  (hl), a
 	; Assign item
-	ld  a, (_script_tn)
+	ld  a, (_tqt)
 	ld  (_flags + ITEM_SLOT), a 
 	; Clear from screen
 	xor a 
 	ld  (__n), a 
 	ld  (__t), a 
-	ld  a, (_script_tx)
+	ld  a, (_tpx)
 	ld  c, a
 	ld  (__x), a 
-	ld  a, (_script_ty)
+	ld  a, (_tpy)
 	ld  (__y), a 
 	call set_map_tile_do
 	jp  script_actions
@@ -639,21 +632,21 @@ XDEF _script_tn
 	; TX RVALUE
 	cp  0xF8
 	jr  nz, rvb_set_tx_done
-	ld  a, (_script_tx)
+	ld  a, (_tpx)
 	ret
 .rvb_set_tx_done
 
 	; TY RVALUE
 	cp  0xF7
 	jr  nz, rvb_set_ty_done
-	ld  a, (_script_ty)
+	ld  a, (_tpy)
 	ret
 .rvb_set_ty_done
 	
 	; TN RVALUE
 	cp  0xF6
 	jr  nz, rvb_set_tile_done
-	ld  a, (_script_tn)
+	ld  a, (_tqt)
 	ret
 .rvb_set_tile_done
 

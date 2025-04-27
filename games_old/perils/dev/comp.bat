@@ -1,7 +1,7 @@
 @echo off
 
 set game=perils3
-set om=cpc
+set om=speccy
 set mode=1
 
 echo Making %game%
@@ -53,6 +53,7 @@ cd ..\dev
 
 if [%om%]==[cpc] goto :cpc
 
+rem Add msc4i.asm to the list of compiled sources if using scripting!
 zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
 zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm msc4i.asm churromain.c -DSPECCY > nul
 if %errorlevel% neq 0 goto :error
@@ -71,6 +72,7 @@ goto :noerror
 ..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul 2> nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
+rem Add msc4i.asm to the list of compiled sources if using scripting!
 zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
 zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error

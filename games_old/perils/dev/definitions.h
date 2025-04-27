@@ -164,7 +164,7 @@ unsigned char rdi;
 
 unsigned char rdx, rdy;
 unsigned char gpit, enit, pad0, pad1 = 0, pad_this_frame = 0;
-unsigned char gpx, gpy;
+unsigned char gpx, gpy, tpx, tpy, tqt, tat;
 signed int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
 unsigned int idx;
