@@ -1,0 +1,19 @@
+msc v4.0.20250421 ~ Processing script.spt
+==========================================
+LINEA ENTERING GAME
+T0=[entering]
+T1=[game]
+Adding 0 @ sect 0
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: SET FLAG 1 = 0
+T0=[SET]
+T1=[$1]
+T2=[=]
+T3=[0]
+Bytecode: 07 F0 FF 00 01 00 FF FF 
+WARNING! undefined # of rooms! The script won't work!
+Index section: 16 bytes
+Bytecode section: 8 bytes
+Wrote 24 bytes to script.spt.bin

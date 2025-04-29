@@ -602,10 +602,11 @@ Function processCurrentSection (fIn As Integer) As String
 	Dim As Integer wrong
 	Dim As Integer state
 	Dim As String linea, lineaLc
+	Dim As Integer deco(255)
 
 	terminado = 0
 	wrong = 0
-	state = 0 			' 0 = fetching, 1 = conditions, 2 = actions
+	state = 0 			' 0 = fetching, 1 = conditions, 2 = actions, 3 = decos
 
 	While Not terminado And Not Eof (fIn)
 		linea = readNewLine (fIn)
@@ -617,12 +618,19 @@ Function processCurrentSection (fIn As Integer) As String
 		ElseIf lineaLc = "end" Then
 			' If we are fetching -> this section has ended.
 			' If we are reading conditions -> wrong
-			' If we are reading actions -> this clausule has ended.'
+			' If we are reading actions -> this clausule has ended.
+			' If we are reading decos -> decos ended.
 			If state = 0 Then 
 				terminado = -1
 			ElseIf state = 1 Then 
 				wrong = -1: terminado = -1
 				Print "Unexpected END @ " & curLineNo
+			ElseIf state = 3 Then 
+				' End decos
+				clausule = clausule & Chr (&HFF)
+
+				' Back to read actions
+				state = 2
 			Else
 				' Write  END to current clausule
 				clausule = clausule & Chr (&HFF)
@@ -662,9 +670,31 @@ Function processCurrentSection (fIn As Integer) As String
 				clausule = clausule & processIf (linea)
 			End If
 
-		Else 
-			' Commands
-			clausule = clausule & processCommand (linea)
+		ElseIf lineaLc = "decos" Then
+			' Only valid when reading actions
+			If state = 2 Then 
+				state = 3
+				decosIdx = 0
+				clausule = clausule & Chr (&H22)
+
+			Else
+				wrong = -1: terminado = -1
+				Print "Unexpected DECOS @ " & curLineNo
+			End If
+		Else
+			If state = 3 Then 
+				' Read & add a decoration
+				parseCoordinatesString linea, deco ()
+
+				clausule = clausule & Chr (deco (2) And 0xFF) & Chr ((deco(1) And &HF) * 16 + (deco (0) And &HF))
+
+			ElseIf state = 2 Then
+				' Commands
+				clausule = clausule & processCommand (linea)
+			Else
+				wrong = -1: terminado = -1
+				Print "Unexpected command @ " & curLineNo
+			End If
 		End If
 	Wend
 

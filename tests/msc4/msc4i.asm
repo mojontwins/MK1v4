@@ -394,6 +394,36 @@ XDEF _script_result
 	jp  script_actions
 .aopcode_21_end
 
+	;; OPCODE 0x22
+	;; DECOS XY T XY T ... 0xFF
+	cp  0x22 
+	jr  nz, aopcode_22_end
+.aopcode_22
+	call read_byte
+	cp  0xff
+	jr  z, aopcode_22_end
+	ld  (__t), a
+	ld  b, 0 
+	ld  c, a 
+	ld  hl, _comportamiento_tiles
+	add hl, bc 
+	ld  a, (hl)
+	ld  (__n), a
+	call read_byte
+	ld  b, a 
+	and 0xf
+	ld  c, a
+	ld  (__x), a
+	ld  a, b 
+	srl a
+	srl a
+	srl a
+	srl a
+	ld  (__y), a 
+	call set_map_tile_do
+	jr  aopcode_22
+aopcode_22_end
+
 	;; OPCODE 0x30
 	;; GET ITEM SET $F <- [FILL I]
 	cp  0x30

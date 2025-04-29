@@ -195,6 +195,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 
 * $20 X Y T : SET TILE (X, Y) = T
 * $21 X Y B : SET BEH (X, Y) = B
+* $22 XY T ... 0xFF: DECOS
 
 * $30 F : GET ITEM SET $F (LVALUE!!)
 
