@@ -26,8 +26,8 @@
 
 	XREF script_bytecode
 
-; Target CPC
-	XREF _cpc_UpdateNow
+; Target SPECCY
+	LIB SPUpdateNow
 
 ; Exports
 	XDEF _script_do
@@ -114,6 +114,19 @@
 
 ;;; Decode OPCODE & jump to interpreter
 
+;; OPCODE 0x01
+;; IF A = B
+	cp  0x01
+	jr  nz, copcode_01_end
+.copcode_01
+	call read_vbyte
+	ld  b, a
+	call read_vbyte
+	cp  b
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_01_end
+
 ;; UNKNOWN
 	jp  script_clausule
 
@@ -131,16 +144,6 @@
 	jp  z, script_loop
 
 ;;; Decode OPCODE & jump to interpreter
-
-;; OPCODE 0x00
-;; FLAGS[N] = V
-	cp  0x00
-	jr  nz, aopcode_00_end
-.aopcode_00
-	call read_i_v		; HL -> FLAGS[N], A -> V
-	ld  (hl), a
-	jp  script_actions
-.aopcode_00_end
 
 ;; UNKNOWN
 	jp script_actions
@@ -163,6 +166,13 @@
 
 .read_vbyte_rec
 	call read_vbyte
+
+; NPANT RVALUE
+	cp  0xFE
+	jr  nz, rvb_set_n_pant_done
+	ld  a, (_n_pant)
+	ret
+.rvb_set_n_pant_done
 
 ; TX RVALUE
 	cp  0xF8

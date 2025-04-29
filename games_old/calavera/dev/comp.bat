@@ -1,20 +1,20 @@
 @echo off
 
-set game=lala3
-set om=cpc
+set game=calavera3
+set om=speccy
 set mode=1
 
 echo Making %game%
 
 if [%1]==[justcompile] goto :compile
 
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 15 packed  > nul
+..\utils\rle62map_sp.exe in=..\map\mapa.map out=mapa.bin size=10,6 scrsize=15,10 tlock=99 mk1h=mapa.h mk1locks > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 
 if [%om%]==[cpc] goto :cpc
 
-..\utils\ts2bin.exe ..\gfx\%om%\font.png ..\gfx\%om%\work.png tileset.bin 7 > nul
-..\utils\sprcnv.exe ..\gfx\%om%\sprites.png speccy\sprites.h  > nul
+..\utils\ts2bin.exe ..\gfx\%om%\font.png ..\gfx\%om%\work.png tileset.bin inverted:0 > nul
+..\utils\sprcnv2.exe ..\gfx\%om%\sprites.png speccy\sprites.h 16 nomask  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\title.png ..\gfx\%om%\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\marco.png ..\gfx\%om%\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\ending.png ..\gfx\%om%\ending.scr  > nul
@@ -42,18 +42,18 @@ goto :compile
 
 :compile 
 
-rem echo Making script
-rem cd ..\script
-rem ..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm debug >..\dev\msc.txt
-rem copy script.spt.bin ..\dev > nul
-rem move msc4i.asm ..\dev > nul
-rem cd ..\dev
+echo Making script
+cd ..\script
+..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm debug >..\dev\msc.txt
+copy script.spt.bin ..\dev > nul
+move msc4i.asm ..\dev > nul
+cd ..\dev
 
 if [%om%]==[cpc] goto :cpc
 
 rem Add msc4i.asm to the list of compiled sources if using scripting!
-zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin churromain.c -DSPECCY > nul
-zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm churromain.c -DSPECCY > nul
+zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
+zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm msc4i.asm churromain.c -DSPECCY > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin
@@ -71,8 +71,8 @@ goto :noerror
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
 rem Add msc4i.asm to the list of compiled sources if using scripting!
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
-zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

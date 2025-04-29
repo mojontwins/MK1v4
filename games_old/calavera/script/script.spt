@@ -1,14 +1,25 @@
-# Título tonto
-# Copyleft 201X tu grupo roneón soft.
-# MTE MK1 3.1
-
-# flags:
-# 1	- 
-
-ENTERING GAME
-	IF TRUE
+ENTERING ANY
+	# Paint the moon
+	IF TILE AT (8, 1) = 0
 	THEN
-		SET FLAG 1 = 0
+		# Tile 49 is out of bounds and abuses how the engine work.
+		# It ends up printed with patters from font.png.
+		SET TILE (8, 1) = 49
 	END
 END
 
+SPECIAL TILE TOUCHED
+	IF NPANT = 3 
+	THEN
+		DECOS
+			10, 2, 3
+			10, 3, 0
+			10, 4, 0
+			10, 5, 0
+			10, 6, 0
+			10, 7, 0
+			10, 8, 12
+			12, 6, 0
+		END
+	END
+END 

@@ -1,19 +1,55 @@
 msc v4.0.20250421 ~ Processing script.spt
 ==========================================
-LINEA ENTERING GAME
+LINEA ENTERING ANY
 T0=[entering]
-T1=[game]
-Adding 0 @ sect 0
-Parsing: IF TRUE
+T1=[any]
+Adding 0 @ sect 1
+Unexpected command @ 2
+Bytecode: FF 
+==========================================
+LINEA IF TILE AT (8, 1) = 0
+T0=[if]
+T1=[tile]
+T2=[at]
+T3=[8]
+T4=[1]
+T5=[=]
+T6=[0]
+Wrong section at 3
+==========================================
+LINEA THEN
+T0=[then]
+Wrong section at 4
+==========================================
+LINEA SET TILE (8, 1) = 49
+T0=[set]
+T1=[tile]
+T2=[8]
+T3=[1]
+T4=[=]
+T5=[49]
+Wrong section at 7
+==========================================
+LINEA END
+T0=[end]
+Wrong section at 8
+==========================================
+LINEA END
+T0=[end]
+Wrong section at 9
+==========================================
+LINEA SPECIAL TILE TOUCHED
+T0=[special]
+T1=[tile]
+T2=[touched]
+Adding 1 @ sect 5
+Parsing: IF NPANT = 3
 T0=[IF]
-T1=[TRUE]
-Parsing: SET FLAG 1 = 0
-T0=[SET]
-T1=[$1]
+T1=[$254]
 T2=[=]
-T3=[0]
-Bytecode: 07 F0 FF 00 01 00 FF FF 
+T3=[3]
+Bytecode: 19 01 FF FE 03 FF 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 6C FF FF FF 
 WARNING! undefined # of rooms! The script won't work!
 Index section: 16 bytes
-Bytecode section: 8 bytes
-Wrote 24 bytes to script.spt.bin
+Bytecode section: 27 bytes
+Wrote 43 bytes to script.spt.bin
