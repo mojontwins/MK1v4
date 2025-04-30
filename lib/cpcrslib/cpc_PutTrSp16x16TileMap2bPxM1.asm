@@ -307,8 +307,9 @@ XREF posicion_inicial_superbuffer
 	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
 	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
 	xor l           ; A = 54761032
+	
 	ld  ixl, a 		; Save for next byte
-
+	
 	and 0x33 		; Mask
 	ld l, a 		; copy to L to index LUT
 	ld a, (de) 		; Get bg
@@ -339,6 +340,7 @@ XREF posicion_inicial_superbuffer
 	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
 	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
 	xor l           ; A = 54761032
+	
 	ld  ixl, a 		; Save for next byte
 
 	and 0x33 		; Mask
@@ -372,6 +374,7 @@ XREF posicion_inicial_superbuffer
 	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
 	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
 	xor l           ; A = 54761032
+	
 	ld  ixl, a 		; Save for next byte
 
 	and 0x33 		; Mask
@@ -405,6 +408,7 @@ XREF posicion_inicial_superbuffer
 	xor l           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
 	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
 	xor l           ; A = 54761032
+	
 	ld  ixl, a 		; Save for next byte
 
 	and 0x33 		; Mask
