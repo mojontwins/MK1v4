@@ -36,3 +36,4 @@ Va a ser con scripting.
 [ ] Quiero poner una palanca (hay que sacrificar un tile) o algo así que despliegue puentes o haga cambios no persistentes en la pantalla.
 
 	* Screen 3, deco: (10, 2) = 3, (10, 3-7) = 0, (10, 8) = 12, y borrar el tile especial con (12, 6) = 0 
+	* Screen 10, deco: (13, 4-5) = 0
