@@ -22,6 +22,8 @@ Como hemos dicho, las diferentes secciones de tu script se lanzarán cuando ocur
 * `PLAYER KILLS ENEMY` se ejecutará cada vez que se muera un enemigo.
 * `SPECIAL TILE TOUCHED` se ejecutará cada vez que el jugador esté en un tile con comportamiento 128.
 
+### No Indexed
+
 ## Las cláusulas
 
 ### Las comprobaciones

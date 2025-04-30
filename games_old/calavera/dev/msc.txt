@@ -1,55 +1,56 @@
 msc v4.0.20250421 ~ Processing script.spt
 ==========================================
+LINEA NOINDEXED 		# We won't be using SCREEN XXX sections
+T0=[noindexed]
+T1=[		]
+==========================================
 LINEA ENTERING ANY
 T0=[entering]
 T1=[any]
 Adding 0 @ sect 1
-Unexpected command @ 2
-Bytecode: FF 
-==========================================
-LINEA IF TILE AT (8, 1) = 0
-T0=[if]
-T1=[tile]
-T2=[at]
+Parsing: IF TILE AT (8, 1) = 0
+T0=[IF]
+T1=[TILE]
+T2=[AT]
 T3=[8]
 T4=[1]
 T5=[=]
 T6=[0]
-Wrong section at 3
-==========================================
-LINEA THEN
-T0=[then]
-Wrong section at 4
-==========================================
-LINEA SET TILE (8, 1) = 49
-T0=[set]
-T1=[tile]
+Parsing: # Tile 49 is out of bounds and abuses how the engine work.
+Parsing: # It ends up printed with patters from font.png.
+Parsing: SET TILE (8, 1) = 49
+T0=[SET]
+T1=[TILE]
 T2=[8]
 T3=[1]
 T4=[=]
 T5=[49]
-Wrong section at 7
-==========================================
-LINEA END
-T0=[end]
-Wrong section at 8
-==========================================
-LINEA END
-T0=[end]
-Wrong section at 9
+Bytecode: 0B 30 08 01 00 FF 20 08 01 31 FF FF 
 ==========================================
 LINEA SPECIAL TILE TOUCHED
 T0=[special]
 T1=[tile]
 T2=[touched]
-Adding 1 @ sect 5
+Adding 12 @ sect 5
 Parsing: IF NPANT = 3
 T0=[IF]
 T1=[$254]
 T2=[=]
 T3=[3]
-Bytecode: 19 01 FF FE 03 FF 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 6C FF FF FF 
-WARNING! undefined # of rooms! The script won't work!
+Parsing: SOUND 6
+T0=[SOUND]
+T1=[6]
+Began parsing decos
+Parsed deco 10 2 3
+Parsed deco 10 3 0
+Parsed deco 10 4 0
+Parsed deco 10 5 0
+Parsed deco 10 6 0
+Parsed deco 10 7 0
+Parsed deco 10 8 12
+Parsed deco 12 7 0
+Stopped parsing decos
+Bytecode: 1B 01 FF FE 03 FF E0 06 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 7C FF FF FF 
 Index section: 16 bytes
-Bytecode section: 27 bytes
-Wrote 43 bytes to script.spt.bin
+Bytecode section: 40 bytes
+Wrote 56 bytes to script.spt.bin

@@ -3,11 +3,11 @@
 // Copyleft 2017-2025 by The Mojon Twins
 
 #asm
-	.my_inks
+	.pal_general
 		ld  b, 0x7f
 		ld  a, 0
 		out (c), a
-		ld  a, 0x57	// 0b0100000 OR 17 (FF0080FF)
+		ld  a, 0x45	// 0b0100000 OR 5 (FFFF0080)
 		out (c), a
 		ld  a, 1
 		out (c), a

@@ -986,7 +986,7 @@ void move (void) {
 			player.frame = player.facing + 3;
 		} else {
 			//if ((player.vx != 0) && !player.gotten) {
-			if (thrusting) {
+			if (thrusting && player.vx) {
 				player.frame = player.facing + 
 				#ifdef PLAYER_ALTERNATE_ANIMATION
 					(gpx >> 3) % 3;
@@ -994,7 +994,11 @@ void move (void) {
 					player_walk_cycle[((gpx >> 3) & 1)];
 				#endif
 			} else {
-				player.frame = player.facing + 1;
+				#ifdef PLAYER_ALTERNATE_ANIMATION
+					player.frame = player.facing + 1;
+				#else
+					player.frame = player.facing;
+				#endif
 			}
 		}
 	#endif
@@ -1649,8 +1653,10 @@ void draw_scr (void) {
 		// Run "ENTERING ANY" script (if available)
 		script (SC_ENTERING_ANY);
 
-		// Run "ENTERING" script for THIS screen (if available)
-		script (SC_ENTERING_SCREEN + (n_pant << 1));
+		#ifndef NO_INDEXED_SCRIPTING
+			// Run "ENTERING" script for THIS screen (if available)
+			script (SC_ENTERING_SCREEN + (n_pant << 1));
+		#endif
 	#endif
 }
 

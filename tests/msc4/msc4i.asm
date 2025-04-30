@@ -422,7 +422,7 @@ XDEF _script_result
 	ld  (__y), a 
 	call set_map_tile_do
 	jr  aopcode_22
-aopcode_22_end
+.aopcode_22_end
 
 	;; OPCODE 0x30
 	;; GET ITEM SET $F <- [FILL I]

@@ -27,6 +27,7 @@ Dim Shared AS Integer outT = SPECCY
 
 Dim Shared As String interpreterFn
 Dim Shared As Integer maxPants
+Dim Shared As Integer noIndexed
 
 Dim Shared As Integer itemSlot
 
@@ -631,6 +632,8 @@ Function processCurrentSection (fIn As Integer) As String
 
 				' Back to read actions
 				state = 2
+
+				If debug Then Print "Stopped parsing decos"
 			Else
 				' Write  END to current clausule
 				clausule = clausule & Chr (&HFF)
@@ -675,7 +678,8 @@ Function processCurrentSection (fIn As Integer) As String
 			If state = 2 Then 
 				state = 3
 				clausule = clausule & Chr (&H22)
-				AU (&H23) = -1
+				AU (&H22) = -1
+				If debug Then Print "Began parsing decos"
 
 			Else
 				wrong = -1: terminado = -1
@@ -685,15 +689,20 @@ Function processCurrentSection (fIn As Integer) As String
 			If state = 3 Then 
 				' Read & add a decoration
 				parseCoordinatesString linea, deco ()
-
 				clausule = clausule & Chr (deco (2) And &HFF) & Chr ((deco(1) And &HF) * 16 + (deco (0) And &HF))
+				If debug Then Print "Parsed deco " & deco (0) & " " & deco (1) & " " & deco (2)
 
 			ElseIf state = 2 Then
 				' Commands
 				clausule = clausule & processCommand (linea)
-			Else
+
+			ElseIf Left (linea, 1) <> "#" Then 
 				wrong = -1: terminado = -1
 				Print "Unexpected command @ " & curLineNo
+
+			Else 
+				' ignoring comment
+
 			End If
 		End If
 	Wend
@@ -774,6 +783,9 @@ Sub processScript (fIn As Integer)
 				Else
 					Print "Wrong alias definition at " & curLineNo
 				End If
+
+			ElseIf tokens(0) = "noindexed" Then 
+				noIndexed = -1
 
 			ElseIf startsWith (tokens (), "item slot") And tokens (2) = "=" And isNumber (tokens (3)) Then
 				If debug Then Print "Item slot set to " & Val (tokens (3))
@@ -859,7 +871,7 @@ Sub processScript (fIn As Integer)
 
 	mainBinIdx = 0
 
-	If maxPants = 0 Then Print "WARNING! undefined # of rooms! The script won't work!"
+	If maxPants = 0 And noIndexed = 0 Then Print "WARNING! undefined # of rooms! The script won't work!"
 
 	For i = 0 To 8 + maxPants * 2 - 1
 		If sectOffs (i) < 0 Then 
@@ -900,7 +912,7 @@ End Sub
 Sub usage
 	Print "usage:"
 	Print ""
-	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N [interpreter=msci.asm]"
+	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N [interpreter=msci.asm] [noindexed]"
 	Print "         in is [a list of|the] input filename."
 	Print "           msc4 will generate a f.bin per input,"
 	Print "           but only one common interpreter."
@@ -908,6 +920,7 @@ Sub usage
 	Print "         target is the target OM (zx or cpc)"
 	Print "         rooms is the total of rooms in the map"
 	Print "         interpreter for custom interpreter filename"
+	Print "         noindexed if you are only using general sections (ANY, etc)"
 End Sub
 
 '' Interfaz
@@ -933,6 +946,7 @@ If interpreterFn = "" Then interpreterFn = "msci.asm"
 
 outV = Val(sclpGetValue("v"))
 outT = SPECCY: If sclpGetValue("target") = "cpc" Then outT = CPC
+noIndexed = (sclpGetValue("noindexed") <> "")
 
 i = 0: While i < 127 And fileIns(i) <> ""
 	curLineNo = 0
@@ -1017,7 +1031,7 @@ If AU(&H01) Then writeAssemblyString fOut, ";; OPCODE 0x01|;; FLAGS[N] += V|cp  
 If AU(&H02) Then writeAssemblyString fOut, ";; OPCODE 0x02|;; FLAGS[N] -= V|cp  0x02|jr  nz, aopcode_02_end|.aopcode_02|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, (hl)|sub a|ld  (hl), a|jp  script_actions|.aopcode_02_end"
 If AU(&H20) Then writeAssemblyString fOut, ";; OPCODE 0x20|;; SET TILE (X, Y) = T|cp  0x20|jr  nz, aopcode_20_end|.aopcode_20|call read_x_y|call read_vbyte|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|ld  a, (sc_x)|ld  (__x), a|ld  c, a|ld  a, (sc_y)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_20_end"
 If AU(&H21) Then writeAssemblyString fOut, ";; OPCODE 0x21|;; SET BEH (X, Y) = B|cp  0x21|jr  nz, aopcode_21_end|.aopcode_21|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|ld  b, a|sla a|sla a|sla a|sla a|sub b|add c|ld  b, 0|ld  c, a|call read_vbyte|ld  hl, _map_attr|add hl, bc|ld  (hl), a|jp  script_actions|.aopcode_21_end"
-If AU(&H22) Then writeAssemblyString fOut, ";; OPCODE 0x22|;; DECOS XY T XY T ... 0xFF|cp  0x22|jr  nz, aopcode_22_end|.aopcode_22|call read_byte|cp  0xff|jr  z, aopcode_22_end|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|call read_byte|ld  b, a|and 0xf|ld  c, a|ld  (__x), a|ld  a, b|srl a|srl a|srl a|srl a|ld  (__y), a|call set_map_tile_do|jr  aopcode_22|aopcode_22_end"
+If AU(&H22) Then writeAssemblyString fOut, ";; OPCODE 0x22|;; DECOS XY T XY T ... 0xFF|cp  0x22|jr  nz, aopcode_22_end|.aopcode_22|call read_byte|cp  0xff|jr  z, aopcode_22_end|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|call read_byte|ld  b, a|and 0xf|ld  c, a|ld  (__x), a|ld  a, b|srl a|srl a|srl a|srl a|ld  (__y), a|call set_map_tile_do|jr  aopcode_22|.aopcode_22_end"
 If AU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; GET ITEM SET $F <- [FILL I]|cp  0x30|jr  nz, aopcode_30_end|.aopcode_30|;; Get LValue: Flag to modify|call read_vbyte|ld  b, 0|ld  c, a|ld  hl, _flags|add hl, bc|; No item in slot?|ld  a, (_flags + " & itemSlot & ")|or  a|jr  nz, aopcode_30_end|; Write 1 to LValue|inc a|ld  (hl), a|; Assign item|ld  a, (_tqt)|ld  (_flags + " & itemSlot & "), a|; Clear from screen|xor a|ld  (__n), a|ld  (__t), a|ld  a, (_tpx)|ld  c, a|ld  (__x), a|ld  a, (_tpy)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_30_end"
 If AU(&H50) Then writeAssemblyString fOut, ";; OPCODE 0x50|;; PRINT TILE (X, Y) = N|cp  0x50|jr  nz, aopcode_50_end|.aopcode_50|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call read_vbyte|ld  h, 0|ld  l, a|push hl|call _draw_coloured_tile|pop bc|pop bc|pop bc|.aopcode_50_end"
 If AU(&HE0) Then writeAssemblyString fOut, ";; OPCODE 0xE0|;; SOUND N|cp  0xE0|jr  nz, aopcode_E0_end|.aopcode_E0|call read_vbyte|ld  h, 0|ld  l, a|call _peta_el_beeper|jp  script_actions|.aopcode_E0_end"

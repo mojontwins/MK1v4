@@ -1,7 +1,7 @@
 @echo off
 
 set game=calavera3
-set om=speccy
+set om=cpc
 set mode=1
 
 echo Making %game%
@@ -27,11 +27,13 @@ goto :compile
 :cpc 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=chars greyordered in=..\gfx\%om%\font.png out=font.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=strait2x2 greyordered in=..\gfx\%om%\work.png out=work.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=16 pixelperfectm%mode% silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=16 pixelperfectm%mode% gng silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal.png prefix=my_inks out=%om%\pal.h silent > nul 
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal.png prefix=my_inks out=%om%\pal.h silent > nul 
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal_hud.png prefix=pal_hud out=%om%\pal_hud.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal_general.png prefix=pal_general out=%om%\pal_general.h silent > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\marco.png out=marco.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\ending.png out=ending.bin silent > nul

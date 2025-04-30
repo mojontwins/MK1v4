@@ -337,7 +337,10 @@ void main (void) {
 				) {	
 					// Any scripts to run in this screen?
 					script (SC_PRESS_FIRE_AT_ANY);
-					script (SC_PRESS_FIRE_AT_SCREEN + (n_pant << 1));
+
+					#ifndef NO_INDEXED_SCRIPTING
+						script (SC_PRESS_FIRE_AT_SCREEN + (n_pant << 1));
+					#endif
 				}
 			#endif
 

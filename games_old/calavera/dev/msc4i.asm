@@ -26,8 +26,8 @@
 
 	XREF script_bytecode
 
-; Target SPECCY
-	LIB SPUpdateNow
+; Target CPC
+	XREF _cpc_UpdateNow
 
 ; Exports
 	XDEF _script_do
@@ -127,6 +127,23 @@
 	jp  script_clausule
 .copcode_01_end
 
+;; OPCODE 0x30
+;; TILE AT (X, Y) = T
+	cp  0x30
+	jr  nz, copcode_30_end
+.copcode_30
+	call read_x_y
+	ld  a, (sc_x)
+	ld  c, a
+	ld  a, (sc_y)
+	call _attr_2
+	ld  c, l
+	call read_vbyte
+	cp  c
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_30_end
+
 ;; UNKNOWN
 	jp  script_clausule
 
@@ -144,6 +161,71 @@
 	jp  z, script_loop
 
 ;;; Decode OPCODE & jump to interpreter
+
+;; OPCODE 0x20
+;; SET TILE (X, Y) = T
+	cp  0x20
+	jr  nz, aopcode_20_end
+.aopcode_20
+	call read_x_y
+	call read_vbyte
+	ld  (__t), a
+	ld  b, 0
+	ld  c, a
+	ld  hl, _comportamiento_tiles
+	add hl, bc
+	ld  a, (hl)
+	ld  (__n), a
+	ld  a, (sc_x)
+	ld  (__x), a
+	ld  c, a
+	ld  a, (sc_y)
+	ld  (__y), a
+	call set_map_tile_do
+	jp  script_actions
+.aopcode_20_end
+
+;; OPCODE 0x22
+;; DECOS XY T XY T ... 0xFF
+	cp  0x22
+	jr  nz, aopcode_22_end
+.aopcode_22
+	call read_byte
+	cp  0xff
+	jr  z, aopcode_22_end
+	ld  (__t), a
+	ld  b, 0
+	ld  c, a
+	ld  hl, _comportamiento_tiles
+	add hl, bc
+	ld  a, (hl)
+	ld  (__n), a
+	call read_byte
+	ld  b, a
+	and 0xf
+	ld  c, a
+	ld  (__x), a
+	ld  a, b
+	srl a
+	srl a
+	srl a
+	srl a
+	ld  (__y), a
+	call set_map_tile_do
+	jr  aopcode_22
+.aopcode_22_end
+
+;; OPCODE 0xE0
+;; SOUND N
+	cp  0xE0
+	jr  nz, aopcode_E0_end
+.aopcode_E0
+	call read_vbyte
+	ld  h, 0
+	ld  l, a
+	call _peta_el_beeper
+	jp  script_actions
+.aopcode_E0_end
 
 ;; UNKNOWN
 	jp script_actions

@@ -5,8 +5,9 @@
 
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
-//#define AUTO_SPLIT 						// For CPC, but hud must be 32 raster on top and MODE 1
-//#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
+#define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
+#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
+#define NO_PAL_MAP 							// For CPC, with AUTO_SPLIT, only one pal (my_inks)
 
 // ============================================================================
 // I. General configuration
@@ -67,6 +68,7 @@
 #define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
 #define SCRIPTING_DOWN						// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
+#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 
 // Top view:
 // ---------
@@ -90,17 +92,23 @@
 // It's good practice to comment what you are not using!
 
 #define VIEWPORT_X					1		//
-#define VIEWPORT_Y					0		// Viewport character coordinates
+#ifdef CPC
+	#define VIEWPORT_Y				4		// Viewport character coordinates
+	#define BASEHUD 				1
+#else
+	#define VIEWPORT_Y				0		// Viewport character coordinates
+	#define BASEHUD 				21
+#endif
 #define LIFE_X						7		//
-#define LIFE_Y						21		// Life gauge counter character coordinates
+#define LIFE_Y						BASEHUD	// Life gauge counter character coordinates
 #define OBJECTS_X					16		//
-#define OBJECTS_Y					21		// Objects counter character coordinates
+#define OBJECTS_Y					BASEHUD	// Objects counter character coordinates
 //#define OBJECTS_ICON_X			9		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
 //#define KEYS_X					17		//
 //#define KEYS_Y					0		// Keys counter character coordinates
 #define KILLED_X					27		//
-#define KILLED_Y					21		// Kills counter character coordinates
+#define KILLED_Y					BASEHUD	// Kills counter character coordinates
 //#define ITEM_X 					7		// 
 //#define ITEM_Y 					0 		//
 //#define ITEM_FLAG 				0 		// Show item @ flag
@@ -171,9 +179,6 @@ unsigned char comportamiento_tiles [] = {
 // Then change cpc/palmap.h
 #if defined CPC && defined MODE_1 && defined AUTO_SPLIT
 
-	#include "cpc/pal0.h"
-	#include "cpc/pal1.h"
-	#include "cpc/pal2.h"
-	#include "cpc/pal3.h"
+// NONE
 
 #endif

@@ -35,7 +35,7 @@ unsigned char wyz_beat_ct;
 #define AY_STOP_SOUND()  wyz_stop_sound ()
 #define AY_PLAY_MUSIC(a) wyz_play_music (a)
 
-#ifndef AUTO_SPLIT
+#if !defined AUTO_SPLIT || defined NO_PAL_MAP
 	#include "cpc/pal.h"
 #endif
 #include "cpc/spriteset_mappings.h"
@@ -1576,15 +1576,19 @@ void cpc_UpdateNow (unsigned char sprites) {
 				ld  a, (_pant_just_rendered)
 				or  a 
 				jr  z, change_palette_done
-				ld  hl, (_n_pant)
-				ld  h, 0
-				add hl, hl 
-				ld  de, palmap 
-				add hl, de 
-				ld  a, (hl)
-				inc hl 
-				ld  h, (hl)
-				ld  l, a 
+			#ifdef NO_PAL_MAP
+					ld  hl, my_inks
+			#else
+					ld  hl, (_n_pant)
+					ld  h, 0
+					add hl, hl 
+					ld  de, palmap 
+					add hl, de 
+					ld  a, (hl)
+					inc hl 
+					ld  h, (hl)
+					ld  l, a 
+			#endif
 				ld  (inject_pal + 1), hl
 			.change_palette_done
 		#endasm

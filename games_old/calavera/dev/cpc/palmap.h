@@ -5,12 +5,6 @@
 
 #asm
 	.palmap
-		dw inks0, inks2, inks2, inks2
-		dw inks2, inks2, inks1, inks1
-		dw inks0, inks2, inks0, inks0
-		dw inks1, inks1, inks0, inks3
-		dw inks1, inks1, inks0, inks3
-		dw inks0, inks0, inks0, inks3
-		dw inks0, inks0, inks0, inks3
+
 #endasm
 		

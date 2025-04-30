@@ -3,19 +3,19 @@
 // Copyleft 2017-2025 by The Mojon Twins
 
 #asm
-	.my_inks
+	.pal_hud
 		ld  b, 0x7f
 		ld  a, 0
 		out (c), a
-		ld  a, 0x57	// 0b0100000 OR 17 (FF0080FF)
+		ld  a, 0x4C	// 0b0100000 OR C (FFFF0000)
 		out (c), a
 		ld  a, 1
 		out (c), a
-		ld  a, 0x4E	// 0b0100000 OR E (FFFF8000)
+		ld  a, 0x5A	// 0b0100000 OR 1A (FF80FF00)
 		out (c), a
 		ld  a, 2
 		out (c), a
-		ld  a, 0x43	// 0b0100000 OR 3 (FFFFFF80)
+		ld  a, 0x5B	// 0b0100000 OR 1B (FF80FFFF)
 		out (c), a
 		ld  a, 3
 		out (c), a

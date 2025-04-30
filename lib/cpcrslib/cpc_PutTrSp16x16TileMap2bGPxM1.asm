@@ -67,8 +67,6 @@ XREF posicion_inicial_superbuffer
 	jp  loop_alto_map_sbuffer_shift3
 
 .loop_alto_map_sbuffer
-	ld h, $FE		; hl -> LUT
-
 	; El ancho está desenrollado: Hay que procesar y copiar 4 bytes.
 
 	ld a, (de) 		; Get sprite
@@ -93,6 +91,7 @@ XREF posicion_inicial_superbuffer
 	or (hl) 		; Get bg + draw pixels
 	ld (hl), a 		; save BG+sprite
 	inc de
+	inc hl
 	
 	;*************************************************		
 		
@@ -245,7 +244,6 @@ XREF posicion_inicial_superbuffer
 	jp loop_alto_map_sbuffer_shift1
 
 .loop_alto_map_sbuffer_shift2
-	ld  h, $FE; 	; hl -> LUT
 
 	; El ancho está desenrollado. Procesamos 4 bytes que copiamos en 5:
 	; 1: -> A'A; byte 1 = A'A AND 0x33 = 0A
@@ -388,7 +386,6 @@ XREF posicion_inicial_superbuffer
 
 
 .loop_alto_map_sbuffer_shift3
-	ld  h, $FE; 	; hl -> LUT
 
 	; El ancho está desenrollado. Procesamos 4 bytes que copiamos en 5:
 	; 1: -> A'A; byte 1 = A'A AND 0x11 = 0A
