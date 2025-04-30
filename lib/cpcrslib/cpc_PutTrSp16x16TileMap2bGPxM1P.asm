@@ -59,6 +59,7 @@ XREF posicion_inicial_superbuffer
 	; Remember A = X in pixels
 	; Select routine based upon number of rotations
 	; would write self-modifying code for short but meh
+	
 	and 3
 	jr  z, loop_alto_map_sbuffer	
 	cp  1
@@ -68,7 +69,6 @@ XREF posicion_inicial_superbuffer
 	jp  loop_alto_map_sbuffer_shift3
 
 .loop_alto_map_sbuffer
-
 	; El ancho está desenrollado: Hay que procesar y copiar 4 bytes.
 
 	ld a, (de) 		; Get sprite
@@ -267,18 +267,19 @@ XREF posicion_inicial_superbuffer
 	ld  a, (de) 	; Get Sprite byte in A
 	and 0xf0 		; Discard bit 0 in every pixel
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
 	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor c           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor c           ; A = 54761032
 
 	ld  c, a 		; Save for next byte
 
@@ -297,18 +298,19 @@ XREF posicion_inicial_superbuffer
 	ld  a, (de) 	; Get Sprite byte in A
 	and 0xf0 		; Discard bit 0 in every pixel
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
 	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor c           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor c           ; A = 54761032
 
 	ld  c, a 		; Save for next byte
 
@@ -328,18 +330,19 @@ XREF posicion_inicial_superbuffer
 	ld  a, (de) 	; Get Sprite byte in A
 	and 0xf0 		; Discard bit 0 in every pixel
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
 	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor c           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor c           ; A = 54761032
 
 	ld  c, a 		; Save for next byte
 
@@ -359,18 +362,19 @@ XREF posicion_inicial_superbuffer
 	ld  a, (de) 	; Get Sprite byte in A
 	and 0xf0 		; Discard bit 0 in every pixel
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right twice 76543210 -> 54761032
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
+	rrca 
+	rrca            ; A = 10765432     xx__xx__
 	ld  c, a        ; A = 07654321 C = 07654321
 	rrca
 	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $CC         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
+	rrca            ;     xx  xx
+	rrca            ; A = 54321076
+	xor c           ; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
+	xor c           ; A = 54761032
 
 	ld  c, a 		; Save for next byte
 
@@ -412,19 +416,18 @@ XREF posicion_inicial_superbuffer
 	
 	ld  a, (de) 	; Get Sprite byte in A
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
-	ld  c, a        ; A = 07654321 C = 07654321
-	rrca
-	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
-
+	rlca            ; A = 65432107     ___x___x
+	ld  c, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor c           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor c           ; A = 65472103
 	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
@@ -442,19 +445,18 @@ XREF posicion_inicial_superbuffer
 	ld  a, (de) 	; Get Sprite byte in A
 	and 0xf0 		; Discard bit 0 in every pixel
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
-	ld  c, a        ; A = 07654321 C = 07654321
-	rrca
-	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
-
+	rlca            ; A = 65432107     ___x___x
+	ld  c, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor c           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor c           ; A = 65472103
 	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
@@ -473,19 +475,18 @@ XREF posicion_inicial_superbuffer
 	ld  a, (de) 	; Get Sprite byte in A
 	and 0xf0 		; Discard bit 0 in every pixel
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
-	ld  c, a        ; A = 07654321 C = 07654321
-	rrca
-	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
-
+	rlca            ; A = 65432107     ___x___x
+	ld  c, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor c           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor c           ; A = 65472103
 	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
@@ -504,19 +505,18 @@ XREF posicion_inicial_superbuffer
 	ld  a, (de) 	; Get Sprite byte in A
 	and 0xf0 		; Discard bit 0 in every pixel
 
-	; Now rotate nibbles right once 76543210 -> 47650321
+	; Now rotate nibbles right thrice 76543210 -> 65472103
 
 	                ; A = 76543210
-	rrca            ; A = 07654321
-	ld  c, a        ; A = 07654321 C = 07654321
-	rrca
-	rrca
-	rrca            ;     x   x
-	rrca            ; A = 43210765
-	xor c           ; A = 4^7 3^6 2^5 1^4 0^3 7^2 6^1 5^0
-	and $EE         ; A = 4^7 0 0 0 0^3 0 0 0
-	xor c           ; A = 47650321!
-
+	rlca            ; A = 65432107     ___x___x
+	ld  c, a        ; A = 65432107 C = 65432107
+	rlca
+	rlca
+	rlca            ;        x   x   
+	rlca            ; A = 21076543
+	xor c           ; A = 2^6 1^5 0^4 7^3 6^2 5^1 4^0 3^7
+	and $11         ; A = 0 0 0 7^3 0 0 0 3^7
+	xor c           ; A = 65472103
 	ld  c, a 		; Save for next byte
 
 	and 0x11 		; Mask
