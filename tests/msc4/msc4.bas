@@ -28,6 +28,7 @@ Dim Shared AS Integer outT = SPECCY
 Dim Shared As String interpreterFn
 Dim Shared As Integer maxPants
 Dim Shared As Integer noIndexed
+Dim Shared As Integer fastNPant
 
 Dim Shared As Integer itemSlot
 
@@ -364,8 +365,12 @@ Function processIf (linea As String) As String
 	Dim As Integer v1, v2
 	parseScriptLine linea	
 
+	' First of all, override IF NPANT if desired
+	If fastNPant And lCase (tokens (1)) = "$254" And tokens (2) = "=" Then 
+		code = buildCond (2, Chr(&H05), pVal (tokens (3)))
+
 	' Detect numeric conditions IF a OP b 
-	If isNumberOrVar (tokens (1)) And isComp (tokens(2)) And isNumberOrVar (tokens (3)) Then
+	ElseIf isNumberOrVar (tokens (1)) And isComp (tokens(2)) And isNumberOrVar (tokens (3)) Then
 		Select Case tokens (2)
 			Case "=" 
 				' $01 A B
@@ -786,6 +791,11 @@ Sub processScript (fIn As Integer)
 
 			ElseIf tokens(0) = "noindexed" Then 
 				noIndexed = -1
+				If debug Then Print "No indexed script. Beware!"
+
+			ElseIf tokens(0) = "fastnpant" Then 
+				fastNPant = -1
+				If debug Then Print "IF NPANT = N will generate its own opcode!"
 
 			ElseIf startsWith (tokens (), "item slot") And tokens (2) = "=" And isNumber (tokens (3)) Then
 				If debug Then Print "Item slot set to " & Val (tokens (3))
@@ -912,7 +922,8 @@ End Sub
 Sub usage
 	Print "usage:"
 	Print ""
-	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N [interpreter=msci.asm] [noindexed]"
+	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N "
+	Print "         [interpreter=msci.asm] [noindexed] [fastnpant]"
 	Print "         in is [a list of|the] input filename."
 	Print "           msc4 will generate a f.bin per input,"
 	Print "           but only one common interpreter."
@@ -921,6 +932,7 @@ Sub usage
 	Print "         rooms is the total of rooms in the map"
 	Print "         interpreter for custom interpreter filename"
 	Print "         noindexed if you are only using general sections (ANY, etc)"
+	Print "         fastnpant generates a (faster) special opcode for IF NPANT"
 End Sub
 
 '' Interfaz
@@ -947,6 +959,7 @@ If interpreterFn = "" Then interpreterFn = "msci.asm"
 outV = Val(sclpGetValue("v"))
 outT = SPECCY: If sclpGetValue("target") = "cpc" Then outT = CPC
 noIndexed = (sclpGetValue("noindexed") <> "")
+fastNPant = (sclpGetValue("fastnpant") <> "")
 
 i = 0: While i < 127 And fileIns(i) <> ""
 	curLineNo = 0
@@ -1006,6 +1019,7 @@ If CU(&H01) Then writeAssemblyString fOut, ";; OPCODE 0x01|;; IF A = B|cp  0x01|
 If CU(&H02) Then writeAssemblyString fOut, ";; OPCODE 0x02|;; IF A < B|cp  0x02|jr  nz, copcode_02_end|.copcode_02|call read_vbyte|ld  c, a|call read_vbyte|ld  b, a|ld  a, c|cp  b|jp  nc, skip_clausule|jp  script_clausule|.copcode_02_end"
 If CU(&H03) Then writeAssemblyString fOut, ";; OPCODE 0x03|;; IF A >= B|cp  0x03|jr  nz, copcode_03_end|.copcode_03|call read_vbyte|ld  c, a|call read_vbyte|ld  b, a|ld  a, c|cp  b|jp  c, skip_clausule|jp  script_clausule|.copcode_03_end"
 If CU(&H04) Then writeAssemblyString fOut, ";; OPCODE 0x04|;; IF A <> B|cp  0x04|jr  nz, copcode_04_end|.copcode_04|call read_vbyte|ld  b, a|call read_vbyte|cp  b|jp  z, skip_clausule|jp  script_clausule|.copcode_04_end"
+If CU(&H05) Then writeAssemblyString fOut, ";; OPCODE 0x05|;; IF NPANT = N|cp  0x05|jr  nz, copcode_05_end|.copcode_05|call read_vbyte|ld  b, a|ld  a, (_n_pant)|cp  b|jr  nz, skip_clausule|jp script_clausule|.copcode_05_end"
 If CU(&H21) Then writeAssemblyString fOut, ";; OPCODE 0x21|;; IF PLAYER IN_X (X1, X2)|cp  0x21|jr  nz, copcode_21_end|.copcode_21|;; gpx < X1 -> exit|call read_vbyte|ld  c, a|ld  a, (_gpx)|cp  c|jp  c, skip_clausule|;; X2 < gpx -> exit|ld  a, (_gpx)|ld  c, a|call read_vbyte|cp  c|jp  c, skip_clausule|jp  script_clausule|.copcode_21_end"
 If CU(&H22) Then writeAssemblyString fOut, ";; OPCODE 0x22|;; IF PLAYER IN_Y (Y1, Y2)|cp  0x22|jr  nz, copcode_22_end|.copcode_22|;; gpy < Y1 -> exit|call read_vbyte|ld  c, a|ld  a, (_gpy)|cp  c|jp  c, skip_clausule|;; Y2 < gpy -> exit|ld  a, (_gpy)|ld  c, a|call read_vbyte|cp  c|jp  c, skip_clausule|jp  script_clausule|.copcode_22_end"
 If CU(&H23) Then writeAssemblyString fOut, ";; OPCODE 0x23|;; IF PLAYER AT (X, Y)|cp  0x23|jr  nz, copcode_23_end|.opcode23|;; (gpx + 8) >> 4 != X -> exit|ld  a, (_tpx)|ld  c, a|call read_vbyte|cp  c|jp  nz, skip_clausule|;; (gpy + 8) >> 4 != Y -> exit|ld  a, (_tpy)|ld  c, a|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_23_end"

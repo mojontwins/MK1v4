@@ -160,6 +160,19 @@ XDEF _script_result
 	jp  script_clausule
 .copcode_04_end
 
+	;; OPCODE 0x05
+	;; IF NPANT = N
+	cp  0x05
+	jr  nz, copcode_05_end
+.copcode_05
+	call read_vbyte
+	ld  b, a 
+	ld  a, (_n_pant)
+	cp  b
+	jr  nz, skip_clausule
+	jp script_clausule
+.copcode_05_end
+
 	;; OPCODE 0x21
 	;; IF PLAYER IN_X (X1, X2)
 	cp  0x21

@@ -37,3 +37,11 @@ Va a ser con scripting.
 
 	* Screen 3, deco: (10, 2) = 3, (10, 3-7) = 0, (10, 8) = 12, y borrar el tile especial con (12, 6) = 0 
 	* Screen 10, deco: (13, 4-5) = 0
+
+## NORVIDARSE
+
+Me lo apunto para mirar el próximo día, cada día:
+
+[ ] Exporta .MAP de nuevo!!
+[ ] Activar el motor de disparos.
+[ ] Revisar los behs (¡¡la luna mata!!)

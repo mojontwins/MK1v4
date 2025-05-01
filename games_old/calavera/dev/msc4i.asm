@@ -114,18 +114,18 @@
 
 ;;; Decode OPCODE & jump to interpreter
 
-;; OPCODE 0x01
-;; IF A = B
-	cp  0x01
-	jr  nz, copcode_01_end
-.copcode_01
+;; OPCODE 0x05
+;; IF NPANT = N
+	cp  0x05
+	jr  nz, copcode_05_end
+.copcode_05
 	call read_vbyte
 	ld  b, a
-	call read_vbyte
+	ld  a, (_n_pant)
 	cp  b
-	jp  nz, skip_clausule
-	jp  script_clausule
-.copcode_01_end
+	jr  nz, skip_clausule
+	jp script_clausule
+.copcode_05_end
 
 ;; OPCODE 0x30
 ;; TILE AT (X, Y) = T
@@ -248,13 +248,6 @@
 
 .read_vbyte_rec
 	call read_vbyte
-
-; NPANT RVALUE
-	cp  0xFE
-	jr  nz, rvb_set_n_pant_done
-	ld  a, (_n_pant)
-	ret
-.rvb_set_n_pant_done
 
 ; TX RVALUE
 	cp  0xF8

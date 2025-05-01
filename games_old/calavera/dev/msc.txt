@@ -3,6 +3,12 @@ msc v4.0.20250421 ~ Processing script.spt
 LINEA NOINDEXED 		# We won't be using SCREEN XXX sections
 T0=[noindexed]
 T1=[		]
+No indexed script. Beware!
+==========================================
+LINEA FASTNPANT 		# IF NPANT = N will generate its own opcode/interpreter
+T0=[fastnpant]
+T1=[		]
+IF NPANT = N will generate its own opcode!
 ==========================================
 LINEA ENTERING ANY
 T0=[entering]
@@ -50,7 +56,19 @@ Parsed deco 10 7 0
 Parsed deco 10 8 12
 Parsed deco 12 7 0
 Stopped parsing decos
-Bytecode: 1B 01 FF FE 03 FF E0 06 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 7C FF FF FF 
+Parsing: IF NPANT = 10
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[10]
+Parsing: SOUND 6
+T0=[SOUND]
+T1=[6]
+Began parsing decos
+Parsed deco 13 4 0
+Parsed deco 13 5 0
+Stopped parsing decos
+Bytecode: 19 05 03 FF E0 06 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 7C FF FF 0D 05 0A FF E0 06 22 00 4D 00 5D FF FF FF 
 Index section: 16 bytes
-Bytecode section: 40 bytes
-Wrote 56 bytes to script.spt.bin
+Bytecode section: 51 bytes
+Wrote 67 bytes to script.spt.bin

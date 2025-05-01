@@ -172,6 +172,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $02 A B : A < B
 * $03 A B : A >= B
 * $04 A B : A <> B
+* $05 N : IF NPANT = N, faster, special opcode (needs command line switch)
 
 * $21 X1 X2: PLAYER IN_X (X1, X2)
 * $22 Y1 Y2: PLAYER IN_Y (Y1, Y2) (!) Better use PX / PY or TX / TY.

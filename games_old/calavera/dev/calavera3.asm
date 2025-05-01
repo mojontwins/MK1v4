@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Apr 30 17:55:59 2025
+;	Module compile time: Wed Apr 30 23:40:25 2025
 
 
 
@@ -6883,6 +6883,7 @@
 	LIB	cpc_PrintGphStrXYM1
 	LIB	cpc_UpdScrP
 	LIB	cpc_PutSpriteXOR
+	LIB	cpc_PutTrSp8x8TileMap2bGPxM1
 	LIB	cpc_PutTrSp16x16TileMap2bGPxM1
 	LIB	cpc_TestKey
 	LIB	cpc_PutSprite
