@@ -16,7 +16,7 @@ Emplearemos el modo "G" de las rutinas de sprites pixel-perfect en modo 1, que n
 
 [X] Revisar que t=5 en enems.ene crea los fantis tipo `RANDOM_RESPAWN` directamente --> El motor debe "matarlos" en `init_malotes` al detectar el tipo 5.
 
-[ ] El motor de disparos en CPC usa rutinas de sprites alineadas a byte - asegurarse de que existe una versión OR de la de 8x8 que no sea pixel perfect. Pues no, tenemos `cpc_PutTrSp8x8TileMapGPxM1` (8x8, OR, Pixel, M1) y `cpc_PutTrSp8x8TileMap` (8x8, mask, byte, general). Necesitamos `cpc_PutTrSp8x8TileMapGPxM1`
+[ ] El motor de disparos en CPC usa rutinas de sprites alineadas a byte - asegurarse de que existe una versión OR de la de 8x8 que no sea pixel perfect. Pues no, tenemos `cpc_PutTrSp8x8TileMap2bGPxM1` (8x8, OR, Pixel, M1) y `cpc_PutTrSp8x8TileMap2b` (8x8, mask, byte, general). Necesitamos `cpc_PutTrSp8x8TileMap2bGPxM1`
 
 Vamos a generalizar esto porque hay un pequeño pifostio. Aquí tenemos que las rutinas "no pixel perfect" de cpcrslib necesitan que la X esté ya convertida a bytes. Sin embargo, se llaman por el tamaño del sprite lo cual, en este contexto, no debería tener sentido: el volcado es el mismo sin importar el modo, por lo que el tamaño debería especificarse en bytes.
 
@@ -24,17 +24,18 @@ Para pintar las balas, sin importar el modo, necesitaría dos rutinas (invalidad
 
 Renombramos (¡hay que modificar `mkts_om`!)
 
-* `cpc_PutSPTileMap2Bx8.asm` sustituiría a `cpc_PutSPTileMap2Bx8.asm`.
-* `cpc_PutSPTileMap4Bx16.asm` sustituiría a `cpc_PutSPTileMap4Bx16.asm`.
-* `cpc_PutSPTileMap4Bx24.asm` sustituiría a `cpc_PutSPTileMap4Bx24.asm`.
+* `cpc_PutSPTileMap2Bx8.asm` sustituiría a `cpc_PutSpTileMap4x8.asm`.
+* `cpc_PutSPTileMap4Bx16.asm` sustituiría a `cpc_PutSpTileMap8x16.asm`.
+* `cpc_PutSPTileMap4Bx24.asm` sustituiría a `cpc_PutSpTileMap8x24.asm`.
 
-* `cpc_PutTrSp2Bx8TileMap.asm` sustituiría a `cpc_PutTrSp2Bx8TileMap.asm`
-* `cpc_PutTrSp2Bx8TileMapG.asm` sustituiría a `cpc_PutTrSp2Bx8TileMapG.asm`
-* `cpc_PutTrSp4Bx16TileMap.asm` sustituiría a `cpc_PutTrSp4Bx16TileMap.asm`
-* `cpc_PutTrSp4Bx16TileMapG.asm` sustituiría a `cpc_PutTrSp4Bx16TileMapG.asm`
-* `cpc_PutTrSp4Bx24TileMap.asm` sustituiría a `cpc_PutTrSp4Bx24TileMap.asm`
-* `cpc_PutTrSp4Bx24TileMapG.asm` sustituiría a `cpc_PutTrSp4Bx24TileMapG.asm`
+[ ] Llegados a este punto recompilo CPCRSLIB y me aseguro de que no haya errores.
 
+* `cpc_PutTrSp2Bx8TileMap.asm` sustituiría a `cpc_PutTrSp4x8TileMap2b.asm`
+* `cpc_PutTrSp2Bx8TileMapG.asm` sustituiría a `cpc_PutTrSp4x8TileMap2bG.asm`
+* `cpc_PutTrSp4Bx16TileMap.asm` sustituiría a `cpc_PutTrSp8x16TileMap2b.asm`
+* `cpc_PutTrSp4Bx16TileMapG.asm` sustituiría a `cpc_PutTrSp8x16TileMap2bG.asm`
+* `cpc_PutTrSp4Bx24TileMap.asm` sustituiría a `cpc_PutTrSp8x24TileMap2b.asm`
+* `cpc_PutTrSp4Bx24TileMapG.asm` sustituiría a `cpc_PutTrSp8x24TileMap2bG.asm`
 
 ## Script additions
 
@@ -65,3 +66,4 @@ Me lo apunto para mirar el próximo día, cada día:
 [X] Exporta .MAP de nuevo!!
 [ ] Activar el motor de disparos.
 [-] Revisar los behs (¡¡la luna mata!!) - La luna mata porque se pone con un beh fuera de rango. Se arregla añadiendo dos bytes a los comportamientos (para que haya 50 tiles definidos)
+[ ] ¡¡Investigar por qué aparece cpc_PutSPTileMap4Bx24 en LIB en los asm generados si no estoy usando ese tamaño de sprite!!
