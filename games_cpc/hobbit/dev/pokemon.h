@@ -60,11 +60,11 @@ extern unsigned char a_scratch [], a_ember [], a_leer [];
 		               defm "TACKLE%     "
 		._a_leechseed  defb 0, 229, 2, AFX_LEECH
 		               defm "LEECH SEED% "
-		._a_vinewhip   defb 35, 255, 1, AFX_NORMAL
+		._a_vinewhip   defb 35, 255, 2, AFX_NORMAL
 		               defm "VINE WHIP%  "
 		._a_scratch    defb 40, 255, 20, AFX_NORMAL
 		               defm "SCRATCH%    "
-		._a_ember      defb 40, 255, 10, AFX_BURN
+		._a_ember      defb 40, 127, 10, AFX_BURN
 		               defm "EMBER%      "
 		._a_leer       defb 0, 255, 5, AFX_LOWER_DF
 		               defm "LEER%       "
@@ -80,11 +80,11 @@ extern unsigned char a_scratch [], a_ember [], a_leer [];
 		               defm "PLACAJE%    "
 		._a_leechseed  defb 0, 229, 2, AFX_LEECH
 		               defm "DRENADORAS% "
-		._a_vinewhip   defb 35, 255, 1, AFX_NORMAL
+		._a_vinewhip   defb 35, 255, 2, AFX_NORMAL
 		               defm "LATIGO CEPA%"
 		._a_scratch    defb 40, 255, 20, AFX_NORMAL
 		               defm "ARA/AZO%    "
-		._a_ember      defb 40, 255, 10, AFX_BURN
+		._a_ember      defb 40, 127, 10, AFX_BURN
 		               defm "BRASAS%     "
 		._a_leer       defb 0, 255, 5, AFX_LOWER_DF
 		               defm "MALICIOSO%  "
@@ -640,6 +640,7 @@ void pk_animate_death (void) {
 			ld  hl, 0
 			push hl 
 			call _cpc_UpdateNow
+			pop bc
 
 			ld  a, (_psk)
 			dec a 
@@ -2006,6 +2007,9 @@ void pokemon_combat(void) {
 
 			call _pk_update_displays
 			call _pk_attack_cycle 
+			call _pk_update_displays
+
+		.pokemon_check_wins
 
 			ld  a, (_pk_data + C_HP + OPPONENT_OFFSET)
 			or  a 

@@ -49,11 +49,12 @@ del %game%.sna > nul
 ..\utils\cpctbin2sna.exe %game%.bin 0x400 -pc 0x400 -o %game%.sna
 echo Output: %game%.sna
 
+echo Compressing for tape - this may take a WHILE
 ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal_loading.png mode=scr in=..\gfx\loading.png out=loading.bin silent > nul
-del loading.c.bin > nul
-..\utils\zx7.exe loading.bin loading.c.bin > nul
-del %game%.c.bin > nul
-..\utils\zx7.exe %game%.bin %game%.c.bin > nul
+del loading.c.bin > nul 2> nul
+..\utils\zx0.exe loading.bin loading.c.bin > nul
+del %game%.c.bin  > nul 2> nul
+..\utils\zx0.exe %game%.bin %game%.c.bin
 
 ..\utils\imanol.exe in=system\loadercpc.asm-orig out=system\loadercpc.asm ^
 	scrc_size=?loading.c.bin ^

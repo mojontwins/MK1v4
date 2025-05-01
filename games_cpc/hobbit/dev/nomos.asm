@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Mar 21 11:18:33 2025
+;	Module compile time: Sun Apr 13 14:35:25 2025
 
 
 
@@ -1971,12 +1971,12 @@
 	defb	0
 	defb	2
 	defb	16
-	defb	48
-	defb	19
-	defb	72
+	defb	112
+	defb	23
+	defb	71
 	defb	2
-	defb	2
-	defb	10
+	defb	0
+	defb	4
 	defb	192
 	defb	64
 	defb	116
@@ -2048,8 +2048,8 @@
 	defb	0
 	defb	2
 	defb	80
-	defb	32
-	defb	82
+	defb	48
+	defb	83
 	defb	119
 	defb	1
 	defb	1
@@ -2061,13 +2061,13 @@
 	defb	2
 	defb	2
 	defb	7
-	defb	32
+	defb	16
 	defb	64
-	defb	36
-	defb	214
-	defb	2
-	defb	2
-	defb	10
+	defb	20
+	defb	212
+	defb	1
+	defb	0
+	defb	4
 	defb	176
 	defb	80
 	defb	101
@@ -2235,14 +2235,14 @@
 	defb	168
 	defb	2
 	defb	2
-	defb	8
+	defb	2
 	defb	192
 	defb	16
 	defb	161
 	defb	197
 	defb	-1
 	defb	1
-	defb	8
+	defb	2
 	defb	112
 	defb	112
 	defb	115
@@ -4508,11 +4508,11 @@
 	defm "PLACAJE%    "
 	._a_leechseed defb 0, 229, 2, 1
 	defm "DRENADORAS% "
-	._a_vinewhip defb 35, 255, 1, 0
+	._a_vinewhip defb 35, 255, 2, 0
 	defm "LATIGO CEPA%"
 	._a_scratch defb 40, 255, 20, 0
 	defm "ARA/AZO%    "
-	._a_ember defb 40, 255, 10, 2
+	._a_ember defb 40, 127, 10, 2
 	defm "BRASAS%     "
 	._a_leer defb 0, 255, 5, 4
 	defm "MALICIOSO%  "
@@ -5132,6 +5132,7 @@
 	ld hl, 0
 	push hl
 	call _cpc_UpdateNow
+	pop bc
 	ld a, (_psk)
 	dec a
 	jr looper
@@ -6099,6 +6100,8 @@
 	.pokemon_combat_loop
 	call _pk_update_displays
 	call _pk_attack_cycle
+	call _pk_update_displays
+	.pokemon_check_wins
 	ld a, (_pk_data + 0 + 16 + 64)
 	or a
 	jr nz, pcl1
@@ -6371,12 +6374,17 @@
 	ld (_game_loop_flag), a
 	ret
 	.pokemon_lose
-	dec a
-	ld (_on_pant), a
-	ld hl, 256
+	ld hl, 2*16*64
+	ld (_player), hl
+	ld hl, 6*16*64
+	ld (_player + 2), hl
+	ld hl, 0
 	ld (_player + 6), hl
+	ld (_player + 8), hl
 	ld a, 1
-	ld (_player + 26), a
+	ld (_player + 36), a
+	ld a, 6
+	ld (_n_pant), a
 	ret
 	.room_12
 	ld a, (_gallumb_flag)
@@ -9110,6 +9118,12 @@
 ._main
 	call	_wyz_init
 	di
+	ld hl, 0xC000
+	xor a
+	ld (hl), a
+	ld de, 0xC001
+	ld bc, 0x3DFF
+	ldir
 	ld a, 195
 	ld (0x38), a
 	ld hl, _isr
