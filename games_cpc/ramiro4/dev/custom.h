@@ -906,7 +906,7 @@ void win_crypt (void) {
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp8x16TileMap2bPx 		// .updfunc
+				ld  hl, cpc_PutTrSp8x16TileMapPx 		// .updfunc
 				ld  (ix + 15), h
 				ld  (ix + 14), l
 		#endasm
@@ -937,7 +937,7 @@ void win_crypt (void) {
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// .updfunc
+				ld  hl, cpc_PutTrSp4x8TileMapPx 		// .updfunc
 				ld  (ix + 15), h
 				ld  (ix + 14), l
 		#endasm

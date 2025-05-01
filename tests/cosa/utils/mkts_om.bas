@@ -972,7 +972,7 @@ Sub generateMixedMappings (mappingsFn As String)
 		End If
 
 		If i Mod 4 = 0 Then Print #fOut, "	";
-		Print #fOut, "cpc_PutTrSp" & functionSuffix & "TileMap2b";
+		Print #fOut, "cpc_PutTrSp" & functionSuffix & "TileMap";
 		If gng Then Print #fOut, "G";
 		If pixelperfectm0 Then Print #fOut, "Px";
 		If pixelperfectm1 Then Print #fOut, "PxM1";
@@ -1101,7 +1101,7 @@ Sub generateStraitMappings (mappingsFn As String, wMeta As Integer, hMeta As Int
 	Print #fOut, "void *sm_updfunc [] = {"
 	For i = 0 To max - 1
 		If i Mod 4 = 0 Then Print #fOut, "	";
-		Print #fOut, "cpc_PutTrSp" & functionSuffix & "TileMap2b";
+		Print #fOut, "cpc_PutTrSp" & functionSuffix & "TileMap";
 		If gng Then Print #fOut, "G";
 		If pixelperfectm0 Then Print #fOut, "Px";
 		If pixelperfectm1 Then Print #fOut, "PxM1";

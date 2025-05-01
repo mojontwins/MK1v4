@@ -24,10 +24,10 @@ void *sm_invfunc [] = {
 };
 
 void *sm_updfunc [] = {
-	cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, 
-	cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, 
-	cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, 
-	cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1, cpc_PutTrSp16x16TileMap2bGPxM1
+	cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, 
+	cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, 
+	cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, 
+	cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1, cpc_PutTrSp16x16TileMapGPxM1
 };
 
 extern void *sm_sprptr [0];

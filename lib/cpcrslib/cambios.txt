@@ -57,7 +57,7 @@ Cambios:
 *cpc_PutSpTileMap: Optimizado el código de búsqueda de tiles tocados por un sprite: Más corto y rápido.
 
 16.02.2009
-*cpc_PutTrSpriteTileMap2b: Rutina nueva similar a cpc_PutTrSpTileMap2b pero sin hacer el cálculo interno de la posición en el superbuffer. Por eso requiere utilizar cpc_SpUpdX y cpc_SpUpdY para actualizar la posición del sprite. O hacerlo del modo habitual pero ejecutandi luego cpc_SuperbufferAddress() después de actualizar la posición.
+*cpc_PutTrSpriteTileMap: Rutina nueva similar a cpc_PutTrSpTileMap pero sin hacer el cálculo interno de la posición en el superbuffer. Por eso requiere utilizar cpc_SpUpdX y cpc_SpUpdY para actualizar la posición del sprite. O hacerlo del modo habitual pero ejecutandi luego cpc_SuperbufferAddress() después de actualizar la posición.
 *cpc_UpdateTileMap: Se ha actualizado para incluir las rutinas cpc_PutTrSpTileMap2 y cpc_PutTrSpriteTileMap2.
 
 
@@ -66,7 +66,7 @@ Cambios:
 Rutinas nuevas (beta) para hacer scroll horizontal por software en el mapa de tiles.
 
 09.02.2009
-*cpc_PutTrSpTileMap2b: Dibuja un sprite en el mapa de tiles teniendo en cuenta que uno de los colores es transparente. El color transparente se define en tiempo de compilación como mascara1 y mascara2
+*cpc_PutTrSpTileMap: Dibuja un sprite en el mapa de tiles teniendo en cuenta que uno de los colores es transparente. El color transparente se define en tiempo de compilación como mascara1 y mascara2
 
 16.01.2009
 *cpc_TestKey

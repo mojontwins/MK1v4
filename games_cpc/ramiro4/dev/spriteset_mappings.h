@@ -28,12 +28,12 @@ void *sm_invfunc [] = {
 };
 
 void *sm_updfunc [] = {
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx
 };
 
 extern void *sm_sprptr [0];

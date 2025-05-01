@@ -388,22 +388,22 @@
 ;	SECTION	text
 
 ._sm_updfunc
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
-	defw	cpc_PutTrSp16x16TileMap2bGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
+	defw	cpc_PutTrSp16x16TileMapGPxM1
 
 ;	SECTION	code
 
@@ -1807,7 +1807,7 @@
 	ld hl, cpc_PutSpTileMap8x16Px
 	ld (ix + 13), h
 	ld (ix + 12), l
-	ld hl, cpc_PutTrSp8x16TileMap2bPx
+	ld hl, cpc_PutTrSp8x16TileMapPx
 	ld (ix + 15), h
 	ld (ix + 14), l
 	add ix, de
@@ -6818,16 +6818,16 @@
 	LIB	cpc_ClrScr
 	XDEF	_get_pointer_to_enem_or_coco
 	LIB	cpc_SetModo
-	LIB	cpc_PutMaskSpriteTileMap2b
-	LIB	cpc_PutTrSpriteTileMap2b
+	LIB	cpc_PutMaskSpriteTileMap
+	LIB	cpc_PutTrSpriteTileMap
 	XDEF	_en_an_state
 	defc	_en_an_state	=	54829
 	XDEF	_flags
 	LIB	cpc_SetInkGphStr
 	XDEF	_mueve_bicharracos
 	XDEF	_gp_gen_alt
-	LIB	cpc_PutTrSp8x16TileMap2bGPxP
-	LIB	cpc_PutTrSp8x24TileMap2bGPxP
+	LIB	cpc_PutTrSp8x16TileMapGPxP
+	LIB	cpc_PutTrSp8x24TileMapGPxP
 	LIB	cpc_ShowTouchedTiles2
 	LIB	cpc_SetTile
 	XDEF	_en_xx
@@ -6855,9 +6855,9 @@
 	XDEF	_pad_read
 	XDEF	_wyz_beat_ct
 	XDEF	_t_alt
-	LIB	cpc_PutTrSp8x8TileMap2bPxM1
-	LIB	cpc_PutTrSp16x16TileMap2bPxM1
-	LIB	cpc_PutTrSp16x24TileMap2bPxM1
+	LIB	cpc_PutTrSp8x8TileMapPxM1
+	LIB	cpc_PutTrSp16x16TileMapPxM1
+	LIB	cpc_PutTrSp16x24TileMapPxM1
 	LIB	cpc_ShowScrTileMap2
 	LIB	cpc_Uncrunch
 	XDEF	_cpc_UpdateNow
@@ -6874,17 +6874,17 @@
 	XDEF	_wyz_init
 	XDEF	_life_old
 	LIB	cpc_PrintGphStrXY2X
-	LIB	cpc_PutTrSp4x8TileMap2bG
-	LIB	cpc_PutTrSp8x16TileMap2bG
-	LIB	cpc_PutTrSp8x24TileMap2bG
+	LIB	cpc_PutTrSp2Bx8TileMapG
+	LIB	cpc_PutTrSp4Bx16TileMapG
+	LIB	cpc_PutTrSp4Bx24TileMapG
 	LIB	cpc_SpRRM1
 	XDEF	_enems_en_an_calc
 	XDEF	_sm_sprptr
 	LIB	cpc_PrintGphStrXYM1
 	LIB	cpc_UpdScrP
 	LIB	cpc_PutSpriteXOR
-	LIB	cpc_PutTrSp8x8TileMap2bGPxM1
-	LIB	cpc_PutTrSp16x16TileMap2bGPxM1
+	LIB	cpc_PutTrSp8x8TileMapGPxM1
+	LIB	cpc_PutTrSp16x16TileMapGPxM1
 	LIB	cpc_TestKey
 	LIB	cpc_PutSprite
 	LIB	cpc_PutSPTileMap2Bx8
@@ -6918,7 +6918,7 @@
 	XDEF	_enoffs
 	LIB	cpc_PutSpTr
 	XDEF	_pad_this_frame
-	LIB	cpc_PutTrSp12x24TileMap2bGCA
+	LIB	cpc_PutTrSp12x24TileMapGCA
 	LIB	cpc_DisableFirmware
 	LIB	cpc_EnableFirmware
 	XDEF	_enem_cells
@@ -6939,10 +6939,10 @@
 	XDEF	_draw_rectangle
 	LIB	cpc_RRI
 	LIB	cpc_GetSp
-	LIB	cpc_PutTrSp4x8TileMap2bGPx
-	LIB	cpc_PutTrSp8x16TileMap2bGPx
+	LIB	cpc_PutTrSp4x8TileMapGPx
+	LIB	cpc_PutTrSp8x16TileMapGPx
 	XDEF	_enit
-	LIB	cpc_PutTrSp8x24TileMap2bGPx
+	LIB	cpc_PutTrSp8x24TileMapGPx
 	LIB	cpc_SpUpdX
 	LIB	cpc_SpUpdY
 	LIB	cpc_PutTile4x16
@@ -6981,17 +6981,17 @@
 	XDEF	_pty1
 	XDEF	_pty2
 	XDEF	_move
-	LIB	cpc_PutMaskSpTileMap2b
-	LIB	cpc_PutTrSpTileMap2b
+	LIB	cpc_PutMaskSpTileMap
+	LIB	cpc_PutTrSpTileMap
 	XDEF	_flag_old
 	XDEF	_wall
-	LIB	cpc_PutORSpTileMap2b
-	LIB	cpc_PutSpTileMap2b
+	LIB	cpc_PutORSpTileMap
+	LIB	cpc_PutSpTileMap
 	LIB	cpc_UpdScr
-	LIB	cpc_PutCpSpTileMap2b
-	LIB	cpc_PutTrSp4x8TileMap2b
-	LIB	cpc_PutTrSp8x16TileMap2b
-	LIB	cpc_PutTrSp8x24TileMap2b
+	LIB	cpc_PutCpSpTileMap
+	LIB	cpc_PutTrSp2Bx8TileMap
+	LIB	cpc_PutTrSp4Bx16TileMap
+	LIB	cpc_PutTrSp4Bx24TileMap
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
 	defc	_en_an_next_frame	=	54796
@@ -7042,23 +7042,23 @@
 	XDEF	_en_tocado
 	LIB	cpc_TestKeyF
 	XDEF	_tat
-	LIB	cpc_PutTrSp16x16TileMap2bGPxM1P
+	LIB	cpc_PutTrSp16x16TileMapGPxM1P
 	XDEF	_rdx
 	XDEF	_rdy
-	LIB	cpc_PutTrSp16x24TileMap2bGPxM1P
+	LIB	cpc_PutTrSp16x24TileMapGPxM1P
 	XDEF	_sm_cox
 	XDEF	_sm_coy
 	XDEF	_draw_2_digits
 	XREF	_script_result
 	XDEF	_init_hotspots
-	LIB	cpc_PutTrSp4x8TileMap2bPx
+	LIB	cpc_PutTrSp4x8TileMapPx
 	XDEF	_pti
 	XDEF	_tileset
 	XDEF	_ptj
-	LIB	cpc_PutTrSp8x8TileMap2bPx
+	LIB	cpc_PutTrSp8x8TileMapPx
 	XDEF	_comportamiento_tiles
-	LIB	cpc_PutTrSp8x16TileMap2bPx
-	LIB	cpc_PutTrSp8x24TileMap2bPx
+	LIB	cpc_PutTrSp8x16TileMapPx
+	LIB	cpc_PutTrSp8x24TileMapPx
 	LIB	cpc_PutSPTileMap4Bx16
 	LIB	cpc_PutSPTileMap4Bx24
 	XDEF	_script

@@ -1,14 +1,14 @@
 XLIB cpc_UpdateTileMap
 
 LIB cpc_PutSpTileMap	
-LIB cpc_PutMaskSpriteTileMap2b
+LIB cpc_PutMaskSpriteTileMap
 LIB cpc_UpdScr
 LIB cpc_ShowTouchedTiles
-LIB cpc_PutMaskSpTileMap2b
-LIB cpc_PutORSpTileMap2b
-LIB cpc_PutSpTileMap2b
-LIB cpc_PutTrSpTileMap2b
-LIB cpc_PutTrSpriteTileMap2b
+LIB cpc_PutMaskSpTileMap
+LIB cpc_PutORSpTileMap
+LIB cpc_PutSpTileMap
+LIB cpc_PutTrSpTileMap
+LIB cpc_PutTrSpriteTileMap
 
 
    	;struct sprite 
@@ -109,20 +109,20 @@ pop iy
 jp cpc_ShowTouchedTiles
 ;ret
 .op1
-call cpc_PutMaskSpriteTileMap2b+5
+call cpc_PutMaskSpriteTileMap+5
 jp cont_buc
 .op2
-call cpc_PutMaskSpTileMap2b+5
+call cpc_PutMaskSpTileMap+5
 jp cont_buc
 .op3
-call cpc_PutORSpTileMap2b+5
+call cpc_PutORSpTileMap+5
 jp cont_buc
 .op4
-call cpc_PutSpTileMap2b+5
+call cpc_PutSpTileMap+5
 jp cont_buc
 .op5
-call cpc_PutTrSpTileMap2b+5
+call cpc_PutTrSpTileMap+5
 jp cont_buc
 .op6
-call cpc_PutTrSpriteTileMap2b+5
+call cpc_PutTrSpriteTileMap+5
 jp cont_buc

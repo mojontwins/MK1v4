@@ -9387,29 +9387,29 @@
 ;	SECTION	text
 
 ._sm_updfunc
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
-	defw	cpc_PutTrSp8x16TileMap2bPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapPx
 
 ;	SECTION	code
 
@@ -12612,7 +12612,7 @@
 	ld hl, cpc_PutSpTileMap8x16Px
 	ld (ix + 13), h
 	ld (ix + 12), l
-	ld hl, cpc_PutTrSp8x16TileMap2bPx
+	ld hl, cpc_PutTrSp8x16TileMapPx
 	ld (ix + 15), h
 	ld (ix + 14), l
 	ret
@@ -17417,7 +17417,7 @@
 	ld hl, cpc_PutSPTileMap4x8Px
 	ld (ix + 13), h
 	ld (ix + 12), l
-	ld hl, cpc_PutTrSp4x8TileMap2bPx
+	ld hl, cpc_PutTrSp4x8TileMapPx
 	ld (ix + 15), h
 	ld (ix + 14), l
 	add ix, de
@@ -18067,8 +18067,8 @@
 	LIB	cpc_SetModo
 	XDEF	_en_cy
 	XDEF	_adjust_to_tile_x
-	LIB	cpc_PutMaskSpriteTileMap2b
-	LIB	cpc_PutTrSpriteTileMap2b
+	LIB	cpc_PutMaskSpriteTileMap
+	LIB	cpc_PutTrSpriteTileMap
 	XDEF	_adjust_to_tile_y
 	XDEF	_en_an_state
 	defc	_en_an_state	=	54832
@@ -18293,15 +18293,15 @@
 	XDEF	_pty2
 	XDEF	_move
 	XDEF	_pinv
-	LIB	cpc_PutMaskSpTileMap2b
-	LIB	cpc_PutTrSpTileMap2b
-	LIB	cpc_PutORSpTileMap2b
-	LIB	cpc_PutSpTileMap2b
-	LIB	cpc_PutCpSpTileMap2b
-	LIB	cpc_PutTrSp4x8TileMap2b
+	LIB	cpc_PutMaskSpTileMap
+	LIB	cpc_PutTrSpTileMap
+	LIB	cpc_PutORSpTileMap
+	LIB	cpc_PutSpTileMap
+	LIB	cpc_PutCpSpTileMap
+	LIB	cpc_PutTrSp2Bx8TileMap
 	LIB	cpc_UpdScr
-	LIB	cpc_PutTrSp8x16TileMap2b
-	LIB	cpc_PutTrSp8x24TileMap2b
+	LIB	cpc_PutTrSp4Bx16TileMap
+	LIB	cpc_PutTrSp4Bx24TileMap
 	XDEF	_wall
 	XDEF	_f_zone_ac
 	XDEF	_cerrojos
@@ -18379,9 +18379,9 @@
 	XDEF	__trap_bx
 	XDEF	__trap_by
 	XDEF	_opscore
-	LIB	cpc_PutTrSp4x8TileMap2bPx
-	LIB	cpc_PutTrSp8x16TileMap2bPx
-	LIB	cpc_PutTrSp8x24TileMap2bPx
+	LIB	cpc_PutTrSp4x8TileMapPx
+	LIB	cpc_PutTrSp8x16TileMapPx
+	LIB	cpc_PutTrSp8x24TileMapPx
 	XDEF	_pti
 	XDEF	_ptj
 	XDEF	_comportamiento_tiles

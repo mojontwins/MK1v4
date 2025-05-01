@@ -74,11 +74,11 @@ Tengo que añadir rutinas como las de Modo 1 en OR que hagan el decoding antes p
 
 Remember: La rutina que copia el tile de fondo en cada posición invalidada es `transferir_map_sbuffer_grey` dentro de `cpc_updScr`. Puedo añadir un `cpc_updScrM1P` que haga el `AND 0xF0` cada vez que lea una fila de patrón de RAM.
 
-En cuanto a los sprites, tengo las funciones `cpc_PutTrSp[TAMAÑO]TileMap2bGPxM1` que son las "modo 1 pixel a pixel con OR". Tendría que replicarlas a `cpc_PutTrSp[TAMAÑO]TileMap2bGPxM1P` con la P de packed y ya empieza esto a ser demasiado chorizo, pero ¿quién se va a andar fijando?.
+En cuanto a los sprites, tengo las funciones `cpc_PutTrSp[TAMAÑO]TileMapGPxM1` que son las "modo 1 pixel a pixel con OR". Tendría que replicarlas a `cpc_PutTrSp[TAMAÑO]TileMapGPxM1P` con la P de packed y ya empieza esto a ser demasiado chorizo, pero ¿quién se va a andar fijando?.
 
 ```
-	cpc_PutTrSp16x16TileMap2bGPxM1P
-	cpc_PutTrSp16x24TileMap2bGPxM1P
+	cpc_PutTrSp16x16TileMapGPxM1P
+	cpc_PutTrSp16x24TileMapGPxM1P
 ```
 
 Estoy pensando que quizá lo mejor sea generar los binarios de tiles y sprites como siempre y luego tener un packer que coja dos binarios y genere otro combinando nibbles de uno con nibbles de otro, rollo
@@ -136,6 +136,6 @@ O sea, F0 F1 F2 F3 S1 S1 S1 S1 S2 S2 S2 S2 S3 S3 S3 S3. El conversor no tendrá 
 
 ```
 	cpc_UpdScrP
-	cpc_PutTrSp8x16TileMap2bGPxP
-	cpc_PutTrSp8x24TileMap2bGPxP
+	cpc_PutTrSp8x16TileMapGPxP
+	cpc_PutTrSp8x24TileMapGPxP
 ```

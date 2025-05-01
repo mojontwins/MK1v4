@@ -20,7 +20,7 @@
 
 //#define DEBUG
 
-#include <cpcrslib.h>
+#include <cpcrslib_mt.h>
 
 #include "config.h"
 

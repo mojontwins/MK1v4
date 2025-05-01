@@ -3,7 +3,7 @@
 ; **	   Raúl Simarro, 	  Artaburu 2007       **
 ; ******************************************************
 
-XLIB cpc_PutSpTileMap2b
+XLIB cpc_PutSpTileMap
 
 XREF tiles_tocados
 XREF pantalla_juego					;datos de la pantalla, cada byte indica un tile
@@ -12,7 +12,7 @@ XREF tiles
 XREF ancho_pantalla_bytes 
 XREF posicion_inicial_superbuffer
 
-.cpc_PutSpTileMap2b
+.cpc_PutSpTileMap
 ;según las coordenadas x,y que tenga el sprite, se dibuja en el buffer
    
    ; ld ix,2

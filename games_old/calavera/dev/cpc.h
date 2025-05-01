@@ -3,7 +3,7 @@
 
 // Pestecé specific shit (most of it)
 
-#include <cpcrslib.h>
+#include <cpcrslib_mt.h>
 
 // We are using some stuff from CPCRSLIB directly
 #asm
@@ -511,7 +511,7 @@ void system_init (void) {
 			ld  (ix + 13), h
 			ld  (ix + 12), l
 
-			ld  hl, cpc_PutTrSp8x16TileMap2bPx 		// sm_updfunc [0]
+			ld  hl, cpc_PutTrSp8x16TileMapPx 		// sm_updfunc [0]
 			ld  (ix + 15), h
 			ld  (ix + 14), l	
 
@@ -533,15 +533,15 @@ void system_init (void) {
 				ld  (ix + 6), a
 				ld  (ix + 7), a
 
-				ld  hl, cpc_PutSpTileMap2Bx8			// sm_invfunc [0]
+				ld  hl, cpc_PutSPTileMap2Bx8			// sm_invfunc [0]
 			
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
 			#ifdef NO_MASKS
-					ld  hl, cpc_PutTrSp2Bx8TileMap2b 	// sm_updfunc [0]
+					ld  hl, cpc_PutTrSp2Bx8TileMap 	// sm_updfunc [0]
 			#else
-					ld  hl, cpc_PutTrSp2Bx8TileMap2bG 	// sm_updfunc [0]
+					ld  hl, cpc_PutTrSp2Bx8TileMapG 	// sm_updfunc [0]
 			#endif
 		
 				ld  (ix + 15), h

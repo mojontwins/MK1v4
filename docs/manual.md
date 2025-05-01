@@ -3569,7 +3569,7 @@ Editamos `dev/system/tilemap_conf.asm` y añadimos al final:
 Por último editamos `comp.bat` y cambiamos la linea que llama a `zcc` para que linke contra `cpcrslib_fg.lib` en lugar de `cpcrslib.lib`:
 
 ```bat
-    zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg -o %game%.bin system\tilemap_conf.asm churromain.c > nul
+    zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.bin system\tilemap_conf.asm churromain.c > nul
 ```
 
 ## ¡Y ya está!

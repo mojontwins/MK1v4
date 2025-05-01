@@ -44,11 +44,11 @@ Sobre todo porque mirar en la LUT es esto, que gasta registro de 16 bits (DE):
 
 Así que lo haré con la macro de forma inline y añadiré (otro) crédito más para el amigo Fran Gallego.
 
-Para hacer las pruebas por el momento picaré solo los sprites 8x16 (4 bytes de ancho) `cpc_PutTrSp8x16TileMap2b`.
+Para hacer las pruebas por el momento picaré solo los sprites 8x16 (4 bytes de ancho) `cpc_PutTrSp4Bx16TileMap`.
 
 El problema que veo es que esta rutina está recibiendo coordenadas de byte (64 de ancho) y no de pixels (128). Esto tendré que cambiarlo en el código de MK1.
 
-Voy a duplicar la función en `cpc_PutTrSp8x16TileMap2bPx`
+Voy a duplicar la función en `cpc_PutTrSp8x16TileMapPx`
 
 ## Primera prueba
 

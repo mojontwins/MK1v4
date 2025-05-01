@@ -78,8 +78,8 @@ goto :noerror
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
 rem Add msc4i.asm to the list of compiled sources if using scripting!
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
-zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

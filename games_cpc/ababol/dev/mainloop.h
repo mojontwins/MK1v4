@@ -179,7 +179,7 @@ void main (void) {
 	/*
 	for (gpit = SP_ENEMS_BASE; gpit < SP_ENEMS_BASE + MAX_ENEMS; gpit ++) {
 		sp_sw [gpit].invfunc = cpc_PutSPTileMap2Bx8;
-		sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
+		sp_sw [gpit].updfunc = cpc_PutTrSp2Bx8TileMap;
 	}
 	*/
 	#asm
@@ -193,7 +193,7 @@ void main (void) {
 			ld  (ix + 13), h
 			ld  (ix + 12), l
 
-			ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+			ld  hl, cpc_PutTrSp4x8TileMapPx 		// sm_updfunc [0]
 			ld  (ix + 15), h
 			ld  (ix + 14), l	
 
@@ -209,7 +209,7 @@ void main (void) {
 			sp_sw [gpit].cox = 0;
 			sp_sw [gpit].coy = 0;
 			sp_sw [gpit].invfunc =cpc_PutSPTileMap2Bx8;
-			sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
+			sp_sw [gpit].updfunc = cpc_PutTrSp2Bx8TileMap;
 			sp_sw [gpit].sp0 = sp_sw [gpit].sp1 = (unsigned int) (sprite_19_a);
 		}
 		*/
@@ -228,7 +228,7 @@ void main (void) {
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
+				ld  hl, cpc_PutTrSp2Bx8TileMap 		// sm_updfunc [0]
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
 
@@ -251,7 +251,7 @@ void main (void) {
 		sp_sw [SP_SWORD_BASE].cox = 0;
 		sp_sw [SP_SWORD_BASE].coy = 0;
 		sp_sw [SP_SWORD_BASE].invfunc =cpc_PutSPTileMap2Bx8;
-		sp_sw [SP_SWORD_BASE].updfunc = cpc_PutTrSp4x8TileMap2b;
+		sp_sw [SP_SWORD_BASE].updfunc = cpc_PutTrSp2Bx8TileMap;
 		sp_sw [SP_SWORD_BASE].sp0 = sp_sw [SP_SWORD_BASE].sp1 = (unsigned int) (sprite_19_a);
 		*/
 		#asm
@@ -270,9 +270,9 @@ void main (void) {
 				ld  (ix + 12), l
 
 				#ifdef MODE_1
-					ld  hl, cpc_PutTrSp8x8TileMap2bPxM1		// sm_updfunc [0]
+					ld  hl, cpc_PutTrSp8x8TileMapPxM1		// sm_updfunc [0]
 				#else
-					ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+					ld  hl, cpc_PutTrSp4x8TileMapPx 		// sm_updfunc [0]
 				#endif
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
