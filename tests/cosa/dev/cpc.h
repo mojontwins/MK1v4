@@ -529,7 +529,7 @@ void system_init (void) {
 				ld  (ix + 6), a
 				ld  (ix + 7), a
 
-				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
+				ld  hl, cpc_PutSPTileMap2Bx8				// sm_invfunc [0]
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 

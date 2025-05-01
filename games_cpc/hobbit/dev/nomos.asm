@@ -10067,7 +10067,7 @@
 	XDEF	_text4
 	XDEF	_text5
 	XDEF	_text6
-	LIB	cpc_PutSpTileMap4x8
+	LIB	cpc_PutSPTileMap2Bx8
 	XDEF	_text7
 	XDEF	_text8
 	XDEF	_text9
@@ -10235,7 +10235,7 @@
 	LIB	cpc_TouchTiles
 	XDEF	_pa2
 	XDEF	_sonia_talk
-	LIB	cpc_PutSpTileMap4x8Px
+	LIB	cpc_PutSPTileMap4x8Px
 	XDEF	_pa3
 	XDEF	_pa4
 	XDEF	_pa5
@@ -10308,8 +10308,8 @@
 	XDEF	_comportamiento_tiles
 	XDEF	_ptj
 	XDEF	_move_tile
-	LIB	cpc_PutSpTileMap8x16
-	LIB	cpc_PutSpTileMap8x24
+	LIB	cpc_PutSPTileMap4Bx16
+	LIB	cpc_PutSPTileMap4Bx24
 	XDEF	_tileset
 	XDEF	_text21
 	XDEF	_wyz_stop_sound

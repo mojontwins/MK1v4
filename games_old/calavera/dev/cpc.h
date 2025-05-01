@@ -533,11 +533,17 @@ void system_init (void) {
 				ld  (ix + 6), a
 				ld  (ix + 7), a
 
-				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
+				ld  hl, cpc_PutSpTileMap2Bx8			// sm_invfunc [0]
+			
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
+			#ifdef NO_MASKS
+					ld  hl, cpc_PutTrSp2Bx8TileMap2b 	// sm_updfunc [0]
+			#else
+					ld  hl, cpc_PutTrSp2Bx8TileMap2bG 	// sm_updfunc [0]
+			#endif
+		
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
 

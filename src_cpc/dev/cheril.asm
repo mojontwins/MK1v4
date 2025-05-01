@@ -11216,7 +11216,7 @@
 	LIB	cpc_PutTrSp16x16TileMap2bGPxM1
 	LIB	cpc_TestKey
 	LIB	cpc_PutSprite
-	LIB	cpc_PutSpTileMap4x8
+	LIB	cpc_PutSPTileMap2Bx8
 	LIB	cpc_PutSpTileMap
 	LIB	cpc_InitTileMap
 	XDEF	_s_marco
@@ -11340,7 +11340,7 @@
 	XDEF	_calc_hotspot_ptr
 	XDEF	_pryy
 	LIB	cpc_TouchTiles
-	LIB	cpc_PutSpTileMap4x8Px
+	LIB	cpc_PutSPTileMap4x8Px
 	XDEF	_abs
 	LIB	cpc_ScrollRight0
 	LIB	cpc_PrintGphStr
@@ -11385,8 +11385,8 @@
 	XDEF	_comportamiento_tiles
 	XDEF	_ptj
 	XDEF	_move_tile
-	LIB	cpc_PutSpTileMap8x16
-	LIB	cpc_PutSpTileMap8x24
+	LIB	cpc_PutSPTileMap4Bx16
+	LIB	cpc_PutSPTileMap4Bx24
 	XDEF	_tileset
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask

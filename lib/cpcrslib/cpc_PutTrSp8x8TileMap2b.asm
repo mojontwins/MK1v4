@@ -50,7 +50,7 @@ XREF posicion_inicial_superbuffer
     ld d,(ix+1)	;HL apunta al sprite
 	
 .sp_buffer_mask
-	ld ixh,16
+	ld ixh,8
 	ex de,hl 		; de -> bg
 	ld b, h
 	ld c, l 		; bc -> sprite

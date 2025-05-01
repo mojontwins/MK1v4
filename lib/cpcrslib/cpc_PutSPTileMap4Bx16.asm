@@ -13,7 +13,7 @@
 ;   cuando sea posible.
 ; - Prescinde de bucles y otros cálculos al ser un caso muy concreto
 
-XLIB cpc_PutSpTileMap8x16
+XLIB cpc_PutSPTileMap4Bx16
 
 XREF tiles_tocados
 XREF pantalla_juego
@@ -22,7 +22,7 @@ XREF tiles
 
 LIB cpc_UpdTileTableClp
 
-.cpc_PutSpTileMap8x16
+.cpc_PutSPTileMap4Bx16
     ex  de, hl
     ld  ixh, d
     ld  ixl, e

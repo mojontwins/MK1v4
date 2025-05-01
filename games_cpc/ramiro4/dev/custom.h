@@ -933,7 +933,7 @@ void win_crypt (void) {
 				ld  (ix + 10), a 		// .ox
 				ld  (ix + 11), a 		// .oy
 
-				ld  hl, cpc_PutSpTileMap4x8Px			// .invfunc
+				ld  hl, cpc_PutSPTileMap4x8Px			// .invfunc
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 

@@ -17518,7 +17518,7 @@
 	ld (ix + 9), a
 	ld (ix + 10), a
 	ld (ix + 11), a
-	ld hl, cpc_PutSpTileMap4x8Px
+	ld hl, cpc_PutSPTileMap4x8Px
 	ld (ix + 13), h
 	ld (ix + 12), l
 	ld hl, cpc_PutTrSp4x8TileMap2bPx
@@ -21302,7 +21302,7 @@
 	ld de, 16
 	ld b, 3
 	.sp_sw_init_enems_loop
-	ld hl, cpc_PutSpTileMap4x8Px
+	ld hl, cpc_PutSPTileMap4x8Px
 	ld (ix + 13), h
 	ld (ix + 12), l
 	ld hl, cpc_PutTrSp4x8TileMap2bPx
@@ -21314,7 +21314,7 @@
 	xor a
 	ld (ix + 6), a
 	ld (ix + 7), a
-	ld hl, cpc_PutSpTileMap4x8Px
+	ld hl, cpc_PutSPTileMap4x8Px
 	ld (ix + 13), h
 	ld (ix + 12), l
 	ld hl, cpc_PutTrSp4x8TileMap2bPx
@@ -22129,7 +22129,7 @@
 	LIB	cpc_PutSpriteXOR
 	LIB	cpc_TestKey
 	LIB	cpc_PutSprite
-	LIB	cpc_PutSpTileMap4x8
+	LIB	cpc_PutSPTileMap2Bx8
 	LIB	cpc_PutSpTileMap
 	LIB	cpc_InitTileMap
 	XDEF	_s_hit_x
@@ -22277,7 +22277,7 @@
 	XDEF	_calc_hotspot_ptr
 	XDEF	_pryy
 	LIB	cpc_TouchTiles
-	LIB	cpc_PutSpTileMap4x8Px
+	LIB	cpc_PutSPTileMap4x8Px
 	XDEF	_tileoffset
 	XDEF	_abs
 	LIB	cpc_ScrollRight0
@@ -22323,8 +22323,8 @@
 	XDEF	_comportamiento_tiles
 	XDEF	_move_tile
 	XDEF	_tileset
-	LIB	cpc_PutSpTileMap8x16
-	LIB	cpc_PutSpTileMap8x24
+	LIB	cpc_PutSPTileMap4Bx16
+	LIB	cpc_PutSPTileMap4Bx24
 	XDEF	_s_type
 	XDEF	_new_level
 	XDEF	_wyz_stop_sound

@@ -184,7 +184,7 @@ void main (void) {
 
 	/*
 	for (gpit = SP_ENEMS_BASE; gpit < SP_ENEMS_BASE + MAX_ENEMS; gpit ++) {
-		sp_sw [gpit].invfunc = cpc_PutSpTileMap4x8;
+		sp_sw [gpit].invfunc = cpc_PutSPTileMap2Bx8;
 		sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
 	}
 	*/
@@ -214,7 +214,7 @@ void main (void) {
 		for (gpit = SP_BULLETS_BASE; gpit < SP_BULLETS_BASE + MAX_BULLETS; gpit ++) {
 			sp_sw [gpit].cox = 0;
 			sp_sw [gpit].coy = 0;
-			sp_sw [gpit].invfunc =cpc_PutSpTileMap4x8;
+			sp_sw [gpit].invfunc =cpc_PutSPTileMap2Bx8;
 			sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
 			sp_sw [gpit].sp0 = sp_sw [gpit].sp1 = (unsigned int) (sprite_19_a);
 		}
@@ -230,7 +230,7 @@ void main (void) {
 				ld  (ix + 6), a
 				ld  (ix + 7), a
 
-				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
+				ld  hl, cpc_PutSPTileMap2Bx8				// sm_invfunc [0]
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
@@ -256,7 +256,7 @@ void main (void) {
 		/*
 		sp_sw [SP_SWORD_BASE].cox = 0;
 		sp_sw [SP_SWORD_BASE].coy = 0;
-		sp_sw [SP_SWORD_BASE].invfunc =cpc_PutSpTileMap4x8;
+		sp_sw [SP_SWORD_BASE].invfunc =cpc_PutSPTileMap2Bx8;
 		sp_sw [SP_SWORD_BASE].updfunc = cpc_PutTrSp4x8TileMap2b;
 		sp_sw [SP_SWORD_BASE].sp0 = sp_sw [SP_SWORD_BASE].sp1 = (unsigned int) (sprite_19_a);
 		*/
@@ -270,7 +270,7 @@ void main (void) {
 				#ifdef MODE_1
 					ld hl, cpc_PutSpTileMap8x8PxM1 // sm_invfunc [0]
 				#else
-					ld  hl, cpc_PutSpTileMap4x8Px		// sm_invfunc [0]
+					ld  hl, cpc_PutSPTileMap4x8Px		// sm_invfunc [0]
 				#endif
 				ld  (ix + 13), h
 				ld  (ix + 12), l

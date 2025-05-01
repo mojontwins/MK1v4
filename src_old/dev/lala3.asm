@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun Apr 27 16:18:06 2025
+;	Module compile time: Thu May 01 10:01:49 2025
 
 
 
@@ -10300,16 +10300,18 @@
 	LIB	cpc_PrintGphStrXYM1
 	LIB	cpc_UpdScrP
 	LIB	cpc_PutSpriteXOR
+	LIB	cpc_PutTrSp8x8TileMap2bGPxM1
 	LIB	cpc_PutTrSp16x16TileMap2bGPxM1
 	LIB	cpc_TestKey
 	LIB	cpc_PutSprite
-	LIB	cpc_PutSpTileMap4x8
 	LIB	cpc_PutSpTileMap
 	LIB	cpc_InitTileMap
 	XDEF	_peta_el_beeper
 	XDEF	_s_marco
 	LIB	cpc_PutSpTileMap8x16Px
 	LIB	cpc_PutSpTileMap8x24Px
+	LIB	cpc_PutSPTileMap4Bx16
+	LIB	cpc_PutSPTileMap4Bx24
 	XDEF	_sp_sw
 	defc	_sp_sw	=	58880
 	XDEF	_cm_two_points
@@ -10419,6 +10421,7 @@
 	XDEF	_at2
 	XDEF	__x2
 	XDEF	__y2
+	LIB	cpc_PutSPTileMap2Bx8
 	LIB	cpc_AnyKeyPressed
 	XDEF	_step
 	XDEF	__en_life
@@ -10428,7 +10431,7 @@
 	XDEF	_calc_hotspot_ptr
 	XDEF	_pryy
 	LIB	cpc_TouchTiles
-	LIB	cpc_PutSpTileMap4x8Px
+	LIB	cpc_PutSPTileMap4x8Px
 	XDEF	_abs
 	LIB	cpc_ScrollRight0
 	LIB	cpc_PrintGphStr
@@ -10474,8 +10477,6 @@
 	XDEF	_comportamiento_tiles
 	LIB	cpc_PutTrSp8x16TileMap2bPx
 	LIB	cpc_PutTrSp8x24TileMap2bPx
-	LIB	cpc_PutSpTileMap8x16
-	LIB	cpc_PutSpTileMap8x24
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask
 	LIB	cpc_ReadTile

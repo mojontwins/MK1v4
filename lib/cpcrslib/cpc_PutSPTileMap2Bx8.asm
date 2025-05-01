@@ -9,11 +9,11 @@
 ;   y los tiles "actuales" (cx, cy).
 ; - Intenta "podar" los casos en los que los rectángulos 
 ;   sean iguales.
-; - Intenta "afinar" y marcar solo 2/3 de long. en vez de 3/4
+; - Intenta "afinar" y marcar solo 1 de long en vez de 2
 ;   cuando sea posible.
 ; - Prescinde de bucles y otros cálculos al ser un caso muy concreto
 
-XLIB cpc_PutSpTileMap8x24
+XLIB cpc_PutSPTileMap2Bx8
 
 XREF tiles_tocados
 XREF pantalla_juego
@@ -22,12 +22,12 @@ XREF tiles
 
 LIB cpc_UpdTileTableClp
 
-.cpc_PutSpTileMap8x24
+.cpc_PutSPTileMap2Bx8
     ex  de, hl
     ld  ixh, d
     ld  ixl, e
 
-    ; Tendré que marcar 6, 8, 9 o 12 cuadros dependiendo de las alineaciones.
+    ; Tendré que marcar 1, 2 o 4 cuadros dependiendo de las alineaciones.
 
     ld e, (ix + 10) ; ox
     ld d, (ix + 11) ; oy
@@ -63,81 +63,29 @@ do_update:
     srl d
     srl d                   ; D = Y / 8
 
-    push de                 ; Lo guardamos
-
     ; Marco el tile origen
     call cpc_UpdTileTableClp   ; Marca el tile en DE
 
-    ; Y el de su derecha
-    inc e
-    call cpc_UpdTileTableClp   ; Marca el tile en DE
-
-    ; Marcar el siguiente?
+    ; Marcar el tile de la derecha?
     ld a, iyl
     or a
     jr z, origin_next_row
 
+    push de
     inc e
     call cpc_UpdTileTableClp   ; Marca el tile en DE
+    pop de
 
 origin_next_row:
-    pop de                  ; Recuperamos   
-    inc d                   ; Y = Y + 1
-    push de                 ; Guardamos
-
-    ; Marco el primer tile
-    call cpc_UpdTileTableClp   ; Marca el tile en DE
-
-    ; Y el de su derecha
-    inc e
-    call cpc_UpdTileTableClp   ; Marca el tile en DE
-
-    ; Marcar el siguiente?
-    ld a, iyl
-    or a
-    jr z, origin_next_row2
-
-    inc e
-    call cpc_UpdTileTableClp   ; Marca el tile en DE
-
-origin_next_row2:
-    pop de                  ; Recuperamos   
-    inc d                   ; Y = Y + 1
-    push de                 ; Guardamos
-
-    ; Marco el primer tile
-    call cpc_UpdTileTableClp   ; Marca el tile en DE
-
-    ; Y el de su derecha
-    inc e
-    call cpc_UpdTileTableClp   ; Marca el tile en DE
-
-    ; Marcar el siguiente?
-    ld a, iyl
-    or a
-    jr z, origin_last_row
-
-    inc e
-    call cpc_UpdTileTableClp   ; Marca el tile en DE    
-
-origin_last_row:
-    pop de                  ; Recuperamos   
-
-    ; Marcar esta fila?
+    ; Marcar fila de abajo?
     ld a, iyh
     or a
     jr z, fin
 
-    inc d                   ; Y = Y + 1
-
-    ; Marco el primer tile
+    inc d
     call cpc_UpdTileTableClp   ; Marca el tile en DE
 
-    ; Y el de su derecha
-    inc e
-    call cpc_UpdTileTableClp   ; Marca el tile en DE
-
-    ; Marcar el siguiente?
+    ; Marcar el tile de la derecha?
     ld a, iyl
     or a
     jr z, fin

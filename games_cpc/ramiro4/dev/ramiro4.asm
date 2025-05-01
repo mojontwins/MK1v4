@@ -17414,7 +17414,7 @@
 	ld de, 16
 	ld b, 3
 	.sp_sw_init_enems_loop
-	ld hl, cpc_PutSpTileMap4x8Px
+	ld hl, cpc_PutSPTileMap4x8Px
 	ld (ix + 13), h
 	ld (ix + 12), l
 	ld hl, cpc_PutTrSp4x8TileMap2bPx
@@ -18146,7 +18146,7 @@
 	XDEF	_text4
 	XDEF	_text5
 	XDEF	_text6
-	LIB	cpc_PutSpTileMap4x8
+	LIB	cpc_PutSPTileMap2Bx8
 	XDEF	_text7
 	XDEF	_text8
 	XDEF	_text9
@@ -18322,7 +18322,7 @@
 	XDEF	_pryy
 	XDEF	_calc_hotspot_ptr
 	LIB	cpc_TouchTiles
-	LIB	cpc_PutSpTileMap4x8Px
+	LIB	cpc_PutSPTileMap4x8Px
 	XDEF	_tileoffset
 	XDEF	_paint_water_strip
 	XDEF	_abs
@@ -18387,8 +18387,8 @@
 	XDEF	_comportamiento_tiles
 	XDEF	_move_tile
 	XDEF	_tileset
-	LIB	cpc_PutSpTileMap8x16
-	LIB	cpc_PutSpTileMap8x24
+	LIB	cpc_PutSPTileMap4Bx16
+	LIB	cpc_PutSPTileMap4Bx24
 	XDEF	_text18
 	XDEF	_text19
 	XDEF	_wyz_stop_sound

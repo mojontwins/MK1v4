@@ -172,7 +172,8 @@
 unsigned char comportamiento_tiles [] = {
 	0, 8, 6, 6, 8, 8, 8, 0, 9, 8, 6, 8, 0, 0, 8, 2,
 	0, 0, 2, 0, 0, 2, 0, 2, 8, 2, 2, 2, 2, 2, 0, 0,
-	2, 2, 2, 2, 0, 2, 2, 0, 2, 0, 2, 6,128,2, 2, 2
+	2, 2, 2, 2, 0, 2, 2, 0, 2, 0, 2, 6,128,2, 2, 2,
+	0, 0 //<- La luna
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes

@@ -14,7 +14,7 @@
 ; - Prescinde de bucles y otros cálculos al ser un caso muy concreto
 ; [na_th_an] Esta rutina funciona con X en pixels modo 0 (0-127) 
 
-XLIB cpc_PutSpTileMap4x8Px
+XLIB cpc_PutSPTileMap4x8Px
 
 XREF tiles_tocados
 XREF pantalla_juego
@@ -23,7 +23,7 @@ XREF tiles
 
 LIB cpc_UpdTileTableClp
 
-.cpc_PutSpTileMap4x8Px
+.cpc_PutSPTileMap4x8Px
     ex  de, hl
     ld  ixh, d
     ld  ixl, e
