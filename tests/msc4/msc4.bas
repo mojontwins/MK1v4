@@ -151,6 +151,8 @@ Sub parseScriptLine (linea As String)
 			tokens (i) = "$247"
 		ElseIf Ucase(tokens (i)) = "TN" Then 
 			tokens (i) = "$246"
+		ElseIf Ucase(tokens (i)) = "HOTSPOT" Then
+			tokens (i) = "$245"
 		End If
 
 		i = i + 1
@@ -835,7 +837,7 @@ Sub processScript (fIn As Integer)
 					ElseIf startsWith (tokens (), "press fire at any") Then
 						section = 2
 					
-					ElseIf startsWith (tokens (), "player gets coin") Then
+					ElseIf startsWith (tokens (), "player got something") Then
 						section = 3
 					
 					ElseIf startsWith (tokens (), "player kills enemy") Then 
@@ -983,7 +985,7 @@ fOut = FreeFile
 Open interpreterFn For Output As #fOut
 
 writeAssemblyString fOut, "defc PLAYER_LIFE=99 ;; Find a way to solve this"
-writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text"
+writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t"
 writeAssemblyString fOut, "XREF script_bytecode"
 
 If outT = SPECCY Then
@@ -1076,9 +1078,10 @@ If RV(&HFC) Then writeAssemblyString fOut, "; PY RVALUE|cp  0xFC|jr  nz, rvb_set
 If RV(&HFB) Then writeAssemblyString fOut, "; KILLED RVALUE|cp  0xFB|jr  nz, rvb_set_player_killed_done|ld  a, (_player + 32) 	; player.killed|ret|.rvb_set_player_killed_done"
 If RV(&HFA) Then writeAssemblyString fOut, "; OBJS RVALUE|cp  0xFA|jr  nz, rvb_set_player_objs_done|ld  a, (_player + 27) 	; player.objs|ret|.rvb_set_player_objs_done"
 If RV(&HF9) Then writeAssemblyString fOut, "; LIFE RVALUE|cp  0xF9|jr  nz, rvb_set_player_life_done|ld  a, (_player + 29) 	; player.life MSB|ret|.rvb_set_player_life_done"
-writeAssemblyString fOut, "; TX RVALUE|cp  0xF8|jr  nz, rvb_set_tx_done|ld  a, (_tpx)|ret|.rvb_set_tx_done"
-writeAssemblyString fOut, "; TY RVALUE|cp  0xF7|jr  nz, rvb_set_ty_done|ld  a, (_tpy)|ret|.rvb_set_ty_done"
-writeAssemblyString fOut, "; TN RVALUE|cp  0xF6|jr  nz, rvb_set_tile_done|ld  a, (_tqt)|ret|.rvb_set_tile_done"
+If RV(&HF8) Then writeAssemblyString fOut, "; TX RVALUE|cp  0xF8|jr  nz, rvb_set_tx_done|ld  a, (_tpx)|ret|.rvb_set_tx_done"
+If RV(&HF7) Then writeAssemblyString fOut, "; TY RVALUE|cp  0xF7|jr  nz, rvb_set_ty_done|ld  a, (_tpy)|ret|.rvb_set_ty_done"
+If RV(&HF6) Then writeAssemblyString fOut, "; TN RVALUE|cp  0xF6|jr  nz, rvb_set_tile_done|ld  a, (_tqt)|ret|.rvb_set_tile_done"
+If RV(&HF5) Then writeAssemblyString fOut, "; HOTSPOT RVALUE|cp  0xF5|jr  nz, rvb_set_tile_done|ld  a, (_hotspot_t)|ret|.rvb_set_tile_done"
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
 writeAssemblyString fOut, ";; Read flag index and value, returns pointer in HL and value in A.|.read_i_v|call read_vbyte  		; Read flag index|ld  c, a|call read_vbyte 		; Read value|ld  (sc_y), a"

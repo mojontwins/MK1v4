@@ -23,6 +23,7 @@
 	XREF _peta_el_beeper
 	XREF _do_extern_action
 	XREF draw_line_of_text
+	XREF _hotspot_t
 
 	XREF script_bytecode
 
@@ -113,6 +114,19 @@
 	jp  z, script_actions
 
 ;;; Decode OPCODE & jump to interpreter
+
+;; OPCODE 0x01
+;; IF A = B
+	cp  0x01
+	jr  nz, copcode_01_end
+.copcode_01
+	call read_vbyte
+	ld  b, a
+	call read_vbyte
+	cp  b
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_01_end
 
 ;; OPCODE 0x05
 ;; IF NPANT = N
@@ -227,6 +241,16 @@
 	jp  script_actions
 .aopcode_E0_end
 
+;; OPCODE 0xF0
+;; WIN GAME
+	cp  0xf0
+	jr  nz, aopcode_F0_end
+.aopcode_F0
+	ld  a, 1
+	ld  (_script_result), a
+	ret
+.aopcode_F0_end
+
 ;; UNKNOWN
 	jp script_actions
 
@@ -249,24 +273,17 @@
 .read_vbyte_rec
 	call read_vbyte
 
-; TX RVALUE
-	cp  0xF8
-	jr  nz, rvb_set_tx_done
-	ld  a, (_tpx)
+; OBJS RVALUE
+	cp  0xFA
+	jr  nz, rvb_set_player_objs_done
+	ld  a, (_player + 27) 	; player.objs
 	ret
-.rvb_set_tx_done
+.rvb_set_player_objs_done
 
-; TY RVALUE
-	cp  0xF7
-	jr  nz, rvb_set_ty_done
-	ld  a, (_tpy)
-	ret
-.rvb_set_ty_done
-
-; TN RVALUE
-	cp  0xF6
+; HOTSPOT RVALUE
+	cp  0xF5
 	jr  nz, rvb_set_tile_done
-	ld  a, (_tqt)
+	ld  a, (_hotspot_t)
 	ret
 .rvb_set_tile_done
 

@@ -48,7 +48,8 @@
 * Motor de disparos, aunque sólo en vista lateral.
 * Tilesets de 48 tiles con `UNPACKED_MAP`.
 * Sprites sin máscaras con `NO_MASKS`.
-* Animación alternativa para vista lateral (1, 2, 3 vs 1, 3, 1, 2). `PLAYER_ALTERNATE_ANIMATION`* Cambios en los comportamientos de los tiles:
+* Animación alternativa para vista lateral (1, 2, 3 vs 1, 3, 1, 2). `PLAYER_ALTERNATE_ANIMATION`
+* Cambios en los comportamientos de los tiles:
 	* 0 traspasable
 	* 1 traspasable y mata
 	* 2 traspasable y oculta

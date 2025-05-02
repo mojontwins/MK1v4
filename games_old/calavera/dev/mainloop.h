@@ -266,6 +266,10 @@ void main (void) {
 						draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
 						hotspot_y = 240;
 						hotspots [n_pant].act = rdi;
+
+						#ifdef ACTIVATE_SCRIPTING
+							script (SC_PLAYER_GOT_SOMETHING);
+						#endif
 					}
 				}
 			}

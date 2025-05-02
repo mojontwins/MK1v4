@@ -11,10 +11,18 @@ ENTERING ANY
 	END
 END
 
+PLAYER GOT SOMETHING
+	IF HOTSPOT = 1
+	IF OBJS = 24
+	THEN
+		WIN GAME
+	END
+END
+
 SPECIAL TILE TOUCHED
 	IF NPANT = 3 
 	THEN
-		SOUND 6
+		SOUND 8
 		DECOS
 			10, 2, 3
 			10, 3, 0
@@ -27,12 +35,45 @@ SPECIAL TILE TOUCHED
 		END
 	END
 
+	IF NPANT = 5
+	THEN
+		SOUND 8
+		DECOS
+			7, 1, 13
+			7, 7, 0
+			8, 9, 0
+			9, 7, 0
+		END
+	END
+
 	IF NPANT = 10
 	THEN
-		SOUND 6
+		SOUND 8
 		DECOS
+			3, 5, 0
 			13, 4, 0
 			13, 5, 0
+		END
+	END
+
+	IF NPANT = 14
+	THEN
+		SOUND 8
+		DECOS
+			12, 4, 13
+			0, 5, 13
+		END
+	END
+
+	IF NPANT = 44
+	THEN
+		SOUND 8
+		DECOS
+			3, 5, 0
+			11, 0, 0
+			11, 1, 0
+			11, 2, 0
+			11, 3, 13
 		END
 	END
 END 

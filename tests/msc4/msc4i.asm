@@ -23,6 +23,7 @@ XREF _map_attr
 XREF _peta_el_beeper
 XREF _do_extern_action
 XREF draw_line_of_text
+XREF _hotspot_t
 
 ; Target CPC
 XREF _cpc_UpdateNow
@@ -690,6 +691,13 @@ XDEF _script_result
 	cp  0xF6
 	jr  nz, rvb_set_tile_done
 	ld  a, (_tqt)
+	ret
+.rvb_set_tile_done
+
+	; HOTSPOT RVALUE
+	cp  0xF5
+	jr  nz, rvb_set_tile_done
+	ld  a, (_hotspot_t)
 	ret
 .rvb_set_tile_done
 

@@ -373,7 +373,7 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (ix+8), a 	// .t
 			
 			#if (defined PLAYER_CAN_FIRE && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
-					ld  a, ENEMIES_LIFE_GAUGE
+					ld  a, ENEMS_LIFE_GAUGE
 					ld  (ix+9), a 	// .life
 			#endif
 
@@ -465,8 +465,7 @@ unsigned int __FASTCALL__ abs (int n) {
 			if ( player.possee && player.vx == 0 )
 		#endif
 		{
-			if (attr ((gpx + 8) >> 4, gpy + 8) >> 4) & 2)
-				return 1;
+			return (attr ((gpx + 8) >> 4, (gpy + 8) >> 4) & 2);
 		}
 		return 0;
 	}
@@ -1584,10 +1583,10 @@ void enems_calc_frame (void) {
 		#ifdef RANDOM_RESPAWN
 				ret
 			.enems_calc_frame_invisible
-				pop de 			// DE -> en_an_next_frame [enit]
-				ld  (de), _sprite_18_a % 256
-				inc de 
-				ld  (de), _sprite_18_a / 256
+				pop hl 			// DE -> en_an_next_frame [enit]
+				ld  (hl), _sprite_18_a % 256
+				inc hl 
+				ld  (hl), _sprite_18_a / 256
 		#endif
 	#endasm
 }
@@ -1706,7 +1705,7 @@ void draw_scr (void) {
 	void enems_kill (unsigned char damage) {
 		// Kill enemy
 
-		#if ENEMIES_LIFE_GAUGE > 1
+		#if ENEMS_LIFE_GAUGE > 1
 			if (_en_life >= damage) {
 				_en_life -= damage;
 			} else {
@@ -2465,6 +2464,8 @@ void mueve_bicharracos (void) {
 						add hl, bc 
 						ld  a, ixl 
 						ld  (hl), a
+
+					.fantys_end
 				#endasm 
 			#endif
 
@@ -2659,12 +2660,16 @@ void mueve_bicharracos (void) {
 
 				#ifdef PLAYER_CAN_FIRE
 					// Collision with bullets
+					if (
 					#ifdef RANDOM_RESPAWN
-						if (_en_t < 128 || en_an_fanty_activo [enit] == 1)
+						(_en_t < 128 || en_an_fanty_activo [enit] == 1)
 					#else
-						if (_en_t < 128)
+						(_en_t < 128)
 					#endif
-					{
+					#ifndef PLAYER_MOGGY_STYLE
+						&& _en_t != 4
+					#endif
+					) {
 						for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
 							#asm
 									ld  bc, (_en_j)
@@ -2745,9 +2750,8 @@ void mueve_bicharracos (void) {
 					jr  z, enems_create_fanty_done 
 
 					call _rand 
+					ld  a, l
 					and 31 
-					xor a 
-					or  l 
 					jr  nz, enems_create_fanty_done
 
 					ld  bc, (_enit) 

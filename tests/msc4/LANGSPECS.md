@@ -63,21 +63,24 @@ Also, compiler verá igual `FLAG n` y `$n`. Las comas en el código será obviab
 
 Para que el compilador sea fácil de programar y modificar, me haré un `outputAssembly` que pueda recibir una cadena con las lineas partidas por `|`, por ejemplo, y que saque a la salida el código debidamente indentado.
 
-Como los valores que se manejan en un juego puede ser como máximo 240 (posición X mayor) y $FF marca indirección, tenemos aún 13 variables especiales:
+Definimos estas variables especiales, codificadas internamente como "flags" fuera de rango. Por eso empiezo por $FE hacia abajo.
 
-$FE = NPANT = n_pant
-$FD = PX = gpx
-$FC = PY = gpy
-$FB = KILLED = player.killed
-$FA = OBJS = player.objs
-$F9 = LIFE = player.life
-$F8 = TX = (gpx + 8) >> 4 
-$F7 = TY = (gpy + 8) >> 4
-$F6 = TN = qtile (gpx + 8, gpy + 8)
+* $FE = NPANT = n_pant 
+* $FD = PX = gpx
+* $FC = PY = gpy
+* $FB = KILLED = player.killed
+* $FA = OBJS = player.objs
+* $F9 = LIFE = player.life
+* $F8 = TX = (gpx + 8) >> 4 
+* $F7 = TY = (gpy + 8) >> 4
+* $F6 = TN = qtile (gpx + 8, gpy + 8)
+* $F5 = HOTSPOT = hotspot_t, last hotspot hit
+* $F4 = MOVED_TO_TILE = moved_to_tile, el tile que desapareció al empujar el empujable sobre él.
+* $F3 = MOVED_X = moved_last_x,
+* $F2 = MOVED_Y = moved_last_y, coordenadas donde quedó el último tile empujado.
+* $F1 = TIMER = timer
 
-Asignar a F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING.
-
-CUIDAO - Esto debe poder funcionar como LVALUE así que ¿deben ser $FF $F0, etc ?
+Sólo rvalue: Asignar a F2-F4, F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING. El resto debe poder ser lvalue (se debe poder asignar a NPANT, KILLED, etc).
 
 El intérprete debe reconocer las y codificar el flag correcto. Luego el intérprete debería resolverlas al valor del motor.
 
@@ -135,11 +138,11 @@ Voy a reservar espacio para 8 scripts especiales por si esto tiene ampliación. 
     0    ENTERING GAME
     2    ENTERING ANY
     4    PRESS FIRE AT ANY
-    6    PLAYER GETS COIN
+    6    PLAYER GOT SOMETHING -> got coin / hit hotspot
     8    PLAYER KILLS ENEMY
     10   SPECIAL TILE TOUCHED
-    12
-    14
+    12   ON TIMER ZERO
+    14   ON TILE PUSHED
     16   ENTERING SCREEN 0
     18   PRESS FIRE AT SCREEN 0
     20   ...
@@ -242,3 +245,6 @@ Necesito implementar:
 - En msc4i.asm: Código de intérprete para el opcode 52.
 - En engine: código para mostrar en hud.
 
+## ON TILE PUSHED
+
+Por defecto, empujar un tile ejecutará ON TILE PUSHED, pero puede cambiarse a que se ejecuten las secciones FIRE correspondientes con `#define TILE_PUSHED_PRESSES_FIRE`. En este caso `IF PUSHED` evaluará a true. 

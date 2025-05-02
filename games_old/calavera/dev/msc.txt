@@ -33,19 +33,39 @@ T4=[=]
 T5=[49]
 Bytecode: 0B 30 08 01 00 FF 20 08 01 31 FF FF 
 ==========================================
+LINEA PLAYER GOT SOMETHING
+T0=[player]
+T1=[got]
+T2=[something]
+Adding 12 @ sect 3
+Parsing: IF HOTSPOT = 1
+T0=[IF]
+T1=[$245]
+T2=[=]
+T3=[1]
+Parsing: IF OBJS = 24
+T0=[IF]
+T1=[$250]
+T2=[=]
+T3=[24]
+Parsing: WIN GAME
+T0=[WIN]
+T1=[GAME]
+Bytecode: 0C 01 FF F5 01 01 FF FA 18 FF F0 FF FF 
+==========================================
 LINEA SPECIAL TILE TOUCHED
 T0=[special]
 T1=[tile]
 T2=[touched]
-Adding 12 @ sect 5
+Adding 25 @ sect 5
 Parsing: IF NPANT = 3
 T0=[IF]
 T1=[$254]
 T2=[=]
 T3=[3]
-Parsing: SOUND 6
+Parsing: SOUND 8
 T0=[SOUND]
-T1=[6]
+T1=[8]
 Began parsing decos
 Parsed deco 10 2 3
 Parsed deco 10 3 0
@@ -56,19 +76,61 @@ Parsed deco 10 7 0
 Parsed deco 10 8 12
 Parsed deco 12 7 0
 Stopped parsing decos
+Parsing: IF NPANT = 5
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[5]
+Parsing: SOUND 8
+T0=[SOUND]
+T1=[8]
+Began parsing decos
+Parsed deco 7 1 13
+Parsed deco 7 7 0
+Parsed deco 8 9 0
+Parsed deco 9 7 0
+Stopped parsing decos
 Parsing: IF NPANT = 10
 T0=[IF]
 T1=[$254]
 T2=[=]
 T3=[10]
-Parsing: SOUND 6
+Parsing: SOUND 8
 T0=[SOUND]
-T1=[6]
+T1=[8]
 Began parsing decos
+Parsed deco 3 5 0
 Parsed deco 13 4 0
 Parsed deco 13 5 0
 Stopped parsing decos
-Bytecode: 19 05 03 FF E0 06 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 7C FF FF 0D 05 0A FF E0 06 22 00 4D 00 5D FF FF FF 
+Parsing: IF NPANT = 14
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[14]
+Parsing: SOUND 8
+T0=[SOUND]
+T1=[8]
+Began parsing decos
+Parsed deco 12 4 13
+Parsed deco 0 5 13
+Stopped parsing decos
+Parsing: IF NPANT = 44
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[44]
+Parsing: SOUND 8
+T0=[SOUND]
+T1=[8]
+Began parsing decos
+Parsed deco 3 5 0
+Parsed deco 11 0 0
+Parsed deco 11 1 0
+Parsed deco 11 2 0
+Parsed deco 11 3 13
+Stopped parsing decos
+Bytecode: 19 05 03 FF E0 08 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 7C FF FF 11 05 05 FF E0 08 22 0D 17 00 77 00 98 00 79 FF FF 0F 05 0A FF E0 08 22 00 53 00 4D 00 5D FF FF 0D 05 0E FF E0 08 22 0D 4C 0D 50 FF FF 13 05 2C FF E0 08 22 00 53 00 0B 00 1B 00 2B 0D 3B FF FF FF 
 Index section: 16 bytes
-Bytecode section: 51 bytes
-Wrote 67 bytes to script.spt.bin
+Bytecode section: 115 bytes
+Wrote 131 bytes to script.spt.bin

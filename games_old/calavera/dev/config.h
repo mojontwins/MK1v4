@@ -51,16 +51,16 @@
 
 // Shooting behaviour (only side view!)
 // ------------------------------------
-//#define PLAYER_CAN_FIRE 					// If defined, shooting engine is enabled.
-//#define PLAYER_BULLET_SPEED 		8		// Pixels/frame. 
-//#define MAX_BULLETS 				3		// Max number of bullets on screen. Be careful!.
-//#define PLAYER_BULLET_Y_OFFSET	4		// vertical offset from the player's top.
-//#define ENEMS_LIFE_GAUGE			5		// Amount of shots needed to kill enemies.
+#define PLAYER_CAN_FIRE 					// If defined, shooting engine is enabled.
+#define PLAYER_BULLET_SPEED 		8		// Pixels/frame. 
+#define MAX_BULLETS 				3		// Max number of bullets on screen. Be careful!.
+#define PLAYER_BULLET_Y_OFFSET		4		// vertical offset from the player's top.
+#define ENEMS_LIFE_GAUGE			5		// Amount of shots needed to kill enemies.
 
-//#define RANDOM_RESPAWN					// If defined, automatic flying enemies spawn on killed enemies
-//#define FANTY_MAX_V 				256 	// Flying enemies max speed.
-//#define FANTY_A 					12		// Flying enemies acceleration.
-//#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
+#define RANDOM_RESPAWN						// If defined, automatic flying enemies spawn on killed enemies
+#define FANTY_MAX_V 				256 	// Flying enemies max speed.
+#define FANTY_A 					12		// Flying enemies acceleration.
+#define FANTIES_LIFE_GAUGE			10		// Amount of shots needed to kill flying enemies.
 
 // Scripting
 // ---------
