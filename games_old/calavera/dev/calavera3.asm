@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri May 02 22:21:58 2025
+;	Module compile time: Sat May 03 17:48:15 2025
 
 
 
@@ -6854,12 +6854,9 @@
 	call fanty_close_to_edge
 	jr nc, fanty_rr_done
 	.fanty_rr_is_close_to_edge
-	ld a, (__en_x)
-	and 1
-	jr z, fanty_rr_is_close_to_edge
-	ld a, (__en_y)
-	and 1
-	jr nz, fanty_rr_done
+	ld a, (_maincounter)
+	or 1
+	jr z, fanty_rr_done
 	ld ixl, 0xff
 	jr fanty_rr_done
 	.fanty_close_to_edge
@@ -6873,7 +6870,7 @@
 	ld hl, _en_an_frame
 	add hl, bc
 	ld a, ixl
-	ld (hl), a
+	;ld (hl), a
 	.fantys_end
 	call	_enems_calc_frame
 	ld	a,(__en_t)

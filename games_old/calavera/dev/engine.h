@@ -2405,7 +2405,7 @@ void mueve_bicharracos (void) {
 						ld  (__en_y), a			
 
 					// Make fanty blink when next to the edges of the screen
-					// Make invisible if close and even x or even y
+					// Make invisible if close and maincounter & 1
 
 					.fanty_rr_blink
 						// Is it close to an edge?
@@ -2430,14 +2430,10 @@ void mueve_bicharracos (void) {
 						jr  nc, fanty_rr_done
 
 					.fanty_rr_is_close_to_edge
-						// even X or Y?
-						ld  a, (__en_x) 
-						and 1 
-						jr  z, fanty_rr_is_close_to_edge
+						ld  a, (_maincounter)
+						or  1
 
-						ld  a, (__en_y)
-						and 1 
-						jr  nz, fanty_rr_done
+						jr  z, fanty_rr_done
 
 						// So make invisible
 
@@ -2463,7 +2459,7 @@ void mueve_bicharracos (void) {
 						ld  hl, _en_an_frame
 						add hl, bc 
 						ld  a, ixl 
-						ld  (hl), a
+						;ld  (hl), a
 
 					.fantys_end
 				#endasm 

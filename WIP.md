@@ -61,8 +61,38 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Generalizar la sección ON COIN GET o como fuese para que se lance cada vez que el jugador coja algo, ya sea una moneda o toque un hotspot (por ahora). Esto nos permite, por ejemplo, reaccionar a hotspots custom (por ejemplo, para implementar la recarga de timer sin tocar el motor) o implementar de forma controlada el "se acabó el juego al coger X objetos". Recordemos que al activar el scripting se desactivan las formas de ganar el juego que no sean con un `WIN GAME` desde el script.
 
-[ ] He activado los random respawn en calaverga y ahora resulta que o bien no van o bien es que no detecta la morisión para activarlos. Habrá que hacer la revisasión.
+[X] He activado los random respawn en calaverga y ahora resulta que o bien no van o bien es que no detecta la morisión para activarlos. Habrá que hacer la revisasión.
 
 	* Era una tontería. Ya salen, pero se cuelga como ocurría en v4 cuando están en la zona que parpadean. O bien el código que pone el frame vacío con 0xff está mal, o bien estoy haciendo el tontaina por otro sitio. Habrá que hacer la revisasión. De esto también.
 
-	
+	* Era también un fallo tontísimo. Además lo he cambiado para que usen maincounter & 1 para parpadear.
+
+	* La detección de "cerca del borde" también está mal porque parpadea siempre... Además el parpadeo parece muy lento ? Esto sí es rarow.
+
+	Hace A = coord, B = limite. 
+
+	Por ejemplo, 
+		* A = 12, B = 0 -> 12, ABS (12) < 16 ? SI.
+		* A = 18, B = 0 -> 18, ABS (18) < 16) ? NO.
+
+		* A = 220, B = 224 -> -4, ABS (-4) < 16 ? SI.
+		* A = 200, B = 224 -> - 24, ABS (-24) < 16 ? NO.
+
+	Pero wait, a lo mejor es que se comprueba todo. Veamos por ejemplo para A = 100:
+
+		* B = 0 -> ABS (100) < 16 ? NO
+		* B = 224 -> ABS (-114) < 16 ? NO
+
+	Entonces no es esto lo que falla.
+
+	* Aún no lo hallo pero creo que hay que poner algún límite a los fanties porque si no se van y se van y se van y cuando quieres que vuelvan tienen que venir desde Gines y nos plan.
+
+		A ver, el límite está puesto pero se lo pasan por el pie? Qué desastre. Estoy usando las mierdas de z88dk, uséiase `l_ge` y  `l_lt`. Supuestamente tú pones en DE el valor, en HL el otr ovalor, llamas a `l_ge` y te pone el carry si DE >= HL. Pero estoy mirando el código y no sé en qué estaba pensando, es muy raro. Voy a hacer la reescribisión.
+
+		Supuestamente no rompen HL ni DE pero es que tendría que estar mirando las fuentes del z88dk que estoy usando NO? BAIA la versión vieja si se carga DE, así que tengo que tener eso en cuentra para la reescribisión.
+
+[ ] Hay un pequeño glitch con la paleta del marcador al empezar el juego. Revisar.
+
+[ ] Pasar a asm el código que hace rebotar al player y los fantys, que lleva sin tocar desde 2010.
+
+
