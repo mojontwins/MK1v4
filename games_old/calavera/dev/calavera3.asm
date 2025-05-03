@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 03 17:48:15 2025
+;	Module compile time: Sat May 03 22:29:24 2025
 
 
 
@@ -6779,16 +6779,16 @@
 	add hl, de
 	ex de, hl
 	.fanty_x_limit_0
+	push de
 	ld hl, 14336
 	call l_ge
-	ld hl, 14336
+	pop de
 	jr nc, fanty_x_limit_1
 	ex de, hl
 	jr fanty_x_write
 	.fanty_x_limit_1
 	ld hl, 0
 	call l_lt
-	ld hl, 0
 	jr nc, fanty_x_write
 	ex de, hl
 	.fanty_x_write
@@ -6816,9 +6816,10 @@
 	add hl, de
 	ex de, hl
 	.fanty_y_limit_0
+	push de
 	ld hl, 9216
 	call l_ge
-	ld hl, 9216
+	pop de
 	jr nc, fanty_y_limit_1
 	ex de, hl
 	jr fanty_y_write

@@ -2314,7 +2314,6 @@ void mueve_bicharracos (void) {
 						// if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						ld  hl, 14336 // 15360 								
 						call l_ge  						// C if DE >= HL 
-						ld  hl, 14336 // 15360 
 						jr  nc, fanty_x_limit_1
 
 						ex  de, hl  					// DE = 15360
@@ -2325,7 +2324,6 @@ void mueve_bicharracos (void) {
 						// if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
 						ld  hl, 0 // -1024 
 						call l_lt  						// C if DE < HL
-						ld  hl, 0 // -1024
 						jr  nc, fanty_x_write
 
 						ex  de, hl 						// DE = -1024
@@ -2374,7 +2372,7 @@ void mueve_bicharracos (void) {
 						// if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						ld  hl, 9216 // 10240 
 						call l_ge  						// C if DE >= HL 
-						ld  hl, 9216 // 10240 
+
 						jr  nc, fanty_y_limit_1
 
 						ex  de, hl  					// DE = 15360
@@ -2384,8 +2382,8 @@ void mueve_bicharracos (void) {
 					.fanty_y_limit_1
 						// if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 						ld  hl, 0 // -1024 
-						call l_lt  						// C if DE < HL
-						ld  hl, 0 // -1024 
+						call l_lt
+								  						// C if DE < HL
 						jr  nc, fanty_y_write
 
 						ex  de, hl 						// DE = -1024
@@ -2785,6 +2783,10 @@ void mueve_bicharracos (void) {
 					ld  (hl), e 
 					inc hl 
 					ld  (hl), d 
+					
+					ex  de, hl
+					call HLshr6_A
+					ld  (_en_y), a
 
 					// Position X is random
 
@@ -2801,6 +2803,10 @@ void mueve_bicharracos (void) {
 					ld  (hl), e 
 					inc hl 
 					ld  (hl), d
+
+					ex  de, hl
+					call HLshr6_A
+					ld  (_en_x), a
 
 					// Init velocities
 
