@@ -128,6 +128,7 @@ void game_over (void) {
 	
 	#ifdef CPC
 		cpc_UpdateNow (0);
+		AY_PLAY_MUSIC (2);
 		espera_activa (500);
 	#else 
 		#asm 
