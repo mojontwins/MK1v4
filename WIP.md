@@ -91,6 +91,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 		Supuestamente no rompen HL ni DE pero es que tendría que estar mirando las fuentes del z88dk que estoy usando NO? BAIA la versión vieja si se carga DE, así que tengo que tener eso en cuentra para la reescribisión.
 
+		Estaba bien , pero faltaba poner vx/vy = 0 en estos casos -- Pero ahora si tocamos "0" en un eje el fantasma se atrapa en esa posición y no es capaz de salir. Con el límite superior no parece haber problemas. Llevo demasiado tiempo con esto.
+
 [ ] Hay un pequeño glitch con la paleta del marcador al empezar el juego. Revisar.
 
 [ ] Pasar a asm el código que hace rebotar al player y los fantys, que lleva sin tocar desde 2010.

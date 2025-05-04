@@ -2047,6 +2047,35 @@ void mueve_bicharracos (void) {
 			// Fanties engine
 			#ifdef RANDOM_RESPAWN
 				#asm
+
+						ld  bc, (_enit)
+						ld  b, 0
+
+					// if (!fanty_activo) goto .end
+
+						ld  hl, _en_an_fanty_activo
+						add hl, bc 
+						ld  a, (hl) 
+						or  a 
+						jp  z, fantys_end
+
+					// Save frame to ixl 
+
+						ld  hl, _en_an_frame 
+						add hl, bc 
+						ld  a, (hl)
+						ld  ixl, a
+
+					// Prepare a 16 bits index (enit) I can use when I need
+
+						ld  a, c
+						sla a  							// enit * 2, 16 bits here
+						ld  (_gp_gen), a 
+						xor a 
+						ld  (_gp_gen + 1), a 
+
+					// Determine if player should repel or attract fanties
+
 						call _player_hidden 
 						ld  a, l 
 
@@ -2065,32 +2094,6 @@ void mueve_bicharracos (void) {
 						ld  (fanty_A_mod_2 + 1), hl
 						ld  (fanty_A_mod_3 + 1), hl
 						ld  (fanty_A_mod_4 + 1), hl
-
-						ld  bc, (_enit)
-						ld  b, 0
-
-					// Save frame to ixl 
-
-						ld  hl, _en_an_frame 
-						add hl, bc 
-						ld  a, (hl)
-						ld  ixl, a
-
-					// Prepare a 16 bits index (enit) I can use when I need
-
-						ld  a, c
-						sla a  							// enit * 2, 16 bits here
-						ld  (_gp_gen), a 
-						xor a 
-						ld  (_gp_gen + 1), a 
-
-					// if (!fanty_activo) goto .end
-
-						ld  hl, _en_an_fanty_activo
-						add hl, bc 
-						ld  a, (hl) 
-						or  a 
-						jp  z, fantys_end
 
 					// UPDATE VELOCITY
 					// X AXIS
@@ -2313,8 +2316,7 @@ void mueve_bicharracos (void) {
 						// if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						ld  hl, 14336 // 15360 								
 						call l_gt  						// C if DE >= HL 
-						jr  nc, fanty_x_limit_1
-						jr  fanty_x_ex_de_zero_velocity
+						jr  c, fanty_x_ex_de_zero_velocity
 
 					.fanty_x_limit_1
 						// if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
@@ -2374,19 +2376,19 @@ void mueve_bicharracos (void) {
 
 					.fanty_y_limit_0
 						// if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						ld  hl, 9216 // 10240 
+						ld  hl, 9216  
 						call l_gt  						// C if DE >= HL 
-						jr  nc, fanty_y_limit_1
-						jr  fanty_y_ex_de_zero_velocity
+						jr  c, fanty_y_ex_de_zero_velocity
 
 					.fanty_y_limit_1
 						// if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-						ld  hl, 0 // -1024 
+						ld  hl, 0  
 						call l_lt 						// C if DE < HL
 						jr  nc, fanty_y_write
 
 					.fanty_y_ex_de_zero_velocity
 						ex  de, hl
+						
 						ld  hl, (_gp_gen) 				// INDEX
 						ld  bc, _en_an_vy 
 						add hl, bc 
