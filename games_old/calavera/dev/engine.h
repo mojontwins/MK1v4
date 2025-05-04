@@ -2049,7 +2049,6 @@ void mueve_bicharracos (void) {
 				#asm
 						call _player_hidden 
 						ld  a, l 
-						ld  iyh, a
 
 						// Self modifying code.
 						// ld HL, NN -> 21 L H
@@ -2167,7 +2166,7 @@ void mueve_bicharracos (void) {
 						ld  de, -FANTY_MAX_V
 						
 						push hl 
-						call l_ge 						// C if DE >= HL
+						call l_gt 						// C if DE >= HL
 						pop hl
 						
 						jr  nc, fanty_vx_write
@@ -2257,7 +2256,7 @@ void mueve_bicharracos (void) {
 						
 						ld  de, -FANTY_MAX_V
 						push hl
-						call l_ge 						// C if DE >= HL
+						call l_gt 						// C if DE >= HL
 						pop hl 
 						jr  nc, fanty_vy_write
 
@@ -2313,12 +2312,9 @@ void mueve_bicharracos (void) {
 					.fanty_x_limit_0
 						// if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						ld  hl, 14336 // 15360 								
-						call l_ge  						// C if DE >= HL 
+						call l_gt  						// C if DE >= HL 
 						jr  nc, fanty_x_limit_1
-
-						ex  de, hl  					// DE = 15360
-
-						jr fanty_x_write
+						jr  fanty_x_ex_de_zero_velocity
 
 					.fanty_x_limit_1
 						// if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
@@ -2326,7 +2322,15 @@ void mueve_bicharracos (void) {
 						call l_lt  						// C if DE < HL
 						jr  nc, fanty_x_write
 
-						ex  de, hl 						// DE = -1024
+					.fanty_x_ex_de_zero_velocity
+						ex  de, hl
+						ld  hl, (_gp_gen) 				// INDEX
+						ld  bc, _en_an_vx 
+						add hl, bc 
+						xor a 
+						ld  (hl), a 
+						inc a
+						ld  (hl), a 
 
 					.fanty_x_write
 
@@ -2371,22 +2375,25 @@ void mueve_bicharracos (void) {
 					.fanty_y_limit_0
 						// if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
 						ld  hl, 9216 // 10240 
-						call l_ge  						// C if DE >= HL 
-
+						call l_gt  						// C if DE >= HL 
 						jr  nc, fanty_y_limit_1
-
-						ex  de, hl  					// DE = 15360
-
-						jr fanty_y_write
+						jr  fanty_y_ex_de_zero_velocity
 
 					.fanty_y_limit_1
 						// if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
 						ld  hl, 0 // -1024 
-						call l_lt
-								  						// C if DE < HL
+						call l_lt 						// C if DE < HL
 						jr  nc, fanty_y_write
 
-						ex  de, hl 						// DE = -1024
+					.fanty_y_ex_de_zero_velocity
+						ex  de, hl
+						ld  hl, (_gp_gen) 				// INDEX
+						ld  bc, _en_an_vy 
+						add hl, bc 
+						xor a 
+						ld  (hl), a 
+						inc a
+						ld  (hl), a 
 
 					.fanty_y_write
 
@@ -2786,7 +2793,7 @@ void mueve_bicharracos (void) {
 					
 					ex  de, hl
 					call HLshr6_A
-					ld  (_en_y), a
+					ld  (__en_y), a
 
 					// Position X is random
 
@@ -2806,7 +2813,7 @@ void mueve_bicharracos (void) {
 
 					ex  de, hl
 					call HLshr6_A
-					ld  (_en_x), a
+					ld  (__en_x), a
 
 					// Init velocities
 

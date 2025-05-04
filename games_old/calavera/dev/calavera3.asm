@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 03 22:29:24 2025
+;	Module compile time: Sun May 04 09:58:46 2025
 
 
 
@@ -6615,7 +6615,6 @@
 .i_133
 	call _player_hidden
 	ld a, l
-	ld iyh, a
 	ld hl, 12
 	or a
 	jr z, fantys_rr_set
@@ -6685,7 +6684,7 @@
 	sbc hl, de
 	ld de, -256
 	push hl
-	call l_ge
+	call l_gt
 	pop hl
 	jr nc, fanty_vx_write
 	ex de, hl
@@ -6744,7 +6743,7 @@
 	sbc hl, de
 	ld de, -256
 	push hl
-	call l_ge
+	call l_gt
 	pop hl
 	jr nc, fanty_vy_write
 	ex de, hl
@@ -6779,18 +6778,23 @@
 	add hl, de
 	ex de, hl
 	.fanty_x_limit_0
-	push de
 	ld hl, 14336
-	call l_ge
-	pop de
+	call l_gt
 	jr nc, fanty_x_limit_1
-	ex de, hl
-	jr fanty_x_write
+	jr fanty_x_ex_de_zero_velocity
 	.fanty_x_limit_1
 	ld hl, 0
 	call l_lt
 	jr nc, fanty_x_write
+	.fanty_x_ex_de_zero_velocity
 	ex de, hl
+	ld hl, (_gp_gen)
+	ld bc, _en_an_vx
+	add hl, bc
+	xor a
+	ld (hl), a
+	inc a
+	ld (hl), a
 	.fanty_x_write
 	pop hl
 	ld (hl), e
@@ -6816,19 +6820,23 @@
 	add hl, de
 	ex de, hl
 	.fanty_y_limit_0
-	push de
 	ld hl, 9216
-	call l_ge
-	pop de
+	call l_gt
 	jr nc, fanty_y_limit_1
-	ex de, hl
-	jr fanty_y_write
+	jr fanty_y_ex_de_zero_velocity
 	.fanty_y_limit_1
 	ld hl, 0
 	call l_lt
-	ld hl, 0
 	jr nc, fanty_y_write
+	.fanty_y_ex_de_zero_velocity
 	ex de, hl
+	ld hl, (_gp_gen)
+	ld bc, _en_an_vy
+	add hl, bc
+	xor a
+	ld (hl), a
+	inc a
+	ld (hl), a
 	.fanty_y_write
 	pop hl
 	ld (hl), e
@@ -7264,6 +7272,9 @@
 	ld (hl), e
 	inc hl
 	ld (hl), d
+	ex de, hl
+	call HLshr6_A
+	ld (__en_y), a
 	.fanty_create_pick_x
 	call _rand
 	ld a, l
@@ -7276,6 +7287,9 @@
 	ld (hl), e
 	inc hl
 	ld (hl), d
+	ex de, hl
+	call HLshr6_A
+	ld (__en_x), a
 	xor a
 	ld hl, _en_an_vx
 	add hl, bc
@@ -7477,7 +7491,7 @@
 	call	_init_hotspots
 	call	_init_malotes
 	call	_init_bullets
-	ld	a,#(4 % 256 % 256)
+	ld	a,#(7 % 256 % 256)
 	ld	(_n_pant),a
 	ld	a,#(0 % 256 % 256)
 	ld	(_maincounter),a
