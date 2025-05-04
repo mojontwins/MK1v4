@@ -2331,7 +2331,7 @@ void mueve_bicharracos (void) {
 						add hl, bc 
 						xor a 
 						ld  (hl), a 
-						inc a
+						inc hl
 						ld  (hl), a 
 
 					.fanty_x_write
@@ -2394,7 +2394,7 @@ void mueve_bicharracos (void) {
 						add hl, bc 
 						xor a 
 						ld  (hl), a 
-						inc a
+						inc hl
 						ld  (hl), a 
 
 					.fanty_y_write

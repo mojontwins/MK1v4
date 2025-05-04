@@ -17,7 +17,7 @@
 
 #define MAP_W						10		//
 #define MAP_H						6		// Map dimmensions in screens
-#define SCR_INICIO					7		// Initial screen
+#define SCR_INICIO					4		// Initial screen
 #define PLAYER_INI_X				12		//
 #define PLAYER_INI_Y				4		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.

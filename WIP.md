@@ -93,6 +93,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 		Estaba bien , pero faltaba poner vx/vy = 0 en estos casos -- Pero ahora si tocamos "0" en un eje el fantasma se atrapa en esa posición y no es capaz de salir. Con el límite superior no parece haber problemas. Llevo demasiado tiempo con esto.
 
+		Era una tontería de antología, como de costumbre. Ahora sólo me falta arreglar que los fantasmas parpadéen al acercarse al borde... O quitar eso por completo, cada vez me convence menos esa solución. Quitarlo implicaría quitarlo también de v4.
+
 [ ] Hay un pequeño glitch con la paleta del marcador al empezar el juego. Revisar.
 
 [ ] Pasar a asm el código que hace rebotar al player y los fantys, que lleva sin tocar desde 2010.

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun May 04 13:11:12 2025
+;	Module compile time: Sun May 04 19:08:41 2025
 
 
 
@@ -6792,7 +6792,7 @@
 	add hl, bc
 	xor a
 	ld (hl), a
-	inc a
+	inc hl
 	ld (hl), a
 	.fanty_x_write
 	pop hl
@@ -6833,7 +6833,7 @@
 	add hl, bc
 	xor a
 	ld (hl), a
-	inc a
+	inc hl
 	ld (hl), a
 	.fanty_y_write
 	pop hl
