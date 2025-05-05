@@ -167,3 +167,4 @@ Si hacemos un sprite con pixeles 1000, al pasar (OR) sobre ellos, resultará:
 
 O sea, si pasa sobre FG no cambia pero si pasa sobre BG es traslúcido.
 
+¿Qué pasa si un sprite tiene un pixel con el bit 0 a 1 (por ejemplo de color BG)? -> afectaría a los pixeles de primer plano: FG1 cambiaría a FG2. Funcionaría contra BG, ya que BG1 se convertiría en BG2 y BG2 se quedaría igual.
