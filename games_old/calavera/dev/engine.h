@@ -2411,54 +2411,6 @@ void mueve_bicharracos (void) {
 						call HLshr6_A
 						ld  (__en_y), a			
 
-					// Make fanty blink when next to the edges of the screen
-					// Make invisible if close and maincounter & 1
-
-					.fanty_rr_blink
-						// Is it close to an edge?
-						ld  a, (__en_x)
-						ld  c, 0 
-						call fanty_close_to_edge
-						jr  c, fanty_rr_is_close_to_edge
-
-						ld  a, (__en_x)
-						ld  c, 224 
-						call fanty_close_to_edge
-						jr  c, fanty_rr_is_close_to_edge
-
-						ld  a, (__en_y)
-						ld  c, 0 
-						call fanty_close_to_edge
-						jr  c, fanty_rr_is_close_to_edge
-
-						ld  a, (__en_y)
-						ld  c, 144
-						call fanty_close_to_edge
-						jr  nc, fanty_rr_done
-
-					.fanty_rr_is_close_to_edge
-						ld  a, (_maincounter)
-						or  1
-
-						jr  z, fanty_rr_done
-
-						// So make invisible
-
-						ld  ixl, 0xff
-						jr  fanty_rr_done
-
-					.fanty_close_to_edge
-						// IN:
-						// A = coordinate
-						// C = edge
-						// OUT:
-						// carry set if close
-
-						sub c 
-						call _abs_a 
-						cp  16
-						ret
-
 					.fanty_rr_done
 
 						ld  bc, (_enit)
@@ -2627,20 +2579,119 @@ void mueve_bicharracos (void) {
 								#if defined(RANDOM_RESPAWN)
 									if (0 == en_an_fanty_activo [enit]) {
 										// Bouncing!
-										if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
-										if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
-										if (_en_my > 0) player.vy = PLAYER_MAX_VX;
-										if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
+										#asm
+											// Linear colision
+											.en_col_lin_h
+												ld  a, (__en_mx)
+												or  a 
+												jr  z, en_col_lin_v
+
+												bit 7, a 
+												jr  z, en_col_lin_h_pos
+
+											.en_col_lin_h_neg
+												ld  hl, -PLAYER_MAX_VX
+												jr  en_col_lin_h_write
+
+											.en_col_lin_h_pos
+												ld  hl, PLAYER_MAX_VX
+
+											.en_col_lin_h_write
+												ld  (_player + 6), hl 		// player.vx
+
+											.en_col_lin_v
+												ld  a, (__en_my)
+												or  a
+												jr  z, en_col_lin_end
+
+												bit 7, a
+												jr  z, en_col_lin_v_pos
+
+											.en_col_lin_v_neg
+												ld  hl, -PLAYER_MAX_VX
+												jr  en_col_lin_v_write
+
+											.en_col_lin_v_pos
+												ld  hl, PLAYER_MAX_VX
+
+											.en_col_lin_v_write
+												ld  (_player + 8), hl 		// player.vy
+
+											.en_col_lin_end
+										#endasm
 									} else {
-										player.vx = en_an_vx [enit] + en_an_vx [enit];
-										player.vy = en_an_vy [enit] + en_an_vy [enit];
+										//player.vx = en_an_vx [enit] + en_an_vx [enit];
+										//player.vy = en_an_vy [enit] + en_an_vy [enit];
+										#asm
+												ld  a, (_enit)
+												sla a
+												ld  b, 0
+												ld  c, a
+
+												ld  hl, _en_an_vx
+												add hl, bc 
+
+												ld  a, (hl)
+												inc hl 
+												ld  h, (hl)
+												ld  l, a
+
+												add hl, hl
+												ld  (_player + 6), hl 			// player.vx
+
+												ld  hl, _en_an_vy 
+												add hl, bc 
+
+												ld  a, (hl)
+												inc hl 
+												ld  h, (hl) 
+												ld  l, a 
+
+												add hl, hl
+												ld  (_player + 8), hl 			// player.vy
+										#endasm
 									}
 								#else
-									// Bouncing!
-									if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+									#asm
+											// Linear colision
+											.en_col_lin_h
+												ld  a, (__en_mx)
+												or  a 
+												jr  z, en_col_lin_v
+
+												bit 7, a 
+												jr  z, en_col_lin_h_pos
+
+											.en_col_lin_h_neg
+												ld  hl, -PLAYER_MAX_VX*2
+												jr  en_col_lin_h_write
+
+											.en_col_lin_h_pos
+												ld  hl, PLAYER_MAX_VX*2
+
+											.en_col_lin_h_write
+												ld  (_player + 6), hl 		// player.vx
+
+											.en_col_lin_v
+												ld  a, (__en_my)
+												or  a
+												jr  z, en_col_lin_end
+
+												bit 7, a
+												jr  z, en_col_lin_v_pos
+
+											.en_col_lin_v_neg
+												ld  hl, -PLAYER_MAX_VX*2
+												jr  en_col_lin_v_write
+
+											.en_col_lin_v_pos
+												ld  hl, PLAYER_MAX_VX*2
+
+											.en_col_lin_v_write
+												ld  (_player + 8), hl 		// player.vy
+
+											.en_col_lin_end
+										#endasm
 								#endif
 							#else
 								// Bouncing:
