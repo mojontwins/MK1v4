@@ -1642,6 +1642,10 @@ void draw_scr (void) {
 			default:
 				en_an_next_frame [enit] = sprite_18_a;
 		}
+
+		#ifdef ENABLE_CUSTOM_ENEMS
+			extra_enems_init ();
+		#endif
 	}
 
 	#ifdef PLAYER_CAN_FIRE
@@ -1766,6 +1770,10 @@ void draw_scr (void) {
 					_en_life = FANTIES_LIFE_GAUGE;
 				#endif
 			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_killed ();
+			#endif		
 		} else {
 			peta_el_beeper (1);
 		}
@@ -2426,6 +2434,10 @@ void mueve_bicharracos (void) {
 
 			enems_calc_frame ();
 
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_move ();
+			#endif		
+
 			#ifndef PLAYER_MOGGY_STYLE	
 				if ( (_en_t == 4
 					) && gpx >= _en_x - 15 && gpx <= _en_x + 15
@@ -2789,6 +2801,10 @@ void mueve_bicharracos (void) {
 					}
 				#endif
 			}
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_checks ();
+			#endif
 		}
 
 		enems_loop_continue:
