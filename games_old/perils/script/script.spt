@@ -6,7 +6,8 @@ ENTERING GAME
 	IF TRUE
 	THEN
 		# Initalize "carrying", 1 = knickers, 2 = bra
-		%CARRYING = 0
+		# Initialization: set to an empty tile
+		%CARRYING = 47
 
 		# Also bra & knickers not taken
 		%BRA = 0
@@ -47,7 +48,7 @@ PRESS FIRE AT SCREEN 0
 	IF %VIEHO1 = 0
 	IF %CARRYING = 20 			# TILE 20 = knickers
 	THEN 
-		%CARRYING = 0
+		%CARRYING = 47			# Empty tile
 		%VIEHO1 = 1
 		SET TILE (7, 5) = 0
 		SET TILE (6, 4) = 0
@@ -109,7 +110,7 @@ PRESS FIRE AT SCREEN 22
 	IF %VIEHO2 = 0
 	IF %CARRYING = 18 			# Tile #18 = bra
 	THEN 
-		%CARRYING = 0
+		%CARRYING = 47 			# Empty tile
 		%VIEHO2 = 1		
 		SET TILE (2, 7) = 0
 		SET TILE (3, 8) = 0

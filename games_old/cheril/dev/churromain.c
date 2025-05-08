@@ -44,4 +44,6 @@
 #include "engine.h"
 #include "pantallas.h"
 #include "mainloop.h" 	// Main is here!
-#include "music.h"
+#ifndef CPC
+	#include "music.h"
+#endif

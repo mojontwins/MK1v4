@@ -54,6 +54,7 @@ void title_screen (void) {
 	#else 
 		#asm 
 				call SPUpdateNow
+				call musicstart
 		#endasm
 	#endif
 

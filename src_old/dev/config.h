@@ -7,6 +7,7 @@
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
 //#define AUTO_SPLIT 						// For CPC, but hud must be 32 raster on top and MODE 1
 //#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
+//#define NO_PAL_MAP 						// For CPC, with AUTO_SPLIT, only one pal (my_inks)
 
 // ============================================================================
 // I. General configuration
@@ -67,6 +68,7 @@
 //#define ACTIVATE_SCRIPTING				// Activates msc scripting and flag related stuff.
 //#define SCRIPTING_DOWN					// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
+//#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 
 // Top view:
 // ---------
@@ -114,7 +116,7 @@
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
 //#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
-//#define NO_MASKS						// Sprites are rendered using OR instead of masks.
+//#define NO_MASKS		sp_OR_SPRITE 	// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 //#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16

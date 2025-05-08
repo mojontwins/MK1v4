@@ -122,7 +122,7 @@
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
 #define RLE_MAP 					62 	// Use RLE compression (values 44, 54, 62; see docs)
-#define NO_MASKS					sp_OR_SPRITE	// Sprites are rendered using OR instead of masks.
+#define NO_MASKS		sp_OR_SPRITE	// Sprites are rendered using OR instead of masks.
 #define PLAYER_ALTERNATE_ANIMATION		// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 //#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16

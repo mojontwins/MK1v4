@@ -633,6 +633,7 @@ unsigned char cm_two_points (void) {
 
 void move (void) {
 	hit = 0; 
+	thrusting = 0;
 
 	// Move player
 	pad_read ();
@@ -652,7 +653,6 @@ void move (void) {
 				if (player.vy > 0) player.vy = 0;
 			}
 
-			thrusting = 0;
 		} else {
 			if ((pad0 & sp_UP) == 0) {
 				player.vy -= PLAYER_AX;
@@ -722,7 +722,7 @@ void move (void) {
 	// Collide vertical.
 	// Includes evil tile detection, open lock & push boxes
 
-	pvy_total = (player.vy + ptgmy);
+	pvy_total = player.vy + ptgmy;
 	if (pvy_total != 0) {
 		_x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
 		if (pvy_total > 0) {
@@ -755,7 +755,7 @@ void move (void) {
 				#endif
 			}
 
-		} else if (pvy_total < 0) {
+		} else {
 			// Collide up
 
 			_y = _y2 = (gpy + 4) >> 4;
@@ -806,7 +806,6 @@ void move (void) {
 			player.vx += PLAYER_RX;
 			if (player.vx > 0) player.vx = 0;
 		}
-		thrusting = 0;
 	} else {
 		if ((pad0 & sp_LEFT) == 0) {
 			player.vx -= PLAYER_AX;
@@ -904,8 +903,9 @@ void move (void) {
 	}
 
 	// bigger vx or vy?
-	#ifndef DEACTIVATE_EVIL_TILE
 		rdi = abs (pvx_total) > abs (pvy_total);
+
+	#ifndef DEACTIVATE_EVIL_TILE
 
 		// Evil tile hit?
 		if (hit) {
@@ -994,9 +994,9 @@ void move (void) {
 				#endif
 			} else {
 				#ifdef PLAYER_ALTERNATE_ANIMATION
-					player.frame = player.facing + 1;
-				#else
 					player.frame = player.facing;
+				#else
+					player.frame = player.facing + 1;
 				#endif
 			}
 		}

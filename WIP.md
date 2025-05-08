@@ -101,6 +101,10 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Pasar a asm el código que hace rebotar al player y los fantys, que lleva sin tocar desde 2010.
 
+[ ] Añadir un flag (o scenery_info a la v4) para poder invalidar el proceso que genera los fantis RR, con el objeto de poder añadir un hotspot que los mate a todos para siempre (al menos hasta que volvamos a la pantalla).
+
+[X] Poner un define para el tile que se emplée como "objeto vacío". Problem is, esto se hace desde msc4i.asm, donde no llegan mis flags. O no, muuuucho más sencillo: definir el tile 47 como vacío y que el que lo implemente que se apañe. Es mucho menos problemático que usar el tile 0. **Qué menso, esto se resuelve sólo tocando el puto script del juego**
+
 # Cosas calculares.
 
 ¿Son muy pocos 5 colores en modo 0? Así podría tener fondo y primer plano pixel a pixel chulo, ¿no? Usando planos:
