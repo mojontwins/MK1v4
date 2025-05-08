@@ -107,7 +107,7 @@ MALOTE malotes [] = {
 
 	// Pantalla 18
  	{32, 128, 32, 48, 32, 128, 0, -2, 4},
- 	{96, 80, 96, 80, 144, 80, 1, 0, 1},
+ 	{128, 96, 128, 96, 128, 112, 0, 0, 5},
  	{192, 64, 48, 64, 192, 64, -2, 0, 4},
 
 	// Pantalla 19
@@ -318,10 +318,10 @@ MALOTE malotes [] = {
 };
 
 #define N_ENEMS_TYPE_0 69
-#define N_ENEMS_TYPE_1 30
+#define N_ENEMS_TYPE_1 29
 #define N_ENEMS_TYPE_2 25
 #define N_ENEMS_TYPE_3 7
-#define N_ENEMS_TYPE_5 18
+#define N_ENEMS_TYPE_5 19
 #define N_ENEMS_TYPE_6 0
 #define N_ENEMS_TYPE_7 0
 
@@ -337,11 +337,11 @@ typedef struct {
 
 HOTSPOT hotspots [] = {
 	{56, 1, 0}, 
-	{0, 0, 0}, 
-	{72, 3, 0}, 
+	{37, 34, 0}, 
+	{55, 3, 0}, 
 	{0, 0, 0}, 
 	{114, 1, 0}, 
-	{56, 1, 0}, 
+	{196, 34, 0}, 
 	{17, 1, 0}, 
 	{135, 1, 0}, 
 	{133, 1, 0}, 
@@ -354,7 +354,7 @@ HOTSPOT hotspots [] = {
 	{70, 1, 0}, 
 	{84, 3, 0}, 
 	{0, 0, 0}, 
-	{71, 3, 0}, 
+	{71, 34, 0}, 
 	{98, 1, 0}, 
 	{0, 0, 0}, 
 	{166, 1, 0}, 
@@ -398,12 +398,13 @@ HOTSPOT hotspots [] = {
 	{101, 1, 0}
 };
 
-#define N_HOTSPOTS_TYPE_0 28
-#define N_HOTSPOTS_TYPE_1 25
+#define N_HOTSPOTS_TYPE_0 27
+#define N_HOTSPOTS_TYPE_1 24
 #define N_HOTSPOTS_TYPE_2 0
-#define N_HOTSPOTS_TYPE_3 7
+#define N_HOTSPOTS_TYPE_3 6
 #define N_HOTSPOTS_TYPE_4 0
 #define N_HOTSPOTS_TYPE_5 0
 #define N_HOTSPOTS_TYPE_6 0
 #define N_HOTSPOTS_TYPE_7 0
+#define N_HOTSPOTS_TYPE_34 3
 

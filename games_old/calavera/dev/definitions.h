@@ -83,6 +83,7 @@ typedef struct {
 } INERCIA;
 
 INERCIA player;
+
 #ifdef PLAYER_CAN_FIRE
 	unsigned char bullets_x [MAX_BULLETS];
 	unsigned char bullets_y [MAX_BULLETS];
@@ -144,6 +145,13 @@ unsigned char orig_tile;	// Original background tile
 		unsigned char pant_final = SCR_FIN;
 	#endif
 #endif
+
+typedef struct {
+	unsigned char hide_hotspots;
+	unsigned char dont_make_rr;
+} SCENERY_INFO;
+
+SCENERY_INFO scenery_info; 
 
 unsigned char n_pant, on_pant;
 unsigned char pant_just_rendered;	// Will be 1 for 1 frame if just entered a new screen in hook_init_mainloop

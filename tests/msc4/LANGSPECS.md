@@ -79,6 +79,8 @@ Definimos estas variables especiales, codificadas internamente como "flags" fuer
 * $F3 = MOVED_X = moved_last_x,
 * $F2 = MOVED_Y = moved_last_y, coordenadas donde quedó el último tile empujado.
 * $F1 = TIMER = timer
+* $F0 = HIDE_HOTSPOTS = scenery_info.hide_hotspots
+* $EF = DONT_MAKE_FANTIES = scenery_info.dont_make_fanties
 
 Sólo rvalue: Asignar a F2-F4, F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING. El resto debe poder ser lvalue (se debe poder asignar a NPANT, KILLED, etc).
 

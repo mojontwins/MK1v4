@@ -31,13 +31,20 @@ T2=[8]
 T3=[1]
 T4=[=]
 T5=[49]
-Bytecode: 0B 30 08 01 00 FF 20 08 01 31 FF FF 
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: DONT_MAKE_FANTIES = 0
+T0=[$239]
+T1=[=]
+T2=[0]
+Bytecode: 0B 30 08 01 00 FF 20 08 01 31 FF 07 F0 FF 00 EF 00 FF FF 
 ==========================================
 LINEA PLAYER GOT SOMETHING
 T0=[player]
 T1=[got]
 T2=[something]
-Adding 12 @ sect 3
+Adding 19 @ sect 3
 Parsing: IF HOTSPOT = 1
 T0=[IF]
 T1=[$245]
@@ -51,13 +58,27 @@ T3=[24]
 Parsing: WIN GAME
 T0=[WIN]
 T1=[GAME]
-Bytecode: 0C 01 FF F5 01 01 FF FA 18 FF F0 FF FF 
+Parsing: IF HOTSPOT = 34
+T0=[IF]
+T1=[$245]
+T2=[=]
+T3=[34]
+Parsing: DONT_MAKE_FANTIES = 1
+T0=[$239]
+T1=[=]
+T2=[1]
+Parsing: # This will kill all enemies, inc. fanties
+Parsing: EXTERN 0, 0
+T0=[EXTERN]
+T1=[0]
+T2=[0]
+Bytecode: 0C 01 FF F5 01 01 FF FA 18 FF F0 FF 0D 01 FF F5 22 FF 00 EF 01 E4 00 00 FF FF 
 ==========================================
 LINEA SPECIAL TILE TOUCHED
 T0=[special]
 T1=[tile]
 T2=[touched]
-Adding 25 @ sect 5
+Adding 45 @ sect 5
 Parsing: IF NPANT = 3
 T0=[IF]
 T1=[$254]
@@ -132,5 +153,5 @@ Parsed deco 11 3 13
 Stopped parsing decos
 Bytecode: 19 05 03 FF E0 08 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 7C FF FF 11 05 05 FF E0 08 22 0D 17 00 77 00 98 00 79 FF FF 0F 05 0A FF E0 08 22 00 53 00 4D 00 5D FF FF 0D 05 0E FF E0 08 22 0D 4C 0D 50 FF FF 13 05 2C FF E0 08 22 00 53 00 0B 00 1B 00 2B 0D 3B FF FF FF 
 Index section: 16 bytes
-Bytecode section: 115 bytes
-Wrote 131 bytes to script.spt.bin
+Bytecode section: 135 bytes
+Wrote 151 bytes to script.spt.bin
