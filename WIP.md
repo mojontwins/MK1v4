@@ -200,3 +200,56 @@ Si hacemos un sprite con pixeles 1000, al pasar (OR) sobre ellos, resultará:
 O sea, si pasa sobre FG no cambia pero si pasa sobre BG es traslúcido.
 
 ¿Qué pasa si un sprite tiene un pixel con el bit 0 a 1 (por ejemplo de color BG)? -> afectaría a los pixeles de primer plano: FG1 cambiaría a FG2. Funcionaría contra BG, ya que BG1 se convertiría en BG2 y BG2 se quedaría igual.
+
+# LUTs para rotar sprites
+
+Me mosquea que la versión CPC vaya más lenta. Claramente no va a 25 fps. La única forma de acelerar esto de forma fiable es acelerar las rutinas de sprites, y en estas lo que más tarda es el rotado.
+
+Precalcular las tres rotaciones de los valores implicaría almacenar 768 bytes de LUT. Mirando el mapa de memoria de los huecos extra de VRAM tengo esto:
+
+En E600 están las estructuras de sprites. Son 16 sprites a 16 bytes cada uno, por lo que una de las rotacionmes podría ir en E700.
+
+En D600 están los arrays que ocuparán hasta unm áximo de  `MAX_ENEMS*18`. Penar que `MAX_ENEMS` pudiera llegar a 8 (ja, ja, ja) aún nos dejaría sitio de sobra en D700 para el segundo LUT de rotaciones. En DE00 podría meter el tercer LUT.
+
+Los LUTs podría generarlos como códigos. Otra idea sería meterlos en el binario en $100, donde hay 768 ($300) bytes para el buffer de caracteres (nametable), pero cargar a $100 puede ser muy problemático... O no. Si los meto ahí, lo primero que haría el motor sería copiar cada rotacion (trozo de $100 bytes) a su sitio correcto en la VRAM libre ($E700, $D700 y $DE00)
+
+Para no liarla tanto, generar el LUT podría ser algo así. Por ejemplo, para la primera rotación:
+
+```asm
+		ld  hl, 0xE700
+
+	.write_lut1_loop
+		ld  a, l
+		rrca
+		ld  c, a 
+		rrca
+		rrca
+		rrca
+		rrca
+		xor c 
+		and $88
+		xor c
+
+		ld  (hl), a 
+		inc l 
+		jr  nz, write_lut1_loop
+```
+
+El tema va a ser cómo usar el LUT, que me quedo sin registros punteros :D Por ejemplo, primer byte:
+
+```asm
+		ld  a, (bc) 	; Get sprite byte. This is the byte we must rotate
+
+		ld  h, 0xE7 	; 1st rotation
+		ld  l, a  		; Point to LUT
+		ld  a, (hl) 	; Rotated!
+
+		...
+
+		ld  h, 0xFE 	; Make mask LUT (already there)
+		ld  l, a 		; etc
+```
+
+
+
+```
