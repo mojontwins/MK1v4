@@ -266,6 +266,10 @@ void main (void) {
 						draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
 						hotspot_y = 240;
 						hotspots [n_pant].act = rdi;
+
+						#ifdef ACTIVATE_SCRIPTING
+							script (SC_PLAYER_GOT_SOMETHING);
+						#endif
 					}
 				}
 			}
@@ -337,7 +341,10 @@ void main (void) {
 				) {	
 					// Any scripts to run in this screen?
 					script (SC_PRESS_FIRE_AT_ANY);
-					script (SC_PRESS_FIRE_AT_SCREEN + (n_pant << 1));
+
+					#ifndef NO_INDEXED_SCRIPTING
+						script (SC_PRESS_FIRE_AT_SCREEN + (n_pant << 1));
+					#endif
 				}
 			#endif
 

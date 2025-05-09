@@ -59,7 +59,6 @@ void main (void) {
 		#endif
 
 		n_pant = SCR_INICIO;
-		maincounter = 0;
 		
 		#ifdef ACTIVATE_SCRIPTING		
 			script_result = 0;
@@ -68,16 +67,20 @@ void main (void) {
 			script (SC_ENTERING_GAME);
 		#endif
 
-		half_life = 0;
-
 		#asm
-			ld  a, 255
-			ld  (_objs_old), a 
-			ld  (_life_old), a 
-			ld  (_keys_old), a 
-			ld  (_killed_old), a 
-			ld  (_flag_old), a
-			ld  (_on_pant), a
+				xor a 
+				ld  (_maincounter), a 
+				ld  (_half_life), a 
+				ld  (_scenery_info + 0), a  	// scenery_info.hide_hotspots
+				ld  (_scenery_info + 1), a 		// scenery_info.dont_make_rr
+
+				ld  a, 255
+				ld  (_objs_old), a 
+				ld  (_life_old), a 
+				ld  (_keys_old), a 
+				ld  (_killed_old), a 
+				ld  (_flag_old), a
+				ld  (_on_pant), a
 		#endasm
 
 		#ifdef CPC

@@ -24,6 +24,7 @@
 	XREF _do_extern_action
 	XREF draw_line_of_text
 	XREF _hotspot_t
+	XREF _scenery_info
 
 	XREF script_bytecode
 
@@ -176,6 +177,16 @@
 
 ;;; Decode OPCODE & jump to interpreter
 
+;; OPCODE 0x00
+;; FLAGS[N] = V
+	cp  0x00
+	jr  nz, aopcode_00_end
+.aopcode_00
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  (hl), a
+	jp  script_actions
+.aopcode_00_end
+
 ;; OPCODE 0x20
 ;; SET TILE (X, Y) = T
 	cp  0x20
@@ -240,6 +251,26 @@
 	call _peta_el_beeper
 	jp  script_actions
 .aopcode_E0_end
+
+;; OPCODE 0xE4
+;; EXTERN N M
+	cp  0xE4
+	jr  nz, aopcode_E4_end
+.aopcode_E4
+	call read_x_y
+	ld  a, (sc_x)
+	ld  h, 0
+	ld  l, a
+	push hl
+	ld  a, (sc_y)
+	ld  h, 0
+	ld  l, a
+	push hl
+	call _do_extern_action
+	pop bc
+	pop bc
+	jp script_actions
+.aopcode_E4_end
 
 ;; OPCODE 0xF0
 ;; WIN GAME
@@ -309,6 +340,13 @@
 	ld  (sc_y), a
 
 	ld  a, c  				; C = flag index
+
+; DONT_MAKE_FANTIES LVALUE
+	cp  0xEF
+	jr  nz, riv_set_dont_make_fanties_done
+	ld  hl, _scenery_info + 1	; scenery_info.dont_make_rr
+	jr  read_i_v_cont
+.riv_set_dont_make_fanties_done
 
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags

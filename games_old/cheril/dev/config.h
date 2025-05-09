@@ -7,6 +7,7 @@
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
 //#define AUTO_SPLIT 						// For CPC, but hud must be 32 raster on top and MODE 1
 //#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
+//#define NO_PAL_MAP 						// For CPC, with AUTO_SPLIT, only one pal (my_inks)
 
 // ============================================================================
 // I. General configuration
@@ -67,6 +68,7 @@
 //#define ACTIVATE_SCRIPTING				// Activates msc scripting and flag related stuff.
 //#define SCRIPTING_DOWN					// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
+//#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 
 // Top view:
 // ---------

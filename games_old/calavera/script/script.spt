@@ -9,6 +9,12 @@ ENTERING ANY
 		# It ends up printed with patters from font.png.
 		SET TILE (8, 1) = 49
 	END
+
+	# Turn on fanty generation
+	IF TRUE
+	THEN
+		DONT_MAKE_FANTIES = 0
+	END
 END
 
 PLAYER GOT SOMETHING
@@ -16,6 +22,15 @@ PLAYER GOT SOMETHING
 	IF OBJS = 24
 	THEN
 		WIN GAME
+	END
+
+	# Incredible engine abuse to paint a hotspot using the font
+	IF HOTSPOT = 34
+	THEN 
+		DONT_MAKE_FANTIES = 1
+
+		# This will kill all enemies, inc. fanties
+		EXTERN 0, 0
 	END
 END
 

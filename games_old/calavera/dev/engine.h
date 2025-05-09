@@ -633,6 +633,7 @@ unsigned char cm_two_points (void) {
 
 void move (void) {
 	hit = 0; 
+	thrusting = 0;
 
 	// Move player
 	pad_read ();
@@ -652,7 +653,6 @@ void move (void) {
 				if (player.vy > 0) player.vy = 0;
 			}
 
-			thrusting = 0;
 		} else {
 			if ((pad0 & sp_UP) == 0) {
 				player.vy -= PLAYER_AX;
@@ -722,7 +722,7 @@ void move (void) {
 	// Collide vertical.
 	// Includes evil tile detection, open lock & push boxes
 
-	pvy_total = (player.vy + ptgmy);
+	pvy_total = player.vy + ptgmy;
 	if (pvy_total != 0) {
 		_x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
 		if (pvy_total > 0) {
@@ -755,7 +755,7 @@ void move (void) {
 				#endif
 			}
 
-		} else if (pvy_total < 0) {
+		} else {
 			// Collide up
 
 			_y = _y2 = (gpy + 4) >> 4;
@@ -806,7 +806,6 @@ void move (void) {
 			player.vx += PLAYER_RX;
 			if (player.vx > 0) player.vx = 0;
 		}
-		thrusting = 0;
 	} else {
 		if ((pad0 & sp_LEFT) == 0) {
 			player.vx -= PLAYER_AX;
@@ -904,8 +903,9 @@ void move (void) {
 	}
 
 	// bigger vx or vy?
-	#ifndef DEACTIVATE_EVIL_TILE
 		rdi = abs (pvx_total) > abs (pvy_total);
+
+	#ifndef DEACTIVATE_EVIL_TILE
 
 		// Evil tile hit?
 		if (hit) {
@@ -994,9 +994,9 @@ void move (void) {
 				#endif
 			} else {
 				#ifdef PLAYER_ALTERNATE_ANIMATION
-					player.frame = player.facing + 1;
-				#else
 					player.frame = player.facing;
+				#else
+					player.frame = player.facing + 1;
 				#endif
 			}
 		}
@@ -1152,6 +1152,12 @@ void hotspot_paint (void) {
 			ld  (_hotspot_y), a 
 			xor a
 			ld  (_hotspot_t_r), a 					// Hotspot type set to 0
+
+			// Check if hotspots are disabled
+
+			ld  a, (_scenery_info + 0) 				// scenery_info.hide_hotspots
+			or  a 
+			ret nz
 
 			call _calc_hotspot_ptr
 			
@@ -1560,12 +1566,6 @@ void enems_calc_frame (void) {
 			add hl, bc
 			ld  a, (hl)
 
-		#ifdef RANDOM_RESPAWN
-				// 0xff means invisible
-				cp  0xff 
-				jr  z, enems_calc_frame_invisible
-		#endif
-
 			ld  hl, _en_an_base_frame
 			add hl, bc
 			add a, (hl)
@@ -1579,15 +1579,6 @@ void enems_calc_frame (void) {
 
 			ldi
 			ldi
-
-		#ifdef RANDOM_RESPAWN
-				ret
-			.enems_calc_frame_invisible
-				pop hl 			// DE -> en_an_next_frame [enit]
-				ld  (hl), _sprite_18_a % 256
-				inc hl 
-				ld  (hl), _sprite_18_a / 256
-		#endif
 	#endasm
 }
 
@@ -1642,6 +1633,10 @@ void draw_scr (void) {
 			default:
 				en_an_next_frame [enit] = sprite_18_a;
 		}
+
+		#ifdef ENABLE_CUSTOM_ENEMS
+			extra_enems_init ();
+		#endif
 	}
 
 	#ifdef PLAYER_CAN_FIRE
@@ -1766,6 +1761,10 @@ void draw_scr (void) {
 					_en_life = FANTIES_LIFE_GAUGE;
 				#endif
 			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_killed ();
+			#endif		
 		} else {
 			peta_el_beeper (1);
 		}
@@ -2426,6 +2425,10 @@ void mueve_bicharracos (void) {
 
 			enems_calc_frame ();
 
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_move ();
+			#endif		
+
 			#ifndef PLAYER_MOGGY_STYLE	
 				if ( (_en_t == 4
 					) && gpx >= _en_x - 15 && gpx <= _en_x + 15
@@ -2789,6 +2792,10 @@ void mueve_bicharracos (void) {
 					}
 				#endif
 			}
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_checks ();
+			#endif
 		}
 
 		enems_loop_continue:
@@ -2798,6 +2805,10 @@ void mueve_bicharracos (void) {
 
 			#asm
 				// Should we create?
+
+					ld  a, (_scenery_info + 1) 	// scenery_info.dont_make_rr
+					or  a 
+					jr  nz, enems_create_fanty_done 
 
 					ld  a, (__en_t) 
 					and 128 

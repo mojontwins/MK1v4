@@ -373,7 +373,7 @@ unsigned int __FASTCALL__ abs (int n) {
 				ld  (ix+8), a 	// .t
 			
 			#if (defined PLAYER_CAN_FIRE && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
-					ld  a, ENEMIES_LIFE_GAUGE
+					ld  a, ENEMS_LIFE_GAUGE
 					ld  (ix+9), a 	// .life
 			#endif
 
@@ -465,8 +465,7 @@ unsigned int __FASTCALL__ abs (int n) {
 			if ( player.possee && player.vx == 0 )
 		#endif
 		{
-			if (attr ((gpx + 8) >> 4, gpy + 8) >> 4) & 2)
-				return 1;
+			return (attr ((gpx + 8) >> 4, (gpy + 8) >> 4) & 2);
 		}
 		return 0;
 	}
@@ -634,6 +633,7 @@ unsigned char cm_two_points (void) {
 
 void move (void) {
 	hit = 0; 
+	thrusting = 0;
 
 	// Move player
 	pad_read ();
@@ -653,7 +653,6 @@ void move (void) {
 				if (player.vy > 0) player.vy = 0;
 			}
 
-			thrusting = 0;
 		} else {
 			if ((pad0 & sp_UP) == 0) {
 				player.vy -= PLAYER_AX;
@@ -723,7 +722,7 @@ void move (void) {
 	// Collide vertical.
 	// Includes evil tile detection, open lock & push boxes
 
-	pvy_total = (player.vy + ptgmy);
+	pvy_total = player.vy + ptgmy;
 	if (pvy_total != 0) {
 		_x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
 		if (pvy_total > 0) {
@@ -756,7 +755,7 @@ void move (void) {
 				#endif
 			}
 
-		} else if (pvy_total < 0) {
+		} else {
 			// Collide up
 
 			_y = _y2 = (gpy + 4) >> 4;
@@ -807,7 +806,6 @@ void move (void) {
 			player.vx += PLAYER_RX;
 			if (player.vx > 0) player.vx = 0;
 		}
-		thrusting = 0;
 	} else {
 		if ((pad0 & sp_LEFT) == 0) {
 			player.vx -= PLAYER_AX;
@@ -905,8 +903,9 @@ void move (void) {
 	}
 
 	// bigger vx or vy?
-	#ifndef DEACTIVATE_EVIL_TILE
 		rdi = abs (pvx_total) > abs (pvy_total);
+
+	#ifndef DEACTIVATE_EVIL_TILE
 
 		// Evil tile hit?
 		if (hit) {
@@ -986,7 +985,7 @@ void move (void) {
 			player.frame = player.facing + 3;
 		} else {
 			//if ((player.vx != 0) && !player.gotten) {
-			if (thrusting) {
+			if (thrusting && player.vx) {
 				player.frame = player.facing + 
 				#ifdef PLAYER_ALTERNATE_ANIMATION
 					(gpx >> 3) % 3;
@@ -994,7 +993,11 @@ void move (void) {
 					player_walk_cycle[((gpx >> 3) & 1)];
 				#endif
 			} else {
-				player.frame = player.facing + 1;
+				#ifdef PLAYER_ALTERNATE_ANIMATION
+					player.frame = player.facing;
+				#else
+					player.frame = player.facing + 1;
+				#endif
 			}
 		}
 	#endif
@@ -1580,10 +1583,10 @@ void enems_calc_frame (void) {
 		#ifdef RANDOM_RESPAWN
 				ret
 			.enems_calc_frame_invisible
-				pop de 			// DE -> en_an_next_frame [enit]
-				ld  (de), _sprite_18_a % 256
-				inc de 
-				ld  (de), _sprite_18_a / 256
+				pop hl 			// DE -> en_an_next_frame [enit]
+				ld  (hl), _sprite_18_a % 256
+				inc hl 
+				ld  (hl), _sprite_18_a / 256
 		#endif
 	#endasm
 }
@@ -1639,6 +1642,10 @@ void draw_scr (void) {
 			default:
 				en_an_next_frame [enit] = sprite_18_a;
 		}
+
+		#ifdef ENABLE_CUSTOM_ENEMS
+			extra_enems_init ();
+		#endif
 	}
 
 	#ifdef PLAYER_CAN_FIRE
@@ -1649,8 +1656,10 @@ void draw_scr (void) {
 		// Run "ENTERING ANY" script (if available)
 		script (SC_ENTERING_ANY);
 
-		// Run "ENTERING" script for THIS screen (if available)
-		script (SC_ENTERING_SCREEN + (n_pant << 1));
+		#ifndef NO_INDEXED_SCRIPTING
+			// Run "ENTERING" script for THIS screen (if available)
+			script (SC_ENTERING_SCREEN + (n_pant << 1));
+		#endif
 	#endif
 }
 
@@ -1700,7 +1709,7 @@ void draw_scr (void) {
 	void enems_kill (unsigned char damage) {
 		// Kill enemy
 
-		#if ENEMIES_LIFE_GAUGE > 1
+		#if ENEMS_LIFE_GAUGE > 1
 			if (_en_life >= damage) {
 				_en_life -= damage;
 			} else {
@@ -1761,6 +1770,10 @@ void draw_scr (void) {
 					_en_life = FANTIES_LIFE_GAUGE;
 				#endif
 			#endif
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_killed ();
+			#endif		
 		} else {
 			peta_el_beeper (1);
 		}
@@ -2042,28 +2055,17 @@ void mueve_bicharracos (void) {
 			// Fanties engine
 			#ifdef RANDOM_RESPAWN
 				#asm
-						call _player_hidden 
-						ld  a, l 
-						ld  iyh, a
-
-						// Self modifying code.
-						// ld HL, NN -> 21 L H
-						// ld DE, NN -> 11 L H
-
-						ld  hl, FANTY_A
-						or  a 
-						jr  z, fantys_rr_set
-
-						ld  hl, -FANTY_A
-
-					.fantys_rr_set
-						ld  (fanty_A_mod_1 + 1), hl
-						ld  (fanty_A_mod_2 + 1), hl
-						ld  (fanty_A_mod_3 + 1), hl
-						ld  (fanty_A_mod_4 + 1), hl
 
 						ld  bc, (_enit)
 						ld  b, 0
+
+					// if (!fanty_activo) goto .end
+
+						ld  hl, _en_an_fanty_activo
+						add hl, bc 
+						ld  a, (hl) 
+						or  a 
+						jp  z, fantys_end
 
 					// Save frame to ixl 
 
@@ -2080,13 +2082,26 @@ void mueve_bicharracos (void) {
 						xor a 
 						ld  (_gp_gen + 1), a 
 
-					// if (!fanty_activo) goto .end
+					// Determine if player should repel or attract fanties
 
-						ld  hl, _en_an_fanty_activo
-						add hl, bc 
-						ld  a, (hl) 
+						call _player_hidden 
+						ld  a, l 
+
+						// Self modifying code.
+						// ld HL, NN -> 21 L H
+						// ld DE, NN -> 11 L H
+
+						ld  hl, FANTY_A
 						or  a 
-						jp  z, fantys_end
+						jr  z, fantys_rr_set
+
+						ld  hl, -FANTY_A
+
+					.fantys_rr_set
+						ld  (fanty_A_mod_1 + 1), hl
+						ld  (fanty_A_mod_2 + 1), hl
+						ld  (fanty_A_mod_3 + 1), hl
+						ld  (fanty_A_mod_4 + 1), hl
 
 					// UPDATE VELOCITY
 					// X AXIS
@@ -2162,7 +2177,7 @@ void mueve_bicharracos (void) {
 						ld  de, -FANTY_MAX_V
 						
 						push hl 
-						call l_ge 						// C if DE >= HL
+						call l_gt 						// C if DE >= HL
 						pop hl
 						
 						jr  nc, fanty_vx_write
@@ -2252,7 +2267,7 @@ void mueve_bicharracos (void) {
 						
 						ld  de, -FANTY_MAX_V
 						push hl
-						call l_ge 						// C if DE >= HL
+						call l_gt 						// C if DE >= HL
 						pop hl 
 						jr  nc, fanty_vy_write
 
@@ -2308,22 +2323,24 @@ void mueve_bicharracos (void) {
 					.fanty_x_limit_0
 						// if (en_an_x [enit] > 15360) en_an_x [enit] = 15360;
 						ld  hl, 14336 // 15360 								
-						call l_ge  						// C if DE >= HL 
-						ld  hl, 14336 // 15360 
-						jr  nc, fanty_x_limit_1
-
-						ex  de, hl  					// DE = 15360
-
-						jr fanty_x_write
+						call l_gt  						// C if DE >= HL 
+						jr  c, fanty_x_ex_de_zero_velocity
 
 					.fanty_x_limit_1
 						// if (en_an_x [enit] < -1024) en_an_x [enit] = -1024;
 						ld  hl, 0 // -1024 
 						call l_lt  						// C if DE < HL
-						ld  hl, 0 // -1024
 						jr  nc, fanty_x_write
 
-						ex  de, hl 						// DE = -1024
+					.fanty_x_ex_de_zero_velocity
+						ex  de, hl
+						ld  hl, (_gp_gen) 				// INDEX
+						ld  bc, _en_an_vx 
+						add hl, bc 
+						xor a 
+						ld  (hl), a 
+						inc hl
+						ld  (hl), a 
 
 					.fanty_x_write
 
@@ -2367,23 +2384,26 @@ void mueve_bicharracos (void) {
 
 					.fanty_y_limit_0
 						// if (en_an_y [enit] > 10240) en_an_y [enit] = 10240;
-						ld  hl, 9216 // 10240 
-						call l_ge  						// C if DE >= HL 
-						ld  hl, 9216 // 10240 
-						jr  nc, fanty_y_limit_1
-
-						ex  de, hl  					// DE = 15360
-
-						jr fanty_y_write
+						ld  hl, 9216  
+						call l_gt  						// C if DE >= HL 
+						jr  c, fanty_y_ex_de_zero_velocity
 
 					.fanty_y_limit_1
 						// if (en_an_y [enit] < -1024) en_an_y [enit] = -1024;
-						ld  hl, 0 // -1024 
-						call l_lt  						// C if DE < HL
-						ld  hl, 0 // -1024 
+						ld  hl, 0  
+						call l_lt 						// C if DE < HL
 						jr  nc, fanty_y_write
 
-						ex  de, hl 						// DE = -1024
+					.fanty_y_ex_de_zero_velocity
+						ex  de, hl
+						
+						ld  hl, (_gp_gen) 				// INDEX
+						ld  bc, _en_an_vy 
+						add hl, bc 
+						xor a 
+						ld  (hl), a 
+						inc hl
+						ld  (hl), a 
 
 					.fanty_y_write
 
@@ -2399,58 +2419,6 @@ void mueve_bicharracos (void) {
 						call HLshr6_A
 						ld  (__en_y), a			
 
-					// Make fanty blink when next to the edges of the screen
-					// Make invisible if close and even x or even y
-
-					.fanty_rr_blink
-						// Is it close to an edge?
-						ld  a, (__en_x)
-						ld  c, 0 
-						call fanty_close_to_edge
-						jr  c, fanty_rr_is_close_to_edge
-
-						ld  a, (__en_x)
-						ld  c, 224 
-						call fanty_close_to_edge
-						jr  c, fanty_rr_is_close_to_edge
-
-						ld  a, (__en_y)
-						ld  c, 0 
-						call fanty_close_to_edge
-						jr  c, fanty_rr_is_close_to_edge
-
-						ld  a, (__en_y)
-						ld  c, 144
-						call fanty_close_to_edge
-						jr  nc, fanty_rr_done
-
-					.fanty_rr_is_close_to_edge
-						// even X or Y?
-						ld  a, (__en_x) 
-						and 1 
-						jr  z, fanty_rr_is_close_to_edge
-
-						ld  a, (__en_y)
-						and 1 
-						jr  nz, fanty_rr_done
-
-						// So make invisible
-
-						ld  ixl, 0xff
-						jr  fanty_rr_done
-
-					.fanty_close_to_edge
-						// IN:
-						// A = coordinate
-						// C = edge
-						// OUT:
-						// carry set if close
-
-						sub c 
-						call _abs_a 
-						cp  16
-						ret
-
 					.fanty_rr_done
 
 						ld  bc, (_enit)
@@ -2458,11 +2426,17 @@ void mueve_bicharracos (void) {
 						ld  hl, _en_an_frame
 						add hl, bc 
 						ld  a, ixl 
-						ld  (hl), a
+						;ld  (hl), a
+
+					.fantys_end
 				#endasm 
 			#endif
 
 			enems_calc_frame ();
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_move ();
+			#endif		
 
 			#ifndef PLAYER_MOGGY_STYLE	
 				if ( (_en_t == 4
@@ -2617,20 +2591,119 @@ void mueve_bicharracos (void) {
 								#if defined(RANDOM_RESPAWN)
 									if (0 == en_an_fanty_activo [enit]) {
 										// Bouncing!
-										if (_en_mx > 0) player.vx = PLAYER_MAX_VX;
-										if (_en_mx < 0) player.vx = -PLAYER_MAX_VX;
-										if (_en_my > 0) player.vy = PLAYER_MAX_VX;
-										if (_en_my < 0) player.vy = -PLAYER_MAX_VX;
+										#asm
+											// Linear colision
+											.en_col_lin_h
+												ld  a, (__en_mx)
+												or  a 
+												jr  z, en_col_lin_v
+
+												bit 7, a 
+												jr  z, en_col_lin_h_pos
+
+											.en_col_lin_h_neg
+												ld  hl, -PLAYER_MAX_VX
+												jr  en_col_lin_h_write
+
+											.en_col_lin_h_pos
+												ld  hl, PLAYER_MAX_VX
+
+											.en_col_lin_h_write
+												ld  (_player + 6), hl 		// player.vx
+
+											.en_col_lin_v
+												ld  a, (__en_my)
+												or  a
+												jr  z, en_col_lin_end
+
+												bit 7, a
+												jr  z, en_col_lin_v_pos
+
+											.en_col_lin_v_neg
+												ld  hl, -PLAYER_MAX_VX
+												jr  en_col_lin_v_write
+
+											.en_col_lin_v_pos
+												ld  hl, PLAYER_MAX_VX
+
+											.en_col_lin_v_write
+												ld  (_player + 8), hl 		// player.vy
+
+											.en_col_lin_end
+										#endasm
 									} else {
-										player.vx = en_an_vx [enit] + en_an_vx [enit];
-										player.vy = en_an_vy [enit] + en_an_vy [enit];
+										//player.vx = en_an_vx [enit] + en_an_vx [enit];
+										//player.vy = en_an_vy [enit] + en_an_vy [enit];
+										#asm
+												ld  a, (_enit)
+												sla a
+												ld  b, 0
+												ld  c, a
+
+												ld  hl, _en_an_vx
+												add hl, bc 
+
+												ld  a, (hl)
+												inc hl 
+												ld  h, (hl)
+												ld  l, a
+
+												add hl, hl
+												ld  (_player + 6), hl 			// player.vx
+
+												ld  hl, _en_an_vy 
+												add hl, bc 
+
+												ld  a, (hl)
+												inc hl 
+												ld  h, (hl) 
+												ld  l, a 
+
+												add hl, hl
+												ld  (_player + 8), hl 			// player.vy
+										#endasm
 									}
 								#else
-									// Bouncing!
-									if (_en_mx > 0) player.vx = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_mx < 0) player.vx = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my > 0) player.vy = (PLAYER_MAX_VX + PLAYER_MAX_VX);
-									if (_en_my < 0) player.vy = -(PLAYER_MAX_VX + PLAYER_MAX_VX);
+									#asm
+											// Linear colision
+											.en_col_lin_h
+												ld  a, (__en_mx)
+												or  a 
+												jr  z, en_col_lin_v
+
+												bit 7, a 
+												jr  z, en_col_lin_h_pos
+
+											.en_col_lin_h_neg
+												ld  hl, -PLAYER_MAX_VX*2
+												jr  en_col_lin_h_write
+
+											.en_col_lin_h_pos
+												ld  hl, PLAYER_MAX_VX*2
+
+											.en_col_lin_h_write
+												ld  (_player + 6), hl 		// player.vx
+
+											.en_col_lin_v
+												ld  a, (__en_my)
+												or  a
+												jr  z, en_col_lin_end
+
+												bit 7, a
+												jr  z, en_col_lin_v_pos
+
+											.en_col_lin_v_neg
+												ld  hl, -PLAYER_MAX_VX*2
+												jr  en_col_lin_v_write
+
+											.en_col_lin_v_pos
+												ld  hl, PLAYER_MAX_VX*2
+
+											.en_col_lin_v_write
+												ld  (_player + 8), hl 		// player.vy
+
+											.en_col_lin_end
+										#endasm
 								#endif
 							#else
 								// Bouncing:
@@ -2653,12 +2726,16 @@ void mueve_bicharracos (void) {
 
 				#ifdef PLAYER_CAN_FIRE
 					// Collision with bullets
+					if (
 					#ifdef RANDOM_RESPAWN
-						if (_en_t < 128 || en_an_fanty_activo [enit] == 1)
+						(_en_t < 128 || en_an_fanty_activo [enit] == 1)
 					#else
-						if (_en_t < 128)
+						(_en_t < 128)
 					#endif
-					{
+					#ifndef PLAYER_MOGGY_STYLE
+						&& _en_t != 4
+					#endif
+					) {
 						for (en_j = 0; en_j < MAX_BULLETS; en_j ++) {
 							#asm
 									ld  bc, (_en_j)
@@ -2724,6 +2801,10 @@ void mueve_bicharracos (void) {
 					}
 				#endif
 			}
+
+			#ifdef ENABLE_CUSTOM_ENEMS
+				extra_enems_checks ();
+			#endif
 		}
 
 		enems_loop_continue:
@@ -2739,9 +2820,8 @@ void mueve_bicharracos (void) {
 					jr  z, enems_create_fanty_done 
 
 					call _rand 
+					ld  a, l
 					and 31 
-					xor a 
-					or  l 
 					jr  nz, enems_create_fanty_done
 
 					ld  bc, (_enit) 
@@ -2779,6 +2859,10 @@ void mueve_bicharracos (void) {
 					ld  (hl), e 
 					inc hl 
 					ld  (hl), d 
+					
+					ex  de, hl
+					call HLshr6_A
+					ld  (__en_y), a
 
 					// Position X is random
 
@@ -2795,6 +2879,10 @@ void mueve_bicharracos (void) {
 					ld  (hl), e 
 					inc hl 
 					ld  (hl), d
+
+					ex  de, hl
+					call HLshr6_A
+					ld  (__en_x), a
 
 					// Init velocities
 

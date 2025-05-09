@@ -1,9 +1,20 @@
 // MTE MK1 v3.2
-// Copyleft 2011, 2025 by The Mojon Twins
+// Copyleft 2011 by The Mojon Twins
 
-// extern.h
-// Called from the script using EXTERN N
+void do_extern_action (unsigned char n, unsigned char m) {
+	// Kill all enemies
+	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+		enoffsmasi = enoffs + enit;
 
-void do_extern_action (unsigned char n) {
-	
+		// Copy array values to temporary variables as fast as possible
+		#asm
+				call enems_get_values
+		#endasm
+
+		if (_en_t && _en_t != 4) enems_kill (99);
+
+		#asm
+				call enems_update_values_store
+		#endasm
+	}
 }
