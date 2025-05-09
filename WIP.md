@@ -57,7 +57,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 ```
 
 
-[ ] Sección ON TILE PUSHED y hacer que MOVED_TO_TILE, MOVED_X y MOVED_Y lleven los valores correctos. (tile que se "pisa" y sus coordenadas).
+[ ] Sección ON TILE PUSHED y hacer que `MOVED_TO_TILE`, `MOVED_X` y `MOVED_Y` lleven los valores correctos. (tile que se "pisa" y sus coordenadas).
 
 [X] Generalizar la sección ON COIN GET o como fuese para que se lance cada vez que el jugador coja algo, ya sea una moneda o toque un hotspot (por ahora). Esto nos permite, por ejemplo, reaccionar a hotspots custom (por ejemplo, para implementar la recarga de timer sin tocar el motor) o implementar de forma controlada el "se acabó el juego al coger X objetos". Recordemos que al activar el scripting se desactivan las formas de ganar el juego que no sean con un `WIN GAME` desde el script.
 
@@ -99,6 +99,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [ ] Hay un pequeño glitch con la paleta del marcador al empezar el juego. Revisar.
 
+    * No sé por qué @#!! pasa este glitch. Hay otro en los juegos que no son `DIRECT_TO_PLAY` que es por razones diferentes. El sistema no lo he diseñado sino que lo he ido construyendo a salto de mata según me iban faltando cosas y a lo mejor es el momento de parar, borrarlo todo, y empezar de nuevo. 
+
 [X] Pasar a asm el código que hace rebotar al player y los fantys, que lleva sin tocar desde 2010.
 
 [X] Añadir un flag (o scenery_info a la v4) para poder invalidar el proceso que genera los fantis RR, con el objeto de poder añadir un hotspot que los mate a todos para siempre (al menos hasta que volvamos a la pantalla).
@@ -137,7 +139,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 ```
     Bits 3 2 1 0
-         | \ / | BG
+         | \ / +- BG
          |  SPRITES
          FG
 ```

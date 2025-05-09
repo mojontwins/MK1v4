@@ -14,11 +14,17 @@ void main (void) {
 	
 		#ifndef DIRECT_TO_PLAY
 			blackout ();
+			
+			#if defined CPC && !defined ALWAYS_SPLIT
+				do_split = 1;
+			#endif
+
 			#ifndef CPC
 				#asm
 					call SPUpdateNow
 				#endasm 
 			#endif
+					
 			#asm
 					ld  hl, _s_marco
 					call _unpack_screen
@@ -282,6 +288,7 @@ void main (void) {
 			// Render to screen
 
 			#ifdef CPC
+
 				cpc_UpdateNow (1);
 
 			#else

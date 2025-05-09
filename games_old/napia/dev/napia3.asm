@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu May 08 10:09:48 2025
+;	Module compile time: Fri May 09 09:43:14 2025
 
 
 
@@ -2060,14 +2060,13 @@
 	jr z, _set_game_pal
 	cp 6
 	jr c, _skip_ay_player
-	ld a, (isr_c2)
-	inc a
-	ld (isr_c2), a
+	ld hl, isr_c2
+	inc (hl)
 	ld a, (_isr_player_on)
 	or a
 	jr z, _skip_ay_player
 	call WYZ_PLAYER_ISR
-	ld a, (_playing)
+	ld a, (_do_split)
 	or a
 	jr z, isr_nohud
 	call pal_hud
@@ -2084,7 +2083,7 @@
 	ei
 	ret
 	._set_game_pal
-	ld a, (_playing)
+	ld a, (_do_split)
 	or a
 	jr z, isr_nosplit
 	.inject_pal
@@ -5699,6 +5698,9 @@
 	BINARY "endingc.bin"
 
 ._title_screen
+	ld	hl,0 % 256	;const
+	ld	a,l
+	ld	(_do_split),a
 	call pal_general
 	call	_blackout
 	ld hl, _s_title
@@ -5784,6 +5786,9 @@
 .i_124
 	call	_title_screen
 	call	_blackout
+	ld	hl,1 % 256	;const
+	ld	a,l
+	ld	(_do_split),a
 	ld hl, _s_marco
 	call _unpack_screen
 	ld	hl,1	;const
@@ -6298,6 +6303,7 @@
 ._tpx	defs	1
 ._tpy	defs	1
 ._enoffsmasi	defs	2
+._do_split	defs	1
 ._pant_just_rendered	defs	1
 .__baddies_pointer	defs	2
 ._orig_tile	defs	1
@@ -6598,6 +6604,7 @@
 	LIB	cpc_PutSp
 	LIB	cpc_UpdScrAddresses
 	XDEF	_tspatterns
+	XDEF	_do_split
 	XDEF	_check_lock_or_box_vert
 	LIB	cpc_PutTrSp8x8TileMapGPxM1
 	XDEF	_hotspot_paint

@@ -252,14 +252,13 @@ extern unsigned char *enem_cells [0];
 #endif
 
 void blackout (void) {
-	rda = BLACK_COLOUR_BYTE;
 	#asm
 			ld  a, 0xc0
 		.bo_l1
 			ld  h, a
 			ld  l, 0
 			ld  b, a
-			ld  a, (_rda)
+			ld  a, BLACK_COLOUR_BYTE
 			ld  (hl), a
 			ld  a, b
 			ld  d, a
@@ -269,6 +268,7 @@ void blackout (void) {
 
 			add 8
 			jr  nz, bo_l1
+
 	#endasm
 }
 

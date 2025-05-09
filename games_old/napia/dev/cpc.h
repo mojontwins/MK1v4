@@ -27,6 +27,7 @@
 
 unsigned char isr_player_on;
 unsigned char wyz_beat_ct;
+unsigned char do_split;
 
 #define WYZ_FX_CHANNEL 1
 #define AY_INIT()        wyz_init ()
@@ -335,9 +336,8 @@ void system_init (void) {
 			jr  c, _skip_ay_player
 
 			// Inc frame counter
-			ld  a, (isr_c2)
-			inc a
-			ld  (isr_c2), a
+			ld  hl, isr_c2
+			inc (hl)
 
 			ld  a, (_isr_player_on)
 			or  a
@@ -348,7 +348,7 @@ void system_init (void) {
 		#if defined MODE_1 && defined AUTO_SPLIT
 				// Set hud pal
 			#ifndef ALWAYS_SPLIT
-					ld  a, (_playing)
+					ld  a, (_do_split)
 					or  a 
 					jr  z, isr_nohud
 			#endif
@@ -374,7 +374,7 @@ void system_init (void) {
 	
 			._set_game_pal
 			#ifndef ALWAYS_SPLIT
-					ld  a, (_playing)
+					ld  a, (_do_split)
 					or  a 
 					jr  z, isr_nosplit
 			#endif
@@ -1576,8 +1576,9 @@ void cpc_UpdateNow (unsigned char sprites) {
 				ld  (isr_c2), a
 		#endasm
 	#endif
+
 	// Set up palette for AUTO_SPLIT
-	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+	#if defined MODE_1 && defined AUTO_SPLIT
 		#asm
 				ld  a, (_pant_just_rendered)
 				or  a 
@@ -1599,6 +1600,7 @@ void cpc_UpdateNow (unsigned char sprites) {
 			.change_palette_done
 		#endasm
 	#endif
+	
 	#asm
 			call cpc_ShowTouchedTiles
 			call cpc_ResetTouchedTiles
