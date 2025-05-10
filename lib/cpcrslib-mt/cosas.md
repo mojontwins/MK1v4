@@ -133,3 +133,46 @@ Ahora tengo que hacer las otras versiones de las rutinas para 4x8 y 8x23
     xor c           ; A = 65472103
     
 ```
+
+# Años después
+
+20250510 - M1 funciona guay pero no me da todo el faps que necesito. Mi objetivo es llegar a 25 faps y para eso hay que meter un oomph. Como tengo tres trocitos de 256 bytes aún libres en VRAM que no uso en el motor, voy a cambiar las rutinas M1 para que utilicen LUTs en lugar de rotar los datos al vuelo.
+
+Me apunto esto para luego
+
+Generar el LUT podría ser algo así. Por ejemplo, para la primera rotación:
+
+```asm
+    ld  hl, 0xE700
+
+  .write_lut1_loop
+    ld  a, l
+    rrca
+    ld  c, a 
+    rrca
+    rrca
+    rrca
+    rrca
+    xor c 
+    and $88
+    xor c
+
+    ld  (hl), a 
+    inc l 
+    jr  nz, write_lut1_loop
+```
+
+El LUT se usaría así Por ejemplo, primer byte:
+
+```asm
+    ld  a, (bc)   ; Get sprite byte. This is the byte we must rotate
+
+    ld  h, 0xE7   ; 1st rotation
+    ld  l, a      ; Point to LUT
+    ld  a, (hl)   ; Rotated!
+
+    ...
+
+    ld  h, 0xFE   ; Make mask LUT (already there)
+    ld  l, a    ; etc
+```

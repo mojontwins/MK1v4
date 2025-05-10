@@ -2,7 +2,7 @@
 
 Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudiendo.
 
-[ ] Limpiar de CPCRSLIB todo lo que no se use en mojonia.
+[X] Limpiar de CPCRSLIB todo lo que no se use en mojonia.
 
 [ ] Resolver cómo hacer saber al script cuántos empujables hay en la pantalla de la mejor forma: la que menos impacto tenga en el motor principal. Recordemos que el goal de la v3.2 por ejemplo es ser lo más bare bones posible ¿Hago un array que cuente las ocurrencias de cada tile? ¿Cómo la hago accesible desde el script? `read_vbyte` está ya muy poblado, recordemos que sólo tengo sitio para 14 variables de motor y no quedan muchas libres a menos que haga otra codificación que tengo que estudiar ($FF XX = flag, $FE XX = variable de motor, por ejemplo ~ igualmente ahora son $FF XX con XX = $F1 .. $FE ¿no? complico levemente el intérprete pero el bytecode sigue ocupando lo mismo)
 
@@ -248,8 +248,4 @@ El tema va a ser cómo usar el LUT, que me quedo sin registros punteros :D Por e
 
 		ld  h, 0xFE 	; Make mask LUT (already there)
 		ld  l, a 		; etc
-```
-
-
-
 ```
