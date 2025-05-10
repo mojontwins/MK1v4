@@ -24,6 +24,7 @@ void title_screen (void) {
 					ld  (inject_pal + 1), hl
 			#endasm 
 		#else
+			do_split = 0;
 			#asm
 					call pal_general
 			#endasm
@@ -37,6 +38,7 @@ void title_screen (void) {
 	#endif
 
 	blackout ();
+
 	#asm
 			ld  hl, _s_title
 			call _unpack_screen

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu May 08 14:00:29 2025
+;	Module compile time: Sat May 10 19:00:27 2025
 
 
 
@@ -1715,18 +1715,18 @@
 	cp 3
 	jr z, _set_game_pal
 	cp 6
-	jr c, _skip_ay_player
-	ld a, (isr_c2)
-	inc a
-	ld (isr_c2), a
+	jr c, _isr_done
+	ld hl, isr_c2
+	inc (hl)
 	ld a, (_isr_player_on)
 	or a
 	jr z, _skip_ay_player
 	call WYZ_PLAYER_ISR
+	._skip_ay_player
 	call pal_hud
 	.isr_nohud
 	xor a
-	._skip_ay_player
+	._isr_done
 	ld (isr_c1), a
 	pop iy
 	pop ix
@@ -1741,7 +1741,7 @@
 	call pal_general
 	.isr_nosplit
 	ld a, 3
-	jr _skip_ay_player
+	jr _isr_done
 	.isr_c1
 	defb 0
 	.isr_c2
@@ -5896,7 +5896,7 @@
 
 ._init_player
 	call	_init_player_values
-	ld hl, 99
+	ld hl, 10
 	ld (_player+29), hl
 	xor a
 	ld (_player+27), a
@@ -7618,12 +7618,13 @@
 	jp	i_175
 .i_178
 	ld	hl,_player+29
-	push	hl
-	call	l_gint	;
-	ld	bc,10
-	add	hl,bc
-	pop	de
-	call	l_pint
+	inc	(hl)
+	ld	a,(hl)
+	inc	hl
+	jr	nz,ASMPC+3
+	inc	(hl)
+	ld	h,(hl)
+	ld	l,a
 	ld	hl,(_player+29)
 	ld	de,99	;const
 	ex	de,hl

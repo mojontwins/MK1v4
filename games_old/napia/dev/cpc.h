@@ -270,6 +270,7 @@ void blackout (void) {
 
 			add 8
 			jr  nz, bo_l1
+
 	#endasm
 }
 

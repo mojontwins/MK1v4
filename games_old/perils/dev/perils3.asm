@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu May 08 10:28:06 2025
+;	Module compile time: Sat May 10 18:49:41 2025
 
 
 
@@ -1714,9 +1714,8 @@
 	jr z, _set_game_pal
 	cp 6
 	jr c, _skip_ay_player
-	ld a, (isr_c2)
-	inc a
-	ld (isr_c2), a
+	ld hl, isr_c2
+	inc (hl)
 	ld a, (_isr_player_on)
 	or a
 	jr z, _skip_ay_player
@@ -2699,11 +2698,6 @@
 
 
 
-._do_extern_action
-	ret
-
-
-
 ._script
 	ld a, l
 	ld (_script_n), a
@@ -2721,6 +2715,9 @@
 	XDEF _tpy
 	XDEF _tat
 	XDEF _tqt
+	XDEF _hotspot_t
+	XDEF _scenery_info
+	XDEF _do_extern_action
 	XDEF _cpc_UpdateNow
 	.script_bytecode
 	BINARY "script.spt.bin"
@@ -8899,6 +8896,9 @@
 	ld (_hotspot_y), a
 	xor a
 	ld (_hotspot_t_r), a
+	ld a, (_scenery_info + 0)
+	or a
+	ret nz
 	call _calc_hotspot_ptr
 	ld ix, _hotspots
 	add ix, de
@@ -9773,6 +9773,11 @@
 	srl a
 	ld (_en_yy), a
 	ret
+
+._do_extern_action
+	ret
+
+
 	._s_title
 	BINARY "titlec.bin"
 	._s_marco
@@ -9879,14 +9884,14 @@
 	ld	a,#(20 % 256 % 256)
 	ld	(_n_pant),a
 	ld	a,#(0 % 256 % 256)
-	ld	(_maincounter),a
-	ld	a,#(0 % 256 % 256)
 	ld	(_script_result),a
 	ld	hl,0	;const
 	call	_script
-	ld	hl,0 % 256	;const
-	ld	a,l
-	ld	(_half_life),a
+	xor a
+	ld (_maincounter), a
+	ld (_half_life), a
+	ld (_scenery_info + 0), a
+	ld (_scenery_info + 1), a
 	ld a, 255
 	ld (_objs_old), a
 	ld (_life_old), a
@@ -10370,6 +10375,7 @@
 ._rdt2	defs	1
 ._gpit	defs	1
 ._playing	defs	1
+._scenery_info	defs	2
 ._seed	defs	2
 ._objs_old	defs	1
 ._maincounter	defs	1
@@ -10632,6 +10638,7 @@
 	XDEF	_sm_updfunc
 	LIB	cpc_ScanKeyboard
 	LIB	cpc_SetColour
+	XDEF	_scenery_info
 	XDEF	_enems_calc_frame
 	XDEF	_rand
 	XDEF	_seed

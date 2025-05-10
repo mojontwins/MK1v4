@@ -19,6 +19,7 @@ void main (void) {
 					call SPUpdateNow
 				#endasm 
 			#endif
+
 			#asm
 					ld  hl, _s_marco
 					call _unpack_screen
@@ -103,6 +104,11 @@ void main (void) {
 
 					ld  a, 1
 					ld  (_pant_just_rendered), a
+
+				#if defined MODE_1 && defined AUTO_SPLIT && !defined ALWAYS_SPLIT
+						ld  (_do_split), a
+				#endif
+
 				.ml_ud_skip
 			#endasm
 

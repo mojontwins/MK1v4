@@ -19,6 +19,7 @@ void main (void) {
 					call SPUpdateNow
 				#endasm 
 			#endif
+
 			#asm
 					ld  hl, _s_marco
 					call _unpack_screen
@@ -59,7 +60,6 @@ void main (void) {
 		#endif
 
 		n_pant = SCR_INICIO;
-		maincounter = 0;
 		
 		#ifdef ACTIVATE_SCRIPTING		
 			script_result = 0;
@@ -68,16 +68,20 @@ void main (void) {
 			script (SC_ENTERING_GAME);
 		#endif
 
-		half_life = 0;
-
 		#asm
-			ld  a, 255
-			ld  (_objs_old), a 
-			ld  (_life_old), a 
-			ld  (_keys_old), a 
-			ld  (_killed_old), a 
-			ld  (_flag_old), a
-			ld  (_on_pant), a
+				xor a 
+				ld  (_maincounter), a 
+				ld  (_half_life), a 
+				ld  (_scenery_info + 0), a  	// scenery_info.hide_hotspots
+				ld  (_scenery_info + 1), a 		// scenery_info.dont_make_rr
+
+				ld  a, 255
+				ld  (_objs_old), a 
+				ld  (_life_old), a 
+				ld  (_keys_old), a 
+				ld  (_killed_old), a 
+				ld  (_flag_old), a
+				ld  (_on_pant), a
 		#endasm
 
 		#ifdef CPC
@@ -100,6 +104,11 @@ void main (void) {
 
 					ld  a, 1
 					ld  (_pant_just_rendered), a
+
+				#if defined MODE_1 && defined AUTO_SPLIT && !defined ALWAYS_SPLIT
+						ld  (_do_split), a
+				#endif
+
 				.ml_ud_skip
 			#endasm
 

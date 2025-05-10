@@ -322,9 +322,6 @@ T0=[special]
 T1=[tile]
 T2=[touched]
 Adding 272 @ sect 5
-Parsing: # There's a special tile in screen 20.
-Parsing: # Touching it should WIN the game.
-Parsing: # Otherwise it's an object.
 Parsing: IF NPANT = 20
 T0=[IF]
 T1=[$254]
@@ -333,7 +330,6 @@ T3=[20]
 Parsing: WIN GAME
 T0=[WIN]
 T1=[GAME]
-Parsing: # Win game BREAKs, so it's safe to just
 Parsing: IF TN = 18
 T0=[IF]
 T1=[$246]

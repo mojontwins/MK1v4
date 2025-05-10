@@ -21,21 +21,22 @@
 #include "mtparser.bi"
 
 Sub usage
-	Print "Mapsrinker v0.1.20220722 shrinks a NES/SG1000 16x12 map to C64 16x10"
+	Print "MapsrinkerOM v0.1.20250428 shrinks a NES/SG1000 16x12 map to CPC/ZX 15x10"
 	Print "usage:"
-	Print "$ mapsrinker in=input.map out=output.map size=w,h behs=<comma separated list> [verbose]"
+	Print "$ MapsrinkerOM in=input.map out=output.map size=w,h behs=<comma separated list> [fixmappy] [verbose]"
 End Sub
 
 ' Vars
 Dim As Integer f, w, h, i, j, x, y, xx, yy, tidx, nPant, maxPants, prev
 Redim As uByte myMap (0, 0, 0)
+Redim As uByte interMap (0, 0, 0)
 Redim As uByte outputMap (0, 0, 0)
 Dim As uByte d
 Dim As Integer onlyWidthExtrude, sizeT, module
 
 Dim As String mandatory (3) => { "in", "out", "size", "behs" }
 Dim As Integer behs (63), coords (9), complexity (11), order (11)
-Dim As Integer verbose
+Dim As Integer verbose, fixmappy
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End
@@ -44,11 +45,13 @@ parseCoordinatesString sclpGetValue ("behs"), behs ()
 parseCoordinatesString sclpGetValue ("size"), coords ()
 
 verbose = (sclpGetValue ("verbose") <> "")
+fixmappy = (sclpGetValue ("fixmappy") <> "")
 
 w = coords (0): h = coords (1)
 maxPants = w*h
 Redim myMap (maxPants - 1, 15, 11)
-Redim outputMap (maxPants - 1, 15, 9)
+Redim interMap (maxPants - 1, 15, 11)
+Redim outputMap (maxPants - 1, 15, 11)
 
 ' read map
 f = Freefile
@@ -67,6 +70,9 @@ For tidx = 0 To maxPants * 192 - 1
 	
 	' Read byte
 	Get #f, , d
+
+	' Fix mappy
+	If fixmappy Then d = d - 1
 	
 	' Write to mem
 	myMap (nPant, xx, yy) = d
@@ -74,6 +80,7 @@ Next tidx
 
 Close f
 
+' PASS 1: Remove TWO rows
 ' Process every screen
 For nPant = 0 To maxPants - 1
 
@@ -118,7 +125,7 @@ For nPant = 0 To maxPants - 1
 	For y = 0 To 11 
 		If y <> order (0) And y <> order (1) Then
 			For x = 0 To 15
-				outputMap (nPant, x, yy) = myMap (nPant, x, y)
+				interMap (nPant, x, yy) = myMap (nPant, x, y)
 			Next x
 			yy = yy + 1
 		End If
@@ -126,25 +133,78 @@ For nPant = 0 To maxPants - 1
 
 Next nPant
 
+' PASS 2: Reove ONE column
+' Process every screen
+For nPant = 0 To maxPants - 1
+
+	' Calculate the complexity of all coluns 1-14
+	
+	complexity (0) = 99: complexity (15) = 99 	' Never chose these
+
+	For x = 1 To 14
+		prev = behs (interMap (nPant, x, 0))
+		If verbose Then Print Hex (prev, 1);
+		complexity (x) = 0
+		For y = 1 To 9
+			If verbose Then Print Hex (behs (interMap (nPant, x, y)), 1);
+			If behs (interMap (nPant, x, y)) <> prev Then	
+				complexity (x) = complexity (x) + 1 
+				prev = behs (interMap (nPant, x, y))
+			End If 			
+		Next y
+		If verbose Then Print "="; complexity (x)
+	Next x
+
+	' Bubble sort the complexity array 
+	For x = 0 To 15: order (x) = x: Next x
+
+	For i = 0 To 14
+		For j = 0 To 14 - i
+			If complexity (j) > complexity (j + 1) Then
+				Swap complexity (j), complexity (j + 1)
+				Swap order (j), order (j + 1)
+			End If 
+		Next j 
+	Next i
+
+	If verbose Then 
+		Print "Least complex line = " & order (0) & " (" & complexity (0) & ")"
+		Print
+	End If
+
+	' Copy to new map skipping two least complex lines
+
+	xx = 0
+	For x = 0 To 15
+		If x <> order (0) Then
+			For y = 0 To 9
+				outputMap (nPant, xx, y) = interMap (nPant, x, y)
+			Next y
+			xx = xx + 1
+		End If
+	Next x
+
+Next nPant
+
 ' Write results
 f = Freefile
 Open sclpGetValue ("out") For Binary As #f 
 
-sizeT = 160: module = 10 
+sizeT = 150: module = 10 
 
 For tidx = 0 To maxPants * sizeT - 1 
 	' Screen location
-	x = (tidx \ 16) Mod w
+	x = (tidx \ 15) Mod w
 	y = tidx \ (w * sizeT)
 	nPant = y * w + x
 	
 	' Screen coordinates
-	xx = tidx Mod 16
-	yy = (tidx \ (16 * w)) Mod module
+	xx = tidx Mod 15
+	yy = (tidx \ (15 * w)) Mod module
 		
 	Put #f, , outputMap (nPant, xx, yy)
 Next tidx
 
 Close 
 
-Print "mapsrinker v0.1.20220722, " & sclpGetValue ("in") & " shrinked into " & sclpGetValue ("out") & ". " & maxPants & " screens processed."
+Print "MapsrinkerOM v0.1.20250428, " & sclpGetValue ("in") & " shrinked into " & sclpGetValue ("out") & ". " & maxPants & " screens processed."

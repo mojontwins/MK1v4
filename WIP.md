@@ -101,6 +101,16 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
     * No sé por qué @#!! pasa este glitch. Hay otro en los juegos que no son `DIRECT_TO_PLAY` que es por razones diferentes. El sistema no lo he diseñado sino que lo he ido construyendo a salto de mata según me iban faltando cosas y a lo mejor es el momento de parar, borrarlo todo, y empezar de nuevo. 
 
+    * Tenemos tres configuraciones:
+
+    - Sin split, la paleta se pone al principio, en `system_init`, llamando directamente a `my_inks`.
+
+    - `AUTO_SPLIT` / `ALWAYS_SPLIT` pone siempre `pal_hud` tras ejecutar el wyz player, en la 6ª int. Cualquier paleta que queremos que salga en el area principal de la pantalla hay que inyectarla escribiendo la dirección de la rutina en `inject_pal + 1`.
+
+    - `AUTO_SPLIT` sin `ALWAYS_SPLIT` funciona como el anterior siempre que `_do_split` valga 1. Si no, actúa como sin split (no hace nada durante el ISR).
+
+    Voy a arreglar primero `perils`. Remember, `ALWAYS_SPLIT` y todas las paletas deben inyectarse, jamás ponerse directamente.
+
 [X] Pasar a asm el código que hace rebotar al player y los fantys, que lleva sin tocar desde 2010.
 
 [X] Añadir un flag (o scenery_info a la v4) para poder invalidar el proceso que genera los fantis RR, con el objeto de poder añadir un hotspot que los mate a todos para siempre (al menos hasta que volvamos a la pantalla).

@@ -23,6 +23,8 @@
 	XREF _peta_el_beeper
 	XREF _do_extern_action
 	XREF draw_line_of_text
+	XREF _hotspot_t
+	XREF _scenery_info
 
 	XREF script_bytecode
 
@@ -306,20 +308,6 @@
 	ld  a, (_player + 32) 	; player.killed
 	ret
 .rvb_set_player_killed_done
-
-; TX RVALUE
-	cp  0xF8
-	jr  nz, rvb_set_tx_done
-	ld  a, (_tpx)
-	ret
-.rvb_set_tx_done
-
-; TY RVALUE
-	cp  0xF7
-	jr  nz, rvb_set_ty_done
-	ld  a, (_tpy)
-	ret
-.rvb_set_ty_done
 
 ; TN RVALUE
 	cp  0xF6

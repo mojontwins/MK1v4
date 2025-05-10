@@ -16,10 +16,6 @@ extern unsigned char script_tx, script_ty, script_tn;
 
 extern void script_do (void);
 
-void do_extern_action (unsigned char n, unsigned char m) {
-
-}
-
 void __FASTCALL__ script (unsigned char a) {
 	#asm 
 			ld  a, l 
@@ -39,6 +35,9 @@ void __FASTCALL__ script (unsigned char a) {
 	XDEF _tpy
 	XDEF _tat 
 	XDEF _tqt
+	XDEF _hotspot_t
+	XDEF _scenery_info
+	XDEF _do_extern_action
 
 	#ifdef CPC
 		XDEF _cpc_UpdateNow

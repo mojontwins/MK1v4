@@ -249,16 +249,21 @@ extern unsigned char *enem_cells [0];
 	#include "cpc/pal_hud.h"
 	#include "cpc/pal_general.h"
 	#include "cpc/palmap.h"
+
+	#ifndef ALWAYS_SPLIT
+		unsigned char do_split;
+	#endif
 #endif
 
 void blackout (void) {
+	rda = BLACK_COLOUR_BYTE;
 	#asm
 			ld  a, 0xc0
 		.bo_l1
 			ld  h, a
 			ld  l, 0
 			ld  b, a
-			ld  a, BLACK_COLOUR_BYTE
+			ld  a, (_rda)
 			ld  (hl), a
 			ld  a, b
 			ld  d, a
@@ -332,23 +337,23 @@ void system_init (void) {
 		#endif
 
 			cp  6
-			jr  c, _skip_ay_player
+			jr  c, _isr_done
 
 			// Inc frame counter
-			ld  a, (isr_c2)
-			inc a
-			ld  (isr_c2), a
+			ld  hl, isr_c2
+			inc (hl)
 
 			ld  a, (_isr_player_on)
 			or  a
 			jr  z, _skip_ay_player
 
 			call WYZ_PLAYER_ISR
+		._skip_ay_player
 
 		#if defined MODE_1 && defined AUTO_SPLIT
 				// Set hud pal
 			#ifndef ALWAYS_SPLIT
-					ld  a, (_playing)
+					ld  a, (_do_split)
 					or  a 
 					jr  z, isr_nohud
 			#endif
@@ -358,7 +363,7 @@ void system_init (void) {
 
 			xor a
 
-		._skip_ay_player 
+		._isr_done 
 			ld  (isr_c1), a	
 			
 			pop iy
@@ -374,7 +379,7 @@ void system_init (void) {
 	
 			._set_game_pal
 			#ifndef ALWAYS_SPLIT
-					ld  a, (_playing)
+					ld  a, (_do_split)
 					or  a 
 					jr  z, isr_nosplit
 			#endif
@@ -384,7 +389,7 @@ void system_init (void) {
 	
 			.isr_nosplit
 				ld  a, RASTER_SPLIT
-				jr  _skip_ay_player
+				jr  _isr_done
 		#endif
 
 		.isr_c1 
