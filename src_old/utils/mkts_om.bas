@@ -60,6 +60,7 @@ Dim Shared As Integer cutSpriteCount
 Dim Shared As Integer pixelperfectm0
 Dim Shared As Integer pixelperfectm1
 Dim Shared As Integer palsAsAssembly
+Dim Shared As Integer withRotationLUT
 
 Dim Shared As Integer greyRowOrder (7) => { 0, 1, 3, 2, 6, 7, 5, 4 }
 
@@ -156,6 +157,7 @@ Sub usage
 	Puts "brickinput means input png has 2x1 ""pixels""."
 	Puts "pixelperfectm0 uses the pixel-perfect sprite routines from MK1v4.CPC"
 	Puts "pixelperfectm1 uses the pixel-perfect sprite routines from MK1v4.CPC"
+	Puts "pixelperfectm1lut uses the pixel-perfect LUT based sprite routines from MK1v4.CPC"
 	Puts "greyordered is used with chars and strait2x2"
 	Puts "mappings is for sprite modes and for mapped mode"
 	Puts "gng is for OR sprites with suited palete, Ghosts'n Goblins style"
@@ -957,6 +959,7 @@ Sub generateMixedMappings (mappingsFn As String)
 		Print #fOut, "cpc_PutSpTileMap" & functionSuffix;
 		If pixelperfectm0 Then Print #fOut, "Px";
 		If pixelperfectm1 Then Print #fOut, "PxM1";
+		If withRotationLUT Then Print #fOut, "LUT";
 		If i < spriteMetaIndex - 1 Then Print #fOut, ", ";
 		If i Mod 4 = 3 Or i = spriteMetaIndex - 1 Then 
 			Print #fOut, ""
@@ -982,6 +985,7 @@ Sub generateMixedMappings (mappingsFn As String)
 		If gng Then Print #fOut, "G";
 		If pixelperfectm0 Then Print #fOut, "Px";
 		If pixelperfectm1 Then Print #fOut, "PxM1";
+		If withRotationLUT Then Print #fOut, "LUT";
 		If i < spriteMetaIndex - 1 Then Print #fOut, ", ";
 		If i Mod 4 = 3 Or i = spriteMetaIndex - 1 Then 
 			Print #fOut, ""
@@ -1095,6 +1099,7 @@ Sub generateStraitMappings (mappingsFn As String, wMeta As Integer, hMeta As Int
 		Print #fOut, "cpc_PutSpTileMap" & functionSuffix;
 		If pixelperfectm0 Then Print #fOut, "Px";
 		If pixelperfectm1 Then Print #fOut, "PxM1";
+		If withRotationLUT Then Print #fOut, "LUT";
 		If ca Then Print #fOut, "CA";
 		If i < max - 1 Then Print #fOut, ", ";
 		If i Mod 4 = 3 Or i = max - 1 Then 
@@ -1113,6 +1118,7 @@ Sub generateStraitMappings (mappingsFn As String, wMeta As Integer, hMeta As Int
 		If gng Then Print #fOut, "G";
 		If pixelperfectm0 Then Print #fOut, "Px";
 		If pixelperfectm1 Then Print #fOut, "PxM1";
+		If withRotationLUT Then Print #fOut, "LUT";
 		If ca Then Print #fOut, "CA";
 		If i < max - 1 Then Print #fOut, ", ";
 		If i Mod 4 = 3 Or i = max - 1 Then 
@@ -1576,6 +1582,10 @@ silent = (sclpGetValue ("silent") <> "")
 debug = (sclpGetValue ("debug") <> "")
 pixelperfectm0 = (sclpGetValue ("pixelperfectm0") <> "")
 pixelperfectm1 = (sclpGetValue ("pixelperfectm1") <> "")
+If sclpGetValue ("pixelperfectm1lut") <> "" Then
+	pixelperfectm1 = -1
+	withRotationLUT = -1
+End If
 greyOrdered = (sclpGetValue ("greyordered") <> "")
 gng = (sclpGetValue ("gng") <> "")
 

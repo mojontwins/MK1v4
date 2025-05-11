@@ -14,3 +14,9 @@ DEFC PASARPORDETRAS = 1
 ; coordenadas del área de juego desde tu módulo de C.
 
 DEFC CHURRERA_CLIPPING = 1
+
+; Base Rotation LUT addresses for Mode 1
+
+DEFC M1LUTR1 = $D700
+DEFC M1LUTR2 = $DE00
+DEFC M1LUTR3 = $E700
