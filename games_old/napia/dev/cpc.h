@@ -27,7 +27,6 @@
 
 unsigned char isr_player_on;
 unsigned char wyz_beat_ct;
-unsigned char do_split;
 
 #define WYZ_FX_CHANNEL 1
 #define AY_INIT()        wyz_init ()
@@ -250,6 +249,10 @@ extern unsigned char *enem_cells [0];
 	#include "cpc/pal_hud.h"
 	#include "cpc/pal_general.h"
 	#include "cpc/palmap.h"
+
+	#ifndef ALWAYS_SPLIT
+		unsigned char do_split;
+	#endif
 #endif
 
 void blackout (void) {
@@ -314,8 +317,8 @@ void system_init (void) {
 
 			xor a 
 			ld  (isr_c1), a
-
-			jp  isr_done
+			ei
+			jp  after_isr
 
 		._isr
 			push af 
@@ -334,7 +337,7 @@ void system_init (void) {
 		#endif
 
 			cp  6
-			jr  c, _skip_ay_player
+			jr  c, _isr_done
 
 			// Inc frame counter
 			ld  hl, isr_c2
@@ -345,6 +348,7 @@ void system_init (void) {
 			jr  z, _skip_ay_player
 
 			call WYZ_PLAYER_ISR
+		._skip_ay_player
 
 		#if defined MODE_1 && defined AUTO_SPLIT
 				// Set hud pal
@@ -359,7 +363,7 @@ void system_init (void) {
 
 			xor a
 
-		._skip_ay_player 
+		._isr_done 
 			ld  (isr_c1), a	
 			
 			pop iy
@@ -385,7 +389,7 @@ void system_init (void) {
 	
 			.isr_nosplit
 				ld  a, RASTER_SPLIT
-				jr  _skip_ay_player
+				jr  _isr_done
 		#endif
 
 		.isr_c1 
@@ -393,7 +397,7 @@ void system_init (void) {
 		.isr_c2
 			defb 0
 
-		.isr_done
+		.after_isr
 	#endasm
 	
 	// Border 0
@@ -408,6 +412,11 @@ void system_init (void) {
 			ld  de, BASE_LUT
 			call depack
 	#endasm
+
+	// Make M! rotation luts
+	#if defined MODE_1
+		cpc_MakeM1RotationLUTs ();
+	#endif
 
 	blackout ();
 
@@ -577,11 +586,6 @@ void system_init (void) {
 			add ix, de
 			djnz sp_sw_init_turnoff_loop
 	#endasm	
-
-	#asm
-		ei
-	#endasm
-
 }
 
 void _tile_address (void) {
@@ -1577,9 +1581,8 @@ void cpc_UpdateNow (unsigned char sprites) {
 				ld  (isr_c2), a
 		#endasm
 	#endif
-
 	// Set up palette for AUTO_SPLIT
-	#if defined MODE_1 && defined AUTO_SPLIT
+	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
 		#asm
 				ld  a, (_pant_just_rendered)
 				or  a 
@@ -1601,7 +1604,6 @@ void cpc_UpdateNow (unsigned char sprites) {
 			.change_palette_done
 		#endasm
 	#endif
-	
 	#asm
 			call cpc_ShowTouchedTiles
 			call cpc_ResetTouchedTiles

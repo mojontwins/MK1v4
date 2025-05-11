@@ -4,6 +4,13 @@ set game=bosque3
 set om=cpc
 set mode=1
 
+if [%mode%]==[0] goto :setmode0 
+set mainspritesetmode=pixelperfectm%mode%lut
+goto :set
+:setmode0
+set mainspritesetmode=pixelperfectm%mode%
+:set
+
 echo Making %game%
 
 if [%1]==[justcompile] goto :compile
@@ -27,7 +34,7 @@ goto :compile
 :cpc 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=chars greyordered in=..\gfx\%om%\font.png out=font.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=strait2x2 greyordered in=..\gfx\%om%\work.png out=work.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=16 pixelperfectm%mode% silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=16 %mainspritesetmode% silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul

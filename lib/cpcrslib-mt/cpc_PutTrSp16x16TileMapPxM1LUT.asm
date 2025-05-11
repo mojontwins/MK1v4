@@ -8,6 +8,8 @@
 ; [na_th_an] Esta nueva vesión de la rutina imprime al pixel en m1
 ; Necesita una LUT en $FE00
 
+INCLUDE "CPCconfig.def"
+
 XLIB cpc_PutTrSp16x16TileMapPxM1LUT
 
 XREF tiles_tocados
@@ -137,7 +139,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right once 76543210 -> 47650321
 	; Using LUT!
 
-	ld  hl, M1LUTR1 / 256
+	ld  h, M1LUTR1 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated once!
 
@@ -165,7 +167,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right once 76543210 -> 47650321
 	; Using LUT!
 
-	ld  hl, M1LUTR1 / 256
+	ld  h, M1LUTR1 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated once!
 
@@ -193,7 +195,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right once 76543210 -> 47650321
 	; Using LUT!
 
-	ld  hl, M1LUTR1 / 256
+	ld  h, M1LUTR1 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated once!
 
@@ -222,7 +224,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right once 76543210 -> 47650321
 	; Using LUT!
 
-	ld  hl, M1LUTR1 / 256
+	ld  h, M1LUTR1 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated once!
 
@@ -278,7 +280,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right twice 76543210 -> 54761032
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR2 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated twice!
 	
@@ -306,7 +308,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right twice 76543210 -> 54761032
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR2 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated twice!
 	
@@ -335,7 +337,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right twice 76543210 -> 54761032
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR2 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated twice!
 	
@@ -364,7 +366,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right twice 76543210 -> 54761032
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR2 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated twice!
 	
@@ -421,7 +423,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right thrice 76543210 -> 65472103
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR3 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated thrice!
 
@@ -449,7 +451,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right thrice 76543210 -> 65472103
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR3 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated twice!
 
@@ -478,7 +480,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right thrice 76543210 -> 65472103
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR3 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated twice!
 
@@ -507,7 +509,7 @@ XREF posicion_inicial_superbuffer
 	; Now rotate nibbles right thrice 76543210 -> 65472103
 	; Using LUT!
 
-	ld  hl, M1LUTR2 / 256
+	ld  h, M1LUTR3 / 256
 	ld  l, a
 	ld  a, (hl) 	; A now has been rotated twice!
 	

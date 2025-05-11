@@ -826,7 +826,7 @@ void move (void) {
 				player.facing = 0;
 			#endif
 		}
-		
+
 		thrusting = 1;
 	}
 
@@ -1153,6 +1153,12 @@ void hotspot_paint (void) {
 			ld  (_hotspot_y), a 
 			xor a
 			ld  (_hotspot_t_r), a 					// Hotspot type set to 0
+
+			// Check if hotspots are disabled
+
+			ld  a, (_scenery_info + 0) 				// scenery_info.hide_hotspots
+			or  a 
+			ret nz
 
 			call _calc_hotspot_ptr
 			
@@ -1561,12 +1567,6 @@ void enems_calc_frame (void) {
 			add hl, bc
 			ld  a, (hl)
 
-		#ifdef RANDOM_RESPAWN
-				// 0xff means invisible
-				cp  0xff 
-				jr  z, enems_calc_frame_invisible
-		#endif
-
 			ld  hl, _en_an_base_frame
 			add hl, bc
 			add a, (hl)
@@ -1580,15 +1580,6 @@ void enems_calc_frame (void) {
 
 			ldi
 			ldi
-
-		#ifdef RANDOM_RESPAWN
-				ret
-			.enems_calc_frame_invisible
-				pop hl 			// DE -> en_an_next_frame [enit]
-				ld  (hl), _sprite_18_a % 256
-				inc hl 
-				ld  (hl), _sprite_18_a / 256
-		#endif
 	#endasm
 }
 
@@ -2815,6 +2806,10 @@ void mueve_bicharracos (void) {
 
 			#asm
 				// Should we create?
+
+					ld  a, (_scenery_info + 1) 	// scenery_info.dont_make_rr
+					or  a 
+					jr  nz, enems_create_fanty_done 
 
 					ld  a, (__en_t) 
 					and 128 

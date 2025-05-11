@@ -8,6 +8,7 @@ cpc_GetScrAddress
 cpc_GetScrAddress0
 cpc_InvalidateRect
 cpc_KeysData
+cpc_MakeM1RotationLUTs
 cpc_PutSpTileMap
 cpc_PutSpTileMap12x24CA
 cpc_PutSpTileMap16x16PxM1
@@ -24,6 +25,7 @@ cpc_PutTrSp12x24TileMapGCA
 cpc_PutTrSp16x16TileMapGPxM1
 cpc_PutTrSp16x16TileMapGPxM1P
 cpc_PutTrSp16x16TileMapPxM1
+cpc_PutTrSp16x16TileMapPxM1LUT
 cpc_PutTrSp16x24TileMapGPxM1P
 cpc_PutTrSp16x24TileMapPxM1
 cpc_PutTrSp2Bx8TileMap

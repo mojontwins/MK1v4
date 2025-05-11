@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu May 08 10:10:04 2025
+;	Module compile time: Sun May 11 15:27:40 2025
 
 
 
@@ -388,22 +388,22 @@
 ;	SECTION	text
 
 ._sm_updfunc
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
 
 ;	SECTION	code
 
@@ -1703,7 +1703,8 @@
 	jp nc,wait_vsync
 	xor a
 	ld (isr_c1), a
-	jp isr_done
+	ei
+	jp after_isr
 	._isr
 	push af
 	push hl
@@ -1714,16 +1715,16 @@
 	ld a, (isr_c1)
 	inc a
 	cp 6
-	jr c, _skip_ay_player
-	ld a, (isr_c2)
-	inc a
-	ld (isr_c2), a
+	jr c, _isr_done
+	ld hl, isr_c2
+	inc (hl)
 	ld a, (_isr_player_on)
 	or a
 	jr z, _skip_ay_player
 	call WYZ_PLAYER_ISR
-	xor a
 	._skip_ay_player
+	xor a
+	._isr_done
 	ld (isr_c1), a
 	pop iy
 	pop ix
@@ -1737,12 +1738,13 @@
 	defb 0
 	.isr_c2
 	defb 0
-	.isr_done
+	.after_isr
 	ld	hl,84	;const
 	call	_cpc_Border
 	ld hl, _trpixlutc
 	ld de, 0xF800 + 0x600
 	call depack
+	call	cpc_MakeM1RotationLUTs
 	call	_blackout
 	call my_inks
 	ld	hl,1	;const
@@ -1807,7 +1809,6 @@
 	ld (ix + 11), a
 	add ix, de
 	djnz sp_sw_init_turnoff_loop
-	ei
 	ret
 
 
@@ -9166,6 +9167,9 @@
 	ld (_hotspot_y), a
 	xor a
 	ld (_hotspot_t_r), a
+	ld a, (_scenery_info + 0)
+	or a
+	ret nz
 	call _calc_hotspot_ptr
 	ld ix, _hotspots
 	add ix, de
@@ -9979,13 +9983,14 @@
 	call	_init_player
 	call	_init_hotspots
 	call	_init_cerrojos
-	ld	a,#(12 % 256 % 256)
-	ld	(_n_pant),a
-	ld	a,#(0 % 256 % 256)
-	ld	(_maincounter),a
-	ld	hl,0 % 256	;const
+	ld	hl,12 % 256	;const
 	ld	a,l
-	ld	(_half_life),a
+	ld	(_n_pant),a
+	xor a
+	ld (_maincounter), a
+	ld (_half_life), a
+	ld (_scenery_info + 0), a
+	ld (_scenery_info + 1), a
 	ld a, 255
 	ld (_objs_old), a
 	ld (_life_old), a
@@ -10446,6 +10451,7 @@
 ._rdt2	defs	1
 ._gpit	defs	1
 ._playing	defs	1
+._scenery_info	defs	2
 ._seed	defs	2
 ._objs_old	defs	1
 ._maincounter	defs	1
@@ -10688,6 +10694,7 @@
 	XDEF	_sm_updfunc
 	LIB	cpc_ScanKeyboard
 	LIB	cpc_SetColour
+	XDEF	_scenery_info
 	XDEF	_enems_calc_frame
 	XDEF	_rand
 	XDEF	_seed
@@ -10706,6 +10713,7 @@
 	XDEF	_flag_old
 	XDEF	_wall
 	LIB	cpc_UpdScr
+	LIB	cpc_PutTrSp16x16TileMapPxM1LUT
 	XDEF	_check_and_clear_cerrojo
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
@@ -10733,6 +10741,7 @@
 	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
 	XDEF	_game_ending
+	LIB	cpc_MakeM1RotationLUTs
 	LIB	cpc_PutTrSp4x8TileMapPx
 	LIB	cpc_PutTrSp8x8TileMapPx
 	LIB	cpc_PutTrSp8x16TileMapPx

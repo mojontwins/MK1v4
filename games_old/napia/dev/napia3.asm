@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 10 15:07:44 2025
+;	Module compile time: Sun May 11 15:19:36 2025
 
 
 
@@ -589,22 +589,22 @@
 ;	SECTION	text
 
 ._sm_updfunc
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
-	defw	cpc_PutTrSp16x16TileMapPxM1
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
+	defw	cpc_PutTrSp16x16TileMapPxM1LUT
 
 ;	SECTION	code
 
@@ -2046,7 +2046,8 @@
 	jp nc,wait_vsync
 	xor a
 	ld (isr_c1), a
-	jp isr_done
+	ei
+	jp after_isr
 	._isr
 	push af
 	push hl
@@ -2059,20 +2060,21 @@
 	cp 3
 	jr z, _set_game_pal
 	cp 6
-	jr c, _skip_ay_player
+	jr c, _isr_done
 	ld hl, isr_c2
 	inc (hl)
 	ld a, (_isr_player_on)
 	or a
 	jr z, _skip_ay_player
 	call WYZ_PLAYER_ISR
+	._skip_ay_player
 	ld a, (_do_split)
 	or a
 	jr z, isr_nohud
 	call pal_hud
 	.isr_nohud
 	xor a
-	._skip_ay_player
+	._isr_done
 	ld (isr_c1), a
 	pop iy
 	pop ix
@@ -2090,17 +2092,18 @@
 	call pal_general
 	.isr_nosplit
 	ld a, 3
-	jr _skip_ay_player
+	jr _isr_done
 	.isr_c1
 	defb 0
 	.isr_c2
 	defb 0
-	.isr_done
+	.after_isr
 	ld	hl,84	;const
 	call	_cpc_Border
 	ld hl, _trpixlutc
 	ld de, 0xF800 + 0x600
 	call depack
+	call	cpc_MakeM1RotationLUTs
 	call	_blackout
 	ld	hl,1	;const
 	call	cpc_SetMode
@@ -2171,7 +2174,6 @@
 	ld (ix + 11), a
 	add ix, de
 	djnz sp_sw_init_turnoff_loop
-	ei
 	ret
 
 
@@ -5835,6 +5837,7 @@
 	ld (_on_pant), a
 	ld a, 1
 	ld (_pant_just_rendered), a
+	ld (_do_split), a
 	.ml_ud_skip
 	ld	hl,_player+27
 	call	l_gchar
@@ -6527,6 +6530,7 @@
 	XDEF	_flag_old
 	XDEF	_wall
 	LIB	cpc_UpdScr
+	LIB	cpc_PutTrSp16x16TileMapPxM1LUT
 	XDEF	_check_and_clear_cerrojo
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
@@ -6554,6 +6558,7 @@
 	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
 	XDEF	_game_ending
+	LIB	cpc_MakeM1RotationLUTs
 	LIB	cpc_PutTrSp4x8TileMapPx
 	LIB	cpc_PutTrSp8x8TileMapPx
 	LIB	cpc_PutTrSp8x16TileMapPx

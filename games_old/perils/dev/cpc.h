@@ -56,8 +56,11 @@ unsigned char wyz_beat_ct;
 	C600 room buffers
 	CE00 dirty cells (tiles_tocados)
 	D600 arrays
+	D700 M1 LUT R1
+	DE00 M1 LUT R2
 	DF80 buffers WYZ
 	E600 sprite structures
+	E700 M1 LUT R3
 	FE00 LUT
 */
 
@@ -317,8 +320,8 @@ void system_init (void) {
 
 			xor a 
 			ld  (isr_c1), a
-
-			jp  isr_done
+			ei
+			jp  after_isr
 
 		._isr
 			push af 
@@ -397,7 +400,7 @@ void system_init (void) {
 		.isr_c2
 			defb 0
 
-		.isr_done
+		.after_isr
 	#endasm
 	
 	// Border 0
@@ -412,6 +415,11 @@ void system_init (void) {
 			ld  de, BASE_LUT
 			call depack
 	#endasm
+
+	// Make M! rotation luts
+	#if defined MODE_1
+		cpc_MakeM1RotationLUTs ();
+	#endif
 
 	blackout ();
 
@@ -581,11 +589,6 @@ void system_init (void) {
 			add ix, de
 			djnz sp_sw_init_turnoff_loop
 	#endasm	
-
-	#asm
-		ei
-	#endasm
-
 }
 
 void _tile_address (void) {

@@ -826,6 +826,7 @@ void move (void) {
 				player.facing = 0;
 			#endif
 		}
+
 		thrusting = 1;
 	}
 
@@ -903,7 +904,7 @@ void move (void) {
 	}
 
 	// bigger vx or vy?
-		rdi = abs (pvx_total) > abs (pvy_total);
+	rdi = abs (pvx_total) > abs (pvy_total);
 
 	#ifndef DEACTIVATE_EVIL_TILE
 

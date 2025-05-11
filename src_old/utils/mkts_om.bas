@@ -57,8 +57,8 @@ Dim Shared As uInteger globalPalette (31), HWPalette (31)
 
 Dim Shared As Integer cutSpriteCount
 
-Dim Shared As Integer pixelperfectm0
-Dim Shared As Integer pixelperfectm1
+Dim Shared As Integer pixelPerfectm0
+Dim Shared As Integer pixelPerfectm1
 Dim Shared As Integer palsAsAssembly
 Dim Shared As Integer withRotationLUT
 
@@ -957,9 +957,8 @@ Sub generateMixedMappings (mappingsFn As String)
 
 		If i Mod 4 = 0 Then Print #fOut, "	";
 		Print #fOut, "cpc_PutSpTileMap" & functionSuffix;
-		If pixelperfectm0 Then Print #fOut, "Px";
-		If pixelperfectm1 Then Print #fOut, "PxM1";
-		If withRotationLUT Then Print #fOut, "LUT";
+		If pixelPerfectm0 Then Print #fOut, "Px";
+		If pixelPerfectm1 Then Print #fOut, "PxM1";
 		If i < spriteMetaIndex - 1 Then Print #fOut, ", ";
 		If i Mod 4 = 3 Or i = spriteMetaIndex - 1 Then 
 			Print #fOut, ""
@@ -983,8 +982,8 @@ Sub generateMixedMappings (mappingsFn As String)
 		If i Mod 4 = 0 Then Print #fOut, "	";
 		Print #fOut, "cpc_PutTrSp" & functionSuffix & "TileMap";
 		If gng Then Print #fOut, "G";
-		If pixelperfectm0 Then Print #fOut, "Px";
-		If pixelperfectm1 Then Print #fOut, "PxM1";
+		If pixelPerfectm0 Then Print #fOut, "Px";
+		If pixelPerfectm1 Then Print #fOut, "PxM1";
 		If withRotationLUT Then Print #fOut, "LUT";
 		If i < spriteMetaIndex - 1 Then Print #fOut, ", ";
 		If i Mod 4 = 3 Or i = spriteMetaIndex - 1 Then 
@@ -1037,9 +1036,9 @@ Sub generateStraitMappings (mappingsFn As String, wMeta As Integer, hMeta As Int
 
 	cox = 0
 	If hMeta = 3 Then coy = -8 Else coy = 0
-	If pixelperfectm1 Then
+	If pixelPerfectm1 Then
 		functionSuffix = "" & (wMeta*8) & "x" & (hMeta*8)
-	ElseIf pixelperfectm0 Then
+	ElseIf pixelPerfectm0 Then
 		functionSuffix = "" & (wMeta*4) & "x" & (hMeta*8)
 	Else 
 		functionSuffix = "" & (wMeta*2) & "Bx" & (hMeta*8)
@@ -1097,9 +1096,8 @@ Sub generateStraitMappings (mappingsFn As String, wMeta As Integer, hMeta As Int
 	For i = 0 To max - 1
 		If i Mod 4 = 0 Then Print #fOut, "	";
 		Print #fOut, "cpc_PutSpTileMap" & functionSuffix;
-		If pixelperfectm0 Then Print #fOut, "Px";
-		If pixelperfectm1 Then Print #fOut, "PxM1";
-		If withRotationLUT Then Print #fOut, "LUT";
+		If pixelPerfectm0 Then Print #fOut, "Px";
+		If pixelPerfectm1 Then Print #fOut, "PxM1";
 		If ca Then Print #fOut, "CA";
 		If i < max - 1 Then Print #fOut, ", ";
 		If i Mod 4 = 3 Or i = max - 1 Then 
@@ -1116,8 +1114,8 @@ Sub generateStraitMappings (mappingsFn As String, wMeta As Integer, hMeta As Int
 		If i Mod 4 = 0 Then Print #fOut, "	";
 		Print #fOut, "cpc_PutTrSp" & functionSuffix & "TileMap";
 		If gng Then Print #fOut, "G";
-		If pixelperfectm0 Then Print #fOut, "Px";
-		If pixelperfectm1 Then Print #fOut, "PxM1";
+		If pixelPerfectm0 Then Print #fOut, "Px";
+		If pixelPerfectm1 Then Print #fOut, "PxM1";
 		If withRotationLUT Then Print #fOut, "LUT";
 		If ca Then Print #fOut, "CA";
 		If i < max - 1 Then Print #fOut, ", ";
@@ -1580,10 +1578,10 @@ cPoolIndex = 0
 flipped = (sclpGetValue ("genflipped") <> "")
 silent = (sclpGetValue ("silent") <> "")
 debug = (sclpGetValue ("debug") <> "")
-pixelperfectm0 = (sclpGetValue ("pixelperfectm0") <> "")
-pixelperfectm1 = (sclpGetValue ("pixelperfectm1") <> "")
+pixelPerfectm0 = (sclpGetValue ("pixelperfectm0") <> "")
+pixelPerfectm1 = (sclpGetValue ("pixelperfectm1") <> "")
 If sclpGetValue ("pixelperfectm1lut") <> "" Then
-	pixelperfectm1 = -1
+	pixelPerfectm1 = -1
 	withRotationLUT = -1
 End If
 greyOrdered = (sclpGetValue ("greyordered") <> "")

@@ -1,6 +1,8 @@
 ; Rutina para crear las LUTs necesarias con las rotaciones para
 ; pintar sprites M1 al pixel, empleadas por las rutinas *?PxM1?LUT.
 
+INCLUDE "CPCconfig.def"
+
 XLIB cpc_MakeM1RotationLUTs
 
 .cpc_MakeM1RotationLUTs
@@ -39,7 +41,7 @@ XLIB cpc_MakeM1RotationLUTs
 	rrca
 	rrca 			; A = 54321076
 	xor c 			; A = 5^1 4^0 3^7 2^6 1^5 0^4 7^3 6^2
-	and $CC         : A = 5^1 4^0 0 0 1^5 0^4 0 0
+	and $CC         ; A = 5^1 4^0 0 0 1^5 0^4 0 0
 	xor c           ; A = 54761032!
 
 	ld  (hl), a 

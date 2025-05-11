@@ -42,6 +42,9 @@
 #include "enems.h"
 
 #include "engine.h"
+#ifdef ACTIVATE_SCRIPTING
+	#include "extern.h"
+#endif
 #include "pantallas.h"
 #include "mainloop.h" 	// Main is here!
 #ifndef CPC

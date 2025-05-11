@@ -14,11 +14,13 @@ void main (void) {
 	
 		#ifndef DIRECT_TO_PLAY
 			blackout ();
-			
-			#if defined CPC && !defined ALWAYS_SPLIT
-				do_split = 1;
-			#endif
+		#endif
+		
+		#if defined CPC && !defined ALWAYS_SPLIT
+			do_split = 1;
+		#endif
 
+		#ifndef DIRECT_TO_PLAY
 			#ifndef CPC
 				#asm
 					call SPUpdateNow
@@ -109,6 +111,11 @@ void main (void) {
 
 					ld  a, 1
 					ld  (_pant_just_rendered), a
+
+				#if defined MODE_1 && defined AUTO_SPLIT && !defined ALWAYS_SPLIT
+						ld  (_do_split), a
+				#endif
+
 				.ml_ud_skip
 			#endasm
 

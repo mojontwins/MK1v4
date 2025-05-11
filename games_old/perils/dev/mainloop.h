@@ -14,6 +14,13 @@ void main (void) {
 	
 		#ifndef DIRECT_TO_PLAY
 			blackout ();
+		#endif
+		
+		#if defined CPC && defined AUTO_SPLIT && !defined ALWAYS_SPLIT
+			do_split = 1;
+		#endif
+
+		#ifndef DIRECT_TO_PLAY
 			#ifndef CPC
 				#asm
 					call SPUpdateNow
