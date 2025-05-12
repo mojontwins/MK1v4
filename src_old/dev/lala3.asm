@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon May 12 17:30:22 2025
+;	Module compile time: Mon May 12 18:11:46 2025
 
 
 
@@ -8450,6 +8450,7 @@
 	and 12
 	jr z, m_horz_coll_checks_done
 	.m_horz_coll_right_adjust
+	call _check_lock_or_box_horz
 	ld hl, 0
 	ld (_player + 6), hl
 	ld a, (_gpx)
@@ -8476,6 +8477,7 @@
 	and 8
 	jr z, m_horz_coll_checks_done
 	.m_horz_coll_left_adjust
+	call _check_lock_or_box_horz
 	ld hl, 0
 	ld (_player + 6), hl
 	ld a, (_gpx)

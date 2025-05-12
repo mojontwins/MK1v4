@@ -1729,7 +1729,7 @@ void move (void) {
 			jr  z, m_horz_coll_checks_done
 
 		.m_horz_coll_right_adjust
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
 					call _check_lock_or_box_horz
 			#endif
 
@@ -1770,7 +1770,7 @@ void move (void) {
 
 		.m_horz_coll_left_adjust
 
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
 					call _check_lock_or_box_horz
 			#endif	
 
