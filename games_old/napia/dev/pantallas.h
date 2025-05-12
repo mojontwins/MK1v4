@@ -24,9 +24,7 @@ void title_screen (void) {
 					ld  (inject_pal + 1), hl
 			#endasm 
 		#else
-			#ifndef ALWAYS_SPLIT
-				do_split = 0;
-			#endif
+			do_split = 0;
 			#asm
 					call pal_general
 			#endasm

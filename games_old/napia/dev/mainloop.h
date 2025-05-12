@@ -16,7 +16,7 @@ void main (void) {
 			blackout ();
 		#endif
 		
-		#if defined CPC && !defined ALWAYS_SPLIT
+		#if defined CPC && defined AUTO_SPLIT && !defined ALWAYS_SPLIT
 			do_split = 1;
 		#endif
 
@@ -185,8 +185,9 @@ void main (void) {
 			#endasm
 			
 			mueve_bicharracos ();
+				
 			move ();
-
+				
 			#ifdef PLAYER_CAN_FIRE
 				mueve_bullets ();
 			#endif
