@@ -147,6 +147,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [ ] Probar los enemigos custom metiendo como añadidos los cuadrators y los suputabolers de la versión v4 en Cheril of the Bosque.
 
+[!] Creo que he dado con un misterioso bug o feature de esta versión de z88dk vieja que hace que si pones el prototipo de una función antes de definir la función, rodea a la misma con un `push hl` al principio y un `pop bc` al final, cosa que no hace si no se añade un prototipo. Esto me rompía completamente el motor (yo esperaba que la rutina no tocara bc, pero con el código añadido lo hace). Now that's WEIRD.
+
 <details>
     <summary>Cosas calculares</summary>
 

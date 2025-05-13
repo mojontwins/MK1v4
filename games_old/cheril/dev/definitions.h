@@ -206,17 +206,3 @@ unsigned char prxx, pryy;
 unsigned char bitmask [] = {
 	1, 2, 4, 8, 16, 32, 64, 128
 };
-
-unsigned char rand (void);
-unsigned int __FASTCALL__ abs (int n);
-void saca_a_todo_el_mundo_de_aqui (void);
-void render_all_sprites (void);
-void hotspot_paint (void);
-void draw_scr_background (void);
-void draw_scr (void);
-void init_player_values (void); 
-unsigned char rand (void);
-void espera_activa (int espera);
-void enems_kill (unsigned char damage);
-unsigned char qtile (unsigned char x, unsigned char y);
-unsigned char attr (unsigned char x, unsigned char y);

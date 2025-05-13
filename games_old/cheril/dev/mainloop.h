@@ -185,7 +185,7 @@ void main (void) {
 			#endasm
 
 			mueve_bicharracos ();
-			//move ();	
+			move ();	
 
 			#ifdef PLAYER_CAN_FIRE
 				mueve_bullets ();

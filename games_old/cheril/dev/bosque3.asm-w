@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue May 13 23:04:49 2025
+;	Module compile time: Tue May 13 22:59:50 2025
 
 
 
@@ -10265,9 +10265,9 @@
 	XDEF	_isr_player_on
 	XDEF	_hotspots
 	LIB	cpc_PutTrSp8x8TileMapPxM1
+	XDEF	_draw_scr
 	LIB	cpc_PutTrSp16x16TileMapPxM1
 	LIB	cpc_PutTrSp16x24TileMapPxM1
-	XDEF	_draw_scr
 	XDEF	_spr_next
 	defc	_spr_next	=	58944
 	XDEF	_wyz_play_music
@@ -10287,6 +10287,7 @@
 	XDEF	_def_keys
 	XDEF	_cortina
 	LIB	cpc_PrintGphStrM12X
+	XDEF	_enems_kill
 	XDEF	_en_an_base_frame
 	defc	_en_an_base_frame	=	54835
 	XDEF	_hotspot_t
@@ -10341,10 +10342,10 @@
 	XDEF	_x1
 	XDEF	_y0
 	XDEF	_y1
+	XDEF	_espera_activa
 	LIB	cpc_PutTrSp2Bx8TileMapG
 	LIB	cpc_PutTrSp4Bx16TileMapG
 	LIB	cpc_PutTrSp4Bx24TileMapG
-	XDEF	_espera_activa
 	LIB	cpc_SpRLM1
 	XDEF	__n
 	XDEF	_unpack_screen
@@ -10557,8 +10558,8 @@
 	XDEF	_tspatterns
 	XDEF	_check_lock_or_box_vert
 	LIB	cpc_PutTrSp8x8TileMapGPxM1
-	LIB	cpc_PutTrSp16x16TileMapGPxM1
 	XDEF	_hotspot_paint
+	LIB	cpc_PutTrSp16x16TileMapGPxM1
 	XDEF	_pant_just_rendered
 	XDEF	__baddies_pointer
 	LIB	cpc_PutMaskSpTileMap
@@ -10576,8 +10577,8 @@
 	LIB	cpc_PutTrSp8x24TileMapGPxP
 	XDEF	_en_an_count
 	defc	_en_an_count	=	54787
-	LIB	cpc_GetTiles
 	XDEF	_render_all_sprites
+	LIB	cpc_GetTiles
 	XDEF	_spr_on
 	defc	_spr_on	=	58952
 	LIB	cpc_PutSpXOR
