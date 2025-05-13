@@ -1191,6 +1191,14 @@ void pad_read (void) {
 	pad_this_frame = (~pad_this_frame) | pad1;
 }
 
+void no_break (void) {
+	for (gpit = 0; gpit < 255; gpit ++) {
+		#asm 
+			halt
+		#endasm
+	}
+}
+
 void espera_activa (int espera) {
 	do {
 		pad_read ();
@@ -1444,6 +1452,7 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 // if you write your code by hand ... 
 
 void cpc_UpdateNow (unsigned char sprites) {
+	
 	if (sprites) {
 		#asm
 			// Call the invalidate function for all sprites 
@@ -1454,16 +1463,11 @@ void cpc_UpdateNow (unsigned char sprites) {
 			}
 			*/
 
-				ld  b, 0
+				ld  a, #((SW_SPRITES_ALL)*16)
 			._cpc_screen_update_inv_loop
-				push bc
-				// SW_SPRITES_ALL will be at very most = 16,
-				// so we can multiply by 16 safely in 8 bits.
-				ld  a, b
-				sla a
-				sla a
-				sla a 
-				sla a
+				sub 16
+				push af
+
 				ld d, 0
 				ld e, a
 				ld  hl, _sp_sw
@@ -1496,10 +1500,8 @@ void cpc_UpdateNow (unsigned char sprites) {
 				ret
 
 			._cpc_screen_update_inv_ret
-				pop bc
-				inc b
-				ld  a, b
-				cp  SW_SPRITES_ALL
+				pop af
+				or  a
 				jr  nz, _cpc_screen_update_inv_loop
 		#endasm
 	}
@@ -1519,18 +1521,11 @@ void cpc_UpdateNow (unsigned char sprites) {
 					(sp_sw [gpit].updfunc) ((int) (&sp_sw [gpit]));
 				}
 			*/	
-				ld  b, SW_SPRITES_ALL
+				ld  a, #((SW_SPRITES_ALL)*16)
 			._cpc_screen_update_upd_loop
-				dec b
-				push bc
-				ld  a, b
+				sub 16
+				push af
 
-				// SW_SPRITES_ALL will be at very most = 16,
-				// so we can multiply by 16 safely in 8 bits.
-				sla a
-				sla a
-				sla a 
-				sla a
 				ld d, 0
 				ld e, a
 				ld  hl, _sp_sw
@@ -1559,13 +1554,12 @@ void cpc_UpdateNow (unsigned char sprites) {
 
 				// ret will pop the function pointer from the
 				// stack and jp to it. Next ret will get to 
-				// _cpc_screen_update_inv_ret
+				// _cpc_screen_update_upd_ret
 				ret
 
 			._cpc_screen_update_upd_ret
-				pop bc
-				xor a
-				or  b
+				pop af
+				or  a
 				jr  nz, _cpc_screen_update_upd_loop
 
 			._cpc_screen_update_done
@@ -1577,13 +1571,16 @@ void cpc_UpdateNow (unsigned char sprites) {
 			.ml_min_faps_loop
 				ld  a, (isr_c2)
 				cp  MIN_FAPS_PER_FRAME
-				jr  c, ml_min_faps_loop
+				jr  nc, ml_min_faps_loop_end
+				halt
+				jr  ml_min_faps_loop
 
 			.ml_min_faps_loop_end
 				xor a
 				ld  (isr_c2), a
 		#endasm
 	#endif
+
 	// Set up palette for AUTO_SPLIT
 	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
 		#asm

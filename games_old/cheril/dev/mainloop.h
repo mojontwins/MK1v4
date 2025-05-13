@@ -95,7 +95,7 @@ void main (void) {
 			AY_PLAY_MUSIC (1);
 		#endif
 
-		while (playing) {
+		while (playing) { 
 			// Change room ?
 			#asm
 					ld  a, (_n_pant)
@@ -183,9 +183,9 @@ void main (void) {
 				xor 1
 				ld  (_half_life), a
 			#endasm
-			
+
 			mueve_bicharracos ();
-			move ();
+			//move ();	
 
 			#ifdef PLAYER_CAN_FIRE
 				mueve_bullets ();

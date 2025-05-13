@@ -88,19 +88,23 @@ void game_ending (void) {
 			call _unpack_screen
 	#endasm
 
+	no_break ();
+
 	#ifdef CPC
 		cpc_ShowTileMap (1);
 		AY_PLAY_MUSIC (0);
-		espera_activa (5000);
-		AY_STOP_SOUND ();
 	#else
 		for (gpit = 0; gpit < 4; gpit ++) {
 			peta_el_beeper (7);
 			peta_el_beeper (2);
 		}
 		peta_el_beeper (9);
-		
-		espera_activa (5000);
+	#endif
+	
+	espera_activa (5000);
+
+	#ifdef CPC
+		AY_STOP_SOUND ();
 	#endif
 }
 
@@ -128,15 +132,21 @@ void game_over (void) {
 		#endif
 		"GAME OVER!");
 	
+	no_break ();
+
 	#ifdef CPC
 		cpc_UpdateNow (0);
 		AY_PLAY_MUSIC (2);
-		espera_activa (500);
 	#else 
 		#asm 
 				call SPUpdateNow
 		#endasm
 		peta_el_beeper (10);
-		espera_activa (500);
+	#endif
+
+	espera_activa (500);
+
+	#ifdef CPC
+		AY_STOP_SOUND ();
 	#endif
 }

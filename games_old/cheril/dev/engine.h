@@ -913,15 +913,39 @@ void move (void) {
 		#endasm
 	#else
 		// Apply gravity
+		/*
 		player.vy += PLAYER_G;
 		if (player.vy > PLAYER_MAX_VY_CAYENDO) player.vy = PLAYER_MAX_VY_CAYENDO;
+		*/
+
+		#asm
+			.m_vert_gravity_do
+				ld  hl, (_player + 8) 		// player.vy
+				ld  de, PLAYER_G 
+				add hl, de 
+
+				ld  de, PLAYER_MAX_VY_CAYENDO 
+
+				// if PLAYER_MAX_VY_CAYENDO < player.vy
+				call l_lt 					// C set if DE < HL 
+				jr  nc, m_vert_gravity_done
+
+				ex  de, hl 					// HL = PLAYER_MAX_VY_CAYENDO
+
+			.m_vert_gravity_done
+				ld  (_player + 8), hl 
+		#endasm 
 
 		#ifdef PLAYER_HAS_JUMP
 			// Make jump
+			/*
 			if (
 				#ifdef PLAYER_CAN_FIRE
 					((pad_this_frame & sp_UP) == 0)
 				#else
+					#ifdef BOTH_BUTTONS_JUMP
+						((pad_this_frame & sp_UP) == 0) ||
+					#endif
 					((pad_this_frame & sp_FIRE) == 0)
 				#endif
 				&& player.saltando == 0 && (player.possee || player.gotten)
@@ -946,6 +970,89 @@ void move (void) {
 			} else {
 				player.saltando = 0;
 			}
+			*/
+
+			#asm
+
+					ld  a, (_pad_this_frame)
+
+					#ifdef PLAYER_CAN_FIRE
+						and sp_UP
+						jr  nz, m_jump_start_done
+					#else
+						and #(sp_UP | sp_FIRE)
+						cp  #(sp_UP | sp_FIRE)
+						jr  z, m_jump_start_done
+					#endif
+
+					ld  a, (_player + 19)			// player.saltando 
+					or  a
+					jr  nz, m_jump_start_done 
+
+					ld  a, (_player + 26) 			// player.possee 
+					ld  c, a 
+					ld  a, (_player + 25) 			// player.gotten 
+					or  c
+					jr  z, m_jump_start_done 
+
+					ld  (_player + 19), a  			// player.saltando
+					xor a 
+					ld  (_player + 14), a  			// player.cont_salto
+
+					ld  l, 3 
+					call _peta_el_beeper
+				.m_jump_start_done
+
+					ld  a, (_pad0)
+					#ifdef PLAYER_CAN_FIRE
+						and sp_UP
+						jr  nz, m_jump_not_pressing
+					#else
+						and #(sp_UP | sp_FIRE)
+						cp  #(sp_UP | sp_FIRE)
+						jr  z, m_jump_perform_not_pressing
+					#endif
+
+					ld  a, (_player + 19) 		// player.saltando
+					or  a 
+					jr  z, m_jump_perform_done
+
+					// player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto >> 1));
+					ld  a, (_player + 14) 		// player.cont_salto
+					srl a
+					ld  d, 0 
+					ld  e, a 
+					ld  hl, PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO
+					sbc hl, de 
+					ex  de, hl 
+					ld  hl, (_player + 8) 		// player.vy 
+					sbc hl, de 
+
+					// if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
+					// if (-PLAYER_MAX_VY_SALTANDO > player.vy) ...
+					ld  de, -PLAYER_MAX_VY_SALTANDO
+					call l_gt 
+					jr  nc, m_jump_perform_write_vy
+
+					ex  de, hl 					// HL = -PLAYER_MAX_VY_SALTANDO
+
+				.m_jump_perform_write_vy
+					ld  (_player + 8), hl 		// player.vy 
+
+					ld  a, (_player + 14) 		// player.cont_salto
+					inc a 
+					ld  (_player + 14), a 
+					cp  8
+					jr  c, m_jump_perform_done 
+
+				.m_jump_perform_not_pressing
+					xor a 
+					ld  (_player + 19), a 			// player.saltando
+
+				.m_jump_perform_done
+
+			#endasm
+
 
 		#elif defined PLAYER_HAS_JETPAC
 			// Make jetpac
@@ -1245,9 +1352,40 @@ void move (void) {
 	#endasm
 
 	#ifndef PLAYER_MOGGY_STYLE
+		/*
 		_y = _y2 = (gpy + 16) >> 4;
 		cm_two_points ();
 		player.possee = (at1 & 12) || (at2 & 12);
+		*/
+		#asm
+				ld  a, (_gpy)
+				add 16
+				srl a 
+				srl a 
+				srl a 
+				srl a 
+				ld  (__y), a 
+				ld  (__y2), a 
+
+				call _cm_two_points
+
+				ld  a, (_at1)
+				and 12 
+				jr  nz, m_vert_set_possee
+
+				ld  a, (_at2)
+				and 12
+				jr  nz, m_vert_set_possee
+
+				xor a 
+				jr  m_vert_set_possee_write
+
+			.m_vert_set_possee
+				ld  a, 1
+
+			.m_vert_set_possee_write
+				ld  (_player + 26), a 		// player.possee
+		#endasm
 	#endif
 
 	// =================================================
@@ -1591,7 +1729,7 @@ void move (void) {
 			jr  z, m_horz_coll_checks_done
 
 		.m_horz_coll_right_adjust
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
 					call _check_lock_or_box_horz
 			#endif
 
@@ -1632,7 +1770,7 @@ void move (void) {
 
 		.m_horz_coll_left_adjust
 
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
 					call _check_lock_or_box_horz
 			#endif	
 
@@ -1824,6 +1962,7 @@ void move (void) {
 		#endasm
 
 	#else
+		/*
 		if (!(player.possee || player.gotten)) {
 			player.frame = player.facing + 3;
 		} else {
@@ -1843,6 +1982,65 @@ void move (void) {
 				#endif
 			}
 		}
+		*/
+
+		#asm
+				// if player.possee == 0 && player.gotten == 0
+				ld  a, (_player + 26) 		// player.possee
+				ld  c, a 
+				ld  a, (_player + 25) 		// player.gotten
+				or  c 
+				jr  nz, m_frame_on_something
+
+				ld  c, 3 
+				jr  m_frame_set
+
+			.m_frame_on_something
+
+				ld  a, (_thrusting)
+				or  a 
+				jr  z, m_frame_still 		// Not thrusting -> still
+
+				ld  hl, (_player + 6) 		// player.vx
+				ld  a, h 
+				or  l 
+				jr  z, m_frame_still 		// Not moving -> still
+
+				ld  a, (_gpx)
+				srl a 
+				srl a 
+				srl a 
+
+			#ifdef PLAYER_ALTERNATE_ANIMATION
+					// de / hl, module in de 
+					ld  d, 0 
+					ld  e, a 
+					ld  hl, 3 
+					call l_div_u
+					ld  c, e 				// (_gpx >> 3) % 3
+			#else
+					and 1 
+					ld  h, 0 
+					ld  l, a 
+					ld  de, _player_walk_cycle 
+					add hl, de 
+					ld  c, (hl)
+			#endif
+				jr  m_frame_set
+
+			.m_frame_still
+
+			#ifdef PLAYER_ALTERNATE_ANIMATION
+				xor c 
+			#else
+				ld  c, 1
+			#endif
+
+			.m_frame_set
+				ld  a, (_player + 22) 		// player.facing
+				add c
+				ld  (_player + 20), a 		// flayer.frame
+		#endasm 
 	#endif
 
 	//player.next_frame = player_cells [player.frame];
@@ -2474,9 +2672,12 @@ void draw_scr (void) {
 				ld  hl, (_enoffs)
 				add hl, bc
 				ld  (_enoffsmasi), hl 		// enoffsmasi = enit + enoffs;
+
+				// Get values to temp vars for size & speed
+				call enems_get_values
 		#endasm
 
-		_en_t = malotes [enoffsmasi].t;
+		//_en_t = malotes [enoffsmasi].t;
 
 		switch (_en_t) {
 			case 1:
@@ -2492,6 +2693,11 @@ void draw_scr (void) {
 		#ifdef ENABLE_CUSTOM_ENEMS
 			extra_enems_init ();
 		#endif
+
+		#asm
+			// Store temp values in array
+				call enems_update_values_store
+		#endasm
 	}
 
 	#ifdef PLAYER_CAN_FIRE
@@ -2736,55 +2942,7 @@ void mueve_bicharracos (void) {
 
 					#ifdef PLAYER_PUSH_BOXES
 						// Check for collisions.
-						._en_bg_collision_horz
-							ld  a, (__en_mx)
-							or  a
-							jr  z, _en_bg_collision_horz_done
-
-							call __ctileoff
-							ld  (_rdi), a
-							ld  c, a
-
-							call en_xx_calc
-							call en_yy_calc
-
-							ld  a, (_en_xx)
-							add c
-							ld  (_ptx1), a
-							ld  (_ptx2), a
-
-							ld  a, (_en_yy)
-							ld  (_pty1), a
-
-							ld  a, (__en_y)
-							add 15
-							srl a
-							srl a
-							srl a
-							srl a
-							ld  (_pty2), a
-
-							call _en_bg_collision_check
-							or  a
-							jr  z, _en_bg_collision_horz_done
-
-							ld  a, (_en_xx)
-							ld  c, a
-							ld  a, (_rdi)
-							xor 1
-							add c
-							sla a
-							sla a
-							sla a
-							sla a
-							ld  (__en_x), a
-
-							ld  a, (__en_mx)
-							neg
-							ld  (__en_mx), a
-						
-						._en_bg_collision_horz_done
-
+						call en_bg_collision_horz
 					#endif
 
 					// *************
@@ -2843,54 +3001,7 @@ void mueve_bicharracos (void) {
 
 					#ifdef PLAYER_PUSH_BOXES
 						// Check for collisions.
-						._en_bg_collision_vert
-							ld  a, (__en_my)
-							or  a
-							jr  z, _en_bg_collision_vert_done
-
-							call __ctileoff
-							ld  (_rdi), a
-							ld  c, a
-
-							call en_xx_calc
-							call en_yy_calc
-
-							ld  a, (_en_yy)
-							add c
-							ld  (_pty1), a
-							ld  (_pty2), a
-
-							ld  a, (_en_xx)
-							ld  (_ptx1), a
-
-							ld  a, (__en_x)
-							add 15
-							srl a
-							srl a
-							srl a
-							srl a
-							ld  (_ptx2), a
-
-							call _en_bg_collision_check
-							or  a
-							jr  z, _en_bg_collision_vert_done
-
-							ld  a, (_en_yy)
-							ld  c, a
-							ld  a, (_rdi)
-							xor 1
-							add c
-							sla a
-							sla a
-							sla a
-							sla a
-							ld  (__en_y), a
-
-							ld  a, (__en_my)
-							neg
-							ld  (__en_my), a
-
-						._en_bg_collision_vert_done
+						call en_bg_collision_vert
 					#endif
 
 					.en_linear_done
@@ -4006,5 +4117,104 @@ void mueve_bicharracos (void) {
 			ld  (_en_yy), a
 			ret
 
+		.en_bg_collision_horz
+			ld  a, (__en_mx)
+			or  a
+			ret  z
+
+			call __ctileoff
+			ld  (_rdi), a
+			ld  c, a
+
+			call en_xx_calc
+			call en_yy_calc
+
+			ld  a, (_en_xx)
+			add c
+			ld  (_ptx1), a
+			ld  (_ptx2), a
+
+			ld  a, (_en_yy)
+			ld  (_pty1), a
+
+			ld  a, (__en_y)
+			add 15
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (_pty2), a
+
+			call _en_bg_collision_check
+			or  a
+			ret  z
+
+			ld  a, (_en_xx)
+			ld  c, a
+			ld  a, (_rdi)
+			xor 1
+			add c
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (__en_x), a
+
+			ld  a, (__en_mx)
+			neg
+			ld  (__en_mx), a
+		
+		._en_bg_collision_horz_done
+			ret
+
+		.en_bg_collision_vert
+			ld  a, (__en_my)
+			or  a
+			ret  z
+
+			call __ctileoff
+			ld  (_rdi), a
+			ld  c, a
+
+			call en_xx_calc
+			call en_yy_calc
+
+			ld  a, (_en_yy)
+			add c
+			ld  (_pty1), a
+			ld  (_pty2), a
+
+			ld  a, (_en_xx)
+			ld  (_ptx1), a
+
+			ld  a, (__en_x)
+			add 15
+			srl a
+			srl a
+			srl a
+			srl a
+			ld  (_ptx2), a
+
+			call _en_bg_collision_check
+			or  a
+			ret  z
+
+			ld  a, (_en_yy)
+			ld  c, a
+			ld  a, (_rdi)
+			xor 1
+			add c
+			sla a
+			sla a
+			sla a
+			sla a
+			ld  (__en_y), a
+
+			ld  a, (__en_my)
+			neg
+			ld  (__en_my), a
+
+		._en_bg_collision_vert_done
+			ret
 	#endif
 #endasm

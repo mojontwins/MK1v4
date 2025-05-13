@@ -208,6 +208,7 @@ unsigned char bitmask [] = {
 };
 
 unsigned char rand (void);
+unsigned int __FASTCALL__ abs (int n);
 void saca_a_todo_el_mundo_de_aqui (void);
 void render_all_sprites (void);
 void hotspot_paint (void);

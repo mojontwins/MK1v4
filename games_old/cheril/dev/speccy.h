@@ -610,26 +610,22 @@ void pad_read (void) {
 	pad_this_frame = (~pad_this_frame) | pad1;
 }
 
-void espera_activa (int espera) {
-	// Waits until "espera" halts have passed 
-	// or a key has been pressed.
-
-	pti = any_key ();
-	while (espera--)  {
-		#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-			#asm
-					halt
-			#endasm
-		#else
-			rdd = 250; do { rdi = 1; } while (rdd --);
-		#endif
-
-		ptj = any_key ();
-		if (ptj && pti == 0) {
-			break;
-		}
-		pti = ptj;
+void no_break (void) {
+	for (gpit = 0; gpit < 40; gpit ++) {
+		#asm 
+			halt
+		#endasm
 	}
+}
+
+void espera_activa (int espera) {
+	do {
+		pad_read ();
+		#asm
+				halt
+		#endasm
+		if (pad_this_frame != 0xff) break;
+	} while (-- espera);
 }
 
 void cortina () {

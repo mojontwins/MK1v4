@@ -41,6 +41,9 @@
 #endif
 #include "enems.h"
 
+#ifdef ENABLE_CUSTOM_ENEMS
+	#include "custom.h"
+#endif
 #include "engine.h"
 #ifdef ACTIVATE_SCRIPTING
 	#include "extern.h"
