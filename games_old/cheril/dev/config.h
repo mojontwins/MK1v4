@@ -66,7 +66,7 @@
 
 // Make your own!
 // --------------
-//#define ENABLE_CUSTOM_ENEMS					// Create your custom enemies in `custom.h`
+#define ENABLE_CUSTOM_ENEMS					// Create your custom enemies in `custom.h`
 
 // Scripting
 // ---------

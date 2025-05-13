@@ -75,10 +75,21 @@ void marrullers_select_direction (void) {
 					ld  a, (__en_y)
 					and 0xf0 
 					ld  (__en_y), a 
+
+					// en_an_ff [enit] = abs (_en_mx + _en_my);
+
+					ld  a, (__en_my) 
+					ld  c, a 
+					ld  a, (__en_mx)
+					add c 
+					call _abs_a
+					ld  de, (_enit)
+					ld  d, 0 
+					ld  hl, (_en_an_ff)
+					add hl, de 
+					ld  (hl), a
 			#endasm
-					
-			// speed
-			en_an_ff [enit] = abs (_en_mx + _en_my);
+			
 		}
 	}
 
