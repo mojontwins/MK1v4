@@ -14,7 +14,7 @@
 #define MARRULLER_RIGHTMOST  208
 #define MARRULLER_BOTTOMMOST 128
 
-unsigned char hit_bg;
+unsigned char last_d [MAX_ENEMS];
 
 void marrullers_select_direction (void) {
 	#asm
@@ -26,10 +26,25 @@ void marrullers_select_direction (void) {
 			xor a 
 			sub c 
 			ld  b, a 				// b = negative, c = positive speed.
+			push bc
 			
+		.marrullers_pick
 			call _rand 				// Doesn't trash BC 
 			ld  a, l 
 			and 3
+
+			ld  hl, (_enit)
+			ld  h, 0 
+			ld  de, _last_d 
+			add hl, de 
+			ld  c, (hl) 			// Last direction selected
+
+			cp  c 	
+			jr  z, marrullers_pick
+
+			ld  (hl), a
+			pop bc
+
 			cp  1
 			jr  z, msd1 
 			cp  2 
@@ -111,9 +126,6 @@ void marrullers_select_direction (void) {
 
 		if (_en_t >= 11 && _en_t <= 14) {
 			#asm
-					xor a 
-					ld  (_hit_bg), a 
-
 				// ***************
 				// HORIZONTAL AXIS
 				// ***************
@@ -127,33 +139,13 @@ void marrullers_select_direction (void) {
 					ld  a, (__en_x)
 					add c 
 					ld  (__en_x), a
-								
-				// Now check horz. boundaries
-				.en_marruller_horz_bounds
-
-					// Left of MARRULLER_LEFTMOST
-					// if MARRULLER_LEFTMOST >= _en_x
-					ld  c, a 
-					ld  a, MARRULLER_LEFTMOST
-					cp  c
-					jr  c, ma_horz_limit_skip_1
-
-					jp _marrullers_select_direction 	// Will ret itself
 					
-				.ma_horz_limit_skip_1
-
-					// Right of x2
-					// _en_x >= MARRULLER_RIGHTMOST
-					cp  MARRULLER_RIGHTMOST
-					jr  c, ma_horz_limit_skip_2
-
-					jp _marrullers_select_direction 	// Will ret itself
-
-				.ma_horz_limit_skip_2
+					call en_bg_collision_horz	// Defined in the engine, L = 1 == collided
+					xor a 
+					or  l 
+					jp  nz, _marrullers_select_direction
 
 				.en_marruller_horizontal_axis_done
-
-					call en_bg_collision_horz	// Defined in the engine
 
 				// *************
 				// VERTICAL AXIS
@@ -170,31 +162,13 @@ void marrullers_select_direction (void) {
 					add c 
 					ld  (__en_y), a
 
-				// Now check vert. boundaries
-				.en_marruller_vert_bounds
-
-					// MARRULLER_TOPMOST >= _en_y 
-					ld  c, a
-					ld  a, MARRULLER_TOPMOST
-					cp  c
-					jr  c, ma_vert_limit_skip_1
-
-					jp _marrullers_select_direction 	// Will ret itself
-
-				.ma_vert_limit_skip_1
-
-					// _en_y >= MARRULLER_BOTTOMMOST
-					cp  MARRULLER_BOTTOMMOST
-					jr  c, ma_vert_limit_skip_2
-
-					jp _marrullers_select_direction 	// Will ret itself
-
-				.ma_vert_limit_skip_2		
-
+					call en_bg_collision_vert	// Defined in the engine
+					xor a 
+					or  l 
+					jp nz, _marrullers_select_direction	// Will ret itself
+				
 				.en_marruller_vertical_axis_done
 
-					call en_bg_collision_vert	// Defined in the engine
-				
 				.en_marruller_done
 
 			#endasm

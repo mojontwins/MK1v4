@@ -2886,127 +2886,7 @@ void mueve_bicharracos (void) {
 			) {
 				#asm
 					
-					// ***************
-					// HORIZONTAL AXIS
-					// ***************
-					.en_linear_horizontal_axis
-						ld  a, (__en_mx)
-						or  a
-						jr  z, en_linear_horizontal_axis_done
-
-						// Move: en_x += _en_mx;
-						ld  c, a
-						ld  a, (__en_x)
-						add c 
-						ld  (__en_x), a
-
-					// Now check horz. boundaries
-					.en_linear_horz_bounds
-
-						// Left of x1
-						// _en_x <= _en_x1 -> _en_x1 >= _en_x
-						ld  a, (__en_x)
-						ld  c, a
-						ld  a, (__en_x1)
-						cp  c
-						jr  c, horz_limit_skip_1
-
-						ld  a, (__en_x1)
-						ld  (__en_x), a
-
-						ld  a, (__en_mx)
-						call _abs_a
-						ld  (__en_mx), a
-
-						jr  horz_limit_skip_2
-
-					.horz_limit_skip_1
-
-						// Right of x2
-						// _en_x >= _en_x2
-						ld  a, (__en_x2)
-						ld  c, a
-						ld  a, (__en_x)
-						cp  c
-						jr  c, horz_limit_skip_2
-
-						ld  a, (__en_x2)
-						ld  (__en_x), a
-
-						ld  a, (__en_mx)
-						call _abs_a
-						neg
-						ld  (__en_mx), a
-
-					.horz_limit_skip_2
-
-					.en_linear_horizontal_axis_done
-
-					#ifdef PLAYER_PUSH_BOXES
-						// Check for collisions.
-						call en_bg_collision_horz
-					#endif
-
-					// *************
-					// VERTICAL AXIS
-					// *************
-					.en_linear_vertical_axis
-						ld  a, (__en_my) 
-						or  a 
-						jr  z, en_linear_vertical_axis_done
-
-						// Move: _en_y += _en_my;
-						ld  c, a
-						ld  a, (__en_y)
-						add c 
-						ld  (__en_y), a
-
-					// Now check vert. boundaries
-					.en_linear_vert_bounds
-
-						// _en_y <= _en_y1 -> _en_y1 >= _en_y
-						ld  a, (__en_y)
-						ld  c, a
-						ld  a, (__en_y1)
-						cp  c
-						jr  c, vert_limit_skip_1
-
-						ld  a, (__en_y1)
-						ld  (__en_y), a
-
-						ld  a, (__en_my)
-						call _abs_a
-						ld  (__en_my), a
-
-						jr  vert_limit_skip_2
-
-					.vert_limit_skip_1
-
-						// _en_y >= _en_y2
-						ld  a, (__en_y2)
-						ld  c, a
-						ld  a, (__en_y)
-						cp  c
-						jr  c, vert_limit_skip_2
-
-						ld  a, (__en_y2)
-						ld  (__en_y), a
-
-						ld  a, (__en_my)
-						call _abs_a
-						neg
-						ld  (__en_my), a
-
-					.vert_limit_skip_2		
-
-					.en_linear_vertical_axis_done
-
-					#ifdef PLAYER_PUSH_BOXES
-						// Check for collisions.
-						call en_bg_collision_vert
-					#endif
-
-					.en_linear_done
+					call en_lineal_do
 
 				#endasm
 			}
@@ -3880,7 +3760,20 @@ void mueve_bicharracos (void) {
 	}
 }
 
+// We've separated several routines so they can be reused,
+// Maybe from custom.h, maybe from extern.h, etc.
+
 #asm
+
+	// ***********************************************************************
+	// calc_baddies_pointer - calculates pointer to current enem in HL
+	//
+	// IN: 
+	//     HL = enemy number (absolute) in malotes.
+	// OUT:
+	//     HL = pointer to enemy struct in malotes.
+	// ***********************************************************************
+	
 	._calc_baddies_pointer
 		#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 			add hl, hl 				// x2
@@ -3903,6 +3796,16 @@ void mueve_bicharracos (void) {
 		ld  de, _malotes
 		add hl, de
 		ret
+
+	// ***********************************************************************
+	// enems_get_values - Gets data from malotes into temporal variables
+	//
+	// IN: 
+	//     `enoffsmasi` is the index of the enemy we want to extract.
+	// OUT:
+	//     `_en_x`, `_en_y`, `_en_mx`, `_en_my`, `_en_x1`, `_en_y1`, 
+	//     `_en_x2`, `_en_y2`, `_en_t`, `_en_life` filled.
+	// ***********************************************************************
 
 	.enems_get_values
 		// Those values are stored in this order:
@@ -3991,6 +3894,18 @@ void mueve_bicharracos (void) {
 
 		ret
 
+	// ***********************************************************************
+	// enems_update_values_store - Puts temp data back into malotes
+	//
+	// IN: 
+	//     `__baddies_pointer` has a valid pointer
+	// OUT:
+	//     `malotes` is updated with `_en_x`, `_en_y`, `_en_mx`, `_en_my`, 
+	//     `_en_x1`, `_en_y1`, `_en_x2`, `_en_y2`, `_en_t`, `_en_life`
+	//
+	// This routine is designed to be called after enems_get_values
+	// ***********************************************************************
+
 	.enems_update_values_store
 
 		// Those values are stored in this order:
@@ -4073,7 +3988,7 @@ void mueve_bicharracos (void) {
 	#endif
 		ret
 
-	#ifdef PLAYER_PUSH_BOXES
+	#if defined PLAYER_PUSH_BOXES || defined ENABLE_CUSTOM_ENEMS
 
 		._en_bg_collision_check
 			ld  a, (_ptx1)
@@ -4122,10 +4037,23 @@ void mueve_bicharracos (void) {
 			ld  (_en_yy), a
 			ret
 
+	// ***********************************************************************
+	// en_bg_collision_horz - checks if current enemy collided horizontally
+	//                        with the BG & moves it out of the obstacle.
+	//
+	// IN: 
+	//     * Temporal variables must be filled.
+	// OUT:
+	//     L = 1 if collided.
+	// ***********************************************************************
+
 		.en_bg_collision_horz
+			// L = 1 if collided (also adjusts)
+
 			ld  a, (__en_mx)
 			or  a
-			ret  z
+			ld  l, a
+			ret z
 
 			call __ctileoff
 			ld  (_rdi), a
@@ -4152,7 +4080,8 @@ void mueve_bicharracos (void) {
 
 			call _en_bg_collision_check
 			or  a
-			ret  z
+			ld  l, a
+			ret z
 
 			ld  a, (_en_xx)
 			ld  c, a
@@ -4165,17 +4094,27 @@ void mueve_bicharracos (void) {
 			sla a
 			ld  (__en_x), a
 
-			ld  a, (__en_mx)
-			neg
-			ld  (__en_mx), a
-		
 		._en_bg_collision_horz_done
+			ld  l, 1
 			ret
 
+	// ***********************************************************************
+	// en_bg_collision_vert - checks if current enemy collided vertically
+	//                        with the BG & moves it out of the obstacle.
+	//
+	// IN: 
+	//     * Temporal variables must be filled.
+	// OUT:
+	//     L = 1 if collided.
+	// ***********************************************************************
+
 		.en_bg_collision_vert
+			// L = 1 if collided (also adjusts)
+			
 			ld  a, (__en_my)
 			or  a
-			ret  z
+			ld  l, a
+			ret z
 
 			call __ctileoff
 			ld  (_rdi), a
@@ -4201,8 +4140,11 @@ void mueve_bicharracos (void) {
 			ld  (_ptx2), a
 
 			call _en_bg_collision_check
+			ld  hl, 0
+			
 			or  a
-			ret  z
+			ld  l, a
+			ret z
 
 			ld  a, (_en_yy)
 			ld  c, a
@@ -4215,11 +4157,163 @@ void mueve_bicharracos (void) {
 			sla a
 			ld  (__en_y), a
 
+		._en_bg_collision_vert_done
+			ld  l, 1
+			ret
+
+	// ***********************************************************************
+	// en_lineal_do - Moves current enemy linearly. You can call this from 
+	//                your custom.
+	//
+	// IN: 
+	//     * Temporal variables must be filled.
+	// OUT:
+	//     L = 1 if collided.
+	// ***********************************************************************
+
+		.en_lineal_do
+		
+		// ***************
+		// HORIZONTAL AXIS
+		// ***************
+		.en_linear_horizontal_axis
+			ld  a, (__en_mx)
+			or  a
+			jr  z, en_linear_horizontal_axis_done
+
+			// Move: en_x += _en_mx;
+			ld  c, a
+			ld  a, (__en_x)
+			add c 
+			ld  (__en_x), a
+
+		// Now check horz. boundaries
+		.en_linear_horz_bounds
+
+			// Left of x1
+			// _en_x <= _en_x1 -> _en_x1 >= _en_x
+			ld  a, (__en_x)
+			ld  c, a
+			ld  a, (__en_x1)
+			cp  c
+			jr  c, horz_limit_skip_1
+
+			ld  a, (__en_x1)
+			ld  (__en_x), a
+
+			ld  a, (__en_mx)
+			call _abs_a
+			ld  (__en_mx), a
+
+			jr  horz_limit_skip_2
+
+		.horz_limit_skip_1
+
+			// Right of x2
+			// _en_x >= _en_x2
+			ld  a, (__en_x2)
+			ld  c, a
+			ld  a, (__en_x)
+			cp  c
+			jr  c, horz_limit_skip_2
+
+			ld  a, (__en_x2)
+			ld  (__en_x), a
+
+			ld  a, (__en_mx)
+			call _abs_a
+			neg
+			ld  (__en_mx), a
+
+		.horz_limit_skip_2
+
+		.en_linear_horizontal_axis_done
+
+		#ifdef PLAYER_PUSH_BOXES
+				// Check for collisions.
+				
+				call en_bg_collision_horz
+				xor a 
+				or  l
+				jr  z, en_linear_horz_no_coll
+
+				ld  a, (__en_mx)
+				neg
+				ld  (__en_mx), a
+
+			.en_linear_horz_no_coll
+		#endif
+
+		// *************
+		// VERTICAL AXIS
+		// *************
+		.en_linear_vertical_axis
+			ld  a, (__en_my) 
+			or  a 
+			jr  z, en_linear_vertical_axis_done
+
+			// Move: _en_y += _en_my;
+			ld  c, a
+			ld  a, (__en_y)
+			add c 
+			ld  (__en_y), a
+
+		// Now check vert. boundaries
+		.en_linear_vert_bounds
+
+			// _en_y <= _en_y1 -> _en_y1 >= _en_y
+			ld  a, (__en_y)
+			ld  c, a
+			ld  a, (__en_y1)
+			cp  c
+			jr  c, vert_limit_skip_1
+
+			ld  a, (__en_y1)
+			ld  (__en_y), a
+
 			ld  a, (__en_my)
+			call _abs_a
+			ld  (__en_my), a
+
+			jr  vert_limit_skip_2
+
+		.vert_limit_skip_1
+
+			// _en_y >= _en_y2
+			ld  a, (__en_y2)
+			ld  c, a
+			ld  a, (__en_y)
+			cp  c
+			jr  c, vert_limit_skip_2
+
+			ld  a, (__en_y2)
+			ld  (__en_y), a
+
+			ld  a, (__en_my)
+			call _abs_a
 			neg
 			ld  (__en_my), a
 
-		._en_bg_collision_vert_done
+		.vert_limit_skip_2		
+
+		.en_linear_vertical_axis_done
+
+		#ifdef PLAYER_PUSH_BOXES
+				// Check for collisions.
+				
+				call en_bg_collision_vert
+				xor a 
+				or  l
+				jr  z, en_linear_vert_no_coll
+
+				ld  a, (__en_my)
+				neg
+				ld  (__en_my), a
+				
+			.en_linear_vert_no_coll
+		#endif
+
+		.en_linear_done
 			ret
 	#endif
 #endasm

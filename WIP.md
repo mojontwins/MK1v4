@@ -153,11 +153,47 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Hacer que los enemigos custom puedan NO matarte. 
 
-[ ] Encontrar una forma fácil de replicar por defecto el movimiento lineal 1..4 en otro en_t... ¿tan fácil como mover a una subrutina?
+[X] Encontrar una forma fácil de replicar por defecto el movimiento lineal 1..4 en otro en_t... ¿tan fácil como mover a una subrutina? YES, subrutined!
 
 [ ] Soporte built-in de textos en msc4. DARLE UN PENSOTE.
 
 [ ] Soporte para "frames por pixel" en los lineales. Por ahora mx = 1, 2, 4 pixels por frame, pero molaría 1, 2, 4 frames por pixel para enemigos lentorros. Estudiar cómo sería la forma más fácil de implementarlo en ensamble y tirar por ahí.
+
+    * Tenemos este código que es el que mueve un eje cada frame...
+
+```asm
+        // [A]
+        ld  a, (__en_mx)
+        or  a
+        jr  z, en_linear_horizontal_axis_done
+
+        // [B]
+        ld  c, a
+        ld  a, (__en_x)
+        add c 
+        ld  (__en_x), a
+```
+
+    Si usamos negativos -1 = 2 frames per pixel, -3 = 4 frames per pixel.
+
+```asm
+        bit 7, a
+        jr  z, en_lineal_horizontal_ppf
+
+        // fpp
+        neg a       // -1 -> 1, -3 -> 3
+        ld  c, a
+        ld  a, (_main_counter)
+        and c 
+        jr  nz, SKIP_NO_SE_MUEVE
+
+        ld  a, 1
+
+    .en_lineal_horizontal_ppf
+        // Normal shit
+```
+
+    Ese inserto entre [A] y [B] podría funcionar. Lo probaré luego.
 
 <details>
     <summary>Cosas calculares</summary>

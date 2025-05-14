@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 14 13:47:08 2025
+;	Module compile time: Wed May 14 17:02:23 2025
 
 
 
@@ -7213,15 +7213,15 @@
 	defb	0
 	defb	1
 	defb	2
+	defb	96
 	defb	48
-	defb	16
+	defb	96
 	defb	48
-	defb	16
-	defb	48
-	defb	80
+	defb	96
+	defb	64
 	defb	0
-	defb	1
-	defb	3
+	defb	0
+	defb	13
 	defb	128
 	defb	16
 	defb	128
@@ -7255,9 +7255,9 @@
 	defb	96
 	defb	48
 	defb	128
-	defb	1
-	defb	1
-	defb	3
+	defb	2
+	defb	2
+	defb	14
 	defb	176
 	defb	48
 	defb	48
@@ -7310,8 +7310,8 @@
 	defb	96
 	defb	64
 	defb	0
-	defb	-1
-	defb	2
+	defb	-2
+	defb	14
 	defb	128
 	defb	16
 	defb	128
@@ -7320,16 +7320,16 @@
 	defb	112
 	defb	0
 	defb	2
-	defb	3
+	defb	13
 	defb	16
 	defb	112
 	defb	16
 	defb	112
 	defb	112
 	defb	112
-	defb	1
+	defb	2
 	defb	0
-	defb	4
+	defb	12
 	defb	208
 	defb	64
 	defb	16
@@ -7446,16 +7446,16 @@
 	defb	48
 	defb	-1
 	defb	0
-	defb	1
+	defb	11
 	defb	16
 	defb	96
 	defb	16
 	defb	96
 	defb	192
 	defb	96
-	defb	1
-	defb	0
 	defb	2
+	defb	0
+	defb	12
 	defb	16
 	defb	16
 	defb	16
@@ -7485,13 +7485,13 @@
 	defb	1
 	defb	208
 	defb	48
-	defb	128
+	defb	192
 	defb	48
 	defb	208
-	defb	128
-	defb	-1
-	defb	1
-	defb	3
+	defb	48
+	defb	-2
+	defb	0
+	defb	14
 	defb	32
 	defb	32
 	defb	32
@@ -7581,7 +7581,7 @@
 	defb	112
 	defb	0
 	defb	2
-	defb	3
+	defb	11
 	defb	112
 	defb	16
 	defb	112
@@ -7598,8 +7598,8 @@
 	defb	160
 	defb	112
 	defb	0
-	defb	1
-	defb	4
+	defb	2
+	defb	14
 	defb	128
 	defb	16
 	defb	128
@@ -7708,24 +7708,24 @@
 	defb	0
 	defb	0
 	defb	4
+	defb	16
 	defb	64
+	defb	16
 	defb	64
+	defb	32
 	defb	64
-	defb	64
-	defb	64
-	defb	128
-	defb	0
-	defb	1
 	defb	2
-	defb	96
-	defb	112
-	defb	96
-	defb	64
-	defb	96
-	defb	112
 	defb	0
-	defb	-1
-	defb	3
+	defb	13
+	defb	96
+	defb	96
+	defb	96
+	defb	96
+	defb	112
+	defb	96
+	defb	2
+	defb	0
+	defb	11
 	defb	208
 	defb	112
 	defb	208
@@ -7771,15 +7771,15 @@
 	defb	1
 	defb	1
 	defb	4
-	defb	128
-	defb	16
-	defb	128
-	defb	16
-	defb	128
-	defb	128
+	defb	112
+	defb	80
+	defb	112
+	defb	64
+	defb	112
+	defb	80
 	defb	0
-	defb	1
-	defb	2
+	defb	-2
+	defb	11
 	defb	192
 	defb	16
 	defb	192
@@ -7937,9 +7937,20 @@
 	xor a
 	sub c
 	ld b, a
+	push bc
+	.marrullers_pick
 	call _rand
 	ld a, l
 	and 3
+	ld hl, (_enit)
+	ld h, 0
+	ld de, _last_d
+	add hl, de
+	ld c, (hl)
+	cp c
+	jr z, marrullers_pick
+	ld (hl), a
+	pop bc
 	cp 1
 	jr z, msd1
 	cp 2
@@ -8026,8 +8037,6 @@
 .i_32
 	jp	i_31
 .i_33_i_32
-	xor a
-	ld (_hit_bg), a
 	.en_marruller_horizontal_axis
 	ld a, (__en_mx)
 	or a
@@ -8036,19 +8045,11 @@
 	ld a, (__en_x)
 	add c
 	ld (__en_x), a
-	.en_marruller_horz_bounds
-	ld c, a
-	ld a, 16
-	cp c
-	jr c, ma_horz_limit_skip_1
-	jp _marrullers_select_direction
-	.ma_horz_limit_skip_1
-	cp 208
-	jr c, ma_horz_limit_skip_2
-	jp _marrullers_select_direction
-	.ma_horz_limit_skip_2
-	.en_marruller_horizontal_axis_do
 	call en_bg_collision_horz
+	xor a
+	or l
+	jp nz, _marrullers_select_direction
+	.en_marruller_horizontal_axis_do
 	.en_marruller_vertical_axis
 	ld a, (__en_my)
 	or a
@@ -8057,19 +8058,11 @@
 	ld a, (__en_y)
 	add c
 	ld (__en_y), a
-	.en_marruller_vert_bounds
-	ld c, a
-	ld a, 16
-	cp c
-	jr c, ma_vert_limit_skip_1
-	jp _marrullers_select_direction
-	.ma_vert_limit_skip_1
-	cp 128
-	jr c, ma_vert_limit_skip_2
-	jp _marrullers_select_direction
-	.ma_vert_limit_skip_2
-	.en_marruller_vertical_axis_done
 	call en_bg_collision_vert
+	xor a
+	or l
+	jp nz, _marrullers_select_direction
+	.en_marruller_vertical_axis_done
 	.en_marruller_done
 .i_31
 	ret
@@ -9416,77 +9409,7 @@
 	ld	hl,4	;const
 	call	l_ule
 	jp	nc,i_53
-	.en_linear_horizontal_axis
-	ld a, (__en_mx)
-	or a
-	jr z, en_linear_horizontal_axis_done
-	ld c, a
-	ld a, (__en_x)
-	add c
-	ld (__en_x), a
-	.en_linear_horz_bounds
-	ld a, (__en_x)
-	ld c, a
-	ld a, (__en_x1)
-	cp c
-	jr c, horz_limit_skip_1
-	ld a, (__en_x1)
-	ld (__en_x), a
-	ld a, (__en_mx)
-	call _abs_a
-	ld (__en_mx), a
-	jr horz_limit_skip_2
-	.horz_limit_skip_1
-	ld a, (__en_x2)
-	ld c, a
-	ld a, (__en_x)
-	cp c
-	jr c, horz_limit_skip_2
-	ld a, (__en_x2)
-	ld (__en_x), a
-	ld a, (__en_mx)
-	call _abs_a
-	neg
-	ld (__en_mx), a
-	.horz_limit_skip_2
-	.en_linear_horizontal_axis_done
-	call en_bg_collision_horz
-	.en_linear_vertical_axis
-	ld a, (__en_my)
-	or a
-	jr z, en_linear_vertical_axis_done
-	ld c, a
-	ld a, (__en_y)
-	add c
-	ld (__en_y), a
-	.en_linear_vert_bounds
-	ld a, (__en_y)
-	ld c, a
-	ld a, (__en_y1)
-	cp c
-	jr c, vert_limit_skip_1
-	ld a, (__en_y1)
-	ld (__en_y), a
-	ld a, (__en_my)
-	call _abs_a
-	ld (__en_my), a
-	jr vert_limit_skip_2
-	.vert_limit_skip_1
-	ld a, (__en_y2)
-	ld c, a
-	ld a, (__en_y)
-	cp c
-	jr c, vert_limit_skip_2
-	ld a, (__en_y2)
-	ld (__en_y), a
-	ld a, (__en_my)
-	call _abs_a
-	neg
-	ld (__en_my), a
-	.vert_limit_skip_2
-	.en_linear_vertical_axis_done
-	call en_bg_collision_vert
-	.en_linear_done
+	call en_lineal_do
 .i_53
 	call	_enems_calc_frame
 	call	_extra_enems_move
@@ -9734,6 +9657,7 @@
 	.en_bg_collision_horz
 	ld a, (__en_mx)
 	or a
+	ld l, a
 	ret z
 	call __ctileoff
 	ld (_rdi), a
@@ -9755,6 +9679,7 @@
 	ld (_pty2), a
 	call _en_bg_collision_check
 	or a
+	ld l, a
 	ret z
 	ld a, (_en_xx)
 	ld c, a
@@ -9766,14 +9691,13 @@
 	sla a
 	sla a
 	ld (__en_x), a
-	ld a, (__en_mx)
-	neg
-	ld (__en_mx), a
 	._en_bg_collision_horz_done
+	ld l, 1
 	ret
 	.en_bg_collision_vert
 	ld a, (__en_my)
 	or a
+	ld l, a
 	ret z
 	call __ctileoff
 	ld (_rdi), a
@@ -9794,7 +9718,9 @@
 	srl a
 	ld (_ptx2), a
 	call _en_bg_collision_check
+	ld hl, 0
 	or a
+	ld l, a
 	ret z
 	ld a, (_en_yy)
 	ld c, a
@@ -9806,10 +9732,95 @@
 	sla a
 	sla a
 	ld (__en_y), a
+	._en_bg_collision_vert_done
+	ld l, 1
+	ret
+	.en_lineal_do
+	.en_linear_horizontal_axis
+	ld a, (__en_mx)
+	or a
+	jr z, en_linear_horizontal_axis_done
+	ld c, a
+	ld a, (__en_x)
+	add c
+	ld (__en_x), a
+	.en_linear_horz_bounds
+	ld a, (__en_x)
+	ld c, a
+	ld a, (__en_x1)
+	cp c
+	jr c, horz_limit_skip_1
+	ld a, (__en_x1)
+	ld (__en_x), a
+	ld a, (__en_mx)
+	call _abs_a
+	ld (__en_mx), a
+	jr horz_limit_skip_2
+	.horz_limit_skip_1
+	ld a, (__en_x2)
+	ld c, a
+	ld a, (__en_x)
+	cp c
+	jr c, horz_limit_skip_2
+	ld a, (__en_x2)
+	ld (__en_x), a
+	ld a, (__en_mx)
+	call _abs_a
+	neg
+	ld (__en_mx), a
+	.horz_limit_skip_2
+	.en_linear_horizontal_axis_done
+	call en_bg_collision_horz
+	xor a
+	or l
+	jr z, en_linear_horz_no_coll
+	ld a, (__en_mx)
+	neg
+	ld (__en_mx), a
+	.en_linear_horz_no_coll
+	.en_linear_vertical_axis
+	ld a, (__en_my)
+	or a
+	jr z, en_linear_vertical_axis_done
+	ld c, a
+	ld a, (__en_y)
+	add c
+	ld (__en_y), a
+	.en_linear_vert_bounds
+	ld a, (__en_y)
+	ld c, a
+	ld a, (__en_y1)
+	cp c
+	jr c, vert_limit_skip_1
+	ld a, (__en_y1)
+	ld (__en_y), a
+	ld a, (__en_my)
+	call _abs_a
+	ld (__en_my), a
+	jr vert_limit_skip_2
+	.vert_limit_skip_1
+	ld a, (__en_y2)
+	ld c, a
+	ld a, (__en_y)
+	cp c
+	jr c, vert_limit_skip_2
+	ld a, (__en_y2)
+	ld (__en_y), a
+	ld a, (__en_my)
+	call _abs_a
+	neg
+	ld (__en_my), a
+	.vert_limit_skip_2
+	.en_linear_vertical_axis_done
+	call en_bg_collision_vert
+	xor a
+	or l
+	jr z, en_linear_vert_no_coll
 	ld a, (__en_my)
 	neg
 	ld (__en_my), a
-	._en_bg_collision_vert_done
+	.en_linear_vert_no_coll
+	.en_linear_done
 	ret
 	._s_title
 	BINARY "titlec.bin"
@@ -10370,10 +10381,10 @@
 ._gp_gen	defs	2
 ._on_pant	defs	1
 ._enoffs	defs	2
-._hit_bg	defs	1
 ._pad0	defs	1
 ._n_pant	defs	1
 ._en_j	defs	1
+._last_d	defs	3
 ._enit	defs	1
 ._gpcx	defs	2
 ._gpcy	defs	2
@@ -10582,7 +10593,6 @@
 	XDEF	_pad_this_frame
 	LIB	cpc_DisableFirmware
 	LIB	cpc_EnableFirmware
-	XDEF	_hit_bg
 	XDEF	_enem_cells
 	LIB	cpc_PrintGphStrXYM12X
 	LIB	cpc_SetInk
@@ -10599,6 +10609,7 @@
 	LIB	cpc_RLI
 	XDEF	_system_init
 	XDEF	_draw_rectangle
+	XDEF	_last_d
 	LIB	cpc_RRI
 	LIB	cpc_GetSp
 	XDEF	_enit
