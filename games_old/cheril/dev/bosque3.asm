@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue May 13 23:07:30 2025
+;	Module compile time: Wed May 14 13:47:08 2025
 
 
 
@@ -8005,7 +8005,7 @@
 	call _abs_a
 	ld de, (_enit)
 	ld d, 0
-	ld hl, (_en_an_ff)
+	ld hl, _en_an_ff
 	add hl, de
 	ld (hl), a
 .i_28
@@ -8026,6 +8026,8 @@
 .i_32
 	jp	i_31
 .i_33_i_32
+	xor a
+	ld (_hit_bg), a
 	.en_marruller_horizontal_axis
 	ld a, (__en_mx)
 	or a
@@ -8035,23 +8037,15 @@
 	add c
 	ld (__en_x), a
 	.en_marruller_horz_bounds
-	ld a, (__en_x)
 	ld c, a
-	ld a, (__en_x1)
+	ld a, 16
 	cp c
 	jr c, ma_horz_limit_skip_1
-	ld a, (__en_x1)
-	ld (__en_x), a
-	jr nc, en_marruller_decide_for_marrull
+	jp _marrullers_select_direction
 	.ma_horz_limit_skip_1
-	ld a, (__en_x2)
-	ld c, a
-	ld a, (__en_x)
-	cp c
+	cp 208
 	jr c, ma_horz_limit_skip_2
-	ld a, (__en_x2)
-	ld (__en_x), a
-	jr nc, en_marruller_decide_for_marrull
+	jp _marrullers_select_direction
 	.ma_horz_limit_skip_2
 	.en_marruller_horizontal_axis_do
 	call en_bg_collision_horz
@@ -8064,29 +8058,18 @@
 	add c
 	ld (__en_y), a
 	.en_marruller_vert_bounds
-	ld a, (__en_y)
 	ld c, a
-	ld a, (__en_y1)
+	ld a, 16
 	cp c
 	jr c, ma_vert_limit_skip_1
-	ld a, (__en_y1)
-	ld (__en_y), a
-	jr nc, en_marruller_decide_for_marrull
+	jp _marrullers_select_direction
 	.ma_vert_limit_skip_1
-	ld a, (__en_y2)
-	ld c, a
-	ld a, (__en_y)
-	cp c
+	cp 128
 	jr c, ma_vert_limit_skip_2
-	ld a, (__en_y2)
-	ld (__en_y), a
-	jr nc, en_marruller_decide_for_marrull
+	jp _marrullers_select_direction
 	.ma_vert_limit_skip_2
 	.en_marruller_vertical_axis_done
 	call en_bg_collision_vert
-	jr en_marruller_done
-	.en_marruller_decide_for_marrull
-	call _marrullers_select_direction
 	.en_marruller_done
 .i_31
 	ret
@@ -8099,6 +8082,12 @@
 
 
 ._extra_enems_killed
+	ret
+
+
+
+._should_collide
+	ld	hl,1 % 256	;const
 	ret
 
 
@@ -9501,6 +9490,10 @@
 .i_53
 	call	_enems_calc_frame
 	call	_extra_enems_move
+	call	_should_collide
+	ld	a,h
+	or	l
+	jp	z,i_55
 	ld	hl,(_en_tocado)
 	ld	h,0
 	ld	de,0
@@ -10377,6 +10370,7 @@
 ._gp_gen	defs	2
 ._on_pant	defs	1
 ._enoffs	defs	2
+._hit_bg	defs	1
 ._pad0	defs	1
 ._n_pant	defs	1
 ._en_j	defs	1
@@ -10588,6 +10582,7 @@
 	XDEF	_pad_this_frame
 	LIB	cpc_DisableFirmware
 	LIB	cpc_EnableFirmware
+	XDEF	_hit_bg
 	XDEF	_enem_cells
 	LIB	cpc_PrintGphStrXYM12X
 	LIB	cpc_SetInk
@@ -10725,6 +10720,7 @@
 	XDEF	_ptj
 	XDEF	_no_break
 	XDEF	_comportamiento_tiles
+	XDEF	_should_collide
 	XDEF	_move_tile_with_check
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask

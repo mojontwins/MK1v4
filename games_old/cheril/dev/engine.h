@@ -2878,9 +2878,11 @@ void mueve_bicharracos (void) {
 			// Basic linear movement x = x + mx, etc.
 			if (
 				_en_t <= 4
+				/*
 				#ifdef RANDOM_RESPAWN
 					|| 0 == en_an_fanty_activo [enit]
 				#endif
+				*/
 			) {
 				#asm
 					
@@ -3513,6 +3515,9 @@ void mueve_bicharracos (void) {
 				// Collision with enemy
 
 				if (
+					#ifdef ENABLE_CUSTOM_ENEMS
+						should_collide () && 
+					#endif
 					0 == en_tocado && collide_enem () && 
 					(_en_t < 128 
 						#ifdef RANDOM_RESPAWN

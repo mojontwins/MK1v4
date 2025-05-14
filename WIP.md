@@ -149,6 +149,16 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [!] Creo que he dado con un misterioso bug o feature de esta versión de z88dk vieja que hace que si pones el prototipo de una función antes de definir la función, rodea a la misma con un `push hl` al principio y un `pop bc` al final, cosa que no hace si no se añade un prototipo. Esto me rompía completamente el motor (yo esperaba que la rutina no tocara bc, pero con el código añadido lo hace). Now that's WEIRD.
 
+[ ] ¡Script y enemigos! Definir enemigos custom que hagan de NPCs puede molar si interactuar con ellos es posible. Sin tener que meter nuevas secciones (o quizá aprovechando alguna), pulsando ACCION sobre un enemigo de estos lanzará las PRESS_FIRE correspondientes. Entonces estaría bien saber con qué EN_T se está colisionando (0 si ninguno, por ejemplo) y ya para nota su EN_IT... Ya de entrada con eso nos podría valer para hacer un bajillón de cosas. El tema es la colisión con el enemigo que te va a matar sí o sí. Eso se soluciona con otra entrada en `custom.h`:
+
+[X] Hacer que los enemigos custom puedan NO matarte. 
+
+[ ] Encontrar una forma fácil de replicar por defecto el movimiento lineal 1..4 en otro en_t... ¿tan fácil como mover a una subrutina?
+
+[ ] Soporte built-in de textos en msc4. DARLE UN PENSOTE.
+
+[ ] Soporte para "frames por pixel" en los lineales. Por ahora mx = 1, 2, 4 pixels por frame, pero molaría 1, 2, 4 frames por pixel para enemigos lentorros. Estudiar cómo sería la forma más fácil de implementarlo en ensamble y tirar por ahí.
+
 <details>
     <summary>Cosas calculares</summary>
 

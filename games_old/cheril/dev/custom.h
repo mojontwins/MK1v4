@@ -5,6 +5,17 @@
 // Custom stuff we need for our marrullers
 // ---------------------------------------------------------------------------
 
+// Very simple marrullers. They appear where you put them and move freely 
+// confiend by these boundaries. They also will bounce off obstacles:
+
+// Limits
+#define MARRULLER_LEFTMOST   16
+#define MARRULLER_TOPMOST    16
+#define MARRULLER_RIGHTMOST  208
+#define MARRULLER_BOTTOMMOST 128
+
+unsigned char hit_bg;
+
 void marrullers_select_direction (void) {
 	#asm
 			ld  hl, (_enit)
@@ -85,7 +96,7 @@ void marrullers_select_direction (void) {
 					call _abs_a
 					ld  de, (_enit)
 					ld  d, 0 
-					ld  hl, (_en_an_ff)
+					ld  hl, _en_an_ff
 					add hl, de 
 					ld  (hl), a
 			#endasm
@@ -100,7 +111,9 @@ void marrullers_select_direction (void) {
 
 		if (_en_t >= 11 && _en_t <= 14) {
 			#asm
-				
+					xor a 
+					ld  (_hit_bg), a 
+
 				// ***************
 				// HORIZONTAL AXIS
 				// ***************
@@ -114,37 +127,27 @@ void marrullers_select_direction (void) {
 					ld  a, (__en_x)
 					add c 
 					ld  (__en_x), a
-			
+								
 				// Now check horz. boundaries
 				.en_marruller_horz_bounds
 
-					// Left of x1
-					// _en_x <= _en_x1 -> _en_x1 >= _en_x
-					ld  a, (__en_x)
-					ld  c, a
-					ld  a, (__en_x1)
+					// Left of MARRULLER_LEFTMOST
+					// if MARRULLER_LEFTMOST >= _en_x
+					ld  c, a 
+					ld  a, MARRULLER_LEFTMOST
 					cp  c
 					jr  c, ma_horz_limit_skip_1
 
-					ld  a, (__en_x1)
-					ld  (__en_x), a
-
-					jr  nc, en_marruller_decide_for_marrullers
-
+					jp _marrullers_select_direction 	// Will ret itself
+					
 				.ma_horz_limit_skip_1
 
 					// Right of x2
-					// _en_x >= _en_x2
-					ld  a, (__en_x2)
-					ld  c, a
-					ld  a, (__en_x)
-					cp  c
+					// _en_x >= MARRULLER_RIGHTMOST
+					cp  MARRULLER_RIGHTMOST
 					jr  c, ma_horz_limit_skip_2
 
-					ld  a, (__en_x2)
-					ld  (__en_x), a
-
-					jr  nc, en_marruller_decide_for_marrullers
+					jp _marrullers_select_direction 	// Will ret itself
 
 				.ma_horz_limit_skip_2
 
@@ -170,42 +173,27 @@ void marrullers_select_direction (void) {
 				// Now check vert. boundaries
 				.en_marruller_vert_bounds
 
-					// _en_y <= _en_y1 -> _en_y1 >= _en_y
-					ld  a, (__en_y)
+					// MARRULLER_TOPMOST >= _en_y 
 					ld  c, a
-					ld  a, (__en_y1)
+					ld  a, MARRULLER_TOPMOST
 					cp  c
 					jr  c, ma_vert_limit_skip_1
 
-					ld  a, (__en_y1)
-					ld  (__en_y), a
-
-					jr  nc, en_marruller_decide_for_marrullers
+					jp _marrullers_select_direction 	// Will ret itself
 
 				.ma_vert_limit_skip_1
 
-					// _en_y >= _en_y2
-					ld  a, (__en_y2)
-					ld  c, a
-					ld  a, (__en_y)
-					cp  c
+					// _en_y >= MARRULLER_BOTTOMMOST
+					cp  MARRULLER_BOTTOMMOST
 					jr  c, ma_vert_limit_skip_2
 
-					ld  a, (__en_y2)
-					ld  (__en_y), a
-
-					jr  nc, en_marruller_decide_for_marrullers
+					jp _marrullers_select_direction 	// Will ret itself
 
 				.ma_vert_limit_skip_2		
 
 				.en_marruller_vertical_axis_done
 
 					call en_bg_collision_vert	// Defined in the engine
-
-					jr en_marruller_done
-				
-				.en_marruller_decide_for_marrullers							
-					call _marrullers_select_direction
 				
 				.en_marruller_done
 
@@ -223,6 +211,13 @@ void marrullers_select_direction (void) {
 		// This is called after enem number enit is killed.
 		// _en_t has been already "marked as dead" (OR 128)
 		// Current enemy vars are copied to temporary _en_x, _en_y, etc
+	}
+
+	unsigned char should_collide (void) {
+		// return 0 for enemies which shouldn't collide.
+		// Collide means they will kill the player or get squashed.
+
+		return 1;
 	}
 
 #endif
