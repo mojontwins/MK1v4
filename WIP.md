@@ -195,6 +195,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
     Ese inserto entre [A] y [B] podría funcionar. Lo probaré luego.
 
+[ ] Calavera hace una mierda rara con los pies al saltar y no me explico cómo es posible, a menos que possee o gotten se estén poniendo a 1 cuando no deberían. Si no, es que no tiene sentidow. **ES POR `player.possee`** Lo que no sé es por qué se pone a 1 en medio del puto aire. Mañana con más emoción lo miro.
+
 <details>
     <summary>Cosas calculares</summary>
 

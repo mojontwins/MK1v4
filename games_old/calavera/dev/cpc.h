@@ -417,7 +417,7 @@ void system_init (void) {
 	#endasm
 
 	// Make M! rotation luts
-	#if defined MODE_1
+	#if defined MODE_1 && !defined NO_MASKS
 		cpc_MakeM1RotationLUTs ();
 	#endif
 

@@ -90,6 +90,15 @@
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 
+// Custom:
+// -------
+
+//#define PLAYER_CUSTOM_VENG 				// Replace Vertical axis for your own 
+//#define PLAYER_CUSTOM_HENG 				// Replace Horizontal axis for your own
+//#define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
+//#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
+
+
 // ============================================================================
 // III. Screen configuration
 // ============================================================================

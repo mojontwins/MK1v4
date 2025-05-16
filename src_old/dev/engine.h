@@ -761,6 +761,7 @@ void move (void) {
 			xor a 
 			ld  (_hit), a 
 			ld  (_thrusting), a 
+			ld  (_wall), a
 
 			call _pad_read
 	#endasm
@@ -769,36 +770,11 @@ void move (void) {
 	//                     Vertical
 	// =================================================
 
-	#ifdef PLAYER_MOGGY_STYLE
-		// Read keyboard and apply A/R to VY
-		/*
-		if ((pad0 & sp_UP) && (pad0 & sp_DOWN)) {
-			if (player.vy > 0) {
-				player.vy -= PLAYER_RX;
-				if (player.vy < 0) player.vy = 0;
-			} else if (player.vy < 0) {
-				player.vy += PLAYER_RX;
-				if (player.vy > 0) player.vy = 0;
-			}
+	// Modify Velocity
 
-		} else {
-			if ((pad0 & sp_UP) == 0) {
-				player.vy -= PLAYER_AX;
-				if (player.vy < -PLAYER_MAX_VX) player.vy = -PLAYER_MAX_VX;
-				player.facing = GENITAL_FACING_UP;
-			}
-
-			if ((pad0 & sp_DOWN) == 0) {
-				player.vy += PLAYER_AX;
-				if (player.vy > PLAYER_MAX_VX) player.vy = +PLAYER_MAX_VX;
-				player.facing = GENITAL_FACING_DOWN;
-			}
-			
-			thrusting = 1;
-		}
-		*/
-		// Nomenclature: m -> move, vert->axis, kp->keypress
-
+	#ifdef PLAYER_CUSTOM_VENG
+		player_custom_veng ();
+	#elif defined PLAYER_MOGGY_STYLE
 		#asm
 				ld  a, (_pad0)
 				ld  c, a
@@ -817,14 +793,14 @@ void move (void) {
 				// Depending on the current vy sign, add or subtract:
 
 				// if (player.vy > 0)
-				ld  hl, (_player + 8) 		// player.vy 
+				ld  hl, (_player + 8) 			// player.vy 
 
 				// If player.vy is zero do nothing!
 				ld  a, h 
 				or  l 
 				jr  z, m_vert_kp_done
 
-				bit 7, h 					// bit 7 = 0 positive, 1 negative
+				bit 7, h 						// bit 7 = 0 positive, 1 negative
 
 				jr  nz, m_vert_kp_rx_negative
 
@@ -862,7 +838,7 @@ void move (void) {
 
 			.m_vert_kp_up_do
 				ld  de, -PLAYER_RX
-				ld  hl, (_player + 8) 		// player.vy 
+				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
 				// Limit, never get below -PLAYER_MAX_VX
@@ -887,7 +863,7 @@ void move (void) {
 
 			.m_vert_kp_down_do
 				ld  de, PLAYER_RX
-				ld  hl, (_player + 8) 		// player.vy 
+				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
 				// Limit, never get over PLAYER_MAX_VX
@@ -907,30 +883,26 @@ void move (void) {
 			.m_vert_kp_down_done
 
 			.m_vert_kp_vy_write
-				ld  (_player + 8), hl 		// player.vy
+				ld  (_player + 8), hl 			// player.vy
 
 			.m_vert_kp_done
 		#endasm
 	#else
 		// Apply gravity
-		/*
-		player.vy += PLAYER_G;
-		if (player.vy > PLAYER_MAX_VY_CAYENDO) player.vy = PLAYER_MAX_VY_CAYENDO;
-		*/
-
+		
 		#asm
 			.m_vert_gravity_do
-				ld  hl, (_player + 8) 		// player.vy
+				ld  hl, (_player + 8) 			// player.vy
 				ld  de, PLAYER_G 
 				add hl, de 
 
 				ld  de, PLAYER_MAX_VY_CAYENDO 
 
 				// if PLAYER_MAX_VY_CAYENDO < player.vy
-				call l_lt 					// C set if DE < HL 
+				call l_lt 						// C set if DE < HL 
 				jr  nc, m_vert_gravity_done
 
-				ex  de, hl 					// HL = PLAYER_MAX_VY_CAYENDO
+				ex  de, hl 						// HL = PLAYER_MAX_VY_CAYENDO
 
 			.m_vert_gravity_done
 				ld  (_player + 8), hl 
@@ -938,40 +910,7 @@ void move (void) {
 
 		#ifdef PLAYER_HAS_JUMP
 			// Make jump
-			/*
-			if (
-				#ifdef PLAYER_CAN_FIRE
-					((pad_this_frame & sp_UP) == 0)
-				#else
-					#ifdef BOTH_BUTTONS_JUMP
-						((pad_this_frame & sp_UP) == 0) ||
-					#endif
-					((pad_this_frame & sp_FIRE) == 0)
-				#endif
-				&& player.saltando == 0 && (player.possee || player.gotten)
-			) {
-				player.saltando = 1;
-				player.cont_salto = 0;
-				peta_el_beeper (3);
-			}
-
-			if (
-				#ifdef PLAYER_CAN_FIRE
-					((pad0 & sp_UP) == 0)
-				#else
-					((pad0 & sp_FIRE) == 0)
-				#endif
-			) {
-				if (player.saltando) {
-					player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto >> 1));
-					if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-					player.cont_salto ++; if (player.cont_salto == 8) player.saltando = 0;
-				}
-			} else {
-				player.saltando = 0;
-			}
-			*/
-
+		
 			#asm
 
 					ld  a, (_pad_this_frame)
@@ -985,19 +924,19 @@ void move (void) {
 						jr  z, m_jump_start_done
 					#endif
 
-					ld  a, (_player + 19)			// player.saltando 
+					ld  a, (_player + 19)		// player.saltando 
 					or  a
 					jr  nz, m_jump_start_done 
 
-					ld  a, (_player + 26) 			// player.possee 
+					ld  a, (_player + 26) 		// player.possee 
 					ld  c, a 
-					ld  a, (_player + 25) 			// player.gotten 
+					ld  a, (_player + 25) 		// player.gotten 
 					or  c
 					jr  z, m_jump_start_done 
 
-					ld  (_player + 19), a  			// player.saltando
+					ld  (_player + 19), a  		// player.saltando
 					xor a 
-					ld  (_player + 14), a  			// player.cont_salto
+					ld  (_player + 14), a  		// player.cont_salto
 
 					ld  l, 3 
 					call _peta_el_beeper
@@ -1006,7 +945,7 @@ void move (void) {
 					ld  a, (_pad0)
 					#ifdef PLAYER_CAN_FIRE
 						and sp_UP
-						jr  nz, m_jump_not_pressing
+						jr  nz, m_jump_perform_not_pressing
 					#else
 						and #(sp_UP | sp_FIRE)
 						cp  #(sp_UP | sp_FIRE)
@@ -1047,7 +986,7 @@ void move (void) {
 
 				.m_jump_perform_not_pressing
 					xor a 
-					ld  (_player + 19), a 			// player.saltando
+					ld  (_player + 19), a 		// player.saltando
 
 				.m_jump_perform_done
 
@@ -1061,25 +1000,13 @@ void move (void) {
 
 	// Vertical thrust: apply vy to y
 
-	/*
-	player.y += player.vy;
-	if (player.y < 0) player.y = 0;
-	if (player.y > 144*64) player.y = 144*64;
-
 	#asm
-			ld  hl, (_player + 2)		// player.y
-			call HLshr6_A
-			ld  (_gpy), A
-	#endasm
-	*/
+			ld  hl, (_player + 8) 				// player.vy
+			ex  de, hl  						// DE = player.vy
 
-	#asm
-			ld  hl, (_player + 8) 		// player.vy
-			ex  de, hl  				// DE = player.vy
+			ld  hl, (_player + 2)				// player.y
 
-			ld  hl, (_player + 2)		// player.y
-
-			add hl, de 					// HL = player.y + player.vy
+			add hl, de 							// HL = player.y + player.vy
 
 			bit 7, h 			
 			jr  z, m_vert_thrust_notneg
@@ -1093,13 +1020,13 @@ void move (void) {
 			// if (player.y > 144*64) player.y = 144*64;
 			// if (144*64 < player.y) ...
 			ld  de, 144*64
-			call l_lt  					// c if DE < HL
+			call l_lt  							// c if DE < HL
 			jr  nc, m_vert_thurst_write
 
-			ex  de, hl 					// HL = 144 * 64
+			ex  de, hl 							// HL = 144 * 64
 
 		.m_vert_thurst_write
-			ld  (_player + 2), hl 		// player.y
+			ld  (_player + 2), hl 				// player.y
 			call HLshr6_A
 			ld  (_gpy), A
 	#endasm
@@ -1107,75 +1034,10 @@ void move (void) {
 	// Collide vertical.
 	// Includes evil tile detection, open lock & push boxes
 
-	/*
-	pvy_total = player.vy + ptgmy;
-	if (pvy_total != 0) {
-		_x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
-		if (pvy_total > 0) {
-			// Collide down
-
-			_y = _y2 = (gpy + 15) >> 4;
-			cm_two_points ();
-
-			if (
-				#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS
-					(at1 & 12) || (at2 & 12)
-				#else
-					((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
-				#endif
-			) {
-				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
-					check_lock_or_box_vert ();
-				#endif
-
-				player.vy = 0;
-				#asm 
-						ld  a, (_gpy)
-						and 0xf0 
-						ld  (_gpy), a 
-						call Ashl16_HL
-						ld  (_player + 2), HL 	// player.y
-				#endasm
-				#ifndef PLAYER_MOGGY_STYLE
-					player.possee = 1;
-				#endif
-			}
-
-		} else {
-			// Collide up
-
-			_y = _y2 = (gpy + 4) >> 4;
-			cm_two_points ();
-
-			if ((at1 & 8) || (at2 & 8)) {
-				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
-					check_lock_or_box_vert ();
-				#endif
-
-				player.vy = 0;
-				#asm 
-						ld  a, (_gpy)
-						and 0xf0
-						add 12 
-						ld  (_gpy), a 
-						call Ashl16_HL
-						ld  (_player + 2), HL 
-				#endasm 
-			}
-		}
-
-		#ifndef DEACTIVATE_EVIL_TILE
-			if ((at1 & 1) || (at2 & 1)) {
-				hit = 1;
-			}
-		#endif
-	}
-	*/
-
 	#asm
 			ld  hl, (_ptgmy)
 			ex  de, hl 
-			ld  hl, (_player + 8) 		// player.vy
+			ld  hl, (_player + 8) 				// player.vy
 			add hl, de
 			ld  (_pvy_total), hl
 
@@ -1226,7 +1088,7 @@ void move (void) {
 
 			// Collision down check is simpler for genital or if you don't have 8s on 4s:
 
-		#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS
+		#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS || defined PLAYER_CUSTOM_VENG
 				// (at1 & 12) || (at2 & 12)
 				ld  a, (_at1)
 				and 12
@@ -1271,7 +1133,7 @@ void move (void) {
 		#endif
 
 		.m_vert_coll_down_adjust
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && (defined PLAYER_MOGGY_STYLE || defined PLAYER_CUSTOM_VENG)
 					call _check_lock_or_box_vert
 			#endif
 
@@ -1284,6 +1146,8 @@ void move (void) {
 			call Ashl16_HL
 			ld  (_player + 2), HL 	// player.y
 
+			ld  a, WALL_DOWN
+			ld  (_wall), a
 
 		#ifndef PLAYER_MOGGY_STYLE
 				ld  a, 1
@@ -1317,7 +1181,7 @@ void move (void) {
 
 		.m_vert_coll_up_adjust
 
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && (defined PLAYER_MOGGY_STYLE || defined PLAYER_CUSTOM_VENG)
 					call _check_lock_or_box_vert
 			#endif	
 
@@ -1330,6 +1194,9 @@ void move (void) {
 			ld  (_gpy), a 
 			call Ashl16_HL
 			ld  (_player + 2), HL 
+
+			ld  a, WALL_UP
+			ld  (_wall), a
 
 		.m_vert_coll_checks_done
 
@@ -1352,11 +1219,8 @@ void move (void) {
 	#endasm
 
 	#ifndef PLAYER_MOGGY_STYLE
-		/*
-		_y = _y2 = (gpy + 16) >> 4;
-		cm_two_points ();
-		player.possee = (at1 & 12) || (at2 & 12);
-		*/
+		// Calculate if possee
+
 		#asm
 				ld  a, (_gpy)
 				add 16
@@ -1392,182 +1256,138 @@ void move (void) {
 	//                     Horizontal
 	// =================================================
 
-	// Read keyboard and apply A/R to VX
-	
-	/*
-	if ((pad0 & sp_LEFT) && (pad0 & sp_RIGHT)) {
-		if (player.vx > 0) {
-			player.vx -= PLAYER_RX;
-			if (player.vx < 0) player.vx = 0;
-		} else if (player.vx < 0) {
-			player.vx += PLAYER_RX;
-			if (player.vx > 0) player.vx = 0;
-		}
-	} else {
-		if ((pad0 & sp_LEFT) == 0) {
-			player.vx -= PLAYER_AX;
-			if (player.vx < -PLAYER_MAX_VX) player.vx = -PLAYER_MAX_VX;
+	// Modify Velocity
+
+	#ifdef PLAYER_CUSTOM_HENG
+		player_custom_heng ();
+	#else
+
+		// Read keyboard and apply A/R to VX
+		// Nomenclature: m -> move, horz->axis, kp->keypress
+
+		#asm
+				ld  a, (_pad0)
+				ld  c, a
+
+			// If neither LEFT nor RIGHT pressed, apply RX
+
+				// if ((pad0 & sp_LEFT) && (pad0 & sp_RIGHT)) {
+				and sp_LEFT
+				jr  z, m_horz_kp_left_or_right_p
+
+				ld  a, c 
+				and sp_RIGHT
+				jr  z, m_horz_kp_left_or_right_p
+
+				// Not left or right pressed, apply horizontal RX
+				// Depending on the current vx sign, add or subtract:
+
+				// if (player.vx > 0)
+				ld  hl, (_player + 6) 		// player.vx 
+
+				// If player.vx is zero do nothing!
+				ld  a, h 
+				or  l 
+				jr  z, m_horz_kp_done
+
+				bit 7, h 					// bit 7 = 0 positive, 1 negative
+
+				jr  nz, m_horz_kp_rx_negative
+
+			.m_horz_kp_rx_positive
+				ld  de, -PLAYER_RX
+				add hl, de 
+
+				// Changed sign?
+				bit 7, h
+				jr  z, m_horz_kp_vx_write
+
+				ld  hl, 0
+				jr  m_horz_kp_vx_write
+
+			.m_horz_kp_rx_negative
+				ld  de, PLAYER_RX
+				add hl, de 
+
+				// Changed sign?
+				bit 7, h
+				jr  nz, m_horz_kp_vx_write
+
+				ld  hl, 0
+				jr  m_horz_kp_vx_write
+
+			.m_horz_kp_left_or_right_p
+
+			// LEFT or RIGHT pressed, which?
+				ld  a, 1 
+				ld  (_thrusting), a
+
+				ld  a, c
+				and sp_LEFT
+				jr  nz, m_horz_kp_left_done
+
+			.m_horz_kp_left_do
+				ld  de, -PLAYER_RX
+				ld  hl, (_player + 6) 		// player.vx 
+				add hl, de 
+
+				// Limit, never get below -PLAYER_MAX_VX
+				// if (player.vx < -PLAYER_MAX_VX) player.vx = -PLAYER_MAX_VX;
+				// if (-PLAYER_MAX_VX > player.vx) ...
+				ld  de, -PLAYER_MAX_VX
+				call l_gt 						// C if DE > HL
+				jr  nc, m_horz_kp_left_facing
+
+				ex  de, hl 						// HL = -PLAYER_MAX_VX
+
+			.m_horz_kp_left_facing
 			#ifdef PLAYER_MOGGY_STYLE
-				player.facing = GENITAL_FACING_LEFT;
+					ld  a, GENITAL_FACING_LEFT
 			#else
-				player.facing = 4;
+		 			ld  a, 4
 			#endif
-		}
+				ld  (_player + 22), a 			// facing
+				jr  m_horz_kp_vx_write
 
-		if ((pad0 & sp_RIGHT) == 0) {
-			player.vx += PLAYER_AX;
-			if (player.vx > PLAYER_MAX_VX) player.vx = PLAYER_MAX_VX;
+			.m_horz_kp_left_done
+
+				ld  a, c
+				and sp_RIGHT
+				jr  nz, m_horz_kp_right_done
+
+			.m_horz_kp_right_do
+				ld  de, PLAYER_RX
+				ld  hl, (_player + 6) 		// player.vx 
+				add hl, de 
+
+				// Limit, never get over PLAYER_MAX_VX
+				// if (player.vx > PLAYER_MAX_VX) player.vx = PLAYER_MAX_VX;
+				// if (PLAYER_MAX_VX < player.vx) ...
+				ld  de, PLAYER_MAX_VX
+				call l_lt 						// C if DE > HL
+				jr  nc, m_horz_kp_right_facing
+
+				ex  de, hl 						// HL = PLAYER_MAX_VX
+
+			.m_horz_kp_right_facing
 			#ifdef PLAYER_MOGGY_STYLE
-				player.facing = GENITAL_FACING_RIGHT;
+					ld  a, GENITAL_FACING_RIGHT
 			#else
-				player.facing = 0;
+		 			ld  a, 0
 			#endif
-		}
+				ld  (_player + 22), a 			// facing
+				//jr  m_horz_kp_vx_write
 
-		thrusting = 1;
-	}
-	*/
-	// Nomenclature: m -> move, horz->axis, kp->keypress
+			.m_horz_kp_right_done
 
-	#asm
-			ld  a, (_pad0)
-			ld  c, a
+			.m_horz_kp_vx_write
+				ld  (_player + 6), hl 		// player.vx
 
-		// If neither LEFT nor RIGHT pressed, apply RX
-
-			// if ((pad0 & sp_LEFT) && (pad0 & sp_RIGHT)) {
-			and sp_LEFT
-			jr  z, m_horz_kp_left_or_right_p
-
-			ld  a, c 
-			and sp_RIGHT
-			jr  z, m_horz_kp_left_or_right_p
-
-			// Not left or right pressed, apply horizontal RX
-			// Depending on the current vx sign, add or subtract:
-
-			// if (player.vx > 0)
-			ld  hl, (_player + 6) 		// player.vx 
-
-			// If player.vx is zero do nothing!
-			ld  a, h 
-			or  l 
-			jr  z, m_horz_kp_done
-
-			bit 7, h 					// bit 7 = 0 positive, 1 negative
-
-			jr  nz, m_horz_kp_rx_negative
-
-		.m_horz_kp_rx_positive
-			ld  de, -PLAYER_RX
-			add hl, de 
-
-			// Changed sign?
-			bit 7, h
-			jr  z, m_horz_kp_vx_write
-
-			ld  hl, 0
-			jr  m_horz_kp_vx_write
-
-		.m_horz_kp_rx_negative
-			ld  de, PLAYER_RX
-			add hl, de 
-
-			// Changed sign?
-			bit 7, h
-			jr  nz, m_horz_kp_vx_write
-
-			ld  hl, 0
-			jr  m_horz_kp_vx_write
-
-		.m_horz_kp_left_or_right_p
-
-		// LEFT or RIGHT pressed, which?
-			ld  a, 1 
-			ld  (_thrusting), a
-
-			ld  a, c
-			and sp_LEFT
-			jr  nz, m_horz_kp_left_done
-
-		.m_horz_kp_left_do
-			ld  de, -PLAYER_RX
-			ld  hl, (_player + 6) 		// player.vx 
-			add hl, de 
-
-			// Limit, never get below -PLAYER_MAX_VX
-			// if (player.vx < -PLAYER_MAX_VX) player.vx = -PLAYER_MAX_VX;
-			// if (-PLAYER_MAX_VX > player.vx) ...
-			ld  de, -PLAYER_MAX_VX
-			call l_gt 						// C if DE > HL
-			jr  nc, m_horz_kp_left_facing
-
-			ex  de, hl 						// HL = -PLAYER_MAX_VX
-
-		.m_horz_kp_left_facing
-		#ifdef PLAYER_MOGGY_STYLE
-				ld  a, GENITAL_FACING_LEFT
-		#else
-	 			ld  a, 4
-		#endif
-			ld  (_player + 22), a 			// facing
-			jr  m_horz_kp_vx_write
-
-		.m_horz_kp_left_done
-
-			ld  a, c
-			and sp_RIGHT
-			jr  nz, m_horz_kp_right_done
-
-		.m_horz_kp_right_do
-			ld  de, PLAYER_RX
-			ld  hl, (_player + 6) 		// player.vx 
-			add hl, de 
-
-			// Limit, never get over PLAYER_MAX_VX
-			// if (player.vx > PLAYER_MAX_VX) player.vx = PLAYER_MAX_VX;
-			// if (PLAYER_MAX_VX < player.vx) ...
-			ld  de, PLAYER_MAX_VX
-			call l_lt 						// C if DE > HL
-			jr  nc, m_horz_kp_right_facing
-
-			ex  de, hl 						// HL = PLAYER_MAX_VX
-
-		.m_horz_kp_right_facing
-		#ifdef PLAYER_MOGGY_STYLE
-				ld  a, GENITAL_FACING_RIGHT
-		#else
-	 			ld  a, 0
-		#endif
-			ld  (_player + 22), a 			// facing
-			//jr  m_horz_kp_vx_write
-
-		.m_horz_kp_right_done
-
-		.m_horz_kp_vx_write
-			ld  (_player + 6), hl 		// player.vx
-
-		.m_horz_kp_done
-	#endasm
-
-	// Horizontal thrust: apply vx to x
-
-	/*
-	player.x += player.vx;
-
-	#ifndef PLAYER_MOGGY_STYLE
-		player.x += ptgmx;
+			.m_horz_kp_done
+		#endasm
 	#endif
 
-	if (player.x < 0) player.x = 0;
-	if (player.x > 224*64) player.x = 224*64;
-
-	#asm
-			ld  hl, (_player)		// player.x
-			call HLshr6_A
-			ld  (_gpx), A
-	#endasm
-	*/
+	// Horizontal thrust: apply vx to x
 
 	#asm
 			ld  hl, (_player + 6) 		// player.vx
@@ -1608,64 +1428,6 @@ void move (void) {
 
 	// Collide horizontal.
 	// Includes evil tile detection, open lock & push boxes
-
-	/*
-	pvx_total = player.vx + ptgmx;
-	if (pvx_total != 0) {
-		_y = (gpy + 4) >> 4; _y2 = (gpy + 15) >> 4;
-		if (pvx_total > 0) {
-			// Collide right
-
-			_x = _x2 = (gpx + 12) >> 4;
-			cm_two_points ();
-
-			if ((at1 & 8) || (at2 & 8)) {
-				#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
-					check_lock_or_box_horz ();
-				#endif
-
-				player.vx = 0;
-				#asm 
-						ld  a, (_gpx)
-						and 0xf0 
-						add 4
-						ld  (_gpx), a 
-						call Ashl16_HL
-						ld  (_player), HL 	// player.x
-				#endasm
-			}
-
-		} else if (pvx_total < 0) {
-			// Collide left
-
-			_x = _x2 = (gpx + 4) >> 4;
-			cm_two_points ();
-
-			if ((at1 & 8) || (at2 & 8)) {
-				#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
-					check_lock_or_box_horz ();
-				#endif
-
-				player.vx = 0;
-				#asm 
-						ld  a, (_gpx)
-						and 0xf0
-						add 12 
-						ld  (_gpx), a 
-						call Ashl16_HL
-						ld  (_player), HL 
-				#endasm 
-			}
-		}
-
-		#ifndef DEACTIVATE_EVIL_TILE
-			if ((at1 & 1) || (at2 & 1)) {
-				hit = 1;
-				player.vy = pvy_total;
-			}
-		#endif
-	}
-	*/
 
 	#asm
 			ld  hl, (_ptgmx)
@@ -1743,6 +1505,9 @@ void move (void) {
 			call Ashl16_HL
 			ld  (_player + 0), HL 	// player.x
 
+			ld  a, WALL_RIGHT
+			ld  (_wall), a
+
 			jr  m_horz_coll_checks_done
 
 		.m_horz_coll_left
@@ -1784,6 +1549,9 @@ void move (void) {
 			call Ashl16_HL
 			ld  (_player + 0), HL 
 
+			ld  a, WALL_LEFT
+			ld  (_wall), a
+
 		.m_horz_coll_checks_done
 
 		#ifndef DEACTIVATE_EVIL_TILE
@@ -1824,47 +1592,45 @@ void move (void) {
 	#ifndef DEACTIVATE_EVIL_TILE
 
 		// Evil tile hit?
-		/*
-		if (hit) {
-			// change sign of velocity with higher magnitude
-			if (rdi) {
-				player.vx = -pvx_total;
-			} else {
-				player.vy = -pvy_total;
-			}
-
-			peta_el_beeper (2);
-
-			player.drain_amount = 1;
-			player.is_dead = PLAYER_KILLED_BY_BG;
-		}
-		*/
 
 		#asm
 				ld  a, (_hit)
 				or  a 
 				jr  z, m_evil_tile_hit_done
-			
-			.m_evil_tile_hit_do
-				ld  a, (_rdi) 
-				or  a
-				jr  z, m_evil_tile_hit_v
+		
+			#ifdef PLAYER_CUSTOM_BG_HIT
+					call _custom_bg_hit
+			#else
 
-			.m_evil_tile_hit_h
-				ld  hl, (_pvx_total)
-				call l_neg 
-				ld  (_player + 6), hl 		// player.vx
-				jr  m_evil_tile_vel_set
+				.m_evil_tile_hit_do
+					ld  a, (_rdi) 
+					or  a
+					jr  z, m_evil_tile_hit_v
 
-			.m_evil_tile_hit_v
-				ld  hl, (_pvy_total)
-				call l_neg 
-				ld  (_player + 8), hl 		// player.vy
-				
-			.m_evil_tile_vel_set
+				.m_evil_tile_hit_h
+					ld  hl, (_pvx_total)
+					call l_neg 
+					ld  (_player + 6), hl 		// player.vx
+					jr  m_evil_tile_vel_set
+
+				.m_evil_tile_hit_v
+					ld  hl, (_pvy_total)
+					call l_neg 
+					ld  (_player + 8), hl 		// player.vy
+					
+				.m_evil_tile_vel_set
+
+			#endif
+
+			#ifdef PLAYER_FLICKERS
+					// Cancel if flickering
+					ld  a, (_player + 23)			// player.estado 
+					or  a 
+					jr  nz, m_evil_tile_hit_done
+			#endif 
+					
 				ld  l, 2 
 				call _peta_el_beeper 
-
 				ld  a, 1 
 				ld  (_player + 46), a		// player.drain_amount
 				ld  a, PLAYER_KILLED_BY_BG
@@ -1929,7 +1695,10 @@ void move (void) {
 	//                       Select frame
 	// =================================================
 
-	#ifdef PLAYER_MOGGY_STYLE
+	#ifdef PLAYER_CUSTOM_FRAME
+		player.frame = player_custom_frame ();
+
+	#elif defined PLAYER_MOGGY_STYLE
 		/*
 		player.frame = player.facing;
 		if (thrusting) player.frame += (((rdi ? gpx : gpy) >> 3) & 1); 
@@ -1962,27 +1731,6 @@ void move (void) {
 		#endasm
 
 	#else
-		/*
-		if (!(player.possee || player.gotten)) {
-			player.frame = player.facing + 3;
-		} else {
-			//if ((player.vx != 0) && !player.gotten) {
-			if (thrusting && player.vx) {
-				player.frame = player.facing + 
-				#ifdef PLAYER_ALTERNATE_ANIMATION
-					(gpx >> 3) % 3;
-				#else
-					player_walk_cycle[((gpx >> 3) & 1)];
-				#endif
-			} else {
-				#ifdef PLAYER_ALTERNATE_ANIMATION
-					player.frame = player.facing;
-				#else
-					player.frame = player.facing + 1;
-				#endif
-			}
-		}
-		*/
 
 		#asm
 				// if player.possee == 0 && player.gotten == 0
@@ -4158,6 +3906,7 @@ void mueve_bicharracos (void) {
 		._en_bg_collision_vert_done
 			ld  l, 1
 			ret
+	#endif
 
 	// ***********************************************************************
 	// en_lineal_do - Moves current enemy linearly. You can call this from 
@@ -4169,149 +3918,149 @@ void mueve_bicharracos (void) {
 	//     L = 1 if collided.
 	// ***********************************************************************
 
-		.en_lineal_do
-		
-		// ***************
-		// HORIZONTAL AXIS
-		// ***************
-		.en_linear_horizontal_axis
+	.en_lineal_do
+	
+	// ***************
+	// HORIZONTAL AXIS
+	// ***************
+	.en_linear_horizontal_axis
+		ld  a, (__en_mx)
+		or  a
+		jr  z, en_linear_horizontal_axis_done
+
+		// Move: en_x += _en_mx;
+		ld  c, a
+		ld  a, (__en_x)
+		add c 
+		ld  (__en_x), a
+
+	// Now check horz. boundaries
+	.en_linear_horz_bounds
+
+		// Left of x1
+		// _en_x <= _en_x1 -> _en_x1 >= _en_x
+		ld  a, (__en_x)
+		ld  c, a
+		ld  a, (__en_x1)
+		cp  c
+		jr  c, horz_limit_skip_1
+
+		ld  a, (__en_x1)
+		ld  (__en_x), a
+
+		ld  a, (__en_mx)
+		call _abs_a
+		ld  (__en_mx), a
+
+		jr  horz_limit_skip_2
+
+	.horz_limit_skip_1
+
+		// Right of x2
+		// _en_x >= _en_x2
+		ld  a, (__en_x2)
+		ld  c, a
+		ld  a, (__en_x)
+		cp  c
+		jr  c, horz_limit_skip_2
+
+		ld  a, (__en_x2)
+		ld  (__en_x), a
+
+		ld  a, (__en_mx)
+		call _abs_a
+		neg
+		ld  (__en_mx), a
+
+	.horz_limit_skip_2
+
+	.en_linear_horizontal_axis_done
+
+	#ifdef PLAYER_PUSH_BOXES
+			// Check for collisions.
+			
+			call en_bg_collision_horz
+			xor a 
+			or  l
+			jr  z, en_linear_horz_no_coll
+
 			ld  a, (__en_mx)
-			or  a
-			jr  z, en_linear_horizontal_axis_done
-
-			// Move: en_x += _en_mx;
-			ld  c, a
-			ld  a, (__en_x)
-			add c 
-			ld  (__en_x), a
-
-		// Now check horz. boundaries
-		.en_linear_horz_bounds
-
-			// Left of x1
-			// _en_x <= _en_x1 -> _en_x1 >= _en_x
-			ld  a, (__en_x)
-			ld  c, a
-			ld  a, (__en_x1)
-			cp  c
-			jr  c, horz_limit_skip_1
-
-			ld  a, (__en_x1)
-			ld  (__en_x), a
-
-			ld  a, (__en_mx)
-			call _abs_a
-			ld  (__en_mx), a
-
-			jr  horz_limit_skip_2
-
-		.horz_limit_skip_1
-
-			// Right of x2
-			// _en_x >= _en_x2
-			ld  a, (__en_x2)
-			ld  c, a
-			ld  a, (__en_x)
-			cp  c
-			jr  c, horz_limit_skip_2
-
-			ld  a, (__en_x2)
-			ld  (__en_x), a
-
-			ld  a, (__en_mx)
-			call _abs_a
 			neg
 			ld  (__en_mx), a
 
-		.horz_limit_skip_2
-
-		.en_linear_horizontal_axis_done
-
-		#ifdef PLAYER_PUSH_BOXES
-				// Check for collisions.
-				
-				call en_bg_collision_horz
-				xor a 
-				or  l
-				jr  z, en_linear_horz_no_coll
-
-				ld  a, (__en_mx)
-				neg
-				ld  (__en_mx), a
-
-			.en_linear_horz_no_coll
-		#endif
-
-		// *************
-		// VERTICAL AXIS
-		// *************
-		.en_linear_vertical_axis
-			ld  a, (__en_my) 
-			or  a 
-			jr  z, en_linear_vertical_axis_done
-
-			// Move: _en_y += _en_my;
-			ld  c, a
-			ld  a, (__en_y)
-			add c 
-			ld  (__en_y), a
-
-		// Now check vert. boundaries
-		.en_linear_vert_bounds
-
-			// _en_y <= _en_y1 -> _en_y1 >= _en_y
-			ld  a, (__en_y)
-			ld  c, a
-			ld  a, (__en_y1)
-			cp  c
-			jr  c, vert_limit_skip_1
-
-			ld  a, (__en_y1)
-			ld  (__en_y), a
-
-			ld  a, (__en_my)
-			call _abs_a
-			ld  (__en_my), a
-
-			jr  vert_limit_skip_2
-
-		.vert_limit_skip_1
-
-			// _en_y >= _en_y2
-			ld  a, (__en_y2)
-			ld  c, a
-			ld  a, (__en_y)
-			cp  c
-			jr  c, vert_limit_skip_2
-
-			ld  a, (__en_y2)
-			ld  (__en_y), a
-
-			ld  a, (__en_my)
-			call _abs_a
-			neg
-			ld  (__en_my), a
-
-		.vert_limit_skip_2		
-
-		.en_linear_vertical_axis_done
-
-		#ifdef PLAYER_PUSH_BOXES
-				// Check for collisions.
-				
-				call en_bg_collision_vert
-				xor a 
-				or  l
-				jr  z, en_linear_vert_no_coll
-
-				ld  a, (__en_my)
-				neg
-				ld  (__en_my), a
-				
-			.en_linear_vert_no_coll
-		#endif
-
-		.en_linear_done
-			ret
+		.en_linear_horz_no_coll
 	#endif
+
+	// *************
+	// VERTICAL AXIS
+	// *************
+	.en_linear_vertical_axis
+		ld  a, (__en_my) 
+		or  a 
+		jr  z, en_linear_vertical_axis_done
+
+		// Move: _en_y += _en_my;
+		ld  c, a
+		ld  a, (__en_y)
+		add c 
+		ld  (__en_y), a
+
+	// Now check vert. boundaries
+	.en_linear_vert_bounds
+
+		// _en_y <= _en_y1 -> _en_y1 >= _en_y
+		ld  a, (__en_y)
+		ld  c, a
+		ld  a, (__en_y1)
+		cp  c
+		jr  c, vert_limit_skip_1
+
+		ld  a, (__en_y1)
+		ld  (__en_y), a
+
+		ld  a, (__en_my)
+		call _abs_a
+		ld  (__en_my), a
+
+		jr  vert_limit_skip_2
+
+	.vert_limit_skip_1
+
+		// _en_y >= _en_y2
+		ld  a, (__en_y2)
+		ld  c, a
+		ld  a, (__en_y)
+		cp  c
+		jr  c, vert_limit_skip_2
+
+		ld  a, (__en_y2)
+		ld  (__en_y), a
+
+		ld  a, (__en_my)
+		call _abs_a
+		neg
+		ld  (__en_my), a
+
+	.vert_limit_skip_2		
+
+	.en_linear_vertical_axis_done
+
+	#ifdef PLAYER_PUSH_BOXES
+			// Check for collisions.
+			
+			call en_bg_collision_vert
+			xor a 
+			or  l
+			jr  z, en_linear_vert_no_coll
+
+			ld  a, (__en_my)
+			neg
+			ld  (__en_my), a
+			
+		.en_linear_vert_no_coll
+	#endif
+
+	.en_linear_done
+		ret
+			
 #endasm

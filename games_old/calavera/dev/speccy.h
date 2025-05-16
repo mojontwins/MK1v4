@@ -610,26 +610,22 @@ void pad_read (void) {
 	pad_this_frame = (~pad_this_frame) | pad1;
 }
 
-void espera_activa (int espera) {
-	// Waits until "espera" halts have passed 
-	// or a key has been pressed.
-
-	pti = any_key ();
-	while (espera--)  {
-		#if defined MODE_128K_DUAL || defined MIN_FAPS_PER_FRAME
-			#asm
-					halt
-			#endasm
-		#else
-			rdd = 250; do { rdi = 1; } while (rdd --);
-		#endif
-
-		ptj = any_key ();
-		if (ptj && pti == 0) {
-			break;
-		}
-		pti = ptj;
+void no_break (void) {
+	for (gpit = 0; gpit < 40; gpit ++) {
+		#asm 
+			halt
+		#endasm
 	}
+}
+
+void espera_activa (int espera) {
+	do {
+		pad_read ();
+		#asm
+				halt
+		#endasm
+		if (pad_this_frame != 0xff) break;
+	} while (-- espera);
 }
 
 void cortina () {
@@ -1458,3 +1454,18 @@ void __FASTCALL__ peta_el_beeper (unsigned char n) {
 		call playsfx
 	#endasm
 }
+
+#ifdef DEBUG
+	unsigned char drda, drdb;
+	unsigned char hex_code (unsigned char n) {
+		if (n < 10) return (n + 16);
+		else return n + 23;
+	}
+
+	void print_hex (unsigned char x, unsigned char y, unsigned char h) {
+		drda = hex_code (h >> 4); drdb = hex_code (h & 15);
+		sp_PrintAtInv (y, x, 71, drda);
+		sp_PrintAtInv (y, 1 + x, 71, drdb);
+	}
+#endif
+	
