@@ -2677,8 +2677,6 @@ void draw_scr (void) {
 				call enems_get_values
 		#endasm
 
-		//_en_t = malotes [enoffsmasi].t;
-
 		switch (_en_t) {
 			case 1:
 			case 2:

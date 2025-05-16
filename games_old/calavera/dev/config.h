@@ -57,10 +57,16 @@
 #define PLAYER_BULLET_Y_OFFSET		4		// vertical offset from the player's top.
 #define ENEMS_LIFE_GAUGE			5		// Amount of shots needed to kill enemies.
 
+// Random Respawn Fanties
+// ----------------------
 #define RANDOM_RESPAWN						// If defined, automatic flying enemies spawn on killed enemies
 #define FANTY_MAX_V 				256 	// Flying enemies max speed.
 #define FANTY_A 					12		// Flying enemies acceleration.
 #define FANTIES_LIFE_GAUGE			10		// Amount of shots needed to kill flying enemies.
+
+// Make your own!
+// --------------
+//#define ENABLE_CUSTOM_ENEMS					// Create your custom enemies in `custom.h`
 
 // Scripting
 // ---------
@@ -126,6 +132,7 @@
 #define PLAYER_ALTERNATE_ANIMATION		// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 //#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16
+//#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
 
 // ============================================================================
 // IV. Player movement configuration

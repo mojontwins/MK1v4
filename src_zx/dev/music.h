@@ -118,7 +118,7 @@
 		LD   B,0
 		XOR  A
 		EX   AF,AF
-		XOR  A
+		XOR  7
 		LD   IXH,D
 		LD   D,$10
 	.EAE5

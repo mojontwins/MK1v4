@@ -1191,6 +1191,14 @@ void pad_read (void) {
 	pad_this_frame = (~pad_this_frame) | pad1;
 }
 
+void no_break (void) {
+	for (gpit = 0; gpit < 255; gpit ++) {
+		#asm 
+			halt
+		#endasm
+	}
+}
+
 void espera_activa (int espera) {
 	do {
 		pad_read ();
