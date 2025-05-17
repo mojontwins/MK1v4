@@ -56,6 +56,7 @@
 #define MAX_BULLETS 				3		// Max number of bullets on screen. Be careful!.
 #define PLAYER_BULLET_Y_OFFSET		4		// vertical offset from the player's top.
 #define ENEMS_LIFE_GAUGE			5		// Amount of shots needed to kill enemies.
+#define PLAYER_AX_RECOIL 			96		// Push player back a bit when firing
 
 // Random Respawn Fanties
 // ----------------------

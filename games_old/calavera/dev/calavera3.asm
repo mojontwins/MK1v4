@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri May 16 19:07:42 2025
+;	Module compile time: Sat May 17 09:24:18 2025
 
 
 
@@ -5032,6 +5032,24 @@
 	ld (hl), a
 	ld	hl,6	;const
 	call	_peta_el_beeper
+	ld	hl,_player+6
+	push	hl
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	push	de
+	ld	a,(_player+22)
+	and	a
+	jp	z,i_32
+	ld	hl,96	;const
+	jp	i_33
+.i_32
+	ld	hl,65440	;const
+.i_33
+	pop	de
+	add	hl,de
+	pop	de
+	call	l_pint
 	ret
 
 
@@ -5039,14 +5057,14 @@
 ._player_hidden
 	ld	a,(_player+26)
 	and	a
-	jp	z,i_33
+	jp	z,i_35
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	call	l_eq
-	jr	c,i_34_i_33
-.i_33
-	jp	i_32
-.i_34_i_33
+	jr	c,i_36_i_35
+.i_35
+	jp	i_34
+.i_36_i_35
 	ld	hl,(_gpx)
 	ld	h,0
 	ld	bc,8
@@ -5073,7 +5091,7 @@
 	ret
 
 
-.i_32
+.i_34
 	ld	hl,0 % 256	;const
 	ret
 
@@ -5227,15 +5245,6 @@
 	ld (_player + 2), hl
 	call HLshr6_A
 	ld (_gpy), A
-	ld hl, (_ptgmy)
-	ex de, hl
-	ld hl, (_player + 8)
-	add hl, de
-	ld (_pvy_total), hl
-	ld a, h
-	or l
-	jp z, m_vert_coll_done
-	.m_vert_coll_do
 	ld a, (_gpx)
 	ld c, a
 	add 4
@@ -5251,6 +5260,15 @@
 	srl a
 	srl a
 	ld (__x2), a
+	ld hl, (_ptgmy)
+	ex de, hl
+	ld hl, (_player + 8)
+	add hl, de
+	ld (_pvy_total), hl
+	ld a, h
+	or l
+	jp z, m_vert_coll_done
+	.m_vert_coll_do
 	bit 7, h
 	jr nz, m_vert_coll_up
 	.m_vert_coll_down
@@ -5573,7 +5591,7 @@
 	ld	a,h
 	or	l
 	call	z,_fire_bullet
-.i_35
+.i_37
 	ld a, (_gpx)
 	add 8
 	srl a
@@ -5603,15 +5621,6 @@
 	ld hl, 5
 	call _script
 	.nospecial
-	ld	a,(_player+26)
-	and	a
-	jp	z,i_36
-	ld	hl,84	;const
-	jp	i_37
-.i_36
-	ld	hl,69	;const
-.i_37
-	call	_cpc_Border
 	ld c, 3
 	ld a, (_player + 26)
 	ld b, a
@@ -7970,7 +7979,6 @@
 	XDEF	_flag_old
 	XDEF	_wall
 	LIB	cpc_UpdScr
-	LIB	cpc_PutTrSp16x16TileMapPxM1LUT
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
 	defc	_en_an_next_frame	=	54796
@@ -7997,7 +8005,6 @@
 	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
 	XDEF	_game_ending
-	LIB	cpc_MakeM1RotationLUTs
 	LIB	cpc_PutTrSp4x8TileMapPx
 	LIB	cpc_PutTrSp8x8TileMapPx
 	LIB	cpc_PutTrSp8x16TileMapPx

@@ -1149,11 +1149,6 @@ void move (void) {
 			ld  a, WALL_DOWN
 			ld  (_wall), a
 
-		#ifndef PLAYER_MOGGY_STYLE
-				ld  a, 1
-				ld  (_player + 26), a 	// player.possee
-		#endif
-
 			jr  m_vert_coll_checks_done
 
 		.m_vert_coll_up
@@ -1344,7 +1339,7 @@ void move (void) {
 			#ifdef PLAYER_MOGGY_STYLE
 					ld  a, GENITAL_FACING_LEFT
 			#else
-		 			ld  a, 4
+		 			ld  a, SIDEVIEW_FACING_LEFT
 			#endif
 				ld  (_player + 22), a 			// facing
 				jr  m_horz_kp_vx_write
@@ -1373,7 +1368,7 @@ void move (void) {
 			#ifdef PLAYER_MOGGY_STYLE
 					ld  a, GENITAL_FACING_RIGHT
 			#else
-		 			ld  a, 0
+		 			ld  a, SIDEVIEW_FACING_RIGHT
 			#endif
 				ld  (_player + 22), a 			// facing
 				//jr  m_horz_kp_vx_write
@@ -1731,17 +1726,16 @@ void move (void) {
 		#endasm
 
 	#else
-
+			
 		#asm
-				// if player.possee == 0 && player.gotten == 0
-				ld  a, (_player + 26) 		// player.possee
-				ld  c, a 
-				ld  a, (_player + 25) 		// player.gotten
-				or  c 
-				jr  nz, m_frame_on_something
-
 				ld  c, 3 
-				jr  m_frame_set
+				
+				// if player.possee == 0 && player.gotten == 0
+				ld  a, (_player + 26) 		// player.possee 
+				ld  b, a 
+				ld  a, (_player + 25) 		// player.gotten 
+				or  b
+				jr  z, m_frame_set
 
 			.m_frame_on_something
 
@@ -1779,7 +1773,7 @@ void move (void) {
 			.m_frame_still
 
 			#ifdef PLAYER_ALTERNATE_ANIMATION
-				xor c 
+				ld  c, 0
 			#else
 				ld  c, 1
 			#endif
@@ -1820,22 +1814,21 @@ void init_player_values (void) {
 			ld  (_player + 2), hl
 
 			ld  hl, 0
-			ld  (_player+6), hl 				// .vx
-			ld  (_player+8), hl 				// .vy
+			ld  (_player + 6), hl 				// .vx
+			ld  (_player + 8), hl 				// .vy
 
 			xor a
-			ld  (_player+19),a 					// .saltando
-			ld  (_player+20),a 					// .frame
-			ld  (_player+21),a 					// .subframe
-			ld  (_player+23), a 				// .estado
-			ld  (_player+24),a 					// .ct_estado
-			ld  (_player+36),a 					// .is_dead
+			ld  (_player + 19), a 				// .saltando
+			ld  (_player + 20), a 				// .frame
+			ld  (_player + 23), a 				// .estado
+			ld  (_player + 24), a 				// .ct_estado
+			ld  (_player + 36), a 				// .is_dead
 
 		#ifdef PLAYER_MOGGY_STYLE
 				ld  a, GENITAL_FACING_DOWN
 		#endif
 
-			ld (_player+22),a 					// .facing
+			ld (_player + 22), a 				// .facing
 	#endasm
 }
 
@@ -1846,11 +1839,11 @@ void init_player (void) {
 
 	#asm
 			ld  hl, PLAYER_LIFE
-			ld  (_player+29), hl 				// .life
+			ld  (_player + 29), hl 				// .life
 			xor a
-			ld  (_player+27), a 				// .objs
-			ld  (_player+28), a 				// .keys
-			ld  (_player+32), a 				// .killed
+			ld  (_player + 27), a 				// .objs
+			ld  (_player + 28), a 				// .keys
+			ld  (_player + 32), a 				// .killed
 	#endasm
 }
 
@@ -2483,14 +2476,14 @@ void draw_scr (void) {
 	void platform_get_player (void) {
 		#asm
 				ld  a, 1
-				ld  (_player+25), a 		// .gotten
+				ld  (_player + 25), a 		// .gotten
 				ld  a, (__en_y)
 				sub 16
 				ld  (_gpy), a 
 				call Ashl16_HL
-				ld  (_player+2), hl 		// .y
+				ld  (_player + 2), hl 		// .y
 				ld  hl, 0
-				ld  (_player+8), hl 		// .vy
+				ld  (_player + 8), hl 		// .vy
 				srl a
 				srl a
 				srl a
@@ -3030,11 +3023,11 @@ void mueve_bicharracos (void) {
 					#asm
 						.moving_platforms
 							// if (player.saltando == 0 || player.cont_salto > 4)
-							ld  a, (_player+19) 		// .saltando
+							ld  a, (_player + 19) 		// .saltando
 							or  a
 							jr  z, moving_platforms_do
 
-							ld  a, (_player+14)			// .cont_salto
+							ld  a, (_player + 14)			// .cont_salto
 							cp  5 						// a > 4 === a >= 5
 							jp  c, moving_platforms_done
 
@@ -3120,7 +3113,7 @@ void mueve_bicharracos (void) {
 							jr  c, moving_platforms_done
 
 							// player.vy >= 0
-							ld  a, (_player+9)		// .vy MSB
+							ld  a, (_player + 9)		// .vy MSB
 							bit 7, a
 							jr  nz, moving_platforms_done
 
@@ -4062,5 +4055,5 @@ void mueve_bicharracos (void) {
 
 	.en_linear_done
 		ret
-			
+
 #endasm

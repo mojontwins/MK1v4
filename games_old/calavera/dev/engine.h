@@ -1035,20 +1035,6 @@ void move (void) {
 	// Includes evil tile detection, open lock & push boxes
 
 	#asm
-			ld  hl, (_ptgmy)
-			ex  de, hl 
-			ld  hl, (_player + 8) 				// player.vy
-			add hl, de
-			ld  (_pvy_total), hl
-
-			// If no vertical speed, do nothing at this stage
-
-			ld  a, h 
-			or  l
-			jp  z, m_vert_coll_done
-
-		.m_vert_coll_do
-
 			// _x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
 			ld  a, (_gpx)
 			ld  c, a
@@ -1065,6 +1051,20 @@ void move (void) {
 			srl a 
 			srl a
 			ld  (__x2), a
+
+			ld  hl, (_ptgmy)
+			ex  de, hl 
+			ld  hl, (_player + 8) 				// player.vy
+			add hl, de
+			ld  (_pvy_total), hl
+
+			// If no vertical speed, do nothing at this stage
+
+			ld  a, h 
+			or  l
+			jp  z, m_vert_coll_done
+
+		.m_vert_coll_do
 
 			// Check bit 7 of HL to see if pvy_total is negative or positive
 

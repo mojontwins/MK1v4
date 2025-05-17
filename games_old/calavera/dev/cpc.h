@@ -1452,6 +1452,7 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 // if you write your code by hand ... 
 
 void cpc_UpdateNow (unsigned char sprites) {
+	
 	if (sprites) {
 		#asm
 			// Call the invalidate function for all sprites 
