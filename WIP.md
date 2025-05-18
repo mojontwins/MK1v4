@@ -158,10 +158,17 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 [ ] Soporte built-in de textos en msc4. DARLE UN PENSOTE. 
     * Quizá baste con toda la infraestructura para parsearlos en el script y crear el array de textos que se vaya referenciando del bytecode, con soporte para cadenas repetidas y tal, y luego dejar en manos del programador del juego el código del `textbox`. La idea es que el programador haga una rutina `textbox` y la ponga en `custom.h` o el `extern.h` y que msc4.h llame a esa rutina con el número del texto.
 
-[ ] ¿Por qué hay ahora mamoneos en Calavera (¿y otros?) con las colisiones laterales mientras estamos saltando? Hay como barreras invisibles porque sí. Parece que en tiles beh 4.
+[X] ¿Por qué hay ahora mamoneos en Calavera (¿y otros?) con las colisiones laterales mientras estamos saltando? Hay como barreras invisibles porque sí. Parece que en tiles beh 4.
 
     * ¿Tendrá que ver con que este juego tiene desactivado `SIMPLE_PLATFORMS` ? Pero no tendría sentido porque yo esto lo he notado mientras se asciende y con las colisiones LATERALES...
     * Ostras qué tonto. Estoy haciendo AND 12 en vez de AND 8 !!
+
+[ ] Terminar de pasar a ensamble el auto tile shadows.
+
+    * En CPC, pasar la parte que calcula "nocast"
+    * En Speccy, pasarlo todo
+
+    Mayormente para que no necesiten llamar a la interfaz C de attr
 
 [ ] Soporte para "frames por pixel" en los lineales. Por ahora mx = 1, 2, 4 pixels por frame, pero molaría 1, 2, 4 frames por pixel para enemigos lentorros. Estudiar cómo sería la forma más fácil de implementarlo en ensamble y tirar por ahí.
 
