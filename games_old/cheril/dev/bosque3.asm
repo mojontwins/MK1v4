@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 14 17:02:23 2025
+;	Module compile time: Sun May 18 09:39:25 2025
 
 
 
@@ -8409,17 +8409,17 @@
 
 
 ._cm_two_points
-	ld a, (__x)
+	ld a, (_cx1)
 	cp 15
 	jr nc, _cm_two_points_at1_reset
-	ld a, (__y)
+	ld a, (_cy1)
 	cp 10
 	jr c, _cm_two_points_at1_do
 	._cm_two_points_at1_reset
 	xor a
 	jr _cm_two_points_at1_done
 	._cm_two_points_at1_do
-	ld a, (__y)
+	ld a, (_cy1)
 	ld b, a
 	sla a
 	sla a
@@ -8427,7 +8427,7 @@
 	sla a
 	sub b
 	ld b, a
-	ld a, (__x)
+	ld a, (_cx1)
 	add b
 	ld e, a
 	ld d, 0
@@ -8436,17 +8436,17 @@
 	ld a, (hl)
 	._cm_two_points_at1_done
 	ld (_at1), a
-	ld a, (__x2)
+	ld a, (_cx2)
 	cp 15
 	jr nc, _cm_two_points_at2_reset
-	ld a, (__y2)
+	ld a, (_cy2)
 	cp 10
 	jr c, _cm_two_points_at2_do
 	._cm_two_points_at2_reset
 	xor a
 	jr _cm_two_points_at2_done
 	._cm_two_points_at2_do
-	ld a, (__y2)
+	ld a, (_cy2)
 	ld b, a
 	sla a
 	sla a
@@ -8454,7 +8454,7 @@
 	sla a
 	sub b
 	ld b, a
-	ld a, (__x2)
+	ld a, (_cx2)
 	add b
 	ld e, a
 	ld d, 0
@@ -8561,6 +8561,7 @@
 	xor a
 	ld (_hit), a
 	ld (_thrusting), a
+	ld (_wall), a
 	call _pad_read
 	ld a, (_pad0)
 	ld c, a
@@ -8643,6 +8644,21 @@
 	ld (_player + 2), hl
 	call HLshr6_A
 	ld (_gpy), A
+	ld a, (_gpx)
+	ld c, a
+	add 4
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_cx1), a
+	ld a, c
+	add 11
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_cx2), a
 	ld hl, (_ptgmy)
 	ex de, hl
 	ld hl, (_player + 8)
@@ -8652,21 +8668,6 @@
 	or l
 	jp z, m_vert_coll_done
 	.m_vert_coll_do
-	ld a, (_gpx)
-	ld c, a
-	add 4
-	srl a
-	srl a
-	srl a
-	srl a
-	ld (__x), a
-	ld a, c
-	add 11
-	srl a
-	srl a
-	srl a
-	srl a
-	ld (__x2), a
 	bit 7, h
 	jr nz, m_vert_coll_up
 	.m_vert_coll_down
@@ -8676,8 +8677,8 @@
 	srl a
 	srl a
 	srl a
-	ld (__y), a
-	ld (__y2), a
+	ld (_cy1), a
+	ld (_cy2), a
 	call _cm_two_points
 	ld a, (_at1)
 	and 12
@@ -8694,6 +8695,8 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), HL
+	ld a, 8
+	ld (_wall), a
 	jr m_vert_coll_checks_done
 	.m_vert_coll_up
 	ld a, (_gpy)
@@ -8702,8 +8705,8 @@
 	srl a
 	srl a
 	srl a
-	ld (__y), a
-	ld (__y2), a
+	ld (_cy1), a
+	ld (_cy2), a
 	call _cm_two_points
 	ld a, (_at1)
 	and 8
@@ -8721,6 +8724,8 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), HL
+	ld a, 4
+	ld (_wall), a
 	.m_vert_coll_checks_done
 	ld a, (_at1)
 	and 1
@@ -8829,14 +8834,14 @@
 	srl a
 	srl a
 	srl a
-	ld (__y), a
+	ld (_cy1), a
 	ld a, c
 	add 15
 	srl a
 	srl a
 	srl a
 	srl a
-	ld (__y2), a
+	ld (_cy2), a
 	bit 7, h
 	jr nz, m_horz_coll_left
 	.m_horz_coll_right
@@ -8846,14 +8851,14 @@
 	srl a
 	srl a
 	srl a
-	ld (__x), a
-	ld (__x2), a
+	ld (_cx1), a
+	ld (_cx2), a
 	call _cm_two_points
 	ld a, (_at1)
-	and 12
+	and 8
 	jr nz, m_horz_coll_right_adjust
 	ld a, (_at2)
-	and 12
+	and 8
 	jr z, m_horz_coll_checks_done
 	.m_horz_coll_right_adjust
 	call _check_lock_or_box_horz
@@ -8865,6 +8870,8 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player + 0), HL
+	ld a, 2
+	ld (_wall), a
 	jr m_horz_coll_checks_done
 	.m_horz_coll_left
 	ld a, (_gpx)
@@ -8873,8 +8880,8 @@
 	srl a
 	srl a
 	srl a
-	ld (__x), a
-	ld (__x2), a
+	ld (_cx1), a
+	ld (_cx2), a
 	call _cm_two_points
 	ld a, (_at1)
 	and 8
@@ -8892,6 +8899,8 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player + 0), HL
+	ld a, 1
+	ld (_wall), a
 	.m_horz_coll_checks_done
 	ld a, (_at1)
 	and 1
@@ -8984,17 +8993,16 @@
 	call Ashl16_HL
 	ld (_player + 2), hl
 	ld hl, 0
-	ld (_player+6), hl
-	ld (_player+8), hl
+	ld (_player + 6), hl
+	ld (_player + 8), hl
 	xor a
-	ld (_player+19),a
-	ld (_player+20),a
-	ld (_player+21),a
-	ld (_player+23), a
-	ld (_player+24),a
-	ld (_player+36),a
+	ld (_player + 19), a
+	ld (_player + 20), a
+	ld (_player + 23), a
+	ld (_player + 24), a
+	ld (_player + 36), a
 	ld a, 6
-	ld (_player+22),a
+	ld (_player + 22), a
 	ret
 
 
@@ -9002,11 +9010,11 @@
 ._init_player
 	call	_init_player_values
 	ld hl, 99
-	ld (_player+29), hl
+	ld (_player + 29), hl
 	xor a
-	ld (_player+27), a
-	ld (_player+28), a
-	ld (_player+32), a
+	ld (_player + 27), a
+	ld (_player + 28), a
+	ld (_player + 32), a
 	ret
 
 
@@ -10410,6 +10418,10 @@
 .__x2	defs	1
 .__y2	defs	1
 .__en_life	defs	1
+._cx1	defs	1
+._cx2	defs	1
+._cy1	defs	1
+._cy2	defs	1
 ._prxx	defs	1
 ._pryy	defs	1
 ._pvy_total	defs	2
@@ -10676,11 +10688,15 @@
 	XDEF	_step
 	XDEF	__en_life
 	XDEF	_cpc_HardPause
-	LIB	cpc_AssignKey
+	XDEF	_cx1
+	XDEF	_cx2
+	XDEF	_cy1
+	XDEF	_cy2
 	XDEF	_prxx
-	XDEF	_calc_hotspot_ptr
+	LIB	cpc_AssignKey
 	XDEF	_pryy
 	LIB	cpc_TouchTiles
+	XDEF	_calc_hotspot_ptr
 	LIB	cpc_PutSPTileMap4x8Px
 	XDEF	_abs
 	LIB	cpc_ScrollRight0

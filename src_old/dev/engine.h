@@ -515,11 +515,11 @@ unsigned char cm_two_points (void) {
 	else at2 = map_attr [_x2 + (_y2 << 4) - _y2];
 	*/
 	#asm
-			ld  a, (__x)
+			ld  a, (_cx1)
 			cp  15
 			jr  nc, _cm_two_points_at1_reset
 
-			ld  a, (__y)
+			ld  a, (_cy1)
 			cp  10
 			jr  c, _cm_two_points_at1_do
 
@@ -528,7 +528,7 @@ unsigned char cm_two_points (void) {
 			jr  _cm_two_points_at1_done
 
 		._cm_two_points_at1_do
-			ld  a, (__y)
+			ld  a, (_cy1)
 			ld  b, a
 			sla a
 			sla a
@@ -536,7 +536,7 @@ unsigned char cm_two_points (void) {
 			sla a
 			sub b
 			ld  b, a
-			ld  a, (__x)
+			ld  a, (_cx1)
 			add b
 			ld  e, a
 			ld  d, 0
@@ -547,11 +547,11 @@ unsigned char cm_two_points (void) {
 		._cm_two_points_at1_done
 			ld (_at1), a
 
-			ld  a, (__x2)
+			ld  a, (_cx2)
 			cp  15
 			jr  nc, _cm_two_points_at2_reset
 
-			ld  a, (__y2)
+			ld  a, (_cy2)
 			cp  10
 			jr  c, _cm_two_points_at2_do
 
@@ -560,7 +560,7 @@ unsigned char cm_two_points (void) {
 			jr  _cm_two_points_at2_done
 
 		._cm_two_points_at2_do
-			ld  a, (__y2)
+			ld  a, (_cy2)
 			ld  b, a
 			sla a
 			sla a
@@ -568,7 +568,7 @@ unsigned char cm_two_points (void) {
 			sla a
 			sub b
 			ld  b, a
-			ld  a, (__x2)
+			ld  a, (_cx2)
 			add b
 			ld  e, a
 			ld  d, 0
@@ -1035,6 +1035,23 @@ void move (void) {
 	// Includes evil tile detection, open lock & push boxes
 
 	#asm
+			// cx1 = (gpx + 4) >> 4; cx2 = (gpx + 11) >> 4;
+			ld  a, (_gpx)
+			ld  c, a
+			add 4
+			srl a 
+			srl a 
+			srl a 
+			srl a
+			ld  (_cx1), a
+			ld  a, c
+			add 11
+			srl a 
+			srl a 
+			srl a 
+			srl a
+			ld  (_cx2), a
+
 			ld  hl, (_ptgmy)
 			ex  de, hl 
 			ld  hl, (_player + 8) 				// player.vy
@@ -1048,23 +1065,6 @@ void move (void) {
 			jp  z, m_vert_coll_done
 
 		.m_vert_coll_do
-
-			// _x = (gpx + 4) >> 4; _x2 = (gpx + 11) >> 4;
-			ld  a, (_gpx)
-			ld  c, a
-			add 4
-			srl a 
-			srl a 
-			srl a 
-			srl a
-			ld  (__x), a
-			ld  a, c
-			add 11
-			srl a 
-			srl a 
-			srl a 
-			srl a
-			ld  (__x2), a
 
 			// Check bit 7 of HL to see if pvy_total is negative or positive
 
@@ -1081,8 +1081,8 @@ void move (void) {
 			srl a
 			srl a 
 			srl a 
-			ld  (__y), a 
-			ld  (__y2), a
+			ld  (_cy1), a 
+			ld  (_cy2), a
 
 			call _cm_two_points 
 
@@ -1161,8 +1161,8 @@ void move (void) {
 			srl a 
 			srl a 
 			srl a 
-			ld  (__y), a 
-			ld  (__y2), a
+			ld  (_cy1), a 
+			ld  (_cy2), a
 
 			call _cm_two_points
 
@@ -1223,8 +1223,8 @@ void move (void) {
 				srl a 
 				srl a 
 				srl a 
-				ld  (__y), a 
-				ld  (__y2), a 
+				ld  (_cy1), a 
+				ld  (_cy2), a 
 
 				call _cm_two_points
 
@@ -1447,14 +1447,14 @@ void move (void) {
 			srl a 
 			srl a 
 			srl a
-			ld  (__y), a
+			ld  (_cy1), a
 			ld  a, c
 			add 15
 			srl a 
 			srl a 
 			srl a 
 			srl a
-			ld  (__y2), a
+			ld  (_cy2), a
 
 			// Check bit 7 of HL to see if pvx_total is negative or positive
 
@@ -1471,18 +1471,18 @@ void move (void) {
 			srl a
 			srl a 
 			srl a 
-			ld  (__x), a 
-			ld  (__x2), a
+			ld  (_cx1), a 
+			ld  (_cx2), a
 
 			call _cm_two_points 
 
 			// (at1 & 8) || (at2 & 8)
 			ld  a, (_at1)
-			and 12
+			and 8
 			jr  nz, m_horz_coll_right_adjust
 
 			ld  a, (_at2)
-			and 12
+			and 8
 			jr  z, m_horz_coll_checks_done
 
 		.m_horz_coll_right_adjust
@@ -1515,8 +1515,8 @@ void move (void) {
 			srl a 
 			srl a 
 			srl a 
-			ld  (__x), a 
-			ld  (__x2), a
+			ld  (_cx1), a 
+			ld  (_cx2), a
 
 			call _cm_two_points
 

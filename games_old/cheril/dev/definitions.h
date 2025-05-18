@@ -25,6 +25,9 @@
 #define GENITAL_FACING_UP 		4
 #define GENITAL_FACING_DOWN 	6
 
+#define SIDEVIEW_FACING_RIGHT 	0
+#define SIDEVIEW_FACING_LEFT 	4
+
 #define HOTSPOT_TYPE_OBJECT 	1
 #define HOTSPOT_TYPE_KEY 		2
 #define HOTSPOT_TYPE_REFILL 	3
@@ -190,7 +193,6 @@ unsigned char rda, rdb, rdmt;
 #endif
 
 unsigned char cx1, cy1, cx2, cy2;
-
 #if defined USE_AUTO_TILE_SHADOWS || defined USE_AUTO_SHADOWS
 	unsigned char nocast, xx, yy, _ta;
 	unsigned char a1, a2, a3, a4;

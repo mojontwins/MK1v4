@@ -97,7 +97,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
         Al final lo quité.
 
-[ ] Hay un pequeño glitch con la paleta del marcador al empezar el juego. Revisar.
+[X] Hay un pequeño glitch con la paleta del marcador al empezar el juego. Revisar.
 
     * No sé por qué @#!! pasa este glitch. Hay otro en los juegos que no son `DIRECT_TO_PLAY` que es por razones diferentes. El sistema no lo he diseñado sino que lo he ido construyendo a salto de mata según me iban faltando cosas y a lo mejor es el momento de parar, borrarlo todo, y empezar de nuevo. 
 
@@ -145,7 +145,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Al llegar al final se interrumpe si estábamos pulsando una tecla. Hay que cambiar a `pad_this_frame`.
 
-[ ] Probar los enemigos custom metiendo como añadidos los cuadrators y los suputabolers de la versión v4 en Cheril of the Bosque.
+[X] Probar los enemigos custom metiendo como añadidos los cuadrators y los suputabolers de la versión v4 en Cheril of the Bosque.
 
 [!] Creo que he dado con un misterioso bug o feature de esta versión de z88dk vieja que hace que si pones el prototipo de una función antes de definir la función, rodea a la misma con un `push hl` al principio y un `pop bc` al final, cosa que no hace si no se añade un prototipo. Esto me rompía completamente el motor (yo esperaba que la rutina no tocara bc, pero con el código añadido lo hace). Now that's WEIRD.
 
@@ -155,7 +155,13 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Encontrar una forma fácil de replicar por defecto el movimiento lineal 1..4 en otro en_t... ¿tan fácil como mover a una subrutina? YES, subrutined!
 
-[ ] Soporte built-in de textos en msc4. DARLE UN PENSOTE.
+[ ] Soporte built-in de textos en msc4. DARLE UN PENSOTE. 
+    * Quizá baste con toda la infraestructura para parsearlos en el script y crear el array de textos que se vaya referenciando del bytecode, con soporte para cadenas repetidas y tal, y luego dejar en manos del programador del juego el código del `textbox`. La idea es que el programador haga una rutina `textbox` y la ponga en `custom.h` o el `extern.h` y que msc4.h llame a esa rutina con el número del texto.
+
+[ ] ¿Por qué hay ahora mamoneos en Calavera (¿y otros?) con las colisiones laterales mientras estamos saltando? Hay como barreras invisibles porque sí. Parece que en tiles beh 4.
+
+    * ¿Tendrá que ver con que este juego tiene desactivado `SIMPLE_PLATFORMS` ? Pero no tendría sentido porque yo esto lo he notado mientras se asciende y con las colisiones LATERALES...
+    * Ostras qué tonto. Estoy haciendo AND 12 en vez de AND 8 !!
 
 [ ] Soporte para "frames por pixel" en los lineales. Por ahora mx = 1, 2, 4 pixels por frame, pero molaría 1, 2, 4 frames por pixel para enemigos lentorros. Estudiar cómo sería la forma más fácil de implementarlo en ensamble y tirar por ahí.
 
@@ -195,7 +201,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
     Ese inserto entre [A] y [B] podría funcionar. Lo probaré luego.
 
-[ ] Calavera hace una mierda rara con los pies al saltar y no me explico cómo es posible, a menos que possee o gotten se estén poniendo a 1 cuando no deberían. Si no, es que no tiene sentidow. **ES POR `player.possee`** Lo que no sé es por qué se pone a 1 en medio del puto aire. Mañana con más emoción lo miro.
+[X] Calavera hace una mierda rara con los pies al saltar y no me explico cómo es posible, a menos que possee o gotten se estén poniendo a 1 cuando no deberían. Si no, es que no tiene sentidow. **ES POR `player.possee`** Lo que no sé es por qué se pone a 1 en medio del puto aire. Mañana con más emoción lo miro.
 
 <details>
     <summary>Cosas calculares</summary>

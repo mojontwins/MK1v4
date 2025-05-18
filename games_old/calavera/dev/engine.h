@@ -1478,11 +1478,11 @@ void move (void) {
 
 			// (at1 & 8) || (at2 & 8)
 			ld  a, (_at1)
-			and 12
+			and 8
 			jr  nz, m_horz_coll_right_adjust
 
 			ld  a, (_at2)
-			and 12
+			and 8
 			jr  z, m_horz_coll_checks_done
 
 		.m_horz_coll_right_adjust

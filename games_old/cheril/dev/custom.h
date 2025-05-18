@@ -1,6 +1,31 @@
 // MTE MK1 v3.2
 // Copyleft 2011 by The Mojon Twins
 
+
+#ifdef PLAYER_CUSTOM_VENG
+	void player_custom_veng (void) {
+		// Modify vy as needed
+	}
+#endif
+
+#ifdef PLAYER_CUSTOM_HENG
+	void player_custom_heng (void) {
+		// Modify vx as needed
+	}
+#endif
+
+#ifdef PLAYER_CUSTOM_FRAME
+	unsigned char player_custom_frame (void) {
+		// Return a frame NUMBER (0-7)
+	}
+#endif
+
+#ifdef PLAYER_CUSTOM_BG_HIT
+	void custom_bg_hit (void) {
+		// rdi = 1 if vx > vy, act accordingly
+	}
+#endif
+
 // ---------------------------------------------------------------------------
 // Custom stuff we need for our marrullers
 // ---------------------------------------------------------------------------

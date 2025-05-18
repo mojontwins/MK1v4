@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 17 16:22:04 2025
+;	Module compile time: Sun May 18 09:10:39 2025
 
 
 
@@ -5490,10 +5490,10 @@
 	ld (_cx2), a
 	call _cm_two_points
 	ld a, (_at1)
-	and 12
+	and 8
 	jr nz, m_horz_coll_right_adjust
 	ld a, (_at2)
-	and 12
+	and 8
 	jr z, m_horz_coll_checks_done
 	.m_horz_coll_right_adjust
 	ld hl, 0
@@ -8001,7 +8001,6 @@
 	XDEF	_flag_old
 	XDEF	_wall
 	LIB	cpc_UpdScr
-	LIB	cpc_PutTrSp16x16TileMapPxM1LUT
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
 	defc	_en_an_next_frame	=	54796
@@ -8032,7 +8031,6 @@
 	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
 	XDEF	_game_ending
-	LIB	cpc_MakeM1RotationLUTs
 	LIB	cpc_PutTrSp4x8TileMapPx
 	LIB	cpc_PutTrSp8x8TileMapPx
 	LIB	cpc_PutTrSp8x16TileMapPx
