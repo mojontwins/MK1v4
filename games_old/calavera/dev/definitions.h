@@ -192,11 +192,11 @@ unsigned char rda, rdb, rdmt;
 	unsigned char rdc, rdn;
 #endif
 
+unsigned char cx1, cy1, cx2, cy2;
 #if defined USE_AUTO_TILE_SHADOWS || defined USE_AUTO_SHADOWS
 	unsigned char nocast, xx, yy, _ta;
 	unsigned char a1, a2, a3, a4;
 	unsigned char t1, t2, t3, t4;
-	unsigned char cx1, cy1, cx2, cy2;
 #endif
 
 unsigned char ptx1, ptx2, pty1, pty2;

@@ -11,7 +11,9 @@ void do_extern_action (unsigned char n, unsigned char m) {
 				call enems_get_values
 		#endasm
 
-		if (_en_t && _en_t != 4) enems_kill (99);
+		if (_en_t && _en_t != 4 && ((_en_t & 128) == 0 || en_an_fanty_activo [enit] == 1)) {
+			enems_kill (99);
+		}
 
 		#asm
 				call enems_update_values_store
