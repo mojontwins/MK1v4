@@ -280,6 +280,7 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 			sp_PrintAtInv (_y + 1, _x + 1, gp_gen_org [3], _t + 3);
 		} else
 	#elif defined USE_AUTO_TILE_SHADOWS && !defined UNPACKED_MAP
+		/*
 		prxx = (_x - VIEWPORT_X) >> 1;
 		pryy = (_y - VIEWPORT_Y) >> 1;	
 		if (attr (prxx, pryy) < 4 && (_t < 16 || _t == 19)) {
@@ -311,6 +312,149 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 			} 
 			sp_PrintAtInv (_y + 1, _x + 1, gp_gen_org [3], _t + 3);
 		} else
+		*/
+		#asm
+				// Get back my buffer coordinates!
+				ld  a, (__x)
+				sub VIEWPORT_X
+				srl a 
+				ld  (_prxx), a
+				ld  c, a
+
+				ld  a, (__y)
+				sub VIEWPORT_Y
+				srl a 
+				ld  (_pryy), a
+
+				// Can this tile get shadows?
+
+				call _attr_2
+
+				ld  a, l 
+				and 8 
+				jp  nz, dct_dont_shade_this_tile
+
+				ld  a, (__t)
+				cp  16 
+				jr  c, dct_shade_this_tile
+
+				cp  19
+				jp  nz, dct_dont_shade_this_tile
+
+			.dct_shade_this_tile
+				// Tile 19 is shaded as tile 0.
+				cp  19
+				jr  nz, dct_not_19
+
+				ld  a, 140
+				ld  (__t), a 
+				ld  a, 192
+				ld  (_t_alt), a
+
+				jr  dct_shade_this_tile_do
+
+			.dct_not_19
+				sla a
+				sla a
+				add 64
+				ld  (__t), a 
+				add 128
+				ld  (_t_alt), a
+
+			.dct_shade_this_tile_do
+				// Draw chars from __t if not shaded, from _t_alt if shaded.
+
+				// Attributes are a bummer
+				ld  hl, (__t)
+				ld  h, 0
+				ld  de, 2048
+				add hl, de 
+				ld  de, _tileset
+				add hl, de 
+				ld  (_gp_gen_org), hl
+
+				ld  hl, (_t_alt)
+				ld  h, 0
+				ld  de, 2048
+				add hl, de 
+				ld  de, _tileset
+				add hl, de 
+				ld  (_gp_gen_alt), hl
+
+				// Top left
+				ld  a, (_prxx)
+				dec a 
+				ld  c, a
+				ld  a, (_pryy) 
+				dec a 
+				call dct_sts_p_do
+				ld  hl, __x
+				inc (hl)
+
+				// Top right
+				ld  a, (_prxx)				
+				ld  c, a
+				ld  a, (_pryy) 
+				dec a 
+				call dct_sts_p_do
+				ld  hl, __x
+				dec (hl)
+				ld  hl, __y
+				inc (hl)
+
+				// Bottom left
+				ld  a, (_prxx)
+				dec a
+				ld  c, a
+				ld  a, (_pryy) 
+				call dct_sts_p_do
+				ld  hl, __x
+				inc (hl)
+
+				// Bottom right is never shaded.
+				jr dct_sts_p_nonshaded
+
+			.dct_sts_p_do
+				call _attr_2
+				ld  a, l
+				and 8 
+				jr  z, dct_sts_p_nonshaded
+			
+			.dct_sts_p_shaded
+				ld  hl, (_gp_gen_alt)
+				ld  a, (_t_alt)
+				ld  e, a
+				jr  dct_sts_p_paint
+
+			.dct_sts_p_nonshaded
+				ld  hl, (_gp_gen_org)
+				ld  a, (__t)
+				ld  e, a
+
+			.dct_sts_p_paint
+				ld  d, (hl)
+				ld  a, (__x)
+				ld  c, a 
+				ld  a, (__y)
+
+				call SPPrintAtInv
+
+				ld  hl, (_gp_gen_org)
+				inc hl 
+				ld  (_gp_gen_org), hl
+				ld  hl, (_gp_gen_alt)
+				inc hl 
+				ld  (_gp_gen_alt), hl
+
+				ld  hl, __t
+				inc (hl)
+				ld  hl, _t_alt
+				inc (hl)
+
+				ret
+
+			.dct_dont_shade_this_tile
+		#endasm
 	#endif
 	{
 		#asm

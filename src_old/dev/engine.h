@@ -583,32 +583,8 @@ unsigned char cm_two_points (void) {
 
 #if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
 	void check_lock_or_box_horz (void) {
-		/*
-		rdx = _x; rdy = (gpy + 8) >> 4;
-		rda = qtile (rdx, rdy);
-
-		#if defined PLAYER_PUSH_BOXES
-			if (rda == 14) {
-				x0 = rdx; y0 = y1 = rdy;
-				if (player.vx > 0) {
-					x1 = x0 + 1;
-				} else {
-					x1 = x0 - 1;
-				}
-	
-				move_tile_with_check ();
-			}
-		#endif
-
-		#if !defined DEACTIVATE_KEYS
-			if (rda == 15) {
-				check_and_clear_cerrojo ();
-			}
-		#endif
-		*/
-
 		#asm
-				ld  a, (__x)
+				ld  a, (_cx1)
 				ld  (_rdx), a 
 				ld  c, a
 				ld  a, (_gpy)
@@ -668,30 +644,6 @@ unsigned char cm_two_points (void) {
 	}
 
 	void check_lock_or_box_vert (void) {
-		/*
-		rdx = (gpx + 8) >> 4; rdy = _y;
-		rda = qtile (rdx, rdy);
-
-		#if defined PLAYER_PUSH_BOXES && defined PLAYER_MOGGY_STYLE
-			if (rda == 14) {
-				x0 = x1 = rdx; y0 = rdy;
-				if (player.vy > 0) {
-					y1 = y0 + 1;
-				} else {
-					y1 = y0 - 1;
-				}
-	
-				move_tile_with_check ();
-			}
-		#endif
-
-		#if !defined DEACTIVATE_KEYS
-			if (rda == 15) {
-				check_and_clear_cerrojo ();
-			}
-		#endif
-		*/
-
 		#asm
 				ld  a, (_gpx)
 				add 8 
@@ -701,7 +653,7 @@ unsigned char cm_two_points (void) {
 				srl a
 				ld  (_rdx), a 
 				ld  c, a
-				ld  a, (__y)
+				ld  a, (_cy1)
 				ld  (_rdy), a 
 
 				call qtile_do

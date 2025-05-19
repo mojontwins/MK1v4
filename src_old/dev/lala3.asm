@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue May 13 22:47:36 2025
+;	Module compile time: Mon May 19 13:14:15 2025
 
 
 
@@ -7960,11 +7960,9 @@
 
 
 ._abs
-	push	hl
 	bit 7, h
 	ret z
 	call l_neg
-	pop	bc
 	ret
 
 
@@ -8053,17 +8051,17 @@
 
 
 ._cm_two_points
-	ld a, (__x)
+	ld a, (_cx1)
 	cp 15
 	jr nc, _cm_two_points_at1_reset
-	ld a, (__y)
+	ld a, (_cy1)
 	cp 10
 	jr c, _cm_two_points_at1_do
 	._cm_two_points_at1_reset
 	xor a
 	jr _cm_two_points_at1_done
 	._cm_two_points_at1_do
-	ld a, (__y)
+	ld a, (_cy1)
 	ld b, a
 	sla a
 	sla a
@@ -8071,7 +8069,7 @@
 	sla a
 	sub b
 	ld b, a
-	ld a, (__x)
+	ld a, (_cx1)
 	add b
 	ld e, a
 	ld d, 0
@@ -8080,17 +8078,17 @@
 	ld a, (hl)
 	._cm_two_points_at1_done
 	ld (_at1), a
-	ld a, (__x2)
+	ld a, (_cx2)
 	cp 15
 	jr nc, _cm_two_points_at2_reset
-	ld a, (__y2)
+	ld a, (_cy2)
 	cp 10
 	jr c, _cm_two_points_at2_do
 	._cm_two_points_at2_reset
 	xor a
 	jr _cm_two_points_at2_done
 	._cm_two_points_at2_do
-	ld a, (__y2)
+	ld a, (_cy2)
 	ld b, a
 	sla a
 	sla a
@@ -8098,7 +8096,7 @@
 	sla a
 	sub b
 	ld b, a
-	ld a, (__x2)
+	ld a, (_cx2)
 	add b
 	ld e, a
 	ld d, 0
@@ -8112,7 +8110,7 @@
 
 
 ._check_lock_or_box_horz
-	ld a, (__x)
+	ld a, (_cx1)
 	ld (_rdx), a
 	ld c, a
 	ld a, (_gpy)
@@ -8143,7 +8141,7 @@
 	srl a
 	ld (_rdx), a
 	ld c, a
-	ld a, (__y)
+	ld a, (_cy1)
 	ld (_rdy), a
 	call qtile_do
 	ld a, l
@@ -8161,6 +8159,7 @@
 	xor a
 	ld (_hit), a
 	ld (_thrusting), a
+	ld (_wall), a
 	call _pad_read
 	.m_vert_gravity_do
 	ld hl, (_player + 8)
@@ -8238,6 +8237,21 @@
 	ld (_player + 2), hl
 	call HLshr6_A
 	ld (_gpy), A
+	ld a, (_gpx)
+	ld c, a
+	add 4
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_cx1), a
+	ld a, c
+	add 11
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_cx2), a
 	ld hl, (_ptgmy)
 	ex de, hl
 	ld hl, (_player + 8)
@@ -8247,21 +8261,6 @@
 	or l
 	jp z, m_vert_coll_done
 	.m_vert_coll_do
-	ld a, (_gpx)
-	ld c, a
-	add 4
-	srl a
-	srl a
-	srl a
-	srl a
-	ld (__x), a
-	ld a, c
-	add 11
-	srl a
-	srl a
-	srl a
-	srl a
-	ld (__x2), a
 	bit 7, h
 	jr nz, m_vert_coll_up
 	.m_vert_coll_down
@@ -8271,8 +8270,8 @@
 	srl a
 	srl a
 	srl a
-	ld (__y), a
-	ld (__y2), a
+	ld (_cy1), a
+	ld (_cy2), a
 	call _cm_two_points
 	ld a, (_at1)
 	and 12
@@ -8288,8 +8287,8 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), HL
-	ld a, 1
-	ld (_player + 26), a
+	ld a, 8
+	ld (_wall), a
 	jr m_vert_coll_checks_done
 	.m_vert_coll_up
 	ld a, (_gpy)
@@ -8298,8 +8297,8 @@
 	srl a
 	srl a
 	srl a
-	ld (__y), a
-	ld (__y2), a
+	ld (_cy1), a
+	ld (_cy2), a
 	call _cm_two_points
 	ld a, (_at1)
 	and 8
@@ -8316,6 +8315,8 @@
 	ld (_gpy), a
 	call Ashl16_HL
 	ld (_player + 2), HL
+	ld a, 4
+	ld (_wall), a
 	.m_vert_coll_checks_done
 	ld a, (_at1)
 	and 1
@@ -8333,8 +8334,8 @@
 	srl a
 	srl a
 	srl a
-	ld (__y), a
-	ld (__y2), a
+	ld (_cy1), a
+	ld (_cy2), a
 	call _cm_two_points
 	ld a, (_at1)
 	and 12
@@ -8448,14 +8449,14 @@
 	srl a
 	srl a
 	srl a
-	ld (__y), a
+	ld (_cy1), a
 	ld a, c
 	add 15
 	srl a
 	srl a
 	srl a
 	srl a
-	ld (__y2), a
+	ld (_cy2), a
 	bit 7, h
 	jr nz, m_horz_coll_left
 	.m_horz_coll_right
@@ -8465,14 +8466,14 @@
 	srl a
 	srl a
 	srl a
-	ld (__x), a
-	ld (__x2), a
+	ld (_cx1), a
+	ld (_cx2), a
 	call _cm_two_points
 	ld a, (_at1)
-	and 12
+	and 8
 	jr nz, m_horz_coll_right_adjust
 	ld a, (_at2)
-	and 12
+	and 8
 	jr z, m_horz_coll_checks_done
 	.m_horz_coll_right_adjust
 	call _check_lock_or_box_horz
@@ -8484,6 +8485,8 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player + 0), HL
+	ld a, 2
+	ld (_wall), a
 	jr m_horz_coll_checks_done
 	.m_horz_coll_left
 	ld a, (_gpx)
@@ -8492,8 +8495,8 @@
 	srl a
 	srl a
 	srl a
-	ld (__x), a
-	ld (__x2), a
+	ld (_cx1), a
+	ld (_cx2), a
 	call _cm_two_points
 	ld a, (_at1)
 	and 8
@@ -8511,6 +8514,8 @@
 	ld (_gpx), a
 	call Ashl16_HL
 	ld (_player + 0), HL
+	ld a, 1
+	ld (_wall), a
 	.m_horz_coll_checks_done
 	ld a, (_at1)
 	and 1
@@ -8557,13 +8562,12 @@
 	ld a, 1
 	ld (_player + 36), a
 	.m_evil_tile_hit_done
-	ld a, (_player + 26)
-	ld c, a
-	ld a, (_player + 25)
-	or c
-	jr nz, m_frame_on_something
 	ld c, 3
-	jr m_frame_set
+	ld a, (_player + 26)
+	ld b, a
+	ld a, (_player + 25)
+	or b
+	jr z, m_frame_set
 	.m_frame_on_something
 	ld a, (_thrusting)
 	or a
@@ -8616,16 +8620,15 @@
 	call Ashl16_HL
 	ld (_player + 2), hl
 	ld hl, 0
-	ld (_player+6), hl
-	ld (_player+8), hl
+	ld (_player + 6), hl
+	ld (_player + 8), hl
 	xor a
-	ld (_player+19),a
-	ld (_player+20),a
-	ld (_player+21),a
-	ld (_player+23), a
-	ld (_player+24),a
-	ld (_player+36),a
-	ld (_player+22),a
+	ld (_player + 19), a
+	ld (_player + 20), a
+	ld (_player + 23), a
+	ld (_player + 24), a
+	ld (_player + 36), a
+	ld (_player + 22), a
 	ret
 
 
@@ -8633,11 +8636,11 @@
 ._init_player
 	call	_init_player_values
 	ld hl, 99
-	ld (_player+29), hl
+	ld (_player + 29), hl
 	xor a
-	ld (_player+27), a
-	ld (_player+28), a
-	ld (_player+32), a
+	ld (_player + 27), a
+	ld (_player + 28), a
+	ld (_player + 32), a
 	ret
 
 
@@ -8947,25 +8950,7 @@
 	ld hl, (_enoffs)
 	add hl, bc
 	ld (_enoffsmasi), hl
-	ld	hl,_malotes
-	push	hl
-	ld	hl,(_enoffsmasi)
-	ld	b,h
-	ld	c,l
-	add	hl,bc
-	add	hl,bc
-	ld	b,h
-	ld	c,l
-	add	hl,bc
-	add	hl,bc
-	pop	de
-	add	hl,de
-	ld	bc,8
-	add	hl,bc
-	call	l_gchar
-	ld	h,0
-	ld	a,l
-	ld	(__en_t),a
+	call enems_get_values
 	ld	hl,(__en_t)
 	ld	h,0
 .i_37
@@ -9001,6 +8986,7 @@
 	pop	de
 	call	l_pint
 .i_36
+	call enems_update_values_store
 	jp	i_32
 .i_33
 	ret
@@ -9009,14 +8995,14 @@
 
 ._platform_get_player
 	ld a, 1
-	ld (_player+25), a
+	ld (_player + 25), a
 	ld a, (__en_y)
 	sub 16
 	ld (_gpy), a
 	call Ashl16_HL
-	ld (_player+2), hl
+	ld (_player + 2), hl
 	ld hl, 0
-	ld (_player+8), hl
+	ld (_player + 8), hl
 	srl a
 	srl a
 	srl a
@@ -9078,75 +9064,7 @@
 	ld	hl,4	;const
 	call	l_ule
 	jp	nc,i_47
-	.en_linear_horizontal_axis
-	ld a, (__en_mx)
-	or a
-	jr z, en_linear_horizontal_axis_done
-	ld c, a
-	ld a, (__en_x)
-	add c
-	ld (__en_x), a
-	.en_linear_horz_bounds
-	ld a, (__en_x)
-	ld c, a
-	ld a, (__en_x1)
-	cp c
-	jr c, horz_limit_skip_1
-	ld a, (__en_x1)
-	ld (__en_x), a
-	ld a, (__en_mx)
-	call _abs_a
-	ld (__en_mx), a
-	jr horz_limit_skip_2
-	.horz_limit_skip_1
-	ld a, (__en_x2)
-	ld c, a
-	ld a, (__en_x)
-	cp c
-	jr c, horz_limit_skip_2
-	ld a, (__en_x2)
-	ld (__en_x), a
-	ld a, (__en_mx)
-	call _abs_a
-	neg
-	ld (__en_mx), a
-	.horz_limit_skip_2
-	.en_linear_horizontal_axis_done
-	.en_linear_vertical_axis
-	ld a, (__en_my)
-	or a
-	jr z, en_linear_vertical_axis_done
-	ld c, a
-	ld a, (__en_y)
-	add c
-	ld (__en_y), a
-	.en_linear_vert_bounds
-	ld a, (__en_y)
-	ld c, a
-	ld a, (__en_y1)
-	cp c
-	jr c, vert_limit_skip_1
-	ld a, (__en_y1)
-	ld (__en_y), a
-	ld a, (__en_my)
-	call _abs_a
-	ld (__en_my), a
-	jr vert_limit_skip_2
-	.vert_limit_skip_1
-	ld a, (__en_y2)
-	ld c, a
-	ld a, (__en_y)
-	cp c
-	jr c, vert_limit_skip_2
-	ld a, (__en_y2)
-	ld (__en_y), a
-	ld a, (__en_my)
-	call _abs_a
-	neg
-	ld (__en_my), a
-	.vert_limit_skip_2
-	.en_linear_vertical_axis_done
-	.en_linear_done
+	call en_lineal_do
 .i_47
 	call	_enems_calc_frame
 	ld	a,(__en_t)
@@ -9176,10 +9094,10 @@
 	jp	i_48
 .i_50_i_49
 	.moving_platforms
-	ld a, (_player+19)
+	ld a, (_player + 19)
 	or a
 	jr z, moving_platforms_do
-	ld a, (_player+14)
+	ld a, (_player + 14)
 	cp 5
 	jp c, moving_platforms_done
 	.moving_platforms_do
@@ -9235,7 +9153,7 @@
 	ld a, (__en_y)
 	cp c
 	jr c, moving_platforms_done
-	ld a, (_player+9)
+	ld a, (_player + 9)
 	bit 7, a
 	jr nz, moving_platforms_done
 	call _platform_get_player
@@ -9386,6 +9304,77 @@
 	ld a, (__en_t)
 	ld (hl), a
 	inc hl
+	ret
+	.en_lineal_do
+	.en_linear_horizontal_axis
+	ld a, (__en_mx)
+	or a
+	jr z, en_linear_horizontal_axis_done
+	ld c, a
+	ld a, (__en_x)
+	add c
+	ld (__en_x), a
+	.en_linear_horz_bounds
+	ld a, (__en_x)
+	ld c, a
+	ld a, (__en_x1)
+	cp c
+	jr c, horz_limit_skip_1
+	ld a, (__en_x1)
+	ld (__en_x), a
+	ld a, (__en_mx)
+	call _abs_a
+	ld (__en_mx), a
+	jr horz_limit_skip_2
+	.horz_limit_skip_1
+	ld a, (__en_x2)
+	ld c, a
+	ld a, (__en_x)
+	cp c
+	jr c, horz_limit_skip_2
+	ld a, (__en_x2)
+	ld (__en_x), a
+	ld a, (__en_mx)
+	call _abs_a
+	neg
+	ld (__en_mx), a
+	.horz_limit_skip_2
+	.en_linear_horizontal_axis_done
+	.en_linear_vertical_axis
+	ld a, (__en_my)
+	or a
+	jr z, en_linear_vertical_axis_done
+	ld c, a
+	ld a, (__en_y)
+	add c
+	ld (__en_y), a
+	.en_linear_vert_bounds
+	ld a, (__en_y)
+	ld c, a
+	ld a, (__en_y1)
+	cp c
+	jr c, vert_limit_skip_1
+	ld a, (__en_y1)
+	ld (__en_y), a
+	ld a, (__en_my)
+	call _abs_a
+	ld (__en_my), a
+	jr vert_limit_skip_2
+	.vert_limit_skip_1
+	ld a, (__en_y2)
+	ld c, a
+	ld a, (__en_y)
+	cp c
+	jr c, vert_limit_skip_2
+	ld a, (__en_y2)
+	ld (__en_y), a
+	ld a, (__en_my)
+	call _abs_a
+	neg
+	ld (__en_my), a
+	.vert_limit_skip_2
+	.en_linear_vertical_axis_done
+	.en_linear_done
 	ret
 	._s_title
 	BINARY "titlec.bin"
@@ -9972,6 +9961,10 @@
 .__x2	defs	1
 .__y2	defs	1
 .__en_life	defs	1
+._cx1	defs	1
+._cx2	defs	1
+._cy1	defs	1
+._cy2	defs	1
 ._prxx	defs	1
 ._pryy	defs	1
 ._pvy_total	defs	2
@@ -10010,9 +10003,9 @@
 	XDEF	_isr_player_on
 	XDEF	_hotspots
 	LIB	cpc_PutTrSp8x8TileMapPxM1
-	XDEF	_draw_scr
 	LIB	cpc_PutTrSp16x16TileMapPxM1
 	LIB	cpc_PutTrSp16x24TileMapPxM1
+	XDEF	_draw_scr
 	XDEF	_spr_next
 	defc	_spr_next	=	58944
 	XDEF	_wyz_play_music
@@ -10032,7 +10025,6 @@
 	XDEF	_def_keys
 	XDEF	_cortina
 	LIB	cpc_PrintGphStrM12X
-	XDEF	_enems_kill
 	XDEF	_en_an_base_frame
 	defc	_en_an_base_frame	=	54835
 	XDEF	_hotspot_t
@@ -10229,11 +10221,15 @@
 	XDEF	_step
 	XDEF	__en_life
 	XDEF	_cpc_HardPause
-	LIB	cpc_AssignKey
+	XDEF	_cx1
+	XDEF	_cx2
+	XDEF	_cy1
+	XDEF	_cy2
 	XDEF	_prxx
-	XDEF	_calc_hotspot_ptr
+	LIB	cpc_AssignKey
 	XDEF	_pryy
 	LIB	cpc_TouchTiles
+	XDEF	_calc_hotspot_ptr
 	LIB	cpc_PutSPTileMap4x8Px
 	XDEF	_abs
 	LIB	cpc_ScrollRight0
@@ -10298,8 +10294,8 @@
 	XDEF	_tspatterns
 	XDEF	_check_lock_or_box_vert
 	LIB	cpc_PutTrSp8x8TileMapGPxM1
-	XDEF	_hotspot_paint
 	LIB	cpc_PutTrSp16x16TileMapGPxM1
+	XDEF	_hotspot_paint
 	XDEF	_pant_just_rendered
 	XDEF	__baddies_pointer
 	LIB	cpc_PutMaskSpTileMap
@@ -10318,8 +10314,8 @@
 	XDEF	_platform_get_player
 	XDEF	_en_an_count
 	defc	_en_an_count	=	54787
-	XDEF	_render_all_sprites
 	LIB	cpc_GetTiles
+	XDEF	_render_all_sprites
 	XDEF	_spr_on
 	defc	_spr_on	=	58952
 	LIB	cpc_PutSpXOR

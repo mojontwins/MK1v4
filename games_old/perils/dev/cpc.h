@@ -669,7 +669,44 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 		#endasm
 
 		// Nocast for tiles which never get shadowed
-		nocast = !((attr (xx, yy) & 8) || (_t >= 16 && _t != 19));		
+		//nocast = !((attr (xx, yy) & 8) || (_t >= 16 && _t != 19));
+		//nocast = !(attr (xx, yy) & 8) && ! (_t >= 16 && _t != 19));
+		//nocast = (attr (xx, yy) & 8) == 0 && (_t < 16 || _t == 19);
+		#asm
+				// Negated OR, so 
+				// if (attr (xx, yy) & 8) -> false
+				// (_t >= 16 && _t != 19) -> false
+
+					ld  a, (_xx)
+					ld  c, a 
+					ld  a, (_yy) 
+					call _attr_2 
+					ld  a, l 
+					and 8 
+					ld  a, 0
+					jr  nz, dct_nocast_write			// Obstacle = can't get shadows.
+
+					// Got here ? it's NOT an obstacle, may get shadows 
+
+					ld  a, (__t) 
+					cp  16
+					jr  c, this_can_get_shadows 		// Not obstacle, < 16...
+
+					cp  19
+					jr  z, this_can_get_shadows 		// Not obstacle, = 19...
+
+					xor a 
+					jr  dct_nocast_write
+
+				.this_can_get_shadows
+					ld  a, 1
+
+				.dct_nocast_write
+					ld  (_nocast), a
+
+				// Problem is it is also activating nocast on 8s
+
+		#endasm
 
 		// Precalc 
 		#asm

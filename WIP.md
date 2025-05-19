@@ -163,7 +163,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
     * ¿Tendrá que ver con que este juego tiene desactivado `SIMPLE_PLATFORMS` ? Pero no tendría sentido porque yo esto lo he notado mientras se asciende y con las colisiones LATERALES...
     * Ostras qué tonto. Estoy haciendo AND 12 en vez de AND 8 !!
 
-[ ] Terminar de pasar a ensamble el auto tile shadows.
+[X] Terminar de pasar a ensamble el auto tile shadows.
 
     * En CPC, pasar la parte que calcula "nocast"
     * En Speccy, pasarlo todo
@@ -171,6 +171,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
     Mayormente para que no necesiten llamar a la interfaz C de attr
 
 [ ] Soporte para "frames por pixel" en los lineales. Por ahora mx = 1, 2, 4 pixels por frame, pero molaría 1, 2, 4 frames por pixel para enemigos lentorros. Estudiar cómo sería la forma más fácil de implementarlo en ensamble y tirar por ahí.
+
+[X] ¿Qué pasa con las empujaciones? ¿Sólo las laterales? Yuju, he roto todas las empujaciones XD Ha sido por el cambio de nombre de las variables para la colisión.
 
     * Tenemos este código que es el que mueve un eje cada frame...
 
