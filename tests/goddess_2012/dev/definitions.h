@@ -128,3 +128,14 @@ unsigned char hotspot_y;
 unsigned char orig_tile;	// Original background tile
 
 unsigned char pant_final = SCR_FIN;
+
+// Aids to remove locals
+
+unsigned char gpit, gpjt, res;
+unsigned int gpint;
+unsigned char bit, enit, tocado;
+unsigned char _x, _y, _xx, _yy;
+unsigned char cx, cy, ccx, ccy;
+unsigned char x0, y0, x1, y1;
+unsigned char rda, rdb, rdx, rdy, rdd, rdm, enoffsmasi;
+unsigned char dx, dy, mn;

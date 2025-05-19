@@ -54,7 +54,7 @@
 #define PLAYER_BULLET_SPEED 	8		// Pixels/frame. 
 #define MAX_BULLETS 			3		// Max number of bullets on screen. Be careful!.
 #define PLAYER_BULLET_Y_OFFSET	4		// vertical offset from the player's top.
-#define ENEMIES_LIFE_GAUGE		5		// Amount of shots needed to kill enemies.
+#define ENEMS_LIFE_GAUGE		5		// Amount of shots needed to kill enemies.
 
 #define FIRING_DRAINS_LIFE				// If defined, firing drains life (oi!)
 #define FIRING_DRAIN_AMOUNT		2		// what to substract when firing.

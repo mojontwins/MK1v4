@@ -1,6 +1,6 @@
 @echo off
 
-set game=goddess2012
+set game=goddess
 set om=speccy
 set mode=0
 
@@ -24,6 +24,8 @@ del ending.bin >nul
 :compile
 ..\utils\msc ..\script\script.spt msc.h 24
 zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200
+
+..\utils\printsize.exe %game%.bin
 
 ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
 ..\utils\bin2tap.exe -o %game%.tap -a 32768 -append loading.scr  > nul
