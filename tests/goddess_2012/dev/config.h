@@ -130,6 +130,7 @@
 // Line of text
 
 #define LINE_OF_TEXT			23
+#define LINE_OF_TEXT_X			1
 
 // Graphic FX, uncomment which applies...
 

@@ -13,12 +13,16 @@ if [%1]==[justcompile] goto :compile
 ..\utils\png2scr ..\gfx\speccy\marco.png marco.scr
 ..\utils\png2scr ..\gfx\speccy\ending.png ending.scr
 ..\utils\png2scr ..\gfx\speccy\loading.png loading.scr
+del title.bin >nul
 ..\utils\zx0 title.scr title.bin
+del marco.bin >nul
 ..\utils\zx0 marco.scr marco.bin
+del ending.bin >nul
 ..\utils\zx0 ending.scr ending.bin
 ..\utils\ene2h ..\enems\enems.ene enems.h 2bytes
-..\utils\msc ..\script\script.spt msc.h 24
 
+:compile
+..\utils\msc ..\script\script.spt msc.h 24
 zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200
 
 ..\utils\bas2tap.exe -q -e -a10 -s"%game%" loader.bas %game%.tap  > nul
@@ -26,4 +30,9 @@ zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200
 ..\utils\bin2tap.exe -o %game%.tap -a 24200 -append %game%.bin  > nul
 
 del *.scr > nul 2> nul
+
+if [%1]==[noclean] goto :end
+if [%2]==[noclean] goto :end
 del *.bin > nul 2> nul
+
+:end
