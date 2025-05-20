@@ -8,10 +8,7 @@
 
 // Frames extra por si se pueden eliminar los enemigos:
 
-#ifdef ENEMIES_MAY_DIE
-	extern unsigned char sprite_17_a []; 
-#endif
-
+extern unsigned char sprite_17_a []; 
 extern unsigned char sprite_18_a []; 
 
 #ifdef PLAYER_CAN_FIRE
@@ -19,14 +16,9 @@ extern unsigned char sprite_18_a [];
 	extern unsigned char sprite_19_b [];
 #endif
 
-#ifdef ENEMIES_MAY_DIE
-	#asm
-		._sprite_17_a
-			BINARY "sprites_extra.bin"
-	#endasm
-#endif
-			
-#asm	
+#asm
+	._sprite_17_a
+		BINARY "sprites_extra.bin"
 	._sprite_18_a
 		defs 96, 0
 #endasm
