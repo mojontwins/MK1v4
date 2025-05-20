@@ -82,21 +82,6 @@ void system_init (void) {
 	#endif	
 }
 
-unsigned char attr (char x, char y) {
-	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
-	#ifdef PLAYER_AUTO_CHANGE_SCREEN
-		if (x < 0 || y < 0 || x > 14 || y > 9) return 0;
-	#else
-		if (x < 0 || y < 0) return 8;
-	#endif
-	return map_attr [x + (y << 4) - y];	
-}
-
-unsigned char qtile (unsigned char x, unsigned char y) {
-	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
-	return map_buff [x + (y << 4) - y];	
-}
-
 #ifdef UNPACKED_MAP
 	// Draw unpacked tile
 
@@ -257,5 +242,27 @@ void select_joyfunc (void) {
 	}
 	#asm
 		di
+	#endasm
+}
+
+void blackout (void) {
+	#asm
+			ld hl, 22528
+			ld (hl), 0
+			push hl
+			pop de
+			inc de
+			ld bc, 767
+			ldir
+	#endasm
+}
+
+void __FASTCALL__ unpack (unsigned int address) {
+	#asm
+			push hl
+			call blackout
+			pop hl
+			ld de, 16384
+			call depack
 	#endasm
 }

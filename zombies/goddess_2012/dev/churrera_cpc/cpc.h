@@ -45,6 +45,8 @@ unsigned char *pptr, *pptr_alt;
 #include "churrera_cpc/extrasprites.h"
 #include "churrera_cpc/spriteset_mappings.h"
 
+#include "churrera_cpc/pal.h"
+
 #define WYZ_FX_CHANNEL 1
 unsigned char isr_player_on;
 unsigned char wyz_beat_ct;
@@ -344,7 +346,6 @@ void system_init (void) {
 	
 	// Decompress LUT in place
 
-	//unpack ((unsigned int) (trpixlutc), BASE_LUT);
 	#asm
 			ld  hl, _trpixlutc
 			ld  de, BASE_LUT
@@ -353,11 +354,11 @@ void system_init (void) {
 
 	blackout ();
 
-	/*
-		#asm
-				call my_inks
-		#endasm
-	*/
+	// Set palette
+
+	#asm
+			call my_inks
+	#endasm
 	
 	// Set mode
 
@@ -524,7 +525,7 @@ void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
 	#endasm
 }
 
-void sp_PrintAtInv (unsigned char x, unsigned char y, unsigned char c, unsigned char t) {
+void sp_PrintAtInv (unsigned char y, unsigned char x, unsigned char c, unsigned char t) {
 	px = x; py = y; pt = t;
 	#asm
 
@@ -798,10 +799,7 @@ void pad_read (void) {
 }
 
 void select_joyfunc (void) {
-	cpc_UpdScr ();
-	cpc_ShowTileMap (1);
-
-	AY_PLAY_MUSIC (0);
+	wyz_play_music (0);
 
 	#asm
 		.title_loop
@@ -829,5 +827,17 @@ void select_joyfunc (void) {
 			ld  bc, 24
 			ldir
 	#endasm
-	AY_STOP_SOUND ();
+	wyz_stop_sound ();
+}
+
+void __FASTCALL__ unpack (unsigned int address) {
+	#asm
+			// address is in HL
+			push hl
+			call _blackout
+			pop hl
+			ld de, BASE_SUPERBUFF
+			call depack
+	#endasm
+	cpc_ShowTileMap (1);
 }

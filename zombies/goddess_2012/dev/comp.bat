@@ -32,20 +32,21 @@ goto :compile
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=sprites in=..\gfx\cpc\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=sprites in=..\gfx\cpc\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=sprites in=..\gfx\cpc\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\cpc\pal.png prefix=my_inks out=cpc\pal.h silent > nul 
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\cpc\pal.png prefix=my_inks out=churrera_cpc\pal.h silent > nul 
 
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=superbuffer in=..\gfx\cpc\marco.png out=marco.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=superbuffer in=..\gfx\cpc\ending.png out=ending.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=superbuffer in=..\gfx\cpc\title.png out=title.bin silent > nul
-..\utils\zx0.exe title.bin titlec.bin > nul
-..\utils\zx0.exe marco.bin marcoc.bin > nul
-..\utils\zx0.exe ending.bin endingc.bin > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=superbuffer in=..\gfx\cpc\marco.png out=marco.scr silent
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=superbuffer in=..\gfx\cpc\ending.png out=ending.scr silent
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\cpc\pal.png mode=superbuffer in=..\gfx\cpc\title.png out=title.scr silent
+..\utils\zx0.exe title.scr.bin title.bin > nul
+..\utils\zx0.exe marco.scr.bin marco.bin > nul
+..\utils\zx0.exe ending.scr.bin ending.bin > nul
 
 
 :compile
 ..\utils\msc ..\script\script.spt msc.h 24
 
 if [%om%]==[cpc] goto :cpc
+
 zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200
 if %errorlevel% neq 0 goto :error
 ..\utils\printsize.exe %game%.bin
@@ -64,9 +65,14 @@ goto :noerror
 ..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul 2> nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm churrera_cpc\instrumentos.h
 
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.asm churrera_cpc\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
 zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.bin churrera_cpc\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 ..\utils\printsize.exe %game%.bin
+
+del %game%.sna > nul
+..\utils\cpctbin2sna.exe %game%.bin 0x400 -pc 0x400 -o %game%.sna
+echo Output: %game%.sna
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal_loading.png mode=scr in=..\gfx\%om%\loading.png out=loading.bin silent > nul
 ..\utils\zx7.exe loading.bin loading.c.bin > nul

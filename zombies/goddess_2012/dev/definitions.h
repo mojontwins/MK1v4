@@ -114,7 +114,7 @@ typedef struct {
 #endif
 } ANIMADO;
 
-ANIMADO en_an [3];
+ANIMADO en_an [3] @ BASE_ARRAYS;
 
 #define TYPE_6_IDLE 		0
 #define TYPE_6_PURSUING		1
@@ -133,8 +133,8 @@ BULLET bullets [MAX_BULLETS];
 
 // Tile behaviour array and tile array for the current screen
 
-unsigned char map_attr [150];
-unsigned char map_buff [150];
+unsigned char map_attr [150] @ BASE_ROOM_BUFFERS;
+unsigned char map_buff [150] @ BASE_ROOM_BUFFERS+150;
 
 // Hotspot related shortcut variables. hotspot_x and hotspot_y contain
 // the pixel coordinates of the current screen hotspot.

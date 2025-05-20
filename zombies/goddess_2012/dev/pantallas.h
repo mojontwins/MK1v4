@@ -25,20 +25,3 @@ extern unsigned char s_ending [];
 	._s_ending
 		BINARY "ending.bin"
 #endasm
-
-void unpack (unsigned int address) {
-	asm_int [0] = address;
-	
-	#asm
-		ld hl, 22528
-		ld (hl), 0
-		push hl
-		pop de
-		inc de
-		ld bc, 767
-		ldir
-		ld hl, (_asm_int)
-		ld de, 16384
-		call depack
-	#endasm
-}

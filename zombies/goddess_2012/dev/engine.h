@@ -5,6 +5,21 @@
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+unsigned char attr (char x, char y) {
+	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
+	#ifdef PLAYER_AUTO_CHANGE_SCREEN
+		if (x < 0 || y < 0 || x > 14 || y > 9) return 0;
+	#else
+		if (x < 0 || y < 0) return 8;
+	#endif
+	return map_attr [x + (y << 4) - y];	
+}
+
+unsigned char qtile (unsigned char x, unsigned char y) {
+	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
+	return map_buff [x + (y << 4) - y];	
+}
+
 unsigned char l1x, l1y, l2x, l2y;
 unsigned char collide (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
 	// Secure and dirty box collision.
@@ -168,7 +183,7 @@ char espera_activa (signed int espera) {
 	
 	for (gpint = 0; gpint < espera && res; gpint ++) {
 		for (gpjt = 0; gpjt < 250; gpjt ++) res = 1;
-		if (sp_GetKey ()) res = 0;
+		pad_read (); if (pad0 != 0xff) res = 0;
 	}
 	
 	return res;
