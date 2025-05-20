@@ -21,80 +21,6 @@ unsigned char *allpurposepuntero;
 unsigned int key_m;
 
 void do_game () {
-	
-	// Kempston detection
-	#asm
-		halt
-		in	a, (31)
-		inc a
-		ld	(_kempston_is_attached), a
-		di
-	#endasm
-	
-	// splib2 initialization
-	sp_Initialize (7, 0);
-	sp_Border (BLACK);
-	sp_AddMemory(0, NUMBLOCKS, 14, AD_FREE);
-	
-	// Define keys and default controls
-	keys.up    = sp_LookupKey('q');
-	keys.down  = sp_LookupKey('a');
-	keys.left  = sp_LookupKey('o');
-	keys.right = sp_LookupKey('p');
-	keys.fire  = sp_LookupKey(' ');
-
-	key_m = sp_LookupKey ('m');
-		
-	joyfunc = sp_JoyKeyboard;
-
-	// Load tileset
-	allpurposepuntero = tileset;
-	for (gpint = 0; gpint < 256; gpint++) {
-		sp_TileArray (gpint, allpurposepuntero);
-		allpurposepuntero += 8;
-	}
-
-	// Clipping rectangle
-	spritesClipValues.row_coord = VIEWPORT_Y;
-	spritesClipValues.col_coord = VIEWPORT_X;
-	spritesClipValues.height = 20;
-	spritesClipValues.width = 30;
-	spritesClip = &spritesClipValues;
-	
-	// Sprite creation
-	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (sp_OR_SPRITE, 3, sprite_2_a, 1);
-		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
-		player.current_frame = player.next_frame = sprite_2_a;
-		
-		for (gpit = 0; gpit < 3; gpit ++) {
-			sp_moviles [gpit] = sp_CreateSpr(sp_OR_SPRITE, 3, sprite_9_a, 1);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_b);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_c);	
-			en_an [gpit].current_frame = sprite_9_a;
-		}
-	#else
-		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1);
-		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
-		player.current_frame = player.next_frame = sprite_2_a;
-		
-		for (gpit = 0; gpit < 3; gpit ++) {
-			sp_moviles [gpit] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_b);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_c);	
-			en_an [gpit].current_frame = sprite_9_a;
-		}
-	#endif
-
-	#ifdef PLAYER_CAN_FIRE
-		for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-			sp_bullets [gpit] = sp_CreateSpr (sp_OR_SPRITE, 2, sprite_19_a, 1);
-			sp_AddColSpr (sp_bullets [gpit], sprite_19_b);
-		}
-	#endif
-
 
 	while (1) {
 		// Here the title screen
@@ -236,28 +162,37 @@ void do_game () {
 					eny = malotes [enoffs + gpit].y;
 				}
 
-				sp_MoveSprAbs (sp_moviles [gpit], spritesClip, en_an [gpit].next_frame - en_an [gpit].current_frame, VIEWPORT_Y + (eny >> 3), VIEWPORT_X + (enx >> 3),enx & 7, eny & 7);
-				en_an [gpit].current_frame = en_an [gpit].next_frame;
+				#ifdef CPC
+				#else
+					sp_MoveSprAbs (sp_moviles [gpit], spritesClip, en_an [gpit].next_frame - en_an [gpit].current_frame, VIEWPORT_Y + (eny >> 3), VIEWPORT_X + (enx >> 3),enx & 7, eny & 7);
+					en_an [gpit].current_frame = en_an [gpit].next_frame;
+				#endif
 			}
 
 			// Precalc this, comes handy:
 			_x = player.x >> 6;
 			_y = player.y >> 6;
 			
-			if ( !(player.estado & EST_PARP) || !(half_life) )
-				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (_y >> 3), VIEWPORT_X + (_x >> 3), _x & 7, _y & 7);
-			else
-				sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, -2, -2, 0, 0);
-			
+			#ifdef CPC
+			#else
+				if ( !(player.estado & EST_PARP) || !(half_life) )
+					sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (_y >> 3), VIEWPORT_X + (_x >> 3), _x & 7, _y & 7);
+				else
+					sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, -2, -2, 0, 0);
+			#endif
+
 			player.current_frame = player.next_frame;
 					
 			#ifdef PLAYER_CAN_FIRE
 				for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-					if (bullets [gpit].estado == 1) {
-						sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + (bullets [gpit].y >> 3), VIEWPORT_X + (bullets [gpit].x >> 3), bullets [gpit].x & 7, bullets [gpit].y & 7);
-					} else {
-						sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, -2, -2, 0, 0);
-					}
+					#ifdef CPC
+					#else
+						if (bullets [gpit].estado == 1) {
+							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + (bullets [gpit].y >> 3), VIEWPORT_X + (bullets [gpit].x >> 3), bullets [gpit].x & 7, bullets [gpit].y & 7);
+						} else {
+							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, -2, -2, 0, 0);
+						}
+					#endif
 				}
 			#endif			
 			
@@ -331,7 +266,7 @@ void do_game () {
 			#endif
 		
 			// Flick screen checks and scripting related stuff
-			gpit = (joyfunc) (&keys);
+			gpit = pad0;
 			
 			#ifdef ACTIVATE_SCRIPTING		
 				if (
@@ -351,7 +286,8 @@ void do_game () {
 					#endif
 					#ifdef SCRIPTING_DOWN
 						do {
-							gpit = (joyfunc) (&keys);
+							pad_read ();
+							gpit = pad0;
 						} while ((gpit & sp_DOWN) == 0);
 					#endif
 				}
@@ -427,11 +363,14 @@ void do_game () {
 				#endif
 			) {
 				// ¡Saca a todo el mundo de aquí!
-				sp_MoveSprAbs (sp_player, spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);				
-				for (gpit = 0; gpit < 3; gpit ++) {
-					if (malotes [enoffs + gpit].t != 0)
-						sp_MoveSprAbs (sp_moviles [gpit], spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);
-				}
+				#ifdef CPC
+				#else
+					sp_MoveSprAbs (sp_player, spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);				
+					for (gpit = 0; gpit < 3; gpit ++) {
+						if (malotes [enoffs + gpit].t != 0)
+							sp_MoveSprAbs (sp_moviles [gpit], spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);
+					}
+				#endif
 				
 				game_over ();
 				playing = 0;

@@ -5,16 +5,34 @@
 // definitions.h
 // Contains type definitions and global variables
 
-struct sp_UDK keys;
-void *joyfunc;				// Pointer to the control function selected
+#ifdef CPC
+	#define BASE_TILEMAP 		0x0100
+	#define WYZ_SONG_BUFFER 	0x8800
+	#define BASE_SUPERBUFF  	0x9000
+	#define BASE_ROOM_BUFFERS	0xC000 + 0x600
+	#define BASE_DIRTY_CELLS 	0xC800 + 0x600
+	#define BASE_ARRAYS 		0xD000 + 0x600
+	#define BASE_WYZ 			0xDF80
+	#define BASE_SPRITES 		0xE000 + 0x600
+	#define BASE_CUSTOM 		0xF000 + 0x600
+	#define BASE_LUT			0xF800 + 0x600
+#else
+	#define BASE_ROOM_BUFFERS	23300
+	#define BASE_ARRAYS 		23600
+#endif
 
-void *my_malloc(uint bytes) {
-   return sp_BlockAlloc(0);
-}
+#ifndef CPC
+	struct sp_UDK keys;
+	void *joyfunc;				// Pointer to the control function selected
 
-void *u_malloc = my_malloc;
-void *u_free = sp_FreeBlock;
+	void *my_malloc(uint bytes) {
+	   return sp_BlockAlloc(0);
+	}
 
+	void *u_malloc = my_malloc;
+	void *u_free = sp_FreeBlock;
+#endif
+	
 // Globalized globals
 
 unsigned char kempston_is_attached;
@@ -57,9 +75,9 @@ unsigned char jetpac_frame_counter;
 #define saturate(n)		(n < 0 ? 0 : n)
 
 typedef struct {
-	int x, y, cx;
-	int vx, vy;
-	char g, ax, rx;
+	signed int x, y, cx;
+	signed int vx, vy;
+	signed char g, ax, rx;
 	unsigned char salto, cont_salto;
 	unsigned char *current_frame, *next_frame;
 	unsigned char saltando;
@@ -83,10 +101,10 @@ typedef struct {
 	unsigned char morido;
 #endif
 #if defined(RANDOM_RESPAWN) || defined (USE_TYPE_6)
-	int x;
-	int y;
-	int vx;
-	int vy;
+	signed int x;
+	signed int y;
+	signed int vx;
+	signed int vy;
 #ifdef RANDOM_RESPAWN
 	unsigned char fanty_activo;
 #endif
@@ -139,3 +157,4 @@ unsigned char cx, cy, ccx, ccy;
 unsigned char x0, y0, x1, y1;
 unsigned char rda, rdb, rdx, rdy, rdd, rdm, enoffsmasi;
 unsigned char dx, dy, mn;
+unsigned char pad0, pad1, pad_this_frame;

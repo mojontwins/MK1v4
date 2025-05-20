@@ -63,22 +63,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_1_a
-        defb 2, 252
-        defb 4, 248
-        defb 0, 248
-        defb 88, 160
+        defb 2, 248
+        defb 4, 240
+        defb 0, 240
+        defb 88, 128
         defb 160, 0
         defb 128, 0
         defb 128, 0
         defb 95, 128
         defb 48, 140
         defb 48, 136
-        defb 5, 240
-        defb 5, 240
+        defb 5, 192
+        defb 5, 16
         defb 102, 0
         defb 94, 0
         defb 64, 0
-        defb 0, 255
+        defb 0, 63
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -89,22 +89,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_1_b
-        defb 12, 3
-        defb 2, 1
-        defb 18, 1
-        defb 42, 1
+        defb 12, 1
+        defb 2, 0
+        defb 18, 0
+        defb 42, 0
         defb 232, 1
-        defb 120, 7
+        defb 120, 3
         defb 32, 7
         defb 176, 3
-        defb 130, 1
-        defb 6, 1
+        defb 130, 0
+        defb 6, 0
         defb 192, 15
         defb 248, 3
         defb 252, 1
         defb 6, 0
         defb 7, 240
-        defb 0, 255
+        defb 0, 240
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -141,10 +141,10 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_2_a
-        defb 4, 248
-        defb 8, 240
-        defb 16, 224
-        defb 16, 224
+        defb 4, 240
+        defb 8, 224
+        defb 16, 192
+        defb 16, 192
         defb 81, 128
         defb 145, 0
         defb 160, 0
@@ -153,7 +153,7 @@ extern unsigned char sprite_16_c [];
         defb 16, 196
         defb 24, 192
         defb 27, 192
-        defb 3, 248
+        defb 3, 192
         defb 3, 248
         defb 3, 248
         defb 3, 248
@@ -167,19 +167,19 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_2_b
-        defb 24, 7
-        defb 4, 3
-        defb 68, 3
+        defb 24, 3
+        defb 4, 1
+        defb 68, 1
         defb 176, 3
         defb 176, 7
-        defb 240, 15
+        defb 240, 7
         defb 64, 15
         defb 224, 15
         defb 64, 7
         defb 16, 3
         defb 12, 1
         defb 44, 1
-        defb 96, 15
+        defb 96, 1
         defb 96, 15
         defb 96, 15
         defb 176, 7
@@ -219,22 +219,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_3_a
-        defb 4, 248
-        defb 8, 240
-        defb 8, 240
-        defb 18, 224
-        defb 35, 192
+        defb 4, 240
+        defb 8, 224
+        defb 8, 224
+        defb 18, 192
+        defb 35, 128
         defb 64, 128
         defb 64, 128
         defb 33, 192
         defb 0, 228
         defb 0, 224
         defb 3, 240
-        defb 7, 240
+        defb 7, 144
         defb 103, 0
         defb 94, 0
-        defb 64, 33
-        defb 0, 255
+        defb 64, 1
+        defb 0, 191
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -245,22 +245,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_3_b
-        defb 8, 7
-        defb 4, 3
-        defb 226, 1
-        defb 176, 3
-        defb 180, 3
-        defb 248, 7
+        defb 8, 3
+        defb 4, 1
+        defb 226, 0
+        defb 176, 1
+        defb 180, 1
+        defb 248, 3
         defb 32, 7
-        defb 144, 9
+        defb 144, 1
         defb 198, 0
         defb 126, 0
-        defb 0, 15
+        defb 0, 1
         defb 136, 3
         defb 28, 1
         defb 6, 0
         defb 7, 240
-        defb 0, 255
+        defb 0, 248
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -297,22 +297,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_4_a
-        defb 3, 252
-        defb 4, 248
-        defb 8, 240
-        defb 8, 240
-        defb 9, 240
-        defb 104, 144
+        defb 3, 248
+        defb 4, 240
+        defb 8, 224
+        defb 8, 224
+        defb 9, 224
+        defb 104, 128
         defb 144, 0
         defb 131, 0
         defb 132, 0
         defb 104, 130
         defb 13, 224
-        defb 13, 224
+        defb 13, 192
         defb 55, 128
         defb 47, 128
-        defb 32, 144
-        defb 0, 255
+        defb 32, 128
+        defb 0, 223
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -323,12 +323,12 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_4_b
-        defb 8, 7
-        defb 4, 3
-        defb 226, 1
-        defb 178, 1
-        defb 178, 1
-        defb 248, 1
+        defb 8, 3
+        defb 4, 1
+        defb 226, 0
+        defb 178, 0
+        defb 178, 0
+        defb 248, 0
         defb 32, 0
         defb 115, 0
         defb 7, 0
@@ -337,7 +337,7 @@ extern unsigned char sprite_16_c [];
         defb 158, 0
         defb 182, 0
         defb 12, 65
-        defb 16, 199
+        defb 16, 195
         defb 8, 227
         defb 0, 255
         defb 0, 255
@@ -375,22 +375,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_5_a
-        defb 16, 224
-        defb 32, 192
-        defb 71, 128
-        defb 13, 192
-        defb 45, 192
-        defb 31, 224
+        defb 16, 192
+        defb 32, 128
+        defb 71, 0
+        defb 13, 128
+        defb 45, 128
+        defb 31, 192
         defb 4, 224
-        defb 9, 144
+        defb 9, 128
         defb 99, 0
         defb 126, 0
-        defb 0, 240
+        defb 0, 128
         defb 17, 192
         defb 56, 128
         defb 96, 0
         defb 224, 15
-        defb 0, 255
+        defb 0, 31
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -401,22 +401,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_5_b
-        defb 32, 31
-        defb 16, 15
-        defb 16, 15
-        defb 72, 7
-        defb 196, 3
+        defb 32, 15
+        defb 16, 7
+        defb 16, 7
+        defb 72, 3
+        defb 196, 1
         defb 2, 1
         defb 2, 1
         defb 132, 3
         defb 0, 39
         defb 0, 7
         defb 192, 15
-        defb 224, 15
+        defb 224, 9
         defb 230, 0
         defb 122, 0
-        defb 2, 132
-        defb 0, 255
+        defb 2, 128
+        defb 0, 253
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -453,19 +453,19 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_6_a
-        defb 24, 224
-        defb 32, 192
-        defb 34, 192
+        defb 24, 192
+        defb 32, 128
+        defb 34, 128
         defb 13, 192
         defb 13, 224
-        defb 15, 240
+        defb 15, 224
         defb 2, 240
         defb 7, 240
         defb 2, 224
         defb 8, 192
         defb 48, 128
         defb 52, 128
-        defb 6, 240
+        defb 6, 128
         defb 6, 240
         defb 6, 240
         defb 13, 224
@@ -479,10 +479,10 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_6_b
-        defb 32, 31
-        defb 16, 15
-        defb 8, 7
-        defb 8, 7
+        defb 32, 15
+        defb 16, 7
+        defb 8, 3
+        defb 8, 3
         defb 138, 1
         defb 137, 0
         defb 5, 0
@@ -491,7 +491,7 @@ extern unsigned char sprite_16_c [];
         defb 8, 35
         defb 24, 3
         defb 216, 3
-        defb 192, 31
+        defb 192, 3
         defb 192, 31
         defb 192, 31
         defb 192, 31
@@ -531,22 +531,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_7_a
-        defb 48, 192
-        defb 64, 128
-        defb 72, 128
-        defb 84, 128
+        defb 48, 128
+        defb 64, 0
+        defb 72, 0
+        defb 84, 0
         defb 23, 128
-        defb 30, 224
+        defb 30, 192
         defb 4, 224
         defb 13, 192
-        defb 65, 128
-        defb 96, 128
+        defb 65, 0
+        defb 96, 0
         defb 3, 240
         defb 31, 192
         defb 63, 128
         defb 96, 0
         defb 224, 15
-        defb 0, 255
+        defb 0, 15
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -557,22 +557,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_7_b
-        defb 64, 63
-        defb 32, 31
-        defb 0, 31
-        defb 26, 5
+        defb 64, 31
+        defb 32, 15
+        defb 0, 15
+        defb 26, 1
         defb 5, 0
         defb 1, 0
         defb 1, 0
         defb 250, 1
         defb 12, 49
         defb 12, 17
-        defb 160, 15
-        defb 160, 15
+        defb 160, 3
+        defb 160, 8
         defb 102, 0
         defb 122, 0
         defb 2, 0
-        defb 0, 255
+        defb 0, 252
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -609,12 +609,12 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_8_a
-        defb 16, 224
-        defb 32, 192
-        defb 71, 128
-        defb 77, 128
-        defb 77, 128
-        defb 31, 128
+        defb 16, 192
+        defb 32, 128
+        defb 71, 0
+        defb 77, 0
+        defb 77, 0
+        defb 31, 0
         defb 4, 0
         defb 206, 0
         defb 224, 0
@@ -623,7 +623,7 @@ extern unsigned char sprite_16_c [];
         defb 121, 0
         defb 109, 0
         defb 48, 130
-        defb 8, 227
+        defb 8, 195
         defb 16, 199
         defb 0, 255
         defb 0, 255
@@ -635,22 +635,22 @@ extern unsigned char sprite_16_c [];
         defb 0, 255
  
     ._sprite_8_b
-        defb 192, 63
-        defb 32, 31
-        defb 16, 15
-        defb 16, 15
-        defb 144, 15
-        defb 22, 9
+        defb 192, 31
+        defb 32, 15
+        defb 16, 7
+        defb 16, 7
+        defb 144, 7
+        defb 22, 1
         defb 9, 0
         defb 193, 0
         defb 33, 0
         defb 22, 65
         defb 176, 7
-        defb 176, 7
+        defb 176, 3
         defb 236, 1
         defb 244, 1
-        defb 4, 9
-        defb 0, 255
+        defb 4, 1
+        defb 0, 251
         defb 0, 255
         defb 0, 255
         defb 0, 255

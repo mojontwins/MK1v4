@@ -28,8 +28,8 @@
 
 	XREF script_bytecode
 
-; Target CPC
-	XREF _cpc_UpdateNow
+; Target SPECCY
+	LIB SPUpdateNow
 
 ; Exports
 	XDEF _script_do

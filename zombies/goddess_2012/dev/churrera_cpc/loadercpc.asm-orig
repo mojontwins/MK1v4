@@ -11,32 +11,32 @@ org $BA00
 ; Set mode 
 
 	ld     bc, $7f00
-	ld     a, $8C + 0
+	ld     a, $8C + %%%loader_mode%%%
 	out    (c), a
 
 ; Load screen 
 
-	ld      ix, $BA00 - 1037
-	ld      de, 1037
+	ld      ix, $BA00 - %%%scrc_size%%%
+	ld      de, %%%scrc_size%%%
 	call    cpct_miniload_asm
 
 	call setPal
 
 ; Depack screen
 
-	ld      hl, $BA00 - 1037
+	ld      hl, $BA00 - %%%scrc_size%%%
 	ld      de, $C000
 	call    dzx7_standard
 
 ; Load binary
 
-	ld      ix, $BA00 - 17331
-	ld      de, 17331
+	ld      ix, $BA00 - %%%mainbin_size%%%
+	ld      de, %%%mainbin_size%%%
 	call    cpct_miniload_asm
 
 ; Depack binary
 
-	ld      hl, $BA00 - 17331
+	ld      hl, $BA00 - %%%mainbin_size%%%
 	ld      de, $0400
 	call    dzx7_standard
 
@@ -82,7 +82,7 @@ loopPal:
 	ret
 
 palette:
-	defb $0A, $14, $1E, $0B, $0B, $0B, $0B, $0B, $0B, $0B, $0B, $0B, $0B, $0B, $0B, $0B
+	defb %%%loading_palette%%%
 
 
 ; -----------------------------------------------------------------------------
