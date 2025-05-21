@@ -266,3 +266,82 @@ void __FASTCALL__ unpack (unsigned int address) {
 			call depack
 	#endasm
 }
+
+void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
+	// Zero terminated strings, supports newlines with %
+	#asm
+			ld  hl, 8
+			add hl, sp
+			
+			ld  a, (hl)
+			ld  (__x), a
+			ld  (__t), a
+			dec hl
+			dec hl
+
+			ld  a, (hl)
+			ld  (__y), a
+			dec hl
+			dec hl
+			
+			ld  a, (hl)
+			ld  (__n), a
+			dec hl
+
+			ld  a, (hl)
+			dec hl 
+			ld  l, (hl)
+			ld  h, a
+
+		.draw_text_loop
+			ld  a, (__x)
+			ld  c, a
+			inc a
+			ld  (__x), a
+
+			ld  a, (__n)
+			ld  d, a
+			
+			ld  a, (hl)
+			or  a
+			ret z
+			
+			inc hl
+
+			cp  0x25
+			jr  z, draw_text_nl
+
+			sub 32
+			ld  e, a
+			
+			ld  a, (__y)
+			
+			push hl
+			call SPPrintAtInv
+			pop hl
+			
+			jr  draw_text_loop
+
+		#if defined ACTIVATE_SCRIPTING && defined TEXT_X
+			.draw_line_of_text
+				;; Entry point called from msc4i
+				;; HL should point to string.
+				ld  a, TEXT_X
+				ld  (__t), a 
+				ld  (__x), a
+				ld  a, TEXT_Y
+				ld  (__y), a
+				ld  a, TEXT_A
+				ld  (__n), a 
+				jr  draw_text_loop
+		#endif
+
+		.draw_text_nl
+			ld  a, (__t)
+			ld  (__x), a
+			ld  a, (__y)
+			inc a
+			ld  (__y), a
+			jr draw_text_loop
+	#endasm
+}

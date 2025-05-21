@@ -31,18 +31,18 @@
 
 	void *u_malloc = my_malloc;
 	void *u_free = sp_FreeBlock;
+	
+	unsigned char kempston_is_attached;
+	struct sp_SS *sp_player;
+	struct sp_SS *sp_moviles [3];
+	#ifdef PLAYER_CAN_FIRE
+		struct sp_SS *sp_bullets [MAX_BULLETS];
+	#endif
+	struct sp_Rect spritesClipValues;
+	struct sp_Rect *spritesClip;
 #endif
 	
 // Globalized globals
-
-unsigned char kempston_is_attached;
-struct sp_SS *sp_player;
-struct sp_SS *sp_moviles [3];
-#ifdef PLAYER_CAN_FIRE
-struct sp_SS *sp_bullets [MAX_BULLETS];
-#endif
-struct sp_Rect spritesClipValues;
-struct sp_Rect *spritesClip;
 
 unsigned char enoffs;
 

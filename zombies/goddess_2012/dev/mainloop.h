@@ -27,6 +27,21 @@ void do_game () {
 		sp_UpdateNow();
 		unpack ((unsigned int) (s_title));
 		select_joyfunc ();
+
+		// Custom
+		clear_gamearea_tiles ();
+		draw_text (4, 4, 71, "PULSA Q PARA VOLAR");
+		draw_text (4, 6, 71, "Y SPACE PARA DISPARAR");
+		draw_text (4, 8, 71, "PERO ESTO TE RESTARA FUERZA");
+		draw_text (4, 10, 71, "AHORRA! NO SEAS BERZA!");
+		draw_text (4, 12, 71, "USA LOS PORTALES CORAZON");
+		draw_text (4, 14, 71, "RECUPERAN UN MONTON!");
+		draw_text (4, 16, 71, "LAS COSAS DE INTERACTUAR");
+		draw_text (4, 18, 71, "SE HACEN PULSANDO A");
+		draw_text (4, 20, 71, "VENCE A LOS TEMPLOS!");
+		sp_UpdateNow ();
+		espera_activa (5000);
+		// End
 		
 		#ifndef DIRECT_TO_PLAY
 			// Clear screen and show game frame
@@ -163,7 +178,7 @@ void do_game () {
 				}
 
 				#ifdef CPC
-					cpc_MoveSprAbs (&sp_sw [SP_ENEMS_BASE + gpit], en_an [gpit].next_frame, enx, eny);
+					cpc_MoveSprAbs (SP_ENEMS_BASE + gpit, en_an [gpit].next_frame, enx, eny);
 				#else
 					sp_MoveSprAbs (sp_moviles [gpit], spritesClip, en_an [gpit].next_frame - en_an [gpit].current_frame, VIEWPORT_Y + (eny >> 3), VIEWPORT_X + (enx >> 3),enx & 7, eny & 7);
 					en_an [gpit].current_frame = en_an [gpit].next_frame;
@@ -176,7 +191,7 @@ void do_game () {
 			
 			#ifdef CPC
 				if (!(player.estado & EST_PARP) || !(half_life)) {
-					cpc_MoveSprAbs (sp_sw, player.next_frame, _x, _y);
+					cpc_MoveSprAbs (0, player.next_frame, _x, _y);
 				} else {
 					sp_sw [SP_PLAYER].sp0 = (unsigned int) (sprite_18_a);
 				}
@@ -193,15 +208,13 @@ void do_game () {
 				for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
 					#ifdef CPC
 						if (bullets [gpit].estado == 1) {
-							cpc_MoveSprAbs (&sp_sw [SP_BULLETS_BASE + gpit], sprite_19_a, bullets [gpit].x, bullets [gpit].y);
+							cpc_MoveSprAbs (SP_BULLETS_BASE + gpit, sprite_19_a, bullets [gpit].x, bullets [gpit].y);
 						} else {
 							sp_sw [SP_BULLETS_BASE + gpit].sp0 = (unsigned int) (sprite_18_a);
 						}
 					#else
 						if (bullets [gpit].estado == 1) {
-							rdx = bullets [gpit].x;
-							rdy = bullets [gpit].y;
-							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + rdy, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
+							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + (bullets [gpit].y >> 3), VIEWPORT_X + (bullets [gpit].x >> 3), bullets [gpit].x & 7, bullets [gpit].y & 7);
 						} else {
 							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, -2, -2, 0, 0);
 						}
@@ -377,12 +390,14 @@ void do_game () {
 			) {
 				// ¡Saca a todo el mundo de aquí!
 				#ifdef CPC
-					cpc_MoveSprAbs (sp_sw, sprite_18_a, 0, 0);
+				
+					cpc_MoveSprAbs (0, sprite_18_a, 0, 0);
 					for (gpit = 0; gpit < 3; gpit ++) {
 						if (malotes [enoffs + gpit].t != 0) {
-							cpc_moveSprAbs (&sp_sw [SP_ENEMS_BASE + gpit], sprite_18_a, 0, 0);
+							cpc_MoveSprAbs (SP_ENEMS_BASE + gpit, sprite_18_a, 0, 0);
 						}
 					}
+					
 				#else
 					sp_MoveSprAbs (sp_player, spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);				
 					for (gpit = 0; gpit < 3; gpit ++) {

@@ -594,7 +594,7 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	#endasm
 }
 
-void draw_text (unsigned char x, unsigned char y, char *s) {
+void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 	// Zero terminated strings, supports newlines with %
 	#asm
 			ld  hl, 6
@@ -750,12 +750,35 @@ void sp_UpdateNow (void) {
 	#endasm			
 }
 
-void cpc_MoveSprAbs (SPR *sprite, unsigned char *next_frame, unsigned char cx, unsigned char cy) {
-	sprite.sp0 = (int) next_frame;
-	// H-coordinates: byte offset (0-63)
-	sprite.cx = (VIEWPORT_X * 2) + (cx >> 2);
-	// V-coordinates: pixel line (0-191)
-	sprite.cy = cy;
+void cpc_MoveSprAbs (unsigned char spr_idx, unsigned char *next_frame, unsigned char cx, unsigned char cy) {
+	px = cx; py = cy; pt = spr_idx; pptr = next_frame;
+
+	#asm
+			ld  a, (_pt)
+			sla a 
+			sla a 
+			sla a 
+			sla a 
+			ld  ixh, #((BASE_SPRITES)/256)
+			ld  ixl, a 
+
+			// H-coordinates: byte offset (0-63)
+			ld  a, (_px)
+			srl a 
+			srl a 
+			add #(VIEWPORT_X*2)
+			ld  (ix + 8), a 
+
+			// V-coordinates: pixel line (0-191)
+			ld  a, (_py)
+			add #(VIEWPORT_Y*8)
+			ld  (ix + 9), a
+
+			ld  a, (_pptr)
+			ld  (ix + 0), a 
+			ld  a, (_pptr + 1)
+			ld  (ix + 1), a
+	#endasm
 }
 
 void pad_read (void) {

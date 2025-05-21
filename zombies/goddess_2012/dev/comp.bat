@@ -65,8 +65,8 @@ goto :noerror
 ..\utils\zx0.exe trpixlut.bin trpixlutc.bin > nul 2> nul
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm churrera_cpc\instrumentos.h
 
-zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.asm churrera_cpc\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.bin churrera_cpc\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -a -vn -zorg=1024 -lcpcrslib_mt -o %game%.asm churrera_cpc\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -m -vn -zorg=1024 -lcpcrslib_mt -o %game%.bin churrera_cpc\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 ..\utils\printsize.exe %game%.bin
 

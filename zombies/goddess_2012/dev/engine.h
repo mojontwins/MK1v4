@@ -5,6 +5,14 @@
 // engine.h
 // Cointains engine functions (movement, colliding, rendering... )
 
+void clear_gamearea_tiles (void) {
+	for (gpit = 0; gpit < 10; gpit ++) {
+		for (gpjt = 0; gpjt < 15; gpjt ++) {
+			draw_coloured_tile (VIEWPORT_X + (gpjt<<1), VIEWPORT_Y + (gpit<<1), 47);
+		}
+	}
+}
+
 unsigned char attr (char x, char y) {
 	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
 	#ifdef PLAYER_AUTO_CHANGE_SCREEN
@@ -1231,8 +1239,8 @@ void mueve_bicharracos (unsigned char n_pant) {
 						// Step on enemy and kill it.
 						en_an [enit].next_frame = sprite_17_a;
 						#ifdef CPC
-							sp_sw [SP_ENEMS_BASE + enit].sp0 = sprite_17_a;
-							cpc_UpdateNow (1);
+							sp_sw [SP_ENEMS_BASE + enit].sp0 = (unsigned int) (sprite_17_a);
+							sp_UpdateNow (1);
 							peta_el_beeper (5);
 							espera_activa (20);
 						#else
@@ -1436,7 +1444,7 @@ void mueve_bicharracos (unsigned char n_pant) {
 									// Kill enemy
 									#ifdef CPC
 										sp_sw [SP_ENEMS_BASE + enit].sp0 = (unsigned int) (sprite_17_a);
-										cpc_UpdateNow (1);
+										sp_UpdateNow (1);
 										peta_el_beeper (5);
 										espera_activa (20);
 									#else
