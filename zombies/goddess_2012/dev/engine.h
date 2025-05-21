@@ -99,7 +99,7 @@ unsigned int abs (signed int n) {
 }
 
 void step (void) {
-	#ifdef CPC
+	#ifndef CPC
 		#asm
 				ld a, 16
 				out (254), a
@@ -119,7 +119,7 @@ void step (void) {
 }
 
 void cortina (void) {
-	#ifdef CPC
+	#ifndef CPC
 		#asm
 			// Antes que nada vamos a limpiar el PAPER de toda la pantalla
 			// para que no queden artefactos feos

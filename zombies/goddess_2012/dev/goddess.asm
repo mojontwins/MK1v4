@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 21 18:57:32 2025
+;	Module compile time: Wed May 21 19:49:53 2025
 
 
 
@@ -8874,62 +8874,11 @@
 
 
 ._step
-	ld a, 16
-	out (254), a
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	xor 16
-	out (254), a
 	ret
 
 
 
 ._cortina
-	ld de, 22528
-	ld b, 3
-	.clearb1
-	push bc
-	ld b, 255
-	.clearb2
-	ld a, (de)
-	and 199
-	ld (de), a
-	inc de
-	djnz clearb2
-	pop bc
-	djnz clearb1
-	ld a, 8
-	.repitatodo
-	ld c, a
-	ld hl, 16384
-	ld a, 12
-	.bucle
-	ld b, a
-	ld a, 255
-	.bucle1
-	sla (hl)
-	inc hl
-	dec a
-	jr nz, bucle1
-	ld a, 255
-	.bucle2
-	srl (hl)
-	inc hl
-	dec a
-	jr nz, bucle2
-	ld a, b
-	dec a
-	jr nz, bucle
-	ld a, c
-	dec a
-	jr nz, repitatodo
 	ret
 
 
@@ -12770,6 +12719,64 @@
 	ex	de,hl
 	call	l_eq
 	jp	nc,i_323
+	ld	a,(_enit)
+	ld	e,a
+	ld	d,0
+	ld	l,#(2 % 256)
+	call	l_asl
+	push	hl
+	ld	hl,0 % 256	;const
+	push	hl
+	ld	hl,_en_an
+	push	hl
+	ld	hl,(_enit)
+	ld	h,0
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	pop	de
+	add	hl,de
+	ld	bc,15
+	add	hl,bc
+	ld	l,(hl)
+	ld	h,0
+	push	hl
+	call	_draw_2_digits
+	pop	bc
+	pop	bc
+	pop	bc
+	ld	a,(_enit)
+	ld	e,a
+	ld	d,0
+	ld	l,#(2 % 256)
+	call	l_asl
+	push	hl
+	ld	hl,1 % 256	;const
+	push	hl
+	ld	hl,_en_an
+	push	hl
+	ld	hl,(_enit)
+	ld	h,0
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	pop	de
+	add	hl,de
+	ld	bc,7
+	add	hl,bc
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	ld	l,#(6 % 256)
+	call	l_asr
+	ld	h,0
+	push	hl
+	call	_draw_2_digits
+	pop	bc
+	pop	bc
+	pop	bc
 	ld	hl,_en_an
 	push	hl
 	ld	hl,(_enit)
