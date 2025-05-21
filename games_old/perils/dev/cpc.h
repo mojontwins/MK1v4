@@ -1749,11 +1749,6 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 }
 
 void select_controls (void) {
-	cpc_UpdScr ();
-	cpc_ShowTileMap (1);
-
-	AY_PLAY_MUSIC (0);
-
 	#asm
 		.title_loop
 			call _pad_read 
@@ -1780,5 +1775,4 @@ void select_controls (void) {
 			ld  bc, 24
 			ldir
 	#endasm
-	AY_STOP_SOUND ();
 }

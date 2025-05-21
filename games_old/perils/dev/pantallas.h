@@ -50,7 +50,7 @@ void title_screen (void) {
 	"MK1 V3.2");
 
 	#ifdef CPC
-		cpc_UpdateNow (0);
+		cpc_ShowTileMap (1);
 		AY_PLAY_MUSIC (0);
 	#else 
 		#asm 
@@ -60,6 +60,10 @@ void title_screen (void) {
 	#endif
 
 	select_controls ();
+
+	#ifdef CPC
+		AY_STOP_SOUND ();
+	#endif
 }
 
 void game_ending (void) {

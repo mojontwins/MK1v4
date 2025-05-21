@@ -2,6 +2,9 @@ ROOMS = 24
 ITEM SLOT = 0
 ALIAS %CARRYING = 0
 
+# BRA is tile 18, KNICKERS is tile 20
+# hence those are the numbers we use to ID those items.
+
 ENTERING GAME
 	IF TRUE
 	THEN
@@ -138,7 +141,7 @@ SPECIAL TILE TOUCHED
 		SOUND 7
 	END
 
-	IF TN = 22
+	IF TN = 20
 	THEN
 		GET ITEM SET %KNICKERS
 		SOUND 7

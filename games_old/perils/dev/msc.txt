@@ -131,7 +131,7 @@ Parsing: %CARRYING = 47			# Empty tile
 T0=[$0]
 T1=[=]
 T2=[47			]
-Syntax error at 51
+Syntax error at 54
 Parsing: %VIEHO1 = 1
 T0=[$3]
 T1=[=]
@@ -343,11 +343,11 @@ T3=[$1]
 Parsing: SOUND 7
 T0=[SOUND]
 T1=[7]
-Parsing: IF TN = 22
+Parsing: IF TN = 20
 T0=[IF]
 T1=[$246]
 T2=[=]
-T3=[22]
+T3=[20]
 Parsing: GET ITEM SET %KNICKERS
 T0=[GET]
 T1=[ITEM]
@@ -356,7 +356,7 @@ T3=[$2]
 Parsing: SOUND 7
 T0=[SOUND]
 T1=[7]
-Bytecode: 08 01 FF FE 14 FF F0 FF 0B 01 FF F6 12 FF 30 01 E0 07 FF 0B 01 FF F6 16 FF 30 02 E0 07 FF FF 
+Bytecode: 08 01 FF FE 14 FF F0 FF 0B 01 FF F6 12 FF 30 01 E0 07 FF 0B 01 FF F6 14 FF 30 02 E0 07 FF FF 
 ==========================================
 LINEA PLAYER KILLS ENEMY
 T0=[player]

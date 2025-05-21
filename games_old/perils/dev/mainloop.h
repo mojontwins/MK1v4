@@ -67,7 +67,7 @@ void main (void) {
 		#endif
 
 		n_pant = SCR_INICIO;
-		
+	
 		#ifdef ACTIVATE_SCRIPTING		
 			script_result = 0;
 			
