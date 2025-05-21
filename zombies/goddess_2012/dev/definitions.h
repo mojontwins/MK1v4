@@ -48,7 +48,7 @@ unsigned char enoffs;
 
 // Aux
 
-extern char asm_number[1];
+extern signed char asm_number[1];
 extern unsigned int asm_int [1];
 extern unsigned int asm_int_2 [1];
 extern unsigned int seed [1];
@@ -124,7 +124,7 @@ ANIMADO en_an [3] @ BASE_ARRAYS;
 typedef struct {
 	unsigned char x;
 	unsigned char y;
-	char mx;
+	signed char mx;
 	unsigned char estado;
 } BULLET;
 
@@ -168,10 +168,6 @@ unsigned char maincounter;
 unsigned char objs_old, keys_old, life_old, killed_old, item_old;
 unsigned char *allpurposepuntero;
 
-#ifdef RANDOM_RESPAWN
-	signed int enx, eny;
-#else
-	unsigned char enx, eny;
-#endif
+unsigned char enx, eny;
 
 unsigned int key_m;

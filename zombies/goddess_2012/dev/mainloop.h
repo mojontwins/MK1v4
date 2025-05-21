@@ -147,11 +147,12 @@ void do_game () {
 
 			// Render		
 			for (gpit = 0; gpit < 3; gpit ++) {
+				enoffsmasi = enoffs + gpit;
 				#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 					#ifdef RANDOM_RESPAWN
 						if (en_an [gpit].fanty_activo)
 					#else
-						if (malotes [enoffs + gpit].t == 6)
+						if (malotes [enoffsmasi].t == 6)
 					#endif
 					{
 						enx = en_an [gpit].x >> 6;
@@ -159,8 +160,8 @@ void do_game () {
 					} else 
 				#endif
 				{
-					enx = malotes [enoffs + gpit].x;
-					eny = malotes [enoffs + gpit].y;
+					enx = malotes [enoffsmasi].x;
+					eny = malotes [enoffsmasi].y;
 				}
 
 				#ifdef CPC

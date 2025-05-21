@@ -1113,6 +1113,8 @@ void mueve_bicharracos (unsigned char n_pant) {
 				}
 			#endif
 
+			// Select frame to display
+
 			en_an [enit].count ++; 
 			if (en_an [enit].count == 4) {
 				en_an [enit].count = 0;
@@ -1140,6 +1142,8 @@ void mueve_bicharracos (unsigned char n_pant) {
 				}	
 			}
 
+			// Simplify coordinates (to byte values)
+
 			_x = player.x >> 6;
 			_y = player.y >> 6;
 			
@@ -1147,24 +1151,17 @@ void mueve_bicharracos (unsigned char n_pant) {
 				if (en_an [enit].fanty_activo) {
 					ccx = en_an [enit].x >> 6;
 					ccy = en_an [enit].y >> 6;
-				} else {
-					ccx = malotes [enoffsmasi].x;
-					ccy = malotes [enoffsmasi].y;
-				}
-			#else
-				#ifdef USE_TYPE_6
-					if (malotes [enoffsmasi].t == 6) {
-						ccx = en_an [enit].x >> 6;
-						ccy = en_an [enit].y >> 6;
-					} else {
-						ccx = malotes [enoffsmasi].x;
-						ccy = malotes [enoffsmasi].y;
-					}
-				#else
-					ccx = malotes [enoffsmasi].x;
-					ccy = malotes [enoffsmasi].y;
-				#endif
+				} else 
+			#elif defined USE_TYPE_6
+				if (malotes [enoffsmasi].t == 6) {
+					ccx = en_an [enit].x >> 6;
+					ccy = en_an [enit].y >> 6;
+				} else 
 			#endif
+			{
+				ccx = malotes [enoffsmasi].x;
+				ccy = malotes [enoffsmasi].y;
+			}
 			
 			// Moving platforms engine:
 

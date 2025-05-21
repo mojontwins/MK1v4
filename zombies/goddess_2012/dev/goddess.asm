@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 21 18:26:34 2025
+;	Module compile time: Wed May 21 18:57:32 2025
 
 
 
@@ -14455,14 +14455,19 @@
 	cp	#(3 % 256)
 	jp	z,i_401
 	jp	nc,i_401
-	ld	hl,_malotes
-	push	hl
 	ld	hl,(_enoffs)
 	ld	h,0
 	ex	de,hl
 	ld	hl,(_gpit)
 	ld	h,0
 	add	hl,de
+	ld	h,0
+	ld	a,l
+	ld	(_enoffsmasi),a
+	ld	hl,_malotes
+	push	hl
+	ld	hl,(_enoffsmasi)
+	ld	h,0
 	ld	b,h
 	ld	c,l
 	add	hl,hl
@@ -14522,12 +14527,8 @@
 .i_403
 	ld	hl,_malotes
 	push	hl
-	ld	hl,(_enoffs)
+	ld	hl,(_enoffsmasi)
 	ld	h,0
-	ex	de,hl
-	ld	hl,(_gpit)
-	ld	h,0
-	add	hl,de
 	ld	b,h
 	ld	c,l
 	add	hl,hl
@@ -14542,12 +14543,8 @@
 	ld	(_enx),a
 	ld	hl,_malotes
 	push	hl
-	ld	hl,(_enoffs)
+	ld	hl,(_enoffsmasi)
 	ld	h,0
-	ex	de,hl
-	ld	hl,(_gpit)
-	ld	h,0
-	add	hl,de
 	ld	b,h
 	ld	c,l
 	add	hl,hl
@@ -15199,8 +15196,8 @@
 ._n_pant	defs	1
 ._enit	defs	1
 ._gpit	defs	1
-._gpjt	defs	1
 ._playing	defs	1
+._gpjt	defs	1
 ._objs_old	defs	1
 ._maincounter	defs	1
 ._l1x	defs	1
@@ -15325,9 +15322,9 @@
 	XDEF	_cy
 	XDEF	_dx
 	XDEF	_dy
-	LIB	cpc_PrintGphStrXY2X
-	LIB	cpc_SpRRM1
 	XDEF	_life_old
+	LIB	cpc_SpRRM1
+	LIB	cpc_PrintGphStrXY2X
 	XDEF	_mn
 	XDEF	_pn
 	LIB	cpc_PrintGphStrXYM1
@@ -15420,16 +15417,16 @@
 	LIB	cpc_ResetTouchedTiles
 	LIB	cpc_ShowTouchedTiles
 	XDEF	_gpit
+	XDEF	_playing
 	XDEF	_gpjt
 	LIB	cpc_PutMaskSp2x8
-	XDEF	_playing
 	LIB	cpc_ScanKeyboard
 	LIB	cpc_SetColour
 	XDEF	_rand
 	XDEF	_seed
 	XDEF	_asm_int_2
-	LIB	cpc_DeleteKeys
 	XDEF	_objs_old
+	LIB	cpc_DeleteKeys
 	XDEF	_maincounter
 	LIB	cpc_PutTrSp2Bx8TileMap
 	LIB	cpc_PutTrSp4Bx16TileMap
