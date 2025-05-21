@@ -260,7 +260,7 @@ void blackout (void) {
 void __FASTCALL__ unpack (unsigned int address) {
 	#asm
 			push hl
-			call blackout
+			call _blackout
 			pop hl
 			ld de, 16384
 			call depack
@@ -274,18 +274,18 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			add hl, sp
 			
 			ld  a, (hl)
-			ld  (__x), a
-			ld  (__t), a
+			ld  (_px), a
+			ld  (_pt), a
 			dec hl
 			dec hl
 
 			ld  a, (hl)
-			ld  (__y), a
+			ld  (_py), a
 			dec hl
 			dec hl
 			
 			ld  a, (hl)
-			ld  (__n), a
+			ld  (_pt_alt), a
 			dec hl
 
 			ld  a, (hl)
@@ -294,12 +294,12 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			ld  h, a
 
 		.draw_text_loop
-			ld  a, (__x)
+			ld  a, (_px)
 			ld  c, a
 			inc a
-			ld  (__x), a
+			ld  (_px), a
 
-			ld  a, (__n)
+			ld  a, (_pt_alt)
 			ld  d, a
 			
 			ld  a, (hl)
@@ -314,34 +314,21 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			sub 32
 			ld  e, a
 			
-			ld  a, (__y)
+			ld  a, (_py)
 			
 			push hl
+			LIB SPPrintAtInv
 			call SPPrintAtInv
 			pop hl
 			
 			jr  draw_text_loop
 
-		#if defined ACTIVATE_SCRIPTING && defined TEXT_X
-			.draw_line_of_text
-				;; Entry point called from msc4i
-				;; HL should point to string.
-				ld  a, TEXT_X
-				ld  (__t), a 
-				ld  (__x), a
-				ld  a, TEXT_Y
-				ld  (__y), a
-				ld  a, TEXT_A
-				ld  (__n), a 
-				jr  draw_text_loop
-		#endif
-
 		.draw_text_nl
-			ld  a, (__t)
-			ld  (__x), a
-			ld  a, (__y)
+			ld  a, (_pt)
+			ld  (_px), a
+			ld  a, (_py)
 			inc a
-			ld  (__y), a
+			ld  (_py), a
 			jr draw_text_loop
 	#endasm
 }

@@ -597,7 +597,7 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 	// Zero terminated strings, supports newlines with %
 	#asm
-			ld  hl, 6
+			ld  hl, 8
 			add hl, sp
 			
 			ld  a, (hl)
@@ -608,6 +608,9 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 
 			ld  a, (hl)
 			ld  (_py), a
+			dec hl
+			dec hl
+			
 			dec hl
 
 			ld  a, (hl)

@@ -158,3 +158,20 @@ unsigned char x0, y0, x1, y1;
 unsigned char rda, rdb, rdx, rdy, rdd, rdm, enoffsmasi;
 unsigned char dx, dy, mn;
 unsigned char pad0, pad1, pad_this_frame;
+
+// Relocated here
+
+unsigned char playing;
+unsigned char success;
+unsigned char n_pant;
+unsigned char maincounter;
+unsigned char objs_old, keys_old, life_old, killed_old, item_old;
+unsigned char *allpurposepuntero;
+
+#ifdef RANDOM_RESPAWN
+	signed int enx, eny;
+#else
+	unsigned char enx, eny;
+#endif
+
+unsigned int key_m;

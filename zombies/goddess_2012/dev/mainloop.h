@@ -5,21 +5,6 @@
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
 
-unsigned char playing;
-unsigned char success;
-unsigned char n_pant;
-unsigned char maincounter;
-unsigned char objs_old, keys_old, life_old, killed_old, item_old;
-unsigned char *allpurposepuntero;
-
-#ifdef RANDOM_RESPAWN
-	signed int enx, eny;
-#else
-	unsigned char enx, eny;
-#endif
-
-unsigned int key_m;
-
 void do_game () {
 
 	while (1) {
@@ -30,15 +15,16 @@ void do_game () {
 
 		// Custom
 		clear_gamearea_tiles ();
-		draw_text (4, 4, 71, "PULSA Q PARA VOLAR");
-		draw_text (4, 6, 71, "Y SPACE PARA DISPARAR");
-		draw_text (4, 8, 71, "PERO ESTO TE RESTARA FUERZA");
-		draw_text (4, 10, 71, "AHORRA! NO SEAS BERZA!");
-		draw_text (4, 12, 71, "USA LOS PORTALES CORAZON");
-		draw_text (4, 14, 71, "RECUPERAN UN MONTON!");
-		draw_text (4, 16, 71, "LAS COSAS DE INTERACTUAR");
-		draw_text (4, 18, 71, "SE HACEN PULSANDO A");
-		draw_text (4, 20, 71, "VENCE A LOS TEMPLOS!");
+		draw_text (4, 3, 71, "PULSA [Q] PARA VOLAR!");
+		draw_text (4, 5, 71, "ESTO MATA UN POQUITO,");
+		draw_text (4, 7, 71, "PERO MATARA MENOS");
+		draw_text (4, 9, 71, "SI VUELAS DESPACITO.");
+		draw_text (4, 11, 71, "CON [SPACE] LANZAS BOLAS");
+		draw_text (4, 13, 71, "PERO HACEN PUPA, NO MOLA.");
+		draw_text (4, 15, 71, "LAS COSAS DE INTERACTUAR");
+		draw_text (4, 17, 71, "SE HACEN PULSANDO [A].");
+		draw_text (4, 19, 71, "VENCE AL TEMPLO TRIFUERZA!");
+		draw_text (4, 21, 71, "CURATE EN LOS CORAZONES!");
 		sp_UpdateNow ();
 		espera_activa (5000);
 		// End

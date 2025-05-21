@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 21 18:14:29 2025
+;	Module compile time: Wed May 21 18:26:34 2025
 
 
 
@@ -6438,7 +6438,7 @@
 
 
 ._draw_text
-	ld hl, 6
+	ld hl, 8
 	add hl, sp
 	ld a, (hl)
 	ld (_px), a
@@ -6447,6 +6447,8 @@
 	dec hl
 	ld a, (hl)
 	ld (_py), a
+	dec hl
+	dec hl
 	dec hl
 	ld a, (hl)
 	dec hl
@@ -8570,14 +8572,20 @@
 	cp	#(15 % 256)
 	jp	z,i_70
 	jp	nc,i_70
-	ld	hl,(_gpjt)
-	ld	h,0
+	ld	a,(_gpjt)
+	ld	e,a
+	ld	d,0
+	ld	l,#(1 % 256)
+	call	l_asl
 	ld	de,2
 	add	hl,de
 	ld	h,0
 	push	hl
-	ld	hl,(_gpit)
-	ld	h,0
+	ld	a,(_gpit)
+	ld	e,a
+	ld	d,0
+	ld	l,#(1 % 256)
+	call	l_asl
 	ld	de,2
 	add	hl,de
 	ld	h,0
@@ -14210,10 +14218,10 @@
 	ld	hl,_s_title
 	call	_unpack
 	call	_select_joyfunc
-	call	_sp_UpdateNow
 	call	_clear_gamearea_tiles
 	ld	hl,4 % 256	;const
 	push	hl
+	ld	hl,3 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
@@ -14226,11 +14234,11 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,6 % 256	;const
+	ld	hl,5 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+19
+	ld	hl,i_1+22
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -14239,11 +14247,11 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,8 % 256	;const
+	ld	hl,7 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+41
+	ld	hl,i_1+44
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -14252,11 +14260,11 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,10 % 256	;const
+	ld	hl,9 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+69
+	ld	hl,i_1+62
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -14265,11 +14273,11 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,12 % 256	;const
+	ld	hl,11 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+92
+	ld	hl,i_1+83
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -14278,11 +14286,11 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,14 % 256	;const
+	ld	hl,13 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+117
+	ld	hl,i_1+108
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -14291,11 +14299,11 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,16 % 256	;const
+	ld	hl,15 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+138
+	ld	hl,i_1+134
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -14304,11 +14312,11 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,18 % 256	;const
+	ld	hl,17 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+163
+	ld	hl,i_1+159
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -14317,11 +14325,24 @@
 	pop	bc
 	ld	hl,4 % 256	;const
 	push	hl
-	ld	hl,20 % 256	;const
+	ld	hl,19 % 256	;const
 	push	hl
 	ld	hl,71 % 256	;const
 	push	hl
-	ld	hl,i_1+183
+	ld	hl,i_1+182
+	push	hl
+	call	_draw_text
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	ld	hl,4 % 256	;const
+	push	hl
+	ld	hl,21 % 256	;const
+	push	hl
+	ld	hl,71 % 256	;const
+	push	hl
+	ld	hl,i_1+209
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -15106,31 +15127,34 @@
 ;	SECTION	text
 
 .i_1
-	defm	"PULSA Q PARA VOLAR"
+	defm	"PULSA [Q] PARA VOLAR!"
 	defb	0
 
-	defm	"Y SPACE PARA DISPARAR"
+	defm	"ESTO MATA UN POQUITO,"
 	defb	0
 
-	defm	"PERO ESTO TE RESTARA FUERZA"
+	defm	"PERO MATARA MENOS"
 	defb	0
 
-	defm	"AHORRA! NO SEAS BERZA!"
+	defm	"SI VUELAS DESPACITO."
 	defb	0
 
-	defm	"USA LOS PORTALES CORAZON"
+	defm	"CON [SPACE] LANZAS BOLAS"
 	defb	0
 
-	defm	"RECUPERAN UN MONTON!"
+	defm	"PERO HACEN PUPA, NO MOLA."
 	defb	0
 
 	defm	"LAS COSAS DE INTERACTUAR"
 	defb	0
 
-	defm	"SE HACEN PULSANDO A"
+	defm	"SE HACEN PULSANDO [A]."
 	defb	0
 
-	defm	"VENCE A LOS TEMPLOS!"
+	defm	"VENCE AL TEMPLO TRIFUERZA!"
+	defb	0
+
+	defm	"CURATE EN LOS CORAZONES!"
 	defb	0
 
 ;	SECTION	code
