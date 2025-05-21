@@ -47,7 +47,8 @@ goto :compile
 
 if [%om%]==[cpc] goto :cpc
 
-zcc +zx -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200
+zcc +zx -a -vn churromain.c -o %game%.asm -lsplib2 -zorg=24200
+zcc +zx -m -vn churromain.c -o %game%.bin -lsplib2 -zorg=24200
 if %errorlevel% neq 0 goto :error
 ..\utils\printsize.exe %game%.bin
 

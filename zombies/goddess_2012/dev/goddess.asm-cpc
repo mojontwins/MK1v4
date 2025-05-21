@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 21 23:39:34 2025
+;	Module compile time: Wed May 21 23:17:47 2025
 
 
 
@@ -13873,10 +13873,6 @@
 	call	_mueve_bicharracos
 	pop	bc
 	call	_mueve_bullets
-	ld	hl,(_enoffs)
-	ld	h,0
-	ld	a,l
-	ld	(_enoffsmasi),a
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_gpit),a
@@ -13890,6 +13886,15 @@
 	cp	#(3 % 256)
 	jp	z,i_401
 	jp	nc,i_401
+	ld	hl,(_enoffs)
+	ld	h,0
+	ex	de,hl
+	ld	hl,(_gpit)
+	ld	h,0
+	add	hl,de
+	ld	h,0
+	ld	a,l
+	ld	(_enoffsmasi),a
 	ld	hl,_malotes
 	push	hl
 	ld	hl,(_enoffsmasi)
@@ -14003,11 +14008,6 @@
 	pop	bc
 	pop	bc
 	pop	bc
-	ld	hl,_enoffsmasi
-	ld	a,(hl)
-	inc	(hl)
-	ld	l,a
-	ld	h,0
 	jp	i_400
 .i_401
 	ld	hl,(_player)

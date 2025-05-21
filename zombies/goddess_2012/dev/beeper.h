@@ -282,12 +282,9 @@
 	
 */
 
-void peta_el_beeper (unsigned char n) {
-	// Cargar en A el valor de n
-	asm_int [0] = n;
+void __FASTCALL__ peta_el_beeper (unsigned char n) {
 	#asm
-		ld a, (_asm_int)
-		;ld a, 0
+		ld a, l
 		call playsfx
 	#endasm
 }

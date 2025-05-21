@@ -146,17 +146,17 @@ void do_game () {
 			#endif
 
 			// Render		
+			enoffsmasi = enoffs;
 			for (gpit = 0; gpit < 3; gpit ++) {
-				enoffsmasi = enoffs + gpit;
 				#if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 					#ifdef RANDOM_RESPAWN
-						if (en_an [gpit].fanty_activo)
+						if (en_an_fanty_activo [gpit])
 					#else
 						if (malotes [enoffsmasi].t == 6)
 					#endif
 					{
-						enx = en_an [gpit].x >> 6;
-						eny = en_an [gpit].y >> 6;
+						enx = en_an_x [gpit] >> 6;
+						eny = en_an_y [gpit] >> 6;
 					} else 
 				#endif
 				{
@@ -165,11 +165,13 @@ void do_game () {
 				}
 
 				#ifdef CPC
-					cpc_MoveSprAbs (SP_ENEMS_BASE + gpit, en_an [gpit].next_frame, enx, eny);
+					cpc_MoveSprAbs (SP_ENEMS_BASE + gpit, en_an_next_frame [gpit], enx, eny);
 				#else
-					sp_MoveSprAbs (sp_moviles [gpit], spritesClip, en_an [gpit].next_frame - en_an [gpit].current_frame, VIEWPORT_Y + (eny >> 3), VIEWPORT_X + (enx >> 3),enx & 7, eny & 7);
-					en_an [gpit].current_frame = en_an [gpit].next_frame;
+					sp_MoveSprAbs (sp_moviles [gpit], spritesClip, en_an_next_frame [gpit] - en_an_current_frame [gpit], VIEWPORT_Y + (eny >> 3), VIEWPORT_X + (enx >> 3),enx & 7, eny & 7);
+					en_an_current_frame [gpit] = en_an_next_frame [gpit];
 				#endif
+
+				enoffsmasi++;
 			}
 
 			// Precalc this, comes handy:
@@ -194,14 +196,14 @@ void do_game () {
 			#ifdef PLAYER_CAN_FIRE
 				for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
 					#ifdef CPC
-						if (bullets [gpit].estado == 1) {
-							cpc_MoveSprAbs (SP_BULLETS_BASE + gpit, sprite_19_a, bullets [gpit].x, bullets [gpit].y);
+						if (bullets_estado [gpit] == 1) {
+							cpc_MoveSprAbs (SP_BULLETS_BASE + gpit, sprite_19_a, bullets_x [gpit], bullets_y [gpit]);
 						} else {
 							sp_sw [SP_BULLETS_BASE + gpit].sp0 = (unsigned int) (sprite_18_a);
 						}
 					#else
-						if (bullets [gpit].estado == 1) {
-							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + (bullets [gpit].y >> 3), VIEWPORT_X + (bullets [gpit].x >> 3), bullets [gpit].x & 7, bullets [gpit].y & 7);
+						if (bullets_estado [gpit] == 1) {
+							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + (bullets_y [gpit] >> 3), VIEWPORT_X + (bullets_x [gpit] >> 3), bullets_x [gpit] & 7, bullets_y [gpit] & 7);
 						} else {
 							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, -2, -2, 0, 0);
 						}
@@ -214,9 +216,9 @@ void do_game () {
 			
 			#ifdef PLAYER_CAN_FIRE
 				for (gpit = 0; gpit < 3; gpit ++)
-					if (en_an [gpit].morido == 1) {
+					if (en_an_morido [gpit] == 1) {
 						peta_el_beeper (1);
-						en_an [gpit].morido = 0;
+						en_an_morido [gpit] = 0;
 					} 	
 			#endif
 

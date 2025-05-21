@@ -93,48 +93,43 @@ typedef struct {
 
 INERCIA player;
 
-typedef struct {
-	unsigned char frame;
-	unsigned char count;
-	unsigned char *current_frame, *next_frame;
-#ifdef PLAYER_CAN_FIRE
-	unsigned char morido;
-#endif
-#if defined(RANDOM_RESPAWN) || defined (USE_TYPE_6)
-	signed int x;
-	signed int y;
-	signed int vx;
-	signed int vy;
-#ifdef RANDOM_RESPAWN
-	unsigned char fanty_activo;
-#endif
-#ifdef USE_TYPE_6
-	unsigned char state;
-#endif	
-#endif
-} ANIMADO;
+unsigned char en_an_frame [3]						@ BASE_ARRAYS;
+unsigned char en_an_count [3] 						@ BASE_ARRAYS + 3;
+unsigned char *en_an_current_frame [3] 				@ BASE_ARRAYS + 6;
+unsigned char *en_an_next_frame [3] 				@ BASE_ARRAYS + 12;
 
-ANIMADO en_an [3] @ BASE_ARRAYS;
+#ifdef PLAYER_CAN_FIRE
+	unsigned char en_an_morido [3] 					@ BASE_ARRAYS + 18;
+#endif
+
+#if defined(RANDOM_RESPAWN) || defined (USE_TYPE_6)
+	signed int en_an_x [3] 							@ BASE_ARRAYS + 21;
+	signed int en_an_y [3] 							@ BASE_ARRAYS + 27;
+	signed int en_an_vx [3] 						@ BASE_ARRAYS + 33;
+	signed int en_an_vy [3] 						@ BASE_ARRAYS + 39;
+	#ifdef RANDOM_RESPAWN
+		unsigned char en_an_fanty_activo [3] 		@ BASE_ARRAYS + 45;
+	#endif
+	#ifdef USE_TYPE_6
+		unsigned char en_an_state [3] 				@ BASE_ARRAYS + 48;
+	#endif	
+#endif
 
 #define TYPE_6_IDLE 		0
 #define TYPE_6_PURSUING		1
 #define TYPE_6_RETREATING	2
 
 #ifdef PLAYER_CAN_FIRE
-typedef struct {
-	unsigned char x;
-	unsigned char y;
-	signed char mx;
-	unsigned char estado;
-} BULLET;
-
-BULLET bullets [MAX_BULLETS];
+	unsigned char bullets_x [MAX_BULLETS] 			@ BASE_ARRAYS + 51;
+	unsigned char bullets_y [MAX_BULLETS] 			@ BASE_ARRAYS + 51 + MAX_BULLETS;
+	signed char bullets_mx [MAX_BULLETS] 			@ BASE_ARRAYS + 51 + 2 * MAX_BULLETS ;
+	unsigned char bullets_estado [MAX_BULLETS] 		@ BASE_ARRAYS + 51 + 3 * MAX_BULLETS;
 #endif
 
 // Tile behaviour array and tile array for the current screen
 
-unsigned char map_attr [150] @ BASE_ROOM_BUFFERS;
-unsigned char map_buff [150] @ BASE_ROOM_BUFFERS+150;
+unsigned char map_attr [150] 						@ BASE_ROOM_BUFFERS;
+unsigned char map_buff [150] 						@ BASE_ROOM_BUFFERS+150;
 
 // Hotspot related shortcut variables. hotspot_x and hotspot_y contain
 // the pixel coordinates of the current screen hotspot.

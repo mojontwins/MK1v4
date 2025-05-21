@@ -732,7 +732,7 @@ void sp_UpdateNow (void) {
 	for (gpit = 0; gpit < SW_SPRITES_ALL; gpit ++) {
 		#if defined PLAYER_CAN_FIRE || defined PLAYER_HAS_SWORD
 			if (gpit >= SP_BULLETS_BASE) {
-				cpc_PutSPTileMap2Bx8 ((int) (&sp_sw [gpit]));
+				cpc_PutTrSp2Bx8TileMap ((int) (&sp_sw [gpit])); // REVISAR!!
 			} else
 		#endif
 		cpc_PutTrSp4Bx16TileMap ((int) (&sp_sw [gpit]));
