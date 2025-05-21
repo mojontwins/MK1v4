@@ -1,5 +1,6 @@
 ROOMS = 24
 ITEM SLOT = 0
+ITEM EMPTY = 47
 ALIAS %CARRYING = 0
 
 # BRA is tile 18, KNICKERS is tile 20
@@ -10,7 +11,7 @@ ENTERING GAME
 	THEN
 		# Initalize "carrying", 1 = knickers, 2 = bra
 		# Initialization: set to an empty tile
-		%CARRYING = 47
+		%CARRYING = EMPTY
 
 		# Also bra & knickers not taken
 		%BRA = 0
@@ -51,7 +52,7 @@ PRESS FIRE AT SCREEN 0
 	IF %VIEHO1 = 0
 	IF %CARRYING = 20 			# TILE 20 = knickers
 	THEN 
-		%CARRYING = 47			# Empty tile
+		%CARRYING = EMPTY		# Empty tile
 		%VIEHO1 = 1
 		SET TILE (7, 5) = 0
 		SET TILE (6, 4) = 0
@@ -113,7 +114,7 @@ PRESS FIRE AT SCREEN 22
 	IF %VIEHO2 = 0
 	IF %CARRYING = 18 			# Tile #18 = bra
 	THEN 
-		%CARRYING = 47 			# Empty tile
+		%CARRYING = EMPTY			# Empty tile
 		%VIEHO2 = 1		
 		SET TILE (2, 7) = 0
 		SET TILE (3, 8) = 0

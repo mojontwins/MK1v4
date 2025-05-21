@@ -247,6 +247,16 @@ Necesito implementar:
 - En msc4i.asm: Código de intérprete para el opcode 52.
 - En engine: código para mostrar en hud.
 
+El item vacío:
+
+Lo suyo es decirle al scripting cuál es el item vacío. Por defecto será el cero, pero podremos especificar otro. Será un valor ESTÁTICO que se quemará en el intérprete, al igual que `ITEM SLOT`.
+
+- `ITEM EMPTY = 47`, 
+
+en el intérprete para el opcode 30 se usará este valor para comprobar si el inventario está vacío. En el compilador, la palabra `EMPTY` se cambiará por el número que representa, para que podamos hacer `%CARRYING = EMPTY`.
+
+OJAL - El tile se borra de la PANTALLA poniendo un 0 siempre, esto no se puede cambiar.
+
 ## ON TILE PUSHED
 
 Por defecto, empujar un tile ejecutará ON TILE PUSHED, pero puede cambiarse a que se ejecuten las secciones FIRE correspondientes con `#define TILE_PUSHED_PRESSES_FIRE`. En este caso `IF PUSHED` evaluará a true. 

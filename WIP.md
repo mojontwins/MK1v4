@@ -212,6 +212,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Calavera hace una mierda rara con los pies al saltar y no me explico cómo es posible, a menos que possee o gotten se estén poniendo a 1 cuando no deberían. Si no, es que no tiene sentidow. **ES POR `player.possee`** Lo que no sé es por qué se pone a 1 en medio del puto aire. Mañana con más emoción lo miro.
 
+[ ] Es necesario poder definir en el script cuál es el tile vacío para que `GET ITEM SET` funcione correctamente. Ahora mismo comprueba que no llevamos nada mirando que en el flag del inventario haya un cero, y eso rompe Perils (que necesita 47 como tile vacío).
+
 <details>
     <summary>Cosas calculares</summary>
 

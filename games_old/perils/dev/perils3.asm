@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 21 10:24:30 2025
+;	Module compile time: Wed May 21 12:34:05 2025
 
 
 
@@ -6919,12 +6919,12 @@
 	defb	0
 	defb	-1
 	defb	4
-	defb	96
-	defb	48
-	defb	96
-	defb	48
-	defb	96
 	defb	80
+	defb	32
+	defb	80
+	defb	32
+	defb	80
+	defb	96
 	defb	0
 	defb	1
 	defb	1
@@ -8568,7 +8568,7 @@
 
 
 ._init_hotspots
-	ld b, 0 * 0
+	ld b, 4 * 6
 	ld hl, _hotspots + 2
 	ld de, 3
 	ld a, 1
@@ -9959,7 +9959,7 @@
 	call	l_lt
 	jp	nc,i_88
 	ld	a,(_n_pant)
-	cp	#(0 % 256)
+	cp	#(4 % 256)
 	jr	z,i_88_uge
 	jp	c,i_88
 .i_88_uge
@@ -9968,7 +9968,7 @@
 	jp	i_87
 .i_89_i_88
 	ld a, (_n_pant)
-	sub 0
+	sub 4
 	ld (_n_pant), a
 	ld a, 144
 	ld (_gpy), a
@@ -9989,7 +9989,7 @@
 	jp	i_91
 .i_93_i_92
 	ld a, (_n_pant)
-	add 0
+	add 4
 	ld (_n_pant), a
 	xor a
 	ld (_gpy), a

@@ -163,6 +163,7 @@ void do_game () {
 				}
 
 				#ifdef CPC
+					cpc_MoveSprAbs (&sp_sw [SP_ENEMS_BASE + gpit], en_an [gpit].next_frame, enx, eny);
 				#else
 					sp_MoveSprAbs (sp_moviles [gpit], spritesClip, en_an [gpit].next_frame - en_an [gpit].current_frame, VIEWPORT_Y + (eny >> 3), VIEWPORT_X + (enx >> 3),enx & 7, eny & 7);
 					en_an [gpit].current_frame = en_an [gpit].next_frame;
@@ -174,6 +175,11 @@ void do_game () {
 			_y = player.y >> 6;
 			
 			#ifdef CPC
+				if (!(player.estado & EST_PARP) || !(half_life)) {
+					cpc_MoveSprAbs (sp_sw, player.next_frame, _x, _y);
+				} else {
+					sp_sw [SP_PLAYER].sp0 = (unsigned int) (sprite_18_a);
+				}
 			#else
 				if ( !(player.estado & EST_PARP) || !(half_life) )
 					sp_MoveSprAbs (sp_player, spritesClip, player.next_frame - player.current_frame, VIEWPORT_Y + (_y >> 3), VIEWPORT_X + (_x >> 3), _x & 7, _y & 7);
@@ -186,9 +192,16 @@ void do_game () {
 			#ifdef PLAYER_CAN_FIRE
 				for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
 					#ifdef CPC
+						if (bullets [gpit].estado == 1) {
+							cpc_MoveSprAbs (&sp_sw [SP_BULLETS_BASE + gpit], sprite_19_a, bullets [gpit].x, bullets [gpit].y);
+						} else {
+							sp_sw [SP_BULLETS_BASE + gpit].sp0 = (unsigned int) (sprite_18_a);
+						}
 					#else
 						if (bullets [gpit].estado == 1) {
-							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + (bullets [gpit].y >> 3), VIEWPORT_X + (bullets [gpit].x >> 3), bullets [gpit].x & 7, bullets [gpit].y & 7);
+							rdx = bullets [gpit].x;
+							rdy = bullets [gpit].y;
+							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, VIEWPORT_Y + rdy, VIEWPORT_X + (rdx >> 3), rdx & 7, rdy & 7);
 						} else {
 							sp_MoveSprAbs (sp_bullets [gpit], spritesClip, 0, -2, -2, 0, 0);
 						}
@@ -364,6 +377,12 @@ void do_game () {
 			) {
 				// ¡Saca a todo el mundo de aquí!
 				#ifdef CPC
+					cpc_MoveSprAbs (sp_sw, sprite_18_a, 0, 0);
+					for (gpit = 0; gpit < 3; gpit ++) {
+						if (malotes [enoffs + gpit].t != 0) {
+							cpc_moveSprAbs (&sp_sw [SP_ENEMS_BASE + gpit], sprite_18_a, 0, 0);
+						}
+					}
 				#else
 					sp_MoveSprAbs (sp_player, spritesClip, 0, VIEWPORT_Y + 30, VIEWPORT_X + 20, 0, 0);				
 					for (gpit = 0; gpit < 3; gpit ++) {

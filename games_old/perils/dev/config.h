@@ -15,8 +15,8 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						0		//
-#define MAP_H						0		// Map dimmensions in screens
+#define MAP_W						4		//
+#define MAP_H						6		// Map dimmensions in screens
 #define SCR_INICIO					20		// Initial screen
 #define PLAYER_INI_X				2		//
 #define PLAYER_INI_Y				2		// Initial tile coordinates

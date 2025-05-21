@@ -213,7 +213,7 @@
 	add hl, bc
 ; No item in slot?
 	ld  a, (_flags + 0)
-	or  a
+	cp  47
 	jr  nz, aopcode_30_end
 ; Write 1 to LValue
 	inc a

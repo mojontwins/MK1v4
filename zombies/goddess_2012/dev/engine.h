@@ -1231,6 +1231,10 @@ void mueve_bicharracos (unsigned char n_pant) {
 						// Step on enemy and kill it.
 						en_an [enit].next_frame = sprite_17_a;
 						#ifdef CPC
+							sp_sw [SP_ENEMS_BASE + enit].sp0 = sprite_17_a;
+							cpc_UpdateNow (1);
+							peta_el_beeper (5);
+							espera_activa (20);
 						#else
 							sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an [enit].next_frame - en_an [enit].current_frame, VIEWPORT_Y + (malotes [enoffs + enit].y >> 3), VIEWPORT_X + (malotes [enoffs + enit].x >> 3), malotes [enoffs + enit].x & 7, malotes [enoffs + enit].y & 7);
 							en_an [enit].current_frame = en_an [enit].next_frame;
@@ -1431,6 +1435,10 @@ void mueve_bicharracos (unsigned char n_pant) {
 								if (malotes [enoffsmasi].life == 0) {
 									// Kill enemy
 									#ifdef CPC
+										sp_sw [SP_ENEMS_BASE + enit].sp0 = (unsigned int) (sprite_17_a);
+										cpc_UpdateNow (1);
+										peta_el_beeper (5);
+										espera_activa (20);
 									#else
 										sp_MoveSprAbs (sp_moviles [enit], spritesClip, en_an [enit].next_frame - en_an [enit].current_frame, VIEWPORT_Y + (ccy >> 3), VIEWPORT_X + (ccx >> 3), ccx & 7, ccy & 7);
 										en_an [enit].current_frame = en_an [enit].next_frame;
