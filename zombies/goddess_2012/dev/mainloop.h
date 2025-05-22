@@ -92,6 +92,10 @@ void do_game () {
 		
 		half_life = 0;
 
+		#ifdef CPC
+			wyz_play_music (1);
+		#endif
+
 		while (playing) {
 			
 			#ifndef DEACTIVATE_OBJECTS			
@@ -399,6 +403,10 @@ void do_game () {
 				playing = 0;
 				cortina ();
 			}
-		}	
+		}
+
+		#ifdef CPC
+			wyz_stop_sound ();
+		#endif	
 	}
 }

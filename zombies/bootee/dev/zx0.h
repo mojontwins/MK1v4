@@ -1,0 +1,109 @@
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
+
+// zx0.h
+// Cointains the ZX0 decompressor.
+
+#asm
+	; -----------------------------------------------------------------------------
+	; ZX0 decoder by Einar Saukas & Urusergi
+	; "Standard" version (68 bytes only)
+	; -----------------------------------------------------------------------------
+	; .Parameters
+	;   .HL source address (compressed data)
+	;   .DE destination address (decompressing)
+	; -----------------------------------------------------------------------------
+	.depack
+	.dzx0_standard
+	        ld      bc, $ffff               ; preserve default offset 1
+	        push    bc
+	        inc     bc
+	        ld      a, $80
+	.dzx0s_literals
+	        call    dzx0s_elias             ; obtain length
+	        ldir                            ; copy literals
+	        add     a, a                    ; copy from last offset or new offset?
+	        jr      c, dzx0s_new_offset
+	        call    dzx0s_elias             ; obtain length
+	.dzx0s_copy
+	        ex      (sp), hl                ; preserve source, restore offset
+	        push    hl                      ; preserve offset
+	        add     hl, de                  ; calculate destination - offset
+	        ldir                            ; copy from offset
+	        pop     hl                      ; restore offset
+	        ex      (sp), hl                ; preserve offset, restore source
+	        add     a, a                    ; copy from literals or new offset?
+	        jr      nc, dzx0s_literals
+	.dzx0s_new_offset
+	        pop     bc                      ; discard last offset
+	        ld      c, $fe                  ; prepare negative offset
+	        call    dzx0s_elias_loop        ; obtain offset MSB
+	        inc     c
+	        ret     z                       ; check end marker
+	        ld      b, c
+	        ld      c, (hl)                 ; obtain offset LSB
+	        inc     hl
+	        rr      b                       ; last offset bit becomes first length bit
+	        rr      c
+	        push    bc                      ; preserve new offset
+	        ld      bc, 1                   ; obtain length
+	        call    nc, dzx0s_elias_backtrack
+	        inc     bc
+	        jr      dzx0s_copy
+	.dzx0s_elias
+	        inc     c                       ; interlaced Elias gamma coding
+	.dzx0s_elias_loop
+	        add     a, a
+	        jr      nz, dzx0s_elias_skip
+	        ld      a, (hl)                 ; load another group of 8 bits
+	        inc     hl
+	        rla
+	.dzx0s_elias_skip
+	        ret     c
+	.dzx0s_elias_backtrack
+	        add     a, a
+	        rl      c
+	        rl      b
+	        jr      dzx0s_elias_loop
+	; -----------------------------------------------------------------------------
+#endasm
+
+unsigned char *address @ 23296;
+unsigned char *destination @ 23298;
+#ifdef MODE_128K
+	unsigned char ram_page @ 23600;
+	
+	void unpack_RAMn (unsigned char n, unsigned char *src, unsigned char *dest) {
+		address = src;
+		destination = dest;
+		ram_page = n;
+
+		#asm	
+			di
+			ld a, (_ram_page)
+			ld b, a
+			call SetRAMBank
+			
+			ld hl, (_address)
+			ld de, (_destination)
+			call depack
+			
+			ld b, 0
+			call SetRAMBank
+			ei
+		#endasm
+	}
+#else
+	void unpack (unsigned char *src, unsigned char *dest) {
+		if (src != 0) {
+			address = src;
+			destination = dest;
+
+			#asm	
+				ld hl, (_address)
+				ld de, (_destination)
+				call depack
+			#endasm
+		}
+	}
+#endif

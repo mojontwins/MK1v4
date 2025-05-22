@@ -92,6 +92,7 @@ typedef struct {
 } INERCIA;
 
 INERCIA player;
+unsigned char gpx, gpy;
 
 unsigned char en_an_frame [3]						@ BASE_ARRAYS;
 unsigned char en_an_count [3] 						@ BASE_ARRAYS + 3;

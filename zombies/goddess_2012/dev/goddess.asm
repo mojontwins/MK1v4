@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 21 23:39:34 2025
+;	Module compile time: Thu May 22 09:17:51 2025
 
 
 
@@ -5064,90 +5064,42 @@
 	defb 0xFF
 	; Tabla de instrumentos
 	.TABLA_PAUTAS
-	defw PAUTA_0,PAUTA_1,PAUTA_2,PAUTA_3,PAUTA_4,PAUTA_5,0,PAUTA_7,PAUTA_8,PAUTA_9,PAUTA_10,PAUTA_11,PAUTA_12,PAUTA_13,PAUTA_14,PAUTA_15,PAUTA_16
+	defw PAUTA_0,PAUTA_1,PAUTA_2,PAUTA_3,PAUTA_4,PAUTA_5
 	; Tabla de efectos
 	.TABLA_SONIDOS
-	defw SONIDO0,SONIDO1,SONIDO2,SONIDO3,SONIDO4,SONIDO5,SONIDO6,SONIDO7,SONIDO8,SONIDO9
+	defw SONIDO0,SONIDO1,SONIDO2,SONIDO3
 	;Pautas (instrumentos)
 	;Instrumento 'Piano'
 	.PAUTA_0
-	defb 6,0,5,0,4,0,3,0,129
-	;Instrumento 'Piano Reverb'
+	defb 45,0,12,0,10,0,7,0,4,0,129
+	;Instrumento 'PICC'
 	.PAUTA_1
-	defb 10,0,11,0,10,0,9,0,8,0,8,0,8,0,8,0,8,0,8,0,7,0,7,0,7,0,7,0,136
-	;Instrumento 'Fade In FX'
+	defb 74,0,4,0,6,0,9,0,7,0,5,0,9,0,6,0,1,0,129
+	;Instrumento 'Flauta vol bajo'
 	.PAUTA_2
-	defb 2,0,3,0,4,8,4,-1,5,-4,5,20,5,-24,4,4,132
-	;Instrumento 'Guitar 1'
+	defb 12,0,9,0,7,0,9,0,11,0,9,0,10,0,10,0,8,0,10,0,129
+	;Instrumento 'Flauta'
 	.PAUTA_3
-	defb 14,0,14,0,12,0,12,0,10,0,9,1,9,1,9,-1,8,-1,8,0,8,0,134
-	;Instrumento 'Guitar 2'
+	defb 8,0,10,0,11,0,11,0,11,0,10,0,9,0,8,0,9,0,8,0,8,0,8,0,8,0,8,0,8,0,7,0,7,0,7,0,7,0,138
+	;Instrumento 'Picc vol 2'
 	.PAUTA_4
-	defb 10,0,10,0,8,0,8,0,6,0,6,1,6,0,6,0,6,-1,6,0,6,0,134
-	;Instrumento 'Eco guitar'
-	.PAUTA_5
-	defb 7,0,7,0,7,0,6,0,6,0,6,0,6,0,6,0,5,0,5,0,5,0,5,0,5,0,4,0,4,0,4,0,4,0,3,0,0,0,129
-	;Instrumento 'Solo Guitar'
-	.PAUTA_7
-	defb 76,0,11,0,11,0,11,0,10,0,9,1,9,0,9,-1,9,0,9,0,9,-1,9,0,9,1,9,0,9,0,138
-	;Instrumento 'Eco Solo Guitar'
-	.PAUTA_8
-	defb 70,0,6,0,6,0,5,0,5,0,5,0,5,0,5,0,4,0,4,0,4,0,4,0,4,0,4,0,3,0,3,0,3,0,3,0,3,0,3,0,2,0,2,0,2,0,1,0,129
-	;Instrumento 'Slap Bass'
-	.PAUTA_9
-	defb 47,0,15,4,14,-4,13,3,12,-5,9,0,129
-	;Instrumento 'Robo'
-	.PAUTA_10
-	defb 13,-1,13,-1,29,11,28,3,28,6,28,7,27,3,31,4,27,15,26,11,26,8,26,6,9,0,25,5,25,7,131
-	;Instrumento 'Chip'
-	.PAUTA_11
-	defb 76,0,13,0,46,0,13,0,12,0,11,0,129
-	;Instrumento 'Clipclop'
-	.PAUTA_12
-	defb 12,0,11,0,10,0,9,0,9,0,9,0,9,0,9,0,8,0,8,0,8,0,8,0,8,0,138
+	defb 71,0,6,0,7,0,6,0,5,0,129
 	;Instrumento 'Eco'
-	.PAUTA_13
-	defb 9,0,8,0,7,0,6,0,129
-	;Instrumento 'Harmonica'
-	.PAUTA_14
-	defb 44,0,13,0,14,0,13,0,12,0,11,0,129
-	;Instrumento 'Onda'
-	.PAUTA_15
-	defb 74,0,10,0,11,0,12,0,11,0,10,0,9,0,6,0,129
-	;Instrumento 'Teeth'
-	.PAUTA_16
-	defb 73,0,10,0,42,0,9,0,8,0,7,0,7,0,7,0,7,0,6,0,6,0,6,0,6,0,136
+	.PAUTA_5
+	defb 3,0,7,0,9,0,6,0,7,0,6,0,129
 	;Efectos
-	;Efecto 'Bass Drum'
+	;Efecto 'bass drum'
 	.SONIDO0
-	defb 209,60,0,15,124,0,255
-	;Efecto 'Bass Drum Vol 2'
+	defb 209,62,0,186,92,0,255
+	;Efecto 'drum'
 	.SONIDO1
-	defb 186,58,0,0,102,0,162,131,0,255
-	;Efecto 'Drum'
+	defb 139,46,0,232,43,8,255
+	;Efecto 'hithat'
 	.SONIDO2
-	defb 231,46,0,115,43,1,100,42,2,255
-	;Efecto 'Drum 2'
+	defb 0,11,1,0,6,1,255
+	;Efecto 'bass drum vol 2'
 	.SONIDO3
-	defb 19,63,0,0,13,1,0,10,1,0,8,1,255
-	;Efecto 'Hit hat'
-	.SONIDO4
-	defb 0,12,1,0,6,1,255
-	;Efecto 'Hit Hat 2'
-	.SONIDO5
-	defb 0,12,1,255
-	;Efecto 'Bongo 1'
-	.SONIDO6
-	defb 186,30,0,232,25,0,0,40,0,69,38,0,255
-	;Efecto 'Bongo 2'
-	.SONIDO7
-	defb 69,46,0,186,41,0,46,56,0,232,54,0,255
-	;Efecto 'Drum 3'
-	.SONIDO8
-	defb 232,44,0,0,92,5,23,108,5,232,124,5,255
-	;Efecto 'Mute'
-	.SONIDO9
-	defb 0,0,0,255
+	defb 186,58,0,0,102,0,162,131,0,255
 	;Frecuencias para las notas
 	._00_title_mus_bin
 	BINARY "../ogt/00_title.mus.bin"
@@ -8833,13 +8785,8 @@
 	inc hl
 	ld a, d
 	ld (hl), a
-	ld hl, _asm_int
-	ld a, e
-	ld (hl), a
-	inc hl
-	ld a, d
-	ld (hl), a
-	LD H,0
+	ld l, e
+	ld h, 0
 	ret
 
 
@@ -9304,10 +9251,8 @@
 	ld	h,0
 	add	hl,de
 	push	hl
-	ld	hl,(_player)
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asr
+	ld	hl,(_gpx)
+	ld	h,0
 	ld	bc,-4
 	add	hl,bc
 	pop	de
@@ -9331,10 +9276,8 @@
 	ld	h,0
 	add	hl,de
 	push	hl
-	ld	hl,(_player)
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asr
+	ld	hl,(_gpx)
+	ld	h,0
 	ld	bc,12
 	add	hl,bc
 	pop	de
@@ -9397,21 +9340,7 @@
 
 
 ._player_hidden
-	ld	hl,(_player)
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asr
-	ld	h,0
-	ld	a,l
-	ld	(__x),a
-	ld	hl,(_player+1+1)
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asr
-	ld	h,0
-	ld	a,l
-	ld	(__y),a
-	ld	a,(__x)
+	ld	a,(_gpx)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -9419,7 +9348,7 @@
 	ld	h,0
 	ld	a,l
 	ld	(__xx),a
-	ld	a,(__y)
+	ld	a,(_gpy)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -9427,7 +9356,7 @@
 	ld	h,0
 	ld	a,l
 	ld	(__yy),a
-	ld	hl,__y
+	ld	hl,_gpy
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -9471,7 +9400,7 @@
 	ex	de,hl
 	call	l_eq
 	jp	nc,i_123
-	ld	hl,__x
+	ld	hl,_gpx
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -9579,15 +9508,15 @@
 	call	l_asr
 	ld	h,0
 	ld	a,l
-	ld	(__x),a
+	ld	(_gpx),a
 	ld	hl,(_player+1+1)
 	ex	de,hl
 	ld	l,#(6 % 256)
 	call	l_asr
 	ld	h,0
 	ld	a,l
-	ld	(__y),a
-	ld	a,(__x)
+	ld	(_gpy),a
+	ld	a,(_gpx)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -9595,7 +9524,7 @@
 	ld	h,0
 	ld	a,l
 	ld	(__xx),a
-	ld	a,(__y)
+	ld	a,(_gpy)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -9620,7 +9549,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_133
-	ld	hl,__x
+	ld	hl,_gpx
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -9678,7 +9607,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	nc,i_139
-	ld	a,(__y)
+	ld	a,(_gpy)
 	ld	e,a
 	ld	d,0
 	ld	hl,15	;const
@@ -9709,7 +9638,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_143
-	ld	hl,__x
+	ld	hl,_gpx
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -9968,15 +9897,15 @@
 	call	l_asr
 	ld	h,0
 	ld	a,l
-	ld	(__y),a
+	ld	(_gpy),a
 	ld	hl,(_player)
 	ex	de,hl
 	ld	l,#(6 % 256)
 	call	l_asr
 	ld	h,0
 	ld	a,l
-	ld	(__x),a
-	ld	a,(__y)
+	ld	(_gpx),a
+	ld	a,(_gpy)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -9984,7 +9913,7 @@
 	ld	h,0
 	ld	a,l
 	ld	(__yy),a
-	ld	a,(__x)
+	ld	a,(_gpx)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -10009,7 +9938,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_167
-	ld	hl,__y
+	ld	hl,_gpy
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -10076,7 +10005,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_173
-	ld	hl,__y
+	ld	hl,_gpy
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -10160,15 +10089,15 @@
 	call	l_asr
 	ld	h,0
 	ld	a,l
-	ld	(__x),a
+	ld	(_gpx),a
 	ld	hl,(_player+1+1)
 	ex	de,hl
 	ld	l,#(6 % 256)
 	call	l_asr
 	ld	h,0
 	ld	a,l
-	ld	(__y),a
-	ld	a,(__x)
+	ld	(_gpy),a
+	ld	a,(_gpx)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -10176,7 +10105,7 @@
 	ld	h,0
 	ld	a,l
 	ld	(__xx),a
-	ld	a,(__y)
+	ld	a,(_gpy)
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
@@ -10197,7 +10126,7 @@
 	ld	a,h
 	or	l
 	jp	z,i_182
-	ld	hl,__x
+	ld	hl,_gpx
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -10226,7 +10155,7 @@
 	ld	a,h
 	or	l
 	jp	nz,i_182
-	ld	hl,__y
+	ld	hl,_gpy
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -10255,14 +10184,14 @@
 	ld	a,h
 	or	l
 	jp	nz,i_182
-	ld	hl,__x
+	ld	hl,_gpx
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
 	ld	hl,0
 	jp	z,i_187
 	inc	hl
-	ld	hl,__y
+	ld	hl,_gpy
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -10328,6 +10257,20 @@
 	call	l_pint
 .i_190
 .i_181
+	ld	hl,(_player+1+1)
+	ex	de,hl
+	ld	l,#(6 % 256)
+	call	l_asr
+	ld	h,0
+	ld	a,l
+	ld	(_gpy),a
+	ld	hl,(_player)
+	ex	de,hl
+	ld	l,#(6 % 256)
+	call	l_asr
+	ld	h,0
+	ld	a,l
+	ld	(_gpx),a
 	ld	hl,(_player+8)
 	ld	a,h
 	or	l
@@ -11574,20 +11517,6 @@
 	call	l_pint
 .i_257
 .i_255
-	ld	hl,(_player)
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asr
-	ld	h,0
-	ld	a,l
-	ld	(__x),a
-	ld	hl,(_player+1+1)
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asr
-	ld	h,0
-	ld	a,l
-	ld	(__y),a
 	ld	hl,_malotes
 	push	hl
 	ld	hl,(_enoffsmasi)
@@ -11692,10 +11621,11 @@
 	ex	de,hl
 	call	l_eq
 	jp	nc,i_274
-	ld	hl,(_player)
-	ex	de,hl
-	ld	l,#(10 % 256)
-	call	l_asr
+	ld	a,(_gpx)
+	ld	e,a
+	ld	d,0
+	ld	l,#(4 % 256)
+	call	l_asr_u
 	ld	h,0
 	ld	a,l
 	ld	(__xx),a
@@ -11717,7 +11647,7 @@
 	xor	a
 	or	h
 	jp	p,i_275
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccx)
@@ -11727,7 +11657,7 @@
 	pop	de
 	call	l_uge
 	jp	nc,i_277
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccx)
@@ -11737,7 +11667,7 @@
 	pop	de
 	call	l_ule
 	jp	nc,i_277
-	ld	hl,(__y)
+	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccy)
@@ -11747,7 +11677,7 @@
 	pop	de
 	call	l_uge
 	jp	nc,i_277
-	ld	hl,(__y)
+	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccy)
@@ -11767,25 +11697,31 @@
 .i_278_i_277
 	ld	hl,_player+25
 	ld	(hl),#(1 % 256 % 256)
-	ld	hl,_player+1+1
-	push	hl
-	ld	hl,(_ccy)
-	ld	h,0
-	ld	bc,-16
-	add	hl,bc
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asl
-	pop	de
-	call	l_pint
 	ld	hl,_player+8
 	ld	(hl),#(0 % 256)
 	inc	hl
 	ld	(hl),#(0 / 256)
-	ld	hl,(_player+1+1)
-	ex	de,hl
-	ld	l,#(10 % 256)
-	call	l_asr
+	ld	hl,(_ccy)
+	ld	h,0
+	ld	bc,-16
+	add	hl,bc
+	ld	h,0
+	ld	a,l
+	ld	(_gpy),a
+	ld	hl,_player+1+1
+	push	hl
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
+	ld	l,#(6 % 256)
+	call	l_asl
+	pop	de
+	call	l_pint
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
+	ld	l,#(4 % 256)
+	call	l_asr_u
 	ld	h,0
 	ld	a,l
 	ld	(__yy),a
@@ -11807,7 +11743,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_281
-	ld	hl,__x
+	ld	hl,_gpx
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -11843,13 +11779,21 @@
 	ld	a,h
 	or	l
 	jp	z,i_280
-	ld	hl,_player+1+1
-	push	hl
 	ld	hl,(__yy)
 	ld	h,0
 	inc	hl
 	ex	de,hl
-	ld	l,#(10 % 256)
+	ld	l,#(4 % 256)
+	call	l_asl
+	ld	h,0
+	ld	a,l
+	ld	(_gpy),a
+	ld	hl,_player+1+1
+	push	hl
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
+	ld	l,#(6 % 256)
 	call	l_asl
 	pop	de
 	call	l_pint
@@ -11878,7 +11822,7 @@
 	jp	m,i_286
 	or	l
 	jp	z,i_286
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccx)
@@ -11888,7 +11832,7 @@
 	pop	de
 	call	l_uge
 	jp	nc,i_288
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccx)
@@ -11898,7 +11842,7 @@
 	pop	de
 	call	l_ule
 	jp	nc,i_288
-	ld	hl,(__y)
+	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccy)
@@ -11908,7 +11852,7 @@
 	pop	de
 	call	l_uge
 	jp	nc,i_288
-	ld	hl,(__y)
+	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccy)
@@ -11928,25 +11872,31 @@
 .i_289_i_288
 	ld	hl,_player+25
 	ld	(hl),#(1 % 256 % 256)
-	ld	hl,_player+1+1
-	push	hl
-	ld	hl,(_ccy)
-	ld	h,0
-	ld	bc,-16
-	add	hl,bc
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asl
-	pop	de
-	call	l_pint
 	ld	hl,_player+8
 	ld	(hl),#(0 % 256)
 	inc	hl
 	ld	(hl),#(0 / 256)
-	ld	hl,(_player+1+1)
-	ex	de,hl
-	ld	l,#(10 % 256)
-	call	l_asr
+	ld	hl,(_ccy)
+	ld	h,0
+	ld	bc,-16
+	add	hl,bc
+	ld	h,0
+	ld	a,l
+	ld	(_gpy),a
+	ld	hl,_player+1+1
+	push	hl
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
+	ld	l,#(6 % 256)
+	call	l_asl
+	pop	de
+	call	l_pint
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
+	ld	l,#(4 % 256)
+	call	l_asr_u
 	ld	h,0
 	ld	a,l
 	ld	(__yy),a
@@ -11969,7 +11919,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_292
-	ld	hl,__x
+	ld	hl,_gpx
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -12006,12 +11956,20 @@
 	ld	a,h
 	or	l
 	jp	z,i_291
-	ld	hl,_player+1+1
-	push	hl
 	ld	a,(__yy)
 	ld	e,a
 	ld	d,0
-	ld	l,#(10 % 256)
+	ld	l,#(4 % 256)
+	call	l_asl
+	ld	h,0
+	ld	a,l
+	ld	(_gpy),a
+	ld	hl,_player+1+1
+	push	hl
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
+	ld	l,#(6 % 256)
 	call	l_asl
 	pop	de
 	call	l_pint
@@ -12020,20 +11978,6 @@
 .i_287
 .i_286
 .i_285
-	ld	hl,(_player+1+1)
-	ex	de,hl
-	ld	l,#(6 % 256)
-	call	l_asr
-	ld	h,0
-	ld	a,l
-	ld	(__y),a
-	ld	hl,(_player+1+1)
-	ex	de,hl
-	ld	l,#(10 % 256)
-	call	l_asr
-	ld	h,0
-	ld	a,l
-	ld	(__yy),a
 	ld	hl,_malotes
 	push	hl
 	ld	hl,(_enoffsmasi)
@@ -12053,7 +11997,7 @@
 	ex	de,hl
 	call	l_ne
 	jp	nc,i_297
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccx)
@@ -12063,7 +12007,7 @@
 	pop	de
 	call	l_uge
 	jp	nc,i_297
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccx)
@@ -12073,7 +12017,7 @@
 	pop	de
 	call	l_ule
 	jp	nc,i_297
-	ld	hl,(__y)
+	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccy)
@@ -12083,7 +12027,7 @@
 	pop	de
 	call	l_uge
 	jp	nc,i_297
-	ld	hl,(__y)
+	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccy)
@@ -12103,25 +12047,31 @@
 .i_298_i_297
 	ld	hl,_player+25
 	ld	(hl),#(1 % 256 % 256)
-	ld	hl,_player+1+1
-	push	hl
 	ld	hl,(_ccy)
 	ld	h,0
 	ld	bc,-16
 	add	hl,bc
-	ex	de,hl
+	ld	h,0
+	ld	a,l
+	ld	(_gpy),a
+	ld	hl,_player+1+1
+	push	hl
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
 	ld	l,#(6 % 256)
 	call	l_asl
 	pop	de
 	call	l_pint
-	ld	hl,(_player+1+1)
-	ex	de,hl
-	ld	l,#(10 % 256)
-	call	l_asr
+	ld	a,(_gpy)
+	ld	e,a
+	ld	d,0
+	ld	l,#(4 % 256)
+	call	l_asr_u
 	ld	h,0
 	ld	a,l
 	ld	(__yy),a
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
 	ld	hl,_malotes
@@ -12143,20 +12093,21 @@
 	add	hl,de
 	ld	h,0
 	ld	a,l
-	ld	(__x),a
+	ld	(_gpx),a
 	ld	hl,_player
 	push	hl
-	ld	a,(__x)
+	ld	a,(_gpx)
 	ld	e,a
 	ld	d,0
 	ld	l,#(6 % 256)
 	call	l_asl
 	pop	de
 	call	l_pint
-	ld	hl,(_player)
-	ex	de,hl
-	ld	l,#(10 % 256)
-	call	l_asr
+	ld	a,(_gpx)
+	ld	e,a
+	ld	d,0
+	ld	l,#(4 % 256)
+	call	l_asr_u
 	ld	h,0
 	ld	a,l
 	ld	(__xx),a
@@ -12191,7 +12142,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_301
-	ld	hl,__y
+	ld	hl,_gpy
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -12231,13 +12182,21 @@
 	ld	(hl),#(0 % 256)
 	inc	hl
 	ld	(hl),#(0 / 256)
-	ld	hl,_player
-	push	hl
 	ld	hl,(__xx)
 	ld	h,0
 	inc	hl
 	ex	de,hl
-	ld	l,#(10 % 256)
+	ld	l,#(4 % 256)
+	call	l_asl
+	ld	h,0
+	ld	a,l
+	ld	(_gpx),a
+	ld	hl,_player
+	push	hl
+	ld	a,(_gpx)
+	ld	e,a
+	ld	d,0
+	ld	l,#(6 % 256)
 	call	l_asl
 	pop	de
 	call	l_pint
@@ -12278,7 +12237,7 @@
 	ex	de,hl
 	call	l_gt
 	jp	c,i_308
-	ld	hl,__y
+	ld	hl,_gpy
 	ld	a,(hl)
 	and	#(15 % 256)
 	cp	#(0 % 256)
@@ -12319,12 +12278,20 @@
 	ld	(hl),#(0 % 256)
 	inc	hl
 	ld	(hl),#(0 / 256)
-	ld	hl,_player
-	push	hl
 	ld	a,(__xx)
 	ld	e,a
 	ld	d,0
-	ld	l,#(10 % 256)
+	ld	l,#(4 % 256)
+	call	l_asl
+	ld	h,0
+	ld	a,l
+	ld	(_gpx),a
+	ld	hl,_player
+	push	hl
+	ld	a,(_gpx)
+	ld	e,a
+	ld	d,0
+	ld	l,#(6 % 256)
 	call	l_asl
 	pop	de
 	call	l_pint
@@ -12338,10 +12305,10 @@
 	ld	h,0
 	call	l_lneg
 	jp	nc,i_314
-	ld	hl,(__x)
+	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
-	ld	hl,(__y)
+	ld	hl,(_gpy)
 	ld	h,0
 	push	hl
 	ld	hl,(_ccx)
@@ -12474,6 +12441,26 @@
 	ex	de,hl
 	call	l_eq
 	jp	nc,i_323
+	ld	hl,(_ccx)
+	ld	h,0
+	push	hl
+	ld	hl,(_ccy)
+	ld	h,0
+	push	hl
+	ld	hl,(_gpx)
+	ld	h,0
+	push	hl
+	ld	hl,(_gpy)
+	ld	h,0
+	push	hl
+	call	_distance
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
+	ld	h,0
+	ld	a,l
+	ld	(_rdd),a
 	ld	de,_en_an_state
 	ld	hl,(_enit)
 	ld	h,0
@@ -12490,26 +12477,11 @@
 	jp	z,i_350
 	jp	i_325
 .i_327
-	ld	hl,(_ccx)
-	ld	h,0
-	push	hl
-	ld	hl,(_ccy)
-	ld	h,0
-	push	hl
-	ld	hl,(__x)
-	ld	h,0
-	push	hl
-	ld	hl,(__y)
-	ld	h,0
-	push	hl
-	call	_distance
-	pop	bc
-	pop	bc
-	pop	bc
-	pop	bc
-	ld	de,80	;const
-	ex	de,hl
-	call	l_le
+	ld	a,(_rdd)
+	ld	e,a
+	ld	d,0
+	ld	hl,80	;const
+	call	l_ule
 	jp	nc,i_329
 	call	_player_hidden
 	call	l_lneg
@@ -12712,26 +12684,11 @@
 .i_344
 .i_343
 .i_332
-	ld	hl,(_ccx)
-	ld	h,0
-	push	hl
-	ld	hl,(_ccy)
-	ld	h,0
-	push	hl
-	ld	hl,(__x)
-	ld	h,0
-	push	hl
-	ld	hl,(__y)
-	ld	h,0
-	push	hl
-	call	_distance
-	pop	bc
-	pop	bc
-	pop	bc
-	pop	bc
-	ld	de,80	;const
-	ex	de,hl
-	call	l_ge
+	ld	a,(_rdd)
+	ld	e,a
+	ld	d,0
+	ld	hl,80	;const
+	call	l_uge
 	jp	c,i_348
 	call	_player_hidden
 	ld	a,h
@@ -12992,26 +12949,11 @@
 	call	l_pint
 .i_362
 .i_361
-	ld	hl,(_ccx)
-	ld	h,0
-	push	hl
-	ld	hl,(_ccy)
-	ld	h,0
-	push	hl
-	ld	hl,(__x)
-	ld	h,0
-	push	hl
-	ld	hl,(__y)
-	ld	h,0
-	push	hl
-	call	_distance
-	pop	bc
-	pop	bc
-	pop	bc
-	pop	bc
-	ld	de,80	;const
-	ex	de,hl
-	call	l_le
+	ld	a,(_rdd)
+	ld	e,a
+	ld	d,0
+	ld	hl,80	;const
+	call	l_ule
 	jp	nc,i_366
 	call	_player_hidden
 	call	l_lneg
@@ -13809,9 +13751,10 @@
 	pop	bc
 	call	_draw_life
 	call	_draw_item
-	ld	hl,0 % 256	;const
-	ld	a,l
+	ld	a,#(0 % 256 % 256)
 	ld	(_half_life),a
+	ld	hl,1 % 256	;const
+	call	_wyz_play_music
 .i_394
 	ld	a,(_playing)
 	and	a
@@ -14493,6 +14436,7 @@
 .i_450
 	jp	i_394
 .i_395
+	call	_wyz_stop_sound
 	jp	i_392
 .i_393
 	ret
@@ -14601,6 +14545,8 @@
 ._jetpac_frame_counter	defs	1
 ._rda	defs	1
 ._rdb	defs	1
+._gpx	defs	1
+._gpy	defs	1
 ._rdd	defs	1
 ._rdm	defs	1
 ._keys_old	defs	1
@@ -14883,6 +14829,8 @@
 	LIB	cpc_UpdateTileMap
 	XDEF	_rda
 	XDEF	_rdb
+	XDEF	_gpx
+	XDEF	_gpy
 	XDEF	_rdd
 	LIB	cpc_PutSpTileMap8x8Px
 	XDEF	_rdm

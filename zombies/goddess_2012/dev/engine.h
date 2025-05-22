@@ -79,15 +79,8 @@ unsigned char rand (void) {
 			
 			// Ahora [SEED] = HL
 		
-			ld 	hl, _asm_int
-			ld	a,	e	
-			ld	(hl), a
-			inc	hl
-			ld	a,	d
-			ld	(hl), a
-			
-			// Ahora [ASM_INT] = HL
-			LD H,0
+			ld  l, e 
+			ld  h, 0	
 	#endasm
 }
 
@@ -286,10 +279,10 @@ void game_over (void) {
 			if (bullets_estado [bit] == 0) {
 				bullets_estado [bit] = 1;
 				if (player.facing == 0) {
-					bullets_x [bit] = (player.x >> 6) - 4;
+					bullets_x [bit] = gpx - 4;
 					bullets_mx [bit] = -PLAYER_BULLET_SPEED;
 				} else {
-					bullets_x [bit] = (player.x >> 6) + 12;
+					bullets_x [bit] = gpx + 12;
 					bullets_mx [bit] = PLAYER_BULLET_SPEED;
 				}
 				bullets_y [bit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
@@ -309,12 +302,10 @@ void game_over (void) {
 
 #if defined(RANDOM_RESPAWN) || defined(USE_TYPE_6)
 	char player_hidden (void) {
-		_x = player.x >> 6;
-		_y = player.y >> 6;
-		_xx = _x >> 4;
-		_yy = _y >> 4;
-		if ( (_y & 15) == 0 && player.vx == 0 )
-			if (attr (_xx, _yy) == 2 || (attr (1 + _xx, _yy) == 2 && (_x & 15) != 0) )	
+		_xx = gpx >> 4;
+		_yy = gpy >> 4;
+		if ( (gpy & 15) == 0 && player.vx == 0 )
+			if (attr (_xx, _yy) == 2 || (attr (1 + _xx, _yy) == 2 && (gpx & 15) != 0) )	
 				return 1;
 			
 		
@@ -349,7 +340,7 @@ unsigned char move (unsigned char n_pant) {
 	/* Vertical movement. The ecuations used are:
 
 	   1.- vy = vy + g
-	   2.- _y = _y + vy
+	   2.- gpy = gpy + vy
 
 	*/
 
@@ -403,23 +394,23 @@ unsigned char move (unsigned char n_pant) {
 		back until the edge of the tile.
 	*/
 
-	_x = player.x >> 6;				// Divide / 64 for pixels, then / 16 for tiles.
-	_y = player.y >> 6;
-	_xx = _x >> 4;
-	_yy = _y >> 4;
+	gpx = player.x >> 6;				// Divide / 64 for pixels, then / 16 for tiles.
+	gpy = player.y >> 6;
+	_xx = gpx >> 4;
+	_yy = gpy >> 4;
 	
 	// Cool
 
 	if (player.vy < 0) { 			// Going up
 		//if (player.y >= 1024)
-			if (attr (_xx, _yy) > 7 || ((_x & 15) != 0 && attr (_xx + 1, _yy) > 7)) {
+			if (attr (_xx, _yy) > 7 || ((gpx & 15) != 0 && attr (_xx + 1, _yy) > 7)) {
 				// Stop and adjust.
 				player.vy = 0;
 				player.y = (_yy + 1) << 10;
 			}
-	} else if (player.vy > 0 && (_y & 15) < 8) { 	// Going down
+	} else if (player.vy > 0 && (gpy & 15) < 8) { 	// Going down
 		if (player.y < 9216)
-			if (attr (_xx, _yy + 1) > 3 || ((_x & 15) != 0 && attr (_xx + 1, _yy + 1) > 3))
+			if (attr (_xx, _yy + 1) > 3 || ((gpx & 15) != 0 && attr (_xx + 1, _yy + 1) > 3))
 			{
 				// Stop and adjust.
 				player.vy = 0;
@@ -434,7 +425,7 @@ unsigned char move (unsigned char n_pant) {
 
 	#ifdef PLAYER_HAS_JUMP
 		#ifdef PLAYER_CAN_FIRE
-			if (((gpit & sp_UP) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (_xx, _yy + 1) > 3 || ((_x & 15) != 0 && attr (_xx + 1, _yy + 1) > 3))) || player.gotten)) {
+			if (((gpit & sp_UP) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (_xx, _yy + 1) > 3 || ((gpx & 15) != 0 && attr (_xx + 1, _yy + 1) > 3))) || player.gotten)) {
 				player.saltando = 1;
 				player.cont_salto = 0;
 				peta_el_beeper (3);
@@ -451,7 +442,7 @@ unsigned char move (unsigned char n_pant) {
 			if ((gpit & sp_UP) != 0)
 				player.saltando = 0;
 		#else
-			if (((gpit & sp_FIRE) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (_xx, _yy + 1) > 3 || ((_x & 15) != 0 && attr (_xx + 1, _yy + 1) > 3))) || player.gotten)) {
+			if (((gpit & sp_FIRE) == 0) && ((player.vy == 0 && player.saltando == 0 && (attr (_xx, _yy + 1) > 3 || ((gpx & 15) != 0 && attr (_xx + 1, _yy + 1) > 3))) || player.gotten)) {
 				player.saltando = 1;
 				player.cont_salto = 0;
 				peta_el_beeper (3);
@@ -492,12 +483,12 @@ unsigned char move (unsigned char n_pant) {
 
 	   Direction key pressed:
 	   
-	   _x = _x + vx
+	   gpx = gpx + vx
 	   vx = vx + ax
 
 	   Direction key not pressed:
 
-	   _x = _x + vx
+	   gpx = gpx + vx
 	   vx = vx - rx
 	*/
 
@@ -534,19 +525,19 @@ unsigned char move (unsigned char n_pant) {
 	if (player.x > 14336)
 		player.x = 14336;
 
-	_y = player.y >> 6;
-	_x = player.x >> 6;
-	_yy = _y >> 4;
-	_xx = _x >> 4;
+	gpy = player.y >> 6;
+	gpx = player.x >> 6;
+	_yy = gpy >> 4;
+	_xx = gpx >> 4;
 	
 	if (player.vx < 0) {
-		if (attr (_xx, _yy) > 7 || ((_y & 15) != 0 && attr (_xx, _yy + 1) > 7)) {
+		if (attr (_xx, _yy) > 7 || ((gpy & 15) != 0 && attr (_xx, _yy + 1) > 7)) {
 			// Stop and adjust
 			player.vx = 0;
 			player.x = (_xx + 1) << 10;
 		}
 	} else {
-		if (attr (_xx + 1, _yy) > 7 || ((_y & 15) != 0 && attr (_xx + 1, _yy + 1) > 7)) {
+		if (attr (_xx + 1, _yy) > 7 || ((gpy & 15) != 0 && attr (_xx + 1, _yy + 1) > 7)) {
 			// Stop and adjust
 			player.vx = 0;
 			player.x = _xx << 10;
@@ -572,7 +563,7 @@ unsigned char move (unsigned char n_pant) {
 	// Keys / bolts engine:
 
 	#ifndef DEACTIVATE_KEYS
-		if ((_x & 15) == 0 && (_y & 15) == 0) {
+		if ((gpx & 15) == 0 && (gpy & 15) == 0) {
 			if (qtile (_xx + 1, _yy) == 15 && player.keys > 0) {
 				map_attr [15 * _yy + _xx + 1] = 0;
 				map_buff [15 * _yy + _xx + 1] = 0;
@@ -598,10 +589,10 @@ unsigned char move (unsigned char n_pant) {
 			if ((gpit & sp_FIRE) == 0)
 		#endif		
 		{
-			_x = player.x >> 6;
-			_y = player.y >> 6;
-			_xx = _x >> 4;
-			_yy = _y >> 4;
+			gpx = player.x >> 6;
+			gpy = player.y >> 6;
+			_xx = gpx >> 4;
+			_yy = gpy >> 4;
 			#ifdef PLAYER_AUTO_CHANGE_SCREEN
 				// In this case, there's nothing in the screen boundaries which will stop
 				// the boxes from getting out of the screen, so we have to explicitly 
@@ -610,12 +601,12 @@ unsigned char move (unsigned char n_pant) {
 				// In side-view mode, you can't push boxes vertically.
 				#ifdef PLAYER_MOGGY_STYLE
 					// Vertically, only when player.y is tile-aligned.
-					if ((_y & 15) == 0) {
+					if ((gpy & 15) == 0) {
 						if ((gpit & sp_UP) == 0 && _yy > 1) {
 							if (qtile (_xx, _yy - 1) == 14 && attr (_xx, _yy - 2) == 0) {				
 								move_tile (_xx, _yy - 1, _xx, _yy - 2);
 							}
-							if ((_x & 15) != 0) {
+							if ((gpx & 15) != 0) {
 								if (qtile (_xx + 1, _yy - 1) == 14 && attr (_xx + 1, _yy - 2) == 0) {
 									move_tile (_xx + 1, _yy - 1, _xx + 1, _yy - 2);
 								}
@@ -624,7 +615,7 @@ unsigned char move (unsigned char n_pant) {
 							if (qtile (_xx, _yy + 1) == 14 && attr (_xx, _yy + 2) == 0) {
 								move_tile (_xx, _yy + 1, _xx, _yy + 2);
 							}
-							if ((_x & 15) != 0) {
+							if ((gpx & 15) != 0) {
 								if (qtile (_xx + 1, _yy + 1) == 14 && attr (_xx + 1, _yy + 2) == 0) {
 									move_tile (_xx + 1, _yy + 1, _xx + 1, _yy + 2);
 								}	
@@ -634,12 +625,12 @@ unsigned char move (unsigned char n_pant) {
 				#endif
 
 				// Horizontally, only when player.x is tile-aligned.
-				if ((_x & 15) == 0) {
+				if ((gpx & 15) == 0) {
 					if ((gpit & sp_RIGHT) == 0 && _xx < 14) {
 						if (qtile (_xx + 1, _yy) == 14 && attr (_xx + 2, _yy) == 0) {
 							move_tile (_xx + 1, _yy, _xx + 2, _yy);
 						}
-						if ((_y & 15) != 0) {
+						if ((gpy & 15) != 0) {
 							if (qtile (_xx + 1, _yy + 1) == 14 && attr (_xx + 2, _yy + 1) == 0) {
 								move_tile (_xx + 1, _yy + 1, _xx + 2, _yy + 1);
 							}
@@ -648,7 +639,7 @@ unsigned char move (unsigned char n_pant) {
 						if (qtile (_xx - 1, _yy) == 14 && attr (_xx - 2, _yy) == 0) {
 							move_tile (_xx - 1, _yy, _xx - 2, _yy);
 						}
-						if ((_y & 15) != 0) {
+						if ((gpy & 15) != 0) {
 							if (qtile (_xx - 1, _yy + 1) == 14 && attr (_xx - 2, _yy + 1) == 0) {
 								move_tile (_xx - 1, _yy + 1, _xx - 2, _yy + 1);
 							}
@@ -660,12 +651,12 @@ unsigned char move (unsigned char n_pant) {
 				// In side-view mode, you can't push boxes vertically.
 				#ifdef PLAYER_MOGGY_STYLE
 					// Vertically, only when player.y is tile-aligned.
-					if ((_y & 15) == 0) {
+					if ((gpy & 15) == 0) {
 						if ((gpit & sp_UP) == 0) {
 							if (qtile (_xx, _yy - 1) == 14 && attr (_xx, _yy - 2) == 0) {				
 								move_tile (_xx, _yy - 1, _xx, _yy - 2);
 							}
-							if ((_x & 15) != 0) {
+							if ((gpx & 15) != 0) {
 								if (qtile (_xx + 1, _yy - 1) == 14 && attr (_xx + 1, _yy - 2) == 0) {
 									move_tile (_xx + 1, _yy - 1, _xx + 1, _yy - 2);
 								}
@@ -674,7 +665,7 @@ unsigned char move (unsigned char n_pant) {
 							if (qtile (_xx, _yy + 1) == 14 && attr (_xx, _yy + 2) == 0) {
 								move_tile (_xx, _yy + 1, _xx, _yy + 2);
 							}
-							if ((_x & 15) != 0) {
+							if ((gpx & 15) != 0) {
 								if (qtile (_xx + 1, _yy + 1) == 14 && attr (_xx + 1, _yy + 2) == 0) {
 									move_tile (_xx + 1, _yy + 1, _xx + 1, _yy + 2);
 								}	
@@ -684,12 +675,12 @@ unsigned char move (unsigned char n_pant) {
 				#endif
 
 				// Horizontally, only when player.x is tile-aligned.
-				if ((_x & 15) == 0) {
+				if ((gpx & 15) == 0) {
 					if ((gpit & sp_RIGHT) == 0) {
 						if (qtile (_xx + 1, _yy) == 14 && attr (_xx + 2, _yy) == 0) {
 							move_tile (_xx + 1, _yy, _xx + 2, _yy);
 						}
-						if ((_y & 15) != 0) {
+						if ((gpy & 15) != 0) {
 							if (qtile (_xx + 1, _yy + 1) == 14 && attr (_xx + 2, _yy + 1) == 0) {
 								move_tile (_xx + 1, _yy + 1, _xx + 2, _yy + 1);
 							}
@@ -698,7 +689,7 @@ unsigned char move (unsigned char n_pant) {
 						if (qtile (_xx - 1, _yy) == 14 && attr (_xx - 2, _yy) == 0) {
 							move_tile (_xx - 1, _yy, _xx - 2, _yy);
 						}
-						if ((_y & 15) != 0) {
+						if ((gpy & 15) != 0) {
 							if (qtile (_xx - 1, _yy + 1) == 14 && attr (_xx - 2, _yy + 1) == 0) {
 								move_tile (_xx - 1, _yy + 1, _xx - 2, _yy + 1);
 							}
@@ -712,15 +703,15 @@ unsigned char move (unsigned char n_pant) {
 	// Evil tile engine
 
 	#ifndef DEACTIVATE_EVIL_TILE	
-		_x = player.x >> 6;
-		_y = player.y >> 6;
-		_xx = _x >> 4;
-		_yy = _y >> 4;
+		gpx = player.x >> 6;
+		gpy = player.y >> 6;
+		_xx = gpx >> 4;
+		_yy = gpy >> 4;
 
 		if (attr (_xx, _yy) == 1 || 
-			((_x & 15) != 0 && attr (_xx + 1, _yy) == 1) ||
-			((_y & 15) != 0 && attr (_xx, _yy + 1) == 1) ||
-			((_x & 15) != 0 && (_y & 15) != 0 && attr (_xx + 1, _yy + 1) == 1)) {
+			((gpx & 15) != 0 && attr (_xx + 1, _yy) == 1) ||
+			((gpy & 15) != 0 && attr (_xx, _yy + 1) == 1) ||
+			((gpx & 15) != 0 && (gpy & 15) != 0 && attr (_xx + 1, _yy + 1) == 1)) {
 			if (player.life > 0) {
 				peta_el_beeper (4);
 				player.life --;	
@@ -731,6 +722,9 @@ unsigned char move (unsigned char n_pant) {
 			}
 		}
 	#endif
+
+	gpy = player.y >> 6;
+	gpx = player.x >> 6;
 
 	// Select next frame to paint...
 
@@ -1144,9 +1138,6 @@ void mueve_bicharracos (unsigned char n_pant) {
 
 			// Simplify coordinates (to byte values)
 
-			_x = player.x >> 6;
-			_y = player.y >> 6;
-			
 			#ifdef RANDOM_RESPAWN
 				if (en_an_fanty_activo [enit]) {
 					ccx = en_an_x [enit] >> 6;
@@ -1167,57 +1158,62 @@ void mueve_bicharracos (unsigned char n_pant) {
 
 			#ifndef PLAYER_MOGGY_STYLE	
 				if (malotes [enoffsmasi].t == 4) {
-					_xx = player.x >> 10;
+					_xx = gpx >> 4;
 					// Vertical
 					if (malotes [enoffsmasi].my < 0) {
 						// Go up.
-						if (_x >= ccx - 15 && _x <= ccx + 15 && _y >= ccy - 16 && _y <= ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
+						if (gpx >= ccx - 15 && gpx <= ccx + 15 && gpy >= ccy - 16 && gpy <= ccy - 11 && player.vy >= -(PLAYER_INCR_SALTO)) {
 							player.gotten = 1;
-							player.y = (ccy - 16) << 6;
 							player.vy = 0;						
-							_yy = player.y >> 10;
+							gpy = (ccy - 16);
+							player.y = gpy << 6;
+							_yy = gpy >> 4;
 							// Collide?
 							if (player.y > 1024)
-								if (attr (_xx, _yy) > 7 || ((_x & 15) != 0 && attr (_xx + 1, _yy) > 7)) {
+								if (attr (_xx, _yy) > 7 || ((gpx & 15) != 0 && attr (_xx + 1, _yy) > 7)) {
 									// ajust:
-									player.y = (_yy + 1) << 10;
+									gpy = (_yy + 1) << 4;
+									player.y = gpy << 6;
 								}
 						}
 					} else if (malotes [enoffsmasi].my > 0) {
 						// Go down.
-						if (_x >= ccx - 15 && _x <= ccx + 15 && _y >= ccy - 20 && _y <= ccy - 14 && player.vy >= 0) {
+						if (gpx >= ccx - 15 && gpx <= ccx + 15 && gpy >= ccy - 20 && gpy <= ccy - 14 && player.vy >= 0) {
 							player.gotten = 1;
-							player.y = (ccy - 16) << 6;
-							player.vy = 0;
-							_yy = player.y >> 10;
+							player.vy = 0;						
+							gpy = (ccy - 16);
+							player.y = gpy << 6;
+							_yy = gpy >> 4;
 							// Collide?
 							if (player.y < 9216)
-								if (attr (_xx, _yy + 1) > 7 || ((_x & 15) != 0 && attr (_xx + 1, _yy + 1) > 7)) {
+								if (attr (_xx, _yy + 1) > 7 || ((gpx & 15) != 0 && attr (_xx + 1, _yy + 1) > 7)) {
 									// ajust:
-									player.y = _yy << 10;
+									gpy = _yy << 4;
+									player.y = gpy << 6;
 								}
 						}
 					}
 
-					_y = player.y >> 6;
-					_yy = player.y >> 10;
 					// Horizontal
-					if (malotes [enoffsmasi].mx != 0 && _x >= ccx - 15 && _x <= ccx + 15 && _y >= ccy - 16 && _y <= ccy - 11 && player.vy >= 0) {
+					if (malotes [enoffsmasi].mx != 0 && gpx >= ccx - 15 && gpx <= ccx + 15 && gpy >= ccy - 16 && gpy <= ccy - 11 && player.vy >= 0) {
 						player.gotten = 1;
-						player.y = (ccy - 16) << 6;
-						_yy = player.y >> 10;
-						_x = _x + malotes [enoffsmasi].mx;
-						player.x = _x << 6;
-						_xx = player.x >> 10;
+						gpy = (ccy - 16);
+						player.y = gpy << 6;
+						_yy = gpy >> 4;
+						gpx = gpx + malotes [enoffsmasi].mx;
+						player.x = gpx << 6;
+						_xx = gpx >> 4;
 						if (malotes [enoffsmasi].mx < 0) {
-							if (attr (_xx, _yy) > 7 || ((_y & 15) != 0 && attr (_xx, _yy + 1) > 7)) {
+							if (attr (_xx, _yy) > 7 || ((gpy & 15) != 0 && attr (_xx, _yy + 1) > 7)) {
 								player.vx = 0;
-								player.x = (_xx + 1) << 10;
+								gpx = (_xx + 1) << 4;
+								player.x = gpx << 6;
 							}
 						} else if (malotes [enoffsmasi].mx > 0) {
-							if (attr (_xx + 1, _yy) > 7 || ((_y & 15) != 0 && attr (_xx + 1, _yy + 1) > 7)) {
+							if (attr (_xx + 1, _yy) > 7 || ((gpy & 15) != 0 && attr (_xx + 1, _yy + 1) > 7)) {
 								player.vx = 0;
-								player.x = _xx << 10;
+								gpx = _xx << 4;
+								player.x = gpx << 6;
 							}
 						}					
 					}
@@ -1226,13 +1222,13 @@ void mueve_bicharracos (unsigned char n_pant) {
 			// Collision with enemy
 			
 			if (
-				!tocado && collide (_x, _y, ccx, ccy) && (malotes [enoffsmasi].t < 16 
+				!tocado && collide (gpx, gpy, ccx, ccy) && (malotes [enoffsmasi].t < 16 
 					#ifdef RANDOM_RESPAWN
 						|| en_an_fanty_activo [enit] == 1
 					#endif
 				) && player.estado == EST_NORMAL) {
 				#ifdef PLAYER_KILLS_ENEMIES
-					if (_y < ccy - 8 && player.vy > 0 && malotes [enoffsmasi].t >= PLAYER_MIN_KILLABLE) {
+					if (gpy < ccy - 8 && player.vy > 0 && malotes [enoffsmasi].t >= PLAYER_MIN_KILLABLE) {
 						// Step on enemy and kill it.
 						en_an_next_frame [enit] = sprite_17_a;
 						#ifdef CPC
@@ -1301,18 +1297,18 @@ void mueve_bicharracos (unsigned char n_pant) {
 						#else
 							// Bouncing:
 							
-							// _x
+							// X
 							if (malotes [enoffsmasi].mx != 0) {
-								if (_x < ccx) {
+								if (gpx < ccx) {
 									player.vx = - (abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].mx) << 7);
 								} else {
 									player.vx = abs (malotes [enoffsmasi].mx + malotes [enoffsmasi].mx) << 7;
 								}
 							}
 							
-							// _y
+							// Y
 							if (malotes [enoffsmasi].my != 0) {
-								if (_y < ccy) {
+								if (gpy < ccy) {
 									player.vy = - (abs (malotes [enoffsmasi].my + malotes [enoffsmasi].my) << 7);
 								} else {
 									player.vy = abs (malotes [enoffsmasi].my + malotes [enoffsmasi].my) << 7;
@@ -1365,9 +1361,10 @@ void mueve_bicharracos (unsigned char n_pant) {
 
 			#ifdef USE_TYPE_6
 				if (malotes [enoffsmasi].t == 6) {
+					rdd = distance (ccx, ccy, gpx, gpy);
 					switch (en_an_state [enit]) {
 						case TYPE_6_IDLE:
-							if (distance (ccx, ccy, _x, _y) <= SIGHT_DISTANCE && !player_hidden ()) 
+							if (rdd <= SIGHT_DISTANCE && !player_hidden ()) 
 								en_an_state [enit] = TYPE_6_PURSUING;
 							break;
 						case TYPE_6_PURSUING:
@@ -1381,7 +1378,7 @@ void mueve_bicharracos (unsigned char n_pant) {
 								else if (player.y < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
 									en_an_vy [enit] -= FANTY_A;
 							}
-							if (distance (ccx, ccy, _x, _y) >= SIGHT_DISTANCE || player_hidden ()) 
+							if (rdd >= SIGHT_DISTANCE || player_hidden ()) 
 								en_an_state [enit] = TYPE_6_RETREATING;
 							break;
 						case TYPE_6_RETREATING:
@@ -1393,7 +1390,7 @@ void mueve_bicharracos (unsigned char n_pant) {
 								en_an_vy [enit] += FANTY_A;
 							else if ((malotes [enoffsmasi].y << 6) < en_an_y [enit] && en_an_vy [enit] > -FANTY_MAX_V)
 								en_an_vy [enit] -= FANTY_A;
-							if (distance (ccx, ccy, _x, _y) <= SIGHT_DISTANCE && !player_hidden ()) 
+							if (rdd <= SIGHT_DISTANCE && !player_hidden ()) 
 								en_an_state [enit] = TYPE_6_PURSUING;
 							break;	
 					}
