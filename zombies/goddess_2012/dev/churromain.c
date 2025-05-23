@@ -27,7 +27,6 @@
 #endif
 
 #include "zx0.h"
-#include "pantallas.h"
 #include "mapa.h"
 
 #ifdef CPC
@@ -41,6 +40,7 @@
 	#include "beeper.h"
 	#include "printer.h"
 #endif
+#include "pantallas.h"
 
 #include "enems.h"
 #ifdef ACTIVATE_SCRIPTING

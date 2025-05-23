@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // 128K stuff
@@ -99,34 +99,39 @@ extern LEVELHEADER level_data [0];
 #asm
 	._level_data defs 16
 #endasm
+
 extern unsigned char mapa [0];
-#ifdef UNPACKED_MAP
 #asm
-	._mapa defs MAP_W * MAP_H * 150
+	#ifdef UNPACKED_MAP
+		._mapa defs MAP_W * MAP_H * 150
+	#else
+		._mapa defs MAP_W * MAP_H * 75
+	#endif
 #endasm
-#else
-#asm
-	._mapa defs MAP_W * MAP_H * 75
-#endasm
-#endif
+
 extern CERROJOS cerrojos [0];
 #asm
 	._cerrojos defs 128	; 32 * 4
 #endasm
+
 extern unsigned char tileset [0];
 #asm
 	._tileset BINARY "basicts.bin"
 #endasm
-#include "sprites-empty.h"
-#include "extrasprites.h"
+
+#include "speccy/sprites-empty.h"
+#include "speccy/extrasprites.h"
+
 extern MALOTE malotes [0];
 #asm
 	._malotes defs MAP_W * MAP_H * 3 * 12
 #endasm
+
 extern HOTSPOT hotspots [0];
 #asm
 	._hotspots defs MAP_W * MAP_H * 3
 #endasm
+
 extern unsigned char comportamiento_tiles [0];
 #asm
 	._comportamiento_tiles defs 48

@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // Config.h
@@ -90,7 +90,7 @@
 //#define MAX_BULLETS 			3		// Max number of bullets on screen. Be careful!.
 //#define PLAYER_BULLET_Y_OFFSET	6	// vertical offset from the player's top.
 //#define PLAYER_BULLET_X_OFFSET	0	// vertical offset from the player's left/right.
-//#define ENEMIES_LIFE_GAUGE		4	// Amount of shots needed to kill enemies.
+//#define ENEMS_LIFE_GAUGE		4	// Amount of shots needed to kill enemies.
 //#define LIMITED_BULLETS 				// If defined, bullets die after N frames
 //#define LB_FRAMES 				4	// If defined, defines the # of frames bullets live (fixed)
 //#define LB_FRAMES_FLAG			2	// If defined, defines which flag determines the # of frames
@@ -160,7 +160,7 @@
 #define PLAYER_BOOTEE 					// Always jumping engine. Don't forget to disable "HAS_JUMP" and "HAS_JETPAC"!!!
 //#define PLAYER_STEP_SOUND				// Sound while walking. No effect in the BOOTEE engine.
 //#define PLAYER_BOUNCE_WITH_WALLS		// Bounce when hitting a wall. Only really useful in MOGGY_STYLE mode
-//#define PLAYER_CUMULATIVE_JUMP		// Keep pressing JUMP to JUMP higher in several bounces
+//#define PLAYER_CUMULATIVE_JUMP		// Keep pressing JUMP to JUMP higher in several bounces. Works with PLAYER_HAS_JUMP
 
 // ============================================================================
 // III. Screen configuration
@@ -200,6 +200,7 @@
 //#define USE_AUTO_TILE_SHADOWS 		// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
 //#define NO_MASKS						// Sprites are rendered using OR instead of masks.
+//#define NO_ALT_TILE 					// 0 is not replaced by 19 in packed maps at random.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 //#define MASKED_BULLETS				// If needed
 //#define ENABLE_TILANIMS			32	// If defined, animated tiles are enabled.
@@ -225,7 +226,7 @@
 #define PLAYER_MAX_VY_SALTANDO	320 	// Max jump velocity (320/64 = 5 píxels/frame)
 #define PLAYER_INCR_SALTO		48		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
-#define PLAYER_INCR_JETPAC		32		// Vertical jetpac gauge
+#define PLAYER_INCR_JETPAC		48		// Vertical jetpac gauge. Must by > G of course!
 #define PLAYER_MAX_VY_JETPAC	256 	// Max vertical jetpac speed
 
 // IV.2. Horizontal (side view) or general (top view) movement.
@@ -251,9 +252,9 @@
 // You can add the numbers to get combined behaviours
 // Save for 10 (special), but that's obvious, innit?
 #ifndef COMPRESSED_LEVELS
-unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 0, 0, 8, 4, 1, 8, 8, 8, 4, 4, 8, 4,10,
-	0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-};
+	unsigned char comportamiento_tiles [] = {
+		0, 8, 8, 0, 0, 8, 4, 9, 8, 8, 8, 4, 4, 8, 4,10,
+		0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	};
 #endif

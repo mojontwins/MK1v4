@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // 128K stuff
@@ -43,17 +43,17 @@ void ram6_to_ram (void) {
 	for (gpit = 0; gpit < 150; gpit ++) {
 #ifdef UNPACKED_MAP
 		// Mapa tipo UNPACKED
-		gpd = *map_pointer ++;
-		map_buff [gpit] = gpd;
+		rdd = *map_pointer ++;
+		map_buff [gpit] = rdd;
 #else
 		// Mapa tipo PACKED
 		if (!(gpit & 1)) {
-			gpc = *map_pointer ++;
-			gpd = gpc >> 4;
+			rdc = *map_pointer ++;
+			rdd = rdc >> 4;
 		} else {
-			gpd = gpc & 15;
+			rdd = rdc & 15;
 		}
-		map_buff [gpit] = gpd;
+		map_buff [gpit] = rdd;
 #endif	
 	}
 	

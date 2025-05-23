@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // Beeper.h
@@ -282,11 +282,9 @@
 	
 */
 
-void peta_el_beeper (unsigned char n) {
-	// Cargar en A el valor de n
-	asm_int [0] = n;
+void __FASTCALL__ peta_el_beeper (unsigned char n) {
 	#asm
-		ld a, (_asm_int)
+		ld a, l
 		call playsfx
 	#endasm
 }

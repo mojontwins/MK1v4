@@ -10,7 +10,7 @@ echo ### CONVIRTIENDO COSAS QUE HAY QUE CONVERTIR ###
 ..\utils\ene2h ..\enems\enems.ene enems.h 2bytes > nul 2> nul
 
 ..\utils\ts2bin ..\gfx\speccy\font.png ..\gfx\speccy\work.png ts.bin 7 > nul 2> nul
-..\utils\sprcnv ..\gfx\speccy\sprites.png sprites.h > nul 2> nul
+..\utils\sprcnv ..\gfx\speccy\sprites.png speccy\sprites.h > nul 2> nul
 ..\utils\png2scr ..\gfx\speccy\title.png title.scr > nul 2> nul
 ..\utils\png2scr ..\gfx\speccy\marco.png marco.scr > nul 2> nul
 ..\utils\png2scr ..\gfx\speccy\ending.png ending.scr > nul 2> nul
@@ -36,7 +36,7 @@ if %errorlevel% neq 0 goto :error
 
 echo ### CONSTRUYENDO CINTA ###
 rem cambia LOADER por el nombre que quieres que salga en Program:
-..\utils\bas2tap -a10 -sBOOTEE loader.bas loader.tap  > nul 2> nul
+..\utils\bas2tap -a10 -sBOOTEE speccy\loader.bas loader.tap  > nul 2> nul
 ..\utils\bin2tap -o screen.tap -a 16384 loading.scr  > nul 2> nul
 ..\utils\bin2tap -o main.tap -a 24200 %game%.bin  > nul 2> nul
 copy /b loader.tap + screen.tap + main.tap %game%.tap  > nul 2> nul

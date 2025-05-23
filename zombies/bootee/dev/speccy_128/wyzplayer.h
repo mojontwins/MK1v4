@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // WYZ player hook functions
@@ -43,14 +43,12 @@ void wyz_init (void) {
 	#endasm
 }
 
-void wyz_play_sound (unsigned char fx_number) {
-	asm_int [0] = fx_number;
-	
+void __FASTCALL__ wyz_play_sound (unsigned char fx_number) {
 	#asm
 		di
 		ld b,1
 		call SetRAMBank
-		ld a, (_asm_int)
+		ld a, l
 		ld b, a
 		call INICIAEFECTO
 		ld b,0
@@ -59,14 +57,12 @@ void wyz_play_sound (unsigned char fx_number) {
 	#endasm
 }
 
-void wyz_play_music (unsigned char song_number) {
-	asm_int [0] = song_number;
-
+void __FASTCALL__wyz_play_music (unsigned char song_number) {
 	#asm
 		di
 		ld b, 1
 		call SetRAMBank
-		ld a, (_asm_int)
+		ld a, l
 		call CARGA_CANCION
 		ld b, 0
 		call SetRAMBank

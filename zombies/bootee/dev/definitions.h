@@ -1,5 +1,21 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
+
+#ifdef CPC
+	#define BASE_TILEMAP 		0x0100
+	#define WYZ_SONG_BUFFER 	0x8800
+	#define BASE_SUPERBUFF  	0x9000
+	#define BASE_ROOM_BUFFERS	0xC000 + 0x600
+	#define BASE_DIRTY_CELLS 	0xC800 + 0x600
+	#define BASE_ARRAYS 		0xD000 + 0x600
+	#define BASE_WYZ 			0xDF80
+	#define BASE_SPRITES 		0xE000 + 0x600
+	#define BASE_CUSTOM 		0xF000 + 0x600
+	#define BASE_LUT			0xF800 + 0x600
+#else
+	#define BASE_ROOM_BUFFERS	23300
+	#define BASE_ARRAYS 		23600
+#endif
 
 #ifdef USE_TWO_BUTTONS
 	// Define here if you selected the TWO BUTTONS configuration
@@ -28,6 +44,8 @@
 
 void *joyfunc;						// Puntero a la función de manejo seleccionada.
 
+unsigned char pad0, pad1, pad_this_frame;
+
 void *my_malloc(uint bytes) {
    return sp_BlockAlloc(0);
 }
@@ -52,10 +70,7 @@ unsigned char enoffs;
 
 // Aux
 
-extern char asm_number[1];
-extern unsigned int asm_int [1];
-extern unsigned int asm_int_2 [1];
-extern unsigned int seed [1];
+int seed;
 unsigned char half_life;
 
 #asm
@@ -64,8 +79,6 @@ unsigned char half_life;
 ._asm_int
 	defw 0
 ._asm_int_2
-	defw 0
-._seed	
 	defw 0
 #endasm
 
@@ -101,37 +114,44 @@ typedef struct {
 } INERCIA;
 
 INERCIA player;
+signed int ptgmx, ptgmy;
 
-#define FACING_RIGHT 0
-#define FACING_LEFT 2
-#define FACING_UP 4
-#define FACING_DOWN 6
+#define GENITAL_FACING_RIGHT 0
+#define GENITAL_FACING_LEFT 2
+#define GENITAL_FACING_UP 4
+#define GENITAL_FACING_DOWN 6
 
-typedef struct {
-	unsigned char base_frame;
-	unsigned char frame;
-	unsigned char count;
-	unsigned char *current_frame, *next_frame;
-	unsigned char state;
+#define LATERAL_FACING_LEFT 4
+#define LATERAL_FACING_RIGHT 0
+
+unsigned char en_an_frame [3]						@ BASE_ARRAYS;
+unsigned char en_an_count [3] 						@ BASE_ARRAYS + 3;
+unsigned char *en_an_current_frame [3] 				@ BASE_ARRAYS + 6;
+unsigned char *en_an_next_frame [3] 				@ BASE_ARRAYS + 12;
 	
 #ifdef PLAYER_CAN_FIRE
-	unsigned char morido;
-#if defined (RANDOM_RESPAWN) || defined (ENABLE_CUSTOM_TYPE_6)
-	int x;
-	int y;
-	int vx;
-	int vy;
-	unsigned char fanty_activo;
+	unsigned char en_an_morido  [3] 				@ BASE_ARRAYS + 18;
 #endif
-#endif
-#ifdef ENABLE_PURSUERS
-	unsigned char alive;
-	unsigned char dead_row;
-	unsigned char rawv;
-#endif
-} ANIMADO;
 
-ANIMADO en_an [3];
+#if defined(RANDOM_RESPAWN) || defined (ENABLE_CUSTOM_TYPE_6)
+	signed int en_an_x [3] 							@ BASE_ARRAYS + 21;
+	signed int en_an_y [3] 							@ BASE_ARRAYS + 27;
+	signed int en_an_vx [3] 						@ BASE_ARRAYS + 33;
+	signed int en_an_vy [3] 						@ BASE_ARRAYS + 39;
+	#ifdef RANDOM_RESPAWN
+		unsigned char en_an_fanty_activo [3] 		@ BASE_ARRAYS + 45;
+	#endif
+#endif
+		
+unsigned char en_an_state [3] 						@ BASE_ARRAYS + 48;
+
+#ifdef ENABLE_PURSUERS
+	unsigned char en_an_alive [3] 					@ BASE_ARRAYS + 51;
+	unsigned char en_an_dead_row [3] 				@ BASE_ARRAYS + 54;
+	unsigned char en_an_rawv [3] 					@ BASE_ARRAYS + 57;
+#endif
+
+unsigned char en_an_base_frame [3]	 				@ BASE_ARRAYS + 60;
 
 #define TYPE_6_IDLE 		0
 #define TYPE_6_PURSUING		1
@@ -139,24 +159,20 @@ ANIMADO en_an [3];
 #define GENERAL_DYING 		4
 
 #ifdef PLAYER_CAN_FIRE
-typedef struct {
-	unsigned char x;
-	unsigned char y;
-	char mx;
-	char my;
-	unsigned char estado;
-#ifdef LIMITED_BULLETS
-	unsigned char life;
-#endif	
-} BULLET;
-
-BULLET bullets [MAX_BULLETS];
+	unsigned char bullets_x [MAX_BULLETS] 			@ BASE_ARRAYS + 63;
+	unsigned char bullets_y [MAX_BULLETS] 			@ BASE_ARRAYS + 63 + MAX_BULLETS;
+	signed char bullets_mx [MAX_BULLETS] 			@ BASE_ARRAYS + 63 + 2 * MAX_BULLETS ;
+	unsigned char bullets_estado [MAX_BULLETS] 		@ BASE_ARRAYS + 63 + 3 * MAX_BULLETS;
+	signed char bullets_my [MAX_BULLETS] 			@ BASE_ARRAYS + 63 + 4 * MAX_BULLETS;;
+	#ifdef LIMITED_BULLETS
+		unsigned char bullets_life [MAX_BULLETS] 	@ BASE_ARRAYS + 63 + 5 * MAX_BULLETS;;
+	#endif
 #endif
 
 // atributos de la pantalla: Contiene información
 // sobre qué tipo de tile hay en cada casilla
-unsigned char map_attr [150];
-unsigned char map_buff [150] @ FREEPOOL;
+unsigned char map_attr [150] @ BASE_ROOM_BUFFERS;
+unsigned char map_buff [150] @ BASE_ROOM_BUFFERS + 150;
 
 // posición del objeto (hotspot). Para no objeto,
 // se colocan a 240,240, que está siempre fuera de pantalla.
@@ -180,7 +196,7 @@ unsigned char maincounter;
 
 // Breakable walls/etc
 #ifdef BREAKABLE_WALLS
-unsigned char *brk_buff = 23296;
+unsigned char *brk_buff = 23600;
 #endif
 
 // Fire zone
@@ -215,7 +231,6 @@ int key_jump, key_fire;
 #endif
 
 #ifdef MODE_128K
-void blackout_area (void);
 void get_resource (unsigned char res, unsigned int dest);
 void espera_activa (int espera);
 #endif
@@ -225,11 +240,12 @@ void saca_a_todo_el_mundo_de_aqui (void);
 void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t);
 
 // Engine globals (for speed) & size!
-unsigned char gpx, gpy, gpd, gpc, gpt;
+signed int rds;
+unsigned char gpx, gpy, rdd, rda, rdc, rdt;
+unsigned char rdx, rdy;
 unsigned char gpxx, gpyy, gpcx, gpcy;
 unsigned char possee, hit_v, hit_h, hit, wall_h, wall_v;
 unsigned char gpen_x, gpen_y, gpen_cx, gpen_cy, gpen_xx, gpen_yy, gpaux;
-unsigned char enx, eny;
 unsigned char tocado, active;
 unsigned char gpit, gpjt;
 unsigned char enoffsmasi;
@@ -275,3 +291,18 @@ unsigned char success;
 #ifdef PLAYER_CHECK_MAP_BOUNDARIES
 	unsigned char x_pant, y_pant;
 #endif
+
+unsigned char *spacer = "            ";
+
+#ifdef FIRE_TO_PUSH	
+	unsigned char pushed_any;
+#endif
+
+unsigned char cx1, cx2, cy1, cy2, at1, at2;
+
+#if defined(SLOW_DRAIN) && defined(PLAYER_BOUNCES)
+	unsigned char lasttimehit;
+#endif
+
+unsigned char _en_x, _en_y, _en_x1, _en_x2, _en_y1, _en_y2, _en_t, _en_life;
+signed char _en_mx, _en_my;

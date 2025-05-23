@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // churromain.c
@@ -6,6 +6,12 @@
 // Copyleft 2010-2014 The Mojon Twins
 
 #include <spritepack.h>
+
+#include "config.h"
+
+#ifdef CPC
+	#undef MODE_128K
+#endif
 
 // NUMBLOCKS es el número de bloques necesario para mover los sprites
 // Configurar bien este número es MUY IMPORTANTE
@@ -22,19 +28,16 @@
 // 4*10 + 3*5 = 55 bloques.
 
 // Versión para 48K
-#pragma output STACKPTR=61952
-#define FREEPOOL 61440
-#define AD_FREE FREEPOOL - NUMBLOCKS * 15
+#define STACK_SIZE 		64
+#define STACK_ADDR		61952
+#define AD_FREE 		STACK_ADDR-STACK_SIZE-(NUMBLOCKS*15)
 
 // Versión para 128K
-//#pragma output STACKPTR=24199
-//#define FREEPOOL 61697
-//#define AD_FREE 61440 - NUMBLOCKS * 15
+//#define STACK_ADDR 24399
+//#define AD_FREE 61952-(NUMBLOCKS*15)
 
 // Optimal place to compile if using COMPRESSED_LEVELS:
 // 23296 + MAP_W * MAP_H * (108) + MAX_CERROJOS * 4 + 49
-
-#include "config.h"
 
 // Cosas del juego:
 
@@ -44,24 +47,28 @@
 	#include "msc-config.h"
 #endif
 
-#ifdef MODE_128K
-	#include "128k.h"
+#ifndef CPC
+	#ifdef MODE_128K
+		#include "speccy_128/128k.h"
+		#include "speccy_128/wyzplayer.h"
+	#else
+		#include "speccy/beeper.h"
+	#endif
 #endif
 
 #include "zx0.h"
-#include "pantallas.h"
 
 #ifdef MODE_128K
 	#include "librarian.h"
 	
 	#ifdef COMPRESSED_LEVELS
-		#include "levels128.h"
+		#include "speccy_128/levels128.h"
 	#else
 		#include "mapa.h"
-		#include "tileset.h"
-		#include "sprites.h"
-		#include "extrasprites.h"
 		#include "enems.h"
+		#include "speccy/tileset.h"
+		#include "speccy/sprites.h"
+		#include "speccy/extrasprites.h"
 	#endif
 
 #else
@@ -72,9 +79,16 @@
 		#include "mapa.h"
 	#endif
 
-	#include "tileset.h"
-	#include "sprites.h"
-	#include "extrasprites.h"
+	#ifdef CPC
+		#include "cpc/tileset.h"
+		#include "cpc/sprites.h"
+		#include "cpc/extrasprites.h"
+		#include "cpc/spriteset_mappings.h"
+	#else
+		#include "speccy/tileset.h"
+		#include "speccy/sprites.h"
+		#include "speccy/extrasprites.h"
+	#endif
 	
 	#ifndef COMPRESSED_LEVELS
 		#include "enems.h"
@@ -82,19 +96,22 @@
 
 #endif
 
-#ifdef MODE_128K
-	#include "wyzplayer.h"
+#ifdef CPC
+	#include "cpc/printer.h"
 #else
-	#include "beeper.h"
+	#include "speccy/printer.h"
 #endif
-
-#include "printer.h"
+#include "pantallas.h"
 
 #ifdef ACTIVATE_SCRIPTING
 	#ifdef ENABLE_EXTERN_CODE
 		#include "extern.h"
 	#endif
 	#include "msc.h"
+#endif
+
+#ifdef ENABLE_TILANIMS
+	#include "tilanim.h"
 #endif
 
 #include "engine.h"
@@ -105,7 +122,7 @@
 
 #include "mainloop.h"
 
-#ifndef MODE_128K
-// From beepola. Phaser engine by Shiru.
-#include "music.h"
+#if !defined CPC && !defined MODE_128K
+	// From beepola. Phaser engine by Shiru.
+	#include "speccy/music.h"
 #endif

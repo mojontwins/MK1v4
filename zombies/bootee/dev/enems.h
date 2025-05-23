@@ -187,47 +187,44 @@ typedef struct {
 } HOTSPOT;
 
 HOTSPOT hotspots [] = {
-	{1, 7, 0}, 
-	{1, 1, 0}, 
-	{7, 3, 0}, 
-	{2, 13, 0}, 
-	{6, 1, 0}, 
-	{13, 2, 0}, 
-	{1, 1, 0}, 
-	{1, 2, 0}, 
-	{6, 1, 0}, 
-	{2, 10, 0}, 
-	{5, 1, 0}, 
-	{7, 3, 0}, 
-	{1, 8, 0}, 
-	{2, 1, 0}, 
-	{1, 1, 0}, 
-	{1, 10, 0}, 
-	{2, 1, 0}, 
-	{12, 2, 0}, 
-	{1, 5, 0}, 
-	{4, 1, 0}, 
-	{8, 4, 0}, 
-	{1, 2, 0}, 
-	{8, 1, 0}, 
-	{9, 7, 0}, 
-	{1, 10, 0}, 
-	{6, 1, 0}, 
-	{12, 3, 0}, 
-	{1, 6, 0}, 
-	{5, 1, 0}, 
-	{7, 1, 0}
+	{216, 1, 0}, 
+	{145, 1, 0}, 
+	{24, 1, 0}, 
+	{113, 1, 0}, 
+	{115, 2, 0}, 
+	{214, 1, 0}, 
+	{210, 1, 0}, 
+	{17, 2, 0}, 
+	{97, 2, 0}, 
+	{165, 1, 0}, 
+	{115, 1, 0}, 
+	{130, 1, 0}, 
+	{17, 1, 0}, 
+	{162, 1, 0}, 
+	{194, 1, 0}, 
+	{84, 1, 0}, 
+	{115, 1, 0}, 
+	{40, 1, 0}, 
+	{134, 1, 0}, 
+	{180, 1, 0}, 
+	{195, 1, 0}, 
+	{101, 1, 0}, 
+	{113, 1, 0}, 
+	{211, 1, 0}, 
+	{20, 1, 0}, 
+	{115, 1, 0}, 
+	{100, 3, 0}, 
+	{114, 1, 0}, 
+	{151, 1, 0}, 
+	{97, 1, 0}
 };
 
 #define N_HOTSPOTS_TYPE_0 0
-#define N_HOTSPOTS_TYPE_1 13
-#define N_HOTSPOTS_TYPE_2 4
-#define N_HOTSPOTS_TYPE_3 3
-#define N_HOTSPOTS_TYPE_4 1
-#define N_HOTSPOTS_TYPE_5 1
-#define N_HOTSPOTS_TYPE_6 1
-#define N_HOTSPOTS_TYPE_7 2
-#define N_HOTSPOTS_TYPE_8 1
-#define N_HOTSPOTS_TYPE_10 3
-#define N_HOTSPOTS_TYPE_13 1
+#define N_HOTSPOTS_TYPE_1 26
+#define N_HOTSPOTS_TYPE_2 3
+#define N_HOTSPOTS_TYPE_3 1
+#define N_HOTSPOTS_TYPE_4 0
+#define N_HOTSPOTS_TYPE_5 0
+#define N_HOTSPOTS_TYPE_6 0
+#define N_HOTSPOTS_TYPE_7 0
 

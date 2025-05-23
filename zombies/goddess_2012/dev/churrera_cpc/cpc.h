@@ -594,6 +594,7 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	#endasm
 }
 
+#define print_str draw_text
 void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 	// Zero terminated strings, supports newlines with %
 	#asm
@@ -866,4 +867,12 @@ void __FASTCALL__ unpack (unsigned int address) {
 			call depack
 	#endasm
 	cpc_ShowTileMap (1);
+}
+
+void cortina (void) {
+
+}
+
+void step (void) {
+
 }

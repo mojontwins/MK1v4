@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // Savegame / checkpoint routines
@@ -54,7 +54,7 @@ void tape_load (void) {
 void sg_submenu (void) {
 	sg_do_load = 0;
 	if (sg_saved) {
-		blackout_area ();
+		clear_gamearea_tiles ();
 		print_str (VIEWPORT_X + 11, VIEWPORT_Y + 8, 71, "0 START");
 		print_str (VIEWPORT_X + 11, VIEWPORT_Y + 8, 71, "9 CONTINUE");
 		while (1) {

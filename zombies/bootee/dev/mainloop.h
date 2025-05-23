@@ -1,4 +1,4 @@
-// La Churrera Engine 3.99.3d
+// La Churrera Engine 3.100
 // Copyleft 2010-2014 the Mojon Twins
 
 // mainloop.h
@@ -7,79 +7,14 @@
 // Special keys
 
 void main (void) {
-
-	// Install ISR
-	
-	#asm
-		di
-	#endasm
-	
-	#ifdef MODE_128K
-		sp_InitIM2(0xf1f1);
-		sp_CreateGenericISR(0xf1f1);
-		sp_RegisterHook(255, ISR);
-		
+	#ifndef CPC
 		#asm
-			ei
+				ld  sp, STACK_ADDR
 		#endasm
-
-		wyz_init ();
 	#endif
 
 	cortina ();
-	
-	// splib2 initialization
-	sp_Initialize (7, 0);
-	sp_Border (BLACK);
-	sp_AddMemory(0, NUMBLOCKS, 14, AD_FREE);
-
-	joyfunc = sp_JoyKeyboard;
-
-	// Load tileset
-	allpurposepuntero = tileset;
-	gpit = 0; do {
-		sp_TileArray (gpit, allpurposepuntero);
-		allpurposepuntero += 8;
-		gpit ++;
-	} while (gpit);
-
-	// Sprite creation
-	#ifdef NO_MASKS
-		sp_player = sp_CreateSpr (sp_OR_SPRITE, 3, sprite_2_a, 1);
-		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
-		player.current_frame = player.next_frame = sprite_2_a;
-		
-		for (gpit = 0; gpit < 3; gpit ++) {
-			sp_moviles [gpit] = sp_CreateSpr(sp_OR_SPRITE, 3, sprite_9_a, 1);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_b);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_c);	
-			en_an [gpit].current_frame = sprite_9_a;
-		}
-	#else
-		sp_player = sp_CreateSpr (sp_MASK_SPRITE, 3, sprite_2_a, 1);
-		sp_AddColSpr (sp_player, sprite_2_b);
-		sp_AddColSpr (sp_player, sprite_2_c);
-		player.current_frame = player.next_frame = sprite_2_a;
-		
-		for (gpit = 0; gpit < 3; gpit ++) {
-			sp_moviles [gpit] = sp_CreateSpr(sp_MASK_SPRITE, 3, sprite_9_a, 2);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_b);
-			sp_AddColSpr (sp_moviles [gpit], sprite_9_c);	
-			en_an [gpit].current_frame = en_an [gpit].next_frame = sprite_9_a;
-		}
-	#endif
-
-	#ifdef PLAYER_CAN_FIRE
-		for (gpit = 0; gpit < MAX_BULLETS; gpit ++) {
-			#ifdef MASKED_BULLETS
-				sp_bullets [gpit] = sp_CreateSpr (sp_MASK_SPRITE, 2, sprite_19_a, 1);
-			#else		
-				sp_bullets [gpit] = sp_CreateSpr (sp_OR_SPRITE, 2, sprite_19_a, 1);
-			#endif
-			sp_AddColSpr (sp_bullets [gpit], sprite_19_b);
-		}
-	#endif
+	system_init ();
 
 	while (1) {
 		// Here the title screen
@@ -107,7 +42,6 @@ void main (void) {
 			sg_submenu ();
 		#endif
 
-
 		mlplaying = 1;
 		#ifdef COMPRESSED_LEVELS
 			#ifdef ENABLE_CHECKPOINTS
@@ -126,7 +60,7 @@ void main (void) {
 				mlplaying = 0;
 			#else
 				prepare_level (level);			
-				blackout_area ();
+				clear_gamearea_tiles ();
 
 				level_str [7] = 49 + level;
 				print_str (12, 12, 71, level_str);
@@ -382,13 +316,13 @@ void main (void) {
 			
 				#ifdef PLAYER_CAN_FIRE
 					for (gpit = 0; gpit < 3; gpit ++) {
-						if (en_an [gpit].morido == 1) {
+						if (en_an_morido [gpit] == 1) {
 							#ifdef MODE_128K
 								wyz_play_sound (7);
 							#else
 								peta_el_beeper (1);
 							#endif
-							en_an [gpit].morido = 0;
+							en_an_morido [gpit] = 0;
 						}	
 					}
 				#endif
@@ -471,8 +405,9 @@ void main (void) {
 				#endif
 
 				// Change screen
+				
 				{
-					if (player.x == 0 && player.vx < 0 
+					if (gpx == 0 && player.vx < 0 
 						#ifdef PLAYER_CHECK_MAP_BOUNDARIES	
 							&& x_pant > 0
 						#endif
@@ -481,11 +416,11 @@ void main (void) {
 						#ifdef PLAYER_CHECK_MAP_BOUNDARIES
 							x_pant --;
 						#endif
-						player.x = 14336;
+						player.x = 14336; gpx = 224;
 					}
 
 					if (
-						player.x == 14336 && player.vx > 0
+						gpx == 224 && player.vx > 0
 						#ifdef PLAYER_CHECK_MAP_BOUNDARIES	
 							#if defined (MODE_128K) && defined (COMPRESSED_LEVELS)
 								&& x_pant < (level_data->map_w - 1)	
@@ -498,14 +433,10 @@ void main (void) {
 						#ifdef PLAYER_CHECK_MAP_BOUNDARIES
 							x_pant ++;
 						#endif
-						player.x = 0;
+						player.x = 0; gpx = 0;
 					}
 
-					if (player.y == 0 && player.vy < 0 
-						#ifdef PLAYER_CHECK_MAP_BOUNDARIES
-							&& y_pant > 0
-						#endif
-					) {
+					if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
 						#if defined (MODE_128K) && defined (COMPRESSED_LEVELS)
 							n_pant -= level_data->map_w;
 						#else				
@@ -514,11 +445,11 @@ void main (void) {
 						#ifdef PLAYER_CHECK_MAP_BOUNDARIES
 							y_pant --;
 						#endif
-						player.y = 9216;	
+						player.y = 9216; gpy = 144;
 					}
 
 					if (
-						player.y == 9216 && player.vy > 0 
+						gpy == 144 && player.vy > 0 
 						#ifdef PLAYER_CHECK_MAP_BOUNDARIES
 						 	#if defined (MODE_128K) && defined (COMPRESSED_LEVELS)
 								&& y_pant < (level_data->map_h - 1)
@@ -546,12 +477,13 @@ void main (void) {
 							#ifdef PLAYER_CHECK_MAP_BOUNDARIES
 								y_pant ++;
 							#endif
-							player.y = 0;
+							player.y = 0; gpy = 0;
 							if (player.vy > 256) player.vy = 256;
 						}	
 					}
 				}
 
+				
 				// Win game condition
 				if (player.objs == PLAYER_NUM_OBJETOS
 					#ifdef ACTIVATE_SCRIPTING
