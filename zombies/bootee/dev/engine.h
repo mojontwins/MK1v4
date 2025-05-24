@@ -75,7 +75,7 @@ void qtile (unsigned char x, unsigned char y) {
 }
 
 unsigned char cm_two_points (void) {
-	if (cx1 > 14 || cx1 > 9) at1 = 0; 
+	if (cx1 > 14 || cy1 > 9) at1 = 0; 
 	else at1 = map_attr [cx1 + (cy1 << 4) - cy1];
 
 	if (cx2 > 14 || cy2 > 9) at2 = 0; 

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 24 14:18:27 2025
+;	Module compile time: Sat May 24 14:24:21 2025
 
 
 
@@ -8023,7 +8023,7 @@
 	ld	hl,14	;const
 	call	l_ugt
 	jp	c,i_60
-	ld	a,(_cx1)
+	ld	a,(_cy1)
 	ld	e,a
 	ld	d,0
 	ld	hl,9	;const
