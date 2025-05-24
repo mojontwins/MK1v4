@@ -41,6 +41,7 @@
 
 // Cosas del juego:
 
+#include "speccy\sysvars.h"
 #include "definitions.h"
 
 #ifdef ACTIVATE_SCRIPTING

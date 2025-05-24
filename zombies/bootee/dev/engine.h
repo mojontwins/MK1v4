@@ -317,14 +317,14 @@ unsigned char ctileoff (char n) {
 					}
 				#endif
 
-				gpxx = (bullets_x [gpit] + 3) >> 4;
-				gpyy = (bullets_y [gpit] + 3) >> 4;
+				rdx = (bullets_x [gpit] + 3) >> 4;
+				rdy = (bullets_y [gpit] + 3) >> 4;
 
 				#ifdef BREAKABLE_WALLS			
-					if (attr (gpxx, gpyy) & 16) break_wall (gpxx, gpyy);
+					if (attr (rdx, rdy) & 16) break_wall (rdx, rdy);
 				#endif
 				
-				if (attr (gpxx, gpyy) > 7) bullets_estado [gpit] = 0;
+				if (attr (rdx, rdy) > 7) bullets_estado [gpit] = 0;
 				
 				#ifdef LIMITED_BULLETS
 					if (bullets_life [gpit] > 0) {
@@ -848,7 +848,7 @@ void kill_player (unsigned char sound) {
 #ifdef ENABLE_RANDOM_RESPAWN
 	char player_hidden (void) {
 		if ( (gpy & 15) == 0 && player.vx == 0 ) {
-			return (attr (gpxx, gpyy) == 2 || (attr (1 + gpxx, gpyy) == 2 && (gpx & 15)) );
+			return attr ((gpx + 8) >> 4, (gpy + 8) >> 4) & 2;
 		}			
 		return 0;
 	}
@@ -906,8 +906,6 @@ void kill_player (unsigned char sound) {
 
 unsigned char move (void) {
 	
-	wall_v = wall_h = 0;	// Estas banderas se pondrán a 1 si hay colisión.
-
 	pad_read ();			// Leemos el controlador seleccionado.
 	
 	// ---------------------------------------------------------------------------
@@ -992,9 +990,6 @@ unsigned char move (void) {
 	// Convertimos a pixel
 	gpy = player.y >> 6;
 
-	// Coordenadas de tile
-	gpyy = gpy >> 4;
-	
 	// Reiniciamos las banderas de "sobre plataforma" y "colisión matadora vertical"
 	possee = 0; hit_v = 0;
 
@@ -1013,102 +1008,96 @@ unsigned char move (void) {
 
 	rds = player.vy + ptgmy;
 	if (rds < 0) { 			// Estamos ascendiendo
-		if ((gpy & 15) < 8) {		// Solo colisionamos si estamos en la parte inferior de un tile.
 
-			// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
-			#ifdef BOUNDING_BOX_8_BOTTOM
-				cy1 = cy2 = (gpy + 8) >> 4;
-			#elif defined BOUNDING_BOX_8_CENTERED
-				cy1 = cy2 = (gpy + 4) >> 4;
-			#else
-				cy1 = cy2 = gpy >> 4;
+		// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
+		#ifdef BOUNDING_BOX_8_BOTTOM
+			cy1 = cy2 = (gpy + 8) >> 4;
+		#elif defined BOUNDING_BOX_8_CENTERED
+			cy1 = cy2 = (gpy + 4) >> 4;
+		#else
+			cy1 = cy2 = gpy >> 4;
+		#endif
+
+		// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
+		cm_two_points ();
+
+		// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
+		if ((at1 & 8) || (at2 & 8)) {
+
+			// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
+			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+				check_lock_or_box_vert ();
 			#endif
 
-			// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
-			cm_two_points ();
+			#ifdef PLAYER_BOUNCE_WITH_WALLS
+				player.vy = -(player.vy / 2);
+			#else
+				player.vy = 0;
+			#endif
 
-			// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
-			if ((at1 & 8) || (at2 & 8)) {
+			// ajustamos
+			#ifdef BOUNDING_BOX_8_BOTTOM
+				gpy = (gpy & 0xf0) + 8;
+			#elif defined BOUNDING_BOX_8_CENTERED
+				gpy = (gpy & 0xf0) + 12;
+			#else
+				gpy = (gpy & 0xf0) + 16;
+			#endif
 
-				// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
-				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
-					check_lock_or_box_vert ();
-				#endif
+			player.y = gpy << 6;
+		}
 
+		if ((at1 & 1) || (at2 & 1)) {
+			hit_v = 1;
+		}
+	} else if (rds > 0) {		// Estamos descendiendo
+
+		// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
+		#ifdef BOUNDING_BOX_8_BOTTOM
+			cy1 = cy2 = (gpy + 15) >> 4;
+		#elif defined BOUNDING_BOX_8_CENTERED
+			cy1 = cy2 = (gpy + 11) >> 4;
+		#else
+			cy1 = cy2 = (gpy + 15) >> 4;
+		#endif
+
+		// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
+		cm_two_points ();
+
+		// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
+		if ((at1 & 12) || (at2 & 12)) {
+
+			// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
+			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+				check_lock_or_box_vert ();
+			#endif
+
+			#ifdef PLAYER_CUMULATIVE_JUMP
+				if (!player.saltando)
+			#endif
+			{
 				#ifdef PLAYER_BOUNCE_WITH_WALLS
 					player.vy = -(player.vy / 2);
 				#else
 					player.vy = 0;
 				#endif
-
-				// ajustamos
-				#ifdef BOUNDING_BOX_8_BOTTOM
-					gpy = (gpy & 0xf0) + 8;
-				#elif defined BOUNDING_BOX_8_CENTERED
-					gpy = (gpy & 0xf0) + 12;
-				#else
-					gpy = (gpy & 0xf0) + 16;
-				#endif
-
-				player.y = gpy << 6;
-				wall_v = WTOP;
 			}
 
-			if ((at1 & 1) || (at2 & 1)) {
-				hit_v = 1;
-			}
-		}
-	} else if (rds > 0) {		// Estamos descendiendo
-		if ((gpy & 15) < 8) { 		// Solo colisionamos si estamos en la parte superior de un tile.
-
-			// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
+			// ajustamos
 			#ifdef BOUNDING_BOX_8_BOTTOM
-				cy1 = cy2 = (gpy + 15) >> 4;
+				gpy = (gpy & 0xf0);
 			#elif defined BOUNDING_BOX_8_CENTERED
-				cy1 = cy2 = (gpy + 11) >> 4;
+				gpy = (gpy & 0xf0) + 4;
 			#else
-				cy1 = cy2 = (gpy + 15) >> 4;
+				gpy = (gpy & 0xf0);
 			#endif
 
-			// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
-			cm_two_points ();
+			player.y = gpy << 6;
+			possee = 1;
+		}
 
-			// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
-			if ((at1 & 12) || (at2 & 12)) {
-
-				// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
-				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
-					check_lock_or_box_vert ();
-				#endif
-
-				#ifdef PLAYER_CUMULATIVE_JUMP
-					if (!player.saltando)
-				#endif
-				{
-					#ifdef PLAYER_BOUNCE_WITH_WALLS
-						player.vy = -(player.vy / 2);
-					#else
-						player.vy = 0;
-					#endif
-				}
-
-				// ajustamos
-				#ifdef BOUNDING_BOX_8_BOTTOM
-					gpy = (gpy & 0xf0);
-				#elif defined BOUNDING_BOX_8_CENTERED
-					gpy = (gpy & 0xf0) + 4;
-				#else
-					gpy = (gpy & 0xf0);
-				#endif
-
-				player.y = gpy << 6;
-				wall_v = WBOTTOM;
-				possee = 1;
-			}
-
-			if ((at1 & 1) || (at2 & 1)) {
-				hit_v = 1;
-			}
+		if ((at1 & 1) || (at2 & 1)) {
+			hit_v = 1;
 		}
 	}
 
@@ -1267,9 +1256,6 @@ unsigned char move (void) {
 	// Convertimos a pixel
 	gpx = player.x >> 6;
 
-	// Coordenadas de tile
-	gpxx = gpx >> 4;
-
 	// Colisión
 
 	#ifdef BOUNDING_BOX_8_BOTTOM
@@ -1319,7 +1305,6 @@ unsigned char move (void) {
 			#endif
 
 			player.x = gpx << 6;
-			wall_h = WLEFT;
 		}
 
 		if ((at1 & 1) || (at2 & 1)) {
@@ -1365,7 +1350,6 @@ unsigned char move (void) {
 			#endif
 
 			player.x = gpx << 6;
-			wall_h = WRIGHT;
 		}
 
 		if ((at1 & 1) || (at2 & 1)) {
@@ -1701,7 +1685,6 @@ void mueve_bicharracos (void) {
 				case 5:
 					active = 1;
 					
-
 					if (player_hidden ()) {
 						en_an_vx [gpit] = limit (
 							en_an_vx [gpit] + addsign (en_an_x [gpit] - player.x, FANTY_A >> 1),
@@ -1814,21 +1797,21 @@ void mueve_bicharracos (void) {
 						case 2:
 							active = 1;
 							if (player.estado == EST_NORMAL) {
-								_en_mx = (signed char) (addsign (((gpx >> 2) << 2) - gpen_x, en_an_rawv [gpit]));
+								_en_mx = (signed char) (addsign ((gpx & 0xFC) - _en_x, en_an_rawv [gpit]));
 								_en_x += _en_mx;
 								
 								gpen_xx = _en_x >> 4;
 								gpen_yy = _en_y >> 4;
 								#ifdef WALLS_STOP_ENEMIES
-									if (mons_col_sc_x ()) _en_x = gpen_x;
+									if (mons_col_sc_x ()) _en_x = _en_x;
 								#endif
 								
-								_en_my = (signed char) (addsign (((gpy >> 2) << 2) - gpen_y, en_an_rawv [gpit]));
+								_en_my = (signed char) (addsign ((gpy & 0xFC) - _en_y, en_an_rawv [gpit]));
 								_en_y += _en_my;
 								gpen_xx = _en_x >> 4;
 								gpen_yy = _en_y >> 4;
 								#ifdef WALLS_STOP_ENEMIES
-									if (mons_col_sc_y ()) _en_y = gpen_y;
+									if (mons_col_sc_y ()) _en_y = _em_y;
 								#endif
 
 								en_cx = _en_x;
