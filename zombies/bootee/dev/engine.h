@@ -912,26 +912,6 @@ unsigned char move (void) {
 	// EJE VERTICAL
 	// ---------------------------------------------------------------------------
 
-	// Gravedad
-
-	#ifndef PLAYER_MOGGY_STYLE
-		// Si el tipo de movimiento no es genital, entonces nos afecta la gravedad.
-		if (player.vy < PLAYER_MAX_VY_CAYENDO) {
-			player.vy += PLAYER_G;
-		} else {
-			player.vy = PLAYER_MAX_VY_CAYENDO;
-		}
-
-		// Si nos atrapó una plataforma, paramos
-		#ifdef PLAYER_CUMULATIVE_JUMP
-			if (!player.saltando)
-		#endif 
-		{
-			if (player.gotten) player.vy = 0;
-		}
-
-	#endif
-
 	// Vista genital
 
 	#ifdef PLAYER_MOGGY_STYLE
@@ -965,27 +945,121 @@ unsigned char move (void) {
 				}
 			}
 		}
-	#endif
 
-	// Jetpac
+	#else
+		// Vista lateral
 
-	#ifdef PLAYER_HAS_JETPAC
-		// Si pulsamos arriba se decrementa la velocidad hasta un límite
+		// Gravedad
 
-		if ((pad0 & sp_UP) == 0) {
-			player.vy -= PLAYER_INCR_JETPAC;
-			if (player.vy < -PLAYER_MAX_VY_JETPAC) player.vy = -PLAYER_MAX_VY_JETPAC;
-		}
+		player.vy += PLAYER_G;
+		if (player.vy > PLAYER_MAX_VY_CAYENDO) player.vy = PLAYER_MAX_VY_CAYENDO;
+
+		// Salto
+
+		#ifdef PLAYER_HAS_JUMP
+		
+			// Inicio del salto
+
+			if (
+				#if defined PLAYER_CAN_FIRE && !defined USE_TWO_BUTTONS
+					(pad0 & sp_UP) == 0
+				#elif defined (PLAYER_CAN_FIRE) && defined (USE_TWO_BUTTONS)
+					sp_KeyPressed (key_jump)
+				#else
+					(pad0 & sp_FIRE) == 0
+				#endif
+				&& (possee || player.gotten || hit_v)
+				#ifndef PLAYER_CUMULATIVE_JUMP
+					&& player.saltando == 0
+				#endif
+			) {
+				#ifdef PLAYER_CUMULATIVE_JUMP
+					player.vy = -player.vy - PLAYER_VY_INICIAL_SALTO;
+					if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
+				#endif
+
+				player.saltando = 1;
+				player.cont_salto = 0;
+				#ifdef MODE_128K
+					wyz_play_sound (2);
+				#else		
+					peta_el_beeper (3);
+				#endif
+			}
+
+			// Continuación del salto
+
+			#ifndef PLAYER_CUMULATIVE_JUMP	
+				if (
+					#if defined PLAYER_CAN_FIRE && !defined USE_TWO_BUTTONS
+						(pad0 & sp_UP) == 0 
+					#elif defined (PLAYER_CAN_FIRE) && defined (USE_TWO_BUTTONS)
+						sp_KeyPressed (key_jump)
+					#else
+						(pad0 & sp_FIRE) == 0 
+					#endif
+					&& player.saltando
+				) {
+					player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto>>1));
+					if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
+					player.cont_salto ++;
+					if (player.cont_salto == 8)
+						player.saltando = 0;
+				}
+			#endif
+
+			// Interrupción del salto
+
+			if (
+				#if defined PLAYER_CAN_FIRE && !defined USE_TWO_BUTTONS
+					(pad0 & sp_UP)
+				#elif defined (PLAYER_CAN_FIRE) && defined (USE_TWO_BUTTONS)
+					!sp_KeyPressed (key_jump)
+				#else
+					(pad0 & sp_FIRE)
+				#endif
+			) player.saltando = 0;
+
+		#endif
+
+		// Bootee engine
+
+		#ifdef PLAYER_BOOTEE
+			if ( player.saltando == 0 && (possee || player.gotten || hit_v) ) {
+				player.saltando = 1;
+				player.cont_salto = 0;
+				#ifdef MODE_128K
+					wyz_play_sound (2);
+				#else				
+					peta_el_beeper (3);
+				#endif
+			}
+			
+			if (player.saltando ) {
+				player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto>>1));
+				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
+				player.cont_salto ++;
+				if (player.cont_salto == 8)
+					player.saltando = 0;
+			}
+		#endif	
+
+		// Jetpac
+
+		#ifdef PLAYER_HAS_JETPAC
+			// Si pulsamos arriba se decrementa la velocidad hasta un límite
+
+			if ((pad0 & sp_UP) == 0) {
+				player.vy -= PLAYER_INCR_JETPAC;
+				if (player.vy < -PLAYER_MAX_VY_JETPAC) player.vy = -PLAYER_MAX_VY_JETPAC;
+			}
+		#endif
+
 	#endif
 
 	player.y += player.vy;
-	
-	// Safe	
-	if (player.y < 0)
-		player.y = 0;
-		
-	if (player.y > 9216)
-		player.y = 9216;
+	if (player.y < 0) player.y = 0;
+	if (player.y > 9216) player.y = 9216;
 
 	// Convertimos a pixel
 	gpy = player.y >> 6;
@@ -995,209 +1069,125 @@ unsigned char move (void) {
 
 	// Colisión vertical
 
-	// Las coordenadas de los tiles que tendremos que revisar cambian según
-	// el tipo de colisión y la dirección
-
-	#ifdef BOUNDING_BOX_8_BOTTOM
-		cx1 = (gpx + 4) >> 4; cx2 = (gpx + 11) >> 4;
-	#elif defined BOUNDING_BOX_8_CENTERED
-		cx1 = (gpx + 4) >> 4; cx2 = (gpx + 11) >> 4;
-	#else
-		cx1 = gpx >> 4; cx2 = (gpx + 15) >> 4;
-	#endif
 
 	rds = player.vy + ptgmy;
-	if (rds < 0) { 			// Estamos ascendiendo
+	if (rds) {
+		
+		// Las coordenadas de los tiles que tendremos que revisar cambian según
+		// el tipo de colisión y la dirección
 
-		// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
 		#ifdef BOUNDING_BOX_8_BOTTOM
-			cy1 = cy2 = (gpy + 8) >> 4;
+			cx1 = (gpx + 4) >> 4; cx2 = (gpx + 11) >> 4;
 		#elif defined BOUNDING_BOX_8_CENTERED
-			cy1 = cy2 = (gpy + 4) >> 4;
+			cx1 = (gpx + 4) >> 4; cx2 = (gpx + 11) >> 4;
 		#else
-			cy1 = cy2 = gpy >> 4;
+			cx1 = gpx >> 4; cx2 = (gpx + 15) >> 4;
 		#endif
 
-		// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
-		cm_two_points ();
+		if (rds < 0) { 			// Estamos ascendiendo
 
-		// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
-		if ((at1 & 8) || (at2 & 8)) {
-
-			// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
-				check_lock_or_box_vert ();
-			#endif
-
-			#ifdef PLAYER_BOUNCE_WITH_WALLS
-				player.vy = -(player.vy / 2);
-			#else
-				player.vy = 0;
-			#endif
-
-			// ajustamos
+			// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
 			#ifdef BOUNDING_BOX_8_BOTTOM
-				gpy = (gpy & 0xf0) + 8;
+				cy1 = cy2 = (gpy + 8) >> 4;
 			#elif defined BOUNDING_BOX_8_CENTERED
-				gpy = (gpy & 0xf0) + 12;
+				cy1 = cy2 = (gpy + 4) >> 4;
 			#else
-				gpy = (gpy & 0xf0) + 16;
+				cy1 = cy2 = gpy >> 4;
 			#endif
 
-			player.y = gpy << 6;
-		}
+			// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
+			cm_two_points ();
 
-		if ((at1 & 1) || (at2 & 1)) {
-			hit_v = 1;
-		}
-	} else if (rds > 0) {		// Estamos descendiendo
+			// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
+			if ((at1 & 8) || (at2 & 8)) {
 
-		// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
-		#ifdef BOUNDING_BOX_8_BOTTOM
-			cy1 = cy2 = (gpy + 15) >> 4;
-		#elif defined BOUNDING_BOX_8_CENTERED
-			cy1 = cy2 = (gpy + 11) >> 4;
-		#else
-			cy1 = cy2 = (gpy + 15) >> 4;
-		#endif
+				// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
+				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+					check_lock_or_box_vert ();
+				#endif
 
-		// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
-		cm_two_points ();
-
-		// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
-		if ((at1 & 12) || (at2 & 12)) {
-
-			// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
-			#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
-				check_lock_or_box_vert ();
-			#endif
-
-			#ifdef PLAYER_CUMULATIVE_JUMP
-				if (!player.saltando)
-			#endif
-			{
 				#ifdef PLAYER_BOUNCE_WITH_WALLS
 					player.vy = -(player.vy / 2);
 				#else
 					player.vy = 0;
 				#endif
-			}
 
-			// ajustamos
+				// ajustamos
+				#ifdef BOUNDING_BOX_8_BOTTOM
+					gpy = (gpy & 0xf0) + 8;
+				#elif defined BOUNDING_BOX_8_CENTERED
+					gpy = (gpy & 0xf0) + 12;
+				#else
+					gpy = (gpy & 0xf0) + 16;
+				#endif
+
+				player.y = gpy << 6;
+			}
+		} else if (rds > 0) {		// Estamos descendiendo
+
+			// Dependiendo del tipo de colisión, las comprobaciones son diferentes:
 			#ifdef BOUNDING_BOX_8_BOTTOM
-				gpy = (gpy & 0xf0);
+				cy1 = cy2 = (gpy + 15) >> 4;
 			#elif defined BOUNDING_BOX_8_CENTERED
-				gpy = (gpy & 0xf0) + 4;
+				cy1 = cy2 = (gpy + 11) >> 4;
 			#else
-				gpy = (gpy & 0xf0);
+				cy1 = cy2 = (gpy + 15) >> 4;
 			#endif
 
-			player.y = gpy << 6;
-			possee = 1;
+			// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
+			cm_two_points ();
+
+			// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
+			if (
+				#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS
+					(at1 & 12) || (at2 & 12)
+				#else
+					((at1 & 8) || (at2 & 8) || (((gpy - 1) & 15) < 8 && ((at1 & 4) || (at2 & 4))))
+				#endif
+			) {
+
+				// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
+				#if (!defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES) && defined PLAYER_MOGGY_STYLE
+					check_lock_or_box_vert ();
+				#endif
+
+				#ifdef PLAYER_CUMULATIVE_JUMP
+					if (!player.saltando)
+				#endif
+				{
+					#ifdef PLAYER_BOUNCE_WITH_WALLS
+						player.vy = -(player.vy / 2);
+					#else
+						player.vy = 0;
+					#endif
+				}
+
+				// ajustamos
+				#ifdef BOUNDING_BOX_8_BOTTOM
+					gpy = (gpy & 0xf0);
+				#elif defined BOUNDING_BOX_8_CENTERED
+					gpy = (gpy & 0xf0) + 4;
+				#else
+					gpy = (gpy & 0xf0);
+				#endif
+
+				player.y = gpy << 6;
+				possee = 1;
+			}
 		}
 
 		if ((at1 & 1) || (at2 & 1)) {
 			hit_v = 1;
 		}
-	}
 
-	// Cuando la gravedad es menor de 64, habrá un frame en el que no hay colisión,
-	// por lo que hay que detectar que estamos posados de forma explícita
-	#if !defined PLAYER_MOGGY_STYLE && PLAYER_G < 64
-		cy1 = cy2 = (gpy + 16) >> 4;
-		cm_two_points ();
-		possee = (at1 & 12) || (at2 & 12);
-	#endif
-	
-	// Salto
-
-	#ifdef PLAYER_HAS_JUMP
-	
-		// Inicio del salto
-
-		if (
-			#if defined PLAYER_CAN_FIRE && !defined USE_TWO_BUTTONS
-				(pad0 & sp_UP) == 0
-			#elif defined (PLAYER_CAN_FIRE) && defined (USE_TWO_BUTTONS)
-				sp_KeyPressed (key_jump)
-			#else
-				(pad0 & sp_FIRE) == 0
-			#endif
-			&& (possee || player.gotten || hit_v)
-			#ifndef PLAYER_CUMULATIVE_JUMP
-				&& player.saltando == 0
-			#endif
-		) {
-			#ifdef PLAYER_CUMULATIVE_JUMP
-				player.vy = -player.vy - PLAYER_VY_INICIAL_SALTO;
-				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-			#endif
-
-			player.saltando = 1;
-			player.cont_salto = 0;
-			#ifdef MODE_128K
-				wyz_play_sound (2);
-			#else		
-				peta_el_beeper (3);
-			#endif
-		}
-
-		// Continuación del salto
-
-		#ifndef PLAYER_CUMULATIVE_JUMP	
-			if (
-				#if defined PLAYER_CAN_FIRE && !defined USE_TWO_BUTTONS
-					(pad0 & sp_UP) == 0 
-				#elif defined (PLAYER_CAN_FIRE) && defined (USE_TWO_BUTTONS)
-					sp_KeyPressed (key_jump)
-				#else
-					(pad0 & sp_FIRE) == 0 
-				#endif
-				&& player.saltando
-			) {
-				player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto>>1));
-				if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-				player.cont_salto ++;
-				if (player.cont_salto == 8)
-					player.saltando = 0;
-			}
+		// Cuando la gravedad es menor de 64, habrá un frame en el que no hay colisión,
+		// por lo que hay que detectar que estamos posados de forma explícita
+		#if !defined PLAYER_MOGGY_STYLE && PLAYER_G < 64
+			cy1 = cy2 = (gpy + 16) >> 4;
+			cm_two_points ();
+			possee = (at1 & 12) || (at2 & 12);
 		#endif
-
-		// Interrupción del salto
-
-		if (
-			#if defined PLAYER_CAN_FIRE && !defined USE_TWO_BUTTONS
-				(pad0 & sp_UP)
-			#elif defined (PLAYER_CAN_FIRE) && defined (USE_TWO_BUTTONS)
-				!sp_KeyPressed (key_jump)
-			#else
-				(pad0 & sp_FIRE)
-			#endif
-		) player.saltando = 0;
-
-	#endif
-
-	// Bootee engine
-
-	#ifdef PLAYER_BOOTEE
-		if ( player.saltando == 0 && (possee || player.gotten || hit_v) ) {
-			player.saltando = 1;
-			player.cont_salto = 0;
-			#ifdef MODE_128K
-				wyz_play_sound (2);
-			#else				
-				peta_el_beeper (3);
-			#endif
-		}
-		
-		if (player.saltando ) {
-			player.vy -= (PLAYER_VY_INICIAL_SALTO + PLAYER_INCR_SALTO - (player.cont_salto>>1));
-			if (player.vy < -PLAYER_MAX_VY_SALTANDO) player.vy = -PLAYER_MAX_VY_SALTANDO;
-			player.cont_salto ++;
-			if (player.cont_salto == 8)
-				player.saltando = 0;
-		}
-	#endif	
+	}
 
 	// ---------------------------------------------------------------------------
 	// EJE HORIZONTAL
@@ -1241,120 +1231,118 @@ unsigned char move (void) {
 		}
 	}
 
-	player.x = player.x + player.vx;
+	player.x += player.vx;
 	#ifndef PLAYER_MOGGY_STYLE
 		player.x += ptgmx;
 	#endif
 	
-	// Safe
-	if (player.x < 0)
-		player.x = 0;
-		
-	if (player.x > 14336)
-		player.x = 14336;
+	if (player.x < 0) player.x = 0;
+	if (player.x > 14336) player.x = 14336;
 
 	// Convertimos a pixel
 	gpx = player.x >> 6;
 
 	// Colisión
 
-	#ifdef BOUNDING_BOX_8_BOTTOM
-			cy1 = (gpy + 8) >> 4; cy2 = (gpy + 15) >> 4;
-	#elif defined BOUNDING_BOX_8_CENTERED
-			cy1 = (gpy + 4) >> 4; cy2 = (gpy + 11) >> 4;
-	#else
-			cy1 = gpy >> 4; cy2 = (gpy + 15) >> 4;
-	#endif
-
 	rds = player.vx + ptgmx;
-	if (rds < 0) {			// Hacia la izquierda
-
-		// Dependiendo del tipo de colisión, las comprobaciones son diferentes
+	if (rds) {
+		
 		#ifdef BOUNDING_BOX_8_BOTTOM
-			cx1 = cx2 = (gpx + 4) >> 4;
+				cy1 = (gpy + 8) >> 4; cy2 = (gpy + 15) >> 4;
 		#elif defined BOUNDING_BOX_8_CENTERED
-			cx1 = cx2 = (gpx + 4) >> 4;
+				cy1 = (gpy + 4) >> 4; cy2 = (gpy + 11) >> 4;
 		#else
-			cx1 = cx2 = gpx >> 4;
+				cy1 = gpy >> 4; cy2 = (gpy + 15) >> 4;
 		#endif
 
-		// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
-		cm_two_points ();
+		if (rds < 0) {			// Hacia la izquierda
 
-		// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
-		if ((at1 & 8) || (at2 & 8)) {
-
-			// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
-			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
-				check_lock_or_box_horz ();
-			#endif
-
-			#ifdef PLAYER_BOUNCE_WITH_WALLS
-				player.vx = -(player.vx / 2);
-			#else
-				player.vx = 0;
-			#endif
-			
-			// ajustamos
+			// Dependiendo del tipo de colisión, las comprobaciones son diferentes
 			#ifdef BOUNDING_BOX_8_BOTTOM
-				gpx = (gpx & 0xf0) + 12;
+				cx1 = cx2 = (gpx + 4) >> 4;
 			#elif defined BOUNDING_BOX_8_CENTERED
-				gpx = (gpx & 0xf0) + 12;
+				cx1 = cx2 = (gpx + 4) >> 4;
 			#else
-				gpx = (gpx & 0xf0) + 16;
+				cx1 = cx2 = gpx >> 4;
 			#endif
 
-			player.x = gpx << 6;
+			// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
+			cm_two_points ();
+
+			// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
+			if ((at1 & 8) || (at2 & 8)) {
+
+				// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
+				#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
+					check_lock_or_box_horz ();
+				#endif
+
+				#ifdef PLAYER_BOUNCE_WITH_WALLS
+					player.vx = -(player.vx / 2);
+				#else
+					player.vx = 0;
+				#endif
+				
+				// ajustamos
+				#ifdef BOUNDING_BOX_8_BOTTOM
+					gpx = (gpx & 0xf0) + 12;
+				#elif defined BOUNDING_BOX_8_CENTERED
+					gpx = (gpx & 0xf0) + 12;
+				#else
+					gpx = (gpx & 0xf0) + 16;
+				#endif
+
+				player.x = gpx << 6;
+			}
+
+		} else if (rds > 0) { 	// Hacia la derecha
+
+			// Dependiendo del tipo de colisión, las comprobaciones son diferentes
+			// Nótese que detectamos un pixel antes de tiempo. Esto es necesario por cómo
+			// funciona el punto fijo.
+			#ifdef BOUNDING_BOX_8_BOTTOM
+				cx1 = cx2 = (gpx + 12) >> 4;
+			#elif defined BOUNDING_BOX_8_CENTERED
+				cx1 = cx2 = (gpx + 12) >> 4;
+			#else
+				cx1 = cx2 = gpx >> 4;
+			#endif
+
+			// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
+			cm_two_points ();
+
+			// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
+			if ((at1 & 8) || (at2 & 8)) {
+
+				// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
+				#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
+					check_lock_or_box_horz ();
+				#endif
+
+				#ifdef PLAYER_BOUNCE_WITH_WALLS
+					player.vx = -(player.vx / 2);
+				#else
+					player.vx = 0;
+				#endif
+				
+				// ajustamos
+				#ifdef BOUNDING_BOX_8_BOTTOM
+					gpx = (gpx & 0xf0) + 4;
+				#elif defined BOUNDING_BOX_8_CENTERED
+					gpx = (gpx & 0xf0) + 4;
+				#else
+					gpx = (gpx & 0xf0);
+				#endif
+
+				player.x = gpx << 6;
+			}
+
 		}
 
 		if ((at1 & 1) || (at2 & 1)) {
 			hit_h = 1;
 		}
-	} else if (rds > 0) { 	// Hacia la derecha
 
-		// Dependiendo del tipo de colisión, las comprobaciones son diferentes
-		// Nótese que detectamos un pixel antes de tiempo. Esto es necesario por cómo
-		// funciona el punto fijo.
-		#ifdef BOUNDING_BOX_8_BOTTOM
-			cx1 = cx2 = (gpx + 12) >> 4;
-		#elif defined BOUNDING_BOX_8_CENTERED
-			cx1 = cx2 = (gpx + 12) >> 4;
-		#else
-			cx1 = cx2 = gpx >> 4;
-		#endif
-
-		// Calculamos la colisión en esos dos puntos cx1,cy1 y cx2, cy2
-		cm_two_points ();
-
-		// Si topamos con obstáculo hay que parar y sacar al sprite del obstáculo.
-		if ((at1 & 8) || (at2 & 8)) {
-
-			// Como hemos colisionado, vemos si hay una caja que empujar o un cerrojo que abrir
-			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
-				check_lock_or_box_horz ();
-			#endif
-
-			#ifdef PLAYER_BOUNCE_WITH_WALLS
-				player.vx = -(player.vx / 2);
-			#else
-				player.vx = 0;
-			#endif
-			
-			// ajustamos
-			#ifdef BOUNDING_BOX_8_BOTTOM
-				gpx = (gpx & 0xf0) + 4;
-			#elif defined BOUNDING_BOX_8_CENTERED
-				gpx = (gpx & 0xf0) + 4;
-			#else
-				gpx = (gpx & 0xf0);
-			#endif
-
-			player.x = gpx << 6;
-		}
-
-		if ((at1 & 1) || (at2 & 1)) {
-			hit_h = 1;
-		}
 	}
 
 	// En vista genital hay una prioridad entre vertical y horizontal
