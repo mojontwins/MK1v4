@@ -3,7 +3,7 @@
 
 // printer.h
 // Miscellaneous printing functions (tiles, status, etc).
-unsigned char px, py, pxx, pyy, pt, pt_alt;
+unsigned char px, py, pxx, pyy, pt, pn, pt_alt;
 unsigned char *pptr, *pptr_alt; 
 
 // Clears the screen
@@ -103,6 +103,17 @@ void cpc_MoveSprAbs (unsigned char spr_idx, unsigned char *next_frame, unsigned 
 			ld  (ix + 0), a 
 			ld  a, (_pptr + 1)
 			ld  (ix + 1), a
+	#endasm
+}
+
+// Sets the border
+
+void __FASTCALL__ cpc_Border (unsigned char b) {
+	#asm
+			ld 	a, l
+			ld  bc, 0x7F11
+			out (c), c
+			out (c), a
 	#endasm
 }
 
@@ -271,6 +282,38 @@ void system_init (void) {
 			add ix, de
 			djnz sp_sw_init_turnoff_loop
 	#endasm	
+}
+
+// We'll be writing directly to the CPC virtual nametable. 
+
+void tile_address (void) {
+	#asm
+			ld  a, (_py)
+
+			add a, a	; 2		4
+			add a, a	; 4		4
+			add a, a	; 8		4
+			ld  h, 0	;		2
+			ld  l, a 	;		4
+			add hl, hl  ; 16	11
+			add hl, hl  ; 32	11
+			;					44 t-states
+
+			; HL = py * 32
+
+			ld 	de, (_px)			
+			ld 	d, 0
+			add hl, de
+
+			; HL = py * 32 + px
+
+			ld  de, _nametable
+			add hl, de
+			
+			ex  de, hl
+
+			; DE = buffer address
+	#endasm
 }
 
 void draw_coloured_tile (unsigned char x, unsigned char y, unsigned char t) {
@@ -488,9 +531,9 @@ void print_str (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			} else {
 				draw_coloured_tile (OBJECTS_ICON_X, OBJECTS_ICON_Y, 17);
 			}
-			draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
+			print_number2 (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 		#else
-			draw_2_digits (OBJECTS_X, OBJECTS_Y, player.objs);
+			print_number2 (OBJECTS_X, OBJECTS_Y, player.objs);
 		#endif
 	}
 #endif
@@ -557,7 +600,7 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 }
 
 void update_this_enemy (void) {
-	cpc_MoveSprAbs (SP_ENEMS_BASE + gpit, en_an_next_frame [gpit], en_x, en_y);
+	cpc_MoveSprAbs (SP_ENEMS_BASE + gpit, en_an_next_frame [gpit], _en_x, _en_y);
 }
 
 void render_sprites (void) {
@@ -580,7 +623,7 @@ void render_sprites (void) {
 	// Render player
 
 	if (!(player.estado & EST_PARP) || !(half_life)) {
-		cpc_MoveSprAbs (0, player.next_frame, gox, gpy);
+		cpc_MoveSprAbs (0, player.next_frame, gpx, gpy);
 	} else {
 		sp_sw [SP_PLAYER].sp0 = (unsigned int) (sprite_18_a);
 	}
@@ -627,7 +670,7 @@ void select_joyfunc (void) {
 	cpc_UpdScr ();
 	cpc_ShowTileMap (1);
 
-	AY_PLAY_MUSIC (0);
+	wyz_play_music (0);
 
 	#asm
 		.title_loop
@@ -655,9 +698,15 @@ void select_joyfunc (void) {
 			ld  bc, 24
 			ldir
 	#endasm
-	AY_STOP_SOUND ();
+	wyz_stop_sound ();
 }
 
 void unpack_screen (unsigned char *src) {
 	unpack (src, (unsigned char *)(BASE_SUPERBUFF));
+}
+
+void sp_WaitForNoKey () {
+	do {
+		pad_read ();
+	} while (pad0 != 0xff);
 }

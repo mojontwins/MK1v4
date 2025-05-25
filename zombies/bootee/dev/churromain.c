@@ -58,6 +58,11 @@
 	#else
 		#include "speccy/beeper.h"
 	#endif
+#else
+	#include "cpc/efectos.h"
+	#include "cpc/instrumentos.h"
+	#include "cpc/songs.h"
+	#include "cpc/wyz_player.h"
 #endif
 
 #include "zx0.h"
@@ -87,7 +92,7 @@
 		#include "cpc/tileset.h"
 		#include "cpc/sprites.h"
 		#include "cpc/extrasprites.h"
-		#include "cpc/spriteset_mappings.h"
+		#include "cpc/pal.h"
 	#else
 		#include "speccy/tileset.h"
 		#include "speccy/sprites.h"

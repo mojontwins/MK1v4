@@ -57,7 +57,6 @@ del screen.tap > nul 2> nul
 del main.tap > nul 2> nul
 del *.scr > nul 2> nul
 del *.bin > nul 2> nul
-del %game%.bin > nul 2> nul
 
 :end
 echo ### DONE ###

@@ -341,7 +341,6 @@ void main (void) {
 				do_hotspots ();
 
 				// Flick screen checks and scripting related stuff
-				gpit = (joyfunc) (&keys);
 				
 				// Select object
 				#if defined ACTIVATE_SCRIPTING 
@@ -367,9 +366,9 @@ void main (void) {
 						#if defined SCRIPTING_KEY_M			
 							sp_KeyPressed (KEY_M)
 						#elif defined SCRIPTING_DOWN
-							(gpit & sp_DOWN) == 0
+							(pad_this_frame & sp_DOWN) == 0
 						#else
-							(gpit & sp_FIRE) == 0
+							(pad_this_frame & sp_FIRE) == 0
 						#endif
 					) {
 						// Any scripts to run in this screen?
