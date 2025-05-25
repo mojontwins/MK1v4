@@ -387,3 +387,7 @@ void select_joyfunc (void) {
 		#endasm
 	#endif
 }
+
+void unpack_screen (unsigned char *src) {
+	unpack (src, (unsigned char *)(16384));
+}

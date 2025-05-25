@@ -30,7 +30,7 @@ void game_ending (void) {
 		// Resource 2 = ending
 		get_resource (2, 16384);
 	#else
-		unpack (s_ending, (unsigned char *) (16384));
+		unpack_screen (s_ending);
 	#endif
 
 	#ifdef MODE_128K

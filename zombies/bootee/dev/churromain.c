@@ -5,8 +5,6 @@
 // Esqueleto de juegos de la churrera
 // Copyleft 2010-2014 The Mojon Twins
 
-#include <spritepack.h>
-
 #include "config.h"
 
 #ifdef CPC
@@ -41,7 +39,12 @@
 
 // Cosas del juego:
 
-#include "speccy\sysvars.h"
+#ifdef CPC
+	#include "cpc\sysvars.h"
+#else
+	#include "speccy\sysvars.h"
+#endif
+
 #include "definitions.h"
 
 #ifdef ACTIVATE_SCRIPTING

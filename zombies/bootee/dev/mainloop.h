@@ -25,7 +25,7 @@ void main (void) {
 			// Resource 0 = title.bin
 			get_resource (0, 16384);
 		#else		
-			unpack ((unsigned char *) (s_title), (unsigned char *)(16384));
+			unpack_screen ((unsigned char *) (s_title));
 		#endif
 
 		#ifdef MODE_128K
@@ -84,7 +84,7 @@ void main (void) {
 					// Resource 1 = marco.bin
 					get_resource (1, 16384);
 				#else			
-					unpack ((unsigned int) (s_marco), 16384);
+					unpack_screen ((unsigned int) (s_marco));
 				#endif
 			#endif
 

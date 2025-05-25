@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 24 18:25:30 2025
+;	Module compile time: Sun May 25 13:30:24 2025
 
 
 
@@ -7774,6 +7774,18 @@
 	ret
 
 
+
+._unpack_screen
+	ld	hl,2	;const
+	call	l_gintspsp	;
+	ld	hl,16384	;const
+	push	hl
+	call	_unpack
+	pop	bc
+	pop	bc
+	ret
+
+
 	._s_title
 	BINARY "title.bin"
 	._s_marco
@@ -7785,10 +7797,7 @@
 	call	_blackout
 	ld	hl,_s_ending
 	push	hl
-	ld	hl,16384	;const
-	push	hl
-	call	_unpack
-	pop	bc
+	call	_unpack_screen
 	pop	bc
 	ld	hl,4 % 256	;const
 	ld	a,l
@@ -10819,10 +10828,7 @@
 	call	_blackout
 	ld	hl,_s_title
 	push	hl
-	ld	hl,16384	;const
-	push	hl
-	call	_unpack
-	pop	bc
+	call	_unpack_screen
 	pop	bc
 	call	_select_joyfunc
 	ld	hl,1 % 256	;const
@@ -11944,6 +11950,7 @@
 	LIB	sp_DeleteSpr
 	XDEF	_get_resource
 	LIB	sp_JoyTimexEither
+	XDEF	_unpack_screen
 	XDEF	_mlplaying
 	XDEF	_life_old
 	LIB	sp_Invalidate
@@ -12122,8 +12129,8 @@
 	XDEF	_tileset
 	XDEF	_sprite_7_a
 	LIB	sp_JoyTimexLeft
-	LIB	sp_SetMousePosKempston
 	XDEF	_comportamiento_tiles
+	LIB	sp_SetMousePosKempston
 	XDEF	_sprite_7_b
 	XDEF	_sprite_7_c
 	LIB	sp_ComputePos

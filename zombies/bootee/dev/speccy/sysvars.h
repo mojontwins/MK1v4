@@ -3,6 +3,8 @@
 
 // Variables dependientes del sistema (ZX Spectrum)
 
+#include <spritepack.h>
+
 #define BASE_ROOM_BUFFERS	23300
 #define BASE_ARRAYS 		23600
 
