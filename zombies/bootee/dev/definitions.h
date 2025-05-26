@@ -41,7 +41,7 @@ typedef struct {
 	int x, y, cx;
 	int vx, vy;
 	char g, ax, rx;
-	unsigned char salto, cont_salto;
+	unsigned char crouch, cont_salto;
 	unsigned char *current_frame, *next_frame;
 	unsigned char saltando;
 	unsigned char frame, subframe, facing;
@@ -119,6 +119,10 @@ signed char _en_mx, _en_my;
 
 	unsigned char blx, bly;
 #endif
+
+unsigned char *address @ BASE_ARRAYS + 63 + 6 * MAX_BULLETS;
+unsigned char *destination @ BASE_ARRAYS + 65 + 6 * MAX_BULLETS;
+unsigned char ram_page @ BASE_ARRAYS + 67 + 6 * MAX_BULLETS;
 
 // Mapa / pantallas
 

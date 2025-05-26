@@ -17,26 +17,7 @@ void main (void) {
 	system_init ();
 
 	while (1) {
-		// Here the title screen
-		sp_UpdateNow();
-		blackout ();
-
-		#ifdef MODE_128K
-			// Resource 0 = title.bin
-			get_resource (0, 16384);
-		#else		
-			unpack_screen ((unsigned char *) (s_title));
-		#endif
-
-		#ifdef MODE_128K
-			//wyz_play_music (0);
-		#endif
-
-		select_joyfunc ();
-
-		#ifdef MODE_128K
-			//wyz_stop_sound ();
-		#endif
+		title ();
 
 		#ifdef ENABLE_CHECKPOINTS
 			sg_submenu ();
@@ -86,7 +67,6 @@ void main (void) {
 
 			// Let's do it.
 
-			playing = 1;
 			init_player ();
 
 			#ifndef COMPRESSED_LEVELS		
@@ -103,13 +83,13 @@ void main (void) {
 				#endif
 
 				n_pant = SCR_INICIO;
-			#endif		
+			#endif	
+			o_pant = 0xff;	
 
 			#ifdef PLAYER_CAN_FIRE
 				init_bullets ();
 			#endif	
 
-			maincounter = 0;
 
 			#ifdef ACTIVATE_SCRIPTING		
 				script_result = 0;
@@ -131,7 +111,8 @@ void main (void) {
 			#endif
 
 			half_life = 0;
-			
+			maincounter = 0;
+			success = 0;
 			objs_old = keys_old = life_old = killed_old = 0xff;
 			
 			#ifdef MAX_AMMO 	
@@ -173,8 +154,8 @@ void main (void) {
 				display_items ();
 			#endif
 		
-			success = 0;
 
+			playing = 1;
 			while (playing) {
 				if (o_pant != n_pant) {
 					draw_scr ();

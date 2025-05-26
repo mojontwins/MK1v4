@@ -58,8 +58,8 @@
 #define SLOW_DRAIN						// Works with bounces. Drain is 4 times slower
 //#define PLAYER_FLICKERS 				// If defined, collisions make player flicker instead.
 //#define MAP_BOTTOM_KILLS				// If defined, exiting the map bottomwise kills.
-//#define WALLS_STOP_ENEMIES			// If defined, enemies react to the scenary
-//#define EVERYTHING_IS_A_WALL			// If defined, any tile <> type 0 is a wall, otherwise just 8.
+#define WALLS_STOP_ENEMIES				// If defined, enemies react to the scenary
+#define EVERYTHING_IS_A_WALL			// If defined, any tile <> type 0 is a wall, otherwise just 8.
 //#define ENABLE_PURSUERS				// If defined, type 7 enemies are active
 //#define DEATH_COUNT_EXPRESSION	20+(rand()&15)
 //#define TYPE_7_FIXED_SPRITE	4		// If defined, type 7 enemies are always #
@@ -155,6 +155,7 @@
 //#define PLAYER_HAS_JUMP 				// If defined, player is able to jump.
 //#define PLAYER_HAS_JETPAC 			// If defined, player can thrust a vertical jetpac
 //#define PLAYER_KILLS_ENEMIES			// If defined, stepping on enemies kills them
+#define PLAYER_STOMPS_ON_ENEMIES		// Like above, but enemies are not killed (only jump on them)
 //#define PLAYER_CAN_KILL_FLAG	1		// If defined, player can only kill when flag # is "1"
 //#define PLAYER_MIN_KILLABLE	3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 #define PLAYER_BOOTEE 					// Always jumping engine. Don't forget to disable "HAS_JUMP" and "HAS_JETPAC"!!!
@@ -228,6 +229,8 @@
 
 #define PLAYER_INCR_JETPAC		48		// Vertical jetpac gauge. Must by > G of course!
 #define PLAYER_MAX_VY_JETPAC	256 	// Max vertical jetpac speed
+
+#define PLAYER_BOOTEE_CROUCH 	128		// Add this to vy when pressing DOWN in BOOTEE
 
 // IV.2. Horizontal (side view) or general (top view) movement.
 

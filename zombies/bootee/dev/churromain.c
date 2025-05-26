@@ -92,6 +92,7 @@
 		#include "cpc/tileset.h"
 		#include "cpc/sprites.h"
 		#include "cpc/extrasprites.h"
+		#include "cpc/spriteset_mappings.h"
 		#include "cpc/pal.h"
 	#else
 		#include "speccy/tileset.h"
@@ -107,8 +108,10 @@
 
 #ifdef CPC
 	#include "cpc/printer.h"
+	#include "cpc/cell_arrays.h"
 #else
 	#include "speccy/printer.h"
+	#include "speccy/cell_arrays.h"
 #endif
 #include "pantallas.h"
 

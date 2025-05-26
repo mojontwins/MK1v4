@@ -541,7 +541,6 @@ void print_str (unsigned char x, unsigned char y, unsigned char c, char *s) {
 void pad_read (void) {
 	pad_this_frame = pad1;
 
-	// pad1 = pad0 = (joyfunc) (&keys); 
 	// Fill pad1 and pad0 with the status of the first 8 keys in `tabla_teclas`.
 	#asm 
 			ld  hl, cpc_KeysData + 12
@@ -651,27 +650,7 @@ void cortina (void) {
 	// Do something... someday
 }
 
-void espera_activa (int espera) {
-	do {
-		pad_read ();
-		#asm
-				halt
-				halt
-				halt
-				halt
-				halt
-				halt
-		#endasm
-		if (pad_this_frame != 0xff) break;
-	} while (-- espera);
-}
-
 void select_joyfunc (void) {
-	cpc_UpdScr ();
-	cpc_ShowTileMap (1);
-
-	wyz_play_music (0);
-
 	#asm
 		.title_loop
 			call _pad_read 
@@ -697,8 +676,9 @@ void select_joyfunc (void) {
 			ld  de, cpc_KeysData + 12
 			ld  bc, 24
 			ldir
+
+		.joyfunc_selected
 	#endasm
-	wyz_stop_sound ();
 }
 
 void unpack_screen (unsigned char *src) {
@@ -709,4 +689,20 @@ void sp_WaitForNoKey () {
 	do {
 		pad_read ();
 	} while (pad0 != 0xff);
+}
+
+void espera_activa (int espera) {
+	sp_WaitForNoKey ();
+	do {
+		pad_read ();
+		#asm
+				halt
+				halt
+				halt
+				halt
+				halt
+				halt
+		#endasm
+		if (pad_this_frame != 0xff) break;
+	} while (espera --);
 }

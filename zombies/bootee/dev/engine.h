@@ -5,10 +5,6 @@
 
 // Safe!
 
-#ifndef PLAYER_MIN_KILLABLE
-	#define PLAYER_MIN_KILLABLE 0
-#endif
-
 // ---------------------------------------------------------------------------
 // Funciones generales
 // ---------------------------------------------------------------------------
@@ -199,11 +195,11 @@ unsigned char ctileoff (char n) {
 				#else
 
 					#ifdef CAN_FIRE_UP
-						gpjt = (joyfunc) (&keys);
-						if (!(gpjt & sp_UP)) {
+						
+						if (!(pad0 & sp_UP)) {
 							bullets_y [gpit] = (player.y >> 6);
 							bullets_my [gpit] = -PLAYER_BULLET_SPEED;
-						} else if (!(gpjt & sp_DOWN)) {
+						} else if (!(pad0 & sp_DOWN)) {
 							bullets_y [gpit] = 8 + (player.y >> 6);
 							bullets_my [gpit] = PLAYER_BULLET_SPEED;	 
 						} else
@@ -214,7 +210,7 @@ unsigned char ctileoff (char n) {
 					}
 
 					#ifdef CAN_FIRE_UP
-						if (!(gpjt & sp_LEFT) || !(gpjt & sp_RIGHT) || ((gpjt & sp_UP) && (gpjt & sp_DOWN))) 
+						if (!(pad0 & sp_LEFT) || !(pad0 & sp_RIGHT) || ((pad0 & sp_UP) && (pad0 & sp_DOWN))) 
 					#endif
 					{
 						if (player.facing == 0) {
@@ -311,7 +307,7 @@ void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned c
 #if !defined COMPRESSED_LEVELS
 	void init_hotspots (void) {
 		// Activa todos los hotspots
-		for (gpit = 0; gpit < gpit < MAP_W * MAP_H; gpit ++) {
+		for (gpit = 0; gpit < MAP_W * MAP_H; gpit ++) {
 			hotspots [gpit].act = 1;
 		}
 	}
@@ -931,7 +927,7 @@ unsigned char move (void) {
 			if ( player.saltando == 0 && (possee || player.gotten || hit_v) ) {
 				player.saltando = 1;
 				player.cont_salto = 0;
-				PLAY_SFX (3);
+				if (hit == 0) PLAY_SFX (3);
 			}
 			
 			if (player.saltando ) {
@@ -941,6 +937,11 @@ unsigned char move (void) {
 				if (player.cont_salto == 8)
 					player.saltando = 0;
 			}
+
+			if ((pad0 & sp_DOWN) == 0) {
+				if (player.vy < -PLAYER_BOOTEE_CROUCH) player.vy = -PLAYER_BOOTEE_CROUCH;
+				player.crouch = 1;
+			} else player.crouch = 0;
 		#endif	
 
 		// Jetpac
@@ -967,7 +968,6 @@ unsigned char move (void) {
 	possee = 0; hit_v = 0;
 
 	// Colisión vertical
-
 
 	rds = player.vy + ptgmy;
 	if (rds) {
@@ -1143,6 +1143,7 @@ unsigned char move (void) {
 
 	// Colisión
 
+	hit_h = 0;
 	rds = player.vx + ptgmx;
 	if (rds) {
 		
@@ -1328,6 +1329,7 @@ unsigned char move (void) {
 					player.ct_estado = 50;
 				#endif		
 				kill_player(10);
+
 			}
 		}
 	#endif
@@ -1336,14 +1338,16 @@ unsigned char move (void) {
 		
 	#ifndef PLAYER_MOGGY_STYLE
 		#ifdef PLAYER_BOOTEE
-			gpit = player.facing;
-			if (player.vy == 0) {
-				player.next_frame = player_frames [gpit];
+			if (player.crouch) {
+				gpit = player.facing + 3;
+			} else if (player.vy == 0) {
+				gpit = player.facing;
 			} else if (player.vy < 0) {
-				player.next_frame = player_frames [gpit + 1];
+				gpit = player.facing + 1;
 			} else {
-				player.next_frame = player_frames [gpit + 2];
+				gpit = player.facing + 2;
 			}
+			player.next_frame = player_frames [gpit];
 		#else	
 			if (!possee && !player.gotten) {
 				player.next_frame = player_frames [player.facing == LATERAL_FACING_RIGHT ? 8 : 9];
@@ -1428,18 +1432,18 @@ unsigned char move (void) {
 	unsigned char __FASTCALL__ mons_col_sc_x (void) {
 		gpaux = gpen_xx + ctileoff (malotes [enoffsmasi].mx);
 		#ifdef EVERYTHING_IS_A_WALL
-			return (attr (gpaux, gpen_yy) || ((malotes [enoffsmasi].y & 15) && attr (gpaux, gpen_yy + 1))) {
+			return (attr (gpaux, gpen_yy) || ((malotes [enoffsmasi].y & 15) && attr (gpaux, gpen_yy + 1)));
 		#else	
-			return (attr (gpaux, gpen_yy) & 8 || ((malotes [enoffsmasi].y & 15) && attr (gpaux, gpen_yy + 1) & 8)) {
+			return (attr (gpaux, gpen_yy) & 8 || ((malotes [enoffsmasi].y & 15) && attr (gpaux, gpen_yy + 1) & 8));
 		#endif
 	}
 		
 	unsigned char __FASTCALL__ mons_col_sc_y (void) {
 		gpaux = gpen_yy + ctileoff (malotes [enoffsmasi].my);
 		#ifdef EVERYTHING_IS_A_WALL
-			return (attr (gpen_xx, gpaux) || ((malotes [enoffsmasi].x & 15) && attr (gpen_xx + 1, gpaux))) {
+			return (attr (gpen_xx, gpaux) || ((malotes [enoffsmasi].x & 15) && attr (gpen_xx + 1, gpaux)));
 		#else	
-			return (attr (gpen_xx, gpaux) & 8 || ((malotes [enoffsmasi].x & 15) && attr (gpen_xx + 1, gpaux) & 8)) {
+			return (attr (gpen_xx, gpaux) & 8 || ((malotes [enoffsmasi].x & 15) && attr (gpen_xx + 1, gpaux) & 8));
 		#endif
 	}
 #endif
@@ -1750,21 +1754,31 @@ void mueve_bicharracos (void) {
 
 					// Colisión especial: pisar enemigo
 
-					#ifdef PLAYER_KILLS_ENEMIES
+					#if defined PLAYER_KILLS_ENEMIES || defined PLAYER_STOMPS_ON_ENEMIES
 						if (
-							gpy < _en_y - 2 && player.vy >= 0 && _en_t >= PLAYER_MIN_KILLABLE
+							gpy < _en_y - 2 && player.vy >= 0 
+							#ifdef PLAYER_MIN_KILLABLE
+								&& _en_t >= PLAYER_MIN_KILLABLE
+							#endif
 							#ifdef PLAYER_CAN_KILL_FLAG
 								&& flags [PLAYER_CAN_KILL_FLAG]
 							#endif
 						) {
-							en_an_next_frame [gpit] = sprite_17_a;
-							update_this_enemy ();
-							sp_UpdateNow ();			
-							PLAY_SFX (5); 				// Spectrum 48K friendly (pause)
-							en_an_state [gpit] = GENERAL_DYING;
-							en_an_count [gpit] = 8;
-							_en_t |= 16;
-							player.killed ++;
+							#ifdef PLAYER_KILLS_ENEMIES
+								en_an_next_frame [gpit] = sprite_17_a;
+								update_this_enemy ();
+								sp_UpdateNow ();			
+								PLAY_SFX (5); 				// Spectrum 48K friendly (pause)
+								en_an_state [gpit] = GENERAL_DYING;
+								en_an_count [gpit] = 8;
+								_en_t |= 16;
+								player.killed ++;
+							#else 
+								PLAY_SFX (3);
+							#endif
+
+							gpy = _en_y >= 16 ? _en_y - 16 : 0;
+							player.y = gpy << 6;
 							player.vy = -256;
 
 							#ifdef ACTIVATE_SCRIPTING

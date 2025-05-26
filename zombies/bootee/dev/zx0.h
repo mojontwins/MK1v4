@@ -68,10 +68,7 @@
 	; -----------------------------------------------------------------------------
 #endasm
 
-unsigned char *address @ 23296;
-unsigned char *destination @ 23298;
 #ifdef MODE_128K
-	unsigned char ram_page @ 23600;
 	
 	void unpack_RAMn (unsigned char n, unsigned char *src, unsigned char *dest) {
 		address = src;

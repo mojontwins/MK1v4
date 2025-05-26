@@ -22,6 +22,34 @@
 	#endasm
 #endif
 
+void title (void) {
+	// Here the title screen
+	sp_UpdateNow();
+	blackout ();
+
+	#ifdef MODE_128K
+		// Resource 0 = title.bin
+		get_resource (0, 16384);
+	#else		
+		unpack_screen ((unsigned char *) (s_title));
+	#endif
+
+	#ifdef CPC
+		cpc_UpdScr ();
+		cpc_ShowTileMap (1);
+	#endif
+
+	#if defined MODE_128K || defined CPC
+		wyz_play_music (0);
+	#endif
+
+	select_joyfunc ();
+
+	#if defined MODE_128K || defined CPC
+		wyz_stop_sound ();
+	#endif
+}
+
 void game_ending (void) {
 	sp_UpdateNow();
 	blackout ();
