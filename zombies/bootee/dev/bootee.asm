@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon May 26 10:38:27 2025
+;	Module compile time: Mon May 26 10:44:59 2025
 
 
 
@@ -8276,8 +8276,8 @@
 	inc	hl
 	inc	hl
 	ld	(hl),#(0 % 256 % 256)
-	ld	l,(hl)
-	ld	h,0
+	ld	hl,14 % 256	;const
+	call	_wyz_play_sound
 .i_75
 	jp	i_72
 .i_73
@@ -8637,8 +8637,6 @@
 	pop	bc
 	pop	bc
 	pop	bc
-	ld	hl,14 % 256	;const
-	call	_wyz_play_sound
 .i_95
 	jp	i_92
 .i_93
@@ -8877,7 +8875,10 @@
 .i_109
 	ld	hl,_player+26
 	dec	(hl)
-	ld	hl,2 % 256	;const
+	ld	hl,2	;const
+	add	hl,sp
+	ld	l,(hl)
+	ld	h,0
 	call	_wyz_play_sound
 	ret
 

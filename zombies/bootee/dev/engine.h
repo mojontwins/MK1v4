@@ -441,6 +441,7 @@ void do_hotspots (void) {
 					cerrojos [gpit].y == rdy
 				) {
 					cerrojos [gpit].st = 0;
+					PLAY_SFX (14);
 				}
 			}
 		}
@@ -544,7 +545,6 @@ void draw_scr_background (void) {
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
 			if (cerrojos [gpit].np == n_pant && cerrojos [gpit].st == 0) {
 				set_map_tile (cerrojos [gpit].x, cerrojos [gpit].y, 0, 0);
-				PLAY_SFX (14);
 			}
 		}
 	#endif
@@ -740,7 +740,7 @@ void init_player (void) {
 void kill_player (unsigned char sound) {
 	if (player.life == 0) return;
 	player.life --;
-	PLAY_SFX (2);
+	PLAY_SFX (sound);
 	#ifdef CP_RESET_WHEN_DYING
 		#ifdef CP_RESET_ALSO_FLAGS
 			mem_load ();
