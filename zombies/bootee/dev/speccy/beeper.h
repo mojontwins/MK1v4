@@ -252,16 +252,21 @@
 		ret
 	
 	.proclist
-		defw sound1
-		defw sound2
-		defw sound3
-		defw sound4
-		defw sound5
-		defw sound6
-		defw sound7
-		defw sound8
-		defw sound9
-		defw sound10
+		defw sound1 	// 0 Enemy destroyed
+		defw sound2 	// 1 Enemy Hit
+		defw sound3 	// 2 Something
+		defw sound4 	// 3 Jump
+		defw sound5 	// 4 Player hit
+		defw sound6 	// 5 Enemy destroyed 2
+		defw sound7 	// 6 Shot
+		defw sound8 	// 7 Item 1
+		defw sound9 	// 8 Item 2
+		defw sound10 	// 9 Item 3
+		defw sound4 	// 10 Puncho
+		defw sound8 	// 11 Coin
+		defw sound3 	// 12 Talk 1
+		defw sound7 	// 13 Talk 2
+		defw sound3 	// 14 Key in lock
 #endasm
 
 /*
@@ -279,7 +284,11 @@
 	7	Item #1		(item)
 	8	Item #2		(key)
 	9	Item #3		(life)
-	
+	10 Puncho
+	11 Coin
+	12 Talk1
+	13 Talk2
+	14 Lock
 */
 
 void __FASTCALL__ peta_el_beeper (unsigned char n) {

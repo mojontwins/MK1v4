@@ -31,7 +31,7 @@ void __FASTCALL__ wyz_play_music (unsigned char m) {
 	#endasm
 }
 
-void __FASTCALL__ peta_el_beeper (unsigned char s) {
+void __FASTCALL__ wyz_play_sound (unsigned char s) {
 	#asm
 		; Sound number is in L
 		ld  a, l
@@ -1165,7 +1165,7 @@ nonewblack:
 
 	.TABLA_EFECTOS
 		defw 	EFECTO0, EFECTO1, EFECTO2, EFECTO3, EFECTO4, EFECTO5, EFECTO6, EFECTO7
-		defw	EFECTO8, EFECTO9
+		defw	EFECTO8, EFECTO9, EFECTO10,EFECTO11,EFECTO12,EFECTO13,EFECTO14
 
 	.LINE_COUNTER
 		defb 0

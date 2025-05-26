@@ -36,10 +36,10 @@ void game_ending (void) {
 	#ifdef MODE_128K
 	#else
 		gpit = 4; do {
-			peta_el_beeper (7);
-			peta_el_beeper (2);
+			PLAY_SFX (7);
+			PLAY_SFX (2);
 		} while (--gpit);
-		peta_el_beeper (9);
+		PLAY_SFX (9);
 	#endif
 	
 	espera_activa (500);
@@ -58,10 +58,10 @@ void game_over (void) {
 	#ifdef MODE_128K
 	#else
 		gpit = 4; do {
-			peta_el_beeper (7);
-			peta_el_beeper (2);
+			PLAY_SFX (7);
+			PLAY_SFX (2);
 		} while (--gpit);
-		peta_el_beeper (9);
+		PLAY_SFX (9);
 	#endif
 
 	espera_activa (500);
@@ -75,10 +75,10 @@ void game_over (void) {
 		#ifdef MODE_128K
 		#else
 			gpit = 4; do {
-				peta_el_beeper (1);
-				peta_el_beeper (2);
+				PLAY_SFX (1);
+				PLAY_SFX (2);
 			} while (--gpit);
-			peta_el_beeper (0);
+			PLAY_SFX (0);
 		#endif
 			
 		espera_activa (250);

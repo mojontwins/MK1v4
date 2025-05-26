@@ -5,6 +5,12 @@
 
 #include <spritepack.h>
 
+#ifdef MODE_128K
+	#define PLAY_SFX(n) 	wyz_play_sound(n)
+#else
+	#define PLAY_SFX(n)		peta_el_beeper(n)
+#endif
+
 #define BASE_ROOM_BUFFERS	23300
 #define BASE_ARRAYS 		23600
 

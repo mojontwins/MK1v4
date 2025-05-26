@@ -233,12 +233,8 @@ unsigned char ctileoff (char n) {
 					#endif
 				#endif
 
-				#ifdef MODE_128K
-					wyz_play_sound (4);
-				#else
-					peta_el_beeper (6);
-				#endif
-
+				PLAY_SFX (6);
+				
 				#ifdef LIMITED_BULLETS
 					#if defined (LB_FRAMES) || !defined (ACTIVATE_SCRIPTING)
 								bullets_life [gpit] = LB_FRAMES;
@@ -335,11 +331,7 @@ void do_hotspots (void) {
 				if (player.life > PLAYER_LIFE)
 					player.life = PLAYER_LIFE;
 				hotspots [n_pant].act = 2;
-				#ifdef MODE_128K
-					wyz_play_sound (5);
-				#else
-					peta_el_beeper (8);
-				#endif
+				PLAY_SFX (9);
 
 			} else 
 		#endif
@@ -352,17 +344,9 @@ void do_hotspots (void) {
 						#ifdef ONLY_ONE_OBJECT
 							if (player.objs == 0) {
 								player.objs ++;
-								#ifdef MODE_128K
-									wyz_play_sound (3);
-								#else
-									peta_el_beeper (9);
-								#endif 
+								PLAY_SFX (7);
 							} else {
-								#ifdef MODE_128K
-									wyz_play_sound (5);
-								#else
-									peta_el_beeper (4); 
-								#endif
+								PLAY_SFX (4);
 								draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), 17);
 								gpit = 1;
 							}
@@ -371,11 +355,7 @@ void do_hotspots (void) {
 							#ifdef OBJECT_COUNT
 								flags [OBJECT_COUNT] = player.objs;
 							#endif
-							#ifdef MODE_128K
-								wyz_play_sound (3);
-							#else
-								peta_el_beeper (9);
-							#endif
+							PLAY_SFX (7);
 
 							#ifdef GET_X_MORE
 								if (level_data.max_objs > player.objs) {
@@ -396,11 +376,7 @@ void do_hotspots (void) {
 				#ifndef DEACTIVATE_KEYS
 					case 2:
 						player.keys ++;
-						#ifdef MODE_128K
-							wyz_play_sound (3);
-						#else
-							peta_el_beeper (7);
-						#endif
+						PLAY_SFX (8);
 						break;
 				#endif
 
@@ -409,12 +385,7 @@ void do_hotspots (void) {
 						player.life += PLAYER_REFILL;
 						if (player.life > PLAYER_LIFE) {
 							player.life = PLAYER_LIFE;
-						}
-						#ifdef MODE_128K
-							wyz_play_sound (5);
-						#else
-							peta_el_beeper (8);
-						#endif
+						PLAY_SFX (9);
 						break;
 				#endif
 
@@ -425,11 +396,7 @@ void do_hotspots (void) {
 						} else { 
 							player.ammo = MAX_AMMO;
 						}
-						#ifdef MODE_128K
-							wyz_play_sound (3);
-						#else
-							peta_el_beeper (9);
-						#endif
+						PLAY_SFX (7);
 						break;
 				#endif
 
@@ -440,22 +407,14 @@ void do_hotspots (void) {
 						} else {
 							ctimer.t = 99;
 						}
-						#ifdef MODE_128K
-							wyz_play_sound (3);
-						#else
-							peta_el_beeper (7);
-						#endif
+						PLAY_SFX (7);
 						break;
 				#endif
 
 				#ifdef ENABLE_CHECKPOINTS
 					case 6:
 						mem_save ();
-						#ifdef MODE_128K
-							wyz_play_sound (3);
-						#else
-							peta_el_beeper (7);
-						#endif
+						PLAY_SFX (2);
 						break;						
 				#endif
 			}
@@ -494,7 +453,7 @@ void do_hotspots (void) {
 		if ((attr (x1, y1) & 8) == 0) {
 			set_map_tile (x0, y0, 0, 0);
 			set_map_tile (x1, y1, 14, 8);
-			peta_el_beeper (2);
+			PLAY_SFX (2);
 		}
 	}
 #endif
@@ -585,6 +544,7 @@ void draw_scr_background (void) {
 		for (gpit = 0; gpit < MAX_CERROJOS; gpit ++) {
 			if (cerrojos [gpit].np == n_pant && cerrojos [gpit].st == 0) {
 				set_map_tile (cerrojos [gpit].x, cerrojos [gpit].y, 0, 0);
+				PLAY_SFX (14);
 			}
 		}
 	#endif
@@ -694,18 +654,15 @@ void draw_scr (void) {
 		gpaux = (y << 4) - y + x;
 		if (brk_buff [gpaux] < BREAKABLE_WALLS_LIFE) {
 			brk_buff [gpaux] ++;
-			gpaux = 6;
+			gpaux = 1;
 		} else {
 			map_attr [gpaux] = 0;
 			map_buff [gpaux] = 0;
 			set_map_tile (x, y, 0, 0);
-			gpaux = 7;
+			gpaux = 0;
 		}
-		#ifdef MODE_128K
-			wyz_play_sound (gpaux);
-		#else			
-			peta_el_beeper (gpaux);
-		#endif
+		PLAY_SFX (gpaux);
+		
 	}
 #endif
 
@@ -783,11 +740,7 @@ void init_player (void) {
 void kill_player (unsigned char sound) {
 	if (player.life == 0) return;
 	player.life --;
-	#ifdef MODO_128K
-		wyz_play_sound (sound);
-	#else
-		peta_el_beeper (sound);
-	#endif
+	PLAY_SFX (2);
 	#ifdef CP_RESET_WHEN_DYING
 		#ifdef CP_RESET_ALSO_FLAGS
 			mem_load ();
@@ -934,11 +887,7 @@ unsigned char move (void) {
 
 				player.saltando = 1;
 				player.cont_salto = 0;
-				#ifdef MODE_128K
-					wyz_play_sound (2);
-				#else		
-					peta_el_beeper (3);
-				#endif
+				PLAY_SFX (3);
 			}
 
 			// Continuación del salto
@@ -982,11 +931,7 @@ unsigned char move (void) {
 			if ( player.saltando == 0 && (possee || player.gotten || hit_v) ) {
 				player.saltando = 1;
 				player.cont_salto = 0;
-				#ifdef MODE_128K
-					wyz_play_sound (2);
-				#else				
-					peta_el_beeper (3);
-				#endif
+				PLAY_SFX (3);
 			}
 			
 			if (player.saltando ) {
@@ -1382,11 +1327,7 @@ unsigned char move (void) {
 					player.estado = EST_PARP;
 					player.ct_estado = 50;
 				#endif		
-				#ifdef MODE_128K
-					kill_player (8);
-				#else		
-					kill_player (4);
-				#endif
+				kill_player(10);
 			}
 		}
 	#endif
@@ -1819,7 +1760,7 @@ void mueve_bicharracos (void) {
 							en_an_next_frame [gpit] = sprite_17_a;
 							update_this_enemy ();
 							sp_UpdateNow ();			
-							peta_el_beeper (5); 				// Spectrum 48K friendly (pause)
+							PLAY_SFX (5); 				// Spectrum 48K friendly (pause)
 							en_an_state [gpit] = GENERAL_DYING;
 							en_an_count [gpit] = 8;
 							_en_t |= 16;
@@ -1845,11 +1786,7 @@ void mueve_bicharracos (void) {
 							if (!lasttimehit || ((maincounter & 3) == 0))
 						#endif
 						{
-							#ifdef MODE_128K
-								kill_player (7);
-							#else							
-								kill_player(4);
-							#endif
+							kill_player(4);
 						}
 
 						#ifdef PLAYER_BOUNCES
@@ -1927,11 +1864,7 @@ void mueve_bicharracos (void) {
 									update_this_enemy ();
 									sp_UpdateNow ();
 
-									#ifdef MODE_128K
-										wyz_play_sound (6);
-									#else															
-										peta_el_beeper (5);
-									#endif
+									PLAY_SFX (5);
 
 									en_an_next_frame [gpit] = sprite_18_a;
 									if (_en_t != 7) malotes [enoffsmasi].t |= 16;

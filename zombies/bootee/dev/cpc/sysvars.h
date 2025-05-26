@@ -5,6 +5,11 @@
 
 #include <cpcrslib_mt.h>
 
+#define PLAY_SFX(n) 		wyz_play_sound(n)
+
+// This hack is necessary to integrate msc :/
+#define peta_el_beeper(n)	wyz_play_sound(n)
+
 #define BASE_TILEMAP 		0x0100
 #define WYZ_SONG_BUFFER 	0x8800
 #define BASE_SUPERBUFF  	0x9000

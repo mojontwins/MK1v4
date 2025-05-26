@@ -66,11 +66,7 @@ void main (void) {
 				print_str (12, 12, 71, level_str);
 				sp_UpdateNow ();
 				
-				#ifdef MODE_128K
-					wyz_play_sound (3);
-				#else			
-					peta_el_beeper (1);
-				#endif
+				PLAY_SFX (2);
 
 				espera_activa (100);
 			#endif
@@ -169,6 +165,9 @@ void main (void) {
 					//wyz_play_music (1);
 				#endif		
 			#endif
+			#ifdef CPC
+				wyz_play_music (1);	
+			#endif
 
 			#ifdef MSC_MAXITEMS
 				display_items ();
@@ -220,12 +219,8 @@ void main (void) {
 								ctimer.t = TIMER_INITIAL;
 							#endif
 				
-							#ifdef MODE_128K
-								kill_player (7);
-							#else
-								kill_player (4);
-							#endif
-
+							kill_player (4);
+							
 							#ifdef PLAYER_FLICKERS
 								player.estado = EST_PARP;
 								player.ct_estado = 50;
@@ -317,11 +312,7 @@ void main (void) {
 				#ifdef PLAYER_CAN_FIRE
 					for (gpit = 0; gpit < 3; gpit ++) {
 						if (en_an_morido [gpit] == 1) {
-							#ifdef MODE_128K
-								wyz_play_sound (7);
-							#else
-								peta_el_beeper (1);
-							#endif
+							PLAY_SFX (1);
 							en_an_morido [gpit] = 0;
 						}	
 					}
@@ -348,11 +339,7 @@ void main (void) {
 					#if defined MSC_MAXITEMS
 						if (sp_KeyPressed (KEY_Z)) {
 							if (!key_z_pressed) {
-								#ifdef MODE_128K
-									wyz_play_sound (0);
-								#else
-									peta_el_beeper (2);
-								#endif
+								PLAY_SFX (2);
 								flags [FLAG_SLOT_SELECTED] = (flags [FLAG_SLOT_SELECTED] + 1) % MSC_MAXITEMS;
 								display_items ();
 							}
@@ -460,11 +447,8 @@ void main (void) {
 						#ifdef MAP_BOTTOM_KILLS
 							if (n_pant >= MAP_W * MAP_H - MAP_W) {
 								player.vy = -PLAYER_MAX_VY_CAYENDO;
-								#ifdef MODE_128K
-									kill_player (1);
-								#else
-									kill_player (4);
-								#endif
+								kill_player (10);
+								
 							} else 
 						#endif
 						{
@@ -512,7 +496,7 @@ void main (void) {
 			}
 			sp_WaitForNoKey ();
 		
-			#ifdef MODE_128K		
+			#if defined MODE_128K || defined CPC		
 				wyz_stop_sound ();
 			#endif
 
