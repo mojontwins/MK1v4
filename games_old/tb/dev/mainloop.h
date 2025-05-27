@@ -123,9 +123,8 @@ void main (void) {
 				if (player.objs != objs_old) {
 					#if defined ONLY_ONE_OBJECT 
 						#if defined OBJECTS_ICON_X
-							draw_coloured_tile (OBJECTS_ICON_X, OBJECTS_ICON_Y, player.objs ? 17 : 0);
+							draw_coloured_tile (OBJECTS_ICON_X, OBJECTS_ICON_Y, player.objs ? (HOTSPOTS_FIRST_TILE+1) : 47);
 						#endif
-						draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 					#else
 						draw_2_digits (OBJECTS_X, OBJECTS_Y, 
 							#ifdef REVERSE_OBJECT_COUNT
@@ -136,6 +135,13 @@ void main (void) {
 						);
 					#endif
 					objs_old = player.objs;
+				}
+			#endif
+
+			#if defined OBJECTS_X && defined OBJECTS_X 
+				if (flag_old != flags [OBJECT_COUNT]) {
+					draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
+					flag_old = flags [OBJECT_COUNT];
 				}
 			#endif
 
@@ -252,9 +258,6 @@ void main (void) {
 									#else
 										player.objs ++;
 										peta_el_beeper (7);
-										#ifdef OBJECT_COUNT
-											flags [OBJECT_COUNT] ++;
-										#endif
 									#endif
 									break;
 							#endif

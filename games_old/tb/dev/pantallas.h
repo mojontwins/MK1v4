@@ -43,7 +43,7 @@ void title_screen (void) {
 			call _unpack_screen
 	#endasm
 	
-	draw_text (12, 12, 
+	draw_text (12, 15, 
 		#ifndef CPC 
 			4,
 		#endif

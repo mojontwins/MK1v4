@@ -3098,8 +3098,8 @@ void mueve_bicharracos (void) {
 				) {
 					#ifdef PLAYER_KILLS_ENEMIES
 						if (
-							gpy <= _en_y - 8 
-							&& player.vy >= 0 
+							gpy <= _en_y - 4
+							&& player.vy >= -PLAYER_G 
 							#ifdef PLAYER_MIN_KILLABLE
 								&& _en_t >= PLAYER_MIN_KILLABLE
 							#endif
@@ -3109,6 +3109,19 @@ void mueve_bicharracos (void) {
 						) {
 							// Step on enemy and kill it.
 							player.vy = -PLAYER_MAX_VY_SALTANDO;
+							#asm
+									ld  a, (__en_y)
+									cp  BOUNDING_SIZE
+									jr  c, cwepke_zero
+									sub BOUNDING_SIZE
+									jr  cwepke_w
+								.cwepke_zero
+									xor a 
+								.cwepke_w
+									ld  (_gpy), a
+									call Ashl16_HL
+									ld  (_player + 2), hl 		// player.y
+							#endasm
 							enems_kill (0xff);
 						} else	
 					#endif

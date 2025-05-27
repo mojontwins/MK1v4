@@ -492,18 +492,18 @@ Function processCommand (linea As String) As String
 	Select Case cmd
 		Case "inc"
 			' INC $A B
-			' $10 A B
+			' $01 A B
 			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
-				code = buildAction (3, Chr(&H10), lVal (tokens (1)), pVal (tokens (2)))
+				code = buildAction (3, Chr(&H01), lVal (tokens (1)), pVal (tokens (2)))
 			Else
 				syntaxError
 			End If
 
 		Case "dec"
 			' DEC $A B
-			' $11 A B 
+			' $02 A B 
 			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
-				code = buildAction (3, Chr(&H11), lVal (tokens (1)), pVal (tokens (2)))
+				code = buildAction (3, Chr(&H02), lVal (tokens (1)), pVal (tokens (2)))
 			Else
 				syntaxError
 			End If
@@ -511,11 +511,11 @@ Function processCommand (linea As String) As String
 		Case "add"
 			' First deprecated construct add flags x y -> inc $X $Y 
 			If scmd = "flags" Then 
-				code = buildAction (3, Chr (&H10), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
+				code = buildAction (3, Chr (&H01), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
 
 			ElseIf correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
 				' Alias for inc 
-				code = buildAction (3, Chr(&H10), lVal (tokens (1)), pVal (tokens (2)))
+				code = buildAction (3, Chr(&H01), lVal (tokens (1)), pVal (tokens (2)))
 			Else
 				syntaxError
 			End If 
@@ -523,11 +523,11 @@ Function processCommand (linea As String) As String
 		Case "sub"
 			' First deprecated construct sub flags x y -> dec $X $Y 
 			If scmd = "flags" Then 
-				code = buildAction (3, Chr (&H11), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
+				code = buildAction (3, Chr (&H02), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
 
 			ElseIf correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
-				' Alias for inc 
-				code = buildAction (3, Chr(&H11), lVal (tokens (1)), pVal (tokens (2)))
+				' Alias for dec 
+				code = buildAction (3, Chr(&H02), lVal (tokens (1)), pVal (tokens (2)))
 			Else
 				syntaxError
 			End If '
@@ -784,7 +784,9 @@ Sub processScript (fIn As Integer)
 				debugPrintTokens
 			End If
 
-			listRooms (0) = ""
+			For i = 0 To uBound (listRooms) 
+				listRooms (i) = ""
+			Next i
 			cError = 0
 
 			If tokens (0) = "rooms" Then 
@@ -1057,8 +1059,8 @@ writeAssemblyString fOut, ";;; Decode OPCODE & jump to interpreter"
 '' Generate interpreter for ACTIONS
 
 If AU(&H00) Then writeAssemblyString fOut, ";; OPCODE 0x00|;; FLAGS[N] = V|cp  0x00|jr  nz, aopcode_00_end|.aopcode_00|call read_i_v		; HL -> FLAGS[N], A -> V|ld  (hl), a|jp  script_actions|.aopcode_00_end"
-If AU(&H01) Then writeAssemblyString fOut, ";; OPCODE 0x01|;; FLAGS[N] += V|cp  0x01|jr  nz, aopcode_01_end|.aopcode_01|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, (hl)|add a|ld  (hl), a|jp  script_actions|.aopcode_01_end"
-If AU(&H02) Then writeAssemblyString fOut, ";; OPCODE 0x02|;; FLAGS[N] -= V|cp  0x02|jr  nz, aopcode_02_end|.aopcode_02|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, (hl)|sub a|ld  (hl), a|jp  script_actions|.aopcode_02_end"
+If AU(&H01) Then writeAssemblyString fOut, ";; OPCODE 0x01|;; FLAGS[N] += V|cp  0x01|jr  nz, aopcode_01_end|.aopcode_01|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, (hl)|add b|ld  (hl), a|jp  script_actions|.aopcode_01_end"
+If AU(&H02) Then writeAssemblyString fOut, ";; OPCODE 0x02|;; FLAGS[N] -= V|cp  0x02|jr  nz, aopcode_02_end|.aopcode_02|call read_i_v		; HL -> FLAGS[N], A -> V|ld  b, a|ld  a, (hl)|sub b|ld  (hl), a|jp  script_actions|.aopcode_02_end"
 If AU(&H20) Then writeAssemblyString fOut, ";; OPCODE 0x20|;; SET TILE (X, Y) = T|cp  0x20|jr  nz, aopcode_20_end|.aopcode_20|call read_x_y|call read_vbyte|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|ld  a, (sc_x)|ld  (__x), a|ld  c, a|ld  a, (sc_y)|ld  (__y), a|call set_map_tile_do|jp  script_actions|.aopcode_20_end"
 If AU(&H21) Then writeAssemblyString fOut, ";; OPCODE 0x21|;; SET BEH (X, Y) = B|cp  0x21|jr  nz, aopcode_21_end|.aopcode_21|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|ld  b, a|sla a|sla a|sla a|sla a|sub b|add c|ld  b, 0|ld  c, a|call read_vbyte|ld  hl, _map_attr|add hl, bc|ld  (hl), a|jp  script_actions|.aopcode_21_end"
 If AU(&H22) Then writeAssemblyString fOut, ";; OPCODE 0x22|;; DECOS XY T XY T ... 0xFF|cp  0x22|jr  nz, aopcode_22_end|.aopcode_22|call read_byte|cp  0xff|jr  z, aopcode_22_end|ld  (__t), a|ld  b, 0|ld  c, a|ld  hl, _comportamiento_tiles|add hl, bc|ld  a, (hl)|ld  (__n), a|call read_byte|ld  b, a|and 0xf|ld  c, a|ld  (__x), a|ld  a, b|srl a|srl a|srl a|srl a|ld  (__y), a|call set_map_tile_do|jr  aopcode_22|.aopcode_22_end"

@@ -1,14 +1,48 @@
-# Título tonto
-# Copyleft 201X tu grupo roneón soft.
-# MTE MK1 3.1
+ROOMS = 20
+ALIAS %DISKETTES = 1
 
-# flags:
-# 1	- 
+# TODO : SOME TEXT
 
 ENTERING GAME
 	IF TRUE
 	THEN
-		SET FLAG 1 = 0
+		%DISKETTES = 0
+		OBJS = 0
 	END
 END
 
+# Hub screen
+# Entering the hub screen we must draw the mainframe.
+# Pressing ACTION in the hub screen we must trigger the
+# "enter disk" logics.
+
+ENTERING SCREEN 2, 7, 12, 17 
+	IF TRUE
+	THEN
+		SET TILE (7, 7) = 17
+		SET TILE (7, 8) = 18
+	END
+END
+
+PRESS_FIRE AT SCREEN 2, 7, 12, 17
+	IF OBJS = 1
+	IF PLAYER AT (7, 8)
+	THEN
+		INC %DISKETTES, 1
+		OBJS = 0
+		SOUND 7
+	END
+END
+
+# Office screen
+# Entering the office screen we must check if
+# game ending conditions have been fullfilled:
+
+ENTERING SCREEN 15
+	IF KILLED = 25
+	IF %DISKETTES = 15
+	THEN
+		WIN GAME
+	END IF
+
+END

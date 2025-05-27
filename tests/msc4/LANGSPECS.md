@@ -196,8 +196,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 ## Actions 
 
 * $00 A B : FLAGS[A] = B
-* $10 A B : FLAGS[A] += B !
-* $11 A B : FLAGS[A] -= B
+* $01 A B : FLAGS[A] += B !
+* $02 A B : FLAGS[A] -= B
 
 * $20 X Y T : SET TILE (X, Y) = T
 * $21 X Y B : SET BEH (X, Y) = B
@@ -211,6 +211,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $E0 N : SOUND N
 * $E1 : SHOW
 * $E2 : RECHARGE
+* $E3 : TEXT "HOLI"
 * $E4 N M : EXTERN N M
 * $E5 N : PAUSE N
 

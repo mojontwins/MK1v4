@@ -172,8 +172,6 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [ ] Soporte para "frames por pixel" en los lineales. Por ahora mx = 1, 2, 4 pixels por frame, pero molaría 1, 2, 4 frames por pixel para enemigos lentorros. Estudiar cómo sería la forma más fácil de implementarlo en ensamble y tirar por ahí.
 
-[X] ¿Qué pasa con las empujaciones? ¿Sólo las laterales? Yuju, he roto todas las empujaciones XD Ha sido por el cambio de nombre de las variables para la colisión.
-
     * Tenemos este código que es el que mueve un eje cada frame...
 
 ```asm
@@ -210,9 +208,15 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
     Ese inserto entre [A] y [B] podría funcionar. Lo probaré luego.
 
+[X] ¿Qué pasa con las empujaciones? ¿Sólo las laterales? Yuju, he roto todas las empujaciones XD Ha sido por el cambio de nombre de las variables para la colisión.
+
 [X] Calavera hace una mierda rara con los pies al saltar y no me explico cómo es posible, a menos que possee o gotten se estén poniendo a 1 cuando no deberían. Si no, es que no tiene sentidow. **ES POR `player.possee`** Lo que no sé es por qué se pone a 1 en medio del puto aire. Mañana con más emoción lo miro.
 
-[ ] Es necesario poder definir en el script cuál es el tile vacío para que `GET ITEM SET` funcione correctamente. Ahora mismo comprueba que no llevamos nada mirando que en el flag del inventario haya un cero, y eso rompe Perils (que necesita 47 como tile vacío).
+[X] Es necesario poder definir en el script cuál es el tile vacío para que `GET ITEM SET` funcione correctamente. Ahora mismo comprueba que no llevamos nada mirando que en el flag del inventario haya un cero, y eso rompe Perils (que necesita 47 como tile vacío).
+
+[ ] Sigue haciendo "la cosa rara" al trepar a la plataforma tipo 4. Esto hay que cambiarlo y hacerlo BIEN. Pero no es trivial.
+
+[ ] Resolver que haga la metralleta al sonar siempre el sonido de WRONG si tocamos un objeto y llevamos ya otro en ONLY_ON_OBJECT.
 
 <details>
     <summary>Cosas calculares</summary>

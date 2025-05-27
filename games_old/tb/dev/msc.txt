@@ -1,0 +1,123 @@
+msc v4.0.20250421 ~ Processing script.spt
+==========================================
+LINEA ROOMS = 20
+T0=[rooms]
+T1=[=]
+T2=[20]
+==========================================
+LINEA ALIAS %DISKETTES = 1
+T0=[alias]
+T1=[%diskettes]
+T2=[=]
+T3=[1]
+Set alias %diskettes for flag $1
+==========================================
+LINEA ENTERING GAME
+T0=[entering]
+T1=[game]
+Adding 0 @ sect 0
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: %DISKETTES = 0
+T0=[$1]
+T1=[=]
+T2=[0]
+Parsing: OBJS = 0
+T0=[$250]
+T1=[=]
+T2=[0]
+Bytecode: 0A F0 FF 00 01 00 00 FA 00 FF FF 
+==========================================
+LINEA ENTERING SCREEN 2, 7, 12, 17
+T0=[entering]
+T1=[screen]
+T2=[2]
+T3=[7]
+T4=[12]
+T5=[17]
+Adding 11 @ sect 12
+Adding 11 @ sect 22
+Adding 11 @ sect 32
+Adding 11 @ sect 42
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: SET TILE (7, 7) = 17
+T0=[SET]
+T1=[TILE]
+T2=[7]
+T3=[7]
+T4=[=]
+T5=[17]
+Parsing: SET TILE (7, 8) = 18
+T0=[SET]
+T1=[TILE]
+T2=[7]
+T3=[8]
+T4=[=]
+T5=[18]
+Bytecode: 0C F0 FF 20 07 07 11 20 07 08 12 FF FF 
+==========================================
+LINEA PRESS_FIRE AT SCREEN 2, 7, 12, 17
+T0=[press]
+T1=[fire]
+T2=[at]
+T3=[screen]
+T4=[2]
+T5=[7]
+T6=[12]
+T7=[17]
+Adding 24 @ sect 13
+Adding 24 @ sect 23
+Adding 24 @ sect 33
+Adding 24 @ sect 43
+Parsing: IF OBJS = 1
+T0=[IF]
+T1=[$250]
+T2=[=]
+T3=[1]
+Parsing: IF PLAYER AT (7, 8)
+T0=[IF]
+T1=[PLAYER]
+T2=[AT]
+T3=[7]
+T4=[8]
+Parsing: INC %DISKETTES, 1
+T0=[INC]
+T1=[$1]
+T2=[1]
+Parsing: OBJS = 0
+T0=[$250]
+T1=[=]
+T2=[0]
+Parsing: SOUND 7
+T0=[SOUND]
+T1=[7]
+Bytecode: 12 01 FF FA 01 23 07 08 FF 01 01 01 00 FA 00 E0 07 FF FF 
+==========================================
+LINEA ENTERING SCREEN 15
+T0=[entering]
+T1=[screen]
+T2=[15]
+Adding 43 @ sect 38
+Parsing: IF KILLED = 25
+T0=[IF]
+T1=[$251]
+T2=[=]
+T3=[25]
+Parsing: IF %DISKETTES = 15
+T0=[IF]
+T1=[$1]
+T2=[=]
+T3=[15]
+Parsing: WIN GAME
+T0=[WIN]
+T1=[GAME]
+Parsing: END IF
+T0=[END]
+T1=[IF]
+Bytecode: 0C 01 FF FB 19 01 FF 01 0F FF F0 FF FF 
+Index section: 96 bytes
+Bytecode section: 56 bytes
+Wrote 152 bytes to script.spt.bin

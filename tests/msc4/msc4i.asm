@@ -343,7 +343,7 @@ XDEF _script_result
 .aopcode_01
 	call read_i_v		; HL -> FLAGS[N], A -> V
 	ld  b, (hl)
-	add a 
+	add b 
 	ld  (hl), a
 	jp  script_actions
 .aopcode_01_end
@@ -354,8 +354,9 @@ XDEF _script_result
 	jr  nz, aopcode_02_end
 .aopcode_02
 	call read_i_v		; HL -> FLAGS[N], A -> V
-	ld  b, (hl)
-	sub a 
+	ld  b, a
+	ld  a, (hl)
+	sub b
 	ld  (hl), a
 	jp  script_actions
 .aopcode_02_end

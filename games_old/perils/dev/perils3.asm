@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed May 21 12:34:05 2025
+;	Module compile time: Tue May 27 15:34:02 2025
 
 
 
@@ -9170,23 +9170,32 @@
 	push	hl
 	ld	hl,(__en_y)
 	ld	h,0
-	ld	bc,-8
+	ld	bc,-4
 	add	hl,bc
 	pop	de
 	call	l_ule
 	jp	nc,i_58
 	ld	hl,(_player+8)
-	ld	de,0	;const
+	ld	de,65504	;const
 	ex	de,hl
 	call	l_ge
 	jr	c,i_59_i_58
 .i_58
 	jp	i_57
 .i_59_i_58
-	ld	hl,_player+8
-	ld	(hl),#(65280 % 256)
-	inc	hl
-	ld	(hl),#(65280 / 256)
+	ld	hl,65280	;const
+	ld	(_player+8),hl
+	ld a, (__en_y)
+	cp 12
+	jr c, cwepke_zero
+	sub 12
+	jr cwepke_w
+	.cwepke_zero
+	xor a
+	.cwepke_w
+	ld (_gpy), a
+	call Ashl16_HL
+	ld (_player + 2), hl
 	ld	hl,255	;const
 	push	hl
 	call	_enems_kill

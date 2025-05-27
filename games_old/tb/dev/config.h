@@ -15,17 +15,17 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						6		//
-#define MAP_H						5		// Map dimmensions in screens
-#define SCR_INICIO					24		// Initial screen
+#define MAP_W						5		//
+#define MAP_H						4		// Map dimmensions in screens
+#define SCR_INICIO					15		// Initial screen
 #define PLAYER_INI_X				2		//
-#define PLAYER_INI_Y				2		// Initial tile coordinates
+#define PLAYER_INI_Y				7		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			25		// Objects to get to finish game
-#define PLAYER_LIFE 				99		// Max and starting life gauge.
-#define PLAYER_REFILL				10		// Life recharge
+#define PLAYER_NUM_OBJETOS			99		// Objects to get to finish game
+#define PLAYER_LIFE 				15		// Max and starting life gauge.
+#define PLAYER_REFILL				1		// Life recharge
 
 // ============================================================================
 // II. Engine type
@@ -40,14 +40,14 @@
 // -------------------
 
 //#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
-//#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
+#define DIRECT_TO_PLAY						// If defined, title screen is also the game frame.
 //#define DEACTIVATE_KEYS					// If defined, keys are not present.
 //#define DEACTIVATE_OBJECTS				// If defined, objects are not present.
-//#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
-//#define OBJECT_COUNT				1		// Defines which FLAG will be used to store the object count.
-//#define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
-#define PLAYER_BOUNCES						// If defined, collisions make player bounce
-//#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
+#define ONLY_ONE_OBJECT						// If defined, only one object can be carried at a time.
+#define OBJECT_COUNT				1		// Defines which FLAG will be used to store the real object count.
+#define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
+//#define PLAYER_BOUNCES					// If defined, collisions make player bounce
+#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
 
 // Shooting behaviour (only side view!)
 // ------------------------------------
@@ -71,8 +71,8 @@
 // Scripting
 // ---------
 
-//#define ACTIVATE_SCRIPTING				// Activates msc scripting and flag related stuff.
-//#define SCRIPTING_DOWN					// Use DOWN as the action key.
+#define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
+#define SCRIPTING_DOWN						// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 
@@ -86,9 +86,9 @@
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
-//#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
-//#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
-#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
+#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
+#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
+//#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 
 // Custom:
 // -------
@@ -107,17 +107,17 @@
 // It's good practice to comment what you are not using!
 
 #define VIEWPORT_X					1		//
-#define VIEWPORT_Y					2		// Viewport character coordinates
+#define VIEWPORT_Y					0		// Viewport character coordinates
 #define LIFE_X						4		//
-#define LIFE_Y						0		// Life gauge counter character coordinates
-#define OBJECTS_X					11		//
-#define OBJECTS_Y					0		// Objects counter character coordinates
-//#define OBJECTS_ICON_X			9		// 
-//#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-#define KEYS_X						17		//
-#define KEYS_Y						0		// Keys counter character coordinates
-//#define KILLED_X					20		//
-//#define KILLED_Y					21		// Kills counter character coordinates
+#define LIFE_Y						22		// Life gauge counter character coordinates
+#define OBJECTS_X					10		//
+#define OBJECTS_Y					22		// Objects counter character coordinates
+#define OBJECTS_ICON_X				25		// 
+#define OBJECTS_ICON_Y				21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
+#define KEYS_X						22		//
+#define KEYS_Y						22		// Keys counter character coordinates
+#define KILLED_X					16		//
+#define KILLED_Y					22		// Kills counter character coordinates
 //#define ITEM_X 					7		// 
 //#define ITEM_Y 					0 		//
 //#define ITEM_FLAG 				0 		// Show item @ flag
@@ -130,11 +130,11 @@
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
-//#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
+#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
 //#define NO_MASKS		sp_OR_SPRITE 	// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
-//#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16
+#define HOTSPOTS_FIRST_TILE			32 	// Override default value of 16
 //#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
 
 // ============================================================================
@@ -152,7 +152,7 @@
 #define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
 
 #define PLAYER_VY_INICIAL_SALTO 192		// Initial junp velocity (64/64 = 1 píxel/frame)
-#define PLAYER_MAX_VY_SALTANDO	312 	// Max jump velocity (320/64 = 5 píxels/frame)
+#define PLAYER_MAX_VY_SALTANDO	256 	// Max jump velocity (320/64 = 5 píxels/frame)
 #define PLAYER_INCR_SALTO		32		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
 #define PLAYER_INCR_JETPAC		32		// Vertical jetpac gauge
@@ -161,8 +161,8 @@
 // IV.2. Horizontal (side view) or general (top view) movement.
 
 #define PLAYER_MAX_VX			256 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX				48		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX				64		// Friction (32/64 = 0,5 píxels/frame^2)
+#define PLAYER_AX				24		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX				32		// Friction (32/64 = 0,5 píxels/frame^2)
 
 // ============================================================================
 // V. Tile behaviour
@@ -180,7 +180,8 @@
 // 128|N = Special tile (scripting)
 
 unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 0, 0, 8, 8, 9, 8, 8, 8, 8, 8, 8, 8, 8,
+	0, 0, 8, 4, 0, 8, 8, 4, 4, 8, 8, 0, 0, 0, 0, 8,
+	0, 0, 0, 4, 0, 4, 4, 0, 0, 0, 0, 4, 0, 0, 4, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
