@@ -1,7 +1,7 @@
 @echo off
 
 set game=goddess
-set om=cpc
+set om=speccy
 set mode=0
 
 if [%1]==[justcompile] goto :compile

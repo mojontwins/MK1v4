@@ -22,7 +22,7 @@
 
 #ifdef PLAYER_CUSTOM_BG_HIT
 	void custom_bg_hit (void) {
-		// rdi = 1 if vx > vy, act accordingly
+		// check hit_v, hit_h and modify player.x / player.y as you need
 	}
 #endif
 

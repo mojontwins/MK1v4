@@ -98,7 +98,7 @@ INERCIA player;
 signed int ptgmx, ptgmy;
 signed int pvx_total, pvy_total;
 unsigned char at1, at2;
-unsigned char hit;
+unsigned char hit_v, hit_h;
 unsigned char thrusting;
 
 // Enemies

@@ -136,7 +136,7 @@ void game_over (void) {
 
 	#ifdef CPC
 		cpc_UpdateNow (0);
-		AY_PLAY_MUSIC (2);
+		//AY_PLAY_MUSIC (2);
 	#else 
 		#asm 
 				call SPUpdateNow

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun May 18 09:10:39 2025
+;	Module compile time: Wed May 28 14:03:51 2025
 
 
 
@@ -5167,7 +5167,8 @@
 
 ._move
 	xor a
-	ld (_hit), a
+	ld (_hit_h), a
+	ld (_hit_v), a
 	ld (_thrusting), a
 	ld (_wall), a
 	call _pad_read
@@ -5345,8 +5346,18 @@
 	and 1
 	jr z, m_vert_coll_done
 	.m_vert_coll_sethit
+	ld a, (_at1)
+	cp 4
+	jr z, m_vert_coll_done
+	cp 8
+	jr z, m_vert_coll_done
+	ld a, (_at2)
+	cp 4
+	jr z, m_vert_coll_done
+	cp 8
+	jr z, m_vert_coll_done
 	ld a, 1
-	ld (_hit), a
+	ld (_hit_v), a
 	.m_vert_coll_done
 	ld a, (_gpy)
 	add 16
@@ -5543,9 +5554,7 @@
 	jr z, m_horz_coll_done
 	.m_horz_coll_sethit
 	ld a, 1
-	ld (_hit), a
-	ld hl, (_pvy_total)
-	ld (_player + 8), hl
+	ld (_hit_h), a
 	.m_horz_coll_done
 	ld hl, (_pvx_total)
 	call _abs
@@ -5556,22 +5565,21 @@
 	rl a
 	and 1
 	ld (_rdi), a
-	ld a, (_hit)
+	.m_evil_tile_hit_check_v
+	ld a, (_hit_v)
 	or a
-	jr z, m_evil_tile_hit_done
-	.m_evil_tile_hit_do
-	ld a, (_rdi)
-	or a
-	jr z, m_evil_tile_hit_v
-	.m_evil_tile_hit_h
-	ld hl, (_pvx_total)
-	call l_neg
-	ld (_player + 6), hl
-	jr m_evil_tile_vel_set
-	.m_evil_tile_hit_v
+	jr z, m_evil_tile_hit_check_h
 	ld hl, (_pvy_total)
 	call l_neg
 	ld (_player + 8), hl
+	jr m_evil_tile_vel_set
+	.m_evil_tile_hit_check_h
+	ld a, (_hit_h)
+	or a
+	jr z, m_evil_tile_hit_done
+	ld hl, (_pvx_total)
+	call l_neg
+	ld (_player + 6), hl
 	.m_evil_tile_vel_set
 	ld a, (_player + 23)
 	or a
@@ -7696,7 +7704,9 @@
 ._gp_gen_alt	defs	2
 ._en_xx	defs	1
 ._en_yy	defs	1
+._hit_h	defs	1
 ._gp_gen_org	defs	2
+._hit_v	defs	1
 ._killed_old	defs	1
 ._thrusting	defs	1
 ._wyz_beat_ct	defs	1
@@ -7750,7 +7760,6 @@
 ._pryy	defs	1
 ._pvy_total	defs	2
 ._idx	defs	2
-._hit	defs	1
 ._player	defs	47
 ._rda	defs	1
 ._rdb	defs	1
@@ -7844,11 +7853,13 @@
 	XDEF	_mueve_bullets
 	LIB	cpc_CollSp
 	LIB	cpc_PutMaskSp4x16
+	XDEF	_hit_h
 	XDEF	_gp_gen_org
 	XDEF	_blackout
 	XDEF	_map_buff
 	defc	_map_buff	=	50838
 	LIB	cpc_PrintGphStrStd
+	XDEF	_hit_v
 	XDEF	_cpc_Border
 	XDEF	_killed_old
 	XDEF	_thrusting
@@ -8001,6 +8012,7 @@
 	XDEF	_flag_old
 	XDEF	_wall
 	LIB	cpc_UpdScr
+	LIB	cpc_PutTrSp16x16TileMapPxM1LUT
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
 	defc	_en_an_next_frame	=	54796
@@ -8031,6 +8043,7 @@
 	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
 	XDEF	_game_ending
+	LIB	cpc_MakeM1RotationLUTs
 	LIB	cpc_PutTrSp4x8TileMapPx
 	LIB	cpc_PutTrSp8x8TileMapPx
 	LIB	cpc_PutTrSp8x16TileMapPx
@@ -8039,12 +8052,11 @@
 	XDEF	_pvy_total
 	LIB	cpc_SetInkGphStrM1
 	XDEF	_idx
-	XDEF	_hit
 	XDEF	_en_an_x
 	defc	_en_an_x	=	54802
-	XDEF	_player
 	XDEF	_en_an_y
 	defc	_en_an_y	=	54808
+	XDEF	_player
 	LIB	cpc_PutMaskSpriteTileMap
 	LIB	cpc_PutTrSpriteTileMap
 	LIB	cpc_UpdateTileMap

@@ -711,7 +711,8 @@ void move (void) {
 	
 	#asm 
 			xor a 
-			ld  (_hit), a 
+			ld  (_hit_h), a 
+			ld  (_hit_v), a 
 			ld  (_thrusting), a 
 			ld  (_wall), a
 
@@ -1157,8 +1158,27 @@ void move (void) {
 				jr  z, m_vert_coll_done
 
 			.m_vert_coll_sethit
+
+				// This, as is, is problematic. We need more checks:
+				// If at1 or at2 are obstacle and not "1", hit shouldn't be set.
+				// if (at1 == 8 || at1 == 4 || at2 == 8 || at2 == 4) -> abort
+				ld  a, (_at1)
+			#ifndef PLAYER_MOGGY_STYLE
+					cp  4
+					jr  z, m_vert_coll_done
+			#endif
+				cp  8
+				jr  z, m_vert_coll_done
+				ld  a, (_at2)
+			#ifndef PLAYER_MOGGY_STYLE
+					cp  4
+					jr  z, m_vert_coll_done
+			#endif
+				cp  8
+				jr  z, m_vert_coll_done
+
 				ld  a, 1
-				ld  (_hit), a
+				ld  (_hit_v), a
 		#endif
 
 		.m_vert_coll_done
@@ -1502,6 +1522,7 @@ void move (void) {
 		.m_horz_coll_checks_done
 
 		#ifndef DEACTIVATE_EVIL_TILE
+
 				ld  a, (_at1)
 				and 1
 				jr  nz, m_horz_coll_sethit
@@ -1512,10 +1533,7 @@ void move (void) {
 
 			.m_horz_coll_sethit
 				ld  a, 1
-				ld  (_hit), a
-
-				ld  hl, (_pvy_total)
-				ld  (_player + 8), hl 		// player.vy
+				ld  (_hit_h), a
 		#endif
 
 		.m_horz_coll_done
@@ -1541,33 +1559,57 @@ void move (void) {
 		// Evil tile hit?
 
 		#asm
-				ld  a, (_hit)
-				or  a 
-				jr  z, m_evil_tile_hit_done
-		
 			#ifdef PLAYER_CUSTOM_BG_HIT
 					call _custom_bg_hit
+			#elif defined PLAYER_MOGGY_STYLE
+				// In top view, max velocity component takes precedence
+					ld  a, (_hit_v)
+					ld  c, a 
+					ld  a, (_hit_h)
+					or  c 
+					jr  z, m_evil_tile_hit_done
+			
+					.m_evil_tile_hit_do
+						ld  a, (_rdi) 
+						or  a
+						jr  z, m_evil_tile_hit_v
+
+					.m_evil_tile_hit_h
+						ld  hl, (_pvx_total)
+						call l_neg 
+						ld  (_player + 6), hl 		// player.vx
+						jr  m_evil_tile_vel_set
+
+					.m_evil_tile_hit_v
+						ld  hl, (_pvy_total)
+						call l_neg 
+						ld  (_player + 8), hl 		// player.vy
+						
 			#else
+				// In side view, vertical hit takes precedence
 
-				.m_evil_tile_hit_do
-					ld  a, (_rdi) 
-					or  a
-					jr  z, m_evil_tile_hit_v
+				.m_evil_tile_hit_check_v
+					ld  a, (_hit_v)
+					or  a 
+					jr  z, m_evil_tile_hit_check_h
 
-				.m_evil_tile_hit_h
-					ld  hl, (_pvx_total)
-					call l_neg 
-					ld  (_player + 6), hl 		// player.vx
-					jr  m_evil_tile_vel_set
-
-				.m_evil_tile_hit_v
 					ld  hl, (_pvy_total)
 					call l_neg 
 					ld  (_player + 8), hl 		// player.vy
-					
-				.m_evil_tile_vel_set
+					jr  m_evil_tile_vel_set
+
+				.m_evil_tile_hit_check_h
+					ld  a, (_hit_h)
+					or  a
+					jr  z, m_evil_tile_hit_done
+
+					ld  hl, (_pvx_total)
+					call l_neg 
+					ld  (_player + 6), hl 		// player.vx
 
 			#endif
+
+			.m_evil_tile_vel_set
 
 			#ifdef PLAYER_FLICKERS
 					// Cancel if flickering

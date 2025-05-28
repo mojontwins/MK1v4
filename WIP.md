@@ -216,7 +216,11 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [ ] Sigue haciendo "la cosa rara" al trepar a la plataforma tipo 4. Esto hay que cambiarlo y hacerlo BIEN. Pero no es trivial.
 
-[ ] Resolver que haga la metralleta al sonar siempre el sonido de WRONG si tocamos un objeto y llevamos ya otro en ONLY_ON_OBJECT.
+[ ] Resolver que haga la metralleta al sonar siempre el sonido de WRONG si tocamos un objeto y llevamos ya otro en ONLY_ON_OBJECT. 
+
+    * Lo suyo sería tener un flag de "tocando hotspot" que sirviese como semáforo. tocas -> { cosas ... poner a cierto } else { poner a falso }. Voy a añadir `hotspot_flag`.
+
+[X] Calavera : Cuelgue al game over ¿pasa en todos :-S? Jodó qué tonto soy, es que la OGT no tiene canción de game over y se estaba llamando :-/
 
 <details>
     <summary>Cosas calculares</summary>
