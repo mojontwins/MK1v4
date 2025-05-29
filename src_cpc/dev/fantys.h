@@ -598,7 +598,8 @@
 		call HLshr6_A
 		ld  (__en_y), a
 
-	#ifdef RANDOM_RESPAWN
+	// This section is not working yet.
+	#if defined RANDOM_RESPAWN && defined MAKE_BLINK
 		// Make fanty blink when next to the edges of the screen
 		// Make invisible if close and even x or even y
 
