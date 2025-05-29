@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // printer.h
 // Miscellaneous printing functions (tiles, status, etc).
@@ -34,6 +34,7 @@ void _tile_address (void) {
 	#endasm
 }
 
+#ifndef DRAW_RECTANGLE_NOT_NEEDED
 void draw_rectangle (void) {	
 	#asm
 			call __tile_address		// DE = buffer address
@@ -90,6 +91,7 @@ void draw_rectangle (void) {
 			call cpc_InvalidateRect
 	#endasm
 }
+#endif
 
 void attr (char x, char y) {
 	#asm
@@ -561,6 +563,7 @@ void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned c
 			ld  a, (__n)
 			ld (hl), a
 			
+		.set_map_tile_do_print
 			ld  a, (__x)
 			sla a
 			add VIEWPORT_X
@@ -599,6 +602,10 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 			dec hl
 			ld  a, (hl)
 			
+			// You may call here with __x, __y prefilled 
+			// and the number in A.
+			
+		.draw_2_digits_shortcut
 			ld  d, 0
 			ld  e, a
 			ld  hl, 10
@@ -628,10 +635,10 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 	#endasm
 }
 
-void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
+void draw_text (unsigned char x, unsigned char y, char *s) {
 	// Zero terminated strings, supports newlines with %
 	#asm
-			ld  hl, 8
+			ld  hl, 6
 			add hl, sp
 			
 			ld  a, (hl)
@@ -643,16 +650,13 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			ld  a, (hl)
 			ld  (__y), a
 			dec hl
-			dec hl
-			
-			ld  a, (hl)
-			ld  (__n), a
-			dec hl
 
 			ld  a, (hl)
 			dec hl 
 			ld  l, (hl)
 			ld  h, a
+
+		.draw_text_pre_loop
 			push hl
 
 			xor a 
@@ -662,10 +666,13 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			
 			pop hl
 
-		.print_str_loop
+		.draw_text_loop
 			ld  a, (hl)
 			or  a
 			jr  z, print_str_inv 
+			
+			cp  0x25
+			jr  z, draw_text_loop
 			
 			sub 32
 			ld  (de), a
@@ -677,7 +684,7 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			inc a
 			ld  (__n), a
 
-			jr  print_str_loop
+			jr  draw_text_loop
 
 		.print_str_inv
 
@@ -692,11 +699,8 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 			dec a
 			ld  e, a
 			call cpc_InvalidateRect
+	
 	#endasm
-}
-
-void any_key (void) {
-	return cpc_AnyKeyPressed ();
 }
 
 void pad_read (void) {
@@ -740,8 +744,8 @@ void pad_read (void) {
 }
 
 void espera_activa (int espera) {
-	while (cpc_AnyKeyPressed ());
 	do {
+		pad_read ();
 		#asm
 				halt
 				halt
@@ -750,31 +754,150 @@ void espera_activa (int espera) {
 				halt
 				halt
 		#endasm
-		if (cpc_AnyKeyPressed ()) break;
+		if (pad_this_frame != 0xff) break;
 	} while (-- espera);
 }
 
 #ifdef ENABLE_PERSISTENCE
+
+	void calc_persist_base (void) {
+		#asm
+			.call_persist_base
+				ld  hl, (_n_pant)
+				ld  h, 0
+				add hl, hl
+				add hl, hl 			// n_pant << 2
+				ld  d, h
+				ld  e, l
+				add hl, hl
+				add hl, hl 			// n_pant << 4
+				add hl, de 			// n_pant << 4 + n_pant << 2
+				ld  de, PERSIST_BASE
+				add hl, de
+		#endasm
+	}
+
 	void persist (void) {
 		// Marks tile _x, _y @ n_pant to be cleared next time we enter this screen	
 		// n_pant*20 + y*2 + x/8	
+		/*
 		gp_gen = (unsigned char *) (PERSIST_BASE + (n_pant << 4) + (n_pant << 2) + (_y << 1) + (_x >> 3));
 		*gp_gen |= bitmask [_x & 7];	
+		*/
+		#asm
+				ld  a, (__x)
+				and 7
+				ld  b, 0
+				ld  c, a 
+				ld  hl, _bitmask
+				add hl, bc
+				ld  b, (hl) 					// B = Bitmask
+
+				// (_y << 1) + (_x >> 3) fits in 8 bit
+				ld  a, (__y)
+				sla a
+				ld  c, a
+				ld  a, (__x)
+				srl a
+				srl a
+				srl a
+				add c
+
+				call _calc_persist_base 		// HL = address
+				ld  d, 0
+				ld  e, a
+				add hl, de
+
+				ld  a, (hl)
+				or  b 							// OR the bitmask
+				ld  (hl), a
+		#endasm
 	}
 
 	void draw_persistent_row (void) {
+		/*
 		for (gpit = 0; gpit < 8; gpit ++) {
 			if (rdi & (bitmask [gpit]))
 				set_map_tile (rdx + gpit, rdy, PERSIST_CLEAR_TILE, comportamiento_tiles [PERSIST_CLEAR_TILE]);
 		}
+		*/
+		#asm 
+				ld  bc, 0
+
+			.draw_persistent_row_loop
+				push bc
+				ld  hl, _bitmask
+				add hl, bc 
+				ld  a, (_rdi)
+				and (hl)
+				jr  z, draw_persistent_row_continue
+
+				// Draw PERSIST_CLEAR_TILE
+				ld  a, (_comportamiento_tiles + PERSIST_CLEAR_TILE)
+				ld  (__n), a 
+				ld  a, PERSIST_CLEAR_TILE
+				ld  (__t), a 
+				ld  a, (_rdx)
+				add c 
+				ld  (__x), a
+				ld  c, a
+				ld  a, (_rdy)
+				ld  (__y), a
+
+				call set_map_tile_do 		// Expects x in __x/C and y in __y
+
+			.draw_persistent_row_continue
+				pop bc
+				inc c 
+				ld  a, c
+				cp  8
+				jr  nz, draw_persistent_row_loop
+
+		#endasm
 	}
 
 	void draw_persistent (void) {
+		/*
 		gp_gen = (unsigned char *) (PERSIST_BASE + (n_pant << 4) + (n_pant << 2));
 		for (rdy = 0; rdy < 10; rdy ++) {
 			rdx = 0; rdi = *gp_gen ++; draw_persistent_row ();
 			rdx = 8; rdi = *gp_gen ++; draw_persistent_row ();
 		}
+		*/
+		#asm
+				call _calc_persist_base 		// HL = address
+
+				xor a 
+			.draw_persistent_loop
+				ld  (_rdy), a
+
+				xor a
+				ld  (_rdx), a
+
+				ld  a, (hl)
+				ld  (_rdi), a 
+				inc hl
+
+				push hl
+				call _draw_persistent_row
+				pop hl
+
+				ld  a, 8
+				ld  (_rdx), a
+
+				ld  a, (hl)
+				ld  (_rdi), a 
+				inc hl
+
+				push hl
+				call _draw_persistent_row
+				pop hl
+
+				ld  a, (_rdy)
+				inc a 
+				cp  10
+				jr  nz, draw_persistent_loop
+		#endasm
 	}
 
 	void clear_persistent (void) {

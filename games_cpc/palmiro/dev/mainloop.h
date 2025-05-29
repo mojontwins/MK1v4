@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // mainloop.h
 // Cointains initialization stuff and the main game loop.
@@ -95,6 +95,21 @@ void main (void) {
 	blackout ();
 	pal_set (my_inks);
 	
+	// Compressed tileset
+	#ifdef COMPRESSED_TS
+		#asm
+			.decompress_ts
+				ld hl, _tilesetc 
+				ld de, _tspatterns
+				#ifdef DECOMPRESSOR_ZX0
+					call dzx0_standard
+				#else
+					call depack
+				#endif
+
+		#endasm	
+	#endif
+	
 	// Set mode
 
 	#ifdef MODE_1
@@ -166,7 +181,7 @@ void main (void) {
 			ld  (ix + 15), h
 			ld  (ix + 14), l
 
-			ld  hl, (_sm_sprptr) 		// sm_sprptr [0]
+			ld  hl, _sprite_18_a
 			ld  (ix + 1), h
 			ld  (ix + 0), l
 
@@ -178,8 +193,8 @@ void main (void) {
 
 	/*
 	for (gpit = SP_ENEMS_BASE; gpit < SP_ENEMS_BASE + MAX_ENEMS; gpit ++) {
-		sp_sw [gpit].invfunc = cpc_PutSpTileMap4x8;
-		sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
+		sp_sw [gpit].invfunc = cpc_PutSPTileMap2Bx8;
+		sp_sw [gpit].updfunc = cpc_PutTrSp2Bx8TileMap;
 	}
 	*/
 	#asm
@@ -189,11 +204,11 @@ void main (void) {
 			ld  b, MAX_ENEMS
 
 		.sp_sw_init_enems_loop
-			ld  hl, cpc_PutSpTileMap4x8Px			// sm_invfunc [0]
+			ld  hl, cpc_PutSpTileMap8x16Px			// sm_invfunc [0]
 			ld  (ix + 13), h
 			ld  (ix + 12), l
 
-			ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+			ld  hl, cpc_PutTrSp8x16TileMapPx 		// sm_updfunc [0]
 			ld  (ix + 15), h
 			ld  (ix + 14), l	
 
@@ -208,8 +223,8 @@ void main (void) {
 		for (gpit = SP_BULLETS_BASE; gpit < SP_BULLETS_BASE + MAX_BULLETS; gpit ++) {
 			sp_sw [gpit].cox = 0;
 			sp_sw [gpit].coy = 0;
-			sp_sw [gpit].invfunc =cpc_PutSpTileMap4x8;
-			sp_sw [gpit].updfunc = cpc_PutTrSp4x8TileMap2b;
+			sp_sw [gpit].invfunc =cpc_PutSPTileMap2Bx8;
+			sp_sw [gpit].updfunc = cpc_PutTrSp2Bx8TileMap;
 			sp_sw [gpit].sp0 = sp_sw [gpit].sp1 = (unsigned int) (sprite_19_a);
 		}
 		*/
@@ -224,11 +239,11 @@ void main (void) {
 				ld  (ix + 6), a
 				ld  (ix + 7), a
 
-				ld  hl, cpc_PutSpTileMap4x8				// sm_invfunc [0]
+				ld  hl, cpc_PutSPTileMap2Bx8				// sm_invfunc [0]
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
-				ld  hl, cpc_PutTrSp4x8TileMap2b 		// sm_updfunc [0]
+				ld  hl, cpc_PutTrSp2Bx8TileMap 		// sm_updfunc [0]
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
 
@@ -244,14 +259,14 @@ void main (void) {
 		#endasm
 	#endif
 
-	// Sword is 4x8
+	// Sword is 4x8 or 8x8 if SWORD_WIDE
 
 	#ifdef ENABLE_SWORD	
 		/*
 		sp_sw [SP_SWORD_BASE].cox = 0;
 		sp_sw [SP_SWORD_BASE].coy = 0;
-		sp_sw [SP_SWORD_BASE].invfunc =cpc_PutSpTileMap4x8;
-		sp_sw [SP_SWORD_BASE].updfunc = cpc_PutTrSp4x8TileMap2b;
+		sp_sw [SP_SWORD_BASE].invfunc =cpc_PutSPTileMap2Bx8;
+		sp_sw [SP_SWORD_BASE].updfunc = cpc_PutTrSp2Bx8TileMap;
 		sp_sw [SP_SWORD_BASE].sp0 = sp_sw [SP_SWORD_BASE].sp1 = (unsigned int) (sprite_19_a);
 		*/
 		#asm
@@ -262,17 +277,21 @@ void main (void) {
 				ld  (ix + 7), a
 
 				#ifdef MODE_1
-					ld hl, cpc_PutSpTileMap8x8PxM1 // sm_invfunc [0]
+					ld hl, cpc_PutSpTileMap8x8PxM1 		// sm_invfunc [0]
+				#elif defined SWORD_WIDE
+					ld  hl, cpc_PutSpTileMap8x8Px		// sm_invfunc [0]
 				#else
-					ld  hl, cpc_PutSpTileMap4x8Px		// sm_invfunc [0]
+					ld  hl, cpc_PutSPTileMap4x8Px		// sm_invfunc [0]
 				#endif
 				ld  (ix + 13), h
 				ld  (ix + 12), l
 
 				#ifdef MODE_1
-					ld  hl, cpc_PutTrSp8x8TileMap2bPxM1		// sm_updfunc [0]
+					ld  hl, cpc_PutTrSp8x8TileMapPxM1		// sm_updfunc [0]
+				#elif defined SWORD_WIDE
+					ld  hl, cpc_PutTrSp8x8TileMapPx 		// sm_updfunc [0]
 				#else
-					ld  hl, cpc_PutTrSp4x8TileMap2bPx 		// sm_updfunc [0]
+					ld  hl, cpc_PutTrSp4x8TileMapPx 		// sm_updfunc [0]
 				#endif
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
@@ -421,6 +440,16 @@ void main (void) {
 			ld  (_on_pant), a
 		#endasm
 
+		#if defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE 
+			#if defined SAFE_SPOT_ON_ENTERING
+			safe_n_pant = 0xff;
+			#else
+				#asm
+						call die_and_respawn_save
+				#endasm
+			#endif
+		#endif
+
 		AY_PLAY_MUSIC (1);
 
 		while (playing) {
@@ -428,8 +457,6 @@ void main (void) {
 				hook_init_mainloop ();
 				pant_just_rendered = 0;
 			#endif
-
-			player_just_died = 0;
 
 			// Update SCR
 
@@ -529,8 +556,15 @@ void main (void) {
 
 			#if !defined DEACTIVATE_KEYS && defined KEYS_X
 				if (player.keys != keys_old) {
-					draw_2_digits (KEYS_X, KEYS_Y, player.keys);
-					keys_old = player.keys;
+					#asm
+						ld  a, KEYS_X 
+						ld  (__x), a 
+						ld  a, KEYS_Y 
+						ld  (__y), a 
+						ld  a, (_player + 28)		// player.objs
+						ld  (_keys_old), a 
+						call draw_2_digits_shortcut
+					#endasm
 				}
 			#endif
 
@@ -556,10 +590,17 @@ void main (void) {
 			#endif
 
 			#if defined USE_COINS && defined COINS_X
-				if (flags [COIN_FLAG] != coins_old) {
-					draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
-					coins_old = flags [COIN_FLAG];
-				}
+				#ifdef COIN_FLAG
+					if (flags [COIN_FLAG] != coins_old) {
+						draw_2_digits (COINS_X, COINS_Y, flags [COIN_FLAG]);
+						coins_old = flags [COIN_FLAG];
+					}
+				#else
+					if (player.coins != coins_old) {
+						draw_2_digits (COINS_X, COINS_Y, player.coins);
+						coins_old = player.coins;
+					}
+				#endif
 			#endif
 
 			#asm
@@ -852,16 +893,6 @@ void main (void) {
 
 			if (n_pant == on_pant) cpc_UpdateNow (1);
 			
-			// Dead enemies
-
-			#ifdef PLAYER_CAN_FIRE
-				for (rdi = 0; rdi < 3; rdi ++)
-					if (en_an_morido [rdi] == 1) {
-						play_sfx (1);
-						en_an_morido [rdi] = 0;
-					} 	
-			#endif
-
 			#if defined(PLAYER_FLICKERS) || defined (RESPAWN_FLICKER) || defined(PLAYER_DIZZY)
 				// Flickering
 				#asm
@@ -911,7 +942,16 @@ void main (void) {
 
 			// Flick screen
 
-			#ifndef FIXED_SCREENS
+			#ifdef FIXED_SCREENS
+				// Do nothing
+
+			#elif defined CUSTOM_FLICK_SCREEN_HANDLER
+				// Defined in custom.h, Changes n_pant when it's needed.
+				custom_flick_screen_handler ();
+
+			#else
+				// Default flick screen code.
+
 				#ifndef COLUMN_MAP
 					if (gpx == 0 && player.vx < 0) {
 						#asm
@@ -1072,10 +1112,29 @@ void main (void) {
 				}				
 			#endif
 
-			// Dead player
+			// Dead player new code!
+
 			if (player.is_dead) {
+				#asm
+					.player_is_dead
+				#endasm
+
 				player.is_dead = 0;
-				if (player.life > 0) {
+				player.life -= player.drain_amount;
+
+				if (
+					#ifdef ENABLE_CODE_HOOKS
+						hook_just_died () &&
+					#endif
+					#ifdef FIRING_DRAINS_LIFE
+						player.is_dead != PLAYER_KILLED_BY_SELF &&
+					#endif
+					#ifndef DEACTIVATE_EVIL_ZONE
+						player.is_dead != PLAYER_KILLED_BY_EZ &&
+					#endif
+					player.life > 0
+				) {
+
 					#ifdef RESPAWN_REENTER
 						explode_player ();
 						#ifdef RESPAWN_SHOW_LEVEL				
@@ -1085,14 +1144,31 @@ void main (void) {
 								malotes [enoffs + 1].t = malotes [enoffs + 1].t & 15;
 								malotes [enoffs + 2].t = malotes [enoffs + 2].t & 15;
 							#endif
-							draw_scr ();
-							init_player_values ();
-						#else	
-							draw_scr_background ();
-							init_player_values ();
 						#endif
+						init_player_values ();
+						on_pant = 0xff;
+
+					#elif defined DIE_AND_RESPAWN && !defined PLAYER_MOGGY_STYLE						
+						#asm
+								ld  a, (_safe_n_pant)
+								ld  (_n_pant), a 
+								ld  a, 0xff
+								ld  (_on_pant), a
+								ld  a, (_safe_x)
+								ld  (_gpx), a
+								call Ashl16_HL
+								ld  (_player), hl 		// player.x
+								ld  a, (_safe_y)
+								ld  (_gpy), a
+								call Ashl16_HL
+								ld  (_player + 2), hl 	// player.y
+								ld  hl, 0
+								ld  (_player + 6), hl
+								ld  (_player + 8), hl
+						#endasm
 					#endif
-					#ifdef RESPAWN_FLICKER
+
+					#if defined RESPAWN_FLICKER || defined PLAYER_FLICKERS
 						player_flicker ();
 					#endif
 				}
@@ -1120,8 +1196,8 @@ void main (void) {
 			
 			#ifdef USE_SUICIDE_KEY
 				if (cpc_TestKey (KEY_AUX2)) {
-					player.is_dead = 1;
-					player.life --;
+					player.is_dead = PLAYER_KILLED_BY_SELF;
+					player.drain_amount = 1;
 				}
 			#endif
 		}	

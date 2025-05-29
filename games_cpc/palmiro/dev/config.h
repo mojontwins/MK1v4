@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // ============================================================================
 // I. General configuration
@@ -7,7 +7,12 @@
 
 //#define MODE_1
 
+//#define CUSTOM_SCREEN_CONNECTIONS 			// Uses code in custom_screen_connections.h
+
 #define MIN_FAPS_PER_FRAME			2		// Limits the max # of fps to 50/N
+//#define DECOMPRESSOR_ZX0					// User Einar Saukas' ZX0 rather than aplib
+//#define COMPRESSED_TS 			2		// See manual!
+
 #define MAX_CUSTOM_SW_SPRITES   	0 		// If you need to add some, do.
 #define BLACK_PEN		 			1		// Which pen is black?
 
@@ -15,6 +20,11 @@
 //#define SOUND_NONE
 #define SOUND_WYZ
 #define WYZ_FX_CHANNEL 				1		// Where to play sound effects
+
+//#define NO_COMPRESSED_TITLE_SCR
+//#define NO_COMPRESSED_ENDING_SCR
+//#define DRAW_RECTANGLE_NOT_NEEDED
+//#define FORCE_ENEMS_LIFE 					// Force the use of enems life gauge even if not needed
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
@@ -39,6 +49,8 @@
 //#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS	// Call `custom.h/get_cell_n ()` for linear
 //#define ENEMS_CUSTOM_CELLS 				// Include custom_enem_cells.h
 //#define ENEMS_CUSTOM_COLLISION 			// Normal code will only be ran if enems_custom_collision returns 0
+//#define CUSTOM_MAP_POINTER_CALCULATOR 	// Calculate gp_gen yourself in custom_map_pointer_calculator @ custom.h
+//#define CUSTOM_FLICK_SCREEN_HANDLER		// Change n_pant yourselfcustom_flick_screen_handler @ custom.h
 
 // ============================================================================
 // II. Engine type
@@ -64,7 +76,7 @@
 //#define EVIL_ZONE_FREQ 			3 		// if defined to N kill every M^2 frames; N=M^2-1,  
 //#define EVIL_ZONE_CONDITIONAL		 		// Active if scenery_info.evil_zone_active
 #define PLAYER_BOUNCES						// If defined, collisions make player bounce
-#define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
+//#define PLAYER_FLICKERS 			50	 	// If defined, collisions make player flicker for N frames.
 //#define DEACTIVATE_REFILLS				// If defined, no refills.
 #define LEGACY_REFILLS 						// Legacy mode: refills appear in place of collected items/keys
 #define MAX_FLAGS					1		// Number of flags. For scripting and stuff.
@@ -75,9 +87,13 @@
 #define ENEMIES_COLLIDE 					// Check collisions for linear enemies
 //#define ENEMIES_COLLIDE_MASK 		8
 //#define PLATFORMS_ON_FLAG 		0		// If defined, only move platforms if flag N is 1
+//#define DIE_AND_RESPAWN 					// Respawn the player on the latest safe spot (side view)
+//#define SAFE_SPOT_ON_ENTERING 			// Safe spot is only updated when entering a new screen
 
 //#define PACKED_ENEMS 						// Packed XY1, XY2 format.
 //#define FIXED_ENEMS_LIMITS 				// x1, x2, y1, y2 won't change.
+//#define INDEXED_ENEMS 					// Good if you have lots screens with less than MAX_ENEMS
+#define USE_CLASSIC_ENEMS_KILL				// Killing enemies pauses the action i.e. the classic shit
 
 // Coins engine
 // ------------
@@ -146,6 +162,9 @@
 //#define SWORD_DEPLETES 					// Can only hit when player.sword_g > 0 & decs
 //#define SWORD_CUSTOM_HIT 					// use code @ sword_custom_hit.h before default
 //#define SWORD_DISABLE_HIT 				// Disable default hit code.
+//#define SWORD_OFFS 				-4 		// If defined, Added to sword X (value for looking right)
+//#define SWORD_W 					12 		// For horizontal, LOGICAL width of the sprite (introduced for Ninjajar LL CPC)
+//#define SWORD_WIDE 						// For horizontal, sprite is 8x8 rather than 4x8.
 
 // Breakable
 // ---------
@@ -154,6 +173,7 @@
 //#define MAX_BREAKABLE_FRAMES 		8 		// N = frames to display this tile:
 //#define BREAKABLE_BREAKING_TILE 	45		// display this for N frames
 //#define BREAKABLE_ERASE_TILE 		0		// The substitute by this tile.
+//#define BREAKABLE_SPAWN_ONLY_IF 	12		// If defined, spawn only if broken tile is N.
 //#define BREAKABLE_SPAWN_CHANCE  	3 		// Must be a power of 2 - 1, ifdef there's a chance to spawn...
 //#define BREAKABLE_SPAWN_TILE    	46 		// Throw this tile if rand() & chance == 1.
 //#define BREAKABLE_PERSISTENT 				// Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
@@ -202,10 +222,13 @@
 //#define USE_SIGHT_DISTANCE				// If defined, type 6 only pursue you within sight distance
 //#define SIGHT_DISTANCE			120		
 //#define FANTY_MAX_V 				256 	// Flying enemies max speed.
+//#define FANTY_V_RETREATING 			128		// Flying eneimes speed when retreating (USE_SIGHT_DISTANCE / PLAYER_CAN_HIDE)
 //#define FANTY_A 					16		// Flying enemies acceleration.
 //#define FANTIES_LIFE_GAUGE		10		// Amount of shots needed to kill flying enemies.
 //#define MAKE_TYPE_6						// Create fanties for missing enemies if scenery_info.make_type_6
 //#define FANTIES_EXIT_STATE_V		32		// set en_an_state to 1 and make them retreat to (0,0) w. this speed
+//#define FANTY_REMEMBER_POSITION 			// Don't reset fanty to x1, y1 on entering.
+//#define FANTY_FACING
 
 // Quadrators
 // ----------
@@ -216,6 +239,7 @@
 // ---------------------------------
 
 #define ENABLE_MARRULLERS 					// Enable MARRULLERS, enemy type 11-14
+//#define MARRULLERS_CONFINED 				// Marrullers will never touch the borders of the screen
 
 // Scripting
 // ---------
@@ -233,6 +257,7 @@
 // ---------
 
 #define PLAYER_MOGGY_STYLE					// Enable top view.
+#define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
 //#define LOOK_AT_THE_CAMERA				// Use "walk down" cell if player is idle
 //#define PLAYER_NO_INERTIA					// Disable inertia
 //#define PLAYER_CONST_V			256		// Constant speed
@@ -240,14 +265,17 @@
 // Side view:
 // ----------
 
+//#define PLAYER_CUSTOM_VERT_AXIS 			// Do it yourself!
 //#define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
+//#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
+//#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+//#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
+//#define CHANGE_FACING_LIKE_ALEX			// Floor: L/R sets facing. Air: VX sets facing
+
 #define TIGHT_BOUNDING_BOX 					// Bounding box 12x8 or 16x8 (depending on TALL_PLAYER)
 #define TIGHT_LOWER 				4
 #define TIGHT_UPPER 				12 		// For horizontal BB against BG, don't touch unless you know...
-#define PERSPECTIVE_GENITAL                 // smaller vertical bb, get behind tiles
-//#define BETTER_VERTICAL_CONNECTIONS		// Better vertical connections in side view, but heavier
-//#define FIRE_TO_JUMP 						// Jump using the fire button, only if no PLAYER_CAN_FIRE
-//#define BOTH_KEYS_JUMP					// Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
+
 //#define RAMIRO_HOP 						// press jump when reaching a type 4 platform to jump again 
 //#define RAMIRO_HOVER 						// press down to hover
 //#define HOVER_WITH_JUMP_ALSO 				// use jump to hover as well
@@ -318,8 +346,6 @@
 //#define LINE_OF_TEXT_X			1
 //#define LINE_OF_TEXT_SUBSTR		2
 //#define LINE_OF_TEXT_ATTR 		7		
-
-#define GAME_OVER_ATTR				15
 
 // Graphic FX, uncomment which applies...
 
@@ -406,3 +432,19 @@ unsigned char comportamiento_tiles [] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
+// Sword offset. See the manual if you wanna change those
+// Default values are
+// #define MAX_SWORD_FRAMES 9
+// swoffs_x ->  8, 10, 12, 14, 16, 16, 14, 13, 10
+// swoffs_y ->  2,  2,  2,  3,  4,  4,  5,  6,  7
+
+#define NUM_SWORD_FRAMES 4
+#define MIN_SWORD_HIT_FRAME 0
+#define MAX_SWORD_HIT_FRAME 2
+
+#ifdef ENABLE_SWORD
+	unsigned char swoffs_x [] = {  8, 16, 13, 10 };
+#endif
+#if defined ENABLE_SWORD && !defined SWORD_STAB
+	unsigned char swoffs_y [] = {  2,  2,  2,  3,  4,  4,  5,  6,  7};
+#endif

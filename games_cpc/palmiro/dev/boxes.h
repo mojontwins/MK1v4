@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 #ifdef PLAYER_PUSH_BOXES
 	void __FASTCALL__ move_tile (unsigned char act) {
@@ -23,9 +23,10 @@
 				or l 
 				jr z, move_tile_do
 
-		#endasm
-		play_sfx (8);				
-		#asm				
+				ld  hl, 8
+				push hl
+				call _play_sfx
+				pop bc 
 
 				#ifdef FALLING_BOXES
 					call _fall_box
@@ -215,8 +216,7 @@
 										if (en_ccx >= boxx - 15 && en_ccx <= boxx + 15 &&
 											en_ccy >= boyy - 15 && en_ccy <= boyy + 15) {
 											
-											en_an_next_frame [enit] = sprite_17_a;											
-											enems_kill ();
+											enems_kill (0xff);
 										}
 									}						
 
@@ -227,9 +227,8 @@
 							#ifdef BOXES_KILL_PLAYER
 								// Check for player killed!
 								if (gpx >= boxx - 15 && gpx <= boxx + 15 && gpy >= boyy - 15 && gpy <= boyy + 15) {
-									explode_player ();	
-									player.life --;
-									player.is_dead = 1;
+									player.drain_amount = 1;
+									player.is_dead = PLAYER_KILLED_BY_BOX;
 								}
 							#endif
 							}

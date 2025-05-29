@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // churromain.c
 // Program skeleton. Rename to your game title.c
@@ -19,7 +19,7 @@
 
 //#define DEBUG
 
-#include <cpcrslib.h>
+#include <cpcrslib_mt.h>
 
 #include "config.h"
 
@@ -47,14 +47,14 @@
 
 #define BASE_TILEMAP 		0x0100
 #define WYZ_SONG_BUFFER 	0x8800
+#define BASE_SUPERBUFF  	0x9000
 #define BASE_ROOM_BUFFERS	0xC000 + 0x600
 #define BASE_DIRTY_CELLS 	0xC800 + 0x600
 #define BASE_ARRAYS 		0xD000 + 0x600
 #define BASE_WYZ 			0xDF80
 #define BASE_SPRITES 		0xE000 + 0x600
+#define BASE_CUSTOM 		0xF000 + 0x600
 #define BASE_LUT			0xF800 + 0x600
-
-#define BASE_SUPERBUFF  	0x9000
 
 #define ANIMATED_BASE		0xE800 - MAX_ANIMATED_TILES
 #define PERSIST_BASE 		0xE800 + 0x600
@@ -83,13 +83,18 @@
 	#define NEEDS_BLACKOUT_AREA
 #endif
 
+#if defined COINS_PERSISTENT || defined BREAKABLE_PERSISTENT
+	#define ENABLE_PERSISTENCE
+#endif
+
 #define SW_SPRITES_ALL 		1 + MAX_ENEMS + MAX_BULLETS + SWORD_SW_SPRITE_ON + MAX_CUSTOM_SW_SPRITES
 
 #define SP_PLAYER 			0
 #define SP_ENEMS_BASE 		1
 #define SP_BULLETS_BASE 	(SP_ENEMS_BASE + MAX_ENEMS)
 #define SP_SWORD_BASE 		(SP_BULLETS_BASE + MAX_BULLETS)
-#define SP_CUSTOM_BASE		(SP_SWORD_BASE + SWORD_SW_SPRITE_ON)
+#define SP_COCOS_BASE 		(SP_SWORD_BASE + SWORD_SW_SPRITE_ON)
+#define SP_CUSTOM_BASE		(SP_COCOS_BASE + MAX_ENEMS)
 
 #ifdef SOUND_NONE
 	#define AY_INIT()        ;
@@ -140,7 +145,11 @@ extern unsigned char trpixlutc [0];
 #ifdef ACTIVATE_SCRIPTING
 	#include "msc-config.h"
 #endif
+#ifdef DECOMPRESSOR_ZX0
+	#include "zx0.h"
+#else
 #include "aplib.h"
+#endif
 #ifdef SOUND_WYZ
 	#include "wyz/efectos.h"
 	#include "wyz/instrumentos.h"

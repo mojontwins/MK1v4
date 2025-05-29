@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // Mojon Twin Asm Lib (auxiliary functions)
 
@@ -30,6 +30,15 @@
 				call ARKOS_ADDRESS_MT_INIT				
 				ld b, 0
 				jp SetRAMBank					
+		#endif
+
+		#ifdef ENABLE_WYZ
+			.wyz_address_call
+				ld b, WYZ_RAM
+				call SetRAMBank
+				call WYZ_ADDRESS_PLAYERINIT				
+				ld b, 0
+				jp SetRAMBank
 		#endif
 	#endif
 

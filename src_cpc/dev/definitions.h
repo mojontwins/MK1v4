@@ -1,5 +1,5 @@
-// MTE MK1 v4.9
-// Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // definitions.h
 // Contains type definitions and global variables
@@ -19,6 +19,8 @@
 #define TYPE_6_RETREATING		2
 
 #define ENEM_PARALYZED 			32
+
+#define ENEM_IS_DEAD 			128
 
 #define SWORD_TYPE_RIGHT 		0
 #define SWORD_TYPE_LEFT 		1
@@ -46,11 +48,12 @@
 #define PLAYER_KILLED_BY_ENEM 	2
 #define PLAYER_KILLED_BY_EZ 	4
 #define PLAYER_KILLED_BY_SELF 	8
+#define PLAYER_KILLED_BY_BOX 	16
 
 typedef struct {
 	signed int x, y, cx;								// 0, 2, 4
 	signed int vx, vy; 									// 6, 8
-	signed char g, ax, rx; 								// 10, 11, 12
+	unsigned char g, ax, rx; 							// 10, 11, 12
 	unsigned char salto, cont_salto; 					// 13, 14
 	unsigned char *current_frame, *next_frame; 			// 15, 17
 	unsigned char saltando; 							// 19
@@ -75,6 +78,7 @@ typedef struct {
 	unsigned char just_jumped;							// 43
 	unsigned char sword_g;								// 44
 	unsigned char coins;								// 45
+	unsigned char drain_amount; 						// 46
 } INERCIA;
 
 typedef struct {
@@ -130,20 +134,21 @@ extern unsigned char def_keys [0];
 		defw $4580 		; BUTTON_A SPACE
 		defw $4808 		; BUTTON_B Q
 
-		defw $4204		; KEY_ENTER
-		defw $4804		; KEY_ESC	
+		defw $4801 		; KEY_AUX3 1
+		defw $4802 		; KEY_AUX4 2
 
 		defw $4880		; KEY_AUX1 Z
 		defw $4780 		; KEY_AUX2 X
-		defw $4801 		; KEY_AUX3 1
-		defw $4802 		; KEY_AUX4 2
+
+		defw $4204		; KEY_ENTER
+		defw $4804		; KEY_ESC	
 #endasm
 
 extern unsigned char def_keys_joy [0];
 #asm
 	._def_keys_joy
 		defw 0x4904, 0x4908, 0x4901, 0x4902, 0x4910, 0x4920
-		defw 0x4004, 0x4804, 0x4880, 0x4780, 0x4801, 0x4802
+		defw 0x4801, 0x4802, 0x4880, 0x4780, 0x4204, 0x4804
 #endasm
 
 #define KEY_M 0x4440
@@ -158,18 +163,21 @@ extern unsigned char def_keys_joy [0];
 #define KEY_DOWN 		3
 #define KEY_BUTTON_A	4
 #define KEY_BUTTON_B	5
-#define KEY_ENTER		6
-#define KEY_ESC			7
+#define KEY_AUX3 		6
+#define KEY_AUX4 		7
 #define KEY_AUX1		8
 #define KEY_AUX2		9
-#define KEY_AUX3 		10
-#define KEY_AUX4 		11
+#define KEY_ENTER		10
+#define KEY_ESC			11
 
 #define sp_LEFT           0x01
 #define sp_RIGHT          0x02
 #define sp_UP             0x04		
 #define sp_DOWN           0x08
 #define sp_FIRE           0x10
+#define sp_FIRE2          0x20
+#define sp_AUX3           0x40
+#define sp_AUX4           0x80
 
 // Sprite structs
 
@@ -201,7 +209,6 @@ INERCIA player;
 	unsigned char bspr_it;
 #endif
 signed int ptgmx, ptgmy;
-unsigned char player_just_died;
 
 // Enemies
 
@@ -209,25 +216,27 @@ unsigned char en_an_frame [MAX_ENEMS]				@ BASE_ARRAYS;
 unsigned char en_an_count [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS);
 unsigned char *en_an_current_frame [MAX_ENEMS]		@ (BASE_ARRAYS + MAX_ENEMS*2);
 unsigned char *en_an_next_frame [MAX_ENEMS]			@ (BASE_ARRAYS + MAX_ENEMS*4);
-unsigned char en_an_morido [MAX_ENEMS] 				@ (BASE_ARRAYS + MAX_ENEMS*6);
-signed int en_an_x [MAX_ENEMS] 						@ (BASE_ARRAYS + MAX_ENEMS*7);
-signed int en_an_y [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*9);
-signed int en_an_vx [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*11);
-signed int en_an_vy [MAX_ENEMS]	 					@ (BASE_ARRAYS + MAX_ENEMS*13);
-unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (BASE_ARRAYS + MAX_ENEMS*15);
-unsigned char en_an_state [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS*16);
-unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*17);
-unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*18);
+signed int en_an_x [MAX_ENEMS] 						@ (BASE_ARRAYS + MAX_ENEMS*6);
+signed int en_an_y [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*8);
+signed int en_an_vx [MAX_ENEMS]						@ (BASE_ARRAYS + MAX_ENEMS*10);
+signed int en_an_vy [MAX_ENEMS]	 					@ (BASE_ARRAYS + MAX_ENEMS*12);
+unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (BASE_ARRAYS + MAX_ENEMS*14);
+unsigned char en_an_state [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS*15);
+unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*16);
+unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*17);
 
 unsigned int enoffs, enoffsmasi;
 unsigned char en_j, en_x, en_y, en_xx, en_yy;
 unsigned char en_cx, en_cy;
-unsigned char en_ccx, en_ccy;
+
 // Only one enemy may hurt the player at once, so we need this flag:
 unsigned char en_tocado = 0; 
 unsigned char _en_x, _en_y, _en_x1, _en_y1, _en_x2, _en_y2;
 signed char _en_mx, _en_my;
 unsigned char _en_t, _en_life;
+#ifdef INDEXED_ENEMS
+	unsigned char n_enems;
+#endif
 unsigned char *_baddies_pointer;
 
 #if defined ENABLE_CODE_HOOKS
@@ -262,7 +271,7 @@ unsigned char orig_tile;	// Original background tile
 // Game flow
 
 unsigned char isr_player_on;
-unsigned char pattern_line_ct;
+unsigned char wyz_beat_ct;
 
 #ifndef WIN_ON_SCRIPTING
 	#ifdef SCR_FIN
@@ -271,6 +280,10 @@ unsigned char pattern_line_ct;
 #endif
 unsigned char n_pant, on_pant;
 unsigned char pant_just_rendered;	// Will be 1 for 1 frame if just entered a new screen in hook_init_mainloop
+
+#ifdef DIE_AND_RESPAWN
+	unsigned char safe_n_pant, safe_x, safe_y;
+#endif
 
 #if defined ACTIVATE_SCRIPTING && !defined DEACTIVATE_FIRE_ZONE
 	unsigned char f_zone_ac;
@@ -309,11 +322,6 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char s_on, s_type;
 	unsigned char s_x, s_y, s_frame;
 	unsigned char s_hit_x, s_hit_y;
-
-	unsigned char swoffs_x [] = {8, 10, 12, 14, 16, 16, 14, 13, 10};
-	#ifndef SWORD_STAB
-		unsigned char swoffs_y [] = {2,  2,  2, 3,  4,  4,  5,  6,  7};
-	#endif
 #endif
 
 // Breakable
@@ -323,6 +331,9 @@ unsigned char flags [MAX_FLAGS];
 	unsigned char b_f [MAX_BREAKABLE];
 	unsigned char b_x [MAX_BREAKABLE];
 	unsigned char b_y [MAX_BREAKABLE];
+	#ifdef BREAKABLE_SPAWN_ONLY_IF
+		unsigned char b_was [MAX_BREAKABLE];
+	#endif
 #endif
 
 // Aux
@@ -342,7 +353,7 @@ unsigned char success;
 unsigned char rdi;
 signed int rdj;
 unsigned char rdx, rdy;
-unsigned char gpit, enit, pad0, pad1, pad_this_frame;
+unsigned char gpit, enit, pad0, pad1 = 0, pad_this_frame = 0;
 unsigned char gpx, gpy, gpxx, gpyy;
 signed int gpcx, gpcy;
 unsigned char rdd, rdt1, rdt2;
@@ -351,6 +362,10 @@ unsigned char _x, _y, _t, _n;
 unsigned char _x2, _y2;
 unsigned char wall;
 unsigned char rda, rdb, rdmt;
+
+#if defined USE_SIGHT_DISTANCE || defined ENABLE_COCOS
+	unsigned char cx1, cy1, cx2, cy2;
+#endif
 
 #if defined RLE_MAP
 	unsigned char rdc, rdn;
@@ -421,4 +436,4 @@ void init_player_values (void);
 unsigned char rand (void);
 unsigned char player_hidden (void);
 void espera_activa (int espera);
-void enems_kill (void);
+void enems_kill (unsigned char damage);

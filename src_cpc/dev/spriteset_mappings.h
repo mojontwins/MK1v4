@@ -1,5 +1,5 @@
-// MTE MK1 (la Churrera) v5.0
-// Copyleft 2010-2014, 2020-2021 by the Mojon Twins
+// MTE MK1 (la Churrera) v5.10
+// Copyleft 2010-2014, 2020-2022 by the Mojon Twins
 
 // Spriteset mappings. 
 // One entry per sprite face in the spriteset!
@@ -24,10 +24,10 @@ void *sm_invfunc [] = {
 };
 
 void *sm_updfunc [] = {
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, 
-	cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx, cpc_PutTrSp8x16TileMap2bPx
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, 
+	cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx, cpc_PutTrSp8x16TileMapPx
 };
 
 extern void *sm_sprptr [0];

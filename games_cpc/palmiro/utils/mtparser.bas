@@ -14,6 +14,14 @@ Sub clearCoords (coords () As Integer)
 	Next i
 End Sub
 
+Sub clearTokens (tokens () As String)
+	Dim As Integer i
+		
+	For i = lBound (tokens) To uBound (tokens)
+		tokens (i) = ""
+	Next i
+End Sub
+
 Sub parseCoordinatesString (coordsString as String, coords () As Integer)
 	Dim As Integer i, idx
 	Dim As String m, coordString
@@ -26,6 +34,26 @@ Sub parseCoordinatesString (coordsString as String, coords () As Integer)
 		m = Mid (coordsString, i, 1)
 		If m = "," Then
 			coords (idx) = Val (coordString)
+			idx = idx + 1
+			coordString = ""			
+		Else
+			coordString = coordString & m
+		End If
+	Next i
+End Sub
+
+Sub parseCommaSeparatedString (coordsString as String, tokens () As String)
+	Dim As Integer i, idx
+	Dim As String m, coordString
+	
+	coordsString = coordsString & ","
+	idx = 0
+	clearTokens tokens ()
+	
+	For i = 1 To Len (coordsString)
+		m = Mid (coordsString, i, 1)
+		If m = "," Then
+			tokens (idx) = coordString
 			idx = idx + 1
 			coordString = ""			
 		Else
