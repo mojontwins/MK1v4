@@ -520,7 +520,7 @@ void draw_scr_background (void) {
 	rdy = (hotspots [n_pant].xy & 15);
 	rdt = hotspots [n_pant].tipo;
 
-	if (hotspots [n_pant].act == 0) {
+	if (hotspots [n_pant].act != 1) {
 		rdt = 0;
 		#ifndef USE_HOTSPOTS_TYPE_3
 			// Vieja lógica: si el hotspot no está activo y no era 0, puede aparecer una recarga.

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon May 26 16:51:49 2025
+;	Module compile time: Thu May 29 08:50:01 2025
 
 
 
@@ -8995,8 +8995,8 @@
 	inc	hl
 	inc	hl
 	ld	a,(hl)
-	and	a
-	jp	nz,i_106
+	cp	#(1 % 256)
+	jp	z,i_106
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_rdt),a
