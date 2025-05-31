@@ -138,7 +138,7 @@ void main (void) {
 				}
 			#endif
 
-			#if defined OBJECTS_X && defined OBJECTS_X 
+			#if defined OBJECT_COUNT && defined OBJECTS_X 
 				if (flag_old != flags [OBJECT_COUNT]) {
 					draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 					flag_old = flags [OBJECT_COUNT];

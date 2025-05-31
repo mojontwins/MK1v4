@@ -160,10 +160,35 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Hacer que los enemigos custom puedan NO matarte. 
 
-[X] Encontrar una forma fácil de replicar por defecto el movimiento lineal 1..4 en otro en_t... ¿tan fácil como mover a una subrutina? YES, subrutined!
+[X] Encontrar una forma fácil de replicar por defecto el movimiento lineal 1..4 en otro en_t... ¿tan fácil como mover a una subrutina? YES, subrutined! 
+
+    * Si queremos que el enemigo custom tenga el comportamiento lineal estándar y luego haga más cosas se puede hacer que...
+
+```c
+    // custom.h
+
+    // [...]
+
+    void extra_enems_move (void) {
+        // Check _en_t and update your custom enemies. When you are finished. 
+        // Current enemy vars are copied to temporary _en_x, _en_y, etc
+        // write a proper frame pointer to en_an_next_frame
+
+        if (_en_t == MI_TIPO_CUSTOM) {
+            #asm
+                    call en_lineal_do
+            #endasm
+
+           // Hacer más cosas custom aquí
+        }
+    }
+
+    // [...]
+```
 
 [ ] Soporte built-in de textos en msc4. DARLE UN PENSOTE. 
-    * Quizá baste con toda la infraestructura para parsearlos en el script y crear el array de textos que se vaya referenciando del bytecode, con soporte para cadenas repetidas y tal, y luego dejar en manos del programador del juego el código del `textbox`. La idea es que el programador haga una rutina `textbox` y la ponga en `custom.h` o el `extern.h` y que msc4.h llame a esa rutina con el número del texto.
+
+    * Quizá baste con toda la infraestructura para parsearlos en el script y crear el array de textos que se vaya referenciando del bytecode, con soporte para cadenas repetidas y tal, y luego dejar en manos del programador del juego el código del `textbox`. La idea es que el programador haga una rutina `textbox` y la ponga en `custom.h` o el `extern.h` y que msc4.h llame a esa rutina con el número del texto y un puntero al texto desempaquetado, porque usará *ESC5bit* como **Ninjajar** y otros MK2s.
 
 [X] ¿Por qué hay ahora mamoneos en Calavera (¿y otros?) con las colisiones laterales mientras estamos saltando? Hay como barreras invisibles porque sí. Parece que en tiles beh 4.
 
@@ -194,7 +219,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
         ld  (__en_x), a
 ```
 
-    Si usamos negativos -1 = 2 frames per pixel, -3 = 4 frames per pixel.
+    Si usamos negativos -1 (FF) = 2 frames per pixel, -3 (FD) = 4 frames per pixel.
 
 ```asm
         bit 7, a
@@ -214,6 +239,77 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 ```
 
     Ese inserto entre [A] y [B] podría funcionar. Lo probaré luego.
+
+    * Pero qué tonto soy. Esto no me vale. mx / my ya tienen los valores cocinados y pueden ser negativos. Esto hay que codificarlo en otro sitio. Una vez resuelva dónde, hay que tener en cuenta que 
+
+```
+    1       = 00000001
+    -1 = FF = 11111111
+                     - =
+
+    2       = 00000010
+    -2 = FE = 11111110
+                    -- =
+
+    4       = 00000100
+    -4 = FC = 11111100
+                   --- =
+```
+
+    Interesante ¿no? Aparte de esto no sé cómo tirar para codificar esto XD
+
+    Tengo que codificar para "1 pixel cada 2 frames y 1 pixel cada 4 frames". El tema es cómo codificarlo para que sea fácilmente detectable y no haya que hacer mil historias.
+
+    * "1 pixel cada 2 frames" es "no mover si frame_counter & 1 != 0".
+    * "1 pixel cada 4 frames" es "no mover si frame_counter & 3 != 0".
+
+    En teoría la churrera admitiría hasta velocidad 8, que es:
+```
+    8       = 00001000
+    -8 = F8 = 11111000
+```
+    Si uso estos bits:
+
+``` 
+    76543210
+        XXXX -> velocidad normal 1 2 4 8
+    YYYY------> para la velocidad subpixel
+```
+
+    El tema es que YYYY valen 0000 o 1111 para los positivos o negativos. No me vale.
+
+    * Imaginemos que he encontrado la forma de saber si un enemigos es subpixel. En ese caso, las velocidades mx/my pueden ser 1/-1 y 3/-3. 
+
+    No me va a servir, pero voy a mirar como se resolvía en AGNES u otros motores de NES a ver si me da alguna idea.
+
+    * En AGNES, se permite 1 pixel cada 2 frames, y se hace poniendo un en_status a 1 y sus valores mx/my a 1. Se hace igual en los otros motores de NES.
+
+    Vale, dejamos solo uno que se mueva si half_life. Imaginemos que ponemos V=16; tendríamos:
+
+```
+    16       = 00010000
+    -16 = F0 = 11110000
+```
+
+    Imaginemos este algoritmo:
+
+```    
+        // A = v (pos o neg)
+        ld  c, a
+        and 0xf0
+        ld  a, c
+        jr  nz, en_lineal_horizontal_ppf
+
+    .en_lineal_horizontal_fpp
+        ld  a, (_half_life)
+        and 1
+        jr  nz, en_lineal_horizontal_done
+
+        inc a 
+    .en_lineal_horizontal_ppf
+```        
+
+    Me mosquea tanto mamoneo solo para una posibilidad más. Voy a dejarlo macerar.
 
 [X] ¿Qué pasa con las empujaciones? ¿Sólo las laterales? Yuju, he roto todas las empujaciones XD Ha sido por el cambio de nombre de las variables para la colisión.
 
@@ -320,37 +416,37 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
     Para no liarla tanto, generar el LUT podría ser algo así. Por ejemplo, para la primera rotación:
 
     ```asm
-    		ld  hl, 0xE700
+            ld  hl, 0xE700
 
-    	.write_lut1_loop
-    		ld  a, l
-    		rrca
-    		ld  c, a 
-    		rrca
-    		rrca
-    		rrca
-    		rrca
-    		xor c 
-    		and $88
-    		xor c
+        .write_lut1_loop
+            ld  a, l
+            rrca
+            ld  c, a 
+            rrca
+            rrca
+            rrca
+            rrca
+            xor c 
+            and $88
+            xor c
 
-    		ld  (hl), a 
-    		inc l 
-    		jr  nz, write_lut1_loop
+            ld  (hl), a 
+            inc l 
+            jr  nz, write_lut1_loop
     ```
 
     El tema va a ser cómo usar el LUT, que me quedo sin registros punteros :D Por ejemplo, primer byte:
 
     ```asm
-    		ld  a, (bc) 	; Get sprite byte. This is the byte we must rotate
+            ld  a, (bc)     ; Get sprite byte. This is the byte we must rotate
 
-    		ld  h, 0xE7 	; 1st rotation
-    		ld  l, a  		; Point to LUT
-    		ld  a, (hl) 	; Rotated!
+            ld  h, 0xE7     ; 1st rotation
+            ld  l, a        ; Point to LUT
+            ld  a, (hl)     ; Rotated!
 
-    		...
+            ...
 
-    		ld  h, 0xFE 	; Make mask LUT (already there)
-    		ld  l, a 		; etc
+            ld  h, 0xFE     ; Make mask LUT (already there)
+            ld  l, a        ; etc
     ```
 </details>
