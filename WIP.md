@@ -149,7 +149,14 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [!] Creo que he dado con un misterioso bug o feature de esta versión de z88dk vieja que hace que si pones el prototipo de una función antes de definir la función, rodea a la misma con un `push hl` al principio y un `pop bc` al final, cosa que no hace si no se añade un prototipo. Esto me rompía completamente el motor (yo esperaba que la rutina no tocara bc, pero con el código añadido lo hace). Now that's WEIRD.
 
-[ ] ¡Script y enemigos! Definir enemigos custom que hagan de NPCs puede molar si interactuar con ellos es posible. Sin tener que meter nuevas secciones (o quizá aprovechando alguna), pulsando ACCION sobre un enemigo de estos lanzará las PRESS_FIRE correspondientes. Entonces estaría bien saber con qué EN_T se está colisionando (0 si ninguno, por ejemplo) y ya para nota su EN_IT... Ya de entrada con eso nos podría valer para hacer un bajillón de cosas. El tema es la colisión con el enemigo que te va a matar sí o sí. Eso se soluciona con otra entrada en `custom.h`:
+[X] ¡Script y enemigos! Definir enemigos custom que hagan de NPCs puede molar si interactuar con ellos es posible. Sin tener que meter nuevas secciones (o quizá aprovechando alguna), pulsando ACCION sobre un enemigo de estos lanzará las PRESS_FIRE correspondientes. Entonces estaría bien saber con qué EN_T se está colisionando (0 si ninguno, por ejemplo) y ya para nota su EN_IT... Ya de entrada con eso nos podría valer para hacer un bajillón de cosas. El tema es la colisión con el enemigo que te va a matar sí o sí. Eso se soluciona con otra entrada en `custom.h`.
+    * El tema es que `_en_t` y `en_it` sólo tienen sentido durante el bucle que actualiza los enemigos. Lo suyo sería que se lanzase el script cuando te toca un enemigo, pero soy reticente a meter más secciones (sobre todo porque tendría que echar para adelante el índice por pantallas y eso sería ocupar más y más bytes... ¿Qué podría reutilizarse? `SC_PLAYER_KILLS_ENEMY` selanza en `enems_kill`, no tendría sentido. `SC_PRESS_FIRE_AT_ANY` está overcrowded... 
+
+    Me parece que no voy a tener más que subir a 16 las secciones especiales.
+
+    * Como lo ise: Si colisionas con un bicharraco -> (si ENABLE_CUSTOM_ENEMS should collide) colisión, llamar a script (SC_ENEMY_TOUCHED). Quicir, al script siempre se llama. `should_collide` decide si el enemigo **MATA**. A lo mejor hay que renombrar. `this_enemy_kills`.
+
+    A ver como lo pruebo. En TB, que al tocar al becario diga algo por ejemplo.
 
 [X] Hacer que los enemigos custom puedan NO matarte. 
 

@@ -7,6 +7,9 @@
 Const SPECCY = 0
 Const CPC = 1
 
+Const ENTERING_INDEX_OFFSET = 16
+Const PRESS_FIRE_INDEX_OFFSET = 17
+
 Dim Shared As Integer debug = -1
 
 Dim Shared As String tokens (255)
@@ -125,6 +128,12 @@ Sub parseScriptLine (linea As String)
 		i = i + 1
 	Wend
 
+	' Trim prepended ON
+
+	If Len(linea) > 3 And Left (Ucase (linea), 3) = "ON " Then
+		linea = Right (linea, Len (linea) - 3)
+	End If
+
 	' Tokenize
 
 	parseTokenizeString linea, tokens (), ",()[]", "#"
@@ -158,6 +167,14 @@ Sub parseScriptLine (linea As String)
 			tokens (i) = "$240"
 		ElseIf Ucase(tokens (i)) = "DONT_MAKE_FANTIES" Then
 			tokens (i) = "$239"
+		ElseIf Ucase(tokens (i)) = "EN_T" Then
+			tokens (i) = "$238"
+		ElseIf Ucase(tokens (i)) = "EN_N" Then
+			tokens (i) = "$237"
+		ElseIf Ucase(tokens (i)) = "EN_X" Then
+			tokens (i) = "$236"
+		ElseIf Ucase(tokens (i)) = "EN_Y" Then
+			tokens (i) = "$235"
 		End If
 
 		' Static identifiers
@@ -824,15 +841,15 @@ Sub processScript (fIn As Integer)
 					' Find comma separated list
 					If tokens (0) = "entering" Then 
 						listToken = 2 
-						sectOffset = 8
+						sectOffset = ENTERING_INDEX_OFFSET
 					Else 
 						listToken = 4
-						sectOffset = 9
+						sectOffset = PRESS_FIRE_INDEX_OFFSET
 					End If
 
 					' Now adjust. 
-					' Enter is 8 + N * 2
-					' Fire is 9 + N * 2
+					' Enter is ENTERING_INDEX_OFFSET + N * 2
+					' Fire is PRESS_FIRE_INDEX_OFFSET + N * 2
 					i = 0: While i + listToken < uBound (tokens) And tokens (i + listToken) <> ""
 						listRooms (i) = tokens (i + listToken)
 						If isNumber (listRooms (i)) Then 
@@ -862,6 +879,9 @@ Sub processScript (fIn As Integer)
 					ElseIf startsWith (tokens (), "special tile touched") Then
 						section = 5
 					
+					ElseIf startsWith (tokens (), "enemy touched") Then
+						section = 8
+
 					End If
 
 					listRooms (0) = Str(section)
@@ -895,17 +915,17 @@ Sub processScript (fIn As Integer)
 	Wend
 
 	' Output binary = index with adjusted offsets, then main binary 
-	' Index size = 2 * (8 + max_pants). Also write index
+	' Index size = 2 * (16 + max_pants). Also write index
 
 	mainBinIdx = 0
 
 	If maxPants = 0 And noIndexed = 0 Then Print "WARNING! undefined # of rooms! The script won't work!"
 
-	For i = 0 To 8 + maxPants * 2 - 1
+	For i = 0 To ENTERING_INDEX_OFFSET + maxPants * 2 - 1
 		If sectOffs (i) < 0 Then 
 			sectOffs (i) = 0 
 		Else 
-			sectOffs (i) = sectOffs (i) + (8 + maxPants * 2) * 2
+			sectOffs (i) = sectOffs (i) + (ENTERING_INDEX_OFFSET + maxPants * 2) * 2
 		End If
 		WriteToMainBin sectOffs (i) Mod 256
 		WriteToMainBin sectOffs (i) \ 256
@@ -1100,6 +1120,10 @@ If RV(&HF6) Then writeAssemblyString fOut, "; TN RVALUE|cp  0xF6|jr  nz, rvb_set
 If RV(&HF5) Then writeAssemblyString fOut, "; HOTSPOT RVALUE|cp  0xF5|jr  nz, rvb_set_tile_done|ld  a, (_hotspot_t)|ret|.rvb_set_tile_done"
 If RV(&HF0) Then writeAssemblyString fOut, "; HIDE_HOTSPOTS RVALUE|cp  0xF0|jr  nz, rvb_set_hide_hotspots_done|ld  a, (_scenery_info + 0)|ret|.rvb_set_set_hide_hotspots"
 If RV(&HEF) Then writeAssemblyString fOut, "; DONT_MAKE_FANTIES RVALUE|cp  0xEF|jr  nz, rvb_set_dont_make_fanties_done|ld  a, (_scenery_info + 1)|ret|.rvb_set_dont_make_fanties_done"
+If RV(&HEE) Then writeAssemblyString fOut, "; EN_T RVALUE|cp  0xEE|jr  nz, rvb_set_en_t_done|ld  a, (__en_t)|ret|.rvb_set_en_t_done"
+If RV(&HED) Then writeAssemblyString fOut, "; EN_N RVALUE|cp  0xED|jr  nz, rvb_set_en_n_done|ld  a, (_en_it)|ret|.rvb_set_en_n_done"
+If RV(&HEC) Then writeAssemblyString fOut, "; EN_X RVALUE|cp  0xEC|jr  nz, rvb_set_en_x_done|ld  a, (__en_x)|ret|.rvb_set_en_x_done"
+If RV(&HEB) Then writeAssemblyString fOut, "; EN_Y RVALUE|cp  0xEB|jr  nz, rvb_set_en_y_done|ld  a, (__en_y)|ret|.rvb_set_en_y_done"
 
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
@@ -1113,6 +1137,9 @@ If LV(&HFA) Then writeAssemblyString fOut, "; OBJS LVALUE|cp  0xFA|jr  nz, riv_s
 If LV(&HF9) Then writeAssemblyString fOut, "; LIFE LVALUE|cp  0xF9|jr  nz, riv_set_player_life_done|ld  hl, _player + 29	; player.life LSB|jr  read_i_v_cont|.riv_set_player_life_done"
 If LV(&HF0) Then writeAssemblyString fOut, "; HIDE_HOTSPOTS LVALUE|cp  0xF0|jr  nz, riv_set_hide_hotspots_done|ld  hl, _scenery_info + 0	; scenery_info.hide_hotspots|jr  read_i_v_cont|.riv_set_hide_hotspots_done"
 If LV(&HEF) Then writeAssemblyString fOut, "; DONT_MAKE_FANTIES LVALUE|cp  0xEF|jr  nz, riv_set_dont_make_fanties_done|ld  hl, _scenery_info + 1	; scenery_info.dont_make_rr|jr  read_i_v_cont|.riv_set_dont_make_fanties_done"
+If LV(&HEE) Then writeAssemblyString fOut, "; EN_T LVALUE|cp  0xEE|jr  nz, riv_set_player_life_done|ld  hl, __en_t|jr  read_i_v_cont|.riv_set_player_life_done"
+If LV(&HEC) Then writeAssemblyString fOut, "; EN_X LVALUE|cp  0xEC|jr  nz, riv_set_player_life_done|ld  hl, __en_x|jr  read_i_v_cont|.riv_set_player_life_done"
+If LV(&HEB) Then writeAssemblyString fOut, "; EN_Y LVALUE|cp  0xEB|jr  nz, riv_set_player_life_done|ld  hl, __en_y|jr  read_i_v_cont|.riv_set_player_life_done"
 
 writeAssemblyString fOut, "ld  b, 0 				; BC = flag index|ld  hl, _flags|add hl, bc 				; HL -> FLAGS [X]"
 writeAssemblyString fOut, ".read_i_v_cont|ld  a, (sc_y) 			; A = value|ret"

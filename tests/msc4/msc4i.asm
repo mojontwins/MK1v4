@@ -702,6 +702,34 @@ XDEF _script_result
 	ret
 .rvb_set_tile_done
 
+	; EN_T RVALUE
+	cp  0xEE
+	jr  nz, rvb_set_en_t_done
+	ld  a, (__en_t)
+	ret
+.rvb_set_en_t_done
+
+	; EN_N RVALUE
+	cp  0xED
+	jr  nz, rvb_set_en_n_done
+	ld  a, (_en_it)
+	ret
+.rvb_set_en_n_done
+
+	; EN_X RVALUE
+	cp  0xEC
+	jr  nz, rvb_set_en_x_done
+	ld  a, (__en_x)
+	ret
+.rvb_set_en_x_done
+
+	; EN_Y RVALUE
+	cp  0xEB
+	jr  nz, rvb_set_en_y_done
+	ld  a, (__en_y)
+	ret
+.rvb_set_en_y_done
+
 	ld  d, 0 
 	ld  e, a 
 	ld  hl, _flags 
@@ -764,6 +792,27 @@ XDEF _script_result
 	cp  0xF9
 	jr  nz, riv_set_player_life_done
 	ld  hl, _player + 29	; player.life LSB
+	jr  read_i_v_cont
+.riv_set_player_life_done
+
+	; EN_T LVALUE
+	cp  0xEE
+	jr  nz, riv_set_player_life_done
+	ld  hl, __en_t
+	jr  read_i_v_cont
+.riv_set_player_life_done
+
+	; EN_X LVALUE
+	cp  0xEC
+	jr  nz, riv_set_player_life_done
+	ld  hl, __en_x
+	jr  read_i_v_cont
+.riv_set_player_life_done
+
+	; EN_Y LVALUE
+	cp  0xEB
+	jr  nz, riv_set_player_life_done
+	ld  hl, __en_y
 	jr  read_i_v_cont
 .riv_set_player_life_done
 

@@ -81,6 +81,10 @@ Definimos estas variables especiales, codificadas internamente como "flags" fuer
 * $F1 = TIMER = timer
 * $F0 = HIDE_HOTSPOTS = scenery_info.hide_hotspots
 * $EF = DONT_MAKE_FANTIES = scenery_info.dont_make_fanties
+* $EE = EN_T = `_en_t`
+* $ED = EN_N = `_en_it`
+* $EC = EN_X = `_en_x`
+* $EB = EN_Y = `_en_y`
 
 Sólo rvalue: Asignar a F2-F4, F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING. El resto debe poder ser lvalue (se debe poder asignar a NPANT, KILLED, etc).
 
@@ -136,18 +140,26 @@ Voy a reservar espacio para 8 scripts especiales por si esto tiene ampliación. 
 `main_scrpt_pointer` apuntará al binario que contendrá un índice:
 
 ```
-    Add. Offset to.
-    0    ENTERING GAME
-    2    ENTERING ANY
-    4    PRESS FIRE AT ANY
-    6    PLAYER GOT SOMETHING -> got coin / hit hotspot
-    8    PLAYER KILLS ENEMY
-    10   SPECIAL TILE TOUCHED
-    12   ON TIMER ZERO
-    14   ON TILE PUSHED
-    16   ENTERING SCREEN 0
-    18   PRESS FIRE AT SCREEN 0
-    20   ...
+    Sect Add. Offset to.
+    0    0    ENTERING GAME
+    1    2    ENTERING ANY
+    2    4    PRESS FIRE AT ANY
+    3    6    [ON] PLAYER GOT SOMETHING -> got coin / hit hotspot
+    4    8    [ON] PLAYER KILLS ENEMY -> killed enemy (any means), EN_T and EN_N make sense
+    5    10   [ON] SPECIAL TILE TOUCHED -> touched beh 128
+    6    12   [ON] TIMER ZERO -> timer got to 0
+    7    14   [ON] TILE PUSHED -> pushed a tile
+    8    16   [ON] ENEMY TOUCHED -> collided with an enemy, EN_T and EN_N make sense
+    9
+    10
+    11
+    12
+    13
+    14
+    15
+    16   32   ENTERING SCREEN 0
+    17   34   PRESS FIRE AT SCREEN 0
+    18   36   ...
 ```
 El el compiler tendré un array de 256 cadenas con todas las secciones calculadas.
 

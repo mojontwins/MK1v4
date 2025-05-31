@@ -212,7 +212,7 @@ void marrullers_select_direction (void) {
 		// Current enemy vars are copied to temporary _en_x, _en_y, etc
 	}
 
-	unsigned char should_collide (void) {
+	unsigned char this_enemy_kills (void) {
 		// return 0 for enemies which shouldn't collide.
 		// Collide means they will kill the player or get squashed.
 

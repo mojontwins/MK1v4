@@ -3129,7 +3129,7 @@ void mueve_bicharracos (void) {
 
 				if (
 					#ifdef ENABLE_CUSTOM_ENEMS
-						should_collide () && 
+						this_enemy_kills () && 
 					#endif
 					0 == en_tocado && collide_enem () && 
 					(_en_t < 128 
