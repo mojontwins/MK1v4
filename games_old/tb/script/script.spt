@@ -11,6 +11,25 @@ ENTERING GAME
 	END
 END
 
+ENTERING ANY
+	IF TRUE
+	THEN
+		%TALK_FLAG = 0
+	END
+END
+
+# Enemy interaction test
+
+ENEMY TOUCHED
+	IF EN_T = 3
+	IF %TALK_FLAG = 0
+	THEN
+		TEXT "NO SE COMO SE ASE AIUDA"
+		SOUND 2
+		%TALK_FLAG = 1
+	END
+END 
+
 # Hub screen
 # Entering the hub screen we must draw the mainframe.
 # Pressing ACTION in the hub screen we must trigger the

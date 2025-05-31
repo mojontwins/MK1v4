@@ -25,6 +25,10 @@
 	XREF draw_line_of_text
 	XREF _hotspot_t
 	XREF _scenery_info
+	XREF __en_t
+	XREF _en_it
+	XREF __en_x
+	XREF __en_y
 
 	XREF script_bytecode
 
@@ -224,6 +228,23 @@
 	jp  script_actions
 .aopcode_E0_end
 
+;; OPCODE 0xE3
+;; TEXT L <CHARS> 0
+	cp  0xE3
+	jr  nz, aopcode_E3_end
+.aopcode_E3
+	call read_byte 			; String length
+	ld  b, 0
+	ld  c, a
+	add hl, bc 				; Move after the string
+	push hl
+	ld  hl, (script)
+	call draw_line_of_text
+	pop hl
+	ld  (script), hl 		; Get past the string
+	jp script_actions
+.aopcode_E3_end
+
 ;; OPCODE 0xF0
 ;; WIN GAME
 	cp  0xf0
@@ -269,6 +290,13 @@
 	ld  a, (_player + 27) 	; player.objs
 	ret
 .rvb_set_player_objs_done
+
+; EN_T RVALUE
+	cp  0xEE
+	jr  nz, rvb_set_en_t_done
+	ld  a, (__en_t)
+	ret
+.rvb_set_en_t_done
 
 	ld  d, 0
 	ld  e, a

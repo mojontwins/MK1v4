@@ -1057,6 +1057,13 @@ void move (void) {
 				// 		)
 				// 	)
 
+				#ifdef AVOID_PLATFORM_HOP
+					ld  hl, (_player + 8) 				// player.vy
+					call HLshr6_A
+					inc a 
+					ld  c, a 							// C = VY in pixels + 1
+				#endif
+
 				// We have an OR outside, discard easier conditions first
 				ld  a, (_at1)
 				and 8 
@@ -1081,7 +1088,11 @@ void move (void) {
 				ld  a, (_gpy)
 				dec a 
 				and 15
-				cp  8
+				#ifdef AVOID_PLATFORM_HOP
+					cp  c  // was: 8
+				#else
+					cp  4
+				#endif
 				jr  nc, m_vert_coll_checks_done		// Everything failed!
 		#endif
 
@@ -3126,7 +3137,8 @@ void mueve_bicharracos (void) {
 			#endif
 			{
 				// Collision with enemy
-				if ( collide_enem ()) {					
+
+				if (collide_enem ()) {
 					if (
 						0 == en_tocado &&
 						#ifdef ENABLE_CUSTOM_ENEMS

@@ -7,8 +7,9 @@
 #define SC_PLAYER_GOT_SOMETHING 3
 #define SC_PLAYER_KILLS_ENEMY 4
 #define SC_SPECIAL_TILE_TOUCHED 5
-#define SC_ENTERING_SCREEN 8
-#define SC_PRESS_FIRE_AT_SCREEN 9
+#define SC_ENEMY_TOUCHED 8
+#define SC_ENTERING_SCREEN 16
+#define SC_PRESS_FIRE_AT_SCREEN 17
 
 extern unsigned char script_n;
 extern unsigned char script_result;

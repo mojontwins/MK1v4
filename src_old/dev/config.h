@@ -89,6 +89,7 @@
 //#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 #define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
+//#define AVOID_PLATFORM_HOP 				// Only works if SIMPLE_PLATFORMS is DISABLED!
 
 // Custom:
 // -------

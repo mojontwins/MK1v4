@@ -221,9 +221,11 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Es necesario poder definir en el script cuál es el tile vacío para que `GET ITEM SET` funcione correctamente. Ahora mismo comprueba que no llevamos nada mirando que en el flag del inventario haya un cero, y eso rompe Perils (que necesita 47 como tile vacío).
 
-[ ] Sigue haciendo "la cosa rara" al trepar a la plataforma tipo 4. Esto hay que cambiarlo y hacerlo BIEN. Pero no es trivial.
+[X] Sigue haciendo "la cosa rara" al trepar a la plataforma tipo 4. Esto hay que cambiarlo y hacerlo BIEN. Pero no es trivial.
 
-[ ] Resolver que haga la metralleta al sonar siempre el sonido de WRONG si tocamos un objeto y llevamos ya otro en ONLY_ON_OBJECT. 
+    * La solución es no detectar la colisión hacia abajo con 4 si hemos sobrepasado la linea de pixels equivalente a la velocidad vertical. Esto rompería algunos items de gameplay de viejos juegos, así que es opcional. Si no activas `SIMPLE_PLATFORMS` puedes, además, evitar el platform hop con `AVOID_PLATFORM_HOP`.
+
+[X] Resolver que haga la metralleta al sonar siempre el sonido de WRONG si tocamos un objeto y llevamos ya otro en ONLY_ON_OBJECT. 
 
     * Lo suyo sería tener un flag de "tocando hotspot" que sirviese como semáforo. tocas -> { cosas ... poner a cierto } else { poner a falso }. Voy a añadir `hotspot_flag`.
 

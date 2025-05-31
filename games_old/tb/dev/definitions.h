@@ -141,6 +141,7 @@ unsigned char hotspot_x;
 unsigned char hotspot_y;
 unsigned char hotspot_t_r;
 unsigned char hotspot_t;
+unsigned char hotspot_flag;
 unsigned char orig_tile;	// Original background tile
 
 #ifndef WIN_ON_SCRIPTING

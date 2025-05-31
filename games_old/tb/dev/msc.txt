@@ -1,4 +1,4 @@
-msc v4.0.20250421 ~ Processing script.spt
+msc v4.0.20250531 ~ Processing script.spt
 ==========================================
 LINEA ROOMS = 20
 T0=[rooms]
@@ -29,6 +29,45 @@ T1=[=]
 T2=[0]
 Bytecode: 0A F0 FF 00 01 00 00 FA 00 FF FF 
 ==========================================
+LINEA ENTERING ANY
+T0=[entering]
+T1=[any]
+Adding 11 @ sect 1
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: %TALK_FLAG = 0
+T0=[$0]
+T1=[=]
+T2=[0]
+Bytecode: 07 F0 FF 00 00 00 FF FF 
+==========================================
+LINEA ENEMY TOUCHED
+T0=[enemy]
+T1=[touched]
+Adding 19 @ sect 8
+Parsing: IF EN_T = 3
+T0=[IF]
+T1=[$238]
+T2=[=]
+T3=[3]
+Parsing: IF %TALK_FLAG = 0
+T0=[IF]
+T1=[$0]
+T2=[=]
+T3=[0]
+Parsing: TEXT "NO SE COMO SE ASE AIUDA"
+T0=[TEXT]
+T1=[NO SE COMO SE ASE AIUDA]
+Parsing: SOUND 2
+T0=[SOUND]
+T1=[2]
+Parsing: %TALK_FLAG = 1
+T0=[$0]
+T1=[=]
+T2=[1]
+Bytecode: 2A 01 FF EE 03 01 FF 00 00 FF E3 18 4E 4F 20 53 45 20 43 4F 4D 4F 20 53 45 20 41 53 45 20 41 49 55 44 41 00 E0 02 00 00 01 FF FF 
+==========================================
 LINEA ENTERING SCREEN 2, 7, 12, 17
 T0=[entering]
 T1=[screen]
@@ -36,10 +75,10 @@ T2=[2]
 T3=[7]
 T4=[12]
 T5=[17]
-Adding 11 @ sect 12
-Adding 11 @ sect 22
-Adding 11 @ sect 32
-Adding 11 @ sect 42
+Adding 62 @ sect 20
+Adding 62 @ sect 30
+Adding 62 @ sect 40
+Adding 62 @ sect 50
 Parsing: IF TRUE
 T0=[IF]
 T1=[TRUE]
@@ -68,10 +107,10 @@ T4=[2]
 T5=[7]
 T6=[12]
 T7=[17]
-Adding 24 @ sect 13
-Adding 24 @ sect 23
-Adding 24 @ sect 33
-Adding 24 @ sect 43
+Adding 75 @ sect 21
+Adding 75 @ sect 31
+Adding 75 @ sect 41
+Adding 75 @ sect 51
 Parsing: IF OBJS = 1
 T0=[IF]
 T1=[$250]
@@ -100,7 +139,7 @@ LINEA ENTERING SCREEN 15
 T0=[entering]
 T1=[screen]
 T2=[15]
-Adding 43 @ sect 38
+Adding 94 @ sect 46
 Parsing: IF KILLED = 25
 T0=[IF]
 T1=[$251]
@@ -118,6 +157,6 @@ Parsing: END IF
 T0=[END]
 T1=[IF]
 Bytecode: 0C 01 FF FB 19 01 FF 01 0F FF F0 FF FF 
-Index section: 96 bytes
-Bytecode section: 56 bytes
-Wrote 152 bytes to script.spt.bin
+Index section: 112 bytes
+Bytecode section: 107 bytes
+Wrote 219 bytes to script.spt.bin

@@ -253,7 +253,7 @@ void main (void) {
 											peta_el_beeper (6);	
 										} else {
 											rdi = 1;
-											peta_el_beeper (1);	
+											if (hotspot_flag == 0) peta_el_beeper (1);	
 										}
 									#else
 										player.objs ++;
@@ -294,7 +294,15 @@ void main (void) {
 			}
 			
 			#asm
+				._hotspots_finally
+					ld  a, 1
+					ld  (_hotspot_flag), a
+					jr  _hotspots_done
+
 				._hotspots_else
+					xor a 
+					ld  (_hotspot_flag), a
+
 				._hotspots_done
 			#endasm
 			

@@ -89,6 +89,7 @@
 #define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 #define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
+#define AVOID_PLATFORM_HOP 					// Only works if SIMPLE_PLATFORMS is DISABLED!
 
 // Custom:
 // -------
@@ -121,9 +122,9 @@
 //#define ITEM_X 					7		// 
 //#define ITEM_Y 					0 		//
 //#define ITEM_FLAG 				0 		// Show item @ flag
-//#define TEXT_X 					4		//
-//#define TEXT_Y					3		// To use TEXT from the script
-//#define TEXT_A 					71      // (Speccy only) text atribute.
+#define TEXT_X 						1		//
+#define TEXT_Y						20		// To use TEXT from the script
+#define TEXT_A 						71      // (Speccy only) text atribute.
 
 // Graphic FX, uncomment which applies...
 

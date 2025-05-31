@@ -24,6 +24,11 @@ XREF _peta_el_beeper
 XREF _do_extern_action
 XREF draw_line_of_text
 XREF _hotspot_t
+XREF _scenery_info
+XREF __en_t
+XREF _en_it
+XREF __en_x
+XREF __en_y
 
 ; Target CPC
 XREF _cpc_UpdateNow
