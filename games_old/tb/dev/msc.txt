@@ -40,12 +40,15 @@ Parsing: %TALK_FLAG = 0
 T0=[$0]
 T1=[=]
 T2=[0]
-Bytecode: 07 F0 FF 00 00 00 FF FF 
+Parsing: TEXT "                              "
+T0=[TEXT]
+T1=[                              ]
+Bytecode: 28 F0 FF 00 00 00 E3 1F 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 00 FF FF 
 ==========================================
 LINEA ENEMY TOUCHED
 T0=[enemy]
 T1=[touched]
-Adding 19 @ sect 8
+Adding 52 @ sect 8
 Parsing: IF EN_T = 3
 T0=[IF]
 T1=[$238]
@@ -56,9 +59,9 @@ T0=[IF]
 T1=[$0]
 T2=[=]
 T3=[0]
-Parsing: TEXT "NO SE COMO SE ASE AIUDA"
+Parsing: TEXT "NO SE COMO SE ASE, AIUDA PLIS!"
 T0=[TEXT]
-T1=[NO SE COMO SE ASE AIUDA]
+T1=[NO SE COMO SE ASE, AIUDA PLIS ! ]
 Parsing: SOUND 2
 T0=[SOUND]
 T1=[2]
@@ -66,7 +69,7 @@ Parsing: %TALK_FLAG = 1
 T0=[$0]
 T1=[=]
 T2=[1]
-Bytecode: 2A 01 FF EE 03 01 FF 00 00 FF E3 18 4E 4F 20 53 45 20 43 4F 4D 4F 20 53 45 20 41 53 45 20 41 49 55 44 41 00 E0 02 00 00 01 FF FF 
+Bytecode: 33 01 FF EE 03 01 FF 00 00 FF E3 21 4E 4F 20 53 45 20 43 4F 4D 4F 20 53 45 20 41 53 45 2C 20 41 49 55 44 41 20 50 4C 49 53 20 21 20 00 E0 02 00 00 01 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 2, 7, 12, 17
 T0=[entering]
@@ -75,10 +78,10 @@ T2=[2]
 T3=[7]
 T4=[12]
 T5=[17]
-Adding 62 @ sect 20
-Adding 62 @ sect 30
-Adding 62 @ sect 40
-Adding 62 @ sect 50
+Adding 104 @ sect 20
+Adding 104 @ sect 30
+Adding 104 @ sect 40
+Adding 104 @ sect 50
 Parsing: IF TRUE
 T0=[IF]
 T1=[TRUE]
@@ -96,7 +99,10 @@ T2=[7]
 T3=[8]
 T4=[=]
 T5=[18]
-Bytecode: 0C F0 FF 20 07 07 11 20 07 08 12 FF FF 
+Parsing: TEXT "PON DISCOS EN MAINFRAME CON #$"
+T0=[TEXT]
+T1=[PON DISCOS EN MAINFRAME CON #$]
+Bytecode: 2D F0 FF 20 07 07 11 20 07 08 12 E3 1F 50 4F 4E 20 44 49 53 43 4F 53 20 45 4E 20 4D 41 49 4E 46 52 41 4D 45 20 43 4F 4E 20 23 24 00 FF FF 
 ==========================================
 LINEA PRESS_FIRE AT SCREEN 2, 7, 12, 17
 T0=[press]
@@ -107,10 +113,10 @@ T4=[2]
 T5=[7]
 T6=[12]
 T7=[17]
-Adding 75 @ sect 21
-Adding 75 @ sect 31
-Adding 75 @ sect 41
-Adding 75 @ sect 51
+Adding 150 @ sect 21
+Adding 150 @ sect 31
+Adding 150 @ sect 41
+Adding 150 @ sect 51
 Parsing: IF OBJS = 1
 T0=[IF]
 T1=[$250]
@@ -139,7 +145,7 @@ LINEA ENTERING SCREEN 15
 T0=[entering]
 T1=[screen]
 T2=[15]
-Adding 94 @ sect 46
+Adding 169 @ sect 46
 Parsing: IF KILLED = 25
 T0=[IF]
 T1=[$251]
@@ -153,10 +159,26 @@ T3=[15]
 Parsing: WIN GAME
 T0=[WIN]
 T1=[GAME]
-Parsing: END IF
-T0=[END]
-T1=[IF]
-Bytecode: 0C 01 FF FB 19 01 FF 01 0F FF F0 FF FF 
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: TEXT " HAZ TUS COSAS Y VUELVE AQUI!"
+T0=[TEXT]
+T1=[ HAZ TUS COSAS Y VUELVE AQUI ! ]
+Bytecode: 0C 01 FF FB 19 01 FF 01 0F FF F0 FF 26 F0 FF E3 20 20 48 41 5A 20 54 55 53 20 43 4F 53 41 53 20 59 20 56 55 45 4C 56 45 20 41 51 55 49 20 21 20 00 FF FF 
+==========================================
+LINEA ENTERING SCREEN 16
+T0=[entering]
+T1=[screen]
+T2=[16]
+Adding 220 @ sect 48
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: TEXT " CAPTURA A TODOS LOS BECARIOS"
+T0=[TEXT]
+T1=[ CAPTURA A TODOS LOS BECARIOS]
+Bytecode: 24 F0 FF E3 1E 20 43 41 50 54 55 52 41 20 41 20 54 4F 44 4F 53 20 4C 4F 53 20 42 45 43 41 52 49 4F 53 00 FF FF 
 Index section: 112 bytes
-Bytecode section: 107 bytes
-Wrote 219 bytes to script.spt.bin
+Bytecode section: 257 bytes
+Wrote 369 bytes to script.spt.bin

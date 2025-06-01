@@ -2,7 +2,7 @@
 
 set game=tb3
 set om=speccy
-set mode=1
+set mode=0
 
 if [%mode%]==[0] goto :setmode0 
 set mainspritesetmode=pixelperfectm%mode%lut
