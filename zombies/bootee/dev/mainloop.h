@@ -260,7 +260,7 @@ void main (void) {
 				#endif
 
 				maincounter ++;
-				half_life = !half_life;
+				half_life ^= 1;
 			
 				// Move player
 				move ();
@@ -292,7 +292,7 @@ void main (void) {
 			
 				#ifdef PLAYER_CAN_FIRE
 					for (gpit = 0; gpit < 3; gpit ++) {
-						if (en_an_morido [gpit] == 1) {
+						if (en_an_morido [gpit]) {
 							PLAY_SFX (1);
 							en_an_morido [gpit] = 0;
 						}	

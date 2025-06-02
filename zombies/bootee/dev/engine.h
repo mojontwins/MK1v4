@@ -9,27 +9,27 @@
 // Funciones generales
 // ---------------------------------------------------------------------------
 
+unsigned char bufidx (unsigned char x, unsigned char y) {
+	return x + (y << 4) - y;
+}
+
 void attr (char x, char y) {
 	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
-	#ifdef PLAYER_AUTO_CHANGE_SCREEN
-		if (x < 0 || y < 0 || x > 14 || y > 9) return 0;
-	#else
-		if (x < 0 || y < 0) return 8;
-	#endif
-	return map_attr [x + (y << 4) - y];	
+	if (x < 0 || y < 0 || x > 14 || y > 9) return 0;
+	return map_attr [bufidx (x, y)];	
 }
 
 void qtile (unsigned char x, unsigned char y) {
 	// x + 15 * y = x + (16 - 1) * y = x + 16 * y - y = x + (y << 4) - y.
-	return map_buff [x + (y << 4) - y];	
+	return map_buff [bufidx (x, y)];	
 }
 
 unsigned char cm_two_points (void) {
 	if (cx1 > 14 || cy1 > 9) at1 = 0; 
-	else at1 = map_attr [cx1 + (cy1 << 4) - cy1];
+	else at1 = map_attr [bufidx (cx1, cy1)];
 
 	if (cx2 > 14 || cy2 > 9) at2 = 0; 
-	else at2 = map_attr [cx2 + (cy2 << 4) - cy2];
+	else at2 = map_attr [bufidx (cx2, cy2)];
 }
 
 unsigned char collide (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
@@ -82,7 +82,7 @@ unsigned char rand (void) {
 	#endasm
 }
 
-unsigned int abs (int n) {
+unsigned int __FASTCALL__ abs (signed int n) {
 	if (n < 0)
 		return (unsigned int) (-n);
 	else 
@@ -92,52 +92,6 @@ unsigned int abs (int n) {
 signed int addsign (signed int n, signed int value) {
 	if (n >= 0) return value; else return -value;
 }
-
-unsigned char ctileoff (char n) {
-	return n > 0;
-}
-
-// ---------------------------------------------------------------------------
-// Funciones sobre niveles comprimidos:
-// ---------------------------------------------------------------------------
-
-#if defined (COMPRESSED_LEVELS) || defined (ENABLE_CHECKPOINTS)
-	void clear_gamearea_tiles (void) {
-		for (gpit = 0; gpit < 10; gpit ++) {
-			for (gpjt = 0; gpjt < 15; gpjt ++) {
-				draw_coloured_tile (VIEWPORT_X + (gpjt<<1), VIEWPORT_Y + (gpit<<1), 47);
-			}
-		}
-	}
-#endif
-
-#ifdef COMPRESSED_LEVELS
-	#ifdef MODE_128K
-		void prepare_level (unsigned char level) {
-			get_resource (levels [level].resource, (unsigned int) (level_data));
-			//unpack_RAMn (levels [level].page, levels [level].address, (unsigned int) (level_data));
-			n_pant = level_data.scr_ini;
-			player.x = level_data->ini_x << 10;
-			player.y = level_data->ini_y << 10;
-		}
-	#else
-		void prepare_level (unsigned char level) {
-			// Decompress "bundle" which is map + behs + enems/hotspots + bolts
-			unpack ((unsigned char *) levelset [level].leveldata_c, mapa);
-
-			// Now the tileset
-			unpack ((unsigned char *) levelset [level].tileset_c, tileset);
-			
-			// Finally the spriteset
-			unpack ((unsigned char *) levelset [level].spriteset_c, (unsigned char *) (sprite_1_a - 16));
-			
-			n_pant = levelset [level].ini_pant;
-			player.x = levelset [level].ini_x << 10;
-			player.y = levelset [level].ini_y << 10;
-			
-		}
-	#endif
-#endif
 
 // ---------------------------------------------------------------------------
 // Funciones para la disparasión
@@ -157,7 +111,7 @@ unsigned char ctileoff (char n) {
 		#endif
 
 		#ifdef MAX_AMMO
-			if (!player.ammo) return;
+			if (player.ammo == 0) return;
 			player.ammo --;
 		#endif
 
@@ -168,74 +122,74 @@ unsigned char ctileoff (char n) {
 				#ifdef PLAYER_MOGGY_STYLE
 					switch (player.facing) {
 						case GENITAL_FACING_LEFT:
-							bullets_x [gpit] = (player.x >> 6) - 4;
+							bullets_x [gpit] = gpx - 4;
 							bullets_mx [gpit] = -PLAYER_BULLET_SPEED;
-							bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
+							bullets_y [gpit] = gpy + PLAYER_BULLET_Y_OFFSET;
 							bullets_my [gpit] = 0;
 							break;
 						case GENITAL_FACING_RIGHT:
-							bullets_x [gpit] = (player.x >> 6) + 12;
+							bullets_x [gpit] = gpx + 12;
 							bullets_mx [gpit] = PLAYER_BULLET_SPEED;
-							bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
+							bullets_y [gpit] = gpy + PLAYER_BULLET_Y_OFFSET;
 							bullets_my [gpit] = 0;
 							break;
 						case GENITAL_FACING_DOWN:
-							bullets_x [gpit] = (player.x >> 6) + PLAYER_BULLET_X_OFFSET;
-							bullets_y [gpit] = (player.y >> 6) + 12;
+							bullets_x [gpit] = gpx + PLAYER_BULLET_X_OFFSET;
+							bullets_y [gpit] = gpy + 12;
 							bullets_my [gpit] = PLAYER_BULLET_SPEED;
 							bullets_mx [gpit] = 0;
 							break;
 						case GENITAL_FACING_UP:
-							bullets_x [gpit] = (player.x >> 6) + 8 - PLAYER_BULLET_X_OFFSET;
-							bullets_y [gpit] = (player.y >> 6) - 4;
+							bullets_x [gpit] = gpx + 8 - PLAYER_BULLET_X_OFFSET;
+							bullets_y [gpit] = gpy - 4;
 							bullets_my [gpit] = -PLAYER_BULLET_SPEED;
 							bullets_mx [gpit] = 0;
 							break;
 					}
 				#else
 
-					#ifdef CAN_FIRE_UP
-						
+					#ifdef CAN_FIRE_UP	
 						if (!(pad0 & sp_UP)) {
-							bullets_y [gpit] = (player.y >> 6);
+							bullets_y [gpit] = gpy;
 							bullets_my [gpit] = -PLAYER_BULLET_SPEED;
 						} else if (!(pad0 & sp_DOWN)) {
-							bullets_y [gpit] = 8 + (player.y >> 6);
+							bullets_y [gpit] = 8 + gpy;
 							bullets_my [gpit] = PLAYER_BULLET_SPEED;	 
 						} else
 					#endif
 					{
-						bullets_y [gpit] = (player.y >> 6) + PLAYER_BULLET_Y_OFFSET;
+						bullets_y [gpit] = gpy + PLAYER_BULLET_Y_OFFSET;
 						bullets_my [gpit] = 0;
 					}
 
 					#ifdef CAN_FIRE_UP
-						if (!(pad0 & sp_LEFT) || !(pad0 & sp_RIGHT) || ((pad0 & sp_UP) && (pad0 & sp_DOWN))) 
+						if ((pad0 & sp_LEFT) == 0 || (pad0 & sp_RIGHT) == 0 || ((pad0 & sp_UP) && (pad0 & sp_DOWN))) 
 					#endif
 					{
 						if (player.facing == 0) {
-							bullets_x [gpit] = (player.x >> 6) - 4;
+							bullets_x [gpit] = gpx - 4;
 							bullets_mx [gpit] = -PLAYER_BULLET_SPEED;
 						} else {
-							bullets_x [gpit] = (player.x >> 6) + 12;
+							bullets_x [gpit] = gpx + 12;
 							bullets_mx [gpit] = PLAYER_BULLET_SPEED;
 						}
 					} 
 					#ifdef CAN_FIRE_UP
 						else {
-							bullets_x [gpit] = (player.x >> 6) + 4;
+							bullets_x [gpit] = gpx + 4;
 							bullets_mx [gpit] = 0;
 						}
 					#endif
+
 				#endif
 
 				PLAY_SFX (6);
 				
 				#ifdef LIMITED_BULLETS
 					#if defined (LB_FRAMES) || !defined (ACTIVATE_SCRIPTING)
-								bullets_life [gpit] = LB_FRAMES;
+						bullets_life [gpit] = LB_FRAMES;
 					#else
-								bullets_life [gpit] = flags [LB_FRAMES_FLAG];
+						bullets_life [gpit] = flags [LB_FRAMES_FLAG];
 					#endif
 				#endif
 
@@ -257,7 +211,7 @@ unsigned char ctileoff (char n) {
 				#if defined(PLAYER_MOGGY_STYLE) || defined(CAN_FIRE_UP)
 					if (bullets_my [gpit]) {
 						bullets_y [gpit] += bullets_my [gpit];
-						if (bullets_y [gpit] < 8 || bullets_y [gpit] > 160) {
+						if (bullets_y [gpit] > 160) {
 							bullets_estado [gpit] = 0;
 						}
 					}
@@ -291,7 +245,7 @@ unsigned char ctileoff (char n) {
 
 void set_map_tile (unsigned char x, unsigned char y, unsigned char t, unsigned char beh) {
 	draw_coloured_tile (VIEWPORT_X + (x << 1), VIEWPORT_Y + (y << 1), t);
-	gpit = x + (y << 4) - y;
+	gpit = bufidx (x, y);
 	map_attr [gpit] = beh;
 	map_buff [gpit] = t;
 }
@@ -317,7 +271,7 @@ void do_hotspots (void) {
 	if (collide (gpx, gpy, hotspot_x, hotspot_y)) {
 
 		// Deactivate hotspot
-		draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), orig_tile);
+		set_map_tile (hotspot_x >> 4, hotspot_y >> 4, orig_tile, 0);
 		gpit = 0;
 
 		#ifndef USE_HOTSPOTS_TYPE_3
@@ -339,11 +293,11 @@ void do_hotspots (void) {
 					case 1:
 						#ifdef ONLY_ONE_OBJECT
 							if (player.objs == 0) {
-								player.objs ++;
+								player.objs = 1
 								PLAY_SFX (7);
 							} else {
 								PLAY_SFX (4);
-								draw_coloured_tile (VIEWPORT_X + (hotspot_x >> 3), VIEWPORT_Y + (hotspot_y >> 3), 17);
+								set_map_tile (hotspot_x >> 4, hotspot_y >> 4, 17, 0);
 								gpit = 1;
 							}
 						#else
@@ -351,6 +305,7 @@ void do_hotspots (void) {
 							#ifdef OBJECT_COUNT
 								flags [OBJECT_COUNT] = player.objs;
 							#endif
+
 							PLAY_SFX (7);
 
 							#ifdef GET_X_MORE
@@ -418,7 +373,7 @@ void do_hotspots (void) {
 			hotspots [n_pant].act = gpit;
 		}
 
-		hotspot_x = hotspot_y = 240;
+		hotspot_y = 240;
 	}
 }
 
@@ -502,7 +457,6 @@ void draw_scr_background (void) {
 			brk_buff [gpit] = 0;
 		#endif		
 
-
 		#ifdef ENABLE_TILANIMS
 			// Detect tilanims
 			if (rdd >= ENABLE_TILANIMS) {
@@ -515,9 +469,8 @@ void draw_scr_background (void) {
 	
 	// Object setup
 	
-	hotspot_x = hotspot_y = 240;
-	rdx = (hotspots [n_pant].xy >> 4);
-	rdy = (hotspots [n_pant].xy & 15);
+	hotspot_y = 240;
+	
 	rdt = hotspots [n_pant].tipo;
 
 	if (hotspots [n_pant].act != 1) {
@@ -529,9 +482,12 @@ void draw_scr_background (void) {
 	}
 
 	if (rdt) {
-		hotspot_x = rdx << 4;
+		hotspot_x = hotspots [n_pant].xy;
+		rdx = hotspot_x >> 4;
+		rdy = hotspot_x & 15;
+		hotspot_x &= 0xf0;
 		hotspot_y = rdy << 4;
-		orig_tile = map_buff [15 * rdy + rdx];
+		orig_tile = map_buff [bufidx (rdx, rdy)];
 		set_map_tile (rdx, rdy, 16 + (rdt == 3 ? 0 : rdt), 0);
 	}
 
@@ -647,7 +603,7 @@ void draw_scr (void) {
 
 #ifdef BREAKABLE_WALLS
 	void break_wall (unsigned char x, unsigned char y) {
-		gpaux = (y << 4) - y + x;
+		gpaux = bufidx (x, y);
 		if (brk_buff [gpaux] < BREAKABLE_WALLS_LIFE) {
 			brk_buff [gpaux] ++;
 			gpaux = 1;
@@ -1393,6 +1349,45 @@ unsigned char move (void) {
 }
 
 // ---------------------------------------------------------------------------
+// Funciones sobre niveles comprimidos:
+// ---------------------------------------------------------------------------
+
+#if defined (COMPRESSED_LEVELS) || defined (ENABLE_CHECKPOINTS)
+	void clear_gamearea_tiles (void) {
+		for (gpit = 0; gpit < 10; gpit ++) {
+			for (gpjt = 0; gpjt < 15; gpjt ++) {
+				draw_coloured_tile (VIEWPORT_X + (gpjt<<1), VIEWPORT_Y + (gpit<<1), 47);
+			}
+		}
+	}
+#endif
+
+#ifdef COMPRESSED_LEVELS
+	#ifdef MODE_128K
+		void prepare_level (unsigned char level) {
+			get_resource (levels [level].resource, (unsigned int) (level_data));
+			//unpack_RAMn (levels [level].page, levels [level].address, (unsigned int) (level_data));
+			n_pant = level_data.scr_ini;
+			set_player_at (level_data->ini_x << 4, level_data->ini_y << 4);
+		}
+	#else
+		void prepare_level (unsigned char level) {
+			// Decompress "bundle" which is map + behs + enems/hotspots + bolts
+			unpack ((unsigned char *) levelset [level].leveldata_c, mapa);
+
+			// Now the tileset
+			unpack ((unsigned char *) levelset [level].tileset_c, tileset);
+			
+			// Finally the spriteset
+			unpack ((unsigned char *) levelset [level].spriteset_c, (unsigned char *) (sprite_1_a - 16));
+			
+			n_pant = levelset [level].ini_pant;
+			set_player_at (levelset [level].ini_x << 4, levelset [level].ini_y << 4);
+		}
+	#endif
+#endif
+
+// ---------------------------------------------------------------------------
 // Integración con msc
 // ---------------------------------------------------------------------------
 
@@ -1430,7 +1425,7 @@ unsigned char move (void) {
 
 #ifdef WALLS_STOP_ENEMIES
 	unsigned char __FASTCALL__ mons_col_sc_x (void) {
-		gpaux = gpen_xx + ctileoff (malotes [enoffsmasi].mx);
+		gpaux = gpen_xx + (malotes [enoffsmasi].mx > 0);
 		#ifdef EVERYTHING_IS_A_WALL
 			return (attr (gpaux, gpen_yy) || ((malotes [enoffsmasi].y & 15) && attr (gpaux, gpen_yy + 1)));
 		#else	
@@ -1439,7 +1434,7 @@ unsigned char move (void) {
 	}
 		
 	unsigned char __FASTCALL__ mons_col_sc_y (void) {
-		gpaux = gpen_yy + ctileoff (malotes [enoffsmasi].my);
+		gpaux = gpen_yy + (malotes [enoffsmasi].my > 0);
 		#ifdef EVERYTHING_IS_A_WALL
 			return (attr (gpen_xx, gpaux) || ((malotes [enoffsmasi].x & 15) && attr (gpen_xx + 1, gpaux)));
 		#else	
@@ -1711,12 +1706,8 @@ void mueve_bicharracos (void) {
 		
 		if (active) {			
 			// Animate
-			en_an_count [gpit] ++; 
-			if (en_an_count [gpit] == 4) {
-				en_an_count [gpit] = 0;
-				en_an_frame [gpit] = !en_an_frame [gpit];
-				en_an_next_frame [gpit] = enem_frames [en_an_base_frame [gpit] + en_an_frame [gpit]];
-			}
+			if((maincounter & 3) == 0) en_an_frame [gpit] ^= 1;
+			en_an_next_frame [gpit] = enem_frames [en_an_base_frame [gpit] + en_an_frame [gpit]];
 			
 			// Collide with player
 			

@@ -621,7 +621,7 @@ void render_sprites (void) {
 
 	// Render player
 
-	if (!(player.estado & EST_PARP) || !(half_life)) {
+	if (!(player.estado & EST_PARP) || half_life) {
 		cpc_MoveSprAbs (0, player.next_frame, gpx, gpy);
 	} else {
 		sp_sw [SP_PLAYER].sp0 = (unsigned int) (sprite_18_a);

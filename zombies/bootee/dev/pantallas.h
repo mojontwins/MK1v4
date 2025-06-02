@@ -83,7 +83,8 @@ void game_over (void) {
 	recuadre (" GAME OVER! ");
 	sp_UpdateNow ();
 
-	#ifdef MODE_128K
+	#if defined MODE_128K || defined CPC
+		wyz_play_music (2);	
 	#else
 		gpit = 4; do {
 			PLAY_SFX (7);

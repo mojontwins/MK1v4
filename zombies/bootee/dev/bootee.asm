@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu May 29 08:50:01 2025
+;	Module compile time: Mon Jun 02 16:24:52 2025
 
 
 
@@ -8037,6 +8037,33 @@
 
 
 
+._bufidx
+	ld	hl,4	;const
+	add	hl,sp
+	ld	l,(hl)
+	ld	h,0
+	push	hl
+	ld	hl,4	;const
+	add	hl,sp
+	ld	e,(hl)
+	ld	d,0
+	ld	l,#(4 % 256)
+	call	l_asl
+	pop	de
+	add	hl,de
+	ex	de,hl
+	ld	hl,4-2	;const
+	add	hl,sp
+	ld	l,(hl)
+	ld	h,0
+	ex	de,hl
+	and	a
+	sbc	hl,de
+	ld	h,0
+	ret
+
+
+
 ._attr
 	ld	hl,4	;const
 	call	l_gcharspsp	;
@@ -8071,22 +8098,18 @@
 	ld	hl,_map_attr
 	push	hl
 	ld	hl,6	;const
-	call	l_gcharspsp	;
-	ld	hl,6	;const
-	call	l_gcharspsp	;
-	ld	hl,4	;const
-	pop	de
-	call	l_asl
-	pop	de
-	add	hl,de
+	add	hl,sp
+	call	l_gchar
+	ld	h,0
 	push	hl
 	ld	hl,6	;const
 	add	hl,sp
 	call	l_gchar
-	pop	de
-	ex	de,hl
-	and	a
-	sbc	hl,de
+	ld	h,0
+	push	hl
+	call	_bufidx
+	pop	bc
+	pop	bc
 	pop	de
 	add	hl,de
 	ld	l,(hl)
@@ -8105,20 +8128,12 @@
 	push	hl
 	ld	hl,6	;const
 	add	hl,sp
-	ld	e,(hl)
-	ld	d,0
-	ld	l,#(4 % 256)
-	call	l_asl
-	pop	de
-	add	hl,de
-	ex	de,hl
-	ld	hl,6-2	;const
-	add	hl,sp
 	ld	l,(hl)
 	ld	h,0
-	ex	de,hl
-	and	a
-	sbc	hl,de
+	push	hl
+	call	_bufidx
+	pop	bc
+	pop	bc
 	pop	de
 	add	hl,de
 	ld	l,(hl)
@@ -8151,19 +8166,12 @@
 	ld	hl,(_cx1)
 	ld	h,0
 	push	hl
-	ld	a,(_cy1)
-	ld	e,a
-	ld	d,0
-	ld	l,#(4 % 256)
-	call	l_asl
-	pop	de
-	add	hl,de
-	ex	de,hl
 	ld	hl,(_cy1)
 	ld	h,0
-	ex	de,hl
-	and	a
-	sbc	hl,de
+	push	hl
+	call	_bufidx
+	pop	bc
+	pop	bc
 	pop	de
 	add	hl,de
 	ld	l,(hl)
@@ -8194,19 +8202,12 @@
 	ld	hl,(_cx2)
 	ld	h,0
 	push	hl
-	ld	a,(_cy2)
-	ld	e,a
-	ld	d,0
-	ld	l,#(4 % 256)
-	call	l_asl
-	pop	de
-	add	hl,de
-	ex	de,hl
 	ld	hl,(_cy2)
 	ld	h,0
-	ex	de,hl
-	and	a
-	sbc	hl,de
+	push	hl
+	call	_bufidx
+	pop	bc
+	pop	bc
 	pop	de
 	add	hl,de
 	ld	l,(hl)
@@ -8376,19 +8377,6 @@
 
 
 
-._ctileoff
-	ld	hl,2	;const
-	call	l_gcharspsp	;
-	ld	hl,0	;const
-	pop	de
-	call	l_gt
-	ld	hl,0	;const
-	rl	l
-	ld	h,0
-	ret
-
-
-
 ._set_map_tile
 	ld	hl,8	;const
 	add	hl,sp
@@ -8426,20 +8414,12 @@
 	push	hl
 	ld	hl,8	;const
 	add	hl,sp
-	ld	e,(hl)
-	ld	d,0
-	ld	l,#(4 % 256)
-	call	l_asl
-	pop	de
-	add	hl,de
-	ex	de,hl
-	ld	hl,8-2	;const
-	add	hl,sp
 	ld	l,(hl)
 	ld	h,0
-	ex	de,hl
-	and	a
-	sbc	hl,de
+	push	hl
+	call	_bufidx
+	pop	bc
+	pop	bc
 	ld	h,0
 	ld	a,l
 	ld	(_gpit),a
@@ -8562,25 +8542,22 @@
 	ld	a,(_hotspot_x)
 	ld	e,a
 	ld	d,0
-	ld	l,#(3 % 256)
+	ld	l,#(4 % 256)
 	call	l_asr_u
-	ld	de,0
-	add	hl,de
-	ld	h,0
 	push	hl
 	ld	a,(_hotspot_y)
 	ld	e,a
 	ld	d,0
-	ld	l,#(3 % 256)
+	ld	l,#(4 % 256)
 	call	l_asr_u
-	ld	de,2
-	add	hl,de
-	ld	h,0
 	push	hl
 	ld	hl,(_orig_tile)
 	ld	h,0
 	push	hl
-	call	_draw_coloured_tile
+	ld	hl,0 % 256	;const
+	push	hl
+	call	_set_map_tile
+	pop	bc
 	pop	bc
 	pop	bc
 	pop	bc
@@ -8682,9 +8659,6 @@
 	ld	hl,240 % 256	;const
 	ld	a,l
 	ld	(_hotspot_y),a
-	ld	h,0
-	ld	a,l
-	ld	(_hotspot_x),a
 .i_79
 	ret
 
@@ -8927,46 +8901,8 @@
 .i_105
 	jp	i_97
 .i_98
-	ld	hl,240 % 256	;const
-	ld	a,l
+	ld	a,#(240 % 256 % 256)
 	ld	(_hotspot_y),a
-	ld	h,0
-	ld	a,l
-	ld	(_hotspot_x),a
-	ld	hl,_hotspots
-	push	hl
-	ld	hl,(_n_pant)
-	ld	h,0
-	ld	b,h
-	ld	c,l
-	add	hl,bc
-	add	hl,bc
-	pop	de
-	add	hl,de
-	ld	e,(hl)
-	ld	d,0
-	ld	l,#(4 % 256)
-	call	l_asr_u
-	ld	h,0
-	ld	a,l
-	ld	(_rdx),a
-	ld	hl,_hotspots
-	push	hl
-	ld	hl,(_n_pant)
-	ld	h,0
-	ld	b,h
-	ld	c,l
-	add	hl,bc
-	add	hl,bc
-	pop	de
-	add	hl,de
-	ld	a,(hl)
-	and	#(15 % 256)
-	ld	l,a
-	ld	h,0
-	ld	h,0
-	ld	a,l
-	ld	(_rdy),a
 	ld	hl,_hotspots
 	push	hl
 	ld	hl,(_n_pant)
@@ -9016,11 +8952,40 @@
 	ld	a,(_rdt)
 	and	a
 	jp	z,i_108
-	ld	a,(_rdx)
+	ld	hl,_hotspots
+	push	hl
+	ld	hl,(_n_pant)
+	ld	h,0
+	ld	b,h
+	ld	c,l
+	add	hl,bc
+	add	hl,bc
+	pop	de
+	add	hl,de
+	ld	l,(hl)
+	ld	h,0
+	ld	a,l
+	ld	(_hotspot_x),a
 	ld	e,a
 	ld	d,0
 	ld	l,#(4 % 256)
-	call	l_asl
+	call	l_asr_u
+	ld	h,0
+	ld	a,l
+	ld	(_rdx),a
+	ld	a,(_hotspot_x)
+	ld	e,a
+	ld	d,0
+	ld	hl,15	;const
+	call	l_and
+	ld	h,0
+	ld	a,l
+	ld	(_rdy),a
+	ld	a,(_hotspot_x)
+	ld	e,a
+	ld	d,0
+	ld	hl,240	;const
+	call	l_and
 	ld	h,0
 	ld	a,l
 	ld	(_hotspot_x),a
@@ -9034,14 +8999,15 @@
 	ld	(_hotspot_y),a
 	ld	hl,_map_buff
 	push	hl
-	ld	hl,(_rdy)
-	ld	h,0
-	ld	de,15
-	call	l_mult
-	ex	de,hl
 	ld	hl,(_rdx)
 	ld	h,0
-	add	hl,de
+	push	hl
+	ld	hl,(_rdy)
+	ld	h,0
+	push	hl
+	call	_bufidx
+	pop	bc
+	pop	bc
 	pop	de
 	add	hl,de
 	ld	l,(hl)
@@ -10266,9 +10232,11 @@
 	ld	bc,6
 	add	hl,bc
 	call	l_gchar
-	push	hl
-	call	_ctileoff
-	pop	bc
+	ld	de,0	;const
+	ex	de,hl
+	call	l_gt
+	ld	hl,0	;const
+	rl	l
 	pop	de
 	add	hl,de
 	ld	h,0
@@ -10355,9 +10323,11 @@
 	ld	bc,7
 	add	hl,bc
 	call	l_gchar
-	push	hl
-	call	_ctileoff
-	pop	bc
+	ld	de,0	;const
+	ex	de,hl
+	call	l_gt
+	ld	hl,0	;const
+	rl	l
 	pop	de
 	add	hl,de
 	ld	h,0
@@ -10745,40 +10715,20 @@
 	ld	a,(_active)
 	and	a
 	jp	z,i_232
-	ld	de,_en_an_count
-	ld	hl,(_gpit)
-	ld	h,0
-	add	hl,de
-	inc	(hl)
-	ld	de,_en_an_count
-	ld	hl,(_gpit)
-	ld	h,0
-	add	hl,de
+	ld	hl,_maincounter
 	ld	a,(hl)
-	cp	#(4 % 256)
+	and	#(3 % 256)
 	jp	nz,i_233
-	ld	de,_en_an_count
-	ld	hl,(_gpit)
-	ld	h,0
-	add	hl,de
-	ld	(hl),#(0 % 256 % 256)
 	ld	de,_en_an_frame
 	ld	hl,(_gpit)
 	ld	h,0
 	add	hl,de
 	push	hl
-	ld	de,_en_an_frame
-	ld	hl,(_gpit)
-	ld	h,0
-	add	hl,de
-	ld	l,(hl)
-	ld	h,0
-	call	l_lneg
-	ld	hl,0	;const
-	rl	l
+	ld	a,(hl)
+	xor	#(1 % 256)
 	pop	de
-	ld	a,l
 	ld	(de),a
+.i_233
 	ld	hl,_en_an_next_frame
 	push	hl
 	ld	hl,(_gpit)
@@ -10810,7 +10760,6 @@
 	call	l_gint	;
 	pop	de
 	call	l_pint
-.i_233
 	ld	a,(__en_t)
 	cp	#(4 % 256)
 	jp	nz,i_234
@@ -11312,11 +11261,11 @@
 	ld	hl,_maincounter
 	ld	a,(hl)
 	inc	(hl)
-	ld	hl,(_half_life)
-	ld	h,0
-	call	l_lneg
-	ld	hl,0	;const
-	rl	l
+	ld	a,(_half_life)
+	ld	e,a
+	ld	d,0
+	ld	hl,1	;const
+	call	l_xor
 	ld	h,0
 	ld	a,l
 	ld	(_half_life),a
@@ -12254,7 +12203,6 @@
 	XDEF	_half_life
 	XDEF	_gpen_xx
 	XDEF	_gpen_yy
-	XDEF	_ctileoff
 	XDEF	_en_an_state
 	defc	_en_an_state	=	23648
 	XDEF	_mueve_bicharracos
@@ -12301,7 +12249,6 @@
 	LIB	sp_InitAlloc
 	XDEF	_espera_activa
 	LIB	sp_DeleteSpr
-	XDEF	_get_resource
 	LIB	sp_JoyTimexEither
 	XDEF	_unpack_screen
 	XDEF	_mlplaying
@@ -12359,6 +12306,7 @@
 	LIB	sp_MoveSprRelC
 	LIB	sp_InitIM2
 	XDEF	_init_cerrojos
+	XDEF	_bufidx
 	XDEF	_sp_player
 	XDEF	_init_player
 	LIB	sp_GetTiles

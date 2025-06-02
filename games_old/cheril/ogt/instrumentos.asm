@@ -7,7 +7,7 @@ TABLA_SONIDOS: DW SONIDO0,SONIDO1,SONIDO2,SONIDO3,SONIDO4,SONIDO5,SONIDO6,SONIDO
 
 ;Pautas (instrumentos)
 ;Instrumento 'Piano'
-PAUTA_0:	DB	6,0,5,0,4,0,3,0,129
+PAUTA_0:	DB	8,0,7,0,6,0,5,0,129
 ;Instrumento 'Piano Reverb'
 PAUTA_1:	DB	10,0,11,0,10,0,9,0,8,0,8,0,8,0,8,0,8,0,8,0,7,0,7,0,7,0,7,0,136
 ;Instrumento 'Fade In FX'

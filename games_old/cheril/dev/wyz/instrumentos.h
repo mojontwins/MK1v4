@@ -17,7 +17,7 @@
     ;Pautas (instrumentos) 
     ;Instrumento 'Piano' 
     .PAUTA_0
-        defb 6,0,5,0,4,0,3,0,129 
+        defb 8,0,7,0,6,0,5,0,129 
     ;Instrumento 'Piano Reverb' 
     .PAUTA_1
         defb 10,0,11,0,10,0,9,0,8,0,8,0,8,0,8,0,8,0,8,0,7,0,7,0,7,0,7,0,136 
