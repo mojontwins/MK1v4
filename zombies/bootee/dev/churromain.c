@@ -69,42 +69,37 @@
 
 #ifdef MODE_128K
 	#include "librarian.h"
-	
-	#ifdef COMPRESSED_LEVELS
-		#include "speccy_128/levels128.h"
-	#else
-		#include "mapa.h"
-		#include "enems.h"
-		#include "speccy/tileset.h"
-		#include "speccy/sprites.h"
-		#include "speccy/extrasprites.h"
-	#endif
-
-#else
-
-	#ifdef COMPRESSED_LEVELS
-		#include "levels.h"
-	#else
-		#include "mapa.h"
-	#endif
-
-	#ifdef CPC
-		#include "cpc/tileset.h"
-		#include "cpc/sprites.h"
-		#include "cpc/extrasprites.h"
-		#include "cpc/spriteset_mappings.h"
-		#include "cpc/pal.h"
-	#else
-		#include "speccy/tileset.h"
-		#include "speccy/sprites.h"
-		#include "speccy/extrasprites.h"
-	#endif
-	
-	#ifndef COMPRESSED_LEVELS
-		#include "enems.h"
-	#endif
-
 #endif
+
+// ***********
+// GAME ASSETS
+// ***********
+
+#ifdef COMPRESSED_LEVELS
+#ifdef MODE_128K
+	#include "levels_128.h"
+#else
+	#include "levels.h"
+#endif
+
+#ifdef CPC
+	#include "cpc/tileset.h"
+	#include "cpc/sprites.h"
+	#include "cpc/extrasprites.h"
+	#include "cpc/spriteset_mappings.h"
+	#include "cpc/pal.h"
+#else
+	#include "speccy/tileset.h"
+	#include "speccy/sprites.h"
+	#include "speccy/extrasprites.h"
+#endif
+
+#include "enems.h"
+#include "mapa.h"
+
+// **********
+// HW BACKEND
+// **********
 
 #ifdef CPC
 	#include "cpc/printer.h"
@@ -113,6 +108,11 @@
 	#include "speccy/printer.h"
 	#include "speccy/cell_arrays.h"
 #endif
+
+// ***********
+// ENGINE
+// ***********
+
 #include "pantallas.h"
 
 #ifdef ACTIVATE_SCRIPTING
