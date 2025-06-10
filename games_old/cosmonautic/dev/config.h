@@ -73,8 +73,9 @@
 // ---------
 
 #define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
-#define SCRIPTING_DOWN						// Use DOWN as the action key.
-//#define SCRIPTING_KEY_M					// Use M as the action key instead.
+//#define SCRIPTING_DOWN					// Use DOWN as the action key.
+#define SCRIPTING_KEY_M						// Use M as the action key instead.
+											// If none are selected, FIRE is used.
 #define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 
 // Top view:
@@ -163,8 +164,8 @@
 
 // IV.2. Horizontal (side view) or general (top view) movement.
 
-#define PLAYER_MAX_VX			312 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX				32		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_MAX_VX			256 	// Max velocity (192/64 = 3 píxels/frame)
+#define PLAYER_AX				8		// Acceleration (24/64 = 0,375 píxels/frame^2)
 #define PLAYER_RX				1		// Friction (32/64 = 0,5 píxels/frame^2)
 
 // ============================================================================

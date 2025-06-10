@@ -183,6 +183,7 @@
 	sla a
 	sla a
 	ld  (_gpy), a
+	jp  script_actions
 .aopcode_6D_end
 
 ;; OPCODE 0xF2

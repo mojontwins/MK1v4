@@ -363,7 +363,12 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [ ] `draw_and_advance` parece estar usando la interfaz C de `draw_coloured_tile` y a lo mejor puedo hacer el fullero.
 
-[ ] Hay un problema gordísimo en el intérprete que puede saltar cuando menos me lo espere: cuando se termina de ejecutar una instrucción debería saltarse "leer un nuevo opcode" pero ahora mismo no se hace!! <-- FIX
+[X] Hay un problema gordísimo en el intérprete que puede saltar cuando menos me lo espere: cuando se termina de ejecutar una instrucción debería saltarse "leer un nuevo opcode" pero ahora mismo no se hace!! <-- FIX
+    
+    * No era tan gordísimo, copón, sólo se me había olvidado en las dos últimos comandos que añadí.
+
+[ ] Estaba usando RX en vez de AX para acelerar... Me he dado cuenta en Cosmonautic. Ahora tengo que recompilar todos los juegos y ajustarlo bien XD
+
 
 <details>
     <summary>Cosas calculares</summary>

@@ -499,6 +499,7 @@ XDEF _script_result
 	pop bc
 	pop bc
 	pop bc
+	jp  script_actions
 .aopcode_50_end
 
 	;; OPCODE 0x6D
@@ -520,6 +521,7 @@ XDEF _script_result
 	sla a
 	sla a
 	ld  (_gpy), a
+	jp  script_actions
 .aopcode_6D_end
 
 	;; OPCODE 0xE0

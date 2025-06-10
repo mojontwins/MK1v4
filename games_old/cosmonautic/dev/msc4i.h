@@ -29,7 +29,7 @@ void __FASTCALL__ script (unsigned char a) {
 			ld  a, l 
 			ld  (_tqt), a
 			
-			jp _script_do
+			call _script_do
 
 			// gpx, gpy may have changed, so update player.x/player.y
 			call _shl_player_coords

@@ -790,7 +790,7 @@ void move (void) {
 				jr  nz, m_vert_kp_up_done
 
 			.m_vert_kp_up_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -817,7 +817,7 @@ void move (void) {
 				jr  nz, m_vert_kp_down_done
 
 			.m_vert_kp_down_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -1085,7 +1085,7 @@ void move (void) {
 
 				ld  a, (_at2)
 				and 4
-				jr  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
+				jp  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
 
 			.m_vert_coll_down_ch2
 				ld  a, (_gpy)
@@ -1336,7 +1336,7 @@ void move (void) {
 				jr  nz, m_horz_kp_left_done
 
 			.m_horz_kp_left_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
@@ -1365,7 +1365,7 @@ void move (void) {
 				jr  nz, m_horz_kp_right_done
 
 			.m_horz_kp_right_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
