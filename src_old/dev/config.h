@@ -80,6 +80,7 @@
 // ---------
 
 //#define PLAYER_MOGGY_STYLE				// Enable top view.
+//#define FAKE_SIDE_VIEW 					// For gravity 0 games! Needs PLAYER_MOGGY_STYLE enabled.
 
 // Side view:
 // ----------

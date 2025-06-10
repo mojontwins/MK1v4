@@ -327,6 +327,42 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] Calavera : Cuelgue al game over ¿pasa en todos :-S? Jodó qué tonto soy, es que la OGT no tiene canción de game over y se estaba llamando :-/
 
+[X] ¡Vista lateral falsa! - La vista es lateral pero la física es genital. Hay que añadir "FAKE_SIDE_VIEW" para que la elección de frame sea la de la vista lateral (o sea, no es añadir o cambiar código, sino modificar la compilación condicional). Esto se pensó para Cosmonautic en 2010 pero nunca se hizo.
+
+    * El movimiento en los ejes debe ser como `PLAYER_MOGGY_STYLE`.
+    * La selección del facing debe ser como en vista lateral.
+    * La selección del frame por ahora será custom: si hay thrust +1, si no +0.
+
+[X] msc4 `WARP TO`.
+
+[ ] Tiles animados -> a partir de N, con N par, usan N y N + 1, el período es fijo, el contador es random al crear uno. Estructura con 4 bytes, no intercalados. X Y T C. Roughly (rewrite in assembly!!)
+
+```c
+    unsigned char ta_i;
+
+    void tilanim_add (void) {
+        ta_x [ta_i] = rdx;
+        ta_y [ta_i] = rdy;
+        ta_t [ta_i] = rdt;
+        ta_c [ta_i] = rand () & (TILANIM_PERIOD - 1)
+        ta_i ++;
+    }
+
+    void tilanims_do (void) {
+        for (gpit = 0; gpit < ta_i; gpit ++) {
+            ta_c [ta_i] --;
+            if (ta_c [ta_i] == 0) {
+                ta_t [ta_i] ^= 1;
+                set_map_tile (ta_x [ta_i], ta_y [ta_i], ta_t [ta_i], comportamiento_tiles [ta_t [ta_i]]);
+                ta_c [ta_i] = TILANIM_PERIOD;
+            }
+        }
+    }
+
+```
+
+[ ] `draw_and_advance` parece estar usando la interfaz C de `draw_coloured_tile` y a lo mejor puedo hacer el fullero.
+
 <details>
     <summary>Cosas calculares</summary>
 

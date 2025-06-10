@@ -1,0 +1,36 @@
+NOINDEXED 		# We won't be using SCREEN XXX sections
+FASTNPANT 		# IF NPANT = N will generate its own opcode/interpreter
+
+# This section is used to implement teleporters and uses the
+# laziest approach. 
+
+PRESS FIRE AT ANY
+	IF TN != 19
+	THEN
+		BREAK
+	END
+
+	IF NPANT = 2
+	THEN
+		WARP TO 5, 10, 8
+		BREAK
+	END
+
+	IF NPANT = 5
+	THEN
+		WARP TO 2, 2, 3
+		BREAK
+	END
+
+	IF NPANT = 7
+	THEN
+		WARP TO 9, 11, 5
+		BREAK
+	END
+
+	IF NPANT = 9 
+	THEN
+		WARP TO 7, 12, 4
+		BREAK
+	END
+END

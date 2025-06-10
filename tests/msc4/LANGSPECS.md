@@ -220,6 +220,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $50 PRINT TILE AT (X, Y) = T
 * $51 SET FIRE ZONE [TILES] X1, Y1, X2, Y2  [TODO]
 
+* $6D N X Y : WARP TO N, X, Y
+
 * $E0 N : SOUND N
 * $E1 : SHOW
 * $E2 : RECHARGE
@@ -232,7 +234,6 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 
 * $F2 : BREAK"
 
-TODO: WARP TO
 
 # Haciendo esto
 

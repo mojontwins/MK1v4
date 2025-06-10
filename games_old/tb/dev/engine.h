@@ -2620,18 +2620,9 @@ void mueve_bicharracos (void) {
 			#endasm
 
 			// Basic linear movement x = x + mx, etc.
-			if (
-				_en_t <= 4
-				/*
-				#ifdef RANDOM_RESPAWN
-					|| 0 == en_an_fanty_activo [enit]
-				#endif
-				*/
-			) {
+			if (_en_t <= 4) {
 				#asm
-					
-					call en_lineal_do
-
+						call en_lineal_do
 				#endasm
 			}
 

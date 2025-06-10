@@ -1,0 +1,81 @@
+msc v4.1.20250604 ~ Processing script.spt
+==========================================
+LINEA NOINDEXED 		# We won't be using SCREEN XXX sections
+T0=[noindexed]
+T1=[		]
+No indexed script. Beware!
+==========================================
+LINEA FASTNPANT 		# IF NPANT = N will generate its own opcode/interpreter
+T0=[fastnpant]
+T1=[		]
+IF NPANT = N will generate its own opcode!
+==========================================
+LINEA PRESS FIRE AT ANY
+T0=[press]
+T1=[fire]
+T2=[at]
+T3=[any]
+Adding 0 @ sect 2
+Parsing: IF TN != 19
+T0=[IF]
+T1=[$246]
+T2=[!=]
+T3=[19]
+Parsing: BREAK
+T0=[BREAK]
+Parsing: IF NPANT = 2
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[2]
+Parsing: WARP TO 5, 10, 8
+T0=[WARP]
+T1=[TO]
+T2=[5]
+T3=[10]
+T4=[8]
+Parsing: BREAK
+T0=[BREAK]
+Parsing: IF NPANT = 5
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[5]
+Parsing: WARP TO 2, 2, 3
+T0=[WARP]
+T1=[TO]
+T2=[2]
+T3=[2]
+T4=[3]
+Parsing: BREAK
+T0=[BREAK]
+Parsing: IF NPANT = 7
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[7]
+Parsing: WARP TO 9, 11, 5
+T0=[WARP]
+T1=[TO]
+T2=[9]
+T3=[11]
+T4=[5]
+Parsing: BREAK
+T0=[BREAK]
+Parsing: IF NPANT = 9
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[9]
+Parsing: WARP TO 7, 12, 4
+T0=[WARP]
+T1=[TO]
+T2=[7]
+T3=[12]
+T4=[4]
+Parsing: BREAK
+T0=[BREAK]
+Bytecode: 08 04 FF F6 13 FF F2 FF 0A 05 02 FF 6D 05 0A 08 F2 FF 0A 05 05 FF 6D 02 02 03 F2 FF 0A 05 07 FF 6D 09 0B 05 F2 FF 0A 05 09 FF 6D 07 0C 04 F2 FF FF 
+Index section: 32 bytes
+Bytecode section: 49 bytes
+Wrote 81 bytes to script.spt.bin

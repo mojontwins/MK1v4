@@ -804,8 +804,10 @@ void move (void) {
 				ex  de, hl 						// HL = -PLAYER_MAX_VX
 
 			.m_vert_kp_up_facing
-				ld  a, GENITAL_FACING_UP
-				ld  (_player + 22), a 			// facing
+			#ifndef FAKE_SIDE_VIEW
+					ld  a, GENITAL_FACING_UP
+					ld  (_player + 22), a 			// facing
+			#endif
 				jr  m_vert_kp_vy_write
 
 			.m_vert_kp_up_done
@@ -829,10 +831,11 @@ void move (void) {
 				ex  de, hl 						// HL = PLAYER_MAX_VX
 
 			.m_vert_kp_down_facing
-				ld  a, GENITAL_FACING_DOWN
-				ld  (_player + 22), a 			// facing
-				//jr  m_vert_kp_vy_write
-
+			#ifndef FAKE_SIDE_VIEW
+					ld  a, GENITAL_FACING_DOWN
+					ld  (_player + 22), a 			// facing
+			#endif
+	
 			.m_vert_kp_down_done
 
 			.m_vert_kp_vy_write
@@ -1319,7 +1322,7 @@ void move (void) {
 				ex  de, hl 						// HL = -PLAYER_MAX_VX
 
 			.m_horz_kp_left_facing
-			#ifdef PLAYER_MOGGY_STYLE
+			#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 					ld  a, GENITAL_FACING_LEFT
 			#else
 		 			ld  a, SIDEVIEW_FACING_LEFT
@@ -1348,7 +1351,7 @@ void move (void) {
 				ex  de, hl 						// HL = PLAYER_MAX_VX
 
 			.m_horz_kp_right_facing
-			#ifdef PLAYER_MOGGY_STYLE
+			#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 					ld  a, GENITAL_FACING_RIGHT
 			#else
 		 			ld  a, SIDEVIEW_FACING_RIGHT
@@ -1805,10 +1808,7 @@ void move (void) {
 	#endasm
 }
 
-void init_player_values (void) {
-	gpx = 		PLAYER_INI_X << 4;
-	gpy =		PLAYER_INI_Y << 4;
-	
+void _shl_player_coords (void) {
 	#asm
 			ld  a, (_gpx)
 			call Ashl16_HL
@@ -1817,6 +1817,15 @@ void init_player_values (void) {
 			ld  a, (_gpy)
 			call Ashl16_HL
 			ld  (_player + 2), hl
+	#endif
+}
+
+void init_player_values (void) {
+	gpx = 		PLAYER_INI_X << 4;
+	gpy =		PLAYER_INI_Y << 4;
+	
+	#asm
+			call _shl_player_coords
 
 			ld  hl, 0
 			ld  (_player + 6), hl 				// .vx
@@ -1910,6 +1919,37 @@ void init_hotspots (void) {
 				pop bc
 				pop bc
 				pop bc
+
+			#ifdef ENABLE_ANIMATED_TILES
+					ld  a, (_ta_i)
+					ld  b, 0
+					ld  c, a 
+					
+					ld  hl, _ta_x
+					add hl, bc 
+					ld  a, (_rdx)
+					ld  (hl), a 
+					
+					ld  hl, _ta_y
+					add hl, bc 
+					ld  a, (_rdy)
+					ld  (hl), a 
+					
+					ld  hl, _ta_t
+					add hl, bc 
+					ld  a, (__n)
+					ld  (hl), a 
+					
+					call _rand 		// Doesn't trash BC
+					ld  a, l 
+					and TILANIM_PERIOD-1
+					ld  hl, _ta_c 
+					add hl, bc 
+					ld  (hl), a 
+
+					ld  hl, _ta_i
+					inc (hl) 
+			#endif
 
 				ld  a, (_rdx)
 				add 2
