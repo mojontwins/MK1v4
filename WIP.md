@@ -363,6 +363,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [ ] `draw_and_advance` parece estar usando la interfaz C de `draw_coloured_tile` y a lo mejor puedo hacer el fullero.
 
+[ ] Hay un problema gordísimo en el intérprete que puede saltar cuando menos me lo espere: cuando se termina de ejecutar una instrucción debería saltarse "leer un nuevo opcode" pero ahora mismo no se hace!! <-- FIX
+
 <details>
     <summary>Cosas calculares</summary>
 

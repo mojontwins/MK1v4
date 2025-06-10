@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Jun 10 13:48:59 2025
+;	Module compile time: Tue Jun 10 18:56:56 2025
 
 
 
@@ -4184,7 +4184,7 @@
 	ld de, -1
 	ld hl, (_player + 8)
 	add hl, de
-	ld de, -256
+	ld de, -312
 	call l_gt
 	jr nc, m_vert_kp_up_facing
 	ex de, hl
@@ -4198,7 +4198,7 @@
 	ld de, 1
 	ld hl, (_player + 8)
 	add hl, de
-	ld de, 256
+	ld de, 312
 	call l_lt
 	jr nc, m_vert_kp_down_facing
 	ex de, hl
@@ -4276,7 +4276,7 @@
 	and 2
 	jr z, m_vert_coll_down_set_vy
 	.m_vert_coll_down_botiboin
-	ld hl, -256
+	ld hl, -312
 	.m_vert_coll_down_set_vy
 	ld (_player + 8), hl
 	ld a, (_gpy)
@@ -4313,7 +4313,7 @@
 	and 2
 	jr z, m_vert_coll_up_set_vy
 	.m_vert_coll_up_botiboin
-	ld hl, 256
+	ld hl, 312
 	.m_vert_coll_up_set_vy
 	ld (_player + 8), hl
 	ld a, (_gpy)
@@ -4378,7 +4378,7 @@
 	ld de, -1
 	ld hl, (_player + 6)
 	add hl, de
-	ld de, -256
+	ld de, -312
 	call l_gt
 	jr nc, m_horz_kp_left_facing
 	ex de, hl
@@ -4394,7 +4394,7 @@
 	ld de, 1
 	ld hl, (_player + 6)
 	add hl, de
-	ld de, 256
+	ld de, 312
 	call l_lt
 	jr nc, m_horz_kp_right_facing
 	ex de, hl
@@ -4474,7 +4474,7 @@
 	and 2
 	jr z, m_vert_coll_right_set_vy
 	.m_vert_coll_right_botiboin
-	ld hl, -256
+	ld hl, -312
 	.m_vert_coll_right_set_vy
 	ld (_player + 6), hl
 	ld a, (_gpx)
@@ -4512,7 +4512,7 @@
 	and 2
 	jr z, m_vert_coll_left_set_vy
 	.m_vert_coll_left_botiboin
-	ld hl, 256
+	ld hl, 312
 	.m_vert_coll_left_set_vy
 	ld (_player + 6), hl
 	ld a, (_gpx)

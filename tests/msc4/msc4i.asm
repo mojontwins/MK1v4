@@ -501,7 +501,7 @@ XDEF _script_result
 	pop bc
 .aopcode_50_end
 
-	;; OPCOODE 0x6D
+	;; OPCODE 0x6D
 	;; WARP TO N, X, Y
 	cp  0x6D
 	jr  nz, aopcode_6D_end
@@ -509,16 +509,16 @@ XDEF _script_result
 	call read_vbyte
 	ld  (_n_pant), a
 	call read_vbyte
-	srl a
-	srl a
-	srl a
-	srl a
+	sla a
+	sla a
+	sla a
+	sla a
 	ld  (_gpx), a 
 	call read_vbyte
-	srl a
-	srl a
-	srl a
-	srl a
+	sla a
+	sla a
+	sla a
+	sla a
 	ld  (_gpy), a
 .aopcode_6D_end
 

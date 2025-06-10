@@ -172,16 +172,16 @@
 	call read_vbyte
 	ld  (_n_pant), a
 	call read_vbyte
-	srl a
-	srl a
-	srl a
-	srl a
+	sla a
+	sla a
+	sla a
+	sla a
 	ld  (_gpx), a
 	call read_vbyte
-	srl a
-	srl a
-	srl a
-	srl a
+	sla a
+	sla a
+	sla a
+	sla a
 	ld  (_gpy), a
 .aopcode_6D_end
 
