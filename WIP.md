@@ -367,8 +367,9 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
     
     * No era tan gordísimo, copón, sólo se me había olvidado en las dos últimos comandos que añadí.
 
-[ ] Estaba usando RX en vez de AX para acelerar... Me he dado cuenta en Cosmonautic. Ahora tengo que recompilar todos los juegos y ajustarlo bien XD
+[X] Estaba usando RX en vez de AX para acelerar... Me he dado cuenta en Cosmonautic. Ahora tengo que recompilar todos los juegos y ajustarlo bien XD
 
+[ ] Maybe, añadir la detección tilanims a unpacked maps... Clago, clago, pego luego.
 
 <details>
     <summary>Cosas calculares</summary>

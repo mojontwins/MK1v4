@@ -36,6 +36,8 @@
 #define PLAYER_KILLED_BY_ENEM 	2
 #define PLAYER_KILLED_BY_SELF 	8
 
+#define MAX_ANIMATED_TILES 		16
+
 #ifdef CPC
 	#define BASE_TILEMAP 		0x0100
 	#define WYZ_SONG_BUFFER 	0x8800
@@ -115,6 +117,15 @@ unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (BASE_ARRAYS + MAX_ENEMS*14);
 unsigned char en_an_state [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS*15);
 unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*16);
 unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*17);
+
+#ifdef ENABLE_ANIMATED_TILES
+	#define BASE_ANIMATED_TILES (BASE_ARRAYS + MAX_ENEMS*18)
+	unsigned char ta_x [MAX_ANIMATED_TILES] 		@ BASE_ANIMATED_TILES;
+	unsigned char ta_y [MAX_ANIMATED_TILES] 		@ (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES);
+	unsigned char ta_t [MAX_ANIMATED_TILES] 		@ (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES*2);
+	unsigned char ta_c [MAX_ANIMATED_TILES] 		@ (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES*3);
+	unsigned char ta_i;
+#endif
 
 unsigned int enoffs, enoffsmasi;
 unsigned char en_j, en_xx, en_yy;

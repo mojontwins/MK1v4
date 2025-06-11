@@ -1,7 +1,7 @@
 @echo off
 
 set game=napia3
-set om=cpc
+set om=speccy
 set mode=1
 
 if [%mode%]==[0] goto :setmode0 

@@ -1,4 +1,4 @@
-msc v4.0.20250421 ~ Processing script.spt
+msc v4.1.20250604 ~ Processing script.spt
 ==========================================
 LINEA ROOMS = 24
 T0=[rooms]
@@ -63,7 +63,7 @@ LINEA ENTERING SCREEN 0
 T0=[entering]
 T1=[screen]
 T2=[0]
-Adding 20 @ sect 8
+Adding 20 @ sect 16
 Parsing: IF %BRA = 0
 T0=[IF]
 T1=[$1]
@@ -116,7 +116,7 @@ T1=[fire]
 T2=[at]
 T3=[screen]
 T4=[0]
-Adding 85 @ sect 9
+Adding 85 @ sect 17
 Parsing: IF PLAYER TOUCHES (6,5)
 T0=[IF]
 T1=[PLAYER]
@@ -166,7 +166,7 @@ LINEA ENTERING SCREEN 3
 T0=[entering]
 T1=[screen]
 T2=[3]
-Adding 113 @ sect 14
+Adding 113 @ sect 22
 Parsing: IF %KNICKERS = 0
 T0=[IF]
 T1=[$2]
@@ -185,7 +185,7 @@ LINEA ENTERING SCREEN 20
 T0=[entering]
 T1=[screen]
 T2=[20]
-Adding 125 @ sect 48
+Adding 125 @ sect 56
 Parsing: IF TRUE
 T0=[IF]
 T1=[TRUE]
@@ -225,7 +225,7 @@ LINEA ENTERING SCREEN 22
 T0=[entering]
 T1=[screen]
 T2=[22]
-Adding 176 @ sect 52
+Adding 176 @ sect 60
 Parsing: IF %VIEHO2 = 1
 T0=[IF]
 T1=[$4]
@@ -278,7 +278,7 @@ T1=[fire]
 T2=[at]
 T3=[screen]
 T4=[22]
-Adding 241 @ sect 53
+Adding 241 @ sect 61
 Parsing: IF PLAYER TOUCHES (2, 8)
 T0=[IF]
 T1=[PLAYER]
@@ -395,6 +395,6 @@ T3=[8]
 T4=[=]
 T5=[0]
 Bytecode: 13 01 FF FE 14 01 FF FB 3C FF 20 02 07 00 20 02 08 00 FF FF 
-Index section: 112 bytes
+Index section: 128 bytes
 Bytecode section: 320 bytes
-Wrote 432 bytes to script.spt.bin
+Wrote 448 bytes to script.spt.bin

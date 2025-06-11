@@ -7,8 +7,9 @@
 #define SC_PLAYER_GOT_SOMETHING 3
 #define SC_PLAYER_KILLS_ENEMY 4
 #define SC_SPECIAL_TILE_TOUCHED 5
-#define SC_ENTERING_SCREEN 8
-#define SC_PRESS_FIRE_AT_SCREEN 9
+#define SC_ENEMY_TOUCHED 8
+#define SC_ENTERING_SCREEN 16
+#define SC_PRESS_FIRE_AT_SCREEN 17
 
 extern unsigned char script_n;
 extern unsigned char script_result;
@@ -20,7 +21,18 @@ void __FASTCALL__ script (unsigned char a) {
 	#asm 
 			ld  a, l 
 			ld  (_script_n), a 
-			jp _script_do
+
+			ld  a, (_tpx) 
+			ld  c, a
+			ld  a, (_tpy)
+			call qtile_do
+			ld  a, l 
+			ld  (_tqt), a
+			
+			call _script_do
+
+			// gpx, gpy may have changed, so update player.x/player.y
+			call _shl_player_coords
 	#endasm
 }
 

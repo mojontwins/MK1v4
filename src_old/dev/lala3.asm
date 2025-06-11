@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat May 31 13:25:41 2025
+;	Module compile time: Wed Jun 11 08:19:47 2025
 
 
 
@@ -7719,7 +7719,7 @@
 	defb	112
 	defb	96
 	defb	112
-	defb	-255
+	defb	-1
 	defb	0
 	defb	3
 	defb	112
@@ -8466,9 +8466,10 @@
 	jr nz, m_vert_coll_down_adjust
 	ld a, (_at2)
 	and 12
-	jr z, m_vert_coll_checks_done
+	jp z, m_vert_coll_checks_done
 	.m_vert_coll_down_adjust
 	ld hl, 0
+	.m_vert_coll_down_set_vy
 	ld (_player + 8), hl
 	ld a, (_gpy)
 	and 0xf0
@@ -8496,6 +8497,7 @@
 	jr z, m_vert_coll_checks_done
 	.m_vert_coll_up_adjust
 	ld hl, 0
+	.m_vert_coll_up_set_vy
 	ld (_player + 8), hl
 	ld a, (_gpy)
 	and 0xf0
@@ -8581,7 +8583,7 @@
 	and 0x04
 	jr nz, m_horz_kp_left_done
 	.m_horz_kp_left_do
-	ld de, -64
+	ld de, -48
 	ld hl, (_player + 6)
 	add hl, de
 	ld de, -256
@@ -8597,7 +8599,7 @@
 	and 0x08
 	jr nz, m_horz_kp_right_done
 	.m_horz_kp_right_do
-	ld de, 64
+	ld de, 48
 	ld hl, (_player + 6)
 	add hl, de
 	ld de, 256
@@ -8672,10 +8674,11 @@
 	jr nz, m_horz_coll_right_adjust
 	ld a, (_at2)
 	and 8
-	jr z, m_horz_coll_checks_done
+	jp z, m_horz_coll_checks_done
 	.m_horz_coll_right_adjust
 	call _check_lock_or_box_horz
 	ld hl, 0
+	.m_vert_coll_right_set_vy
 	ld (_player + 6), hl
 	ld a, (_gpx)
 	and 0xf0
@@ -8705,6 +8708,7 @@
 	.m_horz_coll_left_adjust
 	call _check_lock_or_box_horz
 	ld hl, 0
+	.m_vert_coll_left_set_vy
 	ld (_player + 6), hl
 	ld a, (_gpx)
 	and 0xf0
@@ -8802,18 +8806,24 @@
 
 
 
-._init_player_values
-	ld	a,#(32 % 256 % 256)
-	ld	(_gpx),a
-	ld	hl,32 % 256	;const
-	ld	a,l
-	ld	(_gpy),a
+._shl_player_coords
 	ld a, (_gpx)
 	call Ashl16_HL
 	ld (_player), hl
 	ld a, (_gpy)
 	call Ashl16_HL
 	ld (_player + 2), hl
+	ret
+
+
+
+._init_player_values
+	ld	a,#(32 % 256 % 256)
+	ld	(_gpx),a
+	ld	hl,32 % 256	;const
+	ld	a,l
+	ld	(_gpy),a
+	call _shl_player_coords
 	ld hl, 0
 	ld (_player + 6), hl
 	ld (_player + 8), hl
@@ -9506,16 +9516,6 @@
 	ld a, (__en_mx)
 	or a
 	jr z, en_linear_horizontal_axis_done
-	bit 7, a
-	jr z, en_lineal_horizontal_ppf
-	.en_lineal_horizontal_fpp
-	neg a
-	ld c, a
-	ld a, (_maincounter)
-	and c
-	jr nz, en_linear_vertical_axis
-	inc a
-	.en_lineal_horizontal_ppf
 	ld c, a
 	ld a, (__en_x)
 	add c
@@ -9550,16 +9550,6 @@
 	ld a, (__en_my)
 	or a
 	jr z, en_linear_vertical_axis_done
-	bit 7, a
-	jr z, en_lineal_vertical_ppf
-	.en_lineal_vertical_fpp
-	neg a
-	ld c, a
-	ld a, (_maincounter)
-	and c
-	jr nz, en_linear_done
-	inc a
-	.en_lineal_vertical_ppf
 	ld c, a
 	ld a, (__en_y)
 	add c
@@ -10946,9 +10936,10 @@
 	XDEF	_qtile
 	XDEF	_init_cerrojos
 	XDEF	_cm_two_points
-	XDEF	_draw_and_advance
+	XDEF	_shl_player_coords
 	LIB	sp_MoveSprRelC
 	LIB	sp_InitIM2
+	XDEF	_draw_and_advance
 	XDEF	_sp_player
 	XDEF	_init_player
 	XDEF	_gp_gen

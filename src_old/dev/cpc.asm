@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Jun 11 08:34:36 2025
+;	Module compile time: Wed Jun 11 08:20:57 2025
 
 
 
@@ -20,6 +20,12 @@
 	defb	0
 
 	defm	""
+	defb	8
+
+	defm	""
+	defb	8
+
+	defm	""
 	defb	0
 
 	defm	""
@@ -30,20 +36,11 @@
 
 	defm	""
 	defb	8
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
 
 	defm	""
 	defb	9
 
 	defm	""
-	defb	9
-
-	defm	""
 	defb	8
 
 	defm	""
@@ -53,16 +50,7 @@
 	defb	8
 
 	defm	""
-	defb	4
-
-	defm	""
 	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	10
 
 	defm	""
 	defb	8
@@ -83,10 +71,10 @@
 	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
 	defb	0
@@ -95,13 +83,25 @@
 	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
-	defb	8
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
 
 	defm	""
 	defb	0
@@ -126,22 +126,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_1_a
-	defb 0, 240
-	defb 3, 224
-	defb 6, 192
-	defb 13, 192
-	defb 11, 192
-	defb 11, 192
-	defb 15, 128
-	defb 3, 0
-	defb 60, 0
-	defb 127, 0
-	defb 103, 0
-	defb 7, 0
-	defb 3, 0
-	defb 126, 0
-	defb 124, 0
-	defb 64, 0
+	defb 0, 255
+	defb 2, 252
+	defb 5, 248
+	defb 10, 240
+	defb 13, 240
+	defb 26, 224
+	defb 96, 128
+	defb 67, 128
+	defb 38, 192
+	defb 18, 224
+	defb 23, 224
+	defb 99, 128
+	defb 128, 0
+	defb 96, 128
+	defb 16, 224
+	defb 39, 192
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -151,22 +151,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_1_b
-	defb 0, 15
-	defb 224, 7
-	defb 0, 3
-	defb 16, 3
-	defb 80, 3
-	defb 80, 3
-	defb 240, 3
-	defb 224, 1
-	defb 24, 0
-	defb 252, 0
-	defb 236, 0
-	defb 226, 0
-	defb 214, 0
-	defb 46, 0
-	defb 0, 0
 	defb 0, 255
+	defb 64, 63
+	defb 32, 31
+	defb 32, 31
+	defb 80, 15
+	defb 8, 7
+	defb 4, 3
+	defb 226, 1
+	defb 212, 3
+	defb 208, 7
+	defb 240, 7
+	defb 236, 3
+	defb 2, 1
+	defb 28, 3
+	defb 136, 7
+	defb 228, 3
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -201,22 +201,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_2_a
-	defb 3, 224
-	defb 6, 192
-	defb 13, 192
-	defb 11, 192
-	defb 11, 192
-	defb 15, 192
-	defb 3, 192
-	defb 12, 128
-	defb 31, 0
-	defb 55, 0
-	defb 55, 0
-	defb 54, 0
-	defb 6, 0
-	defb 6, 224
-	defb 6, 224
-	defb 7, 224
+	defb 2, 252
+	defb 5, 248
+	defb 10, 240
+	defb 13, 240
+	defb 26, 224
+	defb 112, 128
+	defb 67, 128
+	defb 38, 192
+	defb 18, 224
+	defb 23, 224
+	defb 35, 192
+	defb 64, 128
+	defb 80, 128
+	defb 40, 208
+	defb 8, 240
+	defb 19, 224
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -226,22 +226,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_2_b
-	defb 224, 7
-	defb 0, 3
-	defb 16, 3
-	defb 80, 3
-	defb 80, 3
-	defb 240, 3
-	defb 224, 3
-	defb 16, 3
-	defb 248, 1
-	defb 232, 1
-	defb 232, 1
-	defb 200, 1
-	defb 96, 1
-	defb 96, 7
-	defb 96, 7
-	defb 112, 3
+	defb 64, 63
+	defb 32, 31
+	defb 16, 15
+	defb 80, 15
+	defb 8, 7
+	defb 4, 3
+	defb 226, 1
+	defb 212, 3
+	defb 208, 7
+	defb 240, 7
+	defb 232, 7
+	defb 4, 3
+	defb 20, 3
+	defb 152, 7
+	defb 16, 15
+	defb 200, 7
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -276,22 +276,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_3_a
-	defb 0, 240
-	defb 3, 224
-	defb 6, 192
-	defb 13, 192
-	defb 11, 192
-	defb 11, 192
-	defb 15, 192
-	defb 3, 192
-	defb 12, 192
-	defb 15, 192
-	defb 7, 192
-	defb 8, 128
-	defb 23, 0
-	defb 43, 0
-	defb 48, 0
-	defb 32, 2
+	defb 3, 252
+	defb 6, 248
+	defb 13, 240
+	defb 10, 240
+	defb 20, 224
+	defb 33, 192
+	defb 66, 128
+	defb 118, 128
+	defb 23, 224
+	defb 35, 192
+	defb 32, 192
+	defb 40, 192
+	defb 40, 192
+	defb 24, 224
+	defb 9, 240
+	defb 6, 249
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -301,22 +301,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_3_b
-	defb 0, 15
-	defb 224, 7
-	defb 0, 3
-	defb 16, 3
-	defb 80, 3
-	defb 80, 3
-	defb 240, 3
-	defb 224, 3
-	defb 16, 3
-	defb 176, 3
-	defb 176, 3
-	defb 96, 0
-	defb 228, 0
-	defb 252, 0
-	defb 124, 0
-	defb 0, 0
+	defb 64, 63
+	defb 32, 31
+	defb 80, 15
+	defb 16, 15
+	defb 12, 3
+	defb 226, 1
+	defb 212, 3
+	defb 208, 7
+	defb 240, 7
+	defb 232, 7
+	defb 8, 7
+	defb 24, 7
+	defb 152, 7
+	defb 16, 15
+	defb 144, 15
+	defb 96, 159
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -351,22 +351,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_4_a
-	defb 0, 240
-	defb 3, 224
-	defb 6, 192
-	defb 13, 192
-	defb 11, 192
-	defb 11, 192
-	defb 15, 192
-	defb 3, 192
-	defb 12, 0
-	defb 127, 0
-	defb 103, 0
-	defb 7, 0
-	defb 31, 128
-	defb 56, 0
-	defb 48, 1
-	defb 0, 3
+	defb 3, 252
+	defb 6, 248
+	defb 13, 240
+	defb 10, 240
+	defb 20, 224
+	defb 33, 192
+	defb 66, 128
+	defb 118, 128
+	defb 23, 224
+	defb 35, 192
+	defb 32, 192
+	defb 40, 192
+	defb 40, 192
+	defb 24, 224
+	defb 9, 240
+	defb 6, 249
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -376,22 +376,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_4_b
-	defb 0, 15
-	defb 224, 7
-	defb 0, 3
-	defb 16, 3
-	defb 80, 3
-	defb 80, 3
-	defb 240, 3
-	defb 224, 3
-	defb 16, 0
-	defb 254, 0
-	defb 230, 0
-	defb 224, 0
-	defb 248, 1
-	defb 28, 0
-	defb 12, 128
-	defb 0, 192
+	defb 64, 63
+	defb 32, 31
+	defb 80, 15
+	defb 16, 15
+	defb 12, 3
+	defb 226, 1
+	defb 212, 3
+	defb 208, 7
+	defb 240, 7
+	defb 232, 7
+	defb 8, 7
+	defb 24, 7
+	defb 152, 7
+	defb 16, 15
+	defb 144, 15
+	defb 96, 159
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -426,22 +426,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_5_a
-	defb 0, 240
-	defb 7, 224
-	defb 0, 192
-	defb 8, 192
-	defb 10, 192
-	defb 10, 192
-	defb 15, 192
-	defb 7, 128
-	defb 24, 0
-	defb 63, 0
-	defb 55, 0
-	defb 71, 0
-	defb 107, 0
-	defb 116, 0
-	defb 0, 0
 	defb 0, 255
+	defb 2, 252
+	defb 4, 248
+	defb 4, 248
+	defb 10, 240
+	defb 16, 224
+	defb 32, 192
+	defb 71, 128
+	defb 43, 192
+	defb 11, 224
+	defb 15, 224
+	defb 55, 192
+	defb 64, 128
+	defb 56, 192
+	defb 17, 224
+	defb 39, 192
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -451,22 +451,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_5_b
-	defb 0, 15
-	defb 192, 7
-	defb 96, 3
-	defb 176, 3
-	defb 208, 3
-	defb 208, 3
-	defb 240, 1
-	defb 192, 0
-	defb 60, 0
-	defb 254, 0
-	defb 230, 0
-	defb 224, 0
-	defb 192, 0
-	defb 126, 0
-	defb 62, 0
-	defb 2, 0
+	defb 0, 255
+	defb 64, 63
+	defb 160, 31
+	defb 80, 15
+	defb 176, 15
+	defb 88, 7
+	defb 6, 1
+	defb 194, 1
+	defb 100, 3
+	defb 72, 7
+	defb 232, 7
+	defb 198, 1
+	defb 1, 0
+	defb 6, 1
+	defb 8, 7
+	defb 228, 3
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -501,22 +501,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_6_a
-	defb 7, 224
-	defb 0, 192
-	defb 8, 192
-	defb 10, 192
-	defb 10, 192
-	defb 15, 192
-	defb 7, 192
-	defb 8, 192
-	defb 31, 128
-	defb 23, 128
-	defb 23, 128
-	defb 19, 128
-	defb 6, 128
-	defb 6, 224
-	defb 6, 224
-	defb 14, 192
+	defb 2, 252
+	defb 4, 248
+	defb 8, 240
+	defb 10, 240
+	defb 16, 224
+	defb 32, 192
+	defb 71, 128
+	defb 43, 192
+	defb 11, 224
+	defb 15, 224
+	defb 23, 224
+	defb 32, 192
+	defb 40, 192
+	defb 25, 224
+	defb 8, 240
+	defb 19, 224
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -526,22 +526,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_6_b
-	defb 192, 7
-	defb 96, 3
-	defb 176, 3
-	defb 208, 3
-	defb 208, 3
-	defb 240, 3
-	defb 192, 3
-	defb 48, 1
-	defb 248, 0
-	defb 236, 0
-	defb 236, 0
-	defb 108, 0
-	defb 96, 0
-	defb 96, 7
-	defb 96, 7
-	defb 224, 7
+	defb 64, 63
+	defb 160, 31
+	defb 80, 15
+	defb 176, 15
+	defb 88, 7
+	defb 14, 1
+	defb 194, 1
+	defb 100, 3
+	defb 72, 7
+	defb 232, 7
+	defb 196, 3
+	defb 2, 1
+	defb 10, 1
+	defb 20, 11
+	defb 16, 15
+	defb 200, 7
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -576,22 +576,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_7_a
-	defb 0, 240
-	defb 7, 224
-	defb 0, 192
-	defb 8, 192
-	defb 10, 192
-	defb 10, 192
-	defb 15, 192
-	defb 7, 192
-	defb 8, 192
-	defb 13, 192
-	defb 13, 192
-	defb 6, 0
-	defb 39, 0
-	defb 63, 0
-	defb 62, 0
-	defb 0, 0
+	defb 2, 252
+	defb 4, 248
+	defb 10, 240
+	defb 8, 240
+	defb 48, 192
+	defb 71, 128
+	defb 43, 192
+	defb 11, 224
+	defb 15, 224
+	defb 23, 224
+	defb 16, 224
+	defb 24, 224
+	defb 25, 224
+	defb 8, 240
+	defb 9, 240
+	defb 6, 249
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -601,22 +601,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_7_b
-	defb 0, 15
-	defb 192, 7
-	defb 96, 3
-	defb 176, 3
-	defb 208, 3
-	defb 208, 3
-	defb 240, 3
-	defb 192, 3
-	defb 48, 3
-	defb 240, 3
-	defb 224, 3
-	defb 16, 1
-	defb 232, 0
-	defb 212, 0
-	defb 12, 0
-	defb 4, 64
+	defb 192, 63
+	defb 96, 31
+	defb 176, 15
+	defb 80, 15
+	defb 40, 7
+	defb 132, 3
+	defb 66, 1
+	defb 110, 1
+	defb 232, 7
+	defb 196, 3
+	defb 4, 3
+	defb 20, 3
+	defb 20, 3
+	defb 24, 7
+	defb 144, 15
+	defb 96, 159
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -651,22 +651,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_8_a
-	defb 0, 240
-	defb 7, 224
-	defb 0, 192
-	defb 8, 192
-	defb 10, 192
-	defb 10, 192
-	defb 15, 192
-	defb 7, 192
-	defb 8, 0
-	defb 127, 0
-	defb 103, 0
-	defb 7, 0
-	defb 31, 128
-	defb 56, 0
-	defb 48, 1
-	defb 0, 3
+	defb 2, 252
+	defb 4, 248
+	defb 10, 240
+	defb 8, 240
+	defb 48, 192
+	defb 71, 128
+	defb 43, 192
+	defb 11, 224
+	defb 15, 224
+	defb 23, 224
+	defb 16, 224
+	defb 24, 224
+	defb 25, 224
+	defb 8, 240
+	defb 9, 240
+	defb 6, 249
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -676,22 +676,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_8_b
-	defb 0, 15
-	defb 192, 7
-	defb 96, 3
-	defb 176, 3
-	defb 208, 3
-	defb 208, 3
-	defb 240, 3
-	defb 192, 3
-	defb 48, 0
-	defb 254, 0
-	defb 230, 0
-	defb 224, 0
-	defb 248, 1
-	defb 28, 0
-	defb 12, 128
-	defb 0, 192
+	defb 192, 63
+	defb 96, 31
+	defb 176, 15
+	defb 80, 15
+	defb 40, 7
+	defb 132, 3
+	defb 66, 1
+	defb 110, 1
+	defb 232, 7
+	defb 196, 3
+	defb 4, 3
+	defb 20, 3
+	defb 20, 3
+	defb 24, 7
+	defb 144, 15
+	defb 96, 159
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -726,22 +726,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_9_a
-	defb 1, 240
-	defb 7, 224
-	defb 15, 128
-	defb 47, 0
-	defb 111, 0
-	defb 75, 0
-	defb 95, 0
-	defb 44, 0
-	defb 24, 0
-	defb 12, 128
-	defb 15, 192
-	defb 7, 224
-	defb 6, 224
-	defb 6, 224
-	defb 4, 224
-	defb 0, 225
+	defb 0, 252
+	defb 3, 248
+	defb 5, 240
+	defb 7, 240
+	defb 11, 224
+	defb 21, 192
+	defb 42, 128
+	defb 40, 128
+	defb 40, 129
+	defb 40, 131
+	defb 40, 131
+	defb 36, 129
+	defb 32, 139
+	defb 16, 199
+	defb 8, 227
+	defb 0, 247
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -751,22 +751,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_9_b
-	defb 128, 31
-	defb 192, 15
-	defb 224, 7
-	defb 240, 3
-	defb 240, 3
-	defb 120, 1
-	defb 236, 0
-	defb 246, 0
-	defb 114, 0
-	defb 242, 0
-	defb 240, 0
-	defb 96, 3
-	defb 64, 15
-	defb 96, 7
-	defb 32, 7
-	defb 0, 135
+	defb 0, 63
+	defb 192, 31
+	defb 160, 15
+	defb 224, 15
+	defb 208, 7
+	defb 168, 3
+	defb 84, 1
+	defb 20, 1
+	defb 20, 129
+	defb 20, 193
+	defb 20, 193
+	defb 36, 129
+	defb 4, 209
+	defb 8, 227
+	defb 16, 199
+	defb 0, 239
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -801,22 +801,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_10_a
-	defb 1, 248
-	defb 3, 240
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 252
+	defb 3, 248
+	defb 5, 240
 	defb 7, 224
-	defb 15, 192
-	defb 15, 192
-	defb 30, 128
-	defb 55, 0
-	defb 111, 0
-	defb 78, 0
-	defb 79, 0
-	defb 15, 0
-	defb 6, 192
-	defb 2, 240
-	defb 6, 224
-	defb 4, 224
-	defb 0, 225
+	defb 27, 128
+	defb 101, 0
+	defb 138, 0
+	defb 144, 4
+	defb 72, 3
+	defb 36, 129
+	defb 0, 219
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -826,22 +826,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_10_b
-	defb 128, 15
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 63
+	defb 192, 31
+	defb 160, 15
 	defb 224, 7
-	defb 240, 1
-	defb 244, 0
-	defb 246, 0
-	defb 210, 0
-	defb 250, 0
-	defb 52, 0
-	defb 24, 0
-	defb 48, 1
-	defb 240, 3
-	defb 224, 7
-	defb 96, 7
-	defb 96, 7
-	defb 32, 7
-	defb 0, 135
+	defb 216, 1
+	defb 166, 0
+	defb 81, 0
+	defb 9, 32
+	defb 18, 192
+	defb 36, 129
+	defb 0, 219
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -876,22 +876,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_11_a
-	defb 0, 255
-	defb 0, 192
-	defb 30, 128
-	defb 63, 0
-	defb 55, 0
-	defb 63, 0
-	defb 30, 128
-	defb 15, 192
-	defb 0, 224
-	defb 3, 224
-	defb 14, 192
-	defb 14, 192
-	defb 7, 224
-	defb 1, 240
-	defb 0, 252
-	defb 0, 255
+	defb 0, 248
+	defb 7, 240
+	defb 15, 128
+	defb 111, 0
+	defb 146, 0
+	defb 140, 0
+	defb 105, 0
+	defb 115, 0
+	defb 27, 128
+	defb 28, 192
+	defb 15, 224
+	defb 3, 240
+	defb 7, 128
+	defb 124, 0
+	defb 254, 0
+	defb 124, 1
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -901,22 +901,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_11_b
-	defb 0, 255
-	defb 0, 127
-	defb 0, 63
-	defb 0, 15
-	defb 32, 7
-	defb 144, 3
-	defb 152, 1
-	defb 56, 1
-	defb 248, 1
-	defb 176, 3
-	defb 0, 7
-	defb 0, 127
-	defb 0, 3
-	defb 200, 1
-	defb 112, 3
-	defb 0, 7
+	defb 12, 97
+	defb 146, 0
+	defb 210, 0
+	defb 52, 1
+	defb 220, 1
+	defb 152, 3
+	defb 48, 7
+	defb 240, 7
+	defb 96, 15
+	defb 192, 19
+	defb 140, 33
+	defb 222, 0
+	defb 190, 0
+	defb 252, 1
+	defb 248, 3
+	defb 112, 7
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -951,22 +951,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_12_a
-	defb 0, 224
-	defb 15, 192
-	defb 31, 128
-	defb 59, 0
-	defb 63, 0
-	defb 63, 0
-	defb 31, 128
-	defb 13, 192
+	defb 96, 15
+	defb 144, 0
+	defb 151, 0
+	defb 211, 0
+	defb 108, 0
+	defb 8, 128
+	defb 51, 128
+	defb 63, 128
+	defb 27, 192
+	defb 28, 192
 	defb 7, 224
-	defb 0, 224
-	defb 7, 224
-	defb 14, 192
-	defb 14, 192
-	defb 7, 224
-	defb 0, 240
-	defb 0, 254
+	defb 111, 224
+	defb 243, 128
+	defb 124, 0
+	defb 62, 0
+	defb 12, 1
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -976,22 +976,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_12_b
-	defb 0, 127
-	defb 0, 63
+	defb 12, 225
+	defb 18, 0
+	defb 210, 0
+	defb 52, 1
+	defb 220, 1
+	defb 80, 3
+	defb 48, 7
+	defb 240, 7
+	defb 96, 15
+	defb 224, 15
 	defb 128, 31
-	defb 192, 15
-	defb 224, 7
-	defb 224, 3
-	defb 164, 0
-	defb 68, 0
-	defb 142, 0
-	defb 30, 0
-	defb 252, 0
-	defb 56, 1
-	defb 0, 3
+	defb 192, 31
 	defb 128, 1
-	defb 228, 0
-	defb 56, 1
+	defb 126, 0
+	defb 255, 0
+	defb 126, 0
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1026,21 +1026,21 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_13_a
-	defb 1, 240
-	defb 7, 224
-	defb 3, 192
-	defb 12, 192
-	defb 26, 128
-	defb 30, 128
-	defb 12, 128
-	defb 0, 128
-	defb 30, 128
-	defb 31, 128
-	defb 11, 192
-	defb 11, 192
-	defb 3, 192
-	defb 10, 192
-	defb 0, 224
+	defb 0, 255
+	defb 52, 195
+	defb 72, 131
+	defb 136, 7
+	defb 136, 7
+	defb 8, 5
+	defb 133, 0
+	defb 0, 0
+	defb 131, 0
+	defb 129, 0
+	defb 3, 136
+	defb 66, 136
+	defb 16, 236
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1051,22 +1051,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_13_b
-	defb 192, 15
-	defb 192, 15
-	defb 224, 7
-	defb 0, 7
-	defb 96, 7
-	defb 208, 3
-	defb 240, 3
-	defb 96, 3
-	defb 0, 3
-	defb 176, 3
-	defb 240, 3
-	defb 224, 7
-	defb 96, 7
-	defb 96, 7
-	defb 64, 15
-	defb 0, 31
+	defb 0, 255
+	defb 44, 195
+	defb 18, 193
+	defb 17, 224
+	defb 17, 224
+	defb 16, 160
+	defb 161, 0
+	defb 0, 0
+	defb 193, 0
+	defb 129, 0
+	defb 192, 17
+	defb 66, 17
+	defb 8, 55
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1101,22 +1101,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_14_a
-	defb 3, 240
-	defb 3, 240
-	defb 7, 224
-	defb 0, 224
-	defb 6, 224
-	defb 11, 192
-	defb 15, 192
-	defb 6, 192
-	defb 0, 192
-	defb 13, 192
-	defb 15, 192
-	defb 7, 224
-	defb 6, 224
-	defb 6, 224
-	defb 2, 240
-	defb 0, 248
+	defb 0, 255
+	defb 0, 255
+	defb 32, 223
+	defb 64, 189
+	defb 65, 188
+	defb 96, 152
+	defb 147, 8
+	defb 9, 0
+	defb 131, 0
+	defb 130, 0
+	defb 0, 4
+	defb 128, 3
+	defb 4, 131
+	defb 68, 131
+	defb 18, 225
+	defb 6, 249
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1126,22 +1126,22 @@
 	defb 0, 255
 	defb 0, 255
 	._sprite_14_b
-	defb 128, 15
-	defb 224, 7
-	defb 192, 3
-	defb 48, 3
-	defb 88, 1
-	defb 120, 1
-	defb 48, 1
-	defb 0, 1
-	defb 120, 1
-	defb 248, 1
-	defb 208, 3
-	defb 208, 3
-	defb 192, 3
-	defb 80, 3
-	defb 0, 7
 	defb 0, 255
+	defb 0, 255
+	defb 4, 251
+	defb 2, 189
+	defb 130, 61
+	defb 6, 25
+	defb 201, 16
+	defb 144, 0
+	defb 193, 0
+	defb 65, 0
+	defb 0, 32
+	defb 1, 192
+	defb 32, 193
+	defb 34, 193
+	defb 72, 135
+	defb 96, 159
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1177,21 +1177,21 @@
 	defb 0, 255
 	._sprite_15_a
 	defb 0, 0
-	defb 127, 0
-	defb 63, 0
-	defb 31, 128
-	defb 0, 192
+	defb 47, 0
+	defb 95, 0
+	defb 47, 0
+	defb 23, 128
+	defb 11, 192
+	defb 5, 224
 	defb 3, 240
-	defb 3, 240
-	defb 1, 248
+	defb 0, 248
+	defb 1, 252
+	defb 1, 252
+	defb 0, 254
+	defb 0, 255
+	defb 0, 255
 	defb 0, 252
-	defb 0, 252
-	defb 1, 240
-	defb 7, 224
-	defb 6, 224
-	defb 4, 224
-	defb 6, 224
-	defb 0, 240
+	defb 0, 254
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1202,21 +1202,21 @@
 	defb 0, 255
 	._sprite_15_b
 	defb 0, 0
-	defb 254, 0
-	defb 254, 0
-	defb 252, 0
-	defb 172, 0
-	defb 248, 0
-	defb 224, 1
-	defb 240, 3
-	defb 240, 3
-	defb 48, 3
-	defb 240, 3
-	defb 192, 7
+	defb 250, 0
+	defb 244, 0
+	defb 250, 0
+	defb 212, 1
+	defb 232, 3
+	defb 208, 7
+	defb 160, 15
 	defb 0, 31
-	defb 0, 127
-	defb 0, 127
-	defb 0, 255
+	defb 128, 63
+	defb 192, 31
+	defb 32, 15
+	defb 16, 199
+	defb 16, 199
+	defb 32, 15
+	defb 0, 31
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1252,21 +1252,21 @@
 	defb 0, 255
 	._sprite_16_a
 	defb 0, 0
-	defb 127, 0
-	defb 63, 0
-	defb 31, 128
-	defb 1, 192
+	defb 47, 0
+	defb 95, 0
+	defb 47, 0
+	defb 23, 128
+	defb 11, 192
+	defb 5, 224
 	defb 3, 240
-	defb 3, 240
-	defb 1, 248
-	defb 0, 252
 	defb 0, 248
-	defb 1, 248
-	defb 3, 240
-	defb 3, 240
-	defb 3, 240
-	defb 1, 248
-	defb 0, 252
+	defb 1, 252
+	defb 0, 254
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1277,21 +1277,21 @@
 	defb 0, 255
 	._sprite_16_b
 	defb 0, 0
-	defb 254, 0
-	defb 254, 0
-	defb 248, 0
-	defb 88, 1
-	defb 240, 3
-	defb 192, 3
-	defb 224, 7
-	defb 224, 7
-	defb 96, 7
-	defb 224, 7
-	defb 192, 15
-	defb 128, 15
+	defb 250, 0
+	defb 244, 0
+	defb 250, 0
+	defb 212, 1
+	defb 232, 3
+	defb 208, 7
+	defb 160, 15
 	defb 0, 31
-	defb 128, 31
-	defb 0, 31
+	defb 128, 63
+	defb 224, 15
+	defb 16, 7
+	defb 8, 227
+	defb 8, 227
+	defb 8, 3
+	defb 0, 135
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2744,858 +2744,5214 @@
 	rl b
 	jr dzx0s_elias_loop
 	; -----------------------------------------------------------------------------
-	._mapa
-	BINARY "mapa.map.bin"
-	._cerrojos
-	BINARY "mapa.locks.bin"
+;	SECTION	text
+
+._mapa
+	defm	""
+	defb	18
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUQ"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUU"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUUR"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	224
+
+	defm	""
+	defb	21
+
+	defm	"UUU"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	226
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	208
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	25
+
+	defm	""
+	defb	208
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"331"
+	defb	153
+
+	defm	""
+	defb	208
+
+	defm	""
+	defb	0
+
+	defm	"3333"
+	defb	0
+
+	defm	""
+	defb	192
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	11
+
+	defm	""
+	defb	203
+
+	defm	""
+	defb	176
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUU"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	5
+
+	defm	"UUU"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"@UUUU"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	5
+
+	defm	"UUUQ"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	"3333$"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3331`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	"@"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	192
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	176
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	203
+
+	defm	""
+	defb	192
+
+	defm	""
+	defb	188
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUU["
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUUUP"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUUUUP"
+	defb	0
+
+	defm	"UUUUUUP"
+	defb	1
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	"!"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"1"
+	defb	17
+
+	defm	" 333"
+	defb	0
+
+	defm	"1"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"33 "
+	defb	0
+
+	defm	"3333"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3330"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"31"
+	defb	3
+
+	defm	"3"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3"
+	defb	0
+
+	defm	"30"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3333"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"P"
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33$"
+	defb	0
+
+	defm	""
+	defb	5
+
+	defm	""
+	defb	0
+
+	defm	"'wwq`"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	"!"
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	"A"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	12
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUUUP"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"UUUUUP"
+	defb	0
+
+	defm	"UUUUUUPUUUUUUUUUUUUUUU"
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	16
+
+	defm	"33"
+	defb	240
+
+	defm	"333"
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"32"
+	defb	26
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	9
+
+	defm	""
+	defb	157
+
+	defm	""
+	defb	0
+
+	defm	"3333 "
+	defb	154
+
+	defm	""
+	defb	157
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	10
+
+	defm	""
+	defb	9
+
+	defm	""
+	defb	157
+
+	defm	""
+	defb	16
+
+	defm	"33"
+	defb	16
+
+	defm	" "
+	defb	0
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	145
+
+	defm	""
+	defb	3
+
+	defm	"30"
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	9
+
+	defm	" 333"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	145
+
+	defm	""
+	defb	3
+
+	defm	"331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	9
+
+	defm	""
+	defb	16
+
+	defm	"1"
+	defb	3
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	161
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	0
+
+	defm	"0"
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"3333333"
+	defb	30
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3332"
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	0
+
+	defm	"31"
+	defb	3
+
+	defm	"3"
+	defb	16
+
+	defm	""
+	defb	4
+
+	defm	"`"
+	defb	3
+
+	defm	"3"
+	defb	0
+
+	defm	"31"
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	"333<"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"333"
+	defb	17
+
+	defm	""
+	defb	224
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"32"
+	defb	3
+
+	defm	"0 "
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	0
+
+	defm	"31"
+	defb	0
+
+	defm	"@"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"333"
+	defb	16
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"@"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"@"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	12
+
+	defm	""
+	defb	12
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	176
+
+	defm	""
+	defb	176
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	13
+
+	defm	""
+	defb	13
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	0
+
+	defm	" "
+	defb	3
+
+	defm	"3331"
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33"
+	defb	16
+
+	defm	"3"
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"330"
+	defb	3
+
+	defm	"3 "
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	16
+
+	defm	"3330"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"0"
+	defb	3
+
+	defm	"3330"
+	defb	1
+
+	defm	""
+	defb	192
+
+	defm	"33"
+	defb	16
+
+	defm	"33p"
+	defb	21
+
+	defm	"P30"
+	defb	3
+
+	defm	"3"
+	defb	17
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	3
+
+	defm	"33"
+	defb	16
+
+	defm	"2"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	"330"
+	defb	3
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	132
+
+	defm	"D"
+	defb	132
+
+	defm	"D"
+	defb	132
+
+	defm	"A"
+	defb	4
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	217
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	145
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"w"
+	defb	16
+
+	defm	"333331"
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"33333"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"33333"
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33330"
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"33"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"31"
+	defb	16
+
+	defm	"3330"
+	defb	3
+
+	defm	"3!"
+	defb	192
+
+	defm	"333331"
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"3333<"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"333<"
+	defb	177
+
+	defm	"333331"
+	defb	17
+
+	defm	""
+	defb	19
+
+	defm	"33333"
+	defb	0
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	16
+
+	defm	"333333"
+	defb	16
+
+	defm	""
+	defb	3
+
+	defm	"333331 "
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	"3331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"!"
+	defb	3
+
+	defm	"33"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	"331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	23
+
+	defm	"w 3"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"2"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"1"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	3
+
+	defm	"33"
+	defb	2
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"333"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"3"
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	"3333"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	224
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3333 `"
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3"
+	defb	16
+
+	defm	"31"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"30"
+	defb	3
+
+	defm	";"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	3
+
+	defm	"31"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	224
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"33"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3332"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"2www"
+	defb	22
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	7
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	215
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	9
+
+	defm	""
+	defb	215
+
+	defm	""
+	defb	7
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"p"
+	defb	0
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	215
+
+	defm	""
+	defb	212
+
+	defm	"p"
+	defb	0
+
+	defm	"}"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	9
+
+	defm	""
+	defb	217
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	13
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	157
+
+	defm	""
+	defb	13
+
+	defm	""
+	defb	144
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33331"
+	defb	0
+
+	defm	" 33333"
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33332"
+	defb	0
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	3
+
+	defm	"3333"
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	"33331"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"33333"
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33331"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"33333"
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	"wwww"
+	defb	16
+
+	defm	"1"
+	defb	0
+
+	defm	""
+	defb	17
+
+	defm	"!"
+	defb	17
+
+	defm	"!"
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	" "
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"333330"
+	defb	1
+
+	defm	""
+	defb	16
+
+	defm	"33333"
+	defb	0
+
+	defm	""
+	defb	27
+
+	defm	""
+	defb	3
+
+	defm	"33330"
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"333"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	"3330"
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33333"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"333330"
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33333"
+	defb	0
+
+	defm	""
+	defb	23
+
+	defm	"www"
+	defb	183
+
+	defm	"wp"
+	defb	1
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	"3333333#3333331333333<"
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"33333"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"33330"
+	defb	19
+
+	defm	"3333331333331"
+	defb	3
+
+	defm	"#33333"
+	defb	0
+
+	defm	"1wwww"
+	defb	16
+
+	defm	"33"
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"31"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"1"
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"3"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	" "
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3"
+	defb	224
+
+	defm	"31"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"30"
+	defb	3
+
+	defm	"3"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	30
+
+	defm	""
+	defb	3
+
+	defm	"33"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	"3>"
+	defb	1
+
+	defm	""
+	defb	7
+
+	defm	"w"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"33"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"UP"
+	defb	1
+
+	defm	"wwUR"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3333"
+	defb	16
+
+	defm	""
+	defb	14
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3333"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3>"
+	defb	3
+
+	defm	"2"
+	defb	224
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"33"
+	defb	0
+
+	defm	"3"
+	defb	16
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"U"
+	defb	3
+
+	defm	"35"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"1"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"@"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	12
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	""
+	defb	192
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	"@"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	"LD"
+	defb	180
+
+	defm	"`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	6
+
+	defm	"ff`"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"1"
+	defb	0
+
+	defm	" "
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33331"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"33333 "
+	defb	2
+
+	defm	""
+	defb	17
+
+	defm	"!"
+	defb	3
+
+	defm	""
+	defb	17
+
+	defm	"!"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"0"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	" "
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33331"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"33333"
+	defb	16
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"1"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"333333"
+	defb	0
+
+	defm	"3333330"
+	defb	3
+
+	defm	"333331"
+	defb	0
+
+	defm	"333333"
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"<"
+	defb	3
+
+	defm	"3333"
+	defb	0
+
+	defm	";"
+	defb	187
+
+	defm	""
+	defb	203
+
+	defm	"{"
+	defb	199
+
+	defm	"wp"
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"3"
+	defb	17
+
+	defm	"!"
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"3"
+	defb	17
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"0#33333313333333"
+	defb	18
+
+	defm	""
+	defb	3
+
+	defm	"333332"
+	defb	0
+
+	defm	"333333"
+	defb	19
+
+	defm	"3333331ww"
+	defb	188
+
+	defm	""
+	defb	3
+
+	defm	"333"
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	"31 "
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	188
+
+	defm	"331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"2"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3333"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	28
+
+	defm	"8"
+	defb	8
+
+	defm	""
+	defb	3
+
+	defm	"$"
+	defb	132
+
+	defm	""
+	defb	132
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	209
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	218
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"3"
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	224
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	224
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"330"
+	defb	3
+
+	defm	""
+	defb	30
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"3331"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"`33"
+	defb	16
+
+	defm	"3"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	224
+
+	defm	""
+	defb	3
+
+	defm	"30"
+	defb	3
+
+	defm	"?"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3331"
+	defb	22
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	131
+
+	defm	"1"
+	defb	188
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	12
+
+	defm	""
+	defb	20
+
+	defm	"D"
+	defb	217
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	157
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	217
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"HD"
+	defb	132
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"M"
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	212
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"M"
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	212
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"M"
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	212
+
+	defm	""
+	defb	132
+
+	defm	"-"
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"33331"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"3330"
+	defb	17
+
+	defm	" "
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	"333 "
+	defb	1
+
+	defm	""
+	defb	0
+
+	defm	" 3"
+	defb	192
+
+	defm	"30"
+	defb	3
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	3
+
+	defm	";"
+	defb	3
+
+	defm	""
+	defb	192
+
+	defm	"31"
+	defb	0
+
+	defm	""
+	defb	240
+
+	defm	"<"
+	defb	188
+
+	defm	""
+	defb	11
+
+	defm	""
+	defb	3
+
+	defm	"3"
+	defb	240
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	27
+
+	defm	""
+	defb	188
+
+	defm	""
+	defb	188
+
+	defm	""
+	defb	187
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	29
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	220
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	217
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"3333330"
+	defb	3
+
+	defm	""
+	defb	3
+
+	defm	"30303"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"0"
+	defb	3
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	"0"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	" D"
+	defb	132
+
+	defm	"D"
+	defb	132
+
+	defm	"D"
+	defb	132
+
+	defm	"A-"
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	"33"
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	"1"
+	defb	17
+
+	defm	"333331"
+	defb	17
+
+	defm	"#3"
+	defb	3
+
+	defm	"03"
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	""
+	defb	17
+
+	defm	"0"
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	3
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	"HD@31HD"
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	221
+
+	defm	"D"
+	defb	3
+
+	defm	""
+	defb	29
+
+	defm	""
+	defb	221
+
+	defm	""
+	defb	217
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	157
+
+	defm	""
+	defb	212
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	169
+
+	defm	""
+	defb	153
+
+	defm	""
+	defb	212
+
+	defm	""
+	defb	26
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	160
+
+	defm	""
+	defb	170
+
+	defm	""
+	defb	154
+
+	defm	""
+	defb	209
+
+;	SECTION	code
+
+
+;	SECTION	text
+
+._cerrojos
+	defb	5
+	defb	6
+	defb	8
+	defb	0
+	defb	25
+	defb	8
+	defb	5
+	defb	0
+	defb	27
+	defb	1
+	defb	5
+	defb	0
+	defb	27
+	defb	13
+	defb	5
+	defb	0
+
+;	SECTION	code
+
 ;	SECTION	text
 
 ._malotes
-	defb	208
-	defb	96
+	defb	64
 	defb	16
-	defb	96
-	defb	208
-	defb	96
-	defb	-1
-	defb	0
-	defb	0
-	defb	48
+	defb	64
 	defb	16
-	defb	48
-	defb	0
-	defb	48
-	defb	16
-	defb	0
-	defb	0
-	defb	0
-	defb	144
-	defb	48
-	defb	144
-	defb	32
-	defb	144
-	defb	48
-	defb	0
-	defb	0
-	defb	0
+	defb	64
 	defb	128
-	defb	96
-	defb	128
-	defb	80
-	defb	192
-	defb	96
-	defb	1
-	defb	-1
-	defb	1
-	defb	144
 	defb	0
-	defb	144
-	defb	0
-	defb	144
-	defb	64
-	defb	0
-	defb	1
-	defb	0
-	defb	64
-	defb	80
-	defb	0
-	defb	80
-	defb	64
-	defb	80
-	defb	-1
-	defb	0
-	defb	0
-	defb	96
-	defb	112
-	defb	96
-	defb	48
-	defb	96
-	defb	112
-	defb	0
-	defb	-1
 	defb	4
+	defb	3
 	defb	208
-	defb	128
+	defb	16
 	defb	96
-	defb	128
+	defb	16
 	defb	208
-	defb	128
+	defb	16
 	defb	-2
 	defb	0
-	defb	4
-	defb	80
-	defb	80
-	defb	32
-	defb	80
-	defb	80
-	defb	80
-	defb	-1
+	defb	1
+	defb	192
 	defb	0
+	defb	112
 	defb	0
-	defb	16
-	defb	128
-	defb	16
-	defb	128
-	defb	160
-	defb	128
-	defb	2
+	defb	192
 	defb	0
-	defb	4
-	defb	176
-	defb	64
-	defb	176
-	defb	64
-	defb	176
-	defb	96
+	defb	-2
 	defb	0
 	defb	1
+	defb	128
+	defb	0
+	defb	128
+	defb	0
+	defb	128
+	defb	64
+	defb	0
+	defb	1
+	defb	2
+	defb	144
+	defb	16
+	defb	144
+	defb	16
+	defb	176
+	defb	96
+	defb	2
+	defb	2
+	defb	2
+	defb	96
+	defb	0
+	defb	96
+	defb	0
+	defb	96
+	defb	32
+	defb	0
+	defb	1
+	defb	2
+	defb	16
+	defb	32
+	defb	16
+	defb	32
+	defb	96
+	defb	32
+	defb	2
+	defb	0
+	defb	1
+	defb	144
+	defb	96
+	defb	144
+	defb	0
+	defb	144
+	defb	96
+	defb	0
+	defb	-1
+	defb	3
+	defb	176
+	defb	0
+	defb	176
+	defb	0
+	defb	176
+	defb	80
+	defb	0
+	defb	1
+	defb	2
+	defb	96
+	defb	112
+	defb	48
+	defb	112
+	defb	96
+	defb	112
+	defb	-1
+	defb	0
+	defb	3
+	defb	48
+	defb	0
+	defb	48
+	defb	0
+	defb	48
+	defb	32
+	defb	0
+	defb	1
+	defb	1
+	defb	208
+	defb	0
+	defb	208
+	defb	0
+	defb	208
+	defb	64
+	defb	0
+	defb	2
+	defb	1
+	defb	64
+	defb	0
+	defb	64
+	defb	0
+	defb	64
+	defb	80
+	defb	0
+	defb	1
+	defb	1
+	defb	96
+	defb	0
+	defb	96
+	defb	0
+	defb	96
+	defb	64
+	defb	0
+	defb	1
+	defb	1
+	defb	160
+	defb	0
+	defb	160
+	defb	0
+	defb	208
+	defb	80
+	defb	2
+	defb	2
+	defb	2
+	defb	80
+	defb	112
+	defb	16
+	defb	112
+	defb	80
+	defb	112
+	defb	-2
+	defb	0
+	defb	2
+	defb	96
+	defb	0
+	defb	0
+	defb	0
+	defb	96
+	defb	0
+	defb	-1
+	defb	0
 	defb	2
 	defb	224
-	defb	48
+	defb	0
+	defb	224
+	defb	0
 	defb	224
 	defb	48
+	defb	0
+	defb	1
+	defb	2
+	defb	128
+	defb	16
+	defb	128
+	defb	16
+	defb	128
+	defb	128
+	defb	0
+	defb	2
+	defb	3
+	defb	160
+	defb	0
+	defb	160
+	defb	0
+	defb	160
+	defb	112
+	defb	0
+	defb	1
+	defb	1
+	defb	16
+	defb	96
+	defb	16
+	defb	96
+	defb	80
+	defb	128
+	defb	4
+	defb	4
+	defb	2
+	defb	16
+	defb	80
+	defb	16
+	defb	48
+	defb	96
+	defb	80
+	defb	1
+	defb	-1
+	defb	1
+	defb	16
+	defb	16
+	defb	16
+	defb	16
+	defb	96
+	defb	16
+	defb	2
+	defb	0
+	defb	2
+	defb	160
+	defb	0
+	defb	160
+	defb	0
+	defb	160
+	defb	144
+	defb	0
+	defb	2
+	defb	3
+	defb	48
+	defb	32
+	defb	48
+	defb	32
+	defb	144
+	defb	32
+	defb	2
+	defb	0
+	defb	3
+	defb	112
+	defb	48
+	defb	112
+	defb	48
+	defb	112
+	defb	128
+	defb	0
+	defb	1
+	defb	2
+	defb	160
+	defb	96
+	defb	160
+	defb	0
+	defb	160
+	defb	96
+	defb	0
+	defb	-2
+	defb	3
+	defb	96
+	defb	128
+	defb	96
+	defb	16
+	defb	96
+	defb	128
+	defb	0
+	defb	-2
+	defb	4
+	defb	144
+	defb	16
+	defb	144
+	defb	16
+	defb	176
+	defb	112
+	defb	2
+	defb	2
+	defb	3
+	defb	112
+	defb	48
+	defb	32
+	defb	16
+	defb	112
+	defb	48
+	defb	-2
+	defb	-2
+	defb	1
+	defb	64
+	defb	128
+	defb	64
+	defb	128
+	defb	208
+	defb	128
+	defb	1
+	defb	0
+	defb	4
+	defb	208
+	defb	112
+	defb	112
+	defb	112
+	defb	208
+	defb	112
+	defb	-1
+	defb	0
+	defb	1
+	defb	64
+	defb	16
+	defb	64
+	defb	16
+	defb	96
+	defb	16
+	defb	1
+	defb	0
+	defb	3
+	defb	16
+	defb	128
+	defb	16
+	defb	128
+	defb	160
+	defb	128
+	defb	1
+	defb	0
+	defb	4
+	defb	48
+	defb	112
+	defb	48
+	defb	64
+	defb	48
+	defb	112
+	defb	0
+	defb	-1
+	defb	4
+	defb	80
+	defb	48
+	defb	80
+	defb	48
+	defb	160
+	defb	96
+	defb	2
+	defb	2
+	defb	2
+	defb	208
+	defb	112
+	defb	128
+	defb	112
+	defb	208
+	defb	112
+	defb	-1
+	defb	0
+	defb	3
+	defb	208
+	defb	80
+	defb	208
+	defb	16
+	defb	208
+	defb	80
+	defb	0
+	defb	-1
+	defb	2
+	defb	16
+	defb	16
+	defb	16
+	defb	16
+	defb	96
+	defb	128
+	defb	4
+	defb	4
+	defb	3
+	defb	64
+	defb	0
+	defb	64
+	defb	0
+	defb	112
+	defb	48
+	defb	2
+	defb	2
+	defb	1
+	defb	16
+	defb	64
+	defb	16
+	defb	64
+	defb	80
+	defb	112
+	defb	1
+	defb	1
+	defb	2
+	defb	208
+	defb	16
+	defb	192
+	defb	16
+	defb	208
+	defb	128
+	defb	-2
+	defb	2
+	defb	3
+	defb	16
+	defb	0
+	defb	16
+	defb	0
+	defb	112
+	defb	32
+	defb	1
+	defb	1
+	defb	2
+	defb	208
+	defb	0
+	defb	176
+	defb	0
+	defb	208
+	defb	48
+	defb	-2
+	defb	2
+	defb	3
+	defb	64
+	defb	64
+	defb	64
+	defb	0
+	defb	96
+	defb	64
+	defb	1
+	defb	-1
+	defb	1
+	defb	160
+	defb	112
+	defb	160
+	defb	64
+	defb	160
+	defb	112
+	defb	0
+	defb	-1
+	defb	4
+	defb	192
+	defb	32
+	defb	48
+	defb	32
+	defb	192
+	defb	32
+	defb	-1
+	defb	0
+	defb	4
+	defb	64
+	defb	0
+	defb	64
+	defb	0
+	defb	176
+	defb	16
+	defb	1
+	defb	1
+	defb	3
+	defb	192
+	defb	48
+	defb	80
+	defb	48
+	defb	192
+	defb	48
+	defb	-1
+	defb	0
+	defb	4
+	defb	112
+	defb	32
+	defb	112
+	defb	32
+	defb	176
+	defb	32
+	defb	1
+	defb	0
+	defb	3
+	defb	64
+	defb	80
+	defb	64
+	defb	80
+	defb	192
+	defb	112
+	defb	2
+	defb	2
+	defb	2
+	defb	192
+	defb	48
+	defb	32
+	defb	48
+	defb	192
+	defb	48
+	defb	-1
+	defb	0
+	defb	4
+	defb	16
+	defb	32
+	defb	16
+	defb	32
+	defb	128
+	defb	32
+	defb	1
+	defb	0
+	defb	1
+	defb	16
+	defb	64
+	defb	16
+	defb	64
+	defb	112
+	defb	112
+	defb	2
+	defb	2
+	defb	2
+	defb	208
+	defb	64
+	defb	128
+	defb	64
+	defb	208
+	defb	64
+	defb	-1
+	defb	0
+	defb	2
+	defb	48
+	defb	16
+	defb	48
+	defb	16
+	defb	48
+	defb	80
+	defb	0
+	defb	2
+	defb	1
+	defb	64
+	defb	32
+	defb	64
+	defb	32
+	defb	64
+	defb	80
+	defb	0
+	defb	2
+	defb	3
+	defb	16
+	defb	112
+	defb	16
+	defb	112
+	defb	112
+	defb	112
+	defb	1
+	defb	0
+	defb	1
+	defb	192
+	defb	128
+	defb	192
+	defb	16
+	defb	192
+	defb	128
+	defb	0
+	defb	-1
+	defb	4
+	defb	112
+	defb	48
+	defb	16
+	defb	48
+	defb	112
+	defb	48
+	defb	-2
+	defb	0
+	defb	3
+	defb	176
+	defb	48
+	defb	32
+	defb	48
+	defb	176
+	defb	48
+	defb	-1
+	defb	0
+	defb	1
+	defb	176
+	defb	64
+	defb	48
+	defb	64
+	defb	176
+	defb	64
+	defb	-1
+	defb	0
+	defb	1
+	defb	16
+	defb	0
+	defb	16
+	defb	0
+	defb	192
+	defb	32
+	defb	2
+	defb	2
+	defb	2
+	defb	32
+	defb	112
+	defb	32
+	defb	112
+	defb	192
+	defb	112
+	defb	2
+	defb	0
+	defb	4
+	defb	192
+	defb	32
+	defb	48
+	defb	32
+	defb	192
+	defb	32
+	defb	-2
+	defb	0
+	defb	4
+	defb	176
+	defb	80
+	defb	48
+	defb	80
+	defb	176
+	defb	80
+	defb	-1
+	defb	0
+	defb	1
+	defb	208
+	defb	80
+	defb	32
+	defb	80
+	defb	208
+	defb	80
+	defb	-1
+	defb	0
+	defb	4
+	defb	64
+	defb	64
+	defb	64
+	defb	64
+	defb	176
+	defb	64
+	defb	1
+	defb	0
+	defb	2
+	defb	16
+	defb	0
+	defb	0
+	defb	0
+	defb	16
+	defb	144
+	defb	-3
+	defb	3
+	defb	2
+	defb	16
+	defb	48
+	defb	16
+	defb	48
+	defb	208
+	defb	48
+	defb	1
+	defb	0
+	defb	4
+	defb	96
+	defb	64
+	defb	96
+	defb	64
+	defb	96
+	defb	128
+	defb	0
+	defb	1
+	defb	1
+	defb	208
+	defb	80
+	defb	128
+	defb	80
+	defb	208
+	defb	128
+	defb	-2
+	defb	2
+	defb	3
+	defb	96
+	defb	32
+	defb	96
+	defb	32
+	defb	96
+	defb	96
+	defb	0
+	defb	2
+	defb	1
+	defb	128
+	defb	80
+	defb	128
+	defb	80
 	defb	224
-	defb	48
-	defb	0
-	defb	0
-	defb	0
-	defb	32
-	defb	16
-	defb	32
-	defb	16
-	defb	96
-	defb	128
-	defb	4
-	defb	4
-	defb	0
-	defb	48
-	defb	96
-	defb	48
-	defb	64
-	defb	176
-	defb	96
-	defb	4
-	defb	-4
-	defb	0
-	defb	160
-	defb	112
 	defb	80
-	defb	32
-	defb	160
+	defb	2
+	defb	0
+	defb	4
+	defb	96
 	defb	112
-	defb	-4
-	defb	-4
-	defb	0
-	defb	144
-	defb	128
-	defb	144
-	defb	32
-	defb	144
-	defb	128
-	defb	0
+	defb	16
+	defb	112
+	defb	96
+	defb	112
 	defb	-1
-	defb	2
-	defb	80
-	defb	16
-	defb	80
-	defb	16
-	defb	80
-	defb	128
 	defb	0
-	defb	1
-	defb	3
-	defb	176
-	defb	128
-	defb	176
-	defb	32
-	defb	176
-	defb	128
-	defb	0
-	defb	-1
-	defb	1
-	defb	64
-	defb	16
-	defb	64
-	defb	16
-	defb	80
-	defb	128
-	defb	1
-	defb	1
 	defb	3
 	defb	112
 	defb	16
 	defb	112
 	defb	16
-	defb	144
-	defb	128
-	defb	4
-	defb	4
-	defb	2
-	defb	176
-	defb	16
-	defb	176
-	defb	16
-	defb	208
-	defb	128
-	defb	2
-	defb	2
-	defb	1
-	defb	48
-	defb	128
-	defb	48
-	defb	128
-	defb	160
-	defb	128
-	defb	2
+	defb	112
+	defb	80
 	defb	0
-	defb	3
-	defb	16
+	defb	1
+	defb	2
+	defb	48
 	defb	96
-	defb	16
-	defb	16
-	defb	16
+	defb	48
+	defb	0
+	defb	48
 	defb	96
 	defb	0
 	defb	-2
-	defb	2
-	defb	32
-	defb	64
-	defb	32
-	defb	64
-	defb	192
-	defb	64
 	defb	1
+	defb	176
+	defb	48
+	defb	176
+	defb	48
+	defb	176
+	defb	128
 	defb	0
-	defb	4
+	defb	2
+	defb	3
+	defb	160
 	defb	32
-	defb	16
+	defb	160
 	defb	32
-	defb	16
 	defb	192
 	defb	80
-	defb	4
-	defb	4
-	defb	0
-	defb	160
-	defb	32
-	defb	128
-	defb	32
-	defb	160
-	defb	128
-	defb	-4
-	defb	4
-	defb	0
-	defb	160
-	defb	112
-	defb	16
-	defb	48
-	defb	160
-	defb	112
-	defb	-4
-	defb	-4
-	defb	0
-	defb	176
-	defb	128
-	defb	48
-	defb	128
-	defb	176
-	defb	128
-	defb	-1
-	defb	0
-	defb	3
-	defb	176
-	defb	64
-	defb	144
-	defb	64
-	defb	176
-	defb	64
-	defb	-1
-	defb	0
-	defb	2
-	defb	128
-	defb	128
-	defb	128
-	defb	16
-	defb	128
-	defb	128
-	defb	0
-	defb	-1
-	defb	4
-	defb	48
-	defb	16
-	defb	48
-	defb	16
-	defb	176
-	defb	48
 	defb	2
 	defb	2
-	defb	2
-	defb	16
-	defb	128
-	defb	16
-	defb	16
-	defb	16
-	defb	128
-	defb	0
-	defb	-1
-	defb	4
-	defb	48
-	defb	16
-	defb	48
-	defb	16
-	defb	224
+	defb	1
 	defb	96
-	defb	2
-	defb	2
-	defb	0
-	defb	144
-	defb	16
-	defb	144
-	defb	16
-	defb	176
-	defb	112
-	defb	1
-	defb	1
-	defb	1
-	defb	64
-	defb	16
-	defb	64
-	defb	16
+	defb	48
 	defb	96
-	defb	112
-	defb	1
-	defb	1
-	defb	2
-	defb	192
-	defb	16
-	defb	192
-	defb	16
-	defb	192
-	defb	128
 	defb	0
-	defb	3
-	defb	3
-	defb	112
-	defb	112
-	defb	112
-	defb	112
-	defb	192
-	defb	112
-	defb	1
-	defb	0
-	defb	2
-	defb	16
-	defb	128
-	defb	16
-	defb	16
-	defb	16
-	defb	128
+	defb	96
+	defb	48
 	defb	0
 	defb	-1
-	defb	0
+	defb	2
 	defb	144
-	defb	112
 	defb	144
-	defb	112
-	defb	208
-	defb	112
-	defb	1
+	defb	48
+	defb	144
+	defb	144
+	defb	144
+	defb	-1
 	defb	0
-	defb	0
+	defb	3
+	defb	32
 	defb	80
-	defb	96
+	defb	32
+	defb	16
+	defb	32
 	defb	80
-	defb	96
-	defb	144
-	defb	96
-	defb	1
 	defb	0
-	defb	1
-	defb	48
-	defb	48
-	defb	48
-	defb	48
-	defb	160
-	defb	48
-	defb	1
-	defb	0
-	defb	2
-	defb	32
-	defb	64
-	defb	32
-	defb	64
-	defb	32
-	defb	96
-	defb	0
-	defb	1
-	defb	3
-	defb	224
-	defb	16
-	defb	128
-	defb	16
-	defb	224
-	defb	16
-	defb	-2
-	defb	0
-	defb	2
-	defb	160
-	defb	128
-	defb	160
-	defb	48
-	defb	160
-	defb	128
-	defb	0
-	defb	-1
-	defb	1
-	defb	48
-	defb	32
-	defb	48
-	defb	32
-	defb	48
-	defb	112
-	defb	0
-	defb	2
-	defb	4
-	defb	16
-	defb	64
-	defb	16
-	defb	64
-	defb	208
-	defb	64
-	defb	2
-	defb	0
-	defb	4
-	defb	32
-	defb	48
-	defb	32
-	defb	16
-	defb	192
-	defb	48
-	defb	2
 	defb	-2
 	defb	1
-	defb	144
-	defb	16
-	defb	96
-	defb	16
-	defb	144
-	defb	96
+	defb	192
+	defb	80
+	defb	192
+	defb	32
+	defb	192
+	defb	80
+	defb	0
 	defb	-2
 	defb	2
-	defb	0
-	defb	96
-	defb	16
-	defb	96
-	defb	16
-	defb	96
-	defb	96
-	defb	0
-	defb	1
-	defb	1
-	defb	32
-	defb	64
-	defb	32
-	defb	64
-	defb	144
-	defb	64
-	defb	1
-	defb	0
-	defb	2
-	defb	16
-	defb	16
-	defb	16
-	defb	16
-	defb	16
-	defb	128
-	defb	0
-	defb	1
-	defb	0
-	defb	192
-	defb	128
-	defb	192
-	defb	16
-	defb	192
-	defb	128
-	defb	0
-	defb	-1
-	defb	4
 	defb	112
-	defb	112
-	defb	32
-	defb	112
-	defb	112
-	defb	112
-	defb	-1
-	defb	0
-	defb	2
-	defb	48
-	defb	64
-	defb	48
-	defb	64
 	defb	80
-	defb	64
-	defb	1
+	defb	112
+	defb	32
+	defb	112
+	defb	80
 	defb	0
+	defb	-1
 	defb	3
-	defb	32
-	defb	128
-	defb	32
-	defb	16
-	defb	32
-	defb	128
-	defb	0
-	defb	-1
-	defb	4
 	defb	208
-	defb	80
 	defb	48
-	defb	80
+	defb	32
+	defb	48
 	defb	208
-	defb	80
+	defb	48
 	defb	-1
 	defb	0
 	defb	4
-	defb	208
+	defb	64
+	defb	32
+	defb	64
+	defb	32
+	defb	192
+	defb	32
+	defb	1
+	defb	0
+	defb	2
+	defb	80
+	defb	96
+	defb	80
+	defb	96
+	defb	112
+	defb	96
+	defb	1
+	defb	0
+	defb	1
+	defb	112
 	defb	16
-	defb	48
 	defb	16
-	defb	208
-	defb	48
+	defb	16
+	defb	112
+	defb	80
 	defb	-2
 	defb	2
-	defb	2
-	defb	80
-	defb	16
-	defb	80
-	defb	16
-	defb	80
-	defb	128
-	defb	0
-	defb	1
-	defb	4
-	defb	176
-	defb	112
-	defb	176
-	defb	32
-	defb	176
-	defb	112
-	defb	0
-	defb	-1
-	defb	2
-	defb	128
-	defb	112
-	defb	128
-	defb	32
-	defb	128
-	defb	112
-	defb	0
-	defb	-1
-	defb	3
-	defb	144
-	defb	16
-	defb	144
-	defb	16
-	defb	192
-	defb	64
-	defb	2
-	defb	2
-	defb	1
-	defb	48
-	defb	16
-	defb	48
-	defb	16
-	defb	48
-	defb	96
-	defb	0
-	defb	1
-	defb	2
-	defb	16
-	defb	128
-	defb	16
-	defb	128
-	defb	144
-	defb	128
-	defb	1
-	defb	0
-	defb	3
-	defb	64
-	defb	48
-	defb	32
-	defb	48
-	defb	64
-	defb	48
-	defb	-1
-	defb	0
-	defb	1
-	defb	176
-	defb	96
-	defb	176
-	defb	32
-	defb	176
-	defb	96
-	defb	0
-	defb	-1
-	defb	2
-	defb	64
-	defb	80
-	defb	64
-	defb	80
-	defb	96
-	defb	128
-	defb	1
-	defb	1
-	defb	3
-	defb	144
-	defb	16
-	defb	144
-	defb	16
-	defb	144
-	defb	128
-	defb	0
-	defb	2
-	defb	4
-	defb	192
-	defb	112
-	defb	32
-	defb	112
-	defb	192
-	defb	112
-	defb	-2
-	defb	0
-	defb	4
-	defb	32
-	defb	96
-	defb	32
-	defb	96
-	defb	112
-	defb	96
-	defb	1
-	defb	0
 	defb	3
 	defb	176
-	defb	128
+	defb	64
 	defb	176
-	defb	48
+	defb	64
 	defb	176
-	defb	128
-	defb	0
-	defb	-1
-	defb	4
-	defb	80
-	defb	48
-	defb	80
-	defb	48
-	defb	160
-	defb	80
-	defb	2
-	defb	2
-	defb	3
-	defb	16
-	defb	112
-	defb	16
-	defb	16
-	defb	16
-	defb	112
-	defb	0
-	defb	-1
-	defb	1
-	defb	192
-	defb	16
-	defb	192
-	defb	16
-	defb	192
 	defb	96
 	defb	0
-	defb	2
-	defb	3
-	defb	160
-	defb	128
-	defb	112
-	defb	128
-	defb	160
-	defb	128
-	defb	-1
-	defb	0
 	defb	1
-	defb	16
-	defb	32
-	defb	16
-	defb	32
-	defb	64
-	defb	32
 	defb	1
-	defb	0
-	defb	2
+	defb	208
+	defb	80
+	defb	208
+	defb	80
 	defb	208
 	defb	128
 	defb	0
-	defb	128
-	defb	208
-	defb	128
-	defb	-1
-	defb	0
-	defb	3
-	defb	192
-	defb	112
-	defb	192
-	defb	16
-	defb	192
-	defb	112
-	defb	0
-	defb	-1
-	defb	4
-	defb	32
-	defb	64
-	defb	32
-	defb	64
-	defb	160
-	defb	64
-	defb	2
-	defb	0
-	defb	2
-	defb	48
-	defb	48
-	defb	48
-	defb	48
-	defb	48
-	defb	96
-	defb	0
 	defb	1
 	defb	1
-	defb	192
-	defb	96
-	defb	192
-	defb	48
-	defb	192
-	defb	96
-	defb	0
-	defb	-1
-	defb	2
-	defb	64
-	defb	48
-	defb	64
-	defb	48
-	defb	176
-	defb	96
-	defb	2
-	defb	2
-	defb	3
-	defb	176
-	defb	112
-	defb	176
-	defb	32
-	defb	176
-	defb	112
-	defb	0
-	defb	-1
-	defb	1
-	defb	128
-	defb	16
-	defb	128
-	defb	16
-	defb	128
-	defb	64
-	defb	0
-	defb	1
-	defb	2
-	defb	48
-	defb	64
-	defb	48
-	defb	64
-	defb	48
-	defb	112
-	defb	0
-	defb	1
-	defb	3
 
 ;	SECTION	code
 
 ;	SECTION	text
 
 ._hotspots
-	defb	0
-	defb	0
-	defb	0
-	defb	166
-	defb	3
-	defb	0
-	defb	145
+	defb	22
 	defb	2
 	defb	0
-	defb	200
+	defb	115
 	defb	2
 	defb	0
-	defb	200
-	defb	2
-	defb	0
-	defb	71
-	defb	2
-	defb	0
-	defb	200
+	defb	113
 	defb	1
-	defb	0
-	defb	212
-	defb	1
-	defb	0
-	defb	183
-	defb	3
-	defb	0
-	defb	196
-	defb	1
-	defb	0
-	defb	131
-	defb	3
 	defb	0
 	defb	216
+	defb	1
+	defb	0
+	defb	81
+	defb	1
+	defb	0
+	defb	24
+	defb	1
+	defb	0
+	defb	98
+	defb	1
+	defb	0
+	defb	115
+	defb	1
+	defb	0
+	defb	69
+	defb	1
+	defb	0
+	defb	129
 	defb	2
 	defb	0
-	defb	195
+	defb	209
 	defb	2
-	defb	0
-	defb	193
-	defb	1
-	defb	0
-	defb	212
-	defb	1
-	defb	0
-	defb	210
-	defb	1
-	defb	0
-	defb	198
-	defb	1
-	defb	0
-	defb	36
-	defb	1
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	198
-	defb	1
-	defb	0
-	defb	200
-	defb	1
 	defb	0
 	defb	18
 	defb	1
 	defb	0
-	defb	17
-	defb	3
-	defb	0
-	defb	168
+	defb	200
 	defb	1
 	defb	0
-	defb	21
-	defb	2
+	defb	100
+	defb	1
 	defb	0
-	defb	180
-	defb	2
+	defb	148
+	defb	1
+	defb	0
+	defb	34
+	defb	1
+	defb	0
+	defb	66
+	defb	1
+	defb	0
+	defb	209
+	defb	1
+	defb	0
+	defb	19
+	defb	1
 	defb	0
 	defb	113
-	defb	2
+	defb	1
 	defb	0
-	defb	86
-	defb	2
+	defb	133
+	defb	1
+	defb	0
+	defb	35
+	defb	1
+	defb	0
+	defb	70
+	defb	1
+	defb	0
+	defb	87
+	defb	1
+	defb	0
+	defb	129
+	defb	1
+	defb	0
+	defb	87
+	defb	1
+	defb	0
+	defb	114
+	defb	1
+	defb	0
+	defb	100
+	defb	1
+	defb	0
+	defb	129
+	defb	1
+	defb	0
+	defb	212
+	defb	1
 	defb	0
 
 ;	SECTION	code
@@ -3811,15 +8167,15 @@
 	ld	de,15	;const
 	ex	de,hl
 	call	l_eq
-	jp	nc,i_43
+	jp	nc,i_45
 	ld	hl,_player+28
 	call	l_gchar
 	ld	a,h
 	or	l
-	jr	nz,i_44_i_43
-.i_43
-	jp	i_42
-.i_44_i_43
+	jr	nz,i_46_i_45
+.i_45
+	jp	i_44
+.i_46_i_45
 	xor a
 	ld (__t), a
 	ld a, (_comportamiento_tiles) ;; beh [0]
@@ -3829,7 +8185,7 @@
 	ld a, (_rdy)
 	ld (__y), a
 	call set_map_tile_do
-	ld b, 10
+	ld b, 4
 	ld hl, _cerrojos
 	.clear_cerrojo_loop
 	ld c, (hl)
@@ -3863,13 +8219,13 @@
 	ld	(de),a
 	ld	hl,8	;const
 	call	_peta_el_beeper
-.i_42
+.i_44
 	ret
 
 
 
 ._init_cerrojos
-	ld b, 10
+	ld b, 4
 	ld hl, _cerrojos + 3
 	ld de, 4
 	ld a, 1
@@ -3995,7 +8351,7 @@
 	call _pad_read
 	.m_vert_gravity_do
 	ld hl, (_player + 8)
-	ld de, 24
+	ld de, 32
 	add hl, de
 	ld de, 512
 	call l_lt
@@ -4106,23 +8462,11 @@
 	ld (_cy2), a
 	call _cm_two_points
 	ld a, (_at1)
-	and 8
+	and 12
 	jr nz, m_vert_coll_down_adjust
 	ld a, (_at2)
-	and 8
-	jr nz, m_vert_coll_down_adjust
-	ld a, (_at1)
-	and 4
-	jr nz, m_vert_coll_down_ch2
-	ld a, (_at2)
-	and 4
+	and 12
 	jp z, m_vert_coll_checks_done
-	.m_vert_coll_down_ch2
-	ld a, (_gpy)
-	dec a
-	and 15
-	cp 4
-	jr nc, m_vert_coll_checks_done
 	.m_vert_coll_down_adjust
 	ld hl, 0
 	.m_vert_coll_down_set_vy
@@ -4219,14 +8563,14 @@
 	bit 7, h
 	jr nz, m_horz_kp_rx_negative
 	.m_horz_kp_rx_positive
-	ld de, -8
+	ld de, -64
 	add hl, de
 	bit 7, h
 	jr z, m_horz_kp_vx_write
 	ld hl, 0
 	jr m_horz_kp_vx_write
 	.m_horz_kp_rx_negative
-	ld de, 8
+	ld de, 64
 	add hl, de
 	bit 7, h
 	jr nz, m_horz_kp_vx_write
@@ -4239,10 +8583,10 @@
 	and 0x04
 	jr nz, m_horz_kp_left_done
 	.m_horz_kp_left_do
-	ld de, -24
+	ld de, -48
 	ld hl, (_player + 6)
 	add hl, de
-	ld de, -128
+	ld de, -256
 	call l_gt
 	jr nc, m_horz_kp_left_facing
 	ex de, hl
@@ -4255,10 +8599,10 @@
 	and 0x08
 	jr nz, m_horz_kp_right_done
 	.m_horz_kp_right_do
-	ld de, 24
+	ld de, 48
 	ld hl, (_player + 6)
 	add hl, de
-	ld de, 128
+	ld de, 256
 	call l_lt
 	jr nc, m_horz_kp_right_facing
 	ex de, hl
@@ -4474,9 +8818,9 @@
 
 
 ._init_player_values
-	ld	a,#(16 % 256 % 256)
+	ld	a,#(32 % 256 % 256)
 	ld	(_gpx),a
-	ld	hl,112 % 256	;const
+	ld	hl,32 % 256	;const
 	ld	a,l
 	ld	(_gpy),a
 	call _shl_player_coords
@@ -4507,7 +8851,7 @@
 
 
 ._init_hotspots
-	ld b, 4 * 7
+	ld b, 6 * 5
 	ld hl, _hotspots + 2
 	ld de, 3
 	ld a, 1
@@ -4650,7 +8994,7 @@
 	ld a, (_hotspot_t_r)
 	ld b, a
 	cp 3
-	ld a, 32
+	ld a, 16
 	jr z, hotspot_paint_set_t
 	add b
 	.hotspot_paint_set_t
@@ -4665,64 +9009,48 @@
 	ld (_rdx), a
 	ld (_rdy), a
 	ld (_rdi), a
-	._draw_scr_get_scr_address
-	ld hl, (_n_pant)
-	ld h, 0
-	add hl, hl
-	ld de, _mapa
-	add hl, de ; HL = map + (n_pant << 1)
-	ld e, (hl)
-	inc hl
-	ld d, (hl) ; DE = index
-	ld hl, _mapa
-	add hl, de ; HL = map + index
-	ld (_gp_gen), hl
-	._draw_scr_rle
-	._draw_scr_loop
-	ld a, (_rdi)
-	cp 150
-	jr z, _draw_scr_loop_done
+	ld	hl,_mapa
+	push	hl
+	ld	hl,(_n_pant)
+	ld	h,0
+	ld	de,75
+	call	l_mult
+	pop	de
+	add	hl,de
+	ld	(_gp_gen),hl
+	xor a
+	ld (_rdi), a
+	ld (_gpit), a
+	.draw_scr_bg_loop
 	ld hl, (_gp_gen)
 	ld a, (hl)
 	inc hl
 	ld (_gp_gen), hl
-	ld (_rdn), a
-	and 0x1f
-	ld (_rdc), a
-	._draw_scr_advance_loop
-	ld a, (_rdn)
-	cp 0x20
-	jr c, _draw_scr_advance_loop_done
-	sub 0x20
-	ld (_rdn), a
-	call _advance_worm
-	jr _draw_scr_advance_loop
-	._draw_scr_advance_loop_done
-	call _advance_worm
-	jr _draw_scr_loop
-	.no_alt_bg_subst
-	or a
-	ret nz
-	call _rand
-	ld a, l
+	ld b, a
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_rdt1), a
+	ld a, b
 	and 15
-	cp 2
-	jr nc, draw_scr_alt_no
-	ld a, 32 + 3
-	ret
-	.draw_scr_alt_no
-	xor a
-	ret
-	._advance_worm
-	ld a, (_rdc)
-	call no_alt_bg_subst
+	ld (_rdt2), a
+	ld a, (_rdt1)
 	ld (__n), a
 	call _draw_and_advance
-	ret
-	._draw_scr_loop_done
+	ld a, (_rdt2)
+	ld (__n), a
+	call _draw_and_advance
+	ld a, (_gpit)
+	inc a
+	ld (_gpit), a
+	cp 75
+	jr nz, draw_scr_bg_loop
+	jr draw_scr_bg_loop_end
+	.draw_scr_bg_loop_end
 	call	_hotspot_paint
 	ld hl, _cerrojos
-	ld b, 10
+	ld b, 4
 	.draw_scr_bolts_loop
 	; Cerrojos structure is np, x, y, st
 	ld c, (hl) ; np
@@ -4803,18 +9131,18 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_47
-.i_45
+	jp	i_49
+.i_47
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_47
+.i_49
 	ld	a,(_enit)
 	ld	e,a
 	ld	d,0
 	ld	hl,3	;const
 	call	l_ult
-	jp	nc,i_46
+	jp	nc,i_48
 	ld bc, (_enit)
 	xor a
 	ld b, a
@@ -4830,27 +9158,27 @@
 	call enems_get_values
 	ld	hl,(__en_t)
 	ld	h,0
-.i_50
+.i_52
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_51
-	cp	#(2% 256)
-	jp	z,i_52
-	cp	#(3% 256)
 	jp	z,i_53
-	cp	#(4% 256)
+	cp	#(2% 256)
 	jp	z,i_54
-	jp	i_55
-.i_51
-.i_52
+	cp	#(3% 256)
+	jp	z,i_55
+	cp	#(4% 256)
+	jp	z,i_56
+	jp	i_57
 .i_53
 .i_54
+.i_55
+.i_56
 	ld	hl,(__en_t)
 	ld	h,0
 	dec	hl
 	call	_enems_en_an_calc
-	jp	i_49
-.i_55
+	jp	i_51
+.i_57
 	ld	hl,_en_an_next_frame
 	push	hl
 	ld	hl,(_enit)
@@ -4862,10 +9190,10 @@
 	ld	hl,_sprite_18_a
 	pop	de
 	call	l_pint
-.i_49
+.i_51
 	call enems_update_values_store
-	jp	i_45
-.i_46
+	jp	i_47
+.i_48
 	ret
 
 
@@ -4903,16 +9231,16 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_58
-.i_56
+	jp	i_60
+.i_58
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_58
+.i_60
 	ld	a,(_enit)
 	cp	#(3 % 256)
-	jp	z,i_57
-	jp	nc,i_57
+	jp	z,i_59
+	jp	nc,i_59
 	ld	de,(_enoffs)
 	ld	hl,(_enit)
 	ld	h,0
@@ -4923,7 +9251,7 @@
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_59
+	jp	z,i_61
 	ld a, (_maincounter)
 	and 3
 	jr nz, enems_animate_done
@@ -4940,13 +9268,13 @@
 	ld	d,0
 	ld	hl,4	;const
 	call	l_ule
-	jp	nc,i_60
+	jp	nc,i_62
 	call en_lineal_do
-.i_60
+.i_62
 	call	_enems_calc_frame
 	ld	a,(__en_t)
 	cp	#(4 % 256)
-	jp	nz,i_62
+	jp	nz,i_64
 	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
@@ -4956,7 +9284,7 @@
 	add	hl,bc
 	pop	de
 	call	l_uge
-	jp	nc,i_62
+	jp	nc,i_64
 	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
@@ -4966,10 +9294,10 @@
 	add	hl,bc
 	pop	de
 	call	l_ule
-	jr	c,i_63_i_62
-.i_62
-	jp	i_61
-.i_63_i_62
+	jr	c,i_65_i_64
+.i_64
+	jp	i_63
+.i_65_i_64
 	.moving_platforms
 	ld a, (_player + 19)
 	or a
@@ -5039,27 +9367,27 @@
 	call withSign
 	ld (_ptgmx), hl
 	.moving_platforms_done
-	jp	i_64
-.i_61
+	jp	i_66
+.i_63
 	call	_collide_enem
 	ld	a,h
 	or	l
-	jp	z,i_65
+	jp	z,i_67
 	ld	hl,(_en_tocado)
 	ld	h,0
 	ld	de,0
 	call	l_eq
-	jp	nc,i_67
+	jp	nc,i_69
 	ld	a,(__en_t)
 	cp	#(128 % 256)
-	jp	z,i_67
-	jr	c,i_68_i_67
-.i_67
-	jp	i_66
-.i_68_i_67
+	jp	z,i_69
+	jr	c,i_70_i_69
+.i_69
+	jp	i_68
+.i_70_i_69
 	ld	a,(_player+23)
 	and	a
-	jp	nz,i_69
+	jp	nz,i_71
 	ld	a,#(1 % 256 % 256)
 	ld	(_en_tocado),a
 	ld	hl,_player+36
@@ -5079,10 +9407,10 @@
 	bit 7, a
 	jr z, en_col_lin_h_pos
 	.en_col_lin_h_neg
-	ld hl, -128*2
+	ld hl, -256*2
 	jr en_col_lin_h_write
 	.en_col_lin_h_pos
-	ld hl, 128*2
+	ld hl, 256*2
 	.en_col_lin_h_write
 	ld (_player + 6), hl
 	.en_col_lin_v
@@ -5092,23 +9420,23 @@
 	bit 7, a
 	jr z, en_col_lin_v_pos
 	.en_col_lin_v_neg
-	ld hl, -128*2
+	ld hl, -256*2
 	jr en_col_lin_v_write
 	.en_col_lin_v_pos
-	ld hl, 128*2
+	ld hl, 256*2
 	.en_col_lin_v_write
 	ld (_player + 8), hl
 	.en_col_lin_end
-.i_69
+.i_71
+.i_68
+.i_67
 .i_66
-.i_65
-.i_64
-.i_59
-.i_70
+.i_61
+.i_72
 	.enems_update_values_and_exit
 	call enems_update_values_store
-	jp	i_56
-.i_57
+	jp	i_58
+.i_59
 	ret
 
 
@@ -5266,9 +9594,8 @@
 	call	_blackout
 	ld hl, _s_title
 	call _unpack_screen
-	ld	hl,1	;const
+	ld	hl,12	;const
 	push	hl
-	ld	hl,22	;const
 	push	hl
 	ld	hl,4	;const
 	push	hl
@@ -5295,22 +9622,22 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_gpit),a
-	jp	i_73
-.i_71
+	jp	i_75
+.i_73
 	ld	hl,_gpit
 	ld	a,(hl)
 	inc	(hl)
-.i_73
+.i_75
 	ld	a,(_gpit)
 	cp	#(4 % 256)
-	jp	z,i_72
-	jp	nc,i_72
+	jp	z,i_74
+	jp	nc,i_74
 	ld	hl,7	;const
 	call	_peta_el_beeper
 	ld	hl,2	;const
 	call	_peta_el_beeper
-	jp	i_71
-.i_72
+	jp	i_73
+.i_74
 	ld	hl,9	;const
 	call	_peta_el_beeper
 	ld	hl,5000	;const
@@ -5361,7 +9688,7 @@
 ._main
 	ld sp, 61936
 	call	_system_init
-.i_74
+.i_76
 	call	_title_screen
 	call	_blackout
 	call SPUpdateNow
@@ -5388,12 +9715,12 @@
 	ld (_killed_old), a
 	ld (_flag_old), a
 	ld (_on_pant), a
-.i_76
+.i_78
 	ld	hl,(_playing)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_77
+	jp	z,i_79
 	ld a, (_n_pant)
 	ld c, a
 	ld a, (_on_pant)
@@ -5411,8 +9738,8 @@
 	ld	hl,(_objs_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_78
-	ld	hl,17	;const
+	jp	nc,i_80
+	ld	hl,11	;const
 	push	hl
 	ld	hl,0	;const
 	push	hl
@@ -5429,29 +9756,29 @@
 	ld	h,0
 	ld	a,l
 	ld	(_objs_old),a
-.i_78
+.i_80
 	ld	de,(_player+29)
 	ld	hl,(_life_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_79
+	jp	nc,i_81
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	m,i_80
+	jp	m,i_82
 	or	l
-	jp	z,i_80
+	jp	z,i_82
 	ld	hl,(_player+29)
 	ld	h,0
 	ld	a,l
 	ld	(_pti),a
-	jp	i_81
-.i_80
+	jp	i_83
+.i_82
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_pti),a
-.i_81
-	ld	hl,6	;const
+.i_83
+	ld	hl,4	;const
 	push	hl
 	ld	hl,0	;const
 	push	hl
@@ -5466,22 +9793,22 @@
 	ld	h,0
 	ld	a,l
 	ld	(_life_old),a
-.i_79
+.i_81
 	ld	hl,_player+28
 	call	l_gchar
 	ex	de,hl
 	ld	hl,(_keys_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_82
-	ld a, 29
+	jp	nc,i_84
+	ld a, 17
 	ld (__x), a
 	ld a, 0
 	ld (__y), a
 	ld a, (_player + 28)
 	ld (_keys_old), a
 	call draw_2_digits_shortcut
-.i_82
+.i_84
 	ld hl, _maincounter
 	inc (hl)
 	ld a, (_half_life)
@@ -5520,21 +9847,21 @@
 	jp c, _hotspots_else
 	ld	a,(_hotspot_t)
 	and	a
-	jp	z,i_83
+	jp	z,i_85
 	ld	a,#(0 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,(_hotspot_t)
 	ld	h,0
-.i_86
+.i_88
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_87
-	cp	#(2% 256)
-	jp	z,i_88
-	cp	#(3% 256)
 	jp	z,i_89
-	jp	i_85
-.i_87
+	cp	#(2% 256)
+	jp	z,i_90
+	cp	#(3% 256)
+	jp	z,i_91
+	jp	i_87
+.i_89
 	ld	hl,_player+27
 	push	hl
 	call	l_gchar
@@ -5544,8 +9871,8 @@
 	ld	(de),a
 	ld	hl,7	;const
 	call	_peta_el_beeper
-	jp	i_85
-.i_88
+	jp	i_87
+.i_90
 	ld	hl,_player+28
 	push	hl
 	call	l_gchar
@@ -5555,12 +9882,12 @@
 	ld	(de),a
 	ld	hl,8	;const
 	call	_peta_el_beeper
-	jp	i_85
-.i_89
+	jp	i_87
+.i_91
 	ld	hl,_player+29
 	push	hl
 	call	l_gint	;
-	ld	bc,25
+	ld	bc,10
 	add	hl,bc
 	pop	de
 	call	l_pint
@@ -5568,18 +9895,18 @@
 	ld	de,99	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_90
+	jp	nc,i_92
 	ld	hl,99	;const
 	ld	(_player+29),hl
-.i_90
+.i_92
 	ld	a,#(2 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,9	;const
 	call	_peta_el_beeper
-.i_85
+.i_87
 	ld	a,(_rdi)
 	cp	#(1 % 256)
-	jp	z,i_91
+	jp	z,i_93
 	ld	a,(_hotspot_x)
 	ld	e,a
 	ld	d,0
@@ -5624,8 +9951,8 @@
 	ld	(de),a
 	ld	l,a
 	ld	h,0
-.i_91
-.i_83
+.i_93
+.i_85
 	._hotspots_finally
 	ld a, 1
 	ld (_hotspot_flag), a
@@ -5647,15 +9974,15 @@
 	.skipupd
 	ld	a,(_gpx)
 	cp	#(0 % 256)
-	jp	nz,i_93
+	jp	nz,i_95
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jr	c,i_94_i_93
-.i_93
-	jp	i_92
-.i_94_i_93
+	jr	c,i_96_i_95
+.i_95
+	jp	i_94
+.i_96_i_95
 	ld hl, _n_pant
 	dec (hl)
 	ld a, 224
@@ -5663,19 +9990,19 @@
 	ld hl, #(224*64)
 	ld (_player), hl
 	.flick_left_done
-	jp	i_95
-.i_92
+	jp	i_97
+.i_94
 	ld	a,(_gpx)
 	cp	#(224 % 256)
-	jp	nz,i_97
+	jp	nz,i_99
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_98_i_97
-.i_97
-	jp	i_96
-.i_98_i_97
+	jr	c,i_100_i_99
+.i_99
+	jp	i_98
+.i_100_i_99
 	ld hl, _n_pant
 	inc (hl)
 	xor a
@@ -5683,74 +10010,74 @@
 	ld hl, 0
 	ld (_player), hl
 	.flick_right_done
-.i_96
-.i_95
+.i_98
+.i_97
 	ld	a,(_gpy)
 	cp	#(0 % 256)
-	jp	nz,i_100
+	jp	nz,i_102
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_100
+	jp	nc,i_102
 	ld	a,(_n_pant)
-	cp	#(4 % 256)
-	jr	z,i_100_uge
-	jp	c,i_100
-.i_100_uge
-	jr	i_101_i_100
-.i_100
-	jp	i_99
-.i_101_i_100
+	cp	#(6 % 256)
+	jr	z,i_102_uge
+	jp	c,i_102
+.i_102_uge
+	jr	i_103_i_102
+.i_102
+	jp	i_101
+.i_103_i_102
 	ld a, (_n_pant)
-	sub 4
+	sub 6
 	ld (_n_pant), a
 	ld a, 144
 	ld (_gpy), a
 	ld hl, #(144*64)
 	ld (_player+2), hl
 	.flick_up_done
-	jp	i_102
-.i_99
+	jp	i_104
+.i_101
 	ld	a,(_gpy)
 	cp	#(144 % 256)
-	jp	nz,i_104
+	jp	nz,i_106
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_105_i_104
-.i_104
-	jp	i_103
-.i_105_i_104
+	jr	c,i_107_i_106
+.i_106
+	jp	i_105
+.i_107_i_106
 	ld a, (_n_pant)
-	add 4
+	add 6
 	ld (_n_pant), a
 	xor a
 	ld (_gpy), a
 	ld hl, 0
 	ld (_player+2),hl
 	.flick_down_done
-.i_103
-.i_102
+.i_105
+.i_104
 	ld	hl,_player+27
 	call	l_gchar
-	ld	de,12	;const
+	ld	de,25	;const
 	ex	de,hl
 	call	l_eq
-	jp	nc,i_106
+	jp	nc,i_108
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_cortina
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_game_ending
-.i_106
+.i_108
 	ld	hl,(_player+36)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_107
+	jp	z,i_109
 	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
@@ -5768,703 +10095,580 @@
 	sbc	hl,de
 	pop	de
 	call	l_pint
-.i_107
+.i_109
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	p,i_108
+	jp	p,i_110
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_108
+.i_110
 	xor a
 	ld (_pant_just_rendered), a
+	jp	i_78
+.i_79
 	jp	i_76
 .i_77
-	jp	i_74
-.i_75
 	ret
 
 
 	; *****************************************************************************
-	; * Phaser1 Engine, with synthesised drums
+	; * phaser1 engine, with synthesised drums
 	; *
-	; * Original code by Shiru - .HTTP
-	; * Modified by Chris Cowley
+	; * original code by shiru - .http
+	; * modified by chris cowley
 	; *
-	; * Produced by Beepola v1.05.01
+	; * produced by beepola v1.05.01
 	; ******************************************************************************
 	.musicstart
-	LD HL,MUSICDATA ; <- Pointer to Music Data. Change
+	ld hl,musicdata ; <- pointer to music data. change
 	; this to play a different song
-	LD A,(HL) ; Get the loop start pointer
-	LD (PATTERN_LOOP_BEGIN),A
-	INC HL
-	LD A,(HL) ; Get the song end pointer
-	LD (PATTERN_LOOP_END),A
-	INC HL
-	LD E,(HL)
-	INC HL
-	LD D,(HL)
-	INC HL
-	LD (INSTRUM_TBL),HL
-	LD (CURRENT_INST),HL
-	ADD HL,DE
-	LD (PATTERN_ADDR),HL
-	XOR A
-	LD (PATTERN_PTR),A ; Set the pattern pointer to zero
-	LD H,A
-	LD L,A
-	LD (NOTE_PTR),HL ; Set the note offset (within this pattern) to 0
-	.PLAYER
-	DI
-	PUSH IY
-	;LD A,BORDER_COL
+	ld a,(hl) ; get the loop start pointer
+	ld (pattern_loop_begin),a
+	inc hl
+	ld a,(hl) ; get the song end pointer
+	ld (pattern_loop_end),a
+	inc hl
+	ld e,(hl)
+	inc hl
+	ld d,(hl)
+	inc hl
+	ld (instrum_tbl),hl
+	ld (current_inst),hl
+	add hl,de
+	ld (pattern_addr),hl
 	xor a
-	LD H,$00
-	LD L,A
-	LD (CNT_1A),HL
-	LD (CNT_1B),HL
-	LD (DIV_1A),HL
-	LD (DIV_1B),HL
-	LD (CNT_2),HL
-	LD (DIV_2),HL
-	LD (OUT_1),A
-	LD (OUT_2),A
-	JR MAIN_LOOP
+	ld (pattern_ptr),a ; set the pattern pointer to zero
+	ld h,a
+	ld l,a
+	ld (note_ptr),hl ; set the note offset (within this pattern) to 0
+	.player
+	;di
+	push iy
+	;ld a,border_col
+	xor a
+	ld h,$00
+	ld l,a
+	ld (cnt_1a),hl
+	ld (cnt_1b),hl
+	ld (div_1a),hl
+	ld (div_1b),hl
+	ld (cnt_2),hl
+	ld (div_2),hl
+	ld (out_1),a
+	ld (out_2),a
+	jr main_loop
 	; ********************************************************************************************************
-	; * NEXT_PATTERN
+	; * next_pattern
 	; *
-	; * Select the next pattern in sequence (and handle looping if weve reached PATTERN_LOOP_END
-	; * Execution falls through to PLAYNOTE to play the first note from our next pattern
+	; * select the next pattern in sequence (and handle looping if weve reached pattern_loop_end
+	; * execution falls through to playnote to play the first note from our next pattern
 	; ********************************************************************************************************
-	.NEXT_PATTERN
-	LD A,(PATTERN_PTR)
-	INC A
-	INC A
-	DEFB $FE ; CP n
-	.PATTERN_LOOP_END DEFB 0
-	JR NZ,NO_PATTERN_LOOP
-	; Handle Pattern Looping at and of song
-	DEFB $3E ; LD A,n
-	.PATTERN_LOOP_BEGIN DEFB 0
-	.NO_PATTERN_LOOP LD (PATTERN_PTR),A
-	LD HL,$0000
-	LD (NOTE_PTR),HL ; Start of pattern (NOTE_PTR = 0)
-	.MAIN_LOOP
-	LD IYL,0 ; Set channel = 0
-	.READ_LOOP
-	LD HL,(PATTERN_ADDR)
-	LD A,(PATTERN_PTR)
-	LD E,A
-	LD D,0
-	ADD HL,DE
-	LD E,(HL)
-	INC HL
-	LD D,(HL) ; Now DE = Start of Pattern data
-	LD HL,(NOTE_PTR)
-	INC HL ; Increment the note pointer and...
-	LD (NOTE_PTR),HL ; ..STORE it
-	DEC HL
-	ADD HL,DE ; Now HL = address of note data
-	LD A,(HL)
-	OR A
-	JR Z,NEXT_PATTERN ; select next pattern
-	BIT 7,A
-	JP Z,RENDER ; Play the currently defined note(S) and drum
-	LD IYH,A
-	AND $3F
-	CP $3C
-	JP NC,OTHER ; Other parameters
-	ADD A,A
-	LD B,0
-	LD C,A
-	LD HL,FREQ_TABLE
-	ADD HL,BC
-	LD E,(HL)
-	INC HL
-	LD D,(HL)
-	LD A,IYL ; IYL = 0 for channel 1, or = 1 for channel 2
-	OR A
-	JR NZ,SET_NOTE2
-	LD (DIV_1A),DE
-	EX DE,HL
-	DEFB $DD,$21 ; LD IX,nn
-	.CURRENT_INST
-	DEFW $0000
-	LD A,(IX+$00)
-	OR A
-	JR Z,L809B ; Original code jumps into byte 2 of the DJNZ (invalid opcode FD)
-	LD B,A
-	.L8098 ADD HL,HL
-	DJNZ L8098
-	.L809B LD E,(IX+$01)
-	LD D,(IX+$02)
-	ADD HL,DE
-	LD (DIV_1B),HL
-	LD IYL,1 ; Set channel = 1
-	LD A,IYH
-	AND $40
-	JR Z,READ_LOOP ; No phase reset
-	LD HL,OUT_1 ; Reset phaser
-	RES 4,(HL)
-	LD HL,$0000
-	LD (CNT_1A),HL
-	LD H,(IX+$03)
-	LD (CNT_1B),HL
-	JR READ_LOOP
-	.SET_NOTE2
-	LD (DIV_2),DE
-	LD A,IYH
-	LD HL,OUT_2
-	RES 4,(HL)
-	LD HL,$0000
-	LD (CNT_2),HL
-	JP READ_LOOP
-	.SET_STOP
-	LD HL,$0000
-	LD A,IYL
-	OR A
-	JR NZ,SET_STOP2
-	; Stop channel 1 note
-	LD (DIV_1A),HL
-	LD (DIV_1B),HL
-	LD HL,OUT_1
-	RES 4,(HL)
-	LD IYL,1
-	JP READ_LOOP
-	.SET_STOP2
-	; Stop channel 2 note
-	LD (DIV_2),HL
-	LD HL,OUT_2
-	RES 4,(HL)
-	JP READ_LOOP
-	.OTHER CP $3C
-	JR Z,SET_STOP ; Stop note
-	CP $3E
-	JR Z,SKIP_CH1 ; No changes to channel 1
-	INC HL ; Instrument change
-	LD L,(HL)
-	LD H,$00
-	ADD HL,HL
-	LD DE,(NOTE_PTR)
-	INC DE
-	LD (NOTE_PTR),DE ; Increment the note pointer
-	DEFB $01 ; LD BC,nn
-	.INSTRUM_TBL
-	DEFW $0000
-	ADD HL,BC
-	LD (CURRENT_INST),HL
-	JP READ_LOOP
-	.SKIP_CH1
-	LD IYL,$01
-	JP READ_LOOP
-	.EXIT_PLAYER
-	LD HL,$2758
-	EXX
-	POP IY
-	EI
-	RET
-	.RENDER
-	AND $7F ; L813A
-	CP $76
-	JP NC,DRUMS
-	LD D,A
-	EXX
-	DEFB $21 ; LD HL,nn
-	.CNT_1A DEFW $0000
-	DEFB $DD,$21 ; LD IX,nn
-	.CNT_1B DEFW $0000
-	DEFB $01 ; LD BC,nn
-	.DIV_1A DEFW $0000
-	DEFB $11 ; LD DE,nn
-	.DIV_1B DEFW $0000
-	DEFB $3E ; LD A,n
-	.OUT_1 DEFB $0
-	EXX
-	EX AF,AF ; beware!
-	DEFB $21 ; LD HL,nn
-	.CNT_2 DEFW $0000
-	DEFB $01 ; LD BC,nn
-	.DIV_2 DEFW $0000
-	DEFB $3E ; LD A,n
-	.OUT_2 DEFB $00
-	.PLAY_NOTE
-	; Read keyboard
-	LD E,A
-	XOR A
-	IN A,($FE)
-	OR $E0
-	INC A
-	.PLAYER_WAIT_KEY
-	JR NZ,EXIT_PLAYER
-	LD A,E
-	LD E,0
-	.L8168 EXX
-	EX AF,AF ; beware!
-	ADD HL,BC
-	OUT ($FE),A
-	JR C,L8171
-	JR L8173
-	.L8171 XOR $10
-	.L8173 ADD IX,DE
-	JR C,L8179
-	JR L817B
-	.L8179 XOR $10
-	.L817B EX AF,AF ; beware!
-	OUT ($FE),A
-	EXX
-	ADD HL,BC
-	JR C,L8184
-	JR L8186
-	.L8184 XOR $10
-	.L8186 NOP
-	JP L818A
-	.L818A EXX
-	EX AF,AF ; beware!
-	ADD HL,BC
-	OUT ($FE),A
-	JR C,L8193
-	JR L8195
-	.L8193 XOR $10
-	.L8195 ADD IX,DE
-	JR C,L819B
-	JR L819D
-	.L819B XOR $10
-	.L819D EX AF,AF ; beware!
-	OUT ($FE),A
-	EXX
-	ADD HL,BC
-	JR C,L81A6
-	JR L81A8
-	.L81A6 XOR $10
-	.L81A8 NOP
-	JP L81AC
-	.L81AC EXX
-	EX AF,AF ; beware!
-	ADD HL,BC
-	OUT ($FE),A
-	JR C,L81B5
-	JR L81B7
-	.L81B5 XOR $10
-	.L81B7 ADD IX,DE
-	JR C,L81BD
-	JR L81BF
-	.L81BD XOR $10
-	.L81BF EX AF,AF ; beware!
-	OUT ($FE),A
-	EXX
-	ADD HL,BC
-	JR C,L81C8
-	JR L81CA
-	.L81C8 XOR $10
-	.L81CA NOP
-	JP L81CE
-	.L81CE EXX
-	EX AF,AF ; beware!
-	ADD HL,BC
-	OUT ($FE),A
-	JR C,L81D7
-	JR L81D9
-	.L81D7 XOR $10
-	.L81D9 ADD IX,DE
-	JR C,L81DF
-	JR L81E1
-	.L81DF XOR $10
-	.L81E1 EX AF,AF ; beware!
-	OUT ($FE),A
-	EXX
-	ADD HL,BC
-	JR C,L81EA
-	JR L81EC
-	.L81EA XOR $10
-	.L81EC DEC E
-	JP NZ,L8168
-	EXX
-	EX AF,AF ; beware!
-	ADD HL,BC
-	OUT ($FE),A
-	JR C,L81F9
-	JR L81FB
-	.L81F9 XOR $10
-	.L81FB ADD IX,DE
-	JR C,L8201
-	JR L8203
-	.L8201 XOR $10
-	.L8203 EX AF,AF ; beware!
-	OUT ($FE),A
-	EXX
-	ADD HL,BC
-	JR C,L820C
-	JR L820E
-	.L820C XOR $10
-	.L820E DEC D
-	JP NZ,PLAY_NOTE
-	LD (CNT_2),HL
-	LD (OUT_2),A
-	EXX
-	EX AF,AF ; beware!
-	LD (CNT_1A),HL
-	LD (CNT_1B),IX
-	LD (OUT_1),A
-	JP MAIN_LOOP
-	; ************************************************************
-	; * DRUMS - Synthesised
-	; ************************************************************
-	.DRUMS
-	ADD A,A ; On entry A=$75+Drum number (i.E. $76 to $7E)
-	LD B,0
-	LD C,A
-	LD HL,DRUM_TABLE - 236
-	ADD HL,BC
-	LD E,(HL)
-	INC HL
-	LD D,(HL)
-	EX DE,HL
-	JP (HL)
-	.DRUM_TONE1 LD L,16
-	JR DRUM_TONE
-	.DRUM_TONE2 LD L,12
-	JR DRUM_TONE
-	.DRUM_TONE3 LD L,8
-	JR DRUM_TONE
-	.DRUM_TONE4 LD L,6
-	JR DRUM_TONE
-	.DRUM_TONE5 LD L,4
-	JR DRUM_TONE
-	.DRUM_TONE6 LD L,2
-	.DRUM_TONE
-	LD DE,3700
-	LD BC,$0101
+	.next_pattern
+	ld a,(pattern_ptr)
+	inc a
+	inc a
+	defb $fe ; cp n
+	.pattern_loop_end defb 0
+	jr nz,no_pattern_loop
+	; handle pattern looping at and of song
+	defb $3e ; ld a,n
+	.pattern_loop_begin defb 0
+	.no_pattern_loop ld (pattern_ptr),a
+	ld hl,$0000
+	ld (note_ptr),hl ; start of pattern (note_ptr = 0)
+	.main_loop
+	ld iyl,0 ; set channel = 0
+	.read_loop
+	ld hl,(pattern_addr)
+	ld a,(pattern_ptr)
+	ld e,a
+	ld d,0
+	add hl,de
+	ld e,(hl)
+	inc hl
+	ld d,(hl) ; now de = start of pattern data
+	ld hl,(note_ptr)
+	inc hl ; increment the note pointer and...
+	ld (note_ptr),hl ; ..store it
+	dec hl
+	add hl,de ; now hl = address of note data
+	ld a,(hl)
+	or a
+	jr z,next_pattern ; select next pattern
+	bit 7,a
+	jp z,render ; play the currently defined note(s) and drum
+	ld iyh,a
+	and $3f
+	cp $3c
+	jp nc,other ; other parameters
+	add a,a
+	ld b,0
+	ld c,a
+	ld hl,freq_table
+	add hl,bc
+	ld e,(hl)
+	inc hl
+	ld d,(hl)
+	ld a,iyl ; iyl = 0 for channel 1, or = 1 for channel 2
+	or a
+	jr nz,set_note2
+	ld (div_1a),de
+	ex de,hl
+	defb $dd,$21 ; ld ix,nn
+	.current_inst
+	defw $0000
+	ld a,(ix+$00)
+	or a
+	jr z,l809b ; original code jumps into byte 2 of the djnz (invalid opcode fd)
+	ld b,a
+	.l8098 add hl,hl
+	djnz l8098
+	.l809b ld e,(ix+$01)
+	ld d,(ix+$02)
+	add hl,de
+	ld (div_1b),hl
+	ld iyl,1 ; set channel = 1
+	ld a,iyh
+	and $40
+	jr z,read_loop ; no phase reset
+	ld hl,out_1 ; reset phaser
+	res 4,(hl)
+	ld hl,$0000
+	ld (cnt_1a),hl
+	ld h,(ix+$03)
+	ld (cnt_1b),hl
+	jr read_loop
+	.set_note2
+	ld (div_2),de
+	ld a,iyh
+	ld hl,out_2
+	res 4,(hl)
+	ld hl,$0000
+	ld (cnt_2),hl
+	jp read_loop
+	.set_stop
+	ld hl,$0000
+	ld a,iyl
+	or a
+	jr nz,set_stop2
+	; stop channel 1 note
+	ld (div_1a),hl
+	ld (div_1b),hl
+	ld hl,out_1
+	res 4,(hl)
+	ld iyl,1
+	jp read_loop
+	.set_stop2
+	; stop channel 2 note
+	ld (div_2),hl
+	ld hl,out_2
+	res 4,(hl)
+	jp read_loop
+	.other cp $3c
+	jr z,set_stop ; stop note
+	cp $3e
+	jr z,skip_ch1 ; no changes to channel 1
+	inc hl ; instrument change
+	ld l,(hl)
+	ld h,$00
+	add hl,hl
+	ld de,(note_ptr)
+	inc de
+	ld (note_ptr),de ; increment the note pointer
+	defb $01 ; ld bc,nn
+	.instrum_tbl
+	defw $0000
+	add hl,bc
+	ld (current_inst),hl
+	jp read_loop
+	.skip_ch1
+	ld iyl,$01
+	jp read_loop
+	.exit_player
+	ld hl,$2758
+	exx
+	pop iy
+	;ei
+	ret
+	.render
+	and $7f ; l813a
+	cp $76
+	jp nc,drums
+	ld d,a
+	exx
+	defb $21 ; ld hl,nn
+	.cnt_1a defw $0000
+	defb $dd,$21 ; ld ix,nn
+	.cnt_1b defw $0000
+	defb $01 ; ld bc,nn
+	.div_1a defw $0000
+	defb $11 ; ld de,nn
+	.div_1b defw $0000
+	defb $3e ; ld a,n
+	.out_1 defb $0
+	exx
+	ex af,af ; beware!
+	defb $21 ; ld hl,nn
+	.cnt_2 defw $0000
+	defb $01 ; ld bc,nn
+	.div_2 defw $0000
+	defb $3e ; ld a,n
+	.out_2 defb $00
+	.play_note
+	; read keyboard
+	ld e,a
 	xor a
-	.DT_LOOP0 OUT ($FE),A
-	DEC B
-	JR NZ,DT_LOOP1
-	XOR 16
-	LD B,C
-	EX AF,AF ; beware!
-	LD A,C
-	ADD A,L
-	LD C,A
-	EX AF,AF ; beware!
-	.DT_LOOP1 DEC E
-	JR NZ,DT_LOOP0
-	DEC D
-	JR NZ,DT_LOOP0
-	JP MAIN_LOOP
-	.DRUM_NOISE1 LD DE,2480
-	LD IXL,1
-	JR DRUM_NOISE
-	.DRUM_NOISE2 LD DE,1070
-	LD IXL,10
-	JR DRUM_NOISE
-	.DRUM_NOISE3 LD DE,365
-	LD IXL,101
-	.DRUM_NOISE
-	LD H,D
-	LD L,E
+	in a,($fe)
+	or $e0
+	inc a
+	.player_wait_key
+	jr nz,exit_player
+	ld a,e
+	ld e,0
+	.l8168 exx
+	ex af,af ; beware!
+	add hl,bc
+	out ($fe),a
+	jr c,l8171
+	jr l8173
+	.l8171 xor $10
+	.l8173 add ix,de
+	jr c,l8179
+	jr l817b
+	.l8179 xor $10
+	.l817b ex af,af ; beware!
+	out ($fe),a
+	exx
+	add hl,bc
+	jr c,l8184
+	jr l8186
+	.l8184 xor $10
+	.l8186 nop
+	jp l818a
+	.l818a exx
+	ex af,af ; beware!
+	add hl,bc
+	out ($fe),a
+	jr c,l8193
+	jr l8195
+	.l8193 xor $10
+	.l8195 add ix,de
+	jr c,l819b
+	jr l819d
+	.l819b xor $10
+	.l819d ex af,af ; beware!
+	out ($fe),a
+	exx
+	add hl,bc
+	jr c,l81a6
+	jr l81a8
+	.l81a6 xor $10
+	.l81a8 nop
+	jp l81ac
+	.l81ac exx
+	ex af,af ; beware!
+	add hl,bc
+	out ($fe),a
+	jr c,l81b5
+	jr l81b7
+	.l81b5 xor $10
+	.l81b7 add ix,de
+	jr c,l81bd
+	jr l81bf
+	.l81bd xor $10
+	.l81bf ex af,af ; beware!
+	out ($fe),a
+	exx
+	add hl,bc
+	jr c,l81c8
+	jr l81ca
+	.l81c8 xor $10
+	.l81ca nop
+	jp l81ce
+	.l81ce exx
+	ex af,af ; beware!
+	add hl,bc
+	out ($fe),a
+	jr c,l81d7
+	jr l81d9
+	.l81d7 xor $10
+	.l81d9 add ix,de
+	jr c,l81df
+	jr l81e1
+	.l81df xor $10
+	.l81e1 ex af,af ; beware!
+	out ($fe),a
+	exx
+	add hl,bc
+	jr c,l81ea
+	jr l81ec
+	.l81ea xor $10
+	.l81ec dec e
+	jp nz,l8168
+	exx
+	ex af,af ; beware!
+	add hl,bc
+	out ($fe),a
+	jr c,l81f9
+	jr l81fb
+	.l81f9 xor $10
+	.l81fb add ix,de
+	jr c,l8201
+	jr l8203
+	.l8201 xor $10
+	.l8203 ex af,af ; beware!
+	out ($fe),a
+	exx
+	add hl,bc
+	jr c,l820c
+	jr l820e
+	.l820c xor $10
+	.l820e dec d
+	jp nz,play_note
+	ld (cnt_2),hl
+	ld (out_2),a
+	exx
+	ex af,af ; beware!
+	ld (cnt_1a),hl
+	ld (cnt_1b),ix
+	ld (out_1),a
+	jp main_loop
+	; ************************************************************
+	; * drums - synthesised
+	; ************************************************************
+	.drums
+	add a,a ; on entry a=$75+drum number (i.e. $76 to $7e)
+	ld b,0
+	ld c,a
+	ld hl,drum_table - 236
+	add hl,bc
+	ld e,(hl)
+	inc hl
+	ld d,(hl)
+	ex de,hl
+	jp (hl)
+	.drum_tone1 ld l,16
+	jr drum_tone
+	.drum_tone2 ld l,12
+	jr drum_tone
+	.drum_tone3 ld l,8
+	jr drum_tone
+	.drum_tone4 ld l,6
+	jr drum_tone
+	.drum_tone5 ld l,4
+	jr drum_tone
+	.drum_tone6 ld l,2
+	.drum_tone
+	ld de,3700
+	ld bc,$0101
 	xor a
-	LD C,A
-	.DN_LOOP0 LD A,(HL)
-	AND 16
-	OR C
-	OUT ($FE),A
-	LD B,IXL
-	.DN_LOOP1 DJNZ DN_LOOP1
-	INC HL
-	DEC E
-	JR NZ,DN_LOOP0
-	DEC D
-	JR NZ,DN_LOOP0
-	JP MAIN_LOOP
-	.PATTERN_ADDR DEFW $0000
-	.PATTERN_PTR DEFB 0
-	.NOTE_PTR DEFW $0000
+	.dt_loop0 out ($fe),a
+	dec b
+	jr nz,dt_loop1
+	xor 16
+	ld b,c
+	ex af,af ; beware!
+	ld a,c
+	add a,l
+	ld c,a
+	ex af,af ; beware!
+	.dt_loop1 dec e
+	jr nz,dt_loop0
+	dec d
+	jr nz,dt_loop0
+	jp main_loop
+	.drum_noise1 ld de,2480
+	ld ixl,1
+	jr drum_noise
+	.drum_noise2 ld de,1070
+	ld ixl,10
+	jr drum_noise
+	.drum_noise3 ld de,365
+	ld ixl,101
+	.drum_noise
+	ld h,d
+	ld l,e
+	xor a
+	ld c,a
+	.dn_loop0 ld a,(hl)
+	and 16
+	or c
+	out ($fe),a
+	ld b,ixl
+	.dn_loop1 djnz dn_loop1
+	inc hl
+	dec e
+	jr nz,dn_loop0
+	dec d
+	jr nz,dn_loop0
+	jp main_loop
+	.pattern_addr defw $0000
+	.pattern_ptr defb 0
+	.note_ptr defw $0000
 	; **************************************************************
-	; * Frequency Table
+	; * frequency table
 	; **************************************************************
-	.FREQ_TABLE
-	DEFW 178,189,200,212,225,238,252,267,283,300,318,337
-	DEFW 357,378,401,425,450,477,505,535,567,601,637,675
-	DEFW 715,757,802,850,901,954,1011,1071,1135,1202,1274,1350
-	DEFW 1430,1515,1605,1701,1802,1909,2023,2143,2270,2405,2548,2700
-	DEFW 2860,3030,3211,3402,3604,3818,4046,4286,4541,4811,5097,5400
+	.freq_table
+	defw 178,189,200,212,225,238,252,267,283,300,318,337
+	defw 357,378,401,425,450,477,505,535,567,601,637,675
+	defw 715,757,802,850,901,954,1011,1071,1135,1202,1274,1350
+	defw 1430,1515,1605,1701,1802,1909,2023,2143,2270,2405,2548,2700
+	defw 2860,3030,3211,3402,3604,3818,4046,4286,4541,4811,5097,5400
 	; *****************************************************************
-	; * Synth Drum Lookup Table
+	; * synth drum lookup table
 	; *****************************************************************
-	.DRUM_TABLE
-	DEFW DRUM_TONE1,DRUM_TONE2,DRUM_TONE3,DRUM_TONE4,DRUM_TONE5,DRUM_TONE6
-	DEFW DRUM_NOISE1,DRUM_NOISE2,DRUM_NOISE3
-	.MUSICDATA
-	DEFB 0 ; Pattern loop begin * 2
-	DEFB 2 ; Song length * 2
-	DEFW 4 ; Offset to start of song (length of instrument table)
-	DEFB 2 ; Multiple
-	DEFW 0 ; Detune
-	DEFB 0 ; Phase
-	.PATTERNDATA DEFW PAT0
-	; *** Pattern data - $00 marks the end of a pattern ***
-	.PAT0
-	DEFB $BD,0
-	DEFB 230
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 166
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 173
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 163
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 164
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 168
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB 166
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 166
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 173
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 175
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 176
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 180
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB 178
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 175
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 176
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 178
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 176
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 175
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB 173
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 176
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 175
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 176
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 178
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 180
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB 178
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 178
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 173
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 175
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 176
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 180
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB 178
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 178
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 173
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 175
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 176
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 180
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB 178
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 175
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 176
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 178
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 176
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 175
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB 173
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 124
-	DEFB 4
-	DEFB 168
-	DEFB 156
-	DEFB 125
-	DEFB 4
-	DEFB 190
-	DEFB 159
-	DEFB 123
-	DEFB 4
-	DEFB 166
-	DEFB 147
-	DEFB 118
-	DEFB 4
-	DEFB 168
-	DEFB 154
-	DEFB 124
-	DEFB 4
-	DEFB 170
-	DEFB 159
-	DEFB 125
-	DEFB 4
-	DEFB 171
-	DEFB 154
-	DEFB 123
-	DEFB 4
-	DEFB $00
+	.drum_table
+	defw drum_tone1,drum_tone2,drum_tone3,drum_tone4,drum_tone5,drum_tone6
+	defw drum_noise1,drum_noise2,drum_noise3
+	.musicdata
+	defb 0 ; pattern loop begin * 2
+	defb 16 ; song length * 2
+	defw 8 ; offset to start of song (length of instrument table)
+	defb 1 ; multiple
+	defw 10 ; detune
+	defb 0 ; phase
+	defb 1 ; multiple
+	defw 5 ; detune
+	defb 1 ; phase
+	.patterndata
+	defw pat0
+	defw pat1
+	defw pat0
+	defw pat1
+	defw pat2
+	defw pat3
+	defw pat2
+	defw pat3
+	; *** pattern data - $00 marks the end of a pattern ***
+	.pat0
+	defb $bd,0
+	defb 152
+	defb 140
+	defb 6
+	defb 157
+	defb 140
+	defb 6
+	defb 159
+	defb 188
+	defb 6
+	defb 152
+	defb 140
+	defb 6
+	defb 157
+	defb 6
+	defb 159
+	defb 6
+	defb 152
+	defb 6
+	defb 159
+	defb 6
+	defb 151
+	defb 139
+	defb 6
+	defb 157
+	defb 139
+	defb 6
+	defb 159
+	defb 188
+	defb 6
+	defb 151
+	defb 139
+	defb 6
+	defb 157
+	defb 6
+	defb 159
+	defb 6
+	defb 151
+	defb 6
+	defb 159
+	defb 6
+	defb $00
+	.pat1
+	defb $bd,0
+	defb 150
+	defb 138
+	defb 6
+	defb 157
+	defb 138
+	defb 6
+	defb 159
+	defb 188
+	defb 6
+	defb 150
+	defb 138
+	defb 6
+	defb 157
+	defb 6
+	defb 159
+	defb 6
+	defb 150
+	defb 6
+	defb 159
+	defb 6
+	defb 149
+	defb 137
+	defb 6
+	defb 159
+	defb 137
+	defb 6
+	defb 157
+	defb 188
+	defb 6
+	defb 149
+	defb 137
+	defb 6
+	defb 159
+	defb 6
+	defb 157
+	defb 145
+	defb 6
+	defb 149
+	defb 6
+	defb 159
+	defb 6
+	defb $00
+	.pat2
+	defb $bd,2
+	defb 140
+	defb 152
+	defb 24
+	defb 140
+	defb 6
+	defb 141
+	defb 6
+	defb 140
+	defb 12
+	defb 139
+	defb 163
+	defb 24
+	defb 139
+	defb 6
+	defb 140
+	defb 6
+	defb 139
+	defb 12
+	defb $00
+	.pat3
+	defb 138
+	defb 150
+	defb 24
+	defb 138
+	defb 6
+	defb 139
+	defb 6
+	defb 138
+	defb 12
+	defb 137
+	defb 161
+	defb 30
+	defb 133
+	defb 145
+	defb 18
+	defb $00
 ;	SECTION	text
 
 .i_1
@@ -6567,8 +10771,6 @@
 ._tat	defs	1
 ._rdd	defs	1
 ._rdb	defs	1
-._rdc	defs	1
-._rdn	defs	1
 ._pti	defs	1
 ._ptj	defs	1
 ._tqt	defs	1
@@ -6901,32 +11103,30 @@
 	XDEF	_rdd
 	XDEF	_tileset
 	XDEF	_rdb
-	XDEF	_rdc
-	XDEF	_comportamiento_tiles
-	XDEF	_rdn
 	XDEF	_pti
+	XDEF	_comportamiento_tiles
 	XDEF	_ptj
 	LIB	sp_Initialize
 	LIB	sp_SwapEndian
 	LIB	sp_ComputePos
 	LIB	sp_JoyTimexLeft
-	XDEF	_bitmask
 	LIB	sp_JoyTimexRight
 	LIB	sp_SetMousePosKempston
+	XDEF	_bitmask
 	LIB	sp_CharDown
 	LIB	sp_CharLeft
 	LIB	sp_PixelRight
 	LIB	sp_HeapSiftDown
 	LIB	sp_HuffCreate
 	LIB	sp_HuffEncode
-	XDEF	_tqt
 	XDEF	_draw_2_digits
+	XDEF	_no_break
+	XDEF	_tqt
+	XDEF	_check_lock_or_box_horz
 	XDEF	_tpx
 	XDEF	_tpy
-	XDEF	_no_break
-	XDEF	_enoffsmasi
-	XDEF	_check_lock_or_box_horz
 	XDEF	_init_player_values
+	XDEF	_enoffsmasi
 	XDEF	_init_hotspots
 	LIB	sp_IntIntervals
 	XDEF	_my_malloc

@@ -790,7 +790,7 @@ void move (void) {
 				jr  nz, m_vert_kp_up_done
 
 			.m_vert_kp_up_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -817,7 +817,7 @@ void move (void) {
 				jr  nz, m_vert_kp_down_done
 
 			.m_vert_kp_down_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -1052,7 +1052,7 @@ void move (void) {
 
 				ld  a, (_at2)
 				and 12
-				jr  z, m_vert_coll_checks_done
+				jp  z, m_vert_coll_checks_done
 		#else
 				// 	(at1 & 8) || (at2 & 8) || (       ch3
 				// 		((gpy - 1) & 15) < 8 && ( 	  ch2
@@ -1085,7 +1085,7 @@ void move (void) {
 
 				ld  a, (_at2)
 				and 4
-				jr  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
+				jp  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
 
 			.m_vert_coll_down_ch2
 				ld  a, (_gpy)
@@ -1105,6 +1105,20 @@ void move (void) {
 			#endif
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_down_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_down_set_vy
+
+			.m_vert_coll_down_botiboin
+				ld  hl, -PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_down_set_vy
 			ld  (_player + 8), hl 	// player.vy
 
 			ld  a, (_gpy)
@@ -1148,6 +1162,20 @@ void move (void) {
 			#endif	
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_up_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_up_set_vy
+
+			.m_vert_coll_up_botiboin
+				ld  hl, PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_up_set_vy
 			ld  (_player + 8), hl 	// player.vy
 
 			ld  a, (_gpy)
@@ -1308,7 +1336,7 @@ void move (void) {
 				jr  nz, m_horz_kp_left_done
 
 			.m_horz_kp_left_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
@@ -1337,7 +1365,7 @@ void move (void) {
 				jr  nz, m_horz_kp_right_done
 
 			.m_horz_kp_right_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
@@ -1469,7 +1497,7 @@ void move (void) {
 
 			ld  a, (_at2)
 			and 8
-			jr  z, m_horz_coll_checks_done
+			jp  z, m_horz_coll_checks_done
 
 		.m_horz_coll_right_adjust
 			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
@@ -1477,6 +1505,20 @@ void move (void) {
 			#endif
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_right_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_right_set_vy
+
+			.m_vert_coll_right_botiboin
+				ld  hl, -PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_right_set_vy
 			ld  (_player + 6), hl 	// player.vx
 
 			ld  a, (_gpx)
@@ -1521,6 +1563,20 @@ void move (void) {
 			#endif	
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_left_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_left_set_vy
+
+			.m_vert_coll_left_botiboin
+				ld  hl, PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_left_set_vy
 			ld  (_player + 6), hl 	// player.vx
 
 			ld  a, (_gpx)
@@ -1677,17 +1733,10 @@ void move (void) {
 				
 				call _attr_2 
 				ld  a, l
+				ld  (_tat), a
 				and 128
 				jr  z, nospecial
 				
-				ld  (_tat), a
-				ld  a, (_tpx) 
-				ld  c, a
-				ld  a, (_tpy)
-				call qtile_do
-				ld  a, l 
-				ld  (_tqt), a
-
 				ld  hl, SC_SPECIAL_TILE_TOUCHED
 				call _script
 			.nospecial
@@ -1808,7 +1857,7 @@ void move (void) {
 	#endasm
 }
 
-void _shl_player_coords (void) {
+void shl_player_coords (void) {
 	#asm
 			ld  a, (_gpx)
 			call Ashl16_HL
@@ -1817,7 +1866,7 @@ void _shl_player_coords (void) {
 			ld  a, (_gpy)
 			call Ashl16_HL
 			ld  (_player + 2), hl
-	#endif
+	#endasm
 }
 
 void init_player_values (void) {
@@ -1838,7 +1887,7 @@ void init_player_values (void) {
 			ld  (_player + 24), a 				// .ct_estado
 			ld  (_player + 36), a 				// .is_dead
 
-		#ifdef PLAYER_MOGGY_STYLE
+		#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 				ld  a, GENITAL_FACING_DOWN
 		#endif
 

@@ -48,6 +48,7 @@
 #define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
 //#define PLAYER_BOUNCES					// If defined, collisions make player bounce
 #define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
+//#define ENABLE_BOTIBOINS					// If defined, enable botiboins on beh 2.
 
 // Shooting behaviour (only side view!)
 // ------------------------------------
@@ -56,6 +57,7 @@
 //#define MAX_BULLETS 				3		// Max number of bullets on screen. Be careful!.
 //#define PLAYER_BULLET_Y_OFFSET	4		// vertical offset from the player's top.
 //#define ENEMS_LIFE_GAUGE			5		// Amount of shots needed to kill enemies.
+//#define PLAYER_AX_RECOIL 			128		// Push player back a bit when firing
 
 // Random Respawn Fanties
 // ----------------------
@@ -74,12 +76,14 @@
 #define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
 #define SCRIPTING_DOWN						// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
+											// If none are selected, FIRE is used.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 
 // Top view:
 // ---------
 
 //#define PLAYER_MOGGY_STYLE				// Enable top view.
+//#define FAKE_SIDE_VIEW 					// For gravity 0 games! Needs PLAYER_MOGGY_STYLE enabled.
 
 // Side view:
 // ----------

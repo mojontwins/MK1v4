@@ -140,6 +140,8 @@
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 #define HOTSPOTS_FIRST_TILE			32 	// Override default value of 16
 #define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
+#define ENABLE_ANIMATED_TILES 		30  // Must be EVEN
+#define TILANIM_PERIOD 				16  // Must be power of two
 
 // ============================================================================
 // IV. Player movement configuration

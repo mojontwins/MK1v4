@@ -361,9 +361,10 @@ void main (void) {
 						#else
 							sp_KeyPressed (key_m) || ((pad_this_frame & sp_FIRE) == 0)
 						#endif
-					#endif
-					#ifdef SCRIPTING_DOWN
+					#elif defined SCRIPTING_DOWN
 						(pad_this_frame & sp_DOWN) == 0
+					#else
+						(pad_this_frame & sp_FIRE) == 0
 					#endif
 				) {	
 					// Any scripts to run in this screen?

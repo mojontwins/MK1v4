@@ -1970,6 +1970,11 @@ void init_hotspots (void) {
 				pop bc
 
 			#ifdef ENABLE_ANIMATED_TILES
+					ld  a, (__n)
+					cp  ENABLE_ANIMATED_TILES
+					jr  c, tilanims_add_done
+
+				.tilanims_add
 					ld  a, (_ta_i)
 					ld  b, 0
 					ld  c, a 
@@ -1998,6 +2003,7 @@ void init_hotspots (void) {
 
 					ld  hl, _ta_i
 					inc (hl) 
+				.tilanims_add_done
 			#endif
 
 				ld  a, (_rdx)
@@ -2154,6 +2160,9 @@ void draw_scr_background (void) {
 			ld  (_rdx), a
 			ld  (_rdy), a
 			ld  (_rdi), a
+		#ifdef ENABLE_ANIMATED_TILES
+				ld  (_ta_i), a
+		#endif
 	#endasm
 
 	#ifdef RLE_MAP
@@ -2434,6 +2443,61 @@ void draw_scr_background (void) {
 		#endasm
 	#endif	
 }
+
+#ifdef ENABLE_ANIMATED_TILES
+	void tilanims_do (void) {
+		#asm
+				ld  a, (_ta_i)
+				or  a 
+				ret z
+
+				ld  bc, 0
+			.tilanims_do_loop
+				ld  hl, _ta_c 
+				add hl, bc 
+				dec (hl)
+				jr  nz, tilanims_do_continue
+
+				ld  a, TILANIM_PERIOD
+				ld  (hl), a
+
+				ld  hl, _ta_t
+				add hl, bc 
+				ld  a, (hl)
+				xor 1 
+				ld  (hl), a 
+
+				ld  (__t), a 
+				ld  e, a 
+				ld  d, 0 
+				ld  hl, _comportamiento_tiles 
+				add hl, de 
+				ld  a, (hl)
+				ld  (__n), a 
+
+				ld  hl, _ta_y 
+				add hl, bc 
+				ld  a, (hl)
+				ld  (__y), a 
+
+				ld  hl, _ta_x 
+				add hl, bc 
+				ld  a, (hl)
+				ld  (__x), a 
+
+				push bc 
+				ld  c, a 					;; Call directly needs C
+				call set_map_tile_do
+				pop bc
+
+			.tilanims_do_continue
+				inc c 
+				ld  a, (_ta_i)
+				cp  c
+				jr  nz, tilanims_do_loop
+		#endasm
+	}
+#endif
 
 void enems_calc_frame (void) {
 	// en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];

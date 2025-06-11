@@ -75,12 +75,14 @@
 #define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
 #define SCRIPTING_DOWN						// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
+											// If none are selected, FIRE is used.
 #define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 
 // Top view:
 // ---------
 
 //#define PLAYER_MOGGY_STYLE				// Enable top view.
+//#define FAKE_SIDE_VIEW 					// For gravity 0 games! Needs PLAYER_MOGGY_STYLE enabled.
 
 // Side view:
 // ----------
@@ -90,6 +92,7 @@
 //#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
+#define AVOID_PLATFORM_HOP 				// Only works if SIMPLE_PLATFORMS is DISABLED!
 
 // Custom:
 // -------

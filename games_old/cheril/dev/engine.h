@@ -790,7 +790,7 @@ void move (void) {
 				jr  nz, m_vert_kp_up_done
 
 			.m_vert_kp_up_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -804,8 +804,10 @@ void move (void) {
 				ex  de, hl 						// HL = -PLAYER_MAX_VX
 
 			.m_vert_kp_up_facing
-				ld  a, GENITAL_FACING_UP
-				ld  (_player + 22), a 			// facing
+			#ifndef FAKE_SIDE_VIEW
+					ld  a, GENITAL_FACING_UP
+					ld  (_player + 22), a 			// facing
+			#endif
 				jr  m_vert_kp_vy_write
 
 			.m_vert_kp_up_done
@@ -815,7 +817,7 @@ void move (void) {
 				jr  nz, m_vert_kp_down_done
 
 			.m_vert_kp_down_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -829,10 +831,11 @@ void move (void) {
 				ex  de, hl 						// HL = PLAYER_MAX_VX
 
 			.m_vert_kp_down_facing
-				ld  a, GENITAL_FACING_DOWN
-				ld  (_player + 22), a 			// facing
-				//jr  m_vert_kp_vy_write
-
+			#ifndef FAKE_SIDE_VIEW
+					ld  a, GENITAL_FACING_DOWN
+					ld  (_player + 22), a 			// facing
+			#endif
+	
 			.m_vert_kp_down_done
 
 			.m_vert_kp_vy_write
@@ -1049,13 +1052,20 @@ void move (void) {
 
 				ld  a, (_at2)
 				and 12
-				jr  z, m_vert_coll_checks_done
+				jp  z, m_vert_coll_checks_done
 		#else
 				// 	(at1 & 8) || (at2 & 8) || (       ch3
 				// 		((gpy - 1) & 15) < 8 && ( 	  ch2
 				// 			(at1 & 4) || (at2 & 4)    ch1
 				// 		)
 				// 	)
+
+				#ifdef AVOID_PLATFORM_HOP
+					ld  hl, (_player + 8) 				// player.vy
+					call HLshr6_A
+					inc a 
+					ld  c, a 							// C = VY in pixels + 1
+				#endif
 
 				// We have an OR outside, discard easier conditions first
 				ld  a, (_at1)
@@ -1075,13 +1085,17 @@ void move (void) {
 
 				ld  a, (_at2)
 				and 4
-				jr  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
+				jp  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
 
 			.m_vert_coll_down_ch2
 				ld  a, (_gpy)
 				dec a 
 				and 15
-				cp  8
+				#ifdef AVOID_PLATFORM_HOP
+					cp  c  // was: 8
+				#else
+					cp  4
+				#endif
 				jr  nc, m_vert_coll_checks_done		// Everything failed!
 		#endif
 
@@ -1091,6 +1105,20 @@ void move (void) {
 			#endif
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_down_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_down_set_vy
+
+			.m_vert_coll_down_botiboin
+				ld  hl, -PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_down_set_vy
 			ld  (_player + 8), hl 	// player.vy
 
 			ld  a, (_gpy)
@@ -1134,6 +1162,20 @@ void move (void) {
 			#endif	
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_up_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_up_set_vy
+
+			.m_vert_coll_up_botiboin
+				ld  hl, PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_up_set_vy
 			ld  (_player + 8), hl 	// player.vy
 
 			ld  a, (_gpy)
@@ -1294,7 +1336,7 @@ void move (void) {
 				jr  nz, m_horz_kp_left_done
 
 			.m_horz_kp_left_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
@@ -1308,7 +1350,7 @@ void move (void) {
 				ex  de, hl 						// HL = -PLAYER_MAX_VX
 
 			.m_horz_kp_left_facing
-			#ifdef PLAYER_MOGGY_STYLE
+			#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 					ld  a, GENITAL_FACING_LEFT
 			#else
 		 			ld  a, SIDEVIEW_FACING_LEFT
@@ -1323,7 +1365,7 @@ void move (void) {
 				jr  nz, m_horz_kp_right_done
 
 			.m_horz_kp_right_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
@@ -1337,7 +1379,7 @@ void move (void) {
 				ex  de, hl 						// HL = PLAYER_MAX_VX
 
 			.m_horz_kp_right_facing
-			#ifdef PLAYER_MOGGY_STYLE
+			#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 					ld  a, GENITAL_FACING_RIGHT
 			#else
 		 			ld  a, SIDEVIEW_FACING_RIGHT
@@ -1455,7 +1497,7 @@ void move (void) {
 
 			ld  a, (_at2)
 			and 8
-			jr  z, m_horz_coll_checks_done
+			jp  z, m_horz_coll_checks_done
 
 		.m_horz_coll_right_adjust
 			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
@@ -1463,6 +1505,20 @@ void move (void) {
 			#endif
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_right_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_right_set_vy
+
+			.m_vert_coll_right_botiboin
+				ld  hl, -PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_right_set_vy
 			ld  (_player + 6), hl 	// player.vx
 
 			ld  a, (_gpx)
@@ -1507,6 +1563,20 @@ void move (void) {
 			#endif	
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_left_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_left_set_vy
+
+			.m_vert_coll_left_botiboin
+				ld  hl, PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_left_set_vy
 			ld  (_player + 6), hl 	// player.vx
 
 			ld  a, (_gpx)
@@ -1663,17 +1733,10 @@ void move (void) {
 				
 				call _attr_2 
 				ld  a, l
+				ld  (_tat), a
 				and 128
 				jr  z, nospecial
 				
-				ld  (_tat), a
-				ld  a, (_tpx) 
-				ld  c, a
-				ld  a, (_tpy)
-				call qtile_do
-				ld  a, l 
-				ld  (_tqt), a
-
 				ld  hl, SC_SPECIAL_TILE_TOUCHED
 				call _script
 			.nospecial
@@ -1794,10 +1857,7 @@ void move (void) {
 	#endasm
 }
 
-void init_player_values (void) {
-	gpx = 		PLAYER_INI_X << 4;
-	gpy =		PLAYER_INI_Y << 4;
-	
+void shl_player_coords (void) {
 	#asm
 			ld  a, (_gpx)
 			call Ashl16_HL
@@ -1806,6 +1866,15 @@ void init_player_values (void) {
 			ld  a, (_gpy)
 			call Ashl16_HL
 			ld  (_player + 2), hl
+	#endasm
+}
+
+void init_player_values (void) {
+	gpx = 		PLAYER_INI_X << 4;
+	gpy =		PLAYER_INI_Y << 4;
+	
+	#asm
+			call _shl_player_coords
 
 			ld  hl, 0
 			ld  (_player + 6), hl 				// .vx
@@ -1818,7 +1887,7 @@ void init_player_values (void) {
 			ld  (_player + 24), a 				// .ct_estado
 			ld  (_player + 36), a 				// .is_dead
 
-		#ifdef PLAYER_MOGGY_STYLE
+		#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 				ld  a, GENITAL_FACING_DOWN
 		#endif
 
@@ -1899,6 +1968,37 @@ void init_hotspots (void) {
 				pop bc
 				pop bc
 				pop bc
+
+			#ifdef ENABLE_ANIMATED_TILES
+					ld  a, (_ta_i)
+					ld  b, 0
+					ld  c, a 
+					
+					ld  hl, _ta_x
+					add hl, bc 
+					ld  a, (_rdx)
+					ld  (hl), a 
+					
+					ld  hl, _ta_y
+					add hl, bc 
+					ld  a, (_rdy)
+					ld  (hl), a 
+					
+					ld  hl, _ta_t
+					add hl, bc 
+					ld  a, (__n)
+					ld  (hl), a 
+					
+					call _rand 		// Doesn't trash BC
+					ld  a, l 
+					and TILANIM_PERIOD-1
+					ld  hl, _ta_c 
+					add hl, bc 
+					ld  (hl), a 
+
+					ld  hl, _ta_i
+					inc (hl) 
+			#endif
 
 				ld  a, (_rdx)
 				add 2
@@ -2609,18 +2709,9 @@ void mueve_bicharracos (void) {
 			#endasm
 
 			// Basic linear movement x = x + mx, etc.
-			if (
-				_en_t <= 4
-				/*
-				#ifdef RANDOM_RESPAWN
-					|| 0 == en_an_fanty_activo [enit]
-				#endif
-				*/
-			) {
+			if (_en_t <= 4) {
 				#asm
-					
-					call en_lineal_do
-
+						call en_lineal_do
 				#endasm
 			}
 
@@ -3127,189 +3218,195 @@ void mueve_bicharracos (void) {
 			{
 				// Collision with enemy
 
-				if (
-					#ifdef ENABLE_CUSTOM_ENEMS
-						this_enemy_kills () && 
-					#endif
-					0 == en_tocado && collide_enem () && 
-					(_en_t < 128 
-						#ifdef RANDOM_RESPAWN
-							|| en_an_fanty_activo [enit] == 1
+				if (collide_enem ()) {
+					if (
+						0 == en_tocado &&
+						#ifdef ENABLE_CUSTOM_ENEMS
+							this_enemy_kills () &&
 						#endif
-					) 
-				) {
-					#ifdef PLAYER_KILLS_ENEMIES
-						if (
-							gpy <= _en_y - 4
-							&& player.vy >= -PLAYER_G 
-							#ifdef PLAYER_MIN_KILLABLE
-								&& _en_t >= PLAYER_MIN_KILLABLE
+						(_en_t < 128 
+							#ifdef RANDOM_RESPAWN
+								|| en_an_fanty_activo [enit] == 1
 							#endif
-							#ifdef PLAYER_MAX_KILLABLE
-								&& _en_t <= PLAYER_MAX_KILLABLE
-							#endif
-						) {
-							// Step on enemy and kill it.
-							player.vy = -PLAYER_MAX_VY_SALTANDO;
-							#asm
-									ld  a, (__en_y)
-									cp  BOUNDING_SIZE
-									jr  c, cwepke_zero
-									sub BOUNDING_SIZE
-									jr  cwepke_w
-								.cwepke_zero
-									xor a 
-								.cwepke_w
-									ld  (_gpy), a
-									call Ashl16_HL
-									ld  (_player + 2), hl 		// player.y
-							#endasm
-							enems_kill (0xff);
-						} else	
-					#endif
-						
-					if (player.estado == EST_NORMAL) {
-						en_tocado = 1; player.is_dead = 1; peta_el_beeper (2);
-						
-						player.drain_amount = 1;
-						player.is_dead = PLAYER_KILLED_BY_ENEM;
-						
-						#ifdef PLAYER_BOUNCES
-							#ifndef PLAYER_MOGGY_STYLE	
-								#if defined(RANDOM_RESPAWN)
-									if (0 == en_an_fanty_activo [enit]) {
-										// Bouncing!
-										#asm
-											// Linear colision
-											.en_col_lin_h
-												ld  a, (__en_mx)
-												or  a 
-												jr  z, en_col_lin_v
-
-												bit 7, a 
-												jr  z, en_col_lin_h_pos
-
-											.en_col_lin_h_neg
-												ld  hl, -PLAYER_MAX_VX
-												jr  en_col_lin_h_write
-
-											.en_col_lin_h_pos
-												ld  hl, PLAYER_MAX_VX
-
-											.en_col_lin_h_write
-												ld  (_player + 6), hl 		// player.vx
-
-											.en_col_lin_v
-												ld  a, (__en_my)
-												or  a
-												jr  z, en_col_lin_end
-
-												bit 7, a
-												jr  z, en_col_lin_v_pos
-
-											.en_col_lin_v_neg
-												ld  hl, -PLAYER_MAX_VX
-												jr  en_col_lin_v_write
-
-											.en_col_lin_v_pos
-												ld  hl, PLAYER_MAX_VX
-
-											.en_col_lin_v_write
-												ld  (_player + 8), hl 		// player.vy
-
-											.en_col_lin_end
-										#endasm
-									} else {
-										//player.vx = en_an_vx [enit] + en_an_vx [enit];
-										//player.vy = en_an_vy [enit] + en_an_vy [enit];
-										#asm
-												ld  a, (_enit)
-												sla a
-												ld  b, 0
-												ld  c, a
-
-												ld  hl, _en_an_vx
-												add hl, bc 
-
-												ld  a, (hl)
-												inc hl 
-												ld  h, (hl)
-												ld  l, a
-
-												add hl, hl
-												ld  (_player + 6), hl 			// player.vx
-
-												ld  hl, _en_an_vy 
-												add hl, bc 
-
-												ld  a, (hl)
-												inc hl 
-												ld  h, (hl) 
-												ld  l, a 
-
-												add hl, hl
-												ld  (_player + 8), hl 			// player.vy
-										#endasm
-									}
-								#else
-									#asm
-											// Linear colision
-											.en_col_lin_h
-												ld  a, (__en_mx)
-												or  a 
-												jr  z, en_col_lin_v
-
-												bit 7, a 
-												jr  z, en_col_lin_h_pos
-
-											.en_col_lin_h_neg
-												ld  hl, -PLAYER_MAX_VX*2
-												jr  en_col_lin_h_write
-
-											.en_col_lin_h_pos
-												ld  hl, PLAYER_MAX_VX*2
-
-											.en_col_lin_h_write
-												ld  (_player + 6), hl 		// player.vx
-
-											.en_col_lin_v
-												ld  a, (__en_my)
-												or  a
-												jr  z, en_col_lin_end
-
-												bit 7, a
-												jr  z, en_col_lin_v_pos
-
-											.en_col_lin_v_neg
-												ld  hl, -PLAYER_MAX_VX*2
-												jr  en_col_lin_v_write
-
-											.en_col_lin_v_pos
-												ld  hl, PLAYER_MAX_VX*2
-
-											.en_col_lin_v_write
-												ld  (_player + 8), hl 		// player.vy
-
-											.en_col_lin_end
-										#endasm
+						) 
+					) {
+						#ifdef PLAYER_KILLS_ENEMIES
+							if (
+								gpy <= _en_y - 4
+								&& player.vy >= -PLAYER_G 
+								#ifdef PLAYER_MIN_KILLABLE
+									&& _en_t >= PLAYER_MIN_KILLABLE
 								#endif
-							#else
-								// Bouncing:
-								
-								// x
-								if (_en_mx) {
-									if (gpx < _en_x) player.vx = - (abs (_en_mx << 1) << 7);
-									else player.vx = abs (_en_mx + _en_mx) << 7;
-								}
-								
-								// y
-								if (_en_my) {
-									if (gpy < _en_y) player.vy = - (abs (_en_my << 1) << 7);
-									else player.vy = abs (_en_my + _en_my) << 7;
-								}
-							#endif
+								#ifdef PLAYER_MAX_KILLABLE
+									&& _en_t <= PLAYER_MAX_KILLABLE
+								#endif
+							) {
+								// Step on enemy and kill it.
+								player.vy = -PLAYER_MAX_VY_SALTANDO;
+								#asm
+										ld  a, (__en_y)
+										cp  BOUNDING_SIZE
+										jr  c, cwepke_zero
+										sub BOUNDING_SIZE
+										jr  cwepke_w
+									.cwepke_zero
+										xor a 
+									.cwepke_w
+										ld  (_gpy), a
+										call Ashl16_HL
+										ld  (_player + 2), hl 		// player.y
+								#endasm
+								enems_kill (0xff);
+							} else	
 						#endif
+							
+						if (player.estado == EST_NORMAL) {
+							en_tocado = 1; player.is_dead = 1; peta_el_beeper (2);
+							
+							player.drain_amount = 1;
+							player.is_dead = PLAYER_KILLED_BY_ENEM;
+							
+							#ifdef PLAYER_BOUNCES
+								#ifndef PLAYER_MOGGY_STYLE	
+									#if defined(RANDOM_RESPAWN)
+										if (0 == en_an_fanty_activo [enit]) {
+											// Bouncing!
+											#asm
+												// Linear colision
+												.en_col_lin_h
+													ld  a, (__en_mx)
+													or  a 
+													jr  z, en_col_lin_v
+
+													bit 7, a 
+													jr  z, en_col_lin_h_pos
+
+												.en_col_lin_h_neg
+													ld  hl, -PLAYER_MAX_VX
+													jr  en_col_lin_h_write
+
+												.en_col_lin_h_pos
+													ld  hl, PLAYER_MAX_VX
+
+												.en_col_lin_h_write
+													ld  (_player + 6), hl 		// player.vx
+
+												.en_col_lin_v
+													ld  a, (__en_my)
+													or  a
+													jr  z, en_col_lin_end
+
+													bit 7, a
+													jr  z, en_col_lin_v_pos
+
+												.en_col_lin_v_neg
+													ld  hl, -PLAYER_MAX_VX
+													jr  en_col_lin_v_write
+
+												.en_col_lin_v_pos
+													ld  hl, PLAYER_MAX_VX
+
+												.en_col_lin_v_write
+													ld  (_player + 8), hl 		// player.vy
+
+												.en_col_lin_end
+											#endasm
+										} else {
+											//player.vx = en_an_vx [enit] + en_an_vx [enit];
+											//player.vy = en_an_vy [enit] + en_an_vy [enit];
+											#asm
+													ld  a, (_enit)
+													sla a
+													ld  b, 0
+													ld  c, a
+
+													ld  hl, _en_an_vx
+													add hl, bc 
+
+													ld  a, (hl)
+													inc hl 
+													ld  h, (hl)
+													ld  l, a
+
+													add hl, hl
+													ld  (_player + 6), hl 			// player.vx
+
+													ld  hl, _en_an_vy 
+													add hl, bc 
+
+													ld  a, (hl)
+													inc hl 
+													ld  h, (hl) 
+													ld  l, a 
+
+													add hl, hl
+													ld  (_player + 8), hl 			// player.vy
+											#endasm
+										}
+									#else
+										#asm
+												// Linear colision
+												.en_col_lin_h
+													ld  a, (__en_mx)
+													or  a 
+													jr  z, en_col_lin_v
+
+													bit 7, a 
+													jr  z, en_col_lin_h_pos
+
+												.en_col_lin_h_neg
+													ld  hl, -PLAYER_MAX_VX*2
+													jr  en_col_lin_h_write
+
+												.en_col_lin_h_pos
+													ld  hl, PLAYER_MAX_VX*2
+
+												.en_col_lin_h_write
+													ld  (_player + 6), hl 		// player.vx
+
+												.en_col_lin_v
+													ld  a, (__en_my)
+													or  a
+													jr  z, en_col_lin_end
+
+													bit 7, a
+													jr  z, en_col_lin_v_pos
+
+												.en_col_lin_v_neg
+													ld  hl, -PLAYER_MAX_VX*2
+													jr  en_col_lin_v_write
+
+												.en_col_lin_v_pos
+													ld  hl, PLAYER_MAX_VX*2
+
+												.en_col_lin_v_write
+													ld  (_player + 8), hl 		// player.vy
+
+												.en_col_lin_end
+											#endasm
+									#endif
+								#else
+									// Bouncing:
+									
+									// x
+									if (_en_mx) {
+										if (gpx < _en_x) player.vx = - (abs (_en_mx << 1) << 7);
+										else player.vx = abs (_en_mx + _en_mx) << 7;
+									}
+									
+									// y
+									if (_en_my) {
+										if (gpy < _en_y) player.vy = - (abs (_en_my << 1) << 7);
+										else player.vy = abs (_en_my + _en_my) << 7;
+									}
+								#endif
+							#endif
+						}
 					}
+
+					#ifdef ACTIVATE_SCRIPTING
+						script (SC_ENEMY_TOUCHED);
+					#endif
 				}
 
 				#ifdef PLAYER_CAN_FIRE

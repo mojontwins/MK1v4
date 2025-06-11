@@ -67,7 +67,7 @@ void main (void) {
 		#endif
 
 		n_pant = SCR_INICIO;
-	
+		
 		#ifdef ACTIVATE_SCRIPTING		
 			script_result = 0;
 			
@@ -123,9 +123,8 @@ void main (void) {
 				if (player.objs != objs_old) {
 					#if defined ONLY_ONE_OBJECT 
 						#if defined OBJECTS_ICON_X
-							draw_coloured_tile (OBJECTS_ICON_X, OBJECTS_ICON_Y, player.objs ? 17 : 0);
+							draw_coloured_tile (OBJECTS_ICON_X, OBJECTS_ICON_Y, player.objs ? (HOTSPOTS_FIRST_TILE+1) : 47);
 						#endif
-						draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
 					#else
 						draw_2_digits (OBJECTS_X, OBJECTS_Y, 
 							#ifdef REVERSE_OBJECT_COUNT
@@ -136,6 +135,13 @@ void main (void) {
 						);
 					#endif
 					objs_old = player.objs;
+				}
+			#endif
+
+			#if defined OBJECT_COUNT && defined OBJECTS_X 
+				if (flag_old != flags [OBJECT_COUNT]) {
+					draw_2_digits (OBJECTS_X, OBJECTS_Y, flags [OBJECT_COUNT]);
+					flag_old = flags [OBJECT_COUNT];
 				}
 			#endif
 
@@ -186,7 +192,7 @@ void main (void) {
 			
 			mueve_bicharracos ();
 			move ();
-
+				
 			#ifdef PLAYER_CAN_FIRE
 				mueve_bullets ();
 			#endif
@@ -247,14 +253,11 @@ void main (void) {
 											peta_el_beeper (6);	
 										} else {
 											rdi = 1;
-											peta_el_beeper (1);	
+											if (hotspot_flag == 0) peta_el_beeper (1);	
 										}
 									#else
 										player.objs ++;
 										peta_el_beeper (7);
-										#ifdef OBJECT_COUNT
-											flags [OBJECT_COUNT] ++;
-										#endif
 									#endif
 									break;
 							#endif
@@ -291,7 +294,15 @@ void main (void) {
 			}
 			
 			#asm
+				._hotspots_finally
+					ld  a, 1
+					ld  (_hotspot_flag), a
+					jr  _hotspots_done
+
 				._hotspots_else
+					xor a 
+					ld  (_hotspot_flag), a
+
 				._hotspots_done
 			#endasm
 			
@@ -350,9 +361,10 @@ void main (void) {
 						#else
 							sp_KeyPressed (key_m) || ((pad_this_frame & sp_FIRE) == 0)
 						#endif
-					#endif
-					#ifdef SCRIPTING_DOWN
+					#elif defined SCRIPTING_DOWN
 						(pad_this_frame & sp_DOWN) == 0
+					#else
+						(pad_this_frame & sp_FIRE) == 0
 					#endif
 				) {	
 					// Any scripts to run in this screen?

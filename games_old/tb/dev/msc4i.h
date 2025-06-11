@@ -21,7 +21,18 @@ void __FASTCALL__ script (unsigned char a) {
 	#asm 
 			ld  a, l 
 			ld  (_script_n), a 
-			jp _script_do
+
+			ld  a, (_tpx) 
+			ld  c, a
+			ld  a, (_tpy)
+			call qtile_do
+			ld  a, l 
+			ld  (_tqt), a
+			
+			call _script_do
+
+			// gpx, gpy may have changed, so update player.x/player.y
+			call _shl_player_coords
 	#endasm
 }
 

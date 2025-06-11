@@ -790,7 +790,7 @@ void move (void) {
 				jr  nz, m_vert_kp_up_done
 
 			.m_vert_kp_up_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -804,8 +804,10 @@ void move (void) {
 				ex  de, hl 						// HL = -PLAYER_MAX_VX
 
 			.m_vert_kp_up_facing
-				ld  a, GENITAL_FACING_UP
-				ld  (_player + 22), a 			// facing
+			#ifndef FAKE_SIDE_VIEW
+					ld  a, GENITAL_FACING_UP
+					ld  (_player + 22), a 			// facing
+			#endif
 				jr  m_vert_kp_vy_write
 
 			.m_vert_kp_up_done
@@ -815,7 +817,7 @@ void move (void) {
 				jr  nz, m_vert_kp_down_done
 
 			.m_vert_kp_down_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
 
@@ -829,10 +831,11 @@ void move (void) {
 				ex  de, hl 						// HL = PLAYER_MAX_VX
 
 			.m_vert_kp_down_facing
-				ld  a, GENITAL_FACING_DOWN
-				ld  (_player + 22), a 			// facing
-				//jr  m_vert_kp_vy_write
-
+			#ifndef FAKE_SIDE_VIEW
+					ld  a, GENITAL_FACING_DOWN
+					ld  (_player + 22), a 			// facing
+			#endif
+	
 			.m_vert_kp_down_done
 
 			.m_vert_kp_vy_write
@@ -1049,7 +1052,7 @@ void move (void) {
 
 				ld  a, (_at2)
 				and 12
-				jr  z, m_vert_coll_checks_done
+				jp  z, m_vert_coll_checks_done
 		#else
 				// 	(at1 & 8) || (at2 & 8) || (       ch3
 				// 		((gpy - 1) & 15) < 8 && ( 	  ch2
@@ -1082,7 +1085,7 @@ void move (void) {
 
 				ld  a, (_at2)
 				and 4
-				jr  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
+				jp  z, m_vert_coll_checks_done 		// ch1 is false, so ch2 is false.
 
 			.m_vert_coll_down_ch2
 				ld  a, (_gpy)
@@ -1102,6 +1105,20 @@ void move (void) {
 			#endif
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_down_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_down_set_vy
+
+			.m_vert_coll_down_botiboin
+				ld  hl, -PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_down_set_vy
 			ld  (_player + 8), hl 	// player.vy
 
 			ld  a, (_gpy)
@@ -1145,6 +1162,20 @@ void move (void) {
 			#endif	
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_up_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_up_set_vy
+
+			.m_vert_coll_up_botiboin
+				ld  hl, PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_up_set_vy
 			ld  (_player + 8), hl 	// player.vy
 
 			ld  a, (_gpy)
@@ -1305,7 +1336,7 @@ void move (void) {
 				jr  nz, m_horz_kp_left_done
 
 			.m_horz_kp_left_do
-				ld  de, -PLAYER_RX
+				ld  de, -PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
@@ -1319,7 +1350,7 @@ void move (void) {
 				ex  de, hl 						// HL = -PLAYER_MAX_VX
 
 			.m_horz_kp_left_facing
-			#ifdef PLAYER_MOGGY_STYLE
+			#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 					ld  a, GENITAL_FACING_LEFT
 			#else
 		 			ld  a, SIDEVIEW_FACING_LEFT
@@ -1334,7 +1365,7 @@ void move (void) {
 				jr  nz, m_horz_kp_right_done
 
 			.m_horz_kp_right_do
-				ld  de, PLAYER_RX
+				ld  de, PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
 
@@ -1348,7 +1379,7 @@ void move (void) {
 				ex  de, hl 						// HL = PLAYER_MAX_VX
 
 			.m_horz_kp_right_facing
-			#ifdef PLAYER_MOGGY_STYLE
+			#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 					ld  a, GENITAL_FACING_RIGHT
 			#else
 		 			ld  a, SIDEVIEW_FACING_RIGHT
@@ -1466,7 +1497,7 @@ void move (void) {
 
 			ld  a, (_at2)
 			and 8
-			jr  z, m_horz_coll_checks_done
+			jp  z, m_horz_coll_checks_done
 
 		.m_horz_coll_right_adjust
 			#if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
@@ -1474,6 +1505,20 @@ void move (void) {
 			#endif
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_right_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_right_set_vy
+
+			.m_vert_coll_right_botiboin
+				ld  hl, -PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_right_set_vy
 			ld  (_player + 6), hl 	// player.vx
 
 			ld  a, (_gpx)
@@ -1518,6 +1563,20 @@ void move (void) {
 			#endif	
 
 			ld  hl, 0 
+		#ifdef ENABLE_BOTIBOINS
+				ld  a, (_at1)
+				and 2 
+				jr  nz, m_vert_coll_left_botiboin
+
+				ld  a, (_at2) 
+				and 2
+				jr  z, m_vert_coll_left_set_vy
+
+			.m_vert_coll_left_botiboin
+				ld  hl, PLAYER_MAX_VX
+
+		#endif
+		.m_vert_coll_left_set_vy
 			ld  (_player + 6), hl 	// player.vx
 
 			ld  a, (_gpx)
@@ -1674,17 +1733,10 @@ void move (void) {
 				
 				call _attr_2 
 				ld  a, l
+				ld  (_tat), a
 				and 128
 				jr  z, nospecial
 				
-				ld  (_tat), a
-				ld  a, (_tpx) 
-				ld  c, a
-				ld  a, (_tpy)
-				call qtile_do
-				ld  a, l 
-				ld  (_tqt), a
-
 				ld  hl, SC_SPECIAL_TILE_TOUCHED
 				call _script
 			.nospecial
@@ -1805,10 +1857,7 @@ void move (void) {
 	#endasm
 }
 
-void init_player_values (void) {
-	gpx = 		PLAYER_INI_X << 4;
-	gpy =		PLAYER_INI_Y << 4;
-	
+void shl_player_coords (void) {
 	#asm
 			ld  a, (_gpx)
 			call Ashl16_HL
@@ -1817,6 +1866,15 @@ void init_player_values (void) {
 			ld  a, (_gpy)
 			call Ashl16_HL
 			ld  (_player + 2), hl
+	#endasm
+}
+
+void init_player_values (void) {
+	gpx = 		PLAYER_INI_X << 4;
+	gpy =		PLAYER_INI_Y << 4;
+	
+	#asm
+			call _shl_player_coords
 
 			ld  hl, 0
 			ld  (_player + 6), hl 				// .vx
@@ -1829,7 +1887,7 @@ void init_player_values (void) {
 			ld  (_player + 24), a 				// .ct_estado
 			ld  (_player + 36), a 				// .is_dead
 
-		#ifdef PLAYER_MOGGY_STYLE
+		#if defined PLAYER_MOGGY_STYLE && !defined FAKE_SIDE_VIEW
 				ld  a, GENITAL_FACING_DOWN
 		#endif
 
@@ -1910,6 +1968,37 @@ void init_hotspots (void) {
 				pop bc
 				pop bc
 				pop bc
+
+			#ifdef ENABLE_ANIMATED_TILES
+					ld  a, (_ta_i)
+					ld  b, 0
+					ld  c, a 
+					
+					ld  hl, _ta_x
+					add hl, bc 
+					ld  a, (_rdx)
+					ld  (hl), a 
+					
+					ld  hl, _ta_y
+					add hl, bc 
+					ld  a, (_rdy)
+					ld  (hl), a 
+					
+					ld  hl, _ta_t
+					add hl, bc 
+					ld  a, (__n)
+					ld  (hl), a 
+					
+					call _rand 		// Doesn't trash BC
+					ld  a, l 
+					and TILANIM_PERIOD-1
+					ld  hl, _ta_c 
+					add hl, bc 
+					ld  (hl), a 
+
+					ld  hl, _ta_i
+					inc (hl) 
+			#endif
 
 				ld  a, (_rdx)
 				add 2

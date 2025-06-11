@@ -1,4 +1,4 @@
-msc v4.0.20250531 ~ Processing script.spt
+msc v4.1.20250604 ~ Processing script.spt
 ==========================================
 LINEA ROOMS = 20
 T0=[rooms]

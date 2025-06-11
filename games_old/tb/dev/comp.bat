@@ -1,7 +1,7 @@
 @echo off
 
 set game=tb3
-set om=cpc
+set om=speccy
 set mode=0
 
 if [%mode%]==[0] goto :setmode0 
