@@ -10,6 +10,11 @@ PRESS FIRE AT ANY
 		BREAK
 	END
 
+	IF TRUE
+	THEN
+		EXTERN 0 		# kjjj
+	END
+
 	IF NPANT = 2
 	THEN
 		WARP TO 5, 10, 8

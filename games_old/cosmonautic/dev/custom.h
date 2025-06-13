@@ -24,7 +24,15 @@
 				or  a 
 				jr  z, m_frame_set 
 
-				inc c 
+				inc c
+				cp  THRUST_UP
+				jr  z, m_frame_set 
+
+				inc c
+				cp  THRUST_DOWN 
+				jr  z, m_frame_set
+
+				inc c
 
 			.m_frame_set
 				ld  a, (_player + 22)		// player.facing
@@ -37,8 +45,36 @@
 #endif
 
 #ifdef PLAYER_CUSTOM_BG_HIT
-	void custom_bg_hit (void) {
+	unsigned char custom_bg_hit (void) {
 		// check hit_v, hit_h and modify player.x / player.y as you need
+		// Return 1 if hit registered
+
+		// hit_b has preference
+		#asm
+				ld  hl, 0
+
+			.m_evil_tile_hit_check_v
+				ld  a, (_hit_v)
+				or  a 
+				jr  z, m_evil_tile_hit_check_h
+
+				ld  hl, (_pvy_total)
+				call l_neg 
+				ld  (_player + 8), hl 		// player.vy
+
+				ld  hl, 1
+				ret
+
+			.m_evil_tile_hit_check_h
+				ld  a, (_hit_h)
+				or  a
+				ret z
+
+				ld  hl, (_pvx_total)
+				call l_neg 
+				ld  (_player + 6), hl 		// player.vx
+				ld  hl, 1
+		#endasm
 	}
 #endif
 

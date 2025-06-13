@@ -1467,7 +1467,7 @@ void render_all_sprites (void) {
 
 void saca_a_todo_el_mundo_de_aqui (void) {
 	#asm
-			ld  de, 15
+			ld  de, 16
 			ld  b, SW_SPRITES_ALL
 			ld  hl, BASE_SPRITES
 		.clear_sprites_loop

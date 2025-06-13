@@ -150,7 +150,7 @@ Voy a reservar espacio para 8 scripts especiales por si esto tiene ampliación. 
     6    12   [ON] TIMER ZERO -> timer got to 0
     7    14   [ON] TILE PUSHED -> pushed a tile
     8    16   [ON] ENEMY TOUCHED -> collided with an enemy, EN_T and EN_N make sense
-    9
+    9    18   [ON] TILE DESTROYED -> destroyed a tile
     10
     11
     12
@@ -274,3 +274,7 @@ OJAL - El tile se borra de la PANTALLA poniendo un 0 siempre, esto no se puede c
 ## ON TILE PUSHED
 
 Por defecto, empujar un tile ejecutará ON TILE PUSHED, pero puede cambiarse a que se ejecuten las secciones FIRE correspondientes con `#define TILE_PUSHED_PRESSES_FIRE`. En este caso `IF PUSHED` evaluará a true. 
+
+# ON TILE DESTROYED
+
+Cuando se dispare y se rompa un tile (esto en 3.2 no funciona, sería más para 4/5).

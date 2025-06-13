@@ -952,6 +952,23 @@ void move (void) {
 		#elif defined PLAYER_HAS_JETPAC
 			// Make jetpac
 		#endif
+
+		#ifdef JUMP_DOWN_PLATFORM
+			#asm
+					ld  a, (_pad0)
+					and sp_DOWN
+					ld  a, 0
+					jr  nz, m_vert_jump_down_done
+
+					ld  hl, PLAYER_VY_INICIAL_SALTO
+					ld  (_player + 8), hl 		// player.vy
+
+					inc a 
+
+				.m_vert_jump_down_done
+					ld  (_disable_collide_platform), a
+			#endasm
+		#endif
 	#endif 
 
 	// Vertical thrust: apply vy to y
@@ -984,7 +1001,18 @@ void move (void) {
 		.m_vert_thurst_write
 			ld  (_player + 2), hl 				// player.y
 			call HLshr6_A
-			ld  (_gpy), A
+			ld  (_gpy), a
+
+		#ifdef JUMP_DOWN_PLATFORM
+				and 15
+				cp  8
+				jr  c, m_vert_jd_disable_done
+
+				xor a 
+				ld  (_disable_collide_platform), a
+
+			.m_vert_jd_disable_done
+		#endif
 	#endasm
 
 	// Collide vertical.
@@ -1045,13 +1073,23 @@ void move (void) {
 			// Collision down check is simpler for genital or if you don't have 8s on 4s:
 
 		#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS || defined PLAYER_CUSTOM_VENG
+				ld  c, 12
+
+			#ifdef JUMP_DOWN_PLATFORM
+					ld  a, (_disable_collide_platform)
+					or  a 
+					jr  z, jump_down_platform_done
+					ld  c, 8
+				.jump_down_platform_done					
+			#endif
+
 				// (at1 & 12) || (at2 & 12)
 				ld  a, (_at1)
-				and 12
+				and c
 				jr  nz, m_vert_coll_down_adjust
 
 				ld  a, (_at2)
-				and 12
+				and c
 				jp  z, m_vert_coll_checks_done
 		#else
 				// 	(at1 & 8) || (at2 & 8) || (       ch3
@@ -1060,12 +1098,12 @@ void move (void) {
 				// 		)
 				// 	)
 
-				#ifdef AVOID_PLATFORM_HOP
+			#ifdef AVOID_PLATFORM_HOP
 					ld  hl, (_player + 8) 				// player.vy
 					call HLshr6_A
 					inc a 
 					ld  c, a 							// C = VY in pixels + 1
-				#endif
+			#endif
 
 				// We have an OR outside, discard easier conditions first
 				ld  a, (_at1)
@@ -1078,6 +1116,12 @@ void move (void) {
 
 				// Gotten here, we have to check the big condition.
 				// We have an AND, so BOTH sides must be true
+			
+			#ifdef JUMP_DOWN_PLATFORM
+					ld  a, (_disable_collide_platform)
+					or  a 
+					jr  nz, m_vert_coll_checks_done
+			#endif
 
 				ld  a, (_at1)
 				and 4

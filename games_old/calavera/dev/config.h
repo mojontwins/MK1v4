@@ -24,7 +24,7 @@
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS			25		// Objects to get to finish game
-#define PLAYER_LIFE 				10		// Max and starting life gauge.
+#define PLAYER_LIFE 				20		// Max and starting life gauge.
 #define PLAYER_REFILL				1		// Life recharge
 
 // ============================================================================
@@ -47,7 +47,8 @@
 //#define OBJECT_COUNT				1		// Defines which FLAG will be used to store the object count.
 //#define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
 #define PLAYER_BOUNCES						// If defined, collisions make player bounce
-#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
+//#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
+//#define ENABLE_BOTIBOINS					// If defined, enable botiboins on beh 2.
 
 // Shooting behaviour (only side view!)
 // ------------------------------------
@@ -92,7 +93,8 @@
 //#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
-#define AVOID_PLATFORM_HOP 				// Only works if SIMPLE_PLATFORMS is DISABLED!
+#define AVOID_PLATFORM_HOP 					// Only works if SIMPLE_PLATFORMS is DISABLED!
+#define JUMP_DOWN_PLATFORM 					// Use down on type 4s to jump down.
 
 // Custom:
 // -------
@@ -146,6 +148,7 @@
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 //#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16
 //#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
+//#define ENABLE_ANIMATED_TILES 	46  // Must be EVEN
 
 // ============================================================================
 // IV. Player movement configuration

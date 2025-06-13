@@ -38,6 +38,11 @@
 
 #define MAX_ANIMATED_TILES 		16
 
+#define THRUST_LEFT 			1
+#define THRUST_RIGHT 			2
+#define THRUST_UP 				4
+#define THRUST_DOWN 			8
+
 #ifdef CPC
 	#define BASE_TILEMAP 		0x0100
 	#define WYZ_SONG_BUFFER 	0x8800
@@ -102,6 +107,10 @@ signed int pvx_total, pvy_total;
 unsigned char at1, at2;
 unsigned char hit_v, hit_h;
 unsigned char thrusting;
+
+#ifdef JUMP_DOWN_PLATFORM
+	unsigned char disable_collide_platform;
+#endif
 
 // Enemies
 

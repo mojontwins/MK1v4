@@ -782,14 +782,15 @@ void move (void) {
 			.m_vert_kp_up_or_down_p
 
 			// UP or DOWN pressed, which?
-				ld  a, 1 
-				ld  (_thrusting), a
-
+				
 				ld  a, c
 				and sp_UP
 				jr  nz, m_vert_kp_up_done
 
 			.m_vert_kp_up_do
+				ld  a, THRUST_UP
+				ld  (_thrusting), a
+
 				ld  de, -PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
@@ -817,6 +818,9 @@ void move (void) {
 				jr  nz, m_vert_kp_down_done
 
 			.m_vert_kp_down_do
+				ld  a, THRUST_DOWN
+				ld  (_thrusting), a
+
 				ld  de, PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
@@ -952,6 +956,23 @@ void move (void) {
 		#elif defined PLAYER_HAS_JETPAC
 			// Make jetpac
 		#endif
+
+		#ifdef JUMP_DOWN_PLATFORM
+			#asm
+					ld  a, (_pad0)
+					and sp_DOWN
+					ld  a, 0
+					jr  nz, m_vert_jump_down_done
+
+					ld  hl, PLAYER_VY_INICIAL_SALTO
+					ld  (_player + 8), hl 		// player.vy
+
+					inc a 
+
+				.m_vert_jump_down_done
+					ld  (_disable_collide_platform), a
+			#endasm
+		#endif
 	#endif 
 
 	// Vertical thrust: apply vy to y
@@ -984,7 +1005,18 @@ void move (void) {
 		.m_vert_thurst_write
 			ld  (_player + 2), hl 				// player.y
 			call HLshr6_A
-			ld  (_gpy), A
+			ld  (_gpy), a
+
+		#ifdef JUMP_DOWN_PLATFORM
+				and 15
+				cp  8
+				jr  c, m_vert_jd_disable_done
+
+				xor a 
+				ld  (_disable_collide_platform), a
+
+			.m_vert_jd_disable_done
+		#endif
 	#endasm
 
 	// Collide vertical.
@@ -1045,13 +1077,23 @@ void move (void) {
 			// Collision down check is simpler for genital or if you don't have 8s on 4s:
 
 		#if defined PLAYER_MOGGY_STYLE || defined SIMPLE_PLATFORMS || defined PLAYER_CUSTOM_VENG
+				ld  c, 12
+
+			#ifdef JUMP_DOWN_PLATFORM
+					ld  a, (_disable_collide_platform)
+					or  a 
+					jr  z, jump_down_platform_done
+					ld  c, 8
+				.jump_down_platform_done					
+			#endif
+
 				// (at1 & 12) || (at2 & 12)
 				ld  a, (_at1)
-				and 12
+				and c
 				jr  nz, m_vert_coll_down_adjust
 
 				ld  a, (_at2)
-				and 12
+				and c
 				jp  z, m_vert_coll_checks_done
 		#else
 				// 	(at1 & 8) || (at2 & 8) || (       ch3
@@ -1078,6 +1120,12 @@ void move (void) {
 
 				// Gotten here, we have to check the big condition.
 				// We have an AND, so BOTH sides must be true
+
+			#ifdef JUMP_DOWN_PLATFORM
+					ld  a, (_disable_collide_platform)
+					or  a 
+					jr  nz, m_vert_coll_checks_done
+			#endif
 
 				ld  a, (_at1)
 				and 4
@@ -1115,6 +1163,8 @@ void move (void) {
 				jr  z, m_vert_coll_down_set_vy
 
 			.m_vert_coll_down_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, -PLAYER_MAX_VX
 
 		#endif
@@ -1172,6 +1222,8 @@ void move (void) {
 				jr  z, m_vert_coll_up_set_vy
 
 			.m_vert_coll_up_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, PLAYER_MAX_VX
 
 		#endif
@@ -1328,14 +1380,14 @@ void move (void) {
 			.m_horz_kp_left_or_right_p
 
 			// LEFT or RIGHT pressed, which?
-				ld  a, 1 
-				ld  (_thrusting), a
-
 				ld  a, c
 				and sp_LEFT
 				jr  nz, m_horz_kp_left_done
 
 			.m_horz_kp_left_do
+				ld  a, THRUST_LEFT
+				ld  (_thrusting), a
+
 				ld  de, -PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
@@ -1365,6 +1417,9 @@ void move (void) {
 				jr  nz, m_horz_kp_right_done
 
 			.m_horz_kp_right_do
+				ld  a, THRUST_RIGHT 
+				ld  (_thrusting), a
+
 				ld  de, PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
@@ -1515,6 +1570,8 @@ void move (void) {
 				jr  z, m_vert_coll_right_set_vy
 
 			.m_vert_coll_right_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, -PLAYER_MAX_VX
 
 		#endif
@@ -1573,6 +1630,8 @@ void move (void) {
 				jr  z, m_vert_coll_left_set_vy
 
 			.m_vert_coll_left_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, PLAYER_MAX_VX
 
 		#endif
@@ -1631,6 +1690,10 @@ void move (void) {
 		#asm
 			#ifdef PLAYER_CUSTOM_BG_HIT
 					call _custom_bg_hit
+					xor a 
+					or  l
+					jr  z, m_evil_tile_hit_done
+
 			#elif defined PLAYER_MOGGY_STYLE
 				// In top view, max velocity component takes precedence
 					ld  a, (_hit_v)
@@ -1982,11 +2045,13 @@ void init_hotspots (void) {
 					ld  hl, _ta_x
 					add hl, bc 
 					ld  a, (_rdx)
+					srl a
 					ld  (hl), a 
 					
 					ld  hl, _ta_y
 					add hl, bc 
 					ld  a, (_rdy)
+					srl a
 					ld  (hl), a 
 					
 					ld  hl, _ta_t
@@ -2461,19 +2526,21 @@ void draw_scr_background (void) {
 				ld  a, TILANIM_PERIOD
 				ld  (hl), a
 
+				// Get tile, flip bit 1, write back
 				ld  hl, _ta_t
 				add hl, bc 
 				ld  a, (hl)
 				xor 1 
 				ld  (hl), a 
 
+				// We'll be painting tile iN A
 				ld  (__t), a 
 				ld  e, a 
 				ld  d, 0 
 				ld  hl, _comportamiento_tiles 
 				add hl, de 
 				ld  a, (hl)
-				ld  (__n), a 
+				ld  (__n), a  				// Tile beh
 
 				ld  hl, _ta_y 
 				add hl, bc 
@@ -2486,7 +2553,7 @@ void draw_scr_background (void) {
 				ld  (__x), a 
 
 				push bc 
-				ld  c, a 					;; Call directly needs C
+				ld  c, a 					// Call directly needs C
 				call set_map_tile_do
 				pop bc
 

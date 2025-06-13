@@ -101,6 +101,10 @@ unsigned char at1, at2;
 unsigned char hit_v, hit_h;
 unsigned char thrusting;
 
+#ifdef JUMP_DOWN_PLATFORM
+	unsigned char disable_collide_platform;
+#endif
+
 // Enemies
 
 unsigned char en_an_frame [MAX_ENEMS]				@ BASE_ARRAYS;

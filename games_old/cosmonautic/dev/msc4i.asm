@@ -186,6 +186,26 @@
 	jp  script_actions
 .aopcode_6D_end
 
+;; OPCODE 0xE4
+;; EXTERN N M
+	cp  0xE4
+	jr  nz, aopcode_E4_end
+.aopcode_E4
+	call read_x_y
+	ld  a, (sc_x)
+	ld  h, 0
+	ld  l, a
+	push hl
+	ld  a, (sc_y)
+	ld  h, 0
+	ld  l, a
+	push hl
+	call _do_extern_action
+	pop bc
+	pop bc
+	jp script_actions
+.aopcode_E4_end
+
 ;; OPCODE 0xF2
 ;; BREAK
 	cp  0xf2

@@ -43,9 +43,11 @@ void title_screen (void) {
 			call _unpack_screen
 	#endasm
 	
-	draw_text (12, 23, 
+	draw_text (12,
 		#ifndef CPC 
-			4,
+			1, 4,
+		#else
+			23, 
 		#endif
 	"MK1 V3.2");
 
@@ -88,7 +90,6 @@ void game_ending (void) {
 			call _unpack_screen
 	#endasm
 
-	no_break ();
 
 	#ifdef CPC
 		cpc_ShowTileMap (1);
@@ -101,7 +102,8 @@ void game_ending (void) {
 		peta_el_beeper (9);
 	#endif
 		
-		espera_activa (5000);
+	no_break ();
+	espera_activa (5000);
 
 	#ifdef CPC
 		AY_STOP_SOUND ();
@@ -114,29 +116,34 @@ void game_over (void) {
 	#endif 
 
 	#asm
-			ld  a, 10
+			ld  a, 8
 			ld  (__x), a
 			ld  a, 11
 			ld  (__y), a
-			ld  a, 21
+			ld  a, 23
 			ld  (__x2), a
-			ld  a, 13
+			ld  a, 14
 			ld  (__y2), a
 			ld  a, 72
 			ld  (__t), a
 	#endasm
 	draw_rectangle ();	
-	draw_text (11, 12, 
+	draw_text (10, 12, 
 		#ifndef CPC
-			64+1*8+7, 
+			64+7, 
+		#endif		
+	    "MENSO, YA TE");
+
+	draw_text (9, 13, 
+		#ifndef CPC
+			64+7, 
 		#endif
-		"GAME OVER!");
+	    "CUCARACHIARON!");
 	
-	no_break ();
 
 	#ifdef CPC
 		cpc_UpdateNow (0);
-		//AY_PLAY_MUSIC (2);
+		AY_PLAY_MUSIC (2);
 	#else 
 		#asm 
 				call SPUpdateNow
@@ -144,7 +151,8 @@ void game_over (void) {
 		peta_el_beeper (10);
 	#endif
 
-		espera_activa (500);
+	no_break ();
+	espera_activa (5000);
 
 	#ifdef CPC
 		AY_STOP_SOUND ();

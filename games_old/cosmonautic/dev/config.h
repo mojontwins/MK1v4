@@ -57,6 +57,7 @@
 //#define MAX_BULLETS 				3		// Max number of bullets on screen. Be careful!.
 //#define PLAYER_BULLET_Y_OFFSET	4		// vertical offset from the player's top.
 //#define ENEMS_LIFE_GAUGE			5		// Amount of shots needed to kill enemies.
+//#define PLAYER_AX_RECOIL 			128		// Push player back a bit when firing
 
 // Random Respawn Fanties
 // ----------------------
@@ -93,6 +94,7 @@
 //#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 //#define AVOID_PLATFORM_HOP 				// Only works if SIMPLE_PLATFORMS is DISABLED!
+//#define JUMP_DOWN_PLATFORM 				// Use down on type 4s to jump down.
 
 // Custom:
 // -------
@@ -100,7 +102,7 @@
 //#define PLAYER_CUSTOM_VENG 				// Replace Vertical axis for your own 
 //#define PLAYER_CUSTOM_HENG 				// Replace Horizontal axis for your own
 #define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
-//#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
+#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
 
 
 // ============================================================================

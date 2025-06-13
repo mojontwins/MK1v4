@@ -21,8 +21,9 @@
 #endif
 
 #ifdef PLAYER_CUSTOM_BG_HIT
-	void custom_bg_hit (void) {
+	unsigned char custom_bg_hit (void) {
 		// check hit_v, hit_h and modify player.x / player.y as you need
+		// Return 1 if hit registered
 	}
 #endif
 

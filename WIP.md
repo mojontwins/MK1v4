@@ -335,7 +335,7 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 
 [X] msc4 `WARP TO`.
 
-[ ] Tiles animados -> a partir de N, con N par, usan N y N + 1, el período es fijo, el contador es random al crear uno. Estructura con 4 bytes, no intercalados. X Y T C. Roughly (rewrite in assembly!!)
+[X] Tiles animados -> a partir de N, con N par, usan N y N + 1, el período es fijo, el contador es random al crear uno. Estructura con 4 bytes, no intercalados. X Y T C. Roughly (rewrite in assembly!!)
 
 ```c
     unsigned char ta_i;
@@ -370,6 +370,8 @@ Cosas que me apunto de un día para otro para ir resolviendo cuando se vaya pudi
 [X] Estaba usando RX en vez de AX para acelerar... Me he dado cuenta en Cosmonautic. Ahora tengo que recompilar todos los juegos y ajustarlo bien XD
 
 [ ] Maybe, añadir la detección tilanims a unpacked maps... Clago, clago, pego luego.
+
+[ ] Usar la tecla ABAJO para BAJAR de un tile plataforma.
 
 <details>
     <summary>Cosas calculares</summary>

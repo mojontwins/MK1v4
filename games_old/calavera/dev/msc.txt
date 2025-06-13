@@ -1,4 +1,4 @@
-msc v4.0.20250421 ~ Processing script.spt
+msc v4.1.20250604 ~ Processing script.spt
 ==========================================
 LINEA NOINDEXED 		# We won't be using SCREEN XXX sections
 T0=[noindexed]
@@ -152,6 +152,6 @@ Parsed deco 11 2 0
 Parsed deco 11 3 13
 Stopped parsing decos
 Bytecode: 19 05 03 FF E0 08 22 03 2A 00 3A 00 4A 00 5A 00 6A 00 7A 0C 8A 00 7C FF FF 11 05 05 FF E0 08 22 0D 17 00 77 00 98 00 79 FF FF 0F 05 0A FF E0 08 22 00 53 00 4D 00 5D FF FF 0D 05 0E FF E0 08 22 0D 4C 0D 50 FF FF 13 05 2C FF E0 08 22 00 53 00 0B 00 1B 00 2B 0D 3B FF FF FF 
-Index section: 16 bytes
+Index section: 32 bytes
 Bytecode section: 135 bytes
-Wrote 151 bytes to script.spt.bin
+Wrote 167 bytes to script.spt.bin

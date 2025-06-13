@@ -23,6 +23,13 @@ T2=[!=]
 T3=[19]
 Parsing: BREAK
 T0=[BREAK]
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: EXTERN 0 		# kjjj
+T0=[EXTERN]
+T1=[0]
+T2=[		]
 Parsing: IF NPANT = 2
 T0=[IF]
 T1=[$254]
@@ -75,7 +82,7 @@ T3=[12]
 T4=[4]
 Parsing: BREAK
 T0=[BREAK]
-Bytecode: 08 04 FF F6 13 FF F2 FF 0A 05 02 FF 6D 05 0A 08 F2 FF 0A 05 05 FF 6D 02 02 03 F2 FF 0A 05 07 FF 6D 09 0B 05 F2 FF 0A 05 09 FF 6D 07 0C 04 F2 FF FF 
+Bytecode: 08 04 FF F6 13 FF F2 FF 07 F0 FF E4 00 00 FF 0A 05 02 FF 6D 05 0A 08 F2 FF 0A 05 05 FF 6D 02 02 03 F2 FF 0A 05 07 FF 6D 09 0B 05 F2 FF 0A 05 09 FF 6D 07 0C 04 F2 FF FF 
 Index section: 32 bytes
-Bytecode section: 49 bytes
-Wrote 81 bytes to script.spt.bin
+Bytecode section: 56 bytes
+Wrote 88 bytes to script.spt.bin

@@ -25,11 +25,15 @@
 	XREF draw_line_of_text
 	XREF _hotspot_t
 	XREF _scenery_info
+	XREF __en_t
+	XREF _en_it
+	XREF __en_x
+	XREF __en_y
 
 	XREF script_bytecode
 
-; Target CPC
-	XREF _cpc_UpdateNow
+; Target SPECCY
+	LIB SPUpdateNow
 
 ; Exports
 	XDEF _script_do
