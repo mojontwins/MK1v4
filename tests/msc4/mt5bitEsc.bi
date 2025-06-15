@@ -3,4 +3,5 @@
 '
 ' Doc in .bas file
 
-Function encode5BitEsc (String text) As String
+Declare Function encode5BitEsc (text As String, wrap As Integer) As String
+Declare Sub prettyPrintEncodedString (encoded As String)

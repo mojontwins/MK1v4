@@ -39,13 +39,13 @@ Function encodeWord (word As String) As String
 		ElseIf m = "!" Then 
 			binaryString = binaryString & Bin (30, 5)
 
-		ElseIf m < Chr ("?") Then 
+		ElseIf m < "?" Then 
 			binaryString = binaryString & "00000" & Bin (Asc (m) - 32, 5)
 
-		ElseIf m >= Chr ("A") And m <= Chr ("Z") Then 
+		ElseIf m >= "A" And m <= "Z" Then 
 			binaryString = binaryString & Bin (Asc (m) - 64, 5)
 
-		ElseIf m >= Chr ("a") And m <= Chr ("z") Then 
+		ElseIf m >= "a" And m <= "z" Then 
 			binaryString = binaryString & Bin (Asc (Ucase (m)) - 64, 5) 
 
 		End If
@@ -90,6 +90,7 @@ Function encode5BitEsc (text As String, wrap As Integer) As String
 
 			binaryString = binaryString & encodeWord (curWord)
 			curLinLen = curLinLen + Len (curWord)
+			curWord = ""
 
 			If curLinLen < wrap Then 
 				binaryString = binaryString & "11111"       ' 31 = SPACE
@@ -108,9 +109,14 @@ Sub prettyPrintEncodedString (encoded As String)
 	Dim As Integer word
 	Dim As Integer escOn
 	Dim As String pretty
+	Dim As String binaryString
 
-	For i = 1 To Len (encoded) Step 5 
-		word = Val ("&B" & Mid (encoded, i, 5))
+	For i = 1 To Len (encoded) 
+		binaryString = binaryString & Bin (Asc (Mid (encoded, i, 1)), 8)
+	Next i
+
+	For i = 1 To Len (binaryString) Step 5 
+		word = Val ("&B" & Mid (binaryString, i, 5))
 		Print Hex(word, 2) & " ";
 
 		pretty = "*WRONG*"
@@ -120,7 +126,7 @@ Sub prettyPrintEncodedString (encoded As String)
 
 			Select Case word 
 				case 0: pretty = "END"
-				case 1-30: pretty = Chr (32 + word)
+				case 1 To 30: pretty = Chr (32 + word)
 				case 31: pretty = "NL"
 			End Select
 
@@ -130,16 +136,16 @@ Sub prettyPrintEncodedString (encoded As String)
 				escOn = -1
 			Else
 				Select case word
-					case 1-26: pretty = Chr (64 + word)
+					case 1 To 26: pretty = Chr (64 + word)
 					case 27: pretty = ","
 					case 28: pretty = "."
 					case 29: pretty = "?"
 					case 30: pretty = "!"
 					case 31: pretty = "SPACE"
 				End Select
+				Print "[" & pretty & "] "
 			End If 
 
-			Print "[" & pretty & "] "
 		End If
 	Next i
 

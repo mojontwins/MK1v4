@@ -3,6 +3,7 @@
 
 #include "mtparser.bi"
 #include "cmdlineparser.bi"
+#include "mt5bitEsc.bi"
 
 Const SPECCY = 0
 Const CPC = 1
@@ -362,9 +363,9 @@ Function buildCond CDecl (count As Integer, ...) As String
 	Return code
 End Function
 
-Function getTextOffset (String text) As String
+Function getTextOffset (text As String) As String
 	Dim As String encodedText
-	Dim As Integer offset 
+	Dim As Integer offset, i
 
 	' encode this text
 	encodedText = encode5BitEsc (text, textWidth)
@@ -888,7 +889,7 @@ Sub processScript (fIn As Integer)
 				If debug Then Print "Item empty set to " & Val (tokens (3))
 				itemEmpty = Val (tokens (3))
 
-			ElseIf startsWidth (tokens (), "text width") And tokens (2) = "=" And isNumber (tokens (3)) Then 
+			ElseIf startsWith (tokens (), "text width") And tokens (2) = "=" And isNumber (tokens (3)) Then 
 				If debug Then Print "Text width set to " & Val (tokens (3))
 				textWidth = Val (tokens (3))
 
