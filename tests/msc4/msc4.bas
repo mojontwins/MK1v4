@@ -36,6 +36,12 @@ Dim Shared As Integer fastNPant
 Dim Shared As Integer itemSlot
 Dim Shared As Integer itemEmpty = 0
 
+Dim Shared As Integer textWidth
+Dim Shared As Integer textPoolIndex
+Dim Shared As Integer lastTextOffset 
+Dim Shared As String textPool (16384)
+Dim Shared As Integer textOffsets (16384)
+
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
 	' Overwriting what's in `from`.
@@ -356,6 +362,36 @@ Function buildCond CDecl (count As Integer, ...) As String
 	Return code
 End Function
 
+Function getTextOffset (String text) As String
+	Dim As String encodedText
+	Dim As Integer offset 
+
+	' encode this text
+	encodedText = encode5BitEsc (text, textWidth)
+
+	' return offset
+	offset = -1
+
+	For i = 0 To textPoolIndex - 1
+		If textPool (i) = text Then 
+			offset = textOffsets (i)
+			Exit For
+		End If
+	Next i
+
+	If offset = -1 Then
+		' New text! store offset, add text, return offset 
+		offset = lastTextOffset 
+		textOffsets (textPoolIndex) = lastTextOffset 
+		textPool (textPoolIndex) = encodedText
+		lastTextOffset = lastTextOffset + Len (encodedText)
+		textPoolIndex = textPoolIndex + 1
+	End If 
+
+	Return Chr (offset Mod 256) & Chr (offset \ 256)
+
+End Function
+
 Function buildAction CDecl (ByVal count As Integer, ...) As String
 	Dim As String code = ""
 	Dim As Integer i
@@ -602,9 +638,16 @@ Function processCommand (linea As String) As String
 			code = buildAction (1, Chr (&HE2))
 
 		Case "text"
-			' $E3 L <TEXT> 0
-			code = buildAction (1, Chr (&HE3)) & Chr(1 + Len(tokens (1))) & tokens (1) & Chr (0)
 
+			If scmd = "box" Then
+				' $E6 LSB MSB
+				code = buildAction (1, Chr (&HE6)) & getTextOffset (tokens (2))
+
+			Else
+				' $E3 L <TEXT> 0
+				code = buildAction (1, Chr (&HE3)) & Chr(1 + Len(tokens (1))) & tokens (1) & Chr (0)
+			End If
+				
 		Case "extern"
 			' EXTERN N M
 			' $E4 N M'
@@ -845,6 +888,10 @@ Sub processScript (fIn As Integer)
 				If debug Then Print "Item empty set to " & Val (tokens (3))
 				itemEmpty = Val (tokens (3))
 
+			ElseIf startsWidth (tokens (), "text width") And tokens (2) = "=" And isNumber (tokens (3)) Then 
+				If debug Then Print "Text width set to " & Val (tokens (3))
+				textWidth = Val (tokens (3))
+
 			Else
 				If startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
 					' Find comma separated list
@@ -1007,6 +1054,9 @@ outV = Val(sclpGetValue("v"))
 outT = SPECCY: If sclpGetValue("target") = "cpc" Then outT = CPC
 noIndexed = (sclpGetValue("noindexed") <> "")
 fastNPant = (sclpGetValue("fastnpant") <> "")
+
+lastTextOffset = 0
+textPoolIndex = 0
 
 i = 0: While i < 127 And fileIns(i) <> ""
 	curLineNo = 0

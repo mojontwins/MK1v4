@@ -228,6 +228,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $E3 : TEXT "HOLI"
 * $E4 N M : EXTERN N M
 * $E5 N : PAUSE N
+* $E6 LSB MSB : TEXT BOX "ASDJADFJSODHAFDJHA"
 
 * $F0 : WIN GAME
 * $F1 : GAME OVER
@@ -278,3 +279,19 @@ Por defecto, empujar un tile ejecutará ON TILE PUSHED, pero puede cambiarse a q
 # ON TILE DESTROYED
 
 Cuando se dispare y se rompa un tile (esto en 3.2 no funciona, sería más para 4/5).
+
+# Sistema para textos
+
+El sistema soportará llamadas a cuadros de texto en el propio script usando el comando
+
+```spt
+    TEXT BOX "ESTO SALDRA EN UNA CAJA DE TEXTO!"
+```
+
+Los textos serán codificados en un sistema de 5 bits por carácter con escapes para representar 63 caracteres más una marca de final de cadena. En el bytecode sólo se insertará el opcode seguido por el offset de 16 bits del texto en cuestión. El sistéma soportará repetir textos que se almacenarán solo una vez.
+
+Debido a que en el bytecode se inserta directamente el offset del texto actual, la codificación se hace al vuelo. El binario final de los textos con su índice se exporta aparte en `texts.bin`.
+
+A la hora de interpretar, el archivo de integración `msci.h` contendrá una función `msc_decode_text` que tomará el offset, decodificará el texto correcto en un buffer situado a partir de lo que diga la constante `MSC_TEXT_BUFFER` y llamará a la función `text_box` de `extern.h`, que el programador deberá escribir teniendo en cuenta que en `MSC_TEXT_BUFFER` ya estará el texto listo para mostrar en ASCII.
+
+El encoder hará word-wrap automáticamente cada 24 caracteres, pero el ancho de la linea se puede configurar con la directiva `TEXT WIDTH = N` al principio del script.
