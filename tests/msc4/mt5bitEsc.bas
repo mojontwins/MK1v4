@@ -16,11 +16,93 @@
 '   m = 1-30 = ESC m = ASC(m + 32) 
 '   m = 31   = ESC 31 = New line
 
-Function encode5BitEsc (text As String, wrap As Integer) As String
-	Dim As Integer i
+Function encodeWord (word As String) As String
+	Dim As String binaryString
 	Dim As String * 1 m
+	Dim As Integer i
+
+	For i = 1 To Len (word)
+		m = Mid (word, i, 1)
+
+		If m = " " Then 
+			binaryString = binaryString & "11111"
+
+		ElseIf m = "," Then 
+			binaryString = binaryString & Bin (27, 5)
+
+		ElseIf m = "." Then
+			binaryString = binaryString & Bin (28, 5)
+
+		ElseIf m = "?" Then 
+			binaryString = binaryString & Bin (29, 5)
+
+		ElseIf m = "!" Then 
+			binaryString = binaryString & Bin (30, 5)
+
+		ElseIf m < Chr ("?") Then 
+			binaryString = binaryString & "00000" & Bin (Asc (m) - 32, 5)
+
+		ElseIf m >= Chr ("A") And m <= Chr ("Z") Then 
+			binaryString = binaryString & Bin (Asc (m) - 64, 5)
+
+		ElseIf m >= Chr ("a") And m <= Chr ("z") Then 
+			binaryString = binaryString & Bin (Asc (Ucase (m)) - 64, 5) 
+
+		End If
+	Next i
+
+	Return binaryString
+End Function
+
+Function encodeBinaryString (binaryString As String) As String 
+	Dim As Integer i
+	Dim As String encodedString
+
+	' First add padding 
+	If Len (binaryString) Mod 8 <> 0 Then 
+		binaryString = binaryString + String (8 - (Len (binaryString) Mod 8), "0")
+	End If
+
+	' Now encode 
+	For i = 1 to len (binaryString) Step 8
+		encodedString = encodedString + Chr (Val ("&B" & Mid (binaryString, i, 8)))		
+	Next i
+
+	Return encodedString
+End Function 
+
+Function encode5BitEsc (text As String, wrap As Integer) As String
+	Dim As Integer i, curLinLen
+	Dim As String * 1 m
+	Dim As String binaryString
+	Dim As String curWord
+
+	text = text & " "
 
 	For i = 1 To Len (text)
+		m = Mid (text, i, 1)
 
+		If m = " " Then 
+			If curLinLen + Len (curWord) > wrap Then
+				binaryString = binaryString & "0000011111" 	' ESC 31 = NL
+				curLinLen = 0
+			End If
+
+			binaryString = binaryString & encodeWord (curWord)
+			curLinLen = curLinLen + Len (curWord)
+
+			If curLinLen < wrap Then 
+				binaryString = binaryString & "11111"       ' 31 = SPACE
+				curLinLen = curLinLen + 1
+			End If
+		Else
+			curWord = curWord & m
+		End If
 	Next i
+
+	Return encodeBinaryString (binaryString)
 End Function
+
+Sub prettyPrintEncodedString (encoded As String)
+	Dim As Integer i
+End Sub
