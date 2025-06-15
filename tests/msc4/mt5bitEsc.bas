@@ -105,4 +105,42 @@ End Function
 
 Sub prettyPrintEncodedString (encoded As String)
 	Dim As Integer i
+	Dim As Integer word
+	Dim As Integer escOn
+	Dim As String pretty
+
+	For i = 1 To Len (encoded) Step 5 
+		word = Val ("&B" & Mid (encoded, i, 5))
+		Print Hex(word, 2) & " ";
+
+		pretty = "*WRONG*"
+
+		If escOn Then 
+			escOn = 0 
+
+			Select Case word 
+				case 0: pretty = "END"
+				case 1-30: pretty = Chr (32 + word)
+				case 31: pretty = "NL"
+			End Select
+
+			Print "[" & pretty & "] "
+		Else 
+			If word = 0 Then 
+				escOn = -1
+			Else
+				Select case word
+					case 1-26: pretty = Chr (64 + word)
+					case 27: pretty = ","
+					case 28: pretty = "."
+					case 29: pretty = "?"
+					case 30: pretty = "!"
+					case 31: pretty = "SPACE"
+				End Select
+			End If 
+
+			Print "[" & pretty & "] "
+		End If
+	Next i
+
 End Sub
