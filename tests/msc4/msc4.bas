@@ -12,6 +12,7 @@ Const ENTERING_INDEX_OFFSET = 16
 Const PRESS_FIRE_INDEX_OFFSET = 17
 
 Dim Shared As Integer debug = -1
+Dim Shared As Integer textDebug = 0
 
 Dim Shared As String tokens (255)
 Dim Shared As Integer curLineNo
@@ -385,6 +386,13 @@ Function getTextOffset (text As String) As String
 		offset = lastTextOffset 
 		textOffsets (textPoolIndex) = lastTextOffset 
 		textPool (textPoolIndex) = encodedText
+
+		If textdebug Then
+			Print "Encoded text: " & encodedText
+			Print "Pretty Print: "
+			prettyPrintEncodedString encodedText
+		End If
+
 		lastTextOffset = lastTextOffset + Len (encodedText)
 		textPoolIndex = textPoolIndex + 1
 	End If 
@@ -1004,7 +1012,7 @@ Sub writeScript (fName As String)
 
 	fOut = FreeFile
 	Kill fName
-	Open fName For Output As #fOut
+	Open fName For Binary As #fOut
 
 	For i = 0 To mainBinIdx - 1
 		Put #fOut, , mainBinary (i)
@@ -1014,11 +1022,41 @@ Sub writeScript (fName As String)
 	Close fOut
 End Sub
 
+Sub writeTexts (fName As String)
+	Dim As Integer i, j, fOut, adjustedOffset, binSize
+	Dim As uByte d
+
+	fOut = FreeFile
+	Kill fName
+	Open fName for Binary As #fOut 
+
+	binSize = 0
+
+	' Write index
+	'For i = 0 To textPoolIndex - 1
+	'	adjustedOffset = 2 * textPoolIndex + textOffsets (i)
+	'	d = adjustedOffset Mod 256: Put #fOut, , d
+	'	d = adjustedOffset \ 256: Put #fOut, , d
+	'	binSize = binSize + 2
+	'Next i
+
+	' Write texts
+	For i = 0 To textPoolIndex - 1
+		For j = 1 To Len (textPool (i))
+			d = Asc (Mid (textPool (i), j, 1)): Put #fOut, , d
+		Next j
+		binSize = binSize + Len (textPool (i))
+	Next i 
+
+	Print "Wrote " & binSize & " bytes to " & fName
+	Close fOut
+End Sub
+
 Sub usage
 	Print "usage:"
 	Print ""
 	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N "
-	Print "         [interpreter=msci.asm] [noindexed] [fastnpant]"
+	Print "         [interpreter=msci.asm] [noindexed] [fastnpant] [text=text.bin]"
 	Print "         in is [a list of|the] input filename."
 	Print "           msc4 will generate a f.bin per input,"
 	Print "           but only one common interpreter."
@@ -1039,6 +1077,7 @@ End Sub
 Dim As String mandatory (2) = { "in", "v", "target" }
 Dim As Integer fIn, fOut, i
 Dim As String fileIns(127)
+Dim As String fileText
 
 Print "msc v4.1.20250604 ~ ";
 
@@ -1046,6 +1085,7 @@ sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
 
 debug = (sclpGetValue ("debug") <> "")
+textdebug = (sclpGetValue ("textdebug") <> "")
 parseCommaSeparatedString sclpGetValue ("in"), fileIns ()
 
 interpreterFn = sclpGetValue("interpreter")
@@ -1056,8 +1096,12 @@ outT = SPECCY: If sclpGetValue("target") = "cpc" Then outT = CPC
 noIndexed = (sclpGetValue("noindexed") <> "")
 fastNPant = (sclpGetValue("fastnpant") <> "")
 
+fileText = sclpGetValue ("text")
+If fileText = "" Then fileText = "text.bin"
+
 lastTextOffset = 0
 textPoolIndex = 0
+textWidth = 24
 
 i = 0: While i < 127 And fileIns(i) <> ""
 	curLineNo = 0
@@ -1074,8 +1118,16 @@ i = 0: While i < 127 And fileIns(i) <> ""
 	i = i + 1
 Wend 
 
+'' Export encoded texts (if any)
+If textPoolIndex > 0 Then 
+	Print "Exporting encoded text"
+	writeTexts fileText
+End If
+
 '' GENERATE INTERPRETER
 '' Only output conditions & actios for opcodes in AU and CU.
+
+Print "Writing interpreter"
 
 fOut = FreeFile
 Open interpreterFn For Output As #fOut
@@ -1207,3 +1259,5 @@ writeAssemblyString fOut, "ld  b, 0 				; BC = flag index|ld  hl, _flags|add hl,
 writeAssemblyString fOut, ".read_i_v_cont|ld  a, (sc_y) 			; A = value|ret"
 
 Close #fOut
+
+Print "DONE!"

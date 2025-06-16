@@ -25,6 +25,10 @@
 	XREF draw_line_of_text
 	XREF _hotspot_t
 	XREF _scenery_info
+	XREF __en_t
+	XREF _en_it
+	XREF __en_x
+	XREF __en_y
 
 	XREF script_bytecode
 
@@ -116,19 +120,6 @@
 
 ;;; Decode OPCODE & jump to interpreter
 
-;; OPCODE 0x01
-;; IF A = B
-	cp  0x01
-	jr  nz, copcode_01_end
-.copcode_01
-	call read_vbyte
-	ld  b, a
-	call read_vbyte
-	cp  b
-	jp  nz, skip_clausule
-	jp  script_clausule
-.copcode_01_end
-
 ;; UNKNOWN
 	jp  script_clausule
 
@@ -146,39 +137,6 @@
 	jp  z, script_loop
 
 ;;; Decode OPCODE & jump to interpreter
-
-;; OPCODE 0x00
-;; FLAGS[N] = V
-	cp  0x00
-	jr  nz, aopcode_00_end
-.aopcode_00
-	call read_i_v		; HL -> FLAGS[N], A -> V
-	ld  (hl), a
-	jp  script_actions
-.aopcode_00_end
-
-;; OPCODE 0x20
-;; SET TILE (X, Y) = T
-	cp  0x20
-	jr  nz, aopcode_20_end
-.aopcode_20
-	call read_x_y
-	call read_vbyte
-	ld  (__t), a
-	ld  b, 0
-	ld  c, a
-	ld  hl, _comportamiento_tiles
-	add hl, bc
-	ld  a, (hl)
-	ld  (__n), a
-	ld  a, (sc_x)
-	ld  (__x), a
-	ld  c, a
-	ld  a, (sc_y)
-	ld  (__y), a
-	call set_map_tile_do
-	jp  script_actions
-.aopcode_20_end
 
 ;; UNKNOWN
 	jp script_actions
