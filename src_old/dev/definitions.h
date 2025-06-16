@@ -134,6 +134,10 @@ unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*17);
 	unsigned char ta_t [MAX_ANIMATED_TILES] 		@ (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES*2);
 	unsigned char ta_c [MAX_ANIMATED_TILES] 		@ (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES*3);
 	unsigned char ta_i;
+
+	#define BASE_FREE (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES * 4)
+#else
+	#define BASE_FREE (BASE_ARRAYS + MAX_ENEMS*18)
 #endif
 
 unsigned int enoffs, enoffsmasi;

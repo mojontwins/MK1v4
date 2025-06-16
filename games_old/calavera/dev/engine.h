@@ -782,14 +782,15 @@ void move (void) {
 			.m_vert_kp_up_or_down_p
 
 			// UP or DOWN pressed, which?
-				ld  a, 1 
-				ld  (_thrusting), a
 
 				ld  a, c
 				and sp_UP
 				jr  nz, m_vert_kp_up_done
 
 			.m_vert_kp_up_do
+				ld  a, THRUST_UP
+				ld  (_thrusting), a
+
 				ld  de, -PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
@@ -817,6 +818,9 @@ void move (void) {
 				jr  nz, m_vert_kp_down_done
 
 			.m_vert_kp_down_do
+				ld  a, THRUST_DOWN
+				ld  (_thrusting), a
+
 				ld  de, PLAYER_AX
 				ld  hl, (_player + 8) 			// player.vy 
 				add hl, de 
@@ -1159,6 +1163,8 @@ void move (void) {
 				jr  z, m_vert_coll_down_set_vy
 
 			.m_vert_coll_down_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, -PLAYER_MAX_VX
 
 		#endif
@@ -1216,6 +1222,8 @@ void move (void) {
 				jr  z, m_vert_coll_up_set_vy
 
 			.m_vert_coll_up_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, PLAYER_MAX_VX
 
 		#endif
@@ -1372,14 +1380,14 @@ void move (void) {
 			.m_horz_kp_left_or_right_p
 
 			// LEFT or RIGHT pressed, which?
-				ld  a, 1 
-				ld  (_thrusting), a
-
 				ld  a, c
 				and sp_LEFT
 				jr  nz, m_horz_kp_left_done
 
 			.m_horz_kp_left_do
+				ld  a, THRUST_LEFT
+				ld  (_thrusting), a
+
 				ld  de, -PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
@@ -1409,6 +1417,9 @@ void move (void) {
 				jr  nz, m_horz_kp_right_done
 
 			.m_horz_kp_right_do
+				ld  a, THRUST_RIGHT 
+				ld  (_thrusting), a
+
 				ld  de, PLAYER_AX
 				ld  hl, (_player + 6) 		// player.vx 
 				add hl, de 
@@ -1559,6 +1570,8 @@ void move (void) {
 				jr  z, m_vert_coll_right_set_vy
 
 			.m_vert_coll_right_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, -PLAYER_MAX_VX
 
 		#endif
@@ -1617,6 +1630,8 @@ void move (void) {
 				jr  z, m_vert_coll_left_set_vy
 
 			.m_vert_coll_left_botiboin
+				ld  l, 2 
+				call _peta_el_beeper
 				ld  hl, PLAYER_MAX_VX
 
 		#endif
@@ -1675,6 +1690,10 @@ void move (void) {
 		#asm
 			#ifdef PLAYER_CUSTOM_BG_HIT
 					call _custom_bg_hit
+					xor a 
+					or  l
+					jr  z, m_evil_tile_hit_done
+
 			#elif defined PLAYER_MOGGY_STYLE
 				// In top view, max velocity component takes precedence
 					ld  a, (_hit_v)
@@ -2014,6 +2033,11 @@ void init_hotspots (void) {
 				pop bc
 
 			#ifdef ENABLE_ANIMATED_TILES
+					ld  a, (__n)
+					cp  ENABLE_ANIMATED_TILES
+					jr  c, tilanims_add_done
+
+				.tilanims_add
 					ld  a, (_ta_i)
 					ld  b, 0
 					ld  c, a 
@@ -2021,11 +2045,13 @@ void init_hotspots (void) {
 					ld  hl, _ta_x
 					add hl, bc 
 					ld  a, (_rdx)
+					srl a
 					ld  (hl), a 
 					
 					ld  hl, _ta_y
 					add hl, bc 
 					ld  a, (_rdy)
+					srl a
 					ld  (hl), a 
 					
 					ld  hl, _ta_t
@@ -2042,6 +2068,7 @@ void init_hotspots (void) {
 
 					ld  hl, _ta_i
 					inc (hl) 
+				.tilanims_add_done
 			#endif
 
 				ld  a, (_rdx)
@@ -2198,6 +2225,9 @@ void draw_scr_background (void) {
 			ld  (_rdx), a
 			ld  (_rdy), a
 			ld  (_rdi), a
+		#ifdef ENABLE_ANIMATED_TILES
+				ld  (_ta_i), a
+		#endif
 	#endasm
 
 	#ifdef RLE_MAP
@@ -2478,6 +2508,63 @@ void draw_scr_background (void) {
 		#endasm
 	#endif	
 }
+
+#ifdef ENABLE_ANIMATED_TILES
+	void tilanims_do (void) {
+		#asm
+				ld  a, (_ta_i)
+				or  a 
+				ret z
+
+				ld  bc, 0
+			.tilanims_do_loop
+				ld  hl, _ta_c 
+				add hl, bc 
+				dec (hl)
+				jr  nz, tilanims_do_continue
+
+				ld  a, TILANIM_PERIOD
+				ld  (hl), a
+
+				// Get tile, flip bit 1, write back
+				ld  hl, _ta_t
+				add hl, bc 
+				ld  a, (hl)
+				xor 1 
+				ld  (hl), a 
+
+				// We'll be painting tile iN A
+				ld  (__t), a 
+				ld  e, a 
+				ld  d, 0 
+				ld  hl, _comportamiento_tiles 
+				add hl, de 
+				ld  a, (hl)
+				ld  (__n), a  				// Tile beh
+
+				ld  hl, _ta_y 
+				add hl, bc 
+				ld  a, (hl)
+				ld  (__y), a 
+
+				ld  hl, _ta_x 
+				add hl, bc 
+				ld  a, (hl)
+				ld  (__x), a 
+
+				push bc 
+				ld  c, a 					// Call directly needs C
+				call set_map_tile_do
+				pop bc
+
+			.tilanims_do_continue
+				inc c 
+				ld  a, (_ta_i)
+				cp  c
+				jr  nz, tilanims_do_loop
+		#endasm
+	}
+#endif
 
 void enems_calc_frame (void) {
 	// en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];

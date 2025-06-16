@@ -3,3 +3,10 @@
 
 void do_extern_action (unsigned char n, unsigned char m) {
 }
+
+void __FASTCALL__ textbox (unsigned char *ptr) {
+	// Custom implementation. text is pointed to by ptr.
+	#asm
+
+	#endasm
+}
