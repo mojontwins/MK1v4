@@ -1,13 +1,6 @@
 NOINDEXED 		# We won't be using SCREEN XXX sections
 FASTNPANT 		# IF NPANT = N will generate its own opcode/interpreter
 
-ENTERING GAME
-	IF TRUE
-	THEN
-		TEXT BOX "PRUEBA DE TEXT BOX! BIENVENIDO A PUMBY CARAVERGA, AVENTURERO!"
-	END
-END
-
 ENTERING ANY
 	# Paint the moon
 	IF TILE AT (8, 1) = 0

@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Jun 17 13:07:02 2025
+;	Module compile time: Tue Jun 17 13:08:38 2025
 
 
 
@@ -2694,56 +2694,6 @@
 
 
 
-._decode_text
-	ld de, script_encoded_text
-	add hl, de
-	ld de, #((0xD000 + 0x600 + 3*18))
-	ld c, 0x80
-	.fbsd_mainb
-	call fbsd_unpackc
-	or a
-	jr z, fbsd_escaped
-	add 64
-	jr fbsd_stor
-	.fbsd_escaped
-	call fbsd_unpackc
-	or a
-	jr z, fbsd_done
-	cp 31
-	jr nz, fbsd_nonl
-	ld a, '%'
-	.fbsd_nonl
-	jr fbsd_stor
-	add 32
-	.fbsd_stor
-	ld (de), a
-	inc de
-	jr fbsd_mainb
-	.fbsd_unpackc
-	ld a, c
-	ld b, 0x08
-	.fbsd_bucle
-	call fbsd_getbit
-	rl b
-	jr nc, fbsd_bucle
-	ld c, a
-	ld a, b
-	ret
-	.fbsd_getbit
-	add a, a
-	ret nz
-	ld a, (hl)
-	inc hl
-	rla
-	ret
-	.fbsd_done
-	ld (de), a
-	ld hl, (0xD000 + 0x600 + 3*18)
-	jp _textbox
-	ret
-
-
-
 ._script
 	ld a, l
 	ld (_script_n), a
@@ -2774,8 +2724,6 @@
 	XDEF _cpc_UpdateNow
 	.script_bytecode
 	BINARY "script.spt.bin"
-	.script_encoded_text
-	BINARY "text.bin"
 	; -----------------------------------------------------------------------------
 	; ZX0 decoder by Einar Saukas & Urusergi
 	; "Standard" version (68 bytes only)
@@ -7250,11 +7198,6 @@
 	ret
 
 
-
-._textbox
-	ret
-
-
 	._s_title
 	BINARY "titlec.bin"
 	._s_marco
@@ -8142,7 +8085,6 @@
 	XDEF	_step
 	XDEF	__en_life
 	XDEF	_cpc_HardPause
-	XDEF	_decode_text
 	XDEF	_cx1
 	XDEF	_cx2
 	XDEF	_cy1
@@ -8238,7 +8180,6 @@
 	LIB	cpc_PutTrSp8x24TileMapGPxP
 	XREF	_script_tx
 	XREF	_script_ty
-	XDEF	_textbox
 	XDEF	_do_extern_action
 	XDEF	_platform_get_player
 	XDEF	_en_an_count

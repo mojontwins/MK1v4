@@ -25,7 +25,7 @@ extern void script_do (void);
 				ld  de, script_encoded_text
 				add hl, de 
 
-				ld  de, TEXT_BUFFER 
+				ld  de, #(TEXT_BUFFER)
 
 				// 5 bit escaped depacker v2 by na_th_an
 				// Contains code by A. Villena.
@@ -60,6 +60,7 @@ extern void script_do (void);
 				cp  31 			// ESC 31 = NL
 				jr  nz, fbsd_nonl
 				ld  a, '%'
+			.fbsd_nonl
 				jr  fbsd_stor 
 
 				// Otherwise, output a + 32
@@ -94,7 +95,7 @@ extern void script_do (void);
 				ld  (de), a 	// End of string
 
 				ld  hl, TEXT_BUFFER
-				jr  textbox
+				jp  _textbox
 		#endasm
 	}
 #endif

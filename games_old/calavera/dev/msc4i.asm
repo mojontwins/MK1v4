@@ -277,20 +277,6 @@
 	jp script_actions
 .aopcode_E4_end
 
-;; OPCODE 0xE6
-;; TEXT BOX LSB MSB
-	cp  0xE6
-	jr  nz, aopcode_E6_end
-.aopcode_E6
-	call read_x_y
-	ld  a, (sc_x)
-	ld  l, a
-	ld  a, (sc_y)
-	ld  h, a
-	call _decode_text
-	jp script_actions
-.aopcode_E6_end
-
 ;; OPCODE 0xF0
 ;; WIN GAME
 	cp  0xf0
