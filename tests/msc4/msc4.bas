@@ -116,21 +116,28 @@ Sub parseScriptLine (linea As String)
 	curToken = ""
 	i = 1: While i <= Len (linea) 
 		m = Mid (linea, i, 1)
-		If Instr ("<>=!", m) Then
-			If curToken = "" Then index = i
-			curToken = curToken & m
-		Else 
-			If curToken <> "" Then
-				'  12345679
-				'     /---- i
-				'  A!=B
-				'   \------ index'
-				prefix = "": If index >1 Then prefix = left (linea, index - 1)
-				sufix = Right (linea, Len (linea) - i + 1)
-				linea = prefix & " " & curToken & " " & sufix 
-				i = i + 2
+		If quotes Then 
+			' Ignore...
+			If m = Chr(34) Then quotes = 0
+		Else
+			If m = Chr(34) Then 
+				quotes = -1
+			ElseIf Instr ("<>=!", m) Then
+				If curToken = "" Then index = i
+				curToken = curToken & m
+			Else 
+				If curToken <> "" Then
+					'  12345679
+					'     /---- i
+					'  A!=B
+					'   \------ index'
+					prefix = "": If index >1 Then prefix = left (linea, index - 1)
+					sufix = Right (linea, Len (linea) - i + 1)
+					linea = prefix & " " & curToken & " " & sufix 
+					i = i + 2
 
-				curToken = ""
+					curToken = ""
+				End If
 			End If
 		End If
 		i = i + 1
@@ -1133,7 +1140,7 @@ fOut = FreeFile
 Open interpreterFn For Output As #fOut
 
 writeAssemblyString fOut, "defc PLAYER_LIFE=99 ;; Find a way to solve this"
-writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y"
+writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y|XREF _decode_text"
 
 writeAssemblyString fOut, "XREF script_bytecode"
 
@@ -1212,6 +1219,7 @@ If AU(&HE2) Then writeAssemblyString fOut, ";; OPCODE 0xE2|;; RECHARGE|cp  0xE2|
 If AU(&HE3) Then writeAssemblyString fOut, ";; OPCODE 0xE3|;; TEXT L <CHARS> 0|cp  0xE3|jr  nz, aopcode_E3_end|.aopcode_E3|call read_byte 			; String length|ld  b, 0|ld  c, a|add hl, bc 				; Move after the string|push hl|ld  hl, (script)|call draw_line_of_text|pop hl|ld  (script), hl 		; Get past the string|jp script_actions|.aopcode_E3_end"
 If AU(&HE4) Then writeAssemblyString fOut, ";; OPCODE 0xE4|;; EXTERN N M|cp  0xE4|jr  nz, aopcode_E4_end|.aopcode_E4|call read_x_y|ld  a, (sc_x)|ld  h, 0|ld  l, a|push hl|ld  a, (sc_y)|ld  h, 0|ld  l, a|push hl|call _do_extern_action|pop bc|pop bc|jp script_actions|.aopcode_E4_end"
 If AU(&HE5) Then writeAssemblyString fOut, ";; OPCODE 0xE5|;; PAUSE N|cp  0xE5|jr  nz, aopcode_E5_end|.aopcode_E5|call read_vbyte|ld  b, a|.aopcode_E5_loop|halt|djnz aopcode_E5_loop|jp script_actions|.aopcode_E5_end"
+If AU(&HE6) Then writeAssemblyString fOut, ";; OPCODE 0xE6|;; TEXT BOX LSB MSB|cp  0xE6|jr  nz, aopcode_E6_end|.aopcode_E6|call read_x_y|ld  a, (sc_x)|ld  l, a|ld  a, (sc_y)|ld  h, a|call _decode_text|jp script_actions|.aopcode_E6_end"
 If AU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|jr  nz, aopcode_F0_end|.aopcode_F0|ld  a, 1|ld  (_script_result), a|ret|.aopcode_F0_end"
 If AU(&HF1) Then writeAssemblyString fOut, ";; OPCODE 0xF1|;; GAME OVER|cp  0xf1|jr  nz, aopcode_F1_end|.aopcode_F1|ld  a, 2|ld  (_script_result), a|ret|.aopcode_F1_end"
 If AU(&HF2) Then writeAssemblyString fOut, ";; OPCODE 0xF2|;; BREAK|cp  0xf2|jr  nz, aopcode_F2_end|.aopcode_F2|ret|.aopcode_F2_end"

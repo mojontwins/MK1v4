@@ -78,6 +78,7 @@
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 											// If none are selected, FIRE is used.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
+#define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
 
 // Top view:
 // ---------

@@ -29,6 +29,7 @@ XREF __en_t
 XREF _en_it
 XREF __en_x
 XREF __en_y
+XREF _decode_text
 
 ; Target CPC
 XREF _cpc_UpdateNow
@@ -609,6 +610,20 @@ XDEF _script_result
 	djnz aopcode_E5_loop
 	jp script_actions
 .aopcode_E5_end
+
+	;; OPCODE 0xE6
+	;; TEXT BOX LSB MSB
+	cp  0xE6
+	jr  nz, aopcode_E6_end
+.aopcode_E6
+	call read_x_y
+	ld  a, (sc_x)
+	ld  l, a 
+	ld  a, (sc_y)
+	ld  h, a 
+	call _decode_text
+	jp script_actions
+.aopcode_E6_end
 
 	;; OPCODE 0xF0
 	;; WIN GAME
