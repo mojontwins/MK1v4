@@ -78,6 +78,7 @@
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 											// If none are selected, FIRE is used.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
+//#define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
 
 // Top view:
 // ---------
@@ -94,6 +95,7 @@
 #define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 //#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 #define AVOID_PLATFORM_HOP 					// Only works if SIMPLE_PLATFORMS is DISABLED!
+//#define JUMP_DOWN_PLATFORM 				// Use down on type 4s to jump down.
 
 // Custom:
 // -------
@@ -141,6 +143,8 @@
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 #define HOTSPOTS_FIRST_TILE			32 	// Override default value of 16
 //#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
+//#define ENABLE_ANIMATED_TILES 	46  // Must be EVEN
+//#define TILANIM_PERIOD 			16  // Must be power of two
 
 // ============================================================================
 // IV. Player movement configuration

@@ -1467,7 +1467,7 @@ void render_all_sprites (void) {
 
 void saca_a_todo_el_mundo_de_aqui (void) {
 	#asm
-			ld  de, 15
+			ld  de, 16
 			ld  b, SW_SPRITES_ALL
 			ld  hl, BASE_SPRITES
 		.clear_sprites_loop
@@ -1749,6 +1749,11 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 }
 
 void select_controls (void) {
+	cpc_UpdScr ();
+	cpc_ShowTileMap (1);
+
+	AY_PLAY_MUSIC (0);
+
 	#asm
 		.title_loop
 			call _pad_read 
@@ -1775,4 +1780,5 @@ void select_controls (void) {
 			ld  bc, 24
 			ldir
 	#endasm
+	AY_STOP_SOUND ();
 }

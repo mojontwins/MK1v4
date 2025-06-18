@@ -189,6 +189,10 @@ void main (void) {
 				xor 1
 				ld  (_half_life), a
 			#endasm
+
+			#ifdef ENABLE_ANIMATED_TILES
+				tilanims_do ();
+			#endif
 			
 			mueve_bicharracos ();
 			move ();
