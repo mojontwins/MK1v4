@@ -261,6 +261,7 @@ unsigned int __FASTCALL__ abs (int n) {
 
 					ld  a, (_rdx)
 					ld  (__x), a 
+					ld  c, a
 					ld  a, (_rdy)
 					ld  (__y), a
 					call set_map_tile_do

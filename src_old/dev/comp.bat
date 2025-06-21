@@ -1,6 +1,6 @@
 @echo off
 
-set game=cpc
+set game=lala3
 set om=speccy
 set mode=1
 

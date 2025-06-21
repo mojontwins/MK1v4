@@ -23,7 +23,7 @@
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			25		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS			26		// Objects to get to finish game
 #define PLAYER_LIFE 				99		// Max and starting life gauge.
 #define PLAYER_REFILL				10		// Life recharge
 
@@ -142,7 +142,7 @@
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 //#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16
-//#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
+#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
 //#define ENABLE_ANIMATED_TILES 	46  // Must be EVEN
 //#define TILANIM_PERIOD 			16  // Must be power of two
 

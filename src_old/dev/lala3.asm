@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Jun 11 08:19:47 2025
+;	Module compile time: Sat Jun 21 09:41:18 2025
 
 
 
@@ -2934,7 +2934,7 @@
 	defb	0
 
 	defm	""
-	defb	11
+	defb	0
 
 	defm	""
 	defb	203
@@ -3360,45 +3360,45 @@
 	defb	0
 
 	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	3
-
-	defm	"1"
-	defb	17
-
-	defm	" 333"
-	defb	0
-
-	defm	"1"
 	defb	16
 
 	defm	""
 	defb	0
 
 	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	""
+	defb	1
+
+	defm	""
 	defb	3
 
-	defm	"33 "
+	defm	"33331"
+	defb	0
+
+	defm	""
+	defb	16
+
+	defm	"3333"
+	defb	17
+
+	defm	""
+	defb	16
+
+	defm	""
 	defb	0
 
 	defm	"3333"
@@ -4104,19 +4104,19 @@
 	defb	1
 
 	defm	""
-	defb	16
+	defb	3
+
+	defm	"3331"
+	defb	17
 
 	defm	""
-	defb	3
-
-	defm	"3331"
 	defb	0
 
-	defm	" "
-	defb	3
+	defm	" 3333"
+	defb	0
 
-	defm	"3331"
-	defb	16
+	defm	""
+	defb	0
 
 	defm	""
 	defb	1
@@ -4127,10 +4127,7 @@
 	defm	"33"
 	defb	16
 
-	defm	"3"
-	defb	1
-
-	defm	""
+	defm	"33"
 	defb	0
 
 	defm	""
@@ -4139,7 +4136,7 @@
 	defm	"330"
 	defb	3
 
-	defm	"3 "
+	defm	"30"
 	defb	1
 
 	defm	""
@@ -4148,7 +4145,10 @@
 	defm	""
 	defb	16
 
-	defm	"3330"
+	defm	"333"
+	defb	17
+
+	defm	""
 	defb	0
 
 	defm	""
@@ -4157,7 +4157,10 @@
 	defm	"0"
 	defb	3
 
-	defm	"3330"
+	defm	"330"
+	defb	0
+
+	defm	""
 	defb	1
 
 	defm	""
@@ -7872,7 +7875,7 @@
 	defb	113
 	defb	1
 	defb	0
-	defb	216
+	defb	200
 	defb	1
 	defb	0
 	defb	81
@@ -8182,6 +8185,7 @@
 	ld (__n), a
 	ld a, (_rdx)
 	ld (__x), a
+	ld c, a
 	ld a, (_rdy)
 	ld (__y), a
 	call set_map_tile_do
@@ -8424,7 +8428,7 @@
 	.m_vert_thurst_write
 	ld (_player + 2), hl
 	call HLshr6_A
-	ld (_gpy), A
+	ld (_gpy), a
 	ld a, (_gpx)
 	ld c, a
 	add 4
@@ -8461,11 +8465,12 @@
 	ld (_cy1), a
 	ld (_cy2), a
 	call _cm_two_points
+	ld c, 12
 	ld a, (_at1)
-	and 12
+	and c
 	jr nz, m_vert_coll_down_adjust
 	ld a, (_at2)
-	and 12
+	and c
 	jp z, m_vert_coll_checks_done
 	.m_vert_coll_down_adjust
 	ld hl, 0
@@ -8577,12 +8582,12 @@
 	ld hl, 0
 	jr m_horz_kp_vx_write
 	.m_horz_kp_left_or_right_p
-	ld a, 1
-	ld (_thrusting), a
 	ld a, c
 	and 0x04
 	jr nz, m_horz_kp_left_done
 	.m_horz_kp_left_do
+	ld a, 1
+	ld (_thrusting), a
 	ld de, -48
 	ld hl, (_player + 6)
 	add hl, de
@@ -8599,6 +8604,8 @@
 	and 0x08
 	jr nz, m_horz_kp_right_done
 	.m_horz_kp_right_do
+	ld a, 2
+	ld (_thrusting), a
 	ld de, 48
 	ld hl, (_player + 6)
 	add hl, de
@@ -9618,7 +9625,6 @@
 	call	_blackout
 	ld hl, _s_ending
 	call _unpack_screen
-	call	_no_break
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_gpit),a
@@ -9640,6 +9646,7 @@
 .i_74
 	ld	hl,9	;const
 	call	_peta_el_beeper
+	call	_no_break
 	ld	hl,5000	;const
 	push	hl
 	call	_espera_activa
@@ -9673,11 +9680,11 @@
 	pop	bc
 	pop	bc
 	pop	bc
-	call	_no_break
 	call SPUpdateNow
 	ld	hl,10	;const
 	call	_peta_el_beeper
-	ld	hl,500	;const
+	call	_no_break
+	ld	hl,5000	;const
 	push	hl
 	call	_espera_activa
 	pop	bc
@@ -9745,7 +9752,10 @@
 	push	hl
 	ld	hl,_player+27
 	call	l_gchar
-	ld	h,0
+	ld	de,26
+	ex	de,hl
+	and	a
+	sbc	hl,de
 	push	hl
 	call	_draw_2_digits
 	pop	bc
@@ -10062,7 +10072,7 @@
 .i_104
 	ld	hl,_player+27
 	call	l_gchar
-	ld	de,25	;const
+	ld	de,26	;const
 	ex	de,hl
 	call	l_eq
 	jp	nc,i_108
