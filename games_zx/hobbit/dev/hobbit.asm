@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun Apr 13 14:34:35 2025
+;	Module compile time: Fri Jun 27 16:44:56 2025
 
 
 
@@ -7522,7 +7522,7 @@
 	defm "1 POAQ    %2 KEMPSTON%3 SINCLAIR"
 	defb 0
 	.str_copyright
-	defm "@ 2012, 2024 THE MOJON TWINS"
+	defm "@ 2012, 2025 THE MOJON TWINS"
 	defb 0
 	.str_ending
 	defm "SOY RICO POTRICO"

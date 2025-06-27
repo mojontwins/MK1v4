@@ -49,6 +49,7 @@ cpc_RedefineKey
 cpc_ResetTouchedTiles
 cpc_ScanKeyboard
 cpc_SetMode
+cpc_SetColour
 cpc_ShowTileMap
 cpc_ShowTouchedTiles
 cpc_TblLookup

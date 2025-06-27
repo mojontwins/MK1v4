@@ -18,15 +18,15 @@ org $200
 
 ; Load screen 
 
-	ld      ix, $C000 - 15
-	ld      de, 15
+	ld      ix, $C000 - 6246
+	ld      de, 6246
 	call    cpct_miniload_asm
 
 	call setPal
 
 ; Depack screen
 
-	ld      hl, $C000 - 15
+	ld      hl, $C000 - 6246
 	ld      de, $C000
 	call    dzx0_standard
 
@@ -84,7 +84,7 @@ loopPal:
 	ret
 
 palette:
-	defb $05, $14, $07, $18, $15, $04, $1F, $17, $16, $1A, $0A, $03, $0E, $0C, $1C, $0B
+	defb $14, $04, $15, $06, $1E, $16, $19, $03, $00, $0B, $0B, $0B, $0B, $0B, $0B, $0B
 
 
 ; MINILOAD, adapted (nicked?) from

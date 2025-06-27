@@ -154,7 +154,7 @@ unsigned char decos_ending [] = { 0xAF, 0x57, 0xAA, 0x66, 0xAC, 0x67, 0xAD, 0x68
 							 "AND THE FORCE IS VERY%"
 							 "STRONG IN HIM";
 
-	unsigned char text21[] = "_DWARFY%";
+	unsigned char text21[] = "_DWARFY%"
 							 "YOU CAN'T POSSIBLY GET%"
 							 "PAST HIM IF HE CAN SEE%"
 							 "YOU...";
@@ -168,7 +168,7 @@ unsigned char decos_ending [] = { 0xAF, 0x57, 0xAA, 0x66, 0xAC, 0x67, 0xAD, 0x68
 	unsigned char text23[] = "_BILBOS%"
 							 "HEY WAIT A BIT,I THINK%"
 							 "YO'RE FROM A DIFFERENT%"
-							 "GAME!"
+							 "GAME!";
 
 	unsigned char text24[] = "_SONIA%"
 							 "DUNNO, MAYBE.THE MOJON%"

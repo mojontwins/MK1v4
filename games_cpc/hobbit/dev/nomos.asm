@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu May 01 16:09:41 2025
+;	Module compile time: Fri Jun 27 16:56:51 2025
 
 
 
@@ -10220,6 +10220,7 @@
 	XDEF	_wall
 	LIB	cpc_UpdScr
 	XDEF	_pk_effort
+	LIB	cpc_PutTrSp16x16TileMapPxM1LUT
 	XDEF	_delayed_ct
 	XDEF	_cerrojos
 	XDEF	_en_an_next_frame
@@ -10258,6 +10259,7 @@
 	XREF	_s_ending
 	XDEF	_game_ending
 	XDEF	_pk_ssp
+	LIB	cpc_MakeM1RotationLUTs
 	LIB	cpc_PutTrSp4x8TileMapPx
 	LIB	cpc_PutTrSp8x8TileMapPx
 	LIB	cpc_PutTrSp8x16TileMapPx

@@ -55,7 +55,7 @@ void unpack (void) {
 		defm "1 POAQ    %2 KEMPSTON%3 SINCLAIR"
 		defb 0
 	.str_copyright
-		defm  "@ 2012, 2024 THE MOJON TWINS"
+		defm  "@ 2012, 2025 THE MOJON TWINS"
 		defb 0
 	.str_ending
 		defm "SOY RICO POTRICO"

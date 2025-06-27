@@ -68,12 +68,12 @@ del %game%.c.bin  > nul 2> nul
 	loader_mode=0 > nul
 ..\utils\pasmo.exe system\preloadercpc.asm preloader.bin  > nul
 
-del %game%.cdt > nul
-..\utils\cpc2cdt.exe -r %game% -m cpc -l 1024 -x 1024 -p 2000 preloader.bin %game%.cdt > nul
-..\utils\cpc2cdt.exe -r LOADER -m raw1full -rl 740 -p 2000 loader.bin %game%.cdt > nul
-..\utils\cpc2cdt.exe -r SCR -m raw1full -rl 740 -p 2000 loading.c.bin %game%.cdt > nul
-..\utils\cpc2cdt.exe -r MAIN -m raw1full -rl 740 -p 2000 %game%.c.bin %game%.cdt > nul
-echo Output: %game%.cdt
+del %game%_%lang%.cdt > nul
+..\utils\cpc2cdt.exe -r %game% -m cpc -l 1024 -x 1024 -p 2000 preloader.bin %game%_%lang%.cdt > nul
+..\utils\cpc2cdt.exe -r LOADER -m raw1full -rl 740 -p 2000 loader.bin %game%_%lang%.cdt > nul
+..\utils\cpc2cdt.exe -r SCR -m raw1full -rl 740 -p 2000 loading.c.bin %game%_%lang%.cdt > nul
+..\utils\cpc2cdt.exe -r MAIN -m raw1full -rl 740 -p 2000 %game%.c.bin %game%_%lang%.cdt > nul
+echo Output: %game%_%lang%.cdt
 
 if [%1]==[noclean] goto :end 
 if [%2]==[noclean] goto :end 
