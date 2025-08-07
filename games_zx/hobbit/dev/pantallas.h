@@ -122,6 +122,7 @@ void title_screen (void) {
 
 	after_title:
 	wyz_play_music (8);
+	
 	recuadrius ();
 }
 

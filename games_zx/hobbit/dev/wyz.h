@@ -5,6 +5,7 @@
 // Check the manual!
 
 void __FASTCALL__ wyz_play_music (unsigned char song_number) {
+	if(is128k == 0) return;
 	#asm
 		di
 		ld b, WYZ_RAM
@@ -21,6 +22,7 @@ void __FASTCALL__ wyz_play_music (unsigned char song_number) {
 
 void wyz_stop_sound (void)
 {
+	if(is128k == 0) return;
 	#asm
 		di
 		ld b, WYZ_RAM

@@ -17,7 +17,7 @@
 void main (void) {
 	#asm
 			di 		
-
+			ld  sp, 24199
 		#ifdef MODE_128K_DUAL
 				xor a
 				ld  (_ay_player_on), a
@@ -33,16 +33,18 @@ void main (void) {
 				cp  h
 				jr  z, no128K
 
-			// 128K mode: set the stack in low RAM
-				ld  sp, 24199
-
+			#ifdef ENABLE_WYZ
+					ld  a, 1
+					ld  (_ay_player_on), a
+			#endif
+			
 			#ifdef ENABLE_ARKOS
-				// We need to page in so make sure this is LOW in RAM
-				call arkos_address_call
+					// We need to page in so make sure this is LOW in RAM
+					call arkos_address_call
 			#endif
 
 			#ifdef ENABLE_WYZ
-				call wyz_address_call
+					call wyz_address_call
 			#endif
 
 				ld  a, 1			
@@ -54,10 +56,6 @@ void main (void) {
 			.detectionDone
 				ld  (_is128k), a
 
-			#ifdef ENABLE_WYZ
-					ld  a, 1
-					ld  (_ay_player_on), a
-			#endif
 		#else
 			ld  sp, STACK_ADDR
 		#endif
@@ -80,7 +78,6 @@ void main (void) {
 	#endif
 
 	// splib2 initialization
-	//sp_Initialize (7, 0);
 	#asm
 			ld de, 0
 			call SPInitialize
