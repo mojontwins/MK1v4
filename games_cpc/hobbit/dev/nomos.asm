@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Jun 27 16:56:51 2025
+;	Module compile time: Sat Aug 09 11:21:33 2025
 
 
 
@@ -3226,9 +3226,9 @@
 ;	SECTION	text
 
 ._text0
-	defm	"_BILBOS%UF, QUE PESTE ECHA...%"
-	defm	"LAVARSE NO DEBE SER SU%HOBBIT!"
-	defm	""
+	defm	"_BILBOS%DAMN, THAT STENCH!%PRE"
+	defm	"TTY SURE THIS GUY'S%NOT A HOBB"
+	defm	"IT!"
 	defb	0
 
 ;	SECTION	code
@@ -3238,9 +3238,8 @@
 ;	SECTION	text
 
 ._text1
-	defm	"_BILBOS%ME PREGUNTO QUE HARAN%"
-	defm	"TANTOS ENANOS EN HO-%BBITLANDI"
-	defm	"A"
+	defm	"_BILBOS%I WONDER WHY THERE'RE%"
+	defm	"SO MANY DWARVES AROUND"
 	defb	0
 
 ;	SECTION	code
@@ -3250,8 +3249,8 @@
 ;	SECTION	text
 
 ._text2
-	defm	"_BILBOS%VAYA! OTRO SE/OR BAJI-"
-	defm	"%TO Y SUCIO!"
+	defm	"_BILBOS%LOOK! ANOTHER TINY,%FI"
+	defm	"LTHY DUDE!"
 	defb	0
 
 ;	SECTION	code
@@ -3261,8 +3260,8 @@
 ;	SECTION	text
 
 ._text3
-	defm	"_BILBOS%CUANTO ENANO. DEBE HA-"
-	defm	"%BER UN CIRCOS CERCA"
+	defm	"_BILBOS%DO MANY DWARVES. MUST%"
+	defm	"BE A CIRCUS NEARBY"
 	defb	0
 
 ;	SECTION	code
@@ -3272,10 +3271,9 @@
 ;	SECTION	text
 
 ._text4
-	defm	"_GANDALF%HOLA, SOY UN SE/OR QU"
-	defm	"E%HACE MAGIAS. QUIERES%GANAR U"
-	defm	"N TESORO, JOVEN%Y APUESTO ZAGA"
-	defm	"LETE?"
+	defm	"_GANDALF%HELLOS. I'M AN OLD GU"
+	defm	"Y%THAT DOES MAGIC. DO YA%WANNA"
+	defm	" WIN A TREASURE?"
 	defb	0
 
 ;	SECTION	code
@@ -3285,10 +3283,9 @@
 ;	SECTION	text
 
 ._text5
-	defm	"_GANDALF%AYUDAME A ENTRAR EN L"
-	defm	"A%MONTA/A DE AHI CERCA,%DONDE "
-	defm	"HABITA EL DRAGON%CHARMANDER PO"
-	defm	"KEMOS!"
+	defm	"_GANDALF%HELP ME GAIN ACCESS T"
+	defm	"O%THAT NEARBY MOUNTAIN,%WHERE "
+	defm	"CHARMANDER THE%DRAGON DWELLS"
 	defb	0
 
 ;	SECTION	code
@@ -3298,9 +3295,9 @@
 ;	SECTION	text
 
 ._text6
-	defm	"_BILBOS%LA MONTA/A ESTA CERRA-"
-	defm	"%DA CUAL TOTO DE NANCY.%ES QUE"
-	defm	" HAY UN TESORO%DENTRO?"
+	defm	"_BILBOS%BUT HOW, MY MAN? THAT%"
+	defm	"MOUNTAIN IS AS CLOSED%AS BARBI"
+	defm	"E'S TWAT!"
 	defb	0
 
 ;	SECTION	code
@@ -3310,9 +3307,10 @@
 ;	SECTION	text
 
 ._text7
-	defm	"_GANDALF%BILBOS, TRAE 13 NOMOS"
-	defm	"%Y LES OBLIGARE A ABRIR%LA PUE"
-	defm	"RTA CON MI MAGIA"
+	defm	"_GANDALF%THE DWARVES FROM THE%"
+	defm	"FOREST KNOW'OW TO OPEN%THE MOU"
+	defm	"NTAIN. FIND ALL%13 AND COME BA"
+	defm	"CK HERE"
 	defb	0
 
 ;	SECTION	code
@@ -3322,10 +3320,9 @@
 ;	SECTION	text
 
 ._text8
-	defm	"_GANDALF%LOS ENANOS SAN EMPA-%"
-	defm	"RANOIAO Y KIERE PELEA%PERO LA "
-	defm	"MONTA/A ESTA%ABIERTA. APROVECH"
-	defm	"A!"
+	defm	"_GANDALF%DWARVES ARE CRAZY AND"
+	defm	"%STARTED A WAR, BUT THE%MOUNTA"
+	defm	"IN IS OPEN! GO%THERE ASAP!"
 	defb	0
 
 ;	SECTION	code
@@ -3335,8 +3332,8 @@
 ;	SECTION	text
 
 ._text9
-	defm	"_ENANITO%HOLA, SOY           %"
-	defm	"KIERE PELEA?"
+	defm	"_DWARFIE%HIYA, I'M           %"
+	defm	"WANNA FIGHT?"
 	defb	0
 
 ;	SECTION	code
@@ -3346,7 +3343,7 @@
 ;	SECTION	text
 
 ._text10
-	defm	"_CHERIL%VENDO MOTO SEMINUEVA"
+	defm	"_%BIKE LIKE NEW FOR SALE"
 	defb	0
 
 ;	SECTION	code
@@ -3356,10 +3353,9 @@
 ;	SECTION	text
 
 ._text11
-	defm	"BILBOS PIENSA EN LO%QUE DICE G"
-	defm	"ANDALF DEL%TESORO. ESTA FASE R"
-	defm	"E-%PRESENTA EL PENSAMIEN-%TO D"
-	defm	"E BILBOS"
+	defm	"BILBOS THINKS ABOUT%THE FANTAS"
+	defm	"TIC TREASURE%THIS LEVEL REPRES"
+	defm	"ENTS%BILBOS' THINKING..."
 	defb	0
 
 ;	SECTION	code
@@ -3369,10 +3365,10 @@
 ;	SECTION	text
 
 ._text12
-	defm	"LOS ENANITO ABREN LA%COMPLICAD"
-	defm	"A PUERTA DE%LA MONTA/A. ESTA F"
-	defm	"ASE%REPRESENTA LA ABRI-%SION D"
-	defm	"E LA PUERTA"
+	defm	"THE DWARVES OPEN THE%COMPLICAT"
+	defm	"ED DOOR IN%THE MOUNTAIN. THIS "
+	defm	"LE-%VEL REPRESENTS THE%OPEN OF"
+	defm	" THE DOOR"
 	defb	0
 
 ;	SECTION	code
@@ -3382,9 +3378,9 @@
 ;	SECTION	text
 
 ._text13
-	defm	"SONIA LA MOMIA ESTA%MUY CONFUN"
-	defm	"DIDA. ESTA%FASE REPRESENTA LA%"
-	defm	"CONFUSION DE SONIA"
+	defm	"SONIA THE MUMMY IS%VERY CONFUS"
+	defm	"ED. THIS%LEVEL REPRESENTS THE%"
+	defm	"CONFUSION OF SONIA"
 	defb	0
 
 ;	SECTION	code
@@ -3394,9 +3390,10 @@
 ;	SECTION	text
 
 ._text14
-	defm	"EL ANILLO TIENE MUCHA%MAGIA Y "
-	defm	"BILBOS TENDRA%QUE DOMINARLA. E"
-	defm	"STA%FASE ES LA DOMINASION"
+	defm	"THE RING HAS PLENTY OF%MAGIC. "
+	defm	"BILBO NEEDS TO%DOMINATE IT!THI"
+	defm	"S LEVEL%IS BILBO DOMINATING%TH"
+	defm	"E RING"
 	defb	0
 
 ;	SECTION	code
@@ -3406,7 +3403,7 @@
 ;	SECTION	text
 
 ._text17
-	defm	"DE PRONTO LLEGA UN%NOMO..."
+	defm	"A DWARF APPROACHES"
 	defb	0
 
 ;	SECTION	code
@@ -3416,10 +3413,9 @@
 ;	SECTION	text
 
 ._text18
-	defm	"_GANDALF%GRACIAS POR LOS ENANO"
-	defm	"S%ESTOS, BILBOS. AHORA%JUNTARA"
-	defm	"N PICHA PARA%ABRIR LA MONTA/A."
-	defm	".."
+	defm	"_GANDALF%THANK YOU FOR BRINGIN"
+	defm	"G%THE DWARVES. NOW I'LL%MAKE T"
+	defm	"HEM OPEN THAT%MOUNTAIN..."
 	defb	0
 
 ;	SECTION	code
@@ -3429,10 +3425,9 @@
 ;	SECTION	text
 
 ._text19
-	defm	"_ENANITO%IBAMOS A COGER EL TE-"
-	defm	"%SORO Y SER GRANDES DE%NUEVO *"
-	defm	"EN SENTIDO ME-%TAFORICO+ PERO "
-	defm	"HAY UN%PROBLEMA..."
+	defm	"_DWARFY%WE WERE GONNA GET THE%"
+	defm	"TREASURE AND BE GREAT%AGAIN BU"
+	defm	"T A NASTY PRO-%BLEM AROSE..."
 	defb	0
 
 ;	SECTION	code
@@ -3442,10 +3437,9 @@
 ;	SECTION	text
 
 ._text20
-	defm	"_ENANITO%GALLUMB HA LLEGADO DE"
-	defm	"L%PLANETA DAGOBAH Y RON-%DA LO"
-	defm	"S PASILLOS. DOMI-%NA LA FUERZA"
-	defm	"!"
+	defm	"_DWARFY%GALLUMB JUST ARRIVED%F"
+	defm	"ROM DA PLANET DAGOBAH%AND THE "
+	defm	"FORCE IS VERY%STRONG IN HIM"
 	defb	0
 
 ;	SECTION	code
@@ -3455,8 +3449,9 @@
 ;	SECTION	text
 
 ._text21
-	defm	"_ENANITO%NO PODRAS PASAR DE EL"
-	defm	"%SI PUEDE VERTE ..."
+	defm	"_DWARFY%YOU CAN'T POSSIBLY GET"
+	defm	"%PAST HIM IF HE CAN SEE%YOU..."
+	defm	""
 	defb	0
 
 ;	SECTION	code
@@ -3466,9 +3461,13 @@
 ;	SECTION	text
 
 ._text22
-	defm	"_BILBOS%UN ROLLO DE PAPEL DEL%"
-	defm	"CULO DOBLE CAPA, QUE%TE DEJA S"
-	defm	"UAVITO Y TE%QUITA LA ZURRAPA."
+	defm	"_BILBOS%A ROLL OF TOILET PAPER"
+	defm	"%IT"
+	defb	34
+
+	defm	"S NONE THE COARSE%MAKES YOU FE"
+	defm	"EL BETTER%AND CLEANS YOU ARSE%"
+	defm	""
 	defb	0
 
 ;	SECTION	code
@@ -3478,8 +3477,8 @@
 ;	SECTION	text
 
 ._text23
-	defm	"_BILBOS%UN MOMENTO, PERO TU NO"
-	defm	"%ERAS DE OTRO JUEGO?"
+	defm	"_BILBOS%HEY WAIT A BIT,I THINK"
+	defm	"%YO'RE FROM A DIFFERENT%GAME!"
 	defb	0
 
 ;	SECTION	code
@@ -3489,10 +3488,10 @@
 ;	SECTION	text
 
 ._text24
-	defm	"_SONIA%NO SE, IGUAL SI. COMO%L"
-	defm	"OS MOJON TWINS REUTI-%LIZAN TA"
-	defm	"NTO CODIGO SE%LES HABRA PASADO"
-	defm	" QUI-%TARME..."
+	defm	"_SONIA%DUNNO, MAYBE.THE MOJON%"
+	defm	"TWINS REUSE A LOT OF%CODE SO T"
+	defm	"HEY PROBABLY%FORGOT TO REMOVE "
+	defm	"ME!"
 	defb	0
 
 ;	SECTION	code
@@ -3502,9 +3501,9 @@
 ;	SECTION	text
 
 ._text25
-	defm	"_ANILLO%SOY EL ANILLO MAGICO.%"
-	defm	"METEME EL DEDO Y YO TE%HARE IN"
-	defm	"VISIBLE POR UN%RATO!"
+	defm	"_RING%I'M THE MAGIC RING!%PUT "
+	defm	"YOUR FINGER INSIDE%ME AND I'LL"
+	defm	" MAKE YOU%INIVISIBLE."
 	defb	0
 
 ;	SECTION	code
@@ -3514,8 +3513,8 @@
 ;	SECTION	text
 
 ._text26
-	defm	"_ANILLO%ME HAS DOMINADO. PULSA"
-	defm	"%FIRE PARA PONERTEME!"
+	defm	"_RING%YOU WON! NOW I'LL OBEY%P"
+	defm	"USH FIRE TO PUT ME ON"
 	defb	0
 
 ;	SECTION	code
@@ -3525,9 +3524,8 @@
 ;	SECTION	text
 
 ._text27
-	defm	"_GALLUMB%FURIOSO ESTOY! PERDID"
-	defm	"O%MI TESORO HE! Y LA IRA%AL LA"
-	defm	"DO OSCURO CONDUCE"
+	defm	"_GALLUMB%MAD, I AM! I... I LOS"
+	defm	"T%MY PRECIOUS!"
 	defb	0
 
 ;	SECTION	code
@@ -3537,10 +3535,9 @@
 ;	SECTION	text
 
 ._text28
-	defm	"_GALLUMB%EL ANILLO CON EL QUE%"
-	defm	"CASARME CON EL ENANO%ROMAYS IB"
-	defm	"A... PERDIDO%EN LA CAVERNA EST"
-	defm	"A!"
+	defm	"_GALLUMB%THE WEDDING RING TO%M"
+	defm	"ARRY MY BELOVED DWARF%ROMAYS. "
+	defm	"LOST SOMEWHERE%IN THIS CAVE"
 	defb	0
 
 ;	SECTION	code
@@ -3550,10 +3547,10 @@
 ;	SECTION	text
 
 ._text29
-	defm	"_GALLUMB%AH! ME ENGA/ASTE Y ME"
-	defm	"%ROBASTE MI TESORO! LA%PROXIMA"
-	defm	" VEZ QUE TE VEA%TE DEVORARE, N"
-	defm	"OMO!"
+	defm	"_GALLUMB%AH! TREASON! YOU HAVE"
+	defm	"%STOLEN MY PRECIOUS!%NEXT TIME"
+	defm	" WE SEE YOU%WE WILL EAT YOU AL"
+	defm	"IVE!"
 	defb	0
 
 ;	SECTION	code
@@ -3563,9 +3560,9 @@
 ;	SECTION	text
 
 ._text30
-	defm	"_TASSLEHOFF%PERDONA, ES ESTO T"
-	defm	"UYO?%LO ENCONTRE Y LO RECO-%GI"
-	defm	" PARA QUE NO SE PER-%DIERA"
+	defm	"_TASSLEHOFF%SORRY, IS THIS YOU"
+	defm	"RS?%I FOUND IT LAYING IN%THE G"
+	defm	"ROUND..."
 	defb	0
 
 ;	SECTION	code
@@ -3575,9 +3572,9 @@
 ;	SECTION	text
 
 ._text31
-	defm	"_GALLUMB%ESTE NO ES MI TESORO,"
-	defm	"%MALDITO ENANO! ESTO ES%MI ANI"
-	defm	"LLO DE PENE!"
+	defm	"_GALLUMB%NO! DAMNED DWARF, IT%"
+	defm	"AIN'T MY PRECIOUS!!%THIS IS A "
+	defm	"COCK RING!"
 	defb	0
 
 ;	SECTION	code
@@ -3587,9 +3584,9 @@
 ;	SECTION	text
 
 ._text32
-	defm	"_GALLUMB%AH, ERES TU, RUBIO!%K"
-	defm	"IERE PELEA, LADRON?%TE REBIENT"
-	defm	"O, PAIASO!"
+	defm	"_GALLUMB%AH! SO IT IS YOU!%FEE"
+	defm	"L THE WRATH OF THE%MIGHTLY GAL"
+	defm	"LUMB!"
 	defb	0
 
 ;	SECTION	code
@@ -3599,10 +3596,10 @@
 ;	SECTION	text
 
 ._text33
-	defm	"_BILBOS%AY! QUE SOPAPO! CON LO"
-	defm	"%BAJITO QUE ES Y COMO%LA SUERT"
-	defm	"A EL IOPUTA!%ME TIEMBLAN LOS P"
-	defm	"I/OS"
+	defm	"_BILBOS%OUCH! THAT WAS A BLOW!"
+	defm	"%WHO WOULD'VE GUESSED?%HE'S SO"
+	defm	" TINY, BUT MY%HEAD IS SPINNING"
+	defm	"!"
 	defb	0
 
 ;	SECTION	code
@@ -3612,9 +3609,9 @@
 ;	SECTION	text
 
 ._text34
-	defm	"_BILBOS%YA ECHE LAS RABAS...%C"
-	defm	"OMO MAREA ESTO... NO%CREO QUE "
-	defm	"LO AGUANTE%MUCHAS VECES..."
+	defm	"_BILBOS%GOSH, I PUKED. MY HEAD"
+	defm	"%IS SPINNING. I DON'T%THINK I "
+	defm	"CAN TAKE THIS%VERY OFTEN..."
 	defb	0
 
 ;	SECTION	code
@@ -3625,8 +3622,8 @@
 
 ._text35
 	defm	"_BILBOS%HOBBIT, HOBA... CADA%D"
-	defm	"IA TE QUIERO MA...%QUE MAREO.."
-	defm	". MI MAE%ME DESMAYO..."
+	defm	"IA TE QUIERO MA...%I'M PASSING"
+	defm	" OUT..."
 	defb	0
 
 ;	SECTION	code
@@ -3636,10 +3633,10 @@
 ;	SECTION	text
 
 ._text36
-	defm	"_BILBOS%AY... ESTO ES COMO UNA"
-	defm	"%RESACA DE LARIOS! NO%DEBO USA"
-	defm	"R EL ANILLO%MAS QUE CUANDO SEA"
-	defm	" IM-%PRESCINDIBLE HACERLO!"
+	defm	"_BILBOS%AW... THAT'S A NASTY%H"
+	defm	"ANGOVER! BETTER NOT%TO USE THE"
+	defm	" RING UNLESS%COMPLETELY NECESS"
+	defm	"ARY!"
 	defb	0
 
 ;	SECTION	code
@@ -3649,8 +3646,7 @@
 ;	SECTION	text
 
 ._text37
-	defm	"_GANDALF%ESO AUN NO TE LO PUED"
-	defm	"O%DECIR!!"
+	defm	"_GANDALF%THINK ABOUT IT!%"
 	defb	0
 
 ;	SECTION	code
@@ -3660,9 +3656,9 @@
 ;	SECTION	text
 
 ._text38
-	defm	"_CHARMANDER%TE PILLE, INTRUSO!"
-	defm	"%QUE QUIERES? VIENES%A ROBAR M"
-	defm	"I TESORO?"
+	defm	"_CHARMANDER%GOTCHA, INTRUDER!%"
+	defm	"DO YOU COME TO STEAL%MY TREASU"
+	defm	"RE?"
 	defb	0
 
 ;	SECTION	code
@@ -3672,8 +3668,7 @@
 ;	SECTION	text
 
 ._text39
-	defm	"_BILBOS%ESO AUN NO TE LO PUEDO"
-	defm	"%DECIR!!"
+	defm	"_BILBOS%AH! SURPRISE!"
 	defb	0
 
 ;	SECTION	code
@@ -3683,8 +3678,8 @@
 ;	SECTION	text
 
 ._text40
-	defm	"_CHARMANDER%PREPARATE PARA LUC"
-	defm	"HAR%POR TU VIDA!"
+	defm	"_CHARMANDER%PREPARE TO FIGHT F"
+	defm	"OR%YOUR LIFE!"
 	defb	0
 
 ;	SECTION	code
@@ -3694,8 +3689,8 @@
 ;	SECTION	text
 
 ._text41
-	defm	"_BILBOS%BAH. TODOS SABEN QUE%P"
-	defm	"LANTA GANA A FUEGO!"
+	defm	"_BILBOS%MEH. EVERYBODY KNOWS%T"
+	defm	"HAT PLANT WINS FIRE!"
 	defb	0
 
 ;	SECTION	code
@@ -3705,9 +3700,9 @@
 ;	SECTION	text
 
 ._text42
-	defm	"_AMADOR%HAY UN VIEJO QUE NO%ME"
-	defm	" DEJA PODAR EL SETO.%ENCUENTRA"
-	defm	"LO Y HAZ QUE%SE VAYA, BILBOS!"
+	defm	"_AMADOR%THERE'S A WEIRD OLD%MA"
+	defm	"N THAT'S BOTHERING%ME. FIND HI"
+	defm	"M AND MAKE%HIM GO AWAY!"
 	defb	0
 
 ;	SECTION	code
@@ -3717,7 +3712,7 @@
 ;	SECTION	text
 
 ._mission0
-	defm	"BUSCA AL VIEJO PELLEJO"
+	defm	"FIND THE WEIRD OLD MAN!"
 	defb	0
 
 ;	SECTION	code
@@ -3727,7 +3722,7 @@
 ;	SECTION	text
 
 ._mission1
-	defm	"ENCUENTRA LOS 13 NOMOS"
+	defm	"GATHER ALL 13 DWARVES! "
 	defb	0
 
 ;	SECTION	code
@@ -3737,7 +3732,7 @@
 ;	SECTION	text
 
 ._mission2
-	defm	"EXPLORA LA CUEVA GORDA"
+	defm	"EXPLORE THE BIG CAVE! "
 	defb	0
 
 ;	SECTION	code
@@ -3747,7 +3742,7 @@
 ;	SECTION	text
 
 ._mission3
-	defm	"BUSCA EL ANILLO,QUILLO"
+	defm	"FIND THE MAGICAL RING!"
 	defb	0
 
 ;	SECTION	code
@@ -3757,7 +3752,7 @@
 ;	SECTION	text
 
 ._mission4
-	defm	"ENCUENTRA EL TESORO!  "
+	defm	"FIND THE TREASURE!    "
 	defb	0
 
 ;	SECTION	code
@@ -4503,19 +4498,19 @@
 	BINARY "poketilesc.bin"
 	._a_list
 	._a_growl defb 0, 255, 33, 8
-	defm "AULLIDO%    "
+	defm "GROWL%      "
 	._a_tackle defb 35, 242, 7, 0
-	defm "PLACAJE%    "
+	defm "TACKLE%     "
 	._a_leechseed defb 0, 229, 2, 1
-	defm "DRENADORAS% "
+	defm "LEECH SEED% "
 	._a_vinewhip defb 35, 255, 2, 0
-	defm "LATIGO CEPA%"
+	defm "VINE WHIP%  "
 	._a_scratch defb 40, 255, 20, 0
-	defm "ARA/AZO%    "
+	defm "SCRATCH%    "
 	._a_ember defb 40, 127, 10, 2
-	defm "BRASAS%     "
+	defm "EMBER%      "
 	._a_leer defb 0, 255, 5, 4
-	defm "MALICIOSO%  "
+	defm "LEER%       "
 	._bubasaur
 	defb 45, 49, 49, 45, 0, 45
 	defm "BUBASAUR% "
@@ -4537,7 +4532,7 @@
 ;	SECTION	text
 
 ._str_used
-	defm	" USO"
+	defm	" USED"
 	defb	0
 
 ;	SECTION	code
@@ -4547,7 +4542,7 @@
 ;	SECTION	text
 
 ._str_failed
-	defm	"PERO FALLO!"
+	defm	"BUT FAILED!"
 	defb	0
 
 ;	SECTION	code
@@ -4557,7 +4552,7 @@
 ;	SECTION	text
 
 ._str_useless
-	defm	"PERO FUE INUTIL"
+	defm	"IT WAS USELESS"
 	defb	0
 
 ;	SECTION	code
@@ -4567,7 +4562,7 @@
 ;	SECTION	text
 
 ._str_nomore1
-	defm	"NO TIENES"
+	defm	"YOU GOT NO"
 	defb	0
 
 ;	SECTION	code
@@ -4577,7 +4572,7 @@
 ;	SECTION	text
 
 ._str_nomore2
-	defm	"MAS POKEMON!"
+	defm	"MORE POKEMON!"
 	defb	0
 
 ;	SECTION	code
@@ -4587,7 +4582,7 @@
 ;	SECTION	text
 
 ._str_leech
-	defm	"DRENAJE HIERE A"
+	defm	"LECH SEED SAPS"
 	defb	0
 
 ;	SECTION	code
@@ -4597,7 +4592,7 @@
 ;	SECTION	text
 
 ._str_is
-	defm	" ES"
+	defm	" IS"
 	defb	0
 
 ;	SECTION	code
@@ -4607,7 +4602,7 @@
 ;	SECTION	text
 
 ._str_burn
-	defm	"QUEMADO!!"
+	defm	"HURT BY BURN"
 	defb	0
 
 ;	SECTION	code
@@ -4617,7 +4612,7 @@
 ;	SECTION	text
 
 ._str_regain
-	defm	"RECUPERA SALUD"
+	defm	"REGAINS HEALTH!"
 	defb	0
 
 ;	SECTION	code
@@ -4627,7 +4622,7 @@
 ;	SECTION	text
 
 ._str_infected
-	defm	"FUE INFECTADO!"
+	defm	"WAS INFECTED!"
 	defb	0
 
 ;	SECTION	code
@@ -4637,7 +4632,7 @@
 ;	SECTION	text
 
 ._str_burning
-	defm	"ESTA ARDIENDO"
+	defm	"IS BURNING!"
 	defb	0
 
 ;	SECTION	code
@@ -4647,7 +4642,7 @@
 ;	SECTION	text
 
 ._str_genitive
-	defm	""
+	defm	"'S"
 	defb	0
 
 ;	SECTION	code
@@ -4657,7 +4652,7 @@
 ;	SECTION	text
 
 ._str_low_def
-	defm	"BAJA DEFENSA!"
+	defm	"DEFENSE LOW!"
 	defb	0
 
 ;	SECTION	code
@@ -4667,7 +4662,7 @@
 ;	SECTION	text
 
 ._str_low_attack
-	defm	"BAJA ATAQUE!"
+	defm	"ATTACK LOW!"
 	defb	0
 
 ;	SECTION	code
@@ -4677,7 +4672,7 @@
 ;	SECTION	text
 
 ._str_defeated
-	defm	"HA PERDIDO"
+	defm	"WAS DEFEATED"
 	defb	0
 
 ;	SECTION	code
@@ -4693,9 +4688,9 @@
 ;	SECTION	text
 
 ._pk_main_menu
-	defm	"????ATACAR!%    ????USAR ITEM%"
-	defm	"  ????OTRO POKEMON????ESCAPARS"
-	defm	"E%  "
+	defm	"????FIGHT!%     ????USE ITEM% "
+	defm	"  ????SWAP POKEMON????RUN%    "
+	defm	"    "
 	defb	0
 
 ;	SECTION	code
@@ -4705,9 +4700,9 @@
 ;	SECTION	text
 
 ._pk_items_menu
-	defm	"????GALLINA%    ????ANILLO PEN"
-	defm	"E%????LAPIZ%      ????JERINGUI"
-	defm	"LLA%"
+	defm	"????CHICKEN%    ????COCK RING%"
+	defm	"  ????PENCIL%     ????SYRINGE%"
+	defm	"    "
 	defb	0
 
 ;	SECTION	code

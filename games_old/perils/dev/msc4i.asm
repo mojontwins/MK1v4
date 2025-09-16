@@ -29,11 +29,12 @@
 	XREF _en_it
 	XREF __en_x
 	XREF __en_y
+	XREF _decode_text
 
 	XREF script_bytecode
 
-; Target SPECCY
-	LIB SPUpdateNow
+; Target CPC
+	XREF _cpc_UpdateNow
 
 ; Exports
 	XDEF _script_do

@@ -1143,7 +1143,7 @@ void move (void) {
 				#ifdef AVOID_PLATFORM_HOP
 					cp  c  // was: 8
 				#else
-					cp  4
+					cp  8
 				#endif
 				jr  nc, m_vert_coll_checks_done		// Everything failed!
 		#endif

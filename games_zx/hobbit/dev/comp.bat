@@ -1,7 +1,7 @@
 @echo off
 
 set game=hobbit
-set lang=ES
+set lang=EN
 set base=24200
 
 if [%1]==[justcompile] goto :compile
@@ -26,7 +26,7 @@ rem generate for "COMPRESSED_TS 2", i.e. 192 tiles + 256 attrs
 ..\utils\png2scr.exe ..\gfx\marco.png ..\gfx\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\ending.png ..\gfx\ending.scr  > nul
 ..\utils\png2scr.exe ..\gfx\preloading.png preloading.bin  > nul
-..\utils\png2scr.exe ..\gfx\loading-mh.png loading.bin  > nul
+..\utils\png2scr.exe ..\gfx\loading.png loading.bin  > nul
 ..\utils\zx0.exe ..\gfx\title.scr title.bin  > nul
 ..\utils\zx0.exe ..\gfx\pokemon.scr pokemon.bin > nul 
 ..\utils\zx0.exe ..\gfx\marco.scr marco.bin  > nul

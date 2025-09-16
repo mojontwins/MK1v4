@@ -88,7 +88,6 @@ void game_ending (void) {
 			call _unpack_screen
 	#endasm
 
-	no_break ();
 
 	#ifdef CPC
 		cpc_ShowTileMap (1);
@@ -101,6 +100,7 @@ void game_ending (void) {
 		peta_el_beeper (9);
 	#endif
 		
+	no_break ();
 		espera_activa (5000);
 
 	#ifdef CPC
@@ -132,7 +132,6 @@ void game_over (void) {
 		#endif
 		"GAME OVER!");
 	
-	no_break ();
 
 	#ifdef CPC
 		cpc_UpdateNow (0);
@@ -144,7 +143,8 @@ void game_over (void) {
 		peta_el_beeper (10);
 	#endif
 
-		espera_activa (500);
+	no_break ();
+	espera_activa (5000);
 
 	#ifdef CPC
 		AY_STOP_SOUND ();

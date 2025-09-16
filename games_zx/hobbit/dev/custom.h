@@ -56,7 +56,6 @@ unsigned char decos4 [] = { 0x91, 0x19, 0xff };
 unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 
 #ifdef LANG_EN
-	//                        XXXXXXXXXXXXXXXXXXXXXX
 	unsigned char text0 [] = "_BILBOS%"
 							 "DAMN, THAT STENCH!%"
 							 "PRETTY SURE THIS GUY'S%"
@@ -92,7 +91,8 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 
 	unsigned char text7 [] = "_GANDALF%"
 							 "THE DWARVES FROM THE%"
-							 "FOREST KNOW HOW TO OPEN%"
+	//                        XXXXXXXXXXXXXXXXXXXXXX	
+							 "FOREST KNOW'OW TO OPEN%"
 							 "THE MOUNTAIN. FIND ALL%"
 							 "13 AND COME BACK HERE";
 
@@ -103,7 +103,7 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 							 "THERE ASAP!";
 
 	unsigned char text9 [] = "_DWARFIE%"
-							 "HIYA, I'M               %"
+							 "HIYA, I'M           %"
 							 "WANNA FIGHT?";
 
 	unsigned char text10[] = "_%"
@@ -248,7 +248,6 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 
 
 	unsigned char text38[] = "_CHARMANDER%"
-	//                        XXXXXXXXXXXXXXXXXXXXXX	
 							 "GOTCHA, INTRUDER!%"
 							 "DO YOU COME TO STEAL%"
 							 "MY TREASURE?";
@@ -269,6 +268,7 @@ unsigned char decos5 [] = { 0x9a, 0x68, 0xff };
 							  "MAN THAT'S BOTHERING%"
 							  "ME. FIND HIM AND MAKE%"
 							  "HIM GO AWAY!";
+	//                        XXXXXXXXXXXXXXXXXXXXXX
 
 	unsigned char mission0[] = "FIND THE WEIRD OLD MAN!";
 	unsigned char mission1[] = "GATHER ALL 13 DWARVES! ";

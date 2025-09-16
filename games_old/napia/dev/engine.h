@@ -261,6 +261,7 @@ unsigned int __FASTCALL__ abs (int n) {
 
 					ld  a, (_rdx)
 					ld  (__x), a 
+					ld  c, a
 					ld  a, (_rdy)
 					ld  (__y), a
 					call set_map_tile_do
@@ -1142,7 +1143,7 @@ void move (void) {
 				#ifdef AVOID_PLATFORM_HOP
 					cp  c  // was: 8
 				#else
-					cp  4
+					cp  8
 				#endif
 				jr  nc, m_vert_coll_checks_done		// Everything failed!
 		#endif

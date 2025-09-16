@@ -126,7 +126,7 @@ Sub parseTokenizeString (inString As String, tokens () As String, ignore As Stri
 	Dim As Integer i, l, windex, quotes
 
 	parseCleanTokens tokens ()
-	ignore = ignore & " "
+	ignore = ignore & " " & Chr(9)
 
 	inString = inString + " "
 	l = Len (inString)

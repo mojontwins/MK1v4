@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Jun 11 08:34:36 2025
+;	Module compile time: Mon Sep 15 08:09:34 2025
 
 
 
@@ -3826,6 +3826,7 @@
 	ld (__n), a
 	ld a, (_rdx)
 	ld (__x), a
+	ld c, a
 	ld a, (_rdy)
 	ld (__y), a
 	call set_map_tile_do
@@ -4068,7 +4069,7 @@
 	.m_vert_thurst_write
 	ld (_player + 2), hl
 	call HLshr6_A
-	ld (_gpy), A
+	ld (_gpy), a
 	ld a, (_gpx)
 	ld c, a
 	add 4
@@ -4121,7 +4122,7 @@
 	ld a, (_gpy)
 	dec a
 	and 15
-	cp 4
+	cp 8
 	jr nc, m_vert_coll_checks_done
 	.m_vert_coll_down_adjust
 	ld hl, 0
@@ -4233,12 +4234,12 @@
 	ld hl, 0
 	jr m_horz_kp_vx_write
 	.m_horz_kp_left_or_right_p
-	ld a, 1
-	ld (_thrusting), a
 	ld a, c
 	and 0x04
 	jr nz, m_horz_kp_left_done
 	.m_horz_kp_left_do
+	ld a, 1
+	ld (_thrusting), a
 	ld de, -24
 	ld hl, (_player + 6)
 	add hl, de
@@ -4255,6 +4256,8 @@
 	and 0x08
 	jr nz, m_horz_kp_right_done
 	.m_horz_kp_right_do
+	ld a, 2
+	ld (_thrusting), a
 	ld de, 24
 	ld hl, (_player + 6)
 	add hl, de
@@ -5291,7 +5294,6 @@
 	call	_blackout
 	ld hl, _s_ending
 	call _unpack_screen
-	call	_no_break
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_gpit),a
@@ -5313,6 +5315,7 @@
 .i_72
 	ld	hl,9	;const
 	call	_peta_el_beeper
+	call	_no_break
 	ld	hl,5000	;const
 	push	hl
 	call	_espera_activa
@@ -5346,11 +5349,11 @@
 	pop	bc
 	pop	bc
 	pop	bc
-	call	_no_break
 	call SPUpdateNow
 	ld	hl,10	;const
 	call	_peta_el_beeper
-	ld	hl,500	;const
+	call	_no_break
+	ld	hl,5000	;const
 	push	hl
 	call	_espera_activa
 	pop	bc

@@ -261,6 +261,7 @@ unsigned int __FASTCALL__ abs (int n) {
 
 					ld  a, (_rdx)
 					ld  (__x), a 
+					ld  c, a
 					ld  a, (_rdy)
 					ld  (__y), a
 					call set_map_tile_do
@@ -852,6 +853,10 @@ void move (void) {
 		
 		#asm
 			.m_vert_gravity_do
+				ld  a, (_player + 25) 		// player.gotten 
+				or  a 
+				jr  nz, m_vert_gravity_no
+
 				ld  hl, (_player + 8) 			// player.vy
 				ld  de, PLAYER_G 
 				add hl, de 
@@ -866,6 +871,7 @@ void move (void) {
 
 			.m_vert_gravity_done
 				ld  (_player + 8), hl 
+			.m_vert_gravity_no
 		#endasm 
 
 		#ifdef PLAYER_HAS_JUMP
@@ -1142,7 +1148,7 @@ void move (void) {
 				#ifdef AVOID_PLATFORM_HOP
 					cp  c  // was: 8
 				#else
-					cp  4
+					cp  8
 				#endif
 				jr  nc, m_vert_coll_checks_done		// Everything failed!
 		#endif

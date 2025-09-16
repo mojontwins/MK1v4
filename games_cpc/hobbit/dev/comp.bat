@@ -1,7 +1,7 @@
 @echo off
 
 set game=nomos
-set lang=ES
+set lang=EN
 
 echo Making %game%
 
