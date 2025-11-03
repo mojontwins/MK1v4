@@ -1906,12 +1906,12 @@ void move (void) {
 		#endasm 
 	#endif
 
-	//player.next_frame = player_cells [player.frame];
+	//player.next_frame = sprite_cells [player.frame];
 	#asm
 			ld  hl, (_player + 20) 		// player.frame 
 			ld  h, 0
 			add hl, hl 
-			ld  de, _player_cells 
+			ld  de, _sprite_cells 
 			add hl, de 
 			ld  a, (hl) 
 			inc hl 
@@ -2568,7 +2568,7 @@ void draw_scr_background (void) {
 #endif
 
 void enems_calc_frame (void) {
-	// en_an_next_frame [enit] = enem_cells [en_an_base_frame [enit] + en_an_frame [enit]];
+	// en_an_next_frame [enit] = sprite_cells [en_an_base_frame [enit] + en_an_frame [enit]];
 	#asm
 			ld  a, (_enit)
 			sla a
@@ -2592,9 +2592,9 @@ void enems_calc_frame (void) {
 
 			sla a 			// This will work in 8 bit. Always few frames max.			
 			ld  c, a 		// B is already 0
-			ld  hl, _enem_cells
+			ld  hl, _sprite_cells
 
-			add hl, bc 		// HL -> enem_cells [...]
+			add hl, bc 		// HL -> sprite_cells [...]
 			pop de 			// DE -> en_an_next_frame [enit]
 
 			ldi
