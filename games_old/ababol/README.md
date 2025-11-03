@@ -33,7 +33,7 @@ La luna la voy a quitar del set y se pondrá por script o por entering especial.
 
 ## Cosas: el spriteset
 
-Me acabo de dar cuenta de una cosa que está mal y que habría que rehacer, no sólo para que deje de estar mal, sino para hacer que el sistema sea más flexible. Ahora mismo tenemos dos arrays de cells, uno para player y otro para enems. Creo que lo suyo sería tener un único array global y mapear ahí según haga falta.
+Me acabo de dar cuenta de una cosa que está mal y que habría que rehacer, no sólo para que deje de estar mal, sino para hacer que el sistema sea más flexible. Ahora mismo tenemos dos arrays de cells, uno para player y otro para enems. Creo que lo suyo sería tener un único array global y mapear ahí según haga falta. HECHO.
 
 ### POR DEFECTO
 
@@ -41,7 +41,20 @@ Por defecto tendríamos un array de 16 words apuntando a 16 cells. Las del playe
 
 `en_an_base_frame` es ahora un índice a este array de cells. El valor del índice será por defecto `ENEMS_CELL_OFFSET + en_t * 2`. De este modo los cáculos que se hacen para obtener offset y punteros a funciones de actualizaión en CPC estarán bien y no como ahora que esto funciona porque todos los sprites tienen el mimso tamaño, porque está mal.
 
-Tengo que arreglar esto en `src_old` y luego propagar.
+Para Sir Ababol:
+
+* `CUSTOM_SPRITE_CELLS` para definir un LUT custom con todo lo necesario.
+* `ENEMS_CELL_OFFSET` sería 16.
+* 8 primeros cells normal y 8 siguientes nadando.
+* 16 cells para enemigos.
+
+### PECES
+
+Los enemigos 1 a 4 serán los normales. Los enemigos 5 a 8 serán peces y se comportarán como lineales.
+
+* definimos `ENABLE_CUSTOM_ENEMS`  
+* En `extra_enems_move` capturamos los nuevos tipos y simplemente llamamos a `en_lineal_do`. 
+* Calculamos `en_an_next_frame` de forma custom para que miren a izquierda y derecha.
 
 ## Cosas: el cambio de motor
 

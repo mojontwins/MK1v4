@@ -234,19 +234,22 @@ unsigned char spr_on [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*18;
 unsigned char spr_x [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*19;
 unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
 
-extern unsigned char *player_cells [0];
+#ifndef ENEMS_CELL_OFFSET
+	#define ENEMS_CELL_OFFSET 8
+#endif
+
+#ifdef CUSTOM_SPRITE_CELLS
+	#include "custom_sprite_cells.h"
+#else
+	extern unsigned char *sprite_cells [0];
 #asm
-	._player_cells 
+		._sprite_cells 
 		defw SPRITE_00, SPRITE_01, SPRITE_02, SPRITE_03
 		defw SPRITE_04, SPRITE_05, SPRITE_06, SPRITE_07
-#endasm
-
-extern unsigned char *enem_cells [0];
-#asm
-	._enem_cells
 		defw SPRITE_08, SPRITE_09, SPRITE_0A, SPRITE_0B
 		defw SPRITE_0C, SPRITE_0D, SPRITE_0E, SPRITE_0F
 #endasm
+#endif
 
 #if defined MODE_1 && defined AUTO_SPLIT
 	#include "cpc/pal_hud.h"
@@ -1692,9 +1695,7 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 
 			// And now get index to spriteset mappings
 			ld  a, b
-		#ifdef ENEMS_OFFSET
-				add ENEMS_OFFSET
-		#endif
+			add ENEMS_CELL_OFFSET
 			ld  hl, (_enit)
 			ld  h, 0 
 			ld  de, _en_an_base_frame 

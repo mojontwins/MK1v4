@@ -115,15 +115,20 @@ unsigned char isrc           @ 23296;
 unsigned char ay_player_on   @ 23297;
 unsigned char ay_counter     @ 23298;
 
-unsigned char *player_cells [] = {
-	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
-	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
-};
+#ifndef ENEMS_CELL_OFFSET
+	#define ENEMS_CELL_OFFSET 8
+#endif
 
-unsigned char *enem_cells [] = {
-	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
-};
+#ifdef CUSTOM_SPRITE_CELLS
+	#include "custom_sprite_cells.h"
+#else
+	unsigned char *sprite_cells [] = {
+		sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
+		sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+		sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+		sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+	};
+#endif
 
 #asm
 	defw 0	// 2 bytes libres
@@ -1296,9 +1301,7 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 	#asm
 			ld  a, l 		// B = n
 			sla a 			// B = n << 1
-		#ifdef ENEMS_OFFSET
-				add ENEMS_OFFSET
-		#endif
+			add ENEMS_CELL_OFFSET
 			ld  hl, (_enit)
 			ld  h, 0 
 			ld  de, _en_an_base_frame 
