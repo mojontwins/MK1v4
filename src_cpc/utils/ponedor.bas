@@ -1,9 +1,9 @@
-' ponedor v0.2
+' ponedor v0.3
 ' Copyleft 2016, 2019 by the Mojon Twins
 ' Simple GUI program to place enemies and hotspots
 ' I need to get rid of the crashy, allegro-needing old one.
 
-' v0.2 - adds support for 2-byte-per hotspot 'legacy' .ene 
+' v0.3 - adds "export full map png" feature
 
 ' fbc.exe ponedor.bas cmdlineparser.bas mtparser.bas gui.bas bmp.bas
 ' Needs libpng.a, fbpng.bi, cmdlineparser.*, mtparser.*, gui.*, bmp.* to compile.
@@ -115,7 +115,7 @@ Dim Shared As Integer debug
 Dim Shared As Integer doLoad
 Dim Shared As Integer stretchX2
 
-Dim Shared As Integer ratio
+Dim Shared As Integer cellSize
 Dim Shared As Integer offsetr
 Dim Shared As Integer legacyMode
 
@@ -318,28 +318,28 @@ Function myFileExists (fn As String) As Integer
 	Return -1
 End Function
 
-Sub drawThinDigit (x0 As Integer, y0 As Integer, c As uInteger, d As Integer)
+Sub drawThinDigit (target As Byte Ptr, x0 As Integer, y0 As Integer, c As uInteger, d As Integer)
 	Dim As Integer x, y 
 
 	d = d * 8
 	For y = 0 To 7
 		For x = 0 to 3
 			If (thinNumbers (d) And (8 Shr x)) = (8 Shr x) Then
-				Pset (x0 + x, y0 + y), c
+				Pset target, (x0 + x, y0 + y), c
 			End If
 		Next x
 		d = d + 1
 	Next y
 End Sub
 
-Sub drawThinHexNumber2 (x0 As Integer, y0 As Integer, c1 As uInteger, c2 As uInteger, n As Integer)
-	If c2 <> -1 Then Line (x0, y0)-(x0 + 7, y0 + 7), c2, BF
+Sub drawThinHexNumber2 (target As Byte Ptr, x0 As Integer, y0 As Integer, c1 As uInteger, c2 As uInteger, n As Integer)
+	If c2 <> -1 Then Line target, (x0, y0)-(x0 + 7, y0 + 7), c2, BF
 	If n > 255 Then 
-		drawThinDigit x0, y0, c1, 16
-		drawThinDigit x0 + 4, y0, c1, 16
+		drawThinDigit target, x0, y0, c1, 16
+		drawThinDigit target, x0 + 4, y0, c1, 16
 	Else
-		drawThinDigit x0, y0, c1, n \ 16
-		drawThinDigit x0 + 4, y0, c1, n Mod 16 
+		drawThinDigit target, x0, y0, c1, n \ 16
+		drawThinDigit target, x0 + 4, y0, c1, n Mod 16 
 	End If
 End Sub
 
@@ -351,8 +351,8 @@ Sub initOptions
 	options.borderBottom = BORDER_BOTTOM
 	options.borderLeft = BORDER_LEFT
 	options.borderRight = BORDER_RIGHT
-	options.winH = options.borderTop + options.borderBottom + ratio * mapDescriptor.scrH
-	options.winW = options.borderLeft + options.borderRight + ratio * mapDescriptor.scrW
+	options.winH = options.borderTop + options.borderBottom + cellSize * mapDescriptor.scrH
+	options.winW = options.borderLeft + options.borderRight + cellSize * mapDescriptor.scrW
 End Sub
 
 Sub writeSizedString (s As String, n As Integer, fH As Integer)
@@ -792,7 +792,7 @@ Sub openingScreenNoParams
 		End If
 	Loop
 
-	If stretchX2 Then ratio = 32: offsetr = 8 Else ratio = 16: offsetr = 0
+	If stretchX2 Then cellSize = 32: offsetr = 8 Else cellSize = 16: offsetr = 0
 
 	If res Then System
 End Sub
@@ -848,7 +848,7 @@ Function parseInput As Integer
 	debug = (sclpGetValue ("debug") <> "")
 	stretchX2 = (sclpGetValue ("x2") <> "")
 
-	If stretchX2 Then ratio = 32: offsetr = 8 Else ratio = 16: offsetr = 0
+	If stretchX2 Then cellSize = 32: offsetr = 8 Else cellSize = 16: offsetr = 0
 
 	' Are we editing or creating new?
 	If sclpGetValue ("new") <> "" Then
@@ -1108,89 +1108,97 @@ Sub renderMap (xP As Integer, yP As Integer)
 			d = mapData (xP, yP, x, y) - mapDescriptor.adjust
 			If d >= 0 Then Put (xr, yr), tiles (d), PSET Else Line (xr, yr) - (xr + 15, yr + 15), RGB (255,100,0), BF
 			If options.drawGrid Then
-				Line (xr + ratio - 1, yr)-(xr + ratio - 1, yr + ratio - 1), RGBA (127, 127, 127, 64)
-				Line (xr, yr + ratio - 1)-(xr + ratio - 1, yr + ratio - 1), RGBA (127, 127, 127, 64)
+				Line (xr + cellSize - 1, yr)-(xr + cellSize - 1, yr + cellSize - 1), RGBA (127, 127, 127, 64)
+				Line (xr, yr + cellSize - 1)-(xr + cellSize - 1, yr + cellSize - 1), RGBA (127, 127, 127, 64)
 			End If
-			xr = xr + ratio
+			xr = xr + cellSize
 		Next x
-		yr = yr + ratio
+		yr = yr + cellSize
 	Next y
 End Sub
 
-Sub coverme (x0 As Integer, y0 As Integer)
-	Line (x0 + 1, y0 + 1) - (x0 + 14, y0 + 14), RGB (0, 0, 0), BF
+Sub coverme (target As Byte Ptr, x0 As Integer, y0 As Integer)
+	Line target, (x0 + 1, y0 + 1) - (x0 + 14, y0 + 14), RGB (0, 0, 0), BF
 End Sub
 
-Sub drawFirstBox (xC As Integer, yC As Integer, n As Integer)
-	Dim As Integer x0, y0
-	x0 = options.mapViewOffsetX + xC * ratio + offsetr
-	y0 = options.mapViewOffsetY + yC * ratio + offsetr
-	coverme x0, y0
-	Line (x0 + 2, y0 + 2) - (x0 + 13, y0 + 13), RGB (255,220,120), BF
-	Line (x0 + 2, y0 + 2) - (x0 + 13, y0 + 13), RGB (255,200,100), B
+Sub drawFirstBox (target As Any Ptr, x0 As Integer, y0 As Integer, xC As Integer, yC As Integer, n As Integer)
+	Dim As Integer x, y
+	x = x0 + xC * cellSize + offsetr
+	y = y0 + yC * cellSize + offsetr
+	coverme target, x, y
+	Line target, (x + 2, y + 2) - (x + 13, y + 13), RGB (255,220,120), BF
+	Line target, (x + 2, y + 2) - (x + 13, y + 13), RGB (255,200,100), B
 
-	drawThinHexNumber2 x0 + 4, y0 + 4, RGB (40, 40, 40), RGB (255,200,100), n
+	drawThinHexNumber2 target, x + 4, y + 4, RGB (40, 40, 40), RGB (255,200,100), n
 End Sub
 
-Sub drawLastBox (xC As Integer, yC As Integer, n As Integer)
-	Dim As Integer x0, y0
-	x0 = options.mapViewOffsetX + xC * ratio + offsetr
-	y0 = options.mapViewOffsetY + yC * ratio + offsetr
-	'coverme x0, y0
-	Circle (x0 + 8, y0 + 8), 6, RGB (0, 0, 0), , , , F
-	Circle (x0 + 8, y0 + 8), 5, RGB (255,220,120), , , , F
+Sub drawLastBox (target As Any Ptr, x0 As Integer, y0 As Integer, xC As Integer, yC As Integer, n As Integer)
+	Dim As Integer x, y
+	x = x0 + xC * cellSize + offsetr
+	y = y0 + yC * cellSize + offsetr
+	'coverme x, y
+	Circle target, (x + 8, y + 8), 6, RGB (0, 0, 0), , , , F
+	Circle target, (x + 8, y + 8), 5, RGB (255,220,120), , , , F
 
-	drawThinHexNumber2 x0 + 5, y0 + 4, bgmain, -1, n
+	drawThinHexNumber2 target, x + 5, y + 4, bgmain, -1, n
 End Sub
 
-Sub drawHotspot (xC As Integer, yC as Integer, n as Integer)
-	Dim As Integer x0, y0
-	x0 = options.mapViewOffsetX + xC * ratio + offsetr
-	y0 = options.mapViewOffsetY + yC * ratio + offsetr
-	coverme x0, y0
-	Line (x0 + 2, y0 + 2) - (x0 + 13, y0 + 13), RGB (255, 100, 10), BF
-	Line (x0 + 2, y0 + 2) - (x0 + 13, y0 + 13), RGB (255, 100, 10), B
+Sub drawHotspot (target As Any Ptr, x0 As Integer, y0 As Integer, xC As Integer, yC as Integer, n as Integer)
+	Dim As Integer x, y
+	Dim As uByte d
+	x = x0 + xC * cellSize + offsetr
+	y = y0 + yC * cellSize + offsetr
 
-	Line (x0 + 2, y0) - (x0 + 13, y0), RGB (255, 100, 10)
-	Line (x0 + 13, y0) - (x0 + 15, y0 + 2), RGB (255, 100, 10)
-	Line (x0 + 15, y0 + 2) - (x0 + 15, y0 + 13), RGB (255, 100, 10)
-	line (x0 + 15, y0 + 13) - (x0 + 13, y0 + 15), RGB (255, 100, 10)
-	Line (x0 + 13, y0 + 15) - (x0 + 2, y0 + 15), RGB (255, 100, 10)
-	Line (x0 + 2, y0 + 15) - (x0, y0 + 13), RGB (255, 100, 10)
-	Line (x0, y0 + 13) - (x0, y0 + 2), RGB (255, 100, 10)
-	Line (x0, y0 + 2) - (x0 + 2, y0), RGB (255, 100, 10)
+	If target = Null Then
+		coverme target, x, y
+		Line target, (x + 2, y + 2) - (x + 13, y + 13), RGB (255, 100, 10), BF
+		Line target, (x + 2, y + 2) - (x + 13, y + 13), RGB (255, 100, 10), B
 
-	drawThinHexNumber2 x0 + 4, y0 + 4, RGB (40, 40, 40), RGB (255, 100, 10), n
+		Line target, (x + 2, y) - (x + 13, y), RGB (255, 100, 10)
+		Line target, (x + 13, y) - (x + 15, y + 2), RGB (255, 100, 10)
+		Line target, (x + 15, y + 2) - (x + 15, y + 13), RGB (255, 100, 10)
+		line target, (x + 15, y + 13) - (x + 13, y + 15), RGB (255, 100, 10)
+		Line target, (x + 13, y + 15) - (x + 2, y + 15), RGB (255, 100, 10)
+		Line target, (x + 2, y + 15) - (x, y + 13), RGB (255, 100, 10)
+		Line target, (x, y + 13) - (x, y + 2), RGB (255, 100, 10)
+		Line target, (x, y + 2) - (x + 2, y), RGB (255, 100, 10)
+	Else
+		d = 16 + n: If d = 19 Then d = 16
+		Put target, (x0 + xC * cellSize, y0 + yC * cellSize), tiles (d), PSET
+		Line target, (x + 2, y + 2) - (x + 13, y + 13), RGB (255, 100, 10), B
+	End If
+
+	drawThinHexNumber2 target, x + 4, y + 4, RGB (40, 40, 40), RGB (255, 100, 10), n
 End Sub
 
-Sub drawLine (x0 As Integer, y0 As Integer, x1 As Integer, y1 As Integer)
+Sub drawLine (target As Any Ptr, x0 As Integer, y0 As Integer, x1 As Integer, y1 As Integer, x2 As Integer, y2 As Integer)
 	Dim as Integer x, y
 	' Gordaca	
 	For y = -1 To 1
 		For x = -1 To 1
 			If x <> 0 Or y <> 0 Then
-				Line (options.mapViewOffsetX + x0 * ratio + 8 + x + offsetr, options.mapViewOffsetY + y0 * ratio + 8 + y + offsetr) - (options.mapViewOffsetX + x1 * ratio + 8 + x + offsetr, options.mapViewOffsetY + y1 * ratio + 8 + y + offsetr), RGB (0, 0, 0)
+				Line target, (x0 + x1 * cellSize + 8 + x + offsetr, y0 + y1 * cellSize + 8 + y + offsetr) - (x0 + x2 * cellSize + 8 + x + offsetr, y0 + y2 * cellSize + 8 + y + offsetr), RGB (0, 0, 0)
 			End if
 	Next x, y
-	Line (options.mapViewOffsetX + x0 * ratio + 8 + offsetr, options.mapViewOffsetY + y0 * ratio + 8 + offsetr) - (options.mapViewOffsetX + x1 * ratio + 8 + offsetr, options.mapViewOffsetY + y1 * ratio + 8 + offsetr), RGB (255, 230, 200)	
+	Line target, (x0 + x1 * cellSize + 8 + offsetr, y0 + y1 * cellSize + 8 + offsetr) - (x0 + x2 * cellSize + 8 + offsetr, y0 + y2 * cellSize + 8 + offsetr), RGB (255, 230, 200)	
 End Sub
 
-Sub renderEnems (xP As Integer, yP As Integer)
+Sub renderEnems (target As Any Ptr, x0 As Integer, y0 As Integer, xP As Integer, yP As Integer)
 	Dim i As Integer
 
 	For i = 0 To mapDescriptor.nenems - 1
 		If enems (xP, yP, i).t <> 0 Then
-			drawLine enems (xP, yP, i).x, enems (xP, yP, i).y, enems (xP, yP, i).xx, enems (xP, yP, i).yy
-			drawFirstBox enems (xP, yP, i).x, enems (xP, yP, i).y, enems (xP, yP, i).t
-			drawLastBox enems (xP, yP, i).xx, enems (xP, yP, i).yy, enems (xP, yP, i).n
+			drawLine target, x0, y0, enems (xP, yP, i).x, enems (xP, yP, i).y, enems (xP, yP, i).xx, enems (xP, yP, i).yy
+			drawFirstBox target, x0, y0, enems (xP, yP, i).x, enems (xP, yP, i).y, enems (xP, yP, i).t
+			drawLastBox target, x0, y0, enems (xP, yP, i).xx, enems (xP, yP, i).yy, enems (xP, yP, i).n
 		End If
 	Next i
 End Sub
 
 Sub renderScreen (xP As Integer, yP As Integer)
 	renderMap (xP, yP)
-	renderEnems (xP, yP)
-	If hotspots (xP, yP).t Then drawHotspot hotspots (xP, yP).x, hotspots (xP, yP).y, hotspots (xP, yP).t
+	renderEnems (null, options.mapViewOffsetX, options.mapViewOffsetY, xP, yP)
+	If hotspots (xP, yP).t Then drawHotspot null, options.mapViewOffsetX, options.mapViewOffsetY, hotspots (xP, yP).x, hotspots (xP, yP).y, hotspots (xP, yP).t
 End Sub
 
 Function countEnemsThisScreen (xP As Integer, yP As Integer) As Integer
@@ -1562,7 +1570,7 @@ Sub processLeftClick (xP As Integer, yP As Integer, xC As Integer, yC As Integer
 						currentEnem.t = t
 						currentEnem.x = xC
 						currentEnem.y = yC
-						drawFirstBox currentEnem.x, currentEnem.y, currentEnem.t
+						drawFirstBox null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.x, currentEnem.y, currentEnem.t
 						editingState = STATE_LAYINGOUTENEMY
 					End If
 				Else 
@@ -1598,9 +1606,9 @@ Sub processLeftClick (xP As Integer, yP As Integer, xC As Integer, yC As Integer
 				currentEnem.n = a
 				currentEnem.s1 = s1
 				currentEnem.s2 = s2
-				drawLine currentEnem.x, currentEnem.y, currentEnem.xx, currentEnem.yy
-				drawFirstBox currentEnem.x, currentEnem.y, currentEnem.t
-				drawLastBox currentEnem.xx, currentEnem.yy, currentEnem.n
+				drawLine null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.x, currentEnem.y, currentEnem.xx, currentEnem.yy
+				drawFirstBox null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.x, currentEnem.y, currentEnem.t
+				drawLastBox null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.xx, currentEnem.yy, currentEnem.n
 
 				storeCurrentEnem xP, yP
 			Else 
@@ -1641,12 +1649,60 @@ Sub printHotspotsMode ()
 	Sve
 End Sub
 
+Sub fullRenderScreen (bigImg As Any Ptr, x0 As Integer, y0 As Integer, xp As Integer, yp As Integer)
+	Dim As Integer x, y, xr, yr
+	Dim As Byte d
+Print ".";
+	' 1st draw tiles
+	yr = y0
+	For y = 0 To mapDescriptor.scrH - 1
+		xr = x0
+		For x = 0 To mapDescriptor.scrW - 1 
+			d = mapData (xp, yp, x, y) - mapDescriptor.adjust
+			If d >= 0 Then
+				Put bigImg, (xr, yr), tiles (d), PSET
+			End If
+			xr = xr + cellSize
+		Next x 
+		yr = yr + cellSize
+	Next y
+Print ".";
+	' Now draw enemies
+	renderEnems bigImg, x0, y0, xp, yp
+Print ".";
+	' New draw hotspots
+	If hotspots (xp, yp).t Then drawHotspot bigImg, x0, y0, hotspots (xP, yP).x, hotspots (xP, yP).y, hotspots (xP, yP).t
+
+End Sub
+
+Sub fullExport ()
+	' Special render for all screens, size 2x
+	Dim As Integer x, y
+	Dim bigImg As Any Ptr
+CLS
+PRINT "Creating image: ";
+PRINT (mapDescriptor.mapW * mapDescriptor.scrW * cellSize) & "x" & (mapDescriptor.mapH * mapDescriptor.scrH * cellSize) & ":";
+	bigImg = ImageCreate( _
+		mapDescriptor.mapW * mapDescriptor.scrW * cellSize, _
+		mapDescriptor.mapH * mapDescriptor.scrH * cellSize)
+
+	For y = 0 To mapDescriptor.mapH - 1
+		For x = 0 To mapDescriptor.mapW - 1
+			fullRenderScreen bigImg, x * mapDescriptor.scrW * cellSize, y * mapDescriptor.scrH * cellSize, x, y
+			
+		Next x
+	Next y
+
+	png_save enemsFn + ".fullmap.png", bigImg
+End Sub
+
 ' Controls
 Dim As Button buttonSave
 Dim As Button buttonExit
 Dim As Button buttonGrid
 Dim As Button buttonReload
 Dim As Button buttonH
+Dim As Button buttonE
 
 ' Variables
 Dim As Integer xP, yP, xPO, yPO, xC, yC, xCO, yCO, mx, my, mbtn
@@ -1662,7 +1718,7 @@ parseInput ()
 initOptions
 
 '' Create window
-OpenWindow options.winW, options.winH, "Mojon Twins' Ponedowr"
+OpenWindow options.winW, options.winH, "Mojon Twins' Ponedowr v0.3"
 
 buffer = ImageCreate (options.winW, options.winH, 0)
 
@@ -1674,10 +1730,11 @@ If doLoad Then loadProjectAssets
 
 '' Create buttons 
 buttonSave = Button_New (options.borderLeft, options.winH - 22, 48, 20, "Save")
-buttonExit = Button_New (options.borderLeft + 52, options.winH - 22, 48, 20, "Exit")
-buttonGrid = Button_New (options.borderLeft + 52 + 52, options.winH - 22, 48, 20, "Grid")
-buttonReload = Button_New (options.borderLeft + 52 + 52 + 52, options.winH - 22, 56, 20, "Reload")
-buttonH = Button_New (options.borderLeft + 52 + 52 + 52 + 60, options.winH - 22, 16, 20, "H")
+buttonExit = Button_New (options.borderLeft + 50, options.winH - 22, 48, 20, "Exit")
+buttonGrid = Button_New (options.borderLeft + 50 + 50, options.winH - 22, 48, 20, "Grid")
+buttonReload = Button_New (options.borderLeft + 50 + 50 + 50, options.winH - 22, 56, 20, "Reload")
+buttonH = Button_New (options.borderLeft + 50 + 50 + 50 + 58, options.winH - 22, 16, 20, "H")
+buttonE = Button_New (options.borderLeft + 50 + 50 + 50 + 58 + 18, options.winH - 22, 16, 20, "E")
 
 '' Last things
 editingState = 0
@@ -1708,11 +1765,11 @@ Do
 	Getmouse mx, my, , mbtn
 
 	'' Inside area?
-	If 	mx >= options.mapViewOffsetX And mx < options.mapViewOffsetX + ratio * mapDescriptor.scrW And _
-		my >= options.mapViewOffsetY And my < options.mapViewOffsetY + ratio * mapDescriptor.scrH Then
+	If 	mx >= options.mapViewOffsetX And mx < options.mapViewOffsetX + cellSize * mapDescriptor.scrW And _
+		my >= options.mapViewOffsetY And my < options.mapViewOffsetY + cellSize * mapDescriptor.scrH Then
 
-		xC = (mx - options.mapViewOffsetX) \ ratio
-		yC = (my - options.mapViewOffsetY) \ ratio
+		xC = (mx - options.mapViewOffsetX) \ cellSize
+		yC = (my - options.mapViewOffsetY) \ cellSize
 
 		If xC <> xCO Or yC <> yCO Then
 			SetText options.winW - options.borderRight - 60, 0, 8*8, 16, "X:" & Hex (xC, 1) & " Y:" & Hex (yC, 1), 0, bgmain
@@ -1724,9 +1781,9 @@ Do
 				If xC <> currentEnem.xx Or yC <> currentEnem.yy Then
 					currentEnem.xx = xC: currentEnem.yy = yC
 					Rec
-					drawLine currentEnem.x, currentEnem.y, currentEnem.xx, currentEnem.yy
-					drawFirstBox currentEnem.x, currentEnem.y, currentEnem.t 
-					drawLastBox currentEnem.xx, currentEnem.yy, currentEnem.n
+					drawLine null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.x, currentEnem.y, currentEnem.xx, currentEnem.yy
+					drawFirstBox null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.x, currentEnem.y, currentEnem.t 
+					drawLastBox null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.xx, currentEnem.yy, currentEnem.n
 				End If
 			End If
 		End If
@@ -1764,7 +1821,7 @@ Do
 	If (keysTF And CS_GRID) Or Button_Event (buttonGrid) Then
 		options.drawGrid = Not options.drawGrid
 		renderScreen xP, yP
-		If editingState = STATE_LAYINGOUTENEMY Then drawFirstBox currentEnem.x, currentEnem.y, currentEnem.t
+		If editingState = STATE_LAYINGOUTENEMY Then drawFirstBox null, options.mapViewOffsetX, options.mapViewOffsetY, currentEnem.x, currentEnem.y, currentEnem.t
 	End If
 
 	'' Save
@@ -1785,6 +1842,13 @@ Do
 		If saveChurrera Then
 			grabadoChurreraPerfe
 		End If
+	End If
+
+	'' E
+	If Button_Event(buttonE) Then
+		fullExport
+		grabadoPerfe
+		Rec
 	End If
 
 	'' Exit
