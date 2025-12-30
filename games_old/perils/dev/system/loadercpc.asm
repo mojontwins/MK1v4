@@ -11,7 +11,7 @@ org $BA00
 ; Set mode 
 
 	ld     bc, $7f00
-	ld     a, $8C + 0
+	ld     a, $8C + 1
 	out    (c), a
 
 ; Load screen 

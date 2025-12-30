@@ -9,34 +9,34 @@
 // Frames extra por si se pueden eliminar los enemigos:
 
 #ifdef ENEMIES_MAY_DIE
-	extern unsigned char sprite_17_a []; 
+	extern unsigned char spr_boom []; 
 #endif
 
-extern unsigned char sprite_18_a []; 
+extern unsigned char spr_empty []; 
 
 #ifdef PLAYER_CAN_FIRE
-	extern unsigned char sprite_19_a [];
-	extern unsigned char sprite_19_b [];
+	extern unsigned char spr_bullet [];
+	extern unsigned char spr_bullet_b [];
 #endif
 
 #ifdef ENEMIES_MAY_DIE
 	#asm
-		._sprite_17_a
+		._spr_boom
 			BINARY "sprites_extra.bin"
 	#endasm
 #endif
 			
 #asm	
-	._sprite_18_a
+	._spr_empty
 		defs 96, 0
 #endasm
 
 #ifdef PLAYER_CAN_FIRE
 	#asm
-		._sprite_19_a
+		._spr_bullet
 			BINARY "sprites_bullet.bin"
 	#endasm
 #endif
 
-#define SPRFR_EXPL  sprite_17_a
-#define SPRFR_EMPTY sprite_18_a
+#define SPRFR_EXPL  spr_boom
+#define SPRFR_EMPTY spr_empty

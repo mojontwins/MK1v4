@@ -123,11 +123,11 @@ unsigned char ay_counter     @ 23298;
 	#include "custom_sprite_cells.h"
 #else
 	unsigned char *sprite_cells [] = {
-	sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
-	sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
-	sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
-	sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
-};
+		sprite_1_a, sprite_2_a, sprite_3_a, sprite_4_a,
+		sprite_5_a, sprite_6_a, sprite_7_a, sprite_8_a,
+		sprite_9_a, sprite_10_a, sprite_11_a, sprite_12_a,
+		sprite_13_a, sprite_14_a, sprite_15_a, sprite_16_a
+	};
 #endif
 
 #asm
@@ -248,8 +248,8 @@ void system_init (void) {
 
 	#ifdef PLAYER_CAN_FIRE
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
-			sp_bullets [rdi] = sp_CreateSpr (sp_OR_SPRITE, 2, sprite_19_a, 1);
-			sp_AddColSpr (sp_bullets [rdi], sprite_19_b);
+			sp_bullets [rdi] = sp_CreateSpr (sp_OR_SPRITE, 2, spr_bullet, 1);
+			sp_AddColSpr (sp_bullets [rdi], spr_bullet_b);
 		}
 	#endif
 }

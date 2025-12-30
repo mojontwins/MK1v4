@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Jun 17 13:08:38 2025
+;	Module compile time: Tue Dec 30 10:32:47 2025
 
 
 
@@ -1625,10 +1625,9 @@
 	._def_keys_joy
 	defw 0x4904, 0x4908, 0x4901, 0x4902, 0x4910, 0x4920
 	defw 0x4801, 0x4802, 0x4880, 0x4780, 0x4204, 0x4804
-	._player_cells
+	._sprite_cells
 	defw (_sprites + 0x0000), (_sprites + 0x0040), (_sprites + 0x0080), (_sprites + 0x00C0)
 	defw (_sprites + 0x0100), (_sprites + 0x0140), (_sprites + 0x0180), (_sprites + 0x01C0)
-	._enem_cells
 	defw (_sprites + 0x0200), (_sprites + 0x0240), (_sprites + 0x0280), (_sprites + 0x02C0)
 	defw (_sprites + 0x0300), (_sprites + 0x0340), (_sprites + 0x0380), (_sprites + 0x03C0)
 	.pal_hud
@@ -2631,6 +2630,7 @@
 	ld d, 1
 	call _get_pointer_to_enem_or_coco
 	ld a, b
+	add 8
 	ld hl, (_enit)
 	ld h, 0
 	ld de, _en_an_base_frame
@@ -5699,7 +5699,7 @@
 	ld hl, (_player + 20)
 	ld h, 0
 	add hl, hl
-	ld de, _player_cells
+	ld de, _sprite_cells
 	add hl, de
 	ld a, (hl)
 	inc hl
@@ -5977,7 +5977,7 @@
 	add a, (hl)
 	sla a
 	ld c, a
-	ld hl, _enem_cells
+	ld hl, _sprite_cells
 	add hl, bc
 	pop de
 	ldi
@@ -7887,6 +7887,7 @@
 	LIB	cpc_ShowScrTileMap
 	LIB	cpc_SetMode
 	LIB	cpc_ClrScr
+	XDEF	_sprite_cells
 	XDEF	_get_pointer_to_enem_or_coco
 	LIB	cpc_SetModo
 	XDEF	_en_an_state
@@ -8004,7 +8005,6 @@
 	LIB	cpc_EnableFirmware
 	XDEF	_bullets_x
 	XDEF	_bullets_y
-	XDEF	_enem_cells
 	LIB	cpc_PrintGphStrXYM12X
 	LIB	cpc_SetInk
 	XDEF	_pad0
@@ -8032,7 +8032,6 @@
 	XDEF	_mapa
 	XDEF	_draw_coloured_tile
 	XDEF	_attr
-	XDEF	_player_cells
 	LIB	cpc_ResetTouchedTiles
 	XDEF	_gpcx
 	XDEF	_gpcy

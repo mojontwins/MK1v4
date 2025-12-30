@@ -1,7 +1,7 @@
 @echo off
 
-set game=lala3
-set om=speccy
+set game=ababol3
+set om=cpc
 set mode=1
 
 if [%mode%]==[0] goto :setmode0 
@@ -15,13 +15,13 @@ echo Making %game%
 
 if [%1]==[justcompile] goto :compile
 
-..\utils\mapcnv.exe ..\map\mapa.map mapa.h 6 5 15 10 15 packed  > nul
+..\utils\mapcnv.exe ..\map\mapa.map mapa.h 20 3 15 10 15 packed  > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes  > nul
 
 if [%om%]==[cpc] goto :cpc
 
 ..\utils\ts2bin.exe ..\gfx\%om%\font.png ..\gfx\%om%\work.png tileset.bin 7 > nul
-..\utils\sprcnv.exe ..\gfx\%om%\sprites.png speccy\sprites.h  > nul
+..\utils\sprcnv2.exe ..\gfx\%om%\sprites.png speccy\sprites.h 32 > nul
 ..\utils\png2scr.exe ..\gfx\%om%\title.png ..\gfx\%om%\title.scr  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\marco.png ..\gfx\%om%\marco.scr  > nul
 ..\utils\png2scr.exe ..\gfx\%om%\ending.png ..\gfx\%om%\ending.scr  > nul
@@ -34,11 +34,17 @@ goto :compile
 :cpc 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=chars greyordered in=..\gfx\%om%\font.png out=font.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=strait2x2 greyordered in=..\gfx\%om%\work.png out=work.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=16 %mainspritesetmode% silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=32 %mainspritesetmode% silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal.png prefix=my_inks out=%om%\pal.h silent > nul 
+
+rem custom palettes
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-fuera.png prefix=inks0 out=%om%\pal0.h silent > nul
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-cueva.png prefix=inks1 out=%om%\pal1.h silent > nul
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-agua.png prefix=inks2 out=%om%\pal2.h silent > nul
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-marco.png prefix=pal_hud out=%om%\pal_hud.h silent > nul
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal.png prefix=pal_general out=%om%\pal_general.h silent > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\marco.png out=marco.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\ending.png out=ending.bin silent > nul
@@ -88,7 +94,7 @@ del %game%.sna > nul
 ..\utils\cpctbin2sna.exe %game%.bin 0x400 -pc 0x400 -o %game%.sna
 echo Output: %game%.sna
 
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal_loading.png mode=scr in=..\gfx\%om%\loading.png out=loading.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\%om%\pal_loading.png mode=scr in=..\gfx\%om%\loading.png out=loading.bin silent > nul
 ..\utils\zx7.exe loading.bin loading.c.bin > nul
 ..\utils\zx7.exe %game%.bin %game%.c.bin > nul
 

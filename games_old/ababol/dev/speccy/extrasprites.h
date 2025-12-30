@@ -9,19 +9,19 @@
 // Frames extra por si se pueden eliminar los enemigos:
 
 #ifdef ENEMIES_MAY_DIE
-	extern unsigned char sprite_17_a []; 
+	extern unsigned char spr_boom []; 
 #endif
 
-extern unsigned char sprite_18_a []; 
+extern unsigned char spr_empty []; 
 
 #ifdef PLAYER_CAN_FIRE
-	extern unsigned char sprite_19_a [];
-	extern unsigned char sprite_19_b [];
+	extern unsigned char spr_bullet [];
+	extern unsigned char spr_bullet_b [];
 #endif
 
 #ifdef ENEMIES_MAY_DIE
 	#asm
-		._sprite_17_a
+		._spr_boom
 			defb 0, 128
 			defb 56, 0
 			defb 117, 0
@@ -47,7 +47,7 @@ extern unsigned char sprite_18_a [];
 			defb 0, 255
 			defb 0, 255
 	 
-		._sprite_17_b
+		._spr_boom_b
 			defb 0, 3
 			defb 240, 1
 			defb 248, 0
@@ -73,7 +73,7 @@ extern unsigned char sprite_18_a [];
 			defb 0, 255
 			defb 0, 255
 	 
-		._sprite_17_c
+		._spr_boom_c
 			defb 0, 255
 			defb 0, 255
 			defb 0, 255
@@ -102,7 +102,7 @@ extern unsigned char sprite_18_a [];
 #endif
 
 #asm	
-	._sprite_18_a
+	._spr_empty
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
@@ -110,7 +110,7 @@ extern unsigned char sprite_18_a [];
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		
-	._sprite_18_b
+	.spr_empty_b
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
@@ -118,7 +118,7 @@ extern unsigned char sprite_18_a [];
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		
-	._sprite_18_c
+	.spr_empty_c
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
 		defb 0, 255, 0, 255, 0, 255, 0, 255
@@ -129,7 +129,7 @@ extern unsigned char sprite_18_a [];
 
 #ifdef PLAYER_CAN_FIRE
 	#asm
-		._sprite_19_a
+		._spr_bullet
 			defb 0, 0
 			defb 0, 0
 			defb 24, 0
@@ -147,7 +147,7 @@ extern unsigned char sprite_18_a [];
 			defb 0, 0
 			defb 0, 0
 		
-		._sprite_19_b
+		._spr_bullet_b
 			defb 0, 0
 			defb 0, 0
 			defb 0, 0

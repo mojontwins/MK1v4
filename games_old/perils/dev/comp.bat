@@ -90,7 +90,7 @@ del %game%.sna > nul
 ..\utils\cpctbin2sna.exe %game%.bin 0x400 -pc 0x400 -o %game%.sna
 echo Output: %game%.sna
 
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal_loading.png mode=scr in=..\gfx\%om%\loading.png out=loading.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\%om%\pal_loading.png mode=scr in=..\gfx\%om%\loading.png out=loading.bin silent > nul
 ..\utils\zx7.exe loading.bin loading.c.bin > nul
 ..\utils\zx7.exe %game%.bin %game%.c.bin > nul
 
@@ -98,7 +98,7 @@ echo Output: %game%.sna
 	scrc_size=?loading.c.bin ^
 	mainbin_size=?%game%.c.bin ^
 	loading_palette=!..\gfx\%om%\pal_loading.png ^
-	loader_mode=0 > nul
+	loader_mode=1 > nul
 ..\utils\pasmo.exe system\loadercpc.asm loader.bin  > nul
 
 ..\utils\imanol.exe in=system\preloadercpc.asm-orig out=system\preloadercpc.asm ^

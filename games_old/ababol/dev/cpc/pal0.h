@@ -3,71 +3,71 @@
 // Copyleft 2017-2025 by The Mojon Twins
 
 #asm
-	.my_inks
+	.inks0
 		ld  b, 0x7f
 		ld  a, 0
 		out (c), a
-		ld  a, 0x56	// 0b0100000 OR 16 (FF008000)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 1
 		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
+		ld  a, 0x44	// 0b0100000 OR 4 (FF000080)
 		out (c), a
 		ld  a, 2
 		out (c), a
-		ld  a, 0x4E	// 0b0100000 OR E (FFFF8000)
+		ld  a, 0x55	// 0b0100000 OR 15 (FF0000FF)
 		out (c), a
 		ld  a, 3
 		out (c), a
-		ld  a, 0x43	// 0b0100000 OR 3 (FFFFFF80)
+		ld  a, 0x53	// 0b0100000 OR 13 (FF00FFFF)
 		out (c), a
 		ld  a, 4
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 5
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 6
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 7
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 8
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 9
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 10
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 11
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 12
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 13
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 14
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ld  a, 15
 		out (c), a
-		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
+		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
 		out (c), a
 		ret
 #endasm

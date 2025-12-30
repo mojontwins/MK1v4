@@ -2,12 +2,10 @@ msc v4.1.20250604 ~ Processing script.spt
 ==========================================
 LINEA NOINDEXED 		# We won't be using SCREEN XXX sections
 T0=[noindexed]
-T1=[		]
 No indexed script. Beware!
 ==========================================
 LINEA FASTNPANT 		# IF NPANT = N will generate its own opcode/interpreter
 T0=[fastnpant]
-T1=[		]
 IF NPANT = N will generate its own opcode!
 ==========================================
 LINEA ENTERING ANY

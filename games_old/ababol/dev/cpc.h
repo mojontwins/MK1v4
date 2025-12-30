@@ -242,13 +242,13 @@ unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
 	#include "custom_sprite_cells.h"
 #else
 	extern unsigned char *sprite_cells [0];
-#asm
+	#asm
 		._sprite_cells 
 		defw SPRITE_00, SPRITE_01, SPRITE_02, SPRITE_03
 		defw SPRITE_04, SPRITE_05, SPRITE_06, SPRITE_07
 		defw SPRITE_08, SPRITE_09, SPRITE_0A, SPRITE_0B
 		defw SPRITE_0C, SPRITE_0D, SPRITE_0E, SPRITE_0F
-#endasm
+	#endasm
 #endif
 
 #if defined MODE_1 && defined AUTO_SPLIT
@@ -506,7 +506,7 @@ void system_init (void) {
 			ld  (ix + 15), h
 			ld  (ix + 14), l
 
-			ld  hl, _sprite_18_a
+			ld  hl, _spr_empty
 			ld  (ix + 1), h
 			ld  (ix + 0), l
 
@@ -563,7 +563,7 @@ void system_init (void) {
 				ld  (ix + 15), h
 				ld  (ix + 14), l	
 
-				ld  hl, _sprite_19_a 					// sm_sprptr [0]
+				ld  hl, _spr_bullet 					// sm_sprptr [0]
 				ld  (ix + 1), h
 				ld  (ix + 0), l
 
@@ -1437,7 +1437,7 @@ void render_all_sprites (void) {
 			jr  z, player_render_graphic
 
 		.player_render_empty
-			ld  hl, _sprite_18_a
+			ld  hl, _spr_empty
 			jr  player_render_set_sp0
 
 		.player_render_graphic
@@ -1456,7 +1456,7 @@ void render_all_sprites (void) {
 			if (bullets_estado [rdi]) {
 				sp_sw [bspr_it].cx = (bullets_x [rdi] + VIEWPORT_X * 8) >> 2;
 				sp_sw [bspr_it].cy = (bullets_y [rdi] + VIEWPORT_Y * 8);
-				sp_sw [bspr_it].sp0 = (int) (sprite_19_a);	
+				sp_sw [bspr_it].sp0 = (int) (spr_bullet);	
 			} else {
 				//sp_MoveSprAbs (sp_bullets [rdi], spritesClip, 0, -2, -2, 0, 0);
 				sp_sw [bspr_it].cx = (VIEWPORT_X * 8) >> 2;
@@ -1474,10 +1474,10 @@ void saca_a_todo_el_mundo_de_aqui (void) {
 			ld  b, SW_SPRITES_ALL
 			ld  hl, BASE_SPRITES
 		.clear_sprites_loop
-			ld  a, #(_sprite_18_a%256)
+			ld  a, #(_spr_empty%256)
 			ld  (hl), a
 			inc hl
-			ld  a, #(_sprite_18_a/256)
+			ld  a, #(_spr_empty/256)
 			ld  (hl), a 
 			add hl, de
 			djnz clear_sprites_loop

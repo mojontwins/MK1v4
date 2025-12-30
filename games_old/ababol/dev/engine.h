@@ -2652,7 +2652,7 @@ void draw_scr (void) {
 				enems_en_an_calc (_en_t - 1);
 				break;
 			default:
-				en_an_next_frame [enit] = sprite_18_a;
+				en_an_next_frame [enit] = spr_empty;
 		}
 
 		#ifdef ENABLE_CUSTOM_ENEMS
@@ -2736,7 +2736,7 @@ void draw_scr (void) {
 
 		// Update frame
 		
-		en_an_next_frame [enit] = sprite_17_a;											
+		en_an_next_frame [enit] = spr_boom;											
 												
 		#asm
 				ld  a, (__en_x)
@@ -2769,7 +2769,7 @@ void draw_scr (void) {
 			#endif 
 
 			// Sprite empty
-			en_an_next_frame [enit] = sprite_18_a;
+			en_an_next_frame [enit] = spr_empty;
 			
 			// Mark dead
 			_en_t |= 128;			// dead

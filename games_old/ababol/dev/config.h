@@ -5,7 +5,7 @@
 
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
-//#define AUTO_SPLIT 						// For CPC, but hud must be 32 raster on top and MODE 1
+#define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
 //#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
 //#define NO_PAL_MAP 						// For CPC, with AUTO_SPLIT, only one pal (my_inks)
 
@@ -15,17 +15,17 @@
 
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
-#define MAP_W						6		//
-#define MAP_H						5		// Map dimmensions in screens
-#define SCR_INICIO					24		// Initial screen
+#define MAP_W						20		//
+#define MAP_H						3		// Map dimmensions in screens
+#define SCR_INICIO					0		// Initial screen
 #define PLAYER_INI_X				2		//
 #define PLAYER_INI_Y				2		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			26		// Objects to get to finish game
-#define PLAYER_LIFE 				99		// Max and starting life gauge.
-#define PLAYER_REFILL				10		// Life recharge
+#define PLAYER_NUM_OBJETOS			24		// Objects to get to finish game
+#define PLAYER_LIFE 				10		// Max and starting life gauge.
+#define PLAYER_REFILL				1		// Life recharge
 
 // ============================================================================
 // II. Engine type
@@ -46,8 +46,8 @@
 //#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
 //#define OBJECT_COUNT				1		// Defines which FLAG will be used to store the object count.
 //#define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
-#define PLAYER_BOUNCES						// If defined, collisions make player bounce
-//#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
+//#define PLAYER_BOUNCES					// If defined, collisions make player bounce
+#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
 //#define ENABLE_BOTIBOINS					// If defined, enable botiboins on beh 2.
 
 // Shooting behaviour (only side view!)
@@ -68,7 +68,7 @@
 
 // Make your own!
 // --------------
-//#define ENABLE_CUSTOM_ENEMS					// Create your custom enemies in `custom.h`
+#define ENABLE_CUSTOM_ENEMS					// Create your custom enemies in `custom.h`
 
 // Scripting
 // ---------
@@ -105,8 +105,8 @@
 //#define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
 //#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
 
-//#define CUSTOM_SPRITE_CELLS 				// Use your own sprite cell luts from custom_sprite_cells.h
-//#define ENEMS_CELL_OFFSET 		8 		// If the above is defined, this is the 1st cell for the enemies.
+#define CUSTOM_SPRITE_CELLS 				// Use your own sprite cell luts from custom_sprite_cells.h
+#define ENEMS_CELL_OFFSET 			16 		// If the above is defined, this is the 1st cell for the enemies.
 
 // ============================================================================
 // III. Screen configuration
@@ -117,14 +117,14 @@
 
 #define VIEWPORT_X					1		//
 #define VIEWPORT_Y					2		// Viewport character coordinates
-#define LIFE_X						4		//
-#define LIFE_Y						0		// Life gauge counter character coordinates
-#define OBJECTS_X					11		//
-#define OBJECTS_Y					0		// Objects counter character coordinates
+#define LIFE_X						7		//
+#define LIFE_Y						1		// Life gauge counter character coordinates
+#define OBJECTS_X					18		//
+#define OBJECTS_Y					1		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			9		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-#define KEYS_X						17		//
-#define KEYS_Y						0		// Keys counter character coordinates
+#define KEYS_X						28		//
+#define KEYS_Y						1		// Keys counter character coordinates
 //#define KILLED_X					20		//
 //#define KILLED_Y					21		// Kills counter character coordinates
 //#define ITEM_X 					7		// 
@@ -162,18 +162,18 @@
 #define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
 #define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
 
-#define PLAYER_VY_INICIAL_SALTO 192		// Initial junp velocity (64/64 = 1 píxel/frame)
-#define PLAYER_MAX_VY_SALTANDO	312 	// Max jump velocity (320/64 = 5 píxels/frame)
-#define PLAYER_INCR_SALTO		32		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
+#define PLAYER_VY_INICIAL_SALTO 64		// Initial junp velocity (64/64 = 1 píxel/frame)
+#define PLAYER_MAX_VY_SALTANDO	320 	// Max jump velocity (320/64 = 5 píxels/frame)
+#define PLAYER_INCR_SALTO		48		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
 #define PLAYER_INCR_JETPAC		32		// Vertical jetpac gauge
 #define PLAYER_MAX_VY_JETPAC	256 	// Max vertical jetpac speed
 
 // IV.2. Horizontal (side view) or general (top view) movement.
 
-#define PLAYER_MAX_VX			256 	// Max velocity (192/64 = 3 píxels/frame)
-#define PLAYER_AX				48		// Acceleration (24/64 = 0,375 píxels/frame^2)
-#define PLAYER_RX				64		// Friction (32/64 = 0,5 píxels/frame^2)
+#define PLAYER_MAX_VX			192 	// Max velocity (192/64 = 3 píxels/frame)
+#define PLAYER_AX				24		// Acceleration (24/64 = 0,375 píxels/frame^2)
+#define PLAYER_RX				32		// Friction (32/64 = 0,5 píxels/frame^2)
 
 // ============================================================================
 // V. Tile behaviour
@@ -191,8 +191,9 @@
 // 128|N = Special tile (scripting)
 
 unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 0, 0, 8, 8, 9, 8, 8, 8, 8, 8, 8, 8, 8,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 8, 8, 1, 8, 8,
+	8, 0, 8, 1, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8,
+	0, 0, 0, 0, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes
@@ -202,6 +203,5 @@ unsigned char comportamiento_tiles [] = {
 	#include "cpc/pal0.h"
 	#include "cpc/pal1.h"
 	#include "cpc/pal2.h"
-	#include "cpc/pal3.h"
 
 #endif

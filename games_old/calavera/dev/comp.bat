@@ -83,7 +83,7 @@ del %game%.sna > nul
 ..\utils\cpctbin2sna.exe %game%.bin 0x400 -pc 0x400 -o %game%.sna
 echo Output: %game%.sna
 
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal_loading.png mode=scr in=..\gfx\%om%\loading.png out=loading.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\%om%\pal_loading.png mode=scr in=..\gfx\%om%\loading.png out=loading.bin silent > nul
 ..\utils\zx7.exe loading.bin loading.c.bin > nul
 ..\utils\zx7.exe %game%.bin %game%.c.bin > nul
 

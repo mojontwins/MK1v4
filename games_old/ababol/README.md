@@ -50,11 +50,13 @@ Para Sir Ababol:
 
 ### PECES
 
-Los enemigos 1 a 4 serán los normales. Los enemigos 5 a 8 serán peces y se comportarán como lineales.
+Los enemigos 1 a 4 serán los normales. Los enemigos 5 a 7 serán peces y se comportarán como lineales.
 
 * definimos `ENABLE_CUSTOM_ENEMS`  
 * En `extra_enems_move` capturamos los nuevos tipos y simplemente llamamos a `en_lineal_do`. 
-* Calculamos `en_an_next_frame` de forma custom para que miren a izquierda y derecha.
+* Calculamos `en_an_next_frame` de forma custom para que miren a izquierda y derecha:
+	* Los enemigos 5 y 6 se comportan igual que los 1-4, es decir, dos frames alternando.
+	* El enemigo tipo 7 mira a izq. y der. usando `ENEMS_CELL_OFFSET + 12 + facing * 2 + frame`
 
 ## Cosas: el cambio de motor
 
@@ -63,3 +65,12 @@ Así lo vamos a hacer:
 * Activamos `PLAYER_CUSTOM_VENG` - Con esto hacemos que se llame a `player_custom_veng` en `custom.h` para todo el eje vertical, incluyendo gravedad y saltos, pero no colisión. 
 * Poner una guarda que seleccione el tipo de eje en `player_custom_veng` (`if (n_pant < 40)`) y replicar el código vanilla (gravedad y salto). En el `else`tendré que implementar el código de nadal. Pasar a ensamble lo que había en Sir Ababol DX.
 * Norvidarse de modificar el cell, habrá que activar `PLAYER_CUSTOM_FRAME` e implementar la lógica en `player_custom_frame` de `custom.h`
+
+## Paletas
+
+Hay cuatro paletas en juego: 
+
+* pal.png se usa sólo para convertir los gráficos, y es la de rojo, naranja, gris. Norvidarse de poner todos los gráficos con esta paleta!
+* pal.png -> pal_general.h
+* pal-marco.png es la paleta principal y se utilizará para pintar el marco antes del split -> pal_hud.h
+* pal-fuera.png, pal-cueva.png y pal-agua.png se utilizarán tras el split en las filas 0, 1 y 2 del mapa.

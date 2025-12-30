@@ -8,10 +8,14 @@
 
 unsigned char sm_cox [] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 unsigned char sm_coy [] = {
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
@@ -20,10 +24,18 @@ void *sm_invfunc [] = {
 	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, 
 	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, 
 	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, 
+	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, 
+	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, 
+	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, 
+	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, 
 	cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1, cpc_PutSpTileMap16x16PxM1
 };
 
 void *sm_updfunc [] = {
+	cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, 
+	cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, 
+	cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, 
+	cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, 
 	cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, 
 	cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, 
 	cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, cpc_PutTrSp16x16TileMapPxM1LUT, 
@@ -37,6 +49,10 @@ extern void *sm_sprptr [0];
 		defw _sprites + 0x0100, _sprites + 0x0140, _sprites + 0x0180, _sprites + 0x01C0
 		defw _sprites + 0x0200, _sprites + 0x0240, _sprites + 0x0280, _sprites + 0x02C0
 		defw _sprites + 0x0300, _sprites + 0x0340, _sprites + 0x0380, _sprites + 0x03C0
+		defw _sprites + 0x0400, _sprites + 0x0440, _sprites + 0x0480, _sprites + 0x04C0
+		defw _sprites + 0x0500, _sprites + 0x0540, _sprites + 0x0580, _sprites + 0x05C0
+		defw _sprites + 0x0600, _sprites + 0x0640, _sprites + 0x0680, _sprites + 0x06C0
+		defw _sprites + 0x0700, _sprites + 0x0740, _sprites + 0x0780, _sprites + 0x07C0
 #endasm
 
 // A list of MK1v4-friendly macros
@@ -56,4 +72,20 @@ extern void *sm_sprptr [0];
 #define SPRITE_0D (_sprites + 0x0340)
 #define SPRITE_0E (_sprites + 0x0380)
 #define SPRITE_0F (_sprites + 0x03C0)
+#define SPRITE_10 (_sprites + 0x0400)
+#define SPRITE_11 (_sprites + 0x0440)
+#define SPRITE_12 (_sprites + 0x0480)
+#define SPRITE_13 (_sprites + 0x04C0)
+#define SPRITE_14 (_sprites + 0x0500)
+#define SPRITE_15 (_sprites + 0x0540)
+#define SPRITE_16 (_sprites + 0x0580)
+#define SPRITE_17 (_sprites + 0x05C0)
+#define SPRITE_18 (_sprites + 0x0600)
+#define SPRITE_19 (_sprites + 0x0640)
+#define SPRITE_1A (_sprites + 0x0680)
+#define SPRITE_1B (_sprites + 0x06C0)
+#define SPRITE_1C (_sprites + 0x0700)
+#define SPRITE_1D (_sprites + 0x0740)
+#define SPRITE_1E (_sprites + 0x0780)
+#define SPRITE_1F (_sprites + 0x07C0)
 
