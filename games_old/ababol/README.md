@@ -65,6 +65,8 @@ Así lo vamos a hacer:
 * Activamos `PLAYER_CUSTOM_VENG` - Con esto hacemos que se llame a `player_custom_veng` en `custom.h` para todo el eje vertical, incluyendo gravedad y saltos, pero no colisión. 
 * Poner una guarda que seleccione el tipo de eje en `player_custom_veng` (`if (n_pant < 40)`) y replicar el código vanilla (gravedad y salto). En el `else`tendré que implementar el código de nadal. Pasar a ensamble lo que había en Sir Ababol DX.
 * Norvidarse de modificar el cell, habrá que activar `PLAYER_CUSTOM_FRAME` e implementar la lógica en `player_custom_frame` de `custom.h`
+* Ver cómo hacer para que haya un thrust extra al cambiar de `n_pant` >= 40 a `n_pant` < 40. En este engine no hay custom para el entering así que tendré que inventarme algo. Creo que puedo hacerlo en el scripting tal y como está.
+
 
 ## Paletas
 
