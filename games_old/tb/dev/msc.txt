@@ -61,7 +61,7 @@ T2=[=]
 T3=[0]
 Parsing: TEXT "NO SE COMO SE ASE, AIUDA PLIS!"
 T0=[TEXT]
-T1=[NO SE COMO SE ASE, AIUDA PLIS ! ]
+T1=[NO SE COMO SE ASE, AIUDA PLIS!]
 Parsing: SOUND 2
 T0=[SOUND]
 T1=[2]
@@ -69,7 +69,7 @@ Parsing: %TALK_FLAG = 1
 T0=[$0]
 T1=[=]
 T2=[1]
-Bytecode: 33 01 FF EE 03 01 FF 00 00 FF E3 21 4E 4F 20 53 45 20 43 4F 4D 4F 20 53 45 20 41 53 45 2C 20 41 49 55 44 41 20 50 4C 49 53 20 21 20 00 E0 02 00 00 01 FF FF 
+Bytecode: 31 01 FF EE 03 01 FF 00 00 FF E3 1F 4E 4F 20 53 45 20 43 4F 4D 4F 20 53 45 20 41 53 45 2C 20 41 49 55 44 41 20 50 4C 49 53 21 00 E0 02 00 00 01 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 2, 7, 12, 17
 T0=[entering]
@@ -78,10 +78,10 @@ T2=[2]
 T3=[7]
 T4=[12]
 T5=[17]
-Adding 104 @ sect 20
-Adding 104 @ sect 30
-Adding 104 @ sect 40
-Adding 104 @ sect 50
+Adding 102 @ sect 20
+Adding 102 @ sect 30
+Adding 102 @ sect 40
+Adding 102 @ sect 50
 Parsing: IF TRUE
 T0=[IF]
 T1=[TRUE]
@@ -113,10 +113,10 @@ T4=[2]
 T5=[7]
 T6=[12]
 T7=[17]
-Adding 150 @ sect 21
-Adding 150 @ sect 31
-Adding 150 @ sect 41
-Adding 150 @ sect 51
+Adding 148 @ sect 21
+Adding 148 @ sect 31
+Adding 148 @ sect 41
+Adding 148 @ sect 51
 Parsing: IF OBJS = 1
 T0=[IF]
 T1=[$250]
@@ -145,7 +145,7 @@ LINEA ENTERING SCREEN 15
 T0=[entering]
 T1=[screen]
 T2=[15]
-Adding 169 @ sect 46
+Adding 167 @ sect 46
 Parsing: IF KILLED = 25
 T0=[IF]
 T1=[$251]
@@ -164,14 +164,14 @@ T0=[IF]
 T1=[TRUE]
 Parsing: TEXT " HAZ TUS COSAS Y VUELVE AQUI!"
 T0=[TEXT]
-T1=[ HAZ TUS COSAS Y VUELVE AQUI ! ]
-Bytecode: 0C 01 FF FB 19 01 FF 01 0F FF F0 FF 26 F0 FF E3 20 20 48 41 5A 20 54 55 53 20 43 4F 53 41 53 20 59 20 56 55 45 4C 56 45 20 41 51 55 49 20 21 20 00 FF FF 
+T1=[ HAZ TUS COSAS Y VUELVE AQUI!]
+Bytecode: 0C 01 FF FB 19 01 FF 01 0F FF F0 FF 24 F0 FF E3 1E 20 48 41 5A 20 54 55 53 20 43 4F 53 41 53 20 59 20 56 55 45 4C 56 45 20 41 51 55 49 21 00 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 16
 T0=[entering]
 T1=[screen]
 T2=[16]
-Adding 220 @ sect 48
+Adding 216 @ sect 48
 Parsing: IF TRUE
 T0=[IF]
 T1=[TRUE]
@@ -180,5 +180,7 @@ T0=[TEXT]
 T1=[ CAPTURA A TODOS LOS BECARIOS]
 Bytecode: 24 F0 FF E3 1E 20 43 41 50 54 55 52 41 20 41 20 54 4F 44 4F 53 20 4C 4F 53 20 42 45 43 41 52 49 4F 53 00 FF FF 
 Index section: 112 bytes
-Bytecode section: 257 bytes
-Wrote 369 bytes to script.spt.bin
+Bytecode section: 253 bytes
+Wrote 365 bytes to script.spt.bin
+Writing interpreter
+DONE!
