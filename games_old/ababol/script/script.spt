@@ -2,13 +2,24 @@
 # Copyleft 201X tu grupo roneón soft.
 # MTE MK1 3.1
 
-# flags:
-# 1	- 
+
 
 ENTERING GAME
 	IF TRUE
 	THEN
-		SET FLAG 1 = 0
+		%WATER = 0
 	END
 END
 
+ENTERING ANY
+	IF NPANT >= 40
+	THEN
+		%WATER = 1
+		BREAK
+	END
+
+	IF %WATER = 1
+	THEN
+		%WATER = 0
+		
+END 
