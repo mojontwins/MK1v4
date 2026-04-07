@@ -215,12 +215,59 @@
 	void extra_enems_init (void) {
 		// Runs for each enemy when entering a new screen. You should check _en_t
 		// Current malote is malotes [enoffsmasi], iterator is enit
+		if (_en_t >= 5  && _en_t < 8)  {
+			enems_en_an_calc (_en_t - 1);
+		}
 	}
 
 	void extra_enems_move (void) {
 		// Check _en_t and update your custom enemies. When you are finished. 
 		// Current enemy vars are copied to temporary _en_x, _en_y, etc
 		// write a proper frame pointer to en_an_next_frame
+		if (_en_t >= 5 && _en_t < 8) {
+			#asm
+				call en_lineal_do
+			#endasm
+
+			if (_en_t == 7) {
+				// Look right if going right
+				if (_en_mx > 0 || _en_my > 0) {
+					// en_an_next_frame [enit] = sprite_cells [en_an_base_frame [enit] + en_an_frame [enit] + 2];
+					#asm
+							ld  a, (_enit)
+							sla a
+							ld  b, 0
+							ld  c, a
+							ld  hl, _en_an_next_frame
+							add hl, bc
+						
+							push hl 		// en_an_next_frame [enit]
+							
+							ld  bc, (_enit)
+							ld  b, 0
+							
+							ld  hl, _en_an_frame
+							add hl, bc
+							ld  a, (hl)
+
+							ld  hl, _en_an_base_frame
+							add hl, bc
+							add a, (hl)
+							add 2 			// + 2
+
+							sla a 			// This will work in 8 bit. Always few frames max.			
+							ld  c, a 		// B is already 0
+							ld  hl, _sprite_cells
+
+							add hl, bc 		// HL -> sprite_cells [...]
+							pop de 			// DE -> en_an_next_frame [enit]
+
+							ldi
+							ldi
+					#endasm
+				}
+			}
+		}
 	}
 
 	void extra_enems_checks (void) {

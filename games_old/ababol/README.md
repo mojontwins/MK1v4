@@ -53,6 +53,7 @@ Para Sir Ababol:
 Los enemigos 1 a 4 serán los normales. Los enemigos 5 a 7 serán peces y se comportarán como lineales.
 
 * definimos `ENABLE_CUSTOM_ENEMS`  
+* En `extra_enems_init` capturamos los nuevos tipos y llamamos a `enems_en_an_calc (en_t - 1);
 * En `extra_enems_move` capturamos los nuevos tipos y simplemente llamamos a `en_lineal_do`. 
 * Calculamos `en_an_next_frame` de forma custom para que miren a izquierda y derecha:
 	* Los enemigos 5 y 6 se comportan igual que los 1-4, es decir, dos frames alternando.
