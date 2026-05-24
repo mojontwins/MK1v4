@@ -448,7 +448,7 @@ unsigned char comportamiento_tiles [] = {
 
 #define NUM_SWORD_FRAMES 4
 #define MIN_SWORD_HIT_FRAME 0
-#define MAX_SWORD_HIT_FRAME 2
+#define MAX_SWORD_HIT_FRAME 3
 
 #ifdef ENABLE_SWORD
 	unsigned char swoffs_x [] = {  8, 16, 13, 10 };
