@@ -23,6 +23,8 @@ Esta es una lista de donde voy a poner las llaves:
 
 El sistema de inventario será el de Cheril Perils (el Inventario Cutre MSC4 (TM)).
 
+Los tiles para las llaves son 36+N (37...) y para los cerrojos 41+N (42 ...)
+
 Todos los cambios entre `n_pant < 40` y `n_pant >= 40` deben interceptarse para cambiar el tipo de motor y el sprite. O mirar cuál sería la mejor forma de hacerlo. A fin de cuentas hay que hacer una comprobación, bastaría con poner un if (n_pant < 40) para el eje vertical normal `else` el otro, y lo mismo para el frame. 
 
 Lo que sí habrá que hacer es dar un boost al pasar desde n_pant >= 40 a la fila superior para poder escapar del agua.

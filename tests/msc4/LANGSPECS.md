@@ -295,3 +295,7 @@ Debido a que en el bytecode se inserta directamente el offset del texto actual, 
 A la hora de interpretar, el archivo de integración `msci.h` contendrá una función `msc_decode_text` que tomará el offset, decodificará el texto correcto en un buffer situado a partir de lo que diga la constante `MSC_TEXT_BUFFER` y llamará a la función `text_box` de `extern.h`, que el programador deberá escribir teniendo en cuenta que en `MSC_TEXT_BUFFER` ya estará el texto listo para mostrar en ASCII.
 
 El encoder hará word-wrap automáticamente cada 24 caracteres, pero el ancho de la linea se puede configurar con la directiva `TEXT WIDTH = N` al principio del script.
+
+# Indirección
+
+&%ALIAS producirá el número real del flag.

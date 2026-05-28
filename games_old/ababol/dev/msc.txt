@@ -1,0 +1,335 @@
+msc v4.1.20260528 ~ Processing ..\script\script.spt
+==========================================
+LINEA ROOMS = 60
+T0=[rooms]
+T1=[=]
+T2=[60]
+==========================================
+LINEA ITEM SLOT = 0
+T0=[item]
+T1=[slot]
+T2=[=]
+T3=[0]
+Item slot set to 0
+==========================================
+LINEA ITEM EMPTY = 47
+T0=[item]
+T1=[empty]
+T2=[=]
+T3=[47]
+Item empty set to 47
+==========================================
+LINEA ALIAS %CARRYING = 0
+T0=[alias]
+T1=[%carrying]
+T2=[=]
+T3=[0]
+Set alias %carrying for flag $0
+==========================================
+LINEA ENTERING GAME
+T0=[entering]
+T1=[game]
+Adding 0 @ sect 0
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: # Init inventory
+Parsing: %CARRYING = EMPTY
+T0=[$0]
+T1=[=]
+T2=[47]
+Parsing: # Close special gates
+Parsing: %GATE1 = 0
+T0=[$1]
+T1=[=]
+T2=[0]
+Parsing: %GATE2 = 0
+T0=[$2]
+T1=[=]
+T2=[0]
+Parsing: %GATE3 = 0
+T0=[$3]
+T1=[=]
+T2=[0]
+Parsing: %GATE4 = 0
+T0=[$4]
+T1=[=]
+T2=[0]
+Parsing: %GATE5 = 0
+T0=[$5]
+T1=[=]
+T2=[0]
+Parsing: # Medallions not taken
+Parsing: %MEDA1 = 0
+T0=[$6]
+T1=[=]
+T2=[0]
+Parsing: %MEDA2 = 0
+T0=[$7]
+T1=[=]
+T2=[0]
+Parsing: %MEDA3 = 0
+T0=[$8]
+T1=[=]
+T2=[0]
+Parsing: %MEDA4 = 0
+T0=[$9]
+T1=[=]
+T2=[0]
+Parsing: %MEDA5 = 0
+T0=[$10]
+T1=[=]
+T2=[0]
+Bytecode: 25 F0 FF 00 00 2F 00 01 00 00 02 00 00 03 00 00 04 00 00 05 00 00 06 00 00 07 00 00 08 00 00 09 00 00 0A 00 FF FF 
+==========================================
+LINEA ENTERING ANY
+T0=[entering]
+T1=[any]
+Adding 38 @ sect 1
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Parsing: %MX = 0
+T0=[$11]
+T1=[=]
+T2=[0]
+Parsing: %MY = 0
+T0=[$12]
+T1=[=]
+T2=[0]
+Parsing: %GX = 0
+T0=[$13]
+T1=[=]
+T2=[0]
+Parsing: %GY = 0
+T0=[$14]
+T1=[=]
+T2=[0]
+Parsing: %K = 0
+T0=[$15]
+T1=[=]
+T2=[0]
+Parsing: %G = 0
+T0=[$16]
+T1=[=]
+T2=[0]
+Bytecode: 16 F0 FF 00 0B 00 00 0C 00 00 0D 00 00 0E 00 00 0F 00 00 10 00 FF FF 
+==========================================
+LINEA ENTERING SCREEN 22
+T0=[entering]
+T1=[screen]
+T2=[22]
+Adding 61 @ sect 60
+Parsing: IF %GATE1 = 0
+T0=[IF]
+T1=[$1]
+T2=[=]
+T3=[0]
+Parsing: SET TILE (13, 8) = 42
+T0=[SET]
+T1=[TILE]
+T2=[13]
+T3=[8]
+T4=[=]
+T5=[42]
+Parsing: %GX = 13
+T0=[$13]
+T1=[=]
+T2=[13]
+Parsing: %GY = 8
+T0=[$14]
+T1=[=]
+T2=[8]
+Parsing: %K = 37
+T0=[$15]
+T1=[=]
+T2=[37]
+Parsing: %G = &%GATE1
+T0=[$16]
+T1=[=]
+T2=[1]
+Bytecode: 17 01 FF 01 00 FF 20 0D 08 2A 00 0D 0D 00 0E 08 00 0F 25 00 10 01 FF FF 
+==========================================
+LINEA ENTERING SCREEN 31
+T0=[entering]
+T1=[screen]
+T2=[31]
+Adding 85 @ sect 78
+Parsing: IF %GATE2 = 0
+T0=[IF]
+T1=[$2]
+T2=[=]
+T3=[0]
+Parsing: SET TILE (11, 1) = 43
+T0=[SET]
+T1=[TILE]
+T2=[11]
+T3=[1]
+T4=[=]
+T5=[43]
+Parsing: %GX = 11
+T0=[$13]
+T1=[=]
+T2=[11]
+Parsing: %GY = 1
+T0=[$14]
+T1=[=]
+T2=[1]
+Parsing: %K = 38
+T0=[$15]
+T1=[=]
+T2=[38]
+Parsing: %G = &%GATE2
+T0=[$16]
+T1=[=]
+T2=[2]
+Bytecode: 17 01 FF 02 00 FF 20 0B 01 2B 00 0D 0B 00 0E 01 00 0F 26 00 10 02 FF FF 
+==========================================
+LINEA ENTERING SCREEN 15
+T0=[entering]
+T1=[screen]
+T2=[15]
+Adding 109 @ sect 46
+Parsing: IF %GATE3 = 0
+T0=[IF]
+T1=[$3]
+T2=[=]
+T3=[0]
+Parsing: SET TILE (7, 8) = 44
+T0=[SET]
+T1=[TILE]
+T2=[7]
+T3=[8]
+T4=[=]
+T5=[44]
+Parsing: %GX = 7
+T0=[$13]
+T1=[=]
+T2=[7]
+Parsing: %GY = 8
+T0=[$14]
+T1=[=]
+T2=[8]
+Parsing: %K = 39
+T0=[$15]
+T1=[=]
+T2=[39]
+Parsing: %G = &%GATE3
+T0=[$16]
+T1=[=]
+T2=[3]
+Bytecode: 17 01 FF 03 00 FF 20 07 08 2C 00 0D 07 00 0E 08 00 0F 27 00 10 03 FF FF 
+==========================================
+LINEA ENTERING SCREEN 19
+T0=[entering]
+T1=[screen]
+T2=[19]
+Adding 133 @ sect 54
+Parsing: IF %GATE4 = 0
+T0=[IF]
+T1=[$4]
+T2=[=]
+T3=[0]
+Parsing: SET TILE (3, 7) = 45
+T0=[SET]
+T1=[TILE]
+T2=[3]
+T3=[7]
+T4=[=]
+T5=[45]
+Parsing: %GX = 3
+T0=[$13]
+T1=[=]
+T2=[3]
+Parsing: %GY = 7
+T0=[$14]
+T1=[=]
+T2=[7]
+Parsing: %K = 40
+T0=[$15]
+T1=[=]
+T2=[40]
+Parsing: %G = &%GATE4
+T0=[$16]
+T1=[=]
+T2=[4]
+Bytecode: 17 01 FF 04 00 FF 20 03 07 2D 00 0D 03 00 0E 07 00 0F 28 00 10 04 FF FF 
+==========================================
+LINEA PRESS FIRE AT ANY
+T0=[press]
+T1=[fire]
+T2=[at]
+T3=[any]
+Adding 157 @ sect 2
+Parsing: IF %GX <> 0
+T0=[IF]
+T1=[$13]
+T2=[<>]
+T3=[0]
+Parsing: IF PLAYER TOUCHES (%GX, %GY)
+T0=[IF]
+T1=[PLAYER]
+T2=[TOUCHES]
+T3=[$13]
+T4=[$14]
+Parsing: IF %CARRYING = %K
+T0=[IF]
+T1=[$0]
+T2=[=]
+T3=[$15]
+Parsing: # Clear inventory
+Parsing: %CARRYING = EMPTY
+T0=[$0]
+T1=[=]
+T2=[47]
+Parsing: # Delete tile
+Parsing: SET TILE (%GX, %GY), 0
+T0=[SET]
+T1=[TILE]
+T2=[$13]
+T3=[$14]
+T4=[0]
+Parsing: # Set the right GATE flag.
+Parsing: FLAG %G = 1
+T0=[$$16]
+T1=[=]
+T2=[1]
+Parsing: IF %MX <> 0
+T0=[IF]
+T1=[$11]
+T2=[<>]
+T3=[0]
+Parsing: IF PLAYER TOUCHES (%MX, %MY)
+T0=[IF]
+T1=[PLAYER]
+T2=[TOUCHES]
+T3=[$11]
+T4=[$12]
+Parsing: IF %CARRYING = EMPTY
+T0=[IF]
+T1=[$0]
+T2=[=]
+T3=[47]
+Parsing: # Get medallion
+Parsing: %CARRYING = %K
+T0=[$0]
+T1=[=]
+T2=[$15]
+Parsing: # Delete tile
+Parsing: SET TILE (MX%, MY%), 0
+T0=[SET]
+T1=[TILE]
+T2=[MX%]
+T3=[MY%]
+T4=[0]
+Parsing: # Set the right MEDALLION flag
+Parsing: FLAG %G = 1
+T0=[$$16]
+T1=[=]
+T2=[1]
+Bytecode: 1E 04 FF 0D 00 23 FF 0D FF 0E 01 FF 00 FF 0F FF 00 00 2F 20 FF 0D FF 0E 00 00 FF 10 01 FF 1C 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 00 00 FF 0F 20 00 00 00 00 FF 10 01 FF FF 
+Index section: 272 bytes
+Bytecode section: 216 bytes
+Wrote 488 bytes to ..\script\script.spt.bin
+Writing interpreter
+DONE!

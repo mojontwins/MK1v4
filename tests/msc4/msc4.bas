@@ -154,10 +154,13 @@ Sub parseScriptLine (linea As String)
 	parseTokenizeString linea, tokens (), ",()[]", "#"
 
 	' Process to solve %ALIAS -> $n
+	' Also to solve &%ALIAS -> n
 	' Also do special vars here
 	i = 0: While i < uBound (tokens) And tokens (i) <> ""
 		If Len(tokens(i)) > 1 And Left (tokens (i), 1) = "%" Then 
 			tokens (i) = "$" & addOrResolveAlias (Right (tokens (i), Len (tokens (i)) - 1))
+		ElseIf Len(tokens(i)) > 2 And Left (tokens(i), 2) = "&%" Then
+			tokens(i) = Str (addOrResolveAlias (Right (tokens (i), Len (tokens (i)) - 2)))
 		ElseIf Ucase(tokens(i)) = "NPANT" Or Ucase(tokens (i)) = "N_PANT" Then
 			tokens (i) = "$254"
 		ElseIf Ucase(tokens (i)) = "PX" Then 
@@ -1086,7 +1089,7 @@ Dim As Integer fIn, fOut, i
 Dim As String fileIns(127)
 Dim As String fileText
 
-Print "msc v4.1.20250604 ~ ";
+Print "msc v4.1.20260528 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 

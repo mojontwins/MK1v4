@@ -1,25 +1,134 @@
-# Título tonto
-# Copyleft 201X tu grupo roneón soft.
-# MTE MK1 3.1
+# Script Abadol!
 
+ROOMS = 60
+ITEM SLOT = 0
+ITEM EMPTY = 47
 
+# Explicitly set %CARRYING to ITEM SLOT (FLAG 0).
+ALIAS %CARRYING = 0
+
+# Gates and medallions should have bit 7 raised in behs
 
 ENTERING GAME
-	IF TRUE
+	IF TRUE 
 	THEN
-		%WATER = 0
+		# Init inventory
+		%CARRYING = EMPTY
+
+		# Close special gates
+		%GATE1 = 0
+		%GATE2 = 0
+		%GATE3 = 0
+		%GATE4 = 0
+		%GATE5 = 0
+
+		# Medallions not taken
+		%MEDA1 = 0
+		%MEDA2 = 0
+		%MEDA3 = 0
+		%MEDA4 = 0
+		%MEDA5 = 0
 	END
 END
 
 ENTERING ANY
-	IF NPANT >= 40
+	# Reset coordinates of special shit
+	IF TRUE
 	THEN
-		%WATER = 1
-		BREAK
+		%MX = 0
+		%MY = 0
+		%GX = 0
+		%GY = 0
+		%K = 0
+		%G = 0
+	END
+END
+
+# Draw medallions
+# Note how we use & to know the actual flag #
+
+# Draw gates
+# Note how we use & to know the actual flag #
+
+ENTERING SCREEN 22
+	IF %GATE1 = 0
+	THEN
+		SET TILE (13, 8) = 42
+		%GX = 13
+		%GY = 8
+		%K = 37
+		%G = &%GATE1
+	END
+END 
+
+ENTERING SCREEN 31
+	IF %GATE2 = 0
+	THEN
+		SET TILE (11, 1) = 43
+		%GX = 11
+		%GY = 1
+		%K = 38
+		%G = &%GATE2
+	END
+END 
+
+ENTERING SCREEN 15
+	IF %GATE3 = 0
+	THEN
+		SET TILE (7, 8) = 44
+		%GX = 7
+		%GY = 8
+		%K = 39
+		%G = &%GATE3
+	END
+END 
+
+ENTERING SCREEN 19
+	IF %GATE4 = 0
+	THEN
+		SET TILE (3, 7) = 45
+		%GX = 3
+		%GY = 7
+		%K = 40
+		%G = &%GATE4
+	END
+END 
+
+# Open gates
+# This is automated. 
+# - If %GX != 0 there's a gate in this screen.
+# - If you are touching the gate and carrying %K, you open the gate.
+# Gate is FLAG %G or $%G
+
+# Get medallions
+# Works the same way
+
+PRESS FIRE AT ANY
+	IF %GX <> 0
+	IF PLAYER TOUCHES (%GX, %GY)
+	IF %CARRYING = %K
+	THEN
+		# Clear inventory 
+		%CARRYING = EMPTY
+
+		# Delete tile
+		SET TILE (%GX, %GY), 0
+
+		# Set the right GATE flag.
+		FLAG %G = 1
 	END
 
-	IF %WATER = 1
+	IF %MX <> 0
+	IF PLAYER TOUCHES (%MX, %MY)
+	IF %CARRYING = EMPTY
 	THEN
-		%WATER = 0
-		
-END 
+		# Get medallion
+		%CARRYING = %K
+
+		# Delete tile
+		SET TILE (MX%, MY%), 0
+
+		# Set the right MEDALLION flag
+		FLAG %G = 1
+	END
+END
