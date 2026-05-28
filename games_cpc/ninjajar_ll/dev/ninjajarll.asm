@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sun Apr 06 09:45:07 2025
+;	Module compile time: Sun May 24 09:03:38 2026
 
 
 
@@ -4061,7 +4061,7 @@
 	ld a, (_s_frame)
 	cp 0
 	jr c, sword_breakable_done
-	cp 2
+	cp 3
 	jr nc, sword_breakable_done
 	ld h, 0
 	ld a, (_s_hit_x)
@@ -6089,7 +6089,7 @@
 	jp	c,i_100
 .i_100_uge
 	ld	a,(_s_frame)
-	cp	#(2 % 256)
+	cp	#(3 % 256)
 	jp	z,i_100
 	jr	c,i_101_i_100
 .i_100
@@ -6931,8 +6931,8 @@
 ._rdy	defs	1
 ._pti	defs	1
 ._ptj	defs	1
-._s_type	defs	1
 ._new_level	defs	1
+._s_type	defs	1
 ._enoffsmasi	defs	2
 ._game_loop_flag	defs	1
 ._latest_hotspot	defs	1
@@ -6953,8 +6953,11 @@
 	XDEF	__en_y
 	XDEF	_isr_player_on
 	XDEF	_hotspots
-	XDEF	_abs_a
+	LIB	cpc_PutTrSp8x8TileMapPxM1
+	LIB	cpc_PutTrSp16x16TileMapPxM1
+	LIB	cpc_PutTrSp16x24TileMapPxM1
 	XDEF	_draw_scr
+	XDEF	_abs_a
 	XDEF	_spr_next
 	defc	_spr_next	=	58960
 	XDEF	_wyz_play_music
@@ -6996,8 +6999,6 @@
 	LIB	cpc_SetModo
 	XDEF	_en_cy
 	XDEF	_adjust_to_tile_x
-	LIB	cpc_PutMaskSpriteTileMap
-	LIB	cpc_PutTrSpriteTileMap
 	XDEF	_adjust_to_tile_y
 	XDEF	_en_an_state
 	defc	_en_an_state	=	54829
@@ -7006,8 +7007,6 @@
 	XDEF	_mueve_bicharracos
 	XDEF	_gp_gen_alt
 	XDEF	_ts0_behs
-	LIB	cpc_PutTrSp8x16TileMapGPxP
-	LIB	cpc_PutTrSp8x24TileMapGPxP
 	LIB	cpc_ShowTouchedTiles2
 	XDEF	_hook_system_inits
 	LIB	cpc_SetTile
@@ -7045,13 +7044,13 @@
 	XDEF	_wyz_beat_ct
 	XDEF	_hook_hotspots
 	XDEF	_t_alt
-	LIB	cpc_PutTrSp8x8TileMapPxM1
-	LIB	cpc_PutTrSp16x16TileMapPxM1
-	LIB	cpc_PutTrSp16x24TileMapPxM1
 	LIB	cpc_ShowScrTileMap2
 	LIB	cpc_Uncrunch
 	XDEF	_cpc_UpdateNow
 	XDEF	_espera_activa
+	LIB	cpc_PutTrSp2Bx8TileMapG
+	LIB	cpc_PutTrSp4Bx16TileMapG
+	LIB	cpc_PutTrSp4Bx24TileMapG
 	LIB	cpc_SpRLM1
 	XDEF	__n
 	XDEF	_title_screen
@@ -7065,23 +7064,22 @@
 	XDEF	_wyz_init
 	LIB	cpc_PrintGphStrXY2X
 	XDEF	_life_old
-	LIB	cpc_PutTrSp2Bx8TileMapG
-	LIB	cpc_PutTrSp4Bx16TileMapG
-	LIB	cpc_PutTrSp4Bx24TileMapG
 	LIB	cpc_SpRRM1
 	XDEF	_enems_en_an_calc
 	XDEF	_custom_map_pointer_calculator
 	XDEF	_sm_sprptr
 	LIB	cpc_PrintGphStrXYM1
+	LIB	cpc_PutTrSp12x24TileMapGCA
 	XDEF	_s_frame
 	XDEF	_fall_box
 	LIB	cpc_UpdScrP
 	LIB	cpc_PutSpriteXOR
-	LIB	cpc_PutTrSp16x16TileMapGPxM1
 	LIB	cpc_TestKey
 	LIB	cpc_PutSprite
-	LIB	cpc_PutSPTileMap2Bx8
-	LIB	cpc_PutSpTileMap
+	XDEF	cpc_PutSpTileMap
+	LIB	cpc_PutTrSpTileMap
+	LIB	cpc_PutORSpTileMap
+	LIB	cpc_PutCpSpTileMap
 	LIB	cpc_InitTileMap
 	XDEF	_s_hit_x
 	XDEF	_s_hit_y
@@ -7089,6 +7087,8 @@
 	LIB	cpc_PutSpTileMap8x16Px
 	LIB	cpc_PutSpTileMap8x24Px
 	XDEF	_enemy_killer
+	LIB	cpc_PutSPTileMap4Bx16
+	LIB	cpc_PutSPTileMap4Bx24
 	XDEF	_sp_sw
 	defc	_sp_sw	=	58880
 	XDEF	_draw_and_advance
@@ -7107,6 +7107,9 @@
 	XDEF	_clear_persistent
 	XDEF	_l_scr_ini
 	XDEF	_hook_just_died
+	LIB	cpc_PutTrSp4x8TileMapGPx
+	LIB	cpc_PutTrSp8x16TileMapGPx
+	LIB	cpc_PutTrSp8x24TileMapGPx
 	XDEF	_init_player
 	XDEF	_gp_gen
 	XDEF	_spr_x
@@ -7118,7 +7121,6 @@
 	XDEF	_render_this_enemy
 	XDEF	_enoffs
 	LIB	cpc_PutSpTr
-	LIB	cpc_PutTrSp12x24TileMapGCA
 	XDEF	_pad_this_frame
 	LIB	cpc_DisableFirmware
 	LIB	cpc_EnableFirmware
@@ -7147,19 +7149,16 @@
 	XDEF	_draw_rectangle
 	LIB	cpc_RRI
 	LIB	cpc_GetSp
-	LIB	cpc_PutTrSp4x8TileMapGPx
-	LIB	cpc_PutTrSp8x16TileMapGPx
-	LIB	cpc_PutTrSp8x24TileMapGPx
+	XDEF	_init_malotes
 	XDEF	_enit
+	XDEF	_collide_enem
 	LIB	cpc_SpUpdX
 	LIB	cpc_SpUpdY
 	LIB	cpc_PutTile4x16
 	XDEF	_hook_mainloop
-	XDEF	_collide_enem
-	XDEF	_init_malotes
+	XDEF	_main
 	XDEF	_actualiza_breakables
 	XDEF	_add_to_breakables
-	XDEF	_main
 	XDEF	_draw_coloured_tile
 	XDEF	_attr
 	XDEF	_player_cells
@@ -7198,23 +7197,19 @@
 	XDEF	_safe_x
 	XDEF	_safe_y
 	XDEF	_maincounter
+	LIB	cpc_PutTrSp2Bx8TileMap
+	LIB	cpc_PutTrSp4Bx16TileMap
+	LIB	cpc_PutTrSp4Bx24TileMap
 	XDEF	_rdmt
 	XDEF	_ptx1
 	XDEF	_ptx2
 	XDEF	_pty1
 	XDEF	_pty2
 	XDEF	_move
-	LIB	cpc_PutMaskSpTileMap
-	LIB	cpc_PutTrSpTileMap
-	LIB	cpc_PutORSpTileMap
-	LIB	cpc_PutSpTileMap
-	LIB	cpc_PutCpSpTileMap
-	LIB	cpc_PutTrSp2Bx8TileMap
-	LIB	cpc_UpdScr
-	LIB	cpc_PutTrSp4Bx16TileMap
-	LIB	cpc_PutTrSp4Bx24TileMap
 	XDEF	_wall
 	XDEF	_enems_hotspotss
+	LIB	cpc_UpdScr
+	LIB	cpc_PutTrSp16x16TileMapPxM1LUT
 	XDEF	_custom_flick_screen_handler
 	XDEF	_calc_persist_base
 	XDEF	_en_an_next_frame
@@ -7224,6 +7219,7 @@
 	XDEF	_hotspot_t_r
 	XDEF	_my_inks
 	XDEF	__x2
+	LIB	cpc_PutSPTileMap2Bx8
 	XDEF	__y2
 	LIB	cpc_AnyKeyPressed
 	XDEF	__en_life
@@ -7247,6 +7243,11 @@
 	LIB	cpc_PrintGphStr
 	XDEF	_s_ending
 	XDEF	_game_ending
+	LIB	cpc_MakeM1RotationLUTs
+	LIB	cpc_PutTrSp4x8TileMapPx
+	LIB	cpc_PutTrSp8x8TileMapPx
+	LIB	cpc_PutTrSp8x16TileMapPx
+	LIB	cpc_PutTrSp8x24TileMapPx
 	LIB	cpc_UnExo
 	XDEF	_process_breakable
 	XDEF	_init_breakable
@@ -7264,6 +7265,8 @@
 	XDEF	_ts1
 	XDEF	_ts2
 	XDEF	_jetpac_frame_counter
+	LIB	cpc_PutMaskSpriteTileMap
+	LIB	cpc_PutTrSpriteTileMap
 	LIB	cpc_UpdateTileMap
 	XDEF	_rda
 	XDEF	_rdb
@@ -7289,22 +7292,16 @@
 	XDEF	_sm_coy
 	XDEF	_draw_2_digits
 	XDEF	_init_hotspots
-	LIB	cpc_PutTrSp4x8TileMapPx
-	LIB	cpc_PutTrSp8x8TileMapPx
-	LIB	cpc_PutTrSp8x16TileMapPx
-	LIB	cpc_PutTrSp8x24TileMapPx
+	XDEF	_player_flicker
 	XDEF	_pti
-	XDEF	_comportamiento_tiles
 	XDEF	_ptj
 	XDEF	_move_tile
-	LIB	cpc_PutSPTileMap4Bx16
-	LIB	cpc_PutSPTileMap4Bx24
-	XDEF	_s_type
 	XDEF	_tileset
+	XDEF	_comportamiento_tiles
+	XDEF	_new_level
+	XDEF	_s_type
 	XDEF	_wyz_stop_sound
 	XDEF	_bitmask
-	XDEF	_new_level
-	XDEF	_player_flicker
 	LIB	cpc_ReadTile
 	LIB	cpc_PutMaskSprite
 	XDEF	_sss
@@ -7320,11 +7317,14 @@
 	XDEF	_get_coin
 	XDEF	_latest_hotspot
 	XDEF	_draw_persistent_row
+	LIB	cpc_PutTrSp8x8TileMapGPxM1
+	LIB	cpc_PutTrSp16x16TileMapGPxM1
 	XDEF	_asm_int
-	XDEF	_hotspot_paint
 	XDEF	_pant_just_rendered
+	XDEF	_hotspot_paint
 	XDEF	__baddies_pointer
 	XDEF	_calc_baddies_pointer
+	LIB	cpc_PutMaskSpTileMap
 	LIB	cpc_TouchTileSpXY
 	LIB	cpc_SuperbufferAddress
 	LIB	cpc_GetScrAddress
@@ -7335,6 +7335,8 @@
 	defc	_en_an_frame	=	54784
 	XDEF	_success
 	LIB	cpc_RedefineKey
+	LIB	cpc_PutTrSp8x16TileMapGPxP
+	LIB	cpc_PutTrSp8x24TileMapGPxP
 	XDEF	_l_map_h
 	XDEF	_coins_old
 	XDEF	_do_extern_action
