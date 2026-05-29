@@ -179,7 +179,7 @@
 					srl a 
 					srl a 
 
-					and 1 
+					and 3 
 					ld  h, 0 
 					ld  l, a 
 					ld  de, _player_walk_cycle 
@@ -194,7 +194,9 @@
 				.m_frame_set
 					ld  a, (_player + 22) 		// player.facing
 					add c
-					ld  (_player + 20), a 		// flayer.frame
+					ld  l, a 		
+					ld  h, 0
+					ret
 			#endasm 
 		} else {
 			// DX Swim 

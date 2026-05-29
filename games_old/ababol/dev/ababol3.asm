@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Apr 06 09:24:10 2026
+;	Module compile time: Fri May 29 12:50:37 2026
 
 
 
@@ -144,21 +144,21 @@
 	; Primera columna
 	._sprite_1_a
 	defb 0, 255
-	defb 2, 252
-	defb 5, 248
-	defb 10, 240
-	defb 13, 240
-	defb 26, 224
-	defb 96, 128
-	defb 67, 128
-	defb 38, 192
-	defb 18, 224
-	defb 23, 224
-	defb 99, 128
-	defb 128, 0
-	defb 96, 128
-	defb 16, 224
-	defb 39, 192
+	defb 0, 254
+	defb 0, 252
+	defb 1, 248
+	defb 2, 248
+	defb 0, 224
+	defb 13, 192
+	defb 17, 192
+	defb 20, 192
+	defb 21, 192
+	defb 17, 128
+	defb 32, 128
+	defb 41, 128
+	defb 48, 128
+	defb 2, 128
+	defb 1, 248
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -170,21 +170,21 @@
 	; Segunda columna
 	._sprite_1_b
 	defb 0, 255
-	defb 64, 63
-	defb 32, 31
-	defb 32, 31
-	defb 80, 15
-	defb 8, 7
-	defb 4, 3
-	defb 226, 1
-	defb 212, 3
-	defb 208, 7
-	defb 240, 7
-	defb 236, 3
-	defb 2, 1
-	defb 28, 3
-	defb 136, 7
-	defb 228, 3
+	defb 0, 15
+	defb 160, 7
+	defb 80, 7
+	defb 0, 7
+	defb 160, 15
+	defb 224, 15
+	defb 160, 15
+	defb 0, 15
+	defb 128, 15
+	defb 160, 15
+	defb 0, 15
+	defb 0, 7
+	defb 176, 7
+	defb 112, 7
+	defb 32, 7
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -222,22 +222,22 @@
 	; Sprite #1 y máscara
 	; Primera columna
 	._sprite_2_a
-	defb 2, 252
-	defb 5, 248
-	defb 10, 240
-	defb 13, 240
-	defb 26, 224
-	defb 112, 128
-	defb 67, 128
-	defb 38, 192
-	defb 18, 224
-	defb 23, 224
-	defb 35, 192
-	defb 64, 128
-	defb 80, 128
-	defb 40, 208
-	defb 8, 240
-	defb 19, 224
+	defb 0, 254
+	defb 0, 252
+	defb 1, 248
+	defb 2, 240
+	defb 4, 240
+	defb 1, 224
+	defb 13, 192
+	defb 16, 192
+	defb 23, 128
+	defb 37, 128
+	defb 45, 128
+	defb 44, 0
+	defb 65, 0
+	defb 81, 0
+	defb 107, 0
+	defb 3, 0
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -248,22 +248,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_2_b
-	defb 64, 63
-	defb 32, 31
-	defb 16, 15
-	defb 80, 15
-	defb 8, 7
-	defb 4, 3
-	defb 226, 1
-	defb 212, 3
-	defb 208, 7
-	defb 240, 7
-	defb 232, 7
-	defb 4, 3
-	defb 20, 3
-	defb 152, 7
-	defb 16, 15
-	defb 200, 7
+	defb 0, 15
+	defb 160, 7
+	defb 80, 7
+	defb 0, 7
+	defb 160, 15
+	defb 224, 15
+	defb 160, 15
+	defb 0, 3
+	defb 40, 3
+	defb 40, 3
+	defb 224, 3
+	defb 0, 15
+	defb 32, 15
+	defb 32, 7
+	defb 144, 3
+	defb 200, 3
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -301,22 +301,22 @@
 	; Sprite #2 y máscara
 	; Primera columna
 	._sprite_3_a
-	defb 3, 252
-	defb 6, 248
-	defb 13, 240
-	defb 10, 240
-	defb 20, 224
-	defb 33, 192
-	defb 66, 128
-	defb 118, 128
-	defb 23, 224
-	defb 35, 192
-	defb 32, 192
-	defb 40, 192
-	defb 40, 192
-	defb 24, 224
-	defb 9, 240
-	defb 6, 249
+	defb 0, 255
+	defb 0, 254
+	defb 0, 252
+	defb 1, 248
+	defb 2, 248
+	defb 0, 224
+	defb 13, 192
+	defb 17, 128
+	defb 32, 128
+	defb 45, 128
+	defb 45, 128
+	defb 32, 128
+	defb 41, 128
+	defb 51, 128
+	defb 3, 128
+	defb 1, 248
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -327,22 +327,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_3_b
-	defb 64, 63
-	defb 32, 31
-	defb 80, 15
-	defb 16, 15
-	defb 12, 3
-	defb 226, 1
-	defb 212, 3
-	defb 208, 7
-	defb 240, 7
-	defb 232, 7
-	defb 8, 7
-	defb 24, 7
-	defb 152, 7
-	defb 16, 15
-	defb 144, 15
-	defb 96, 159
+	defb 0, 255
+	defb 0, 15
+	defb 160, 7
+	defb 80, 7
+	defb 0, 7
+	defb 160, 15
+	defb 224, 15
+	defb 160, 1
+	defb 12, 1
+	defb 44, 1
+	defb 224, 1
+	defb 0, 15
+	defb 128, 15
+	defb 32, 3
+	defb 184, 3
+	defb 144, 3
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -380,22 +380,22 @@
 	; Sprite #3 y máscara
 	; Primera columna
 	._sprite_4_a
-	defb 3, 252
-	defb 6, 248
-	defb 13, 240
-	defb 10, 240
-	defb 20, 224
-	defb 33, 192
-	defb 66, 128
-	defb 118, 128
-	defb 23, 224
-	defb 35, 192
-	defb 32, 192
-	defb 40, 192
-	defb 40, 192
-	defb 24, 224
-	defb 9, 240
-	defb 6, 249
+	defb 0, 254
+	defb 0, 252
+	defb 1, 248
+	defb 2, 248
+	defb 0, 224
+	defb 13, 224
+	defb 13, 224
+	defb 0, 192
+	defb 23, 128
+	defb 33, 128
+	defb 33, 0
+	defb 64, 0
+	defb 50, 0
+	defb 28, 128
+	defb 0, 193
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -406,22 +406,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_4_b
-	defb 64, 63
-	defb 32, 31
-	defb 80, 15
-	defb 16, 15
-	defb 12, 3
-	defb 226, 1
-	defb 212, 3
-	defb 208, 7
-	defb 240, 7
-	defb 232, 7
-	defb 8, 7
-	defb 24, 7
-	defb 152, 7
-	defb 16, 15
-	defb 144, 15
-	defb 96, 159
+	defb 0, 15
+	defb 160, 7
+	defb 64, 7
+	defb 0, 7
+	defb 160, 1
+	defb 236, 1
+	defb 172, 1
+	defb 0, 1
+	defb 24, 3
+	defb 32, 1
+	defb 228, 1
+	defb 12, 1
+	defb 108, 1
+	defb 0, 1
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -460,21 +460,21 @@
 	; Primera columna
 	._sprite_5_a
 	defb 0, 255
-	defb 2, 252
-	defb 4, 248
-	defb 4, 248
-	defb 10, 240
-	defb 16, 224
-	defb 32, 192
-	defb 71, 128
-	defb 43, 192
-	defb 11, 224
-	defb 15, 224
-	defb 55, 192
-	defb 64, 128
-	defb 56, 192
-	defb 17, 224
-	defb 39, 192
+	defb 0, 240
+	defb 5, 224
+	defb 10, 224
+	defb 0, 224
+	defb 5, 240
+	defb 7, 240
+	defb 5, 128
+	defb 48, 128
+	defb 52, 128
+	defb 7, 128
+	defb 0, 240
+	defb 1, 240
+	defb 4, 192
+	defb 29, 192
+	defb 9, 192
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -486,21 +486,21 @@
 	; Segunda columna
 	._sprite_5_b
 	defb 0, 255
-	defb 64, 63
-	defb 160, 31
-	defb 80, 15
-	defb 176, 15
-	defb 88, 7
-	defb 6, 1
-	defb 194, 1
-	defb 100, 3
-	defb 72, 7
-	defb 232, 7
-	defb 198, 1
-	defb 1, 0
-	defb 6, 1
-	defb 8, 7
-	defb 228, 3
+	defb 0, 127
+	defb 0, 63
+	defb 128, 31
+	defb 64, 31
+	defb 0, 7
+	defb 176, 3
+	defb 136, 1
+	defb 4, 1
+	defb 180, 1
+	defb 180, 1
+	defb 4, 1
+	defb 148, 1
+	defb 204, 1
+	defb 192, 1
+	defb 128, 31
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -538,22 +538,22 @@
 	; Sprite #5 y máscara
 	; Primera columna
 	._sprite_6_a
-	defb 2, 252
-	defb 4, 248
-	defb 8, 240
-	defb 10, 240
-	defb 16, 224
-	defb 32, 192
-	defb 71, 128
-	defb 43, 192
-	defb 11, 224
-	defb 15, 224
-	defb 23, 224
-	defb 32, 192
-	defb 40, 192
-	defb 25, 224
-	defb 8, 240
-	defb 19, 224
+	defb 0, 240
+	defb 5, 224
+	defb 10, 224
+	defb 0, 224
+	defb 5, 240
+	defb 7, 240
+	defb 5, 240
+	defb 0, 192
+	defb 20, 192
+	defb 20, 192
+	defb 7, 192
+	defb 0, 240
+	defb 4, 240
+	defb 4, 224
+	defb 9, 192
+	defb 19, 192
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -564,22 +564,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_6_b
-	defb 64, 63
-	defb 160, 31
-	defb 80, 15
-	defb 176, 15
-	defb 88, 7
-	defb 14, 1
-	defb 194, 1
-	defb 100, 3
-	defb 72, 7
-	defb 232, 7
-	defb 196, 3
-	defb 2, 1
-	defb 10, 1
-	defb 20, 11
-	defb 16, 15
-	defb 200, 7
+	defb 0, 127
+	defb 0, 63
+	defb 128, 31
+	defb 64, 15
+	defb 32, 15
+	defb 128, 7
+	defb 176, 3
+	defb 8, 3
+	defb 232, 1
+	defb 164, 1
+	defb 180, 1
+	defb 52, 0
+	defb 130, 0
+	defb 138, 0
+	defb 214, 0
+	defb 192, 0
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -617,22 +617,22 @@
 	; Sprite #6 y máscara
 	; Primera columna
 	._sprite_7_a
-	defb 2, 252
-	defb 4, 248
-	defb 10, 240
-	defb 8, 240
-	defb 48, 192
-	defb 71, 128
-	defb 43, 192
-	defb 11, 224
-	defb 15, 224
-	defb 23, 224
-	defb 16, 224
-	defb 24, 224
-	defb 25, 224
-	defb 8, 240
-	defb 9, 240
-	defb 6, 249
+	defb 0, 255
+	defb 0, 240
+	defb 5, 224
+	defb 10, 224
+	defb 0, 224
+	defb 5, 240
+	defb 7, 240
+	defb 5, 240
+	defb 0, 240
+	defb 1, 240
+	defb 5, 240
+	defb 0, 240
+	defb 0, 224
+	defb 13, 224
+	defb 14, 224
+	defb 4, 224
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -643,22 +643,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_7_b
-	defb 192, 63
-	defb 96, 31
-	defb 176, 15
-	defb 80, 15
-	defb 40, 7
-	defb 132, 3
-	defb 66, 1
-	defb 110, 1
-	defb 232, 7
-	defb 196, 3
-	defb 4, 3
-	defb 20, 3
-	defb 20, 3
-	defb 24, 7
-	defb 144, 15
-	defb 96, 159
+	defb 0, 255
+	defb 0, 127
+	defb 0, 63
+	defb 128, 31
+	defb 64, 31
+	defb 0, 7
+	defb 176, 3
+	defb 136, 3
+	defb 40, 3
+	defb 168, 3
+	defb 136, 1
+	defb 4, 1
+	defb 148, 1
+	defb 12, 1
+	defb 64, 1
+	defb 128, 31
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -696,22 +696,22 @@
 	; Sprite #7 y máscara
 	; Primera columna
 	._sprite_8_a
-	defb 2, 252
-	defb 4, 248
-	defb 10, 240
-	defb 8, 240
-	defb 48, 192
-	defb 71, 128
-	defb 43, 192
-	defb 11, 224
-	defb 15, 224
-	defb 23, 224
-	defb 16, 224
-	defb 24, 224
-	defb 25, 224
-	defb 8, 240
-	defb 9, 240
-	defb 6, 249
+	defb 0, 240
+	defb 5, 224
+	defb 2, 224
+	defb 0, 224
+	defb 5, 128
+	defb 55, 128
+	defb 53, 128
+	defb 0, 128
+	defb 24, 192
+	defb 4, 128
+	defb 39, 128
+	defb 48, 128
+	defb 54, 128
+	defb 0, 128
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -722,22 +722,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_8_b
-	defb 192, 63
-	defb 96, 31
-	defb 176, 15
-	defb 80, 15
-	defb 40, 7
-	defb 132, 3
-	defb 66, 1
-	defb 110, 1
-	defb 232, 7
-	defb 196, 3
-	defb 4, 3
-	defb 20, 3
-	defb 20, 3
-	defb 24, 7
-	defb 144, 15
-	defb 96, 159
+	defb 0, 127
+	defb 0, 63
+	defb 128, 31
+	defb 64, 31
+	defb 0, 7
+	defb 176, 7
+	defb 176, 7
+	defb 0, 3
+	defb 232, 1
+	defb 132, 1
+	defb 132, 0
+	defb 2, 0
+	defb 76, 0
+	defb 56, 1
+	defb 0, 131
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -775,22 +775,22 @@
 	; Sprite #8 y máscara
 	; Primera columna
 	._sprite_9_a
-	defb 0, 252
-	defb 3, 248
-	defb 5, 240
-	defb 7, 240
-	defb 11, 224
-	defb 21, 192
-	defb 42, 128
-	defb 40, 128
-	defb 40, 129
-	defb 40, 131
-	defb 40, 131
-	defb 36, 129
-	defb 32, 139
-	defb 16, 199
-	defb 8, 227
-	defb 0, 247
+	defb 0, 255
+	defb 0, 255
+	defb 0, 1
+	defb 124, 0
+	defb 66, 0
+	defb 32, 0
+	defb 64, 0
+	defb 5, 0
+	defb 117, 0
+	defb 48, 128
+	defb 30, 192
+	defb 1, 224
+	defb 0, 224
+	defb 15, 224
+	defb 15, 224
+	defb 8, 224
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -801,22 +801,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_9_b
+	defb 0, 193
+	defb 20, 128
+	defb 42, 0
+	defb 64, 0
+	defb 148, 1
+	defb 60, 1
+	defb 180, 1
+	defb 128, 1
+	defb 140, 1
+	defb 236, 1
+	defb 0, 1
+	defb 32, 15
+	defb 128, 31
+	defb 128, 31
 	defb 0, 63
-	defb 192, 31
-	defb 160, 15
-	defb 224, 15
-	defb 208, 7
-	defb 168, 3
-	defb 84, 1
-	defb 20, 1
-	defb 20, 129
-	defb 20, 193
-	defb 20, 193
-	defb 36, 129
-	defb 4, 209
-	defb 8, 227
-	defb 16, 199
-	defb 0, 239
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -855,21 +855,21 @@
 	; Primera columna
 	._sprite_10_a
 	defb 0, 255
-	defb 0, 255
-	defb 0, 255
-	defb 0, 255
-	defb 0, 255
-	defb 0, 252
-	defb 3, 248
-	defb 5, 240
-	defb 7, 224
-	defb 27, 128
-	defb 101, 0
-	defb 138, 0
-	defb 144, 4
-	defb 72, 3
-	defb 36, 129
-	defb 0, 219
+	defb 0, 15
+	defb 112, 1
+	defb 76, 0
+	defb 34, 0
+	defb 64, 0
+	defb 0, 0
+	defb 69, 0
+	defb 5, 0
+	defb 113, 0
+	defb 48, 128
+	defb 31, 192
+	defb 6, 224
+	defb 0, 240
+	defb 4, 240
+	defb 0, 241
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -880,22 +880,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_10_b
+	defb 0, 193
+	defb 20, 128
+	defb 42, 0
+	defb 64, 0
+	defb 148, 1
+	defb 60, 1
+	defb 180, 1
+	defb 128, 1
+	defb 152, 3
+	defb 216, 3
+	defb 0, 3
+	defb 32, 15
+	defb 96, 15
+	defb 192, 15
+	defb 0, 31
 	defb 0, 255
-	defb 0, 255
-	defb 0, 255
-	defb 0, 255
-	defb 0, 255
-	defb 0, 63
-	defb 192, 31
-	defb 160, 15
-	defb 224, 7
-	defb 216, 1
-	defb 166, 0
-	defb 81, 0
-	defb 9, 32
-	defb 18, 192
-	defb 36, 129
-	defb 0, 219
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -933,22 +933,22 @@
 	; Sprite #10 y máscara
 	; Primera columna
 	._sprite_11_a
-	defb 0, 248
-	defb 7, 240
-	defb 15, 128
-	defb 111, 0
-	defb 146, 0
-	defb 140, 0
-	defb 105, 0
-	defb 115, 0
-	defb 27, 128
-	defb 28, 192
-	defb 15, 224
-	defb 3, 240
-	defb 7, 128
+	defb 0, 255
+	defb 0, 255
+	defb 0, 1
 	defb 124, 0
-	defb 254, 0
-	defb 124, 1
+	defb 66, 0
+	defb 32, 0
+	defb 64, 0
+	defb 69, 0
+	defb 3, 0
+	defb 3, 192
+	defb 28, 192
+	defb 12, 224
+	defb 7, 240
+	defb 3, 248
+	defb 0, 252
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -959,22 +959,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_11_b
-	defb 12, 97
-	defb 146, 0
-	defb 210, 0
-	defb 52, 1
-	defb 220, 1
-	defb 152, 3
+	defb 0, 193
+	defb 20, 128
+	defb 42, 0
+	defb 64, 0
+	defb 148, 1
+	defb 60, 1
+	defb 180, 1
+	defb 128, 1
 	defb 48, 7
-	defb 240, 7
-	defb 96, 15
-	defb 192, 19
-	defb 140, 33
-	defb 222, 0
-	defb 190, 0
-	defb 252, 1
-	defb 248, 3
-	defb 112, 7
+	defb 176, 7
+	defb 0, 7
+	defb 160, 15
+	defb 160, 15
+	defb 64, 15
+	defb 0, 31
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1012,22 +1012,22 @@
 	; Sprite #11 y máscara
 	; Primera columna
 	._sprite_12_a
-	defb 96, 15
-	defb 144, 0
-	defb 151, 0
-	defb 211, 0
-	defb 108, 0
-	defb 8, 128
-	defb 51, 128
-	defb 63, 128
-	defb 27, 192
-	defb 28, 192
-	defb 7, 224
-	defb 111, 224
-	defb 243, 128
-	defb 124, 0
-	defb 62, 0
-	defb 12, 1
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1038,22 +1038,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_12_b
-	defb 12, 225
-	defb 18, 0
-	defb 210, 0
-	defb 52, 1
-	defb 220, 1
-	defb 80, 3
-	defb 48, 7
-	defb 240, 7
-	defb 96, 15
-	defb 224, 15
-	defb 128, 31
-	defb 192, 31
-	defb 128, 1
-	defb 126, 0
-	defb 255, 0
-	defb 126, 0
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1091,21 +1091,21 @@
 	; Sprite #12 y máscara
 	; Primera columna
 	._sprite_13_a
-	defb 0, 255
-	defb 52, 195
-	defb 72, 131
-	defb 136, 7
-	defb 136, 7
-	defb 8, 5
-	defb 133, 0
-	defb 0, 0
-	defb 131, 0
-	defb 129, 0
-	defb 3, 136
-	defb 66, 136
-	defb 16, 236
-	defb 0, 255
-	defb 0, 255
+	defb 0, 131
+	defb 40, 1
+	defb 84, 0
+	defb 2, 0
+	defb 41, 128
+	defb 60, 128
+	defb 45, 128
+	defb 1, 128
+	defb 12, 224
+	defb 13, 224
+	defb 0, 224
+	defb 5, 240
+	defb 5, 240
+	defb 2, 240
+	defb 0, 248
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1118,20 +1118,20 @@
 	; Segunda columna
 	._sprite_13_b
 	defb 0, 255
-	defb 44, 195
-	defb 18, 193
-	defb 17, 224
-	defb 17, 224
-	defb 16, 160
-	defb 161, 0
-	defb 0, 0
-	defb 193, 0
-	defb 129, 0
-	defb 192, 17
-	defb 66, 17
-	defb 8, 55
 	defb 0, 255
-	defb 0, 255
+	defb 0, 128
+	defb 62, 0
+	defb 66, 0
+	defb 4, 0
+	defb 2, 0
+	defb 162, 0
+	defb 192, 0
+	defb 192, 3
+	defb 56, 3
+	defb 48, 7
+	defb 224, 15
+	defb 192, 31
+	defb 0, 63
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1170,22 +1170,22 @@
 	; Sprite #13 y máscara
 	; Primera columna
 	._sprite_14_a
+	defb 0, 131
+	defb 40, 1
+	defb 84, 0
+	defb 2, 0
+	defb 41, 128
+	defb 60, 128
+	defb 45, 128
+	defb 1, 128
+	defb 25, 192
+	defb 27, 192
+	defb 0, 192
+	defb 4, 240
+	defb 6, 240
+	defb 3, 240
+	defb 0, 248
 	defb 0, 255
-	defb 0, 255
-	defb 32, 223
-	defb 64, 189
-	defb 65, 188
-	defb 96, 152
-	defb 147, 8
-	defb 9, 0
-	defb 131, 0
-	defb 130, 0
-	defb 0, 4
-	defb 128, 3
-	defb 4, 131
-	defb 68, 131
-	defb 18, 225
-	defb 6, 249
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1197,21 +1197,21 @@
 	; Segunda columna
 	._sprite_14_b
 	defb 0, 255
-	defb 0, 255
-	defb 4, 251
-	defb 2, 189
-	defb 130, 61
-	defb 6, 25
-	defb 201, 16
-	defb 144, 0
-	defb 193, 0
-	defb 65, 0
-	defb 0, 32
-	defb 1, 192
-	defb 32, 193
-	defb 34, 193
-	defb 72, 135
-	defb 96, 159
+	defb 0, 240
+	defb 14, 128
+	defb 50, 0
+	defb 68, 0
+	defb 2, 0
+	defb 0, 0
+	defb 162, 0
+	defb 160, 0
+	defb 142, 0
+	defb 12, 1
+	defb 248, 3
+	defb 96, 7
+	defb 0, 15
+	defb 32, 15
+	defb 0, 143
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1249,22 +1249,22 @@
 	; Sprite #14 y máscara
 	; Primera columna
 	._sprite_15_a
-	defb 0, 0
-	defb 47, 0
-	defb 95, 0
-	defb 47, 0
-	defb 23, 128
-	defb 11, 192
-	defb 5, 224
-	defb 3, 240
-	defb 0, 248
-	defb 1, 252
-	defb 1, 252
-	defb 0, 254
-	defb 0, 255
-	defb 0, 255
+	defb 0, 131
+	defb 40, 1
+	defb 84, 0
+	defb 2, 0
+	defb 41, 128
+	defb 60, 128
+	defb 45, 128
+	defb 1, 128
+	defb 49, 128
+	defb 55, 128
+	defb 0, 128
+	defb 4, 240
+	defb 1, 248
+	defb 1, 248
 	defb 0, 252
-	defb 0, 254
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1275,22 +1275,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_15_b
-	defb 0, 0
-	defb 250, 0
-	defb 244, 0
-	defb 250, 0
-	defb 212, 1
-	defb 232, 3
-	defb 208, 7
-	defb 160, 15
-	defb 0, 31
-	defb 128, 63
-	defb 192, 31
-	defb 32, 15
-	defb 16, 199
-	defb 16, 199
-	defb 32, 15
-	defb 0, 31
+	defb 0, 255
+	defb 0, 255
+	defb 0, 128
+	defb 62, 0
+	defb 66, 0
+	defb 4, 0
+	defb 2, 0
+	defb 160, 0
+	defb 174, 0
+	defb 12, 1
+	defb 120, 3
+	defb 128, 7
+	defb 0, 7
+	defb 240, 7
+	defb 240, 7
+	defb 16, 7
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1328,17 +1328,17 @@
 	; Sprite #15 y máscara
 	; Primera columna
 	._sprite_16_a
-	defb 0, 0
-	defb 47, 0
-	defb 95, 0
-	defb 47, 0
-	defb 23, 128
-	defb 11, 192
-	defb 5, 224
-	defb 3, 240
-	defb 0, 248
-	defb 1, 252
-	defb 0, 254
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1354,22 +1354,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_16_b
-	defb 0, 0
-	defb 250, 0
-	defb 244, 0
-	defb 250, 0
-	defb 212, 1
-	defb 232, 3
-	defb 208, 7
-	defb 160, 15
-	defb 0, 31
-	defb 128, 63
-	defb 224, 15
-	defb 16, 7
-	defb 8, 227
-	defb 8, 227
-	defb 8, 3
-	defb 0, 135
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1407,22 +1407,22 @@
 	; Sprite #16 y máscara
 	; Primera columna
 	._sprite_17_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 240
+	defb 7, 224
+	defb 13, 224
+	defb 13, 224
+	defb 13, 224
+	defb 15, 224
+	defb 15, 224
+	defb 5, 240
+	defb 0, 192
+	defb 26, 192
+	defb 25, 192
+	defb 0, 192
+	defb 1, 252
+	defb 1, 252
+	defb 0, 240
+	defb 7, 240
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1433,22 +1433,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_17_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 31
+	defb 192, 15
+	defb 96, 15
+	defb 96, 15
+	defb 96, 15
+	defb 224, 15
+	defb 224, 15
+	defb 64, 7
+	defb 16, 7
+	defb 128, 7
+	defb 64, 31
+	defb 0, 31
+	defb 64, 31
+	defb 0, 31
+	defb 0, 127
+	defb 0, 127
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1486,22 +1486,22 @@
 	; Sprite #17 y máscara
 	; Primera columna
 	._sprite_18_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 240
+	defb 7, 224
+	defb 13, 224
+	defb 13, 224
+	defb 13, 224
+	defb 15, 224
+	defb 15, 224
+	defb 5, 192
+	defb 16, 192
+	defb 2, 192
+	defb 5, 240
+	defb 0, 240
+	defb 5, 240
+	defb 1, 240
+	defb 0, 252
+	defb 1, 252
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1512,22 +1512,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_18_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 31
+	defb 192, 15
+	defb 96, 15
+	defb 96, 15
+	defb 96, 15
+	defb 224, 15
+	defb 224, 15
+	defb 64, 31
+	defb 0, 7
+	defb 176, 7
+	defb 48, 7
+	defb 0, 7
+	defb 0, 127
+	defb 0, 127
+	defb 0, 31
+	defb 192, 31
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1565,22 +1565,22 @@
 	; Sprite #18 y máscara
 	; Primera columna
 	._sprite_19_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 255
+	defb 0, 248
+	defb 2, 248
+	defb 0, 240
+	defb 6, 192
+	defb 20, 128
+	defb 34, 0
+	defb 64, 0
+	defb 69, 0
+	defb 69, 0
+	defb 36, 0
+	defb 42, 128
+	defb 30, 128
+	defb 16, 192
+	defb 0, 199
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1591,22 +1591,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_19_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 255
+	defb 0, 63
+	defb 128, 63
+	defb 0, 31
+	defb 192, 7
+	defb 80, 3
+	defb 136, 1
+	defb 4, 1
+	defb 68, 1
+	defb 68, 1
+	defb 72, 1
+	defb 168, 3
+	defb 240, 3
+	defb 16, 7
+	defb 0, 199
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1644,22 +1644,22 @@
 	; Sprite #19 y máscara
 	; Primera columna
 	._sprite_20_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 248
+	defb 2, 248
+	defb 0, 0
+	defb 230, 0
+	defb 148, 0
+	defb 130, 0
+	defb 144, 0
+	defb 73, 0
+	defb 33, 0
+	defb 26, 128
+	defb 2, 192
+	defb 6, 240
+	defb 0, 240
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1670,22 +1670,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_20_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 63
+	defb 128, 63
+	defb 0, 1
+	defb 206, 0
+	defb 82, 0
+	defb 130, 0
+	defb 18, 0
+	defb 36, 0
+	defb 8, 1
+	defb 176, 3
+	defb 128, 7
+	defb 192, 31
+	defb 0, 31
+	defb 0, 255
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1723,22 +1723,22 @@
 	; Sprite #20 y máscara
 	; Primera columna
 	._sprite_21_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 227
+	defb 8, 224
+	defb 8, 224
+	defb 8, 224
+	defb 11, 224
+	defb 9, 224
+	defb 11, 224
+	defb 10, 192
+	defb 28, 192
+	defb 27, 192
+	defb 1, 192
+	defb 4, 240
+	defb 6, 240
+	defb 0, 240
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1749,22 +1749,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_21_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 255
+	defb 0, 31
+	defb 0, 15
+	defb 0, 7
+	defb 128, 7
+	defb 64, 7
+	defb 192, 7
+	defb 128, 7
+	defb 48, 7
+	defb 64, 7
+	defb 128, 31
+	defb 0, 31
+	defb 64, 31
+	defb 0, 15
+	defb 96, 15
+	defb 0, 15
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1802,22 +1802,22 @@
 	; Sprite #21 y máscara
 	; Primera columna
 	._sprite_22_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 224
+	defb 8, 224
+	defb 8, 224
+	defb 11, 224
+	defb 9, 224
+	defb 11, 224
+	defb 10, 224
+	defb 8, 192
+	defb 30, 192
+	defb 27, 192
+	defb 1, 192
+	defb 0, 248
+	defb 2, 248
+	defb 0, 240
+	defb 6, 240
+	defb 0, 240
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1828,22 +1828,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_22_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 31
+	defb 0, 15
+	defb 0, 7
+	defb 128, 7
+	defb 64, 7
+	defb 192, 7
+	defb 192, 7
+	defb 0, 7
+	defb 208, 7
+	defb 64, 7
+	defb 128, 15
+	defb 32, 15
+	defb 96, 15
+	defb 0, 15
+	defb 0, 255
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1881,22 +1881,22 @@
 	; Sprite #22 y máscara
 	; Primera columna
 	._sprite_23_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 63, 192
+	defb 124, 128
+	defb 113, 128
+	defb 97, 128
+	defb 103, 128
+	defb 71, 128
+	defb 65, 128
+	defb 65, 128
+	defb 65, 128
+	defb 33, 192
+	defb 32, 192
+	defb 32, 192
+	defb 32, 192
+	defb 32, 192
+	defb 32, 192
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1907,22 +1907,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_23_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 252, 3
+	defb 14, 1
+	defb 128, 1
+	defb 128, 1
+	defb 224, 1
+	defb 224, 1
+	defb 128, 1
+	defb 128, 1
+	defb 128, 1
+	defb 128, 3
+	defb 0, 3
+	defb 0, 3
+	defb 0, 3
+	defb 0, 3
+	defb 0, 3
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1960,22 +1960,22 @@
 	; Sprite #23 y máscara
 	; Primera columna
 	._sprite_24_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 31, 224
+	defb 63, 192
+	defb 56, 192
+	defb 48, 192
+	defb 51, 192
+	defb 35, 192
+	defb 32, 192
+	defb 33, 192
+	defb 33, 192
+	defb 33, 192
+	defb 33, 192
+	defb 32, 192
+	defb 32, 192
+	defb 32, 192
+	defb 32, 192
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -1986,22 +1986,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_24_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 255
+	defb 254, 1
+	defb 7, 0
+	defb 193, 0
+	defb 192, 0
+	defb 240, 0
+	defb 240, 0
+	defb 192, 0
+	defb 128, 0
+	defb 128, 1
+	defb 128, 1
+	defb 0, 1
+	defb 0, 3
+	defb 0, 3
+	defb 0, 3
+	defb 0, 131
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2039,22 +2039,22 @@
 	; Sprite #24 y máscara
 	; Primera columna
 	._sprite_25_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 166, 0
+	defb 66, 16
+	defb 65, 16
+	defb 71, 0
+	defb 111, 0
+	defb 44, 128
+	defb 11, 128
+	defb 15, 224
+	defb 15, 224
+	defb 15, 192
+	defb 55, 128
+	defb 118, 0
+	defb 99, 0
+	defb 56, 128
+	defb 8, 193
+	defb 0, 243
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2065,22 +2065,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_25_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 157
+	defb 98, 8
+	defb 33, 12
+	defb 145, 4
+	defb 241, 0
+	defb 59, 0
+	defb 218, 0
+	defb 248, 1
+	defb 248, 3
+	defb 240, 7
+	defb 80, 7
+	defb 168, 1
+	defb 220, 1
+	defb 12, 1
+	defb 12, 225
+	defb 6, 224
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2118,22 +2118,22 @@
 	; Sprite #25 y máscara
 	; Primera columna
 	._sprite_26_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 185
+	defb 70, 16
+	defb 132, 48
+	defb 137, 32
+	defb 143, 0
+	defb 220, 0
+	defb 91, 0
+	defb 31, 128
+	defb 31, 192
+	defb 15, 224
+	defb 10, 224
+	defb 21, 128
+	defb 59, 128
+	defb 48, 128
+	defb 48, 135
+	defb 96, 7
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2144,22 +2144,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_26_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 101, 0
+	defb 66, 8
+	defb 130, 8
+	defb 226, 0
+	defb 246, 0
+	defb 52, 1
+	defb 208, 1
+	defb 240, 7
+	defb 240, 7
+	defb 240, 3
+	defb 236, 1
+	defb 110, 0
+	defb 198, 0
+	defb 28, 1
+	defb 16, 131
+	defb 0, 207
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2197,22 +2197,22 @@
 	; Sprite #26 y máscara
 	; Primera columna
 	._sprite_27_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 248
+	defb 3, 224
+	defb 13, 224
+	defb 9, 192
+	defb 30, 192
+	defb 29, 192
+	defb 26, 192
+	defb 26, 192
+	defb 29, 128
+	defb 62, 128
+	defb 55, 0
+	defb 103, 0
+	defb 206, 0
+	defb 12, 0
+	defb 8, 225
+	defb 0, 227
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2223,22 +2223,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_27_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 31
+	defb 192, 7
+	defb 176, 7
+	defb 144, 3
+	defb 120, 3
+	defb 184, 3
+	defb 88, 3
+	defb 88, 3
+	defb 184, 1
+	defb 124, 1
+	defb 236, 0
+	defb 230, 0
+	defb 115, 0
+	defb 48, 0
+	defb 16, 135
+	defb 0, 199
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2276,22 +2276,22 @@
 	; Sprite #27 y máscara
 	; Primera columna
 	._sprite_28_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 255
+	defb 0, 248
+	defb 3, 224
+	defb 13, 224
+	defb 13, 192
+	defb 30, 192
+	defb 29, 192
+	defb 26, 192
+	defb 26, 192
+	defb 29, 128
+	defb 62, 0
+	defb 179, 0
+	defb 103, 0
+	defb 20, 0
+	defb 12, 193
+	defb 0, 225
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2302,22 +2302,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_28_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 0, 255
+	defb 0, 31
+	defb 192, 7
+	defb 176, 7
+	defb 176, 3
+	defb 120, 3
+	defb 184, 3
+	defb 88, 3
+	defb 88, 3
+	defb 184, 1
+	defb 124, 0
+	defb 205, 0
+	defb 230, 0
+	defb 40, 0
+	defb 48, 131
+	defb 0, 135
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2355,22 +2355,22 @@
 	; Sprite #28 y máscara
 	; Primera columna
 	._sprite_29_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 7, 248
+	defb 200, 48
+	defb 48, 0
+	defb 160, 0
+	defb 0, 0
+	defb 128, 0
+	defb 0, 0
+	defb 128, 0
+	defb 18, 0
+	defb 140, 0
+	defb 32, 0
+	defb 32, 0
+	defb 208, 32
+	defb 12, 240
+	defb 3, 252
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2381,22 +2381,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_29_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 224, 31
+	defb 24, 7
+	defb 4, 3
+	defb 2, 1
+	defb 82, 1
+	defb 0, 1
+	defb 30, 0
+	defb 63, 0
+	defb 33, 0
+	defb 63, 0
+	defb 30, 0
+	defb 0, 1
+	defb 2, 1
+	defb 12, 3
+	defb 240, 15
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2434,22 +2434,22 @@
 	; Sprite #29 y máscara
 	; Primera columna
 	._sprite_30_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 1, 254
+	defb 6, 248
+	defb 200, 48
+	defb 48, 0
+	defb 160, 0
+	defb 0, 0
+	defb 128, 0
+	defb 12, 0
+	defb 146, 0
+	defb 0, 0
+	defb 128, 0
+	defb 32, 0
+	defb 32, 0
+	defb 216, 32
+	defb 7, 248
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2460,22 +2460,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_30_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 224, 31
+	defb 24, 7
+	defb 4, 3
+	defb 2, 1
+	defb 82, 1
+	defb 0, 1
+	defb 14, 0
+	defb 31, 0
+	defb 17, 0
+	defb 31, 0
+	defb 14, 0
+	defb 0, 1
+	defb 2, 1
+	defb 12, 3
+	defb 240, 15
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2513,22 +2513,22 @@
 	; Sprite #30 y máscara
 	; Primera columna
 	._sprite_31_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 7, 248
+	defb 24, 224
+	defb 32, 192
+	defb 64, 128
+	defb 74, 128
+	defb 0, 128
+	defb 112, 0
+	defb 248, 0
+	defb 136, 0
+	defb 248, 0
+	defb 112, 0
+	defb 0, 128
+	defb 64, 128
+	defb 48, 192
+	defb 15, 240
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2539,22 +2539,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_31_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 128, 127
+	defb 96, 31
+	defb 19, 12
+	defb 12, 0
+	defb 5, 0
+	defb 0, 0
+	defb 1, 0
+	defb 48, 0
+	defb 73, 0
+	defb 0, 0
+	defb 1, 0
+	defb 4, 0
+	defb 4, 0
+	defb 27, 4
+	defb 224, 31
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2592,22 +2592,22 @@
 	; Sprite #31 y máscara
 	; Primera columna
 	._sprite_32_a
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 7, 248
+	defb 24, 224
+	defb 32, 192
+	defb 64, 128
+	defb 74, 128
+	defb 0, 128
+	defb 120, 0
+	defb 252, 0
+	defb 132, 0
+	defb 252, 0
+	defb 120, 0
+	defb 0, 128
+	defb 64, 128
+	defb 48, 192
+	defb 15, 240
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2618,22 +2618,22 @@
 	defb 0, 255
 	; Segunda columna
 	._sprite_32_b
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
-	defb 255, 255
+	defb 224, 31
+	defb 19, 12
+	defb 12, 0
+	defb 5, 0
+	defb 0, 0
+	defb 1, 0
+	defb 0, 0
+	defb 1, 0
+	defb 72, 0
+	defb 49, 0
+	defb 4, 0
+	defb 4, 0
+	defb 11, 4
+	defb 48, 15
+	defb 192, 63
+	defb 0, 255
 	defb 0, 255
 	defb 0, 255
 	defb 0, 255
@@ -2813,7 +2813,7 @@
 ;	SECTION	text
 
 ._spritesClipValues
-	defb	2
+	defb	4
 	defb	1
 	defb	20
 	defb	30
@@ -2821,7 +2821,7 @@
 ;	SECTION	code
 
 	.fsClipStruct defb 0, 24, 0, 32
-	.vpClipStruct defb 2, 2 + 20, 1, 1 + 30
+	.vpClipStruct defb 4, 4 + 20, 1, 1 + 30
 ;	SECTION	text
 
 ._sprite_cells
@@ -3184,7 +3184,7 @@
 	ld (__x), a
 	ld a, (__y)
 	sla a
-	add 2
+	add 4
 	ld (__y), a
 	jp _draw_coloured_tile_do
 	ret
@@ -3592,7 +3592,7 @@
 	srl a
 	srl a
 	srl a
-	add 2
+	add 4
 	ld h, a
 	ld a, (_rdx)
 	srl a
@@ -3678,7 +3678,7 @@
 	srl a
 	srl a
 	srl a
-	add 2
+	add 4
 	ld h, a
 	ld a, (_rdx)
 	srl a
@@ -4037,6 +4037,36 @@
 	ret
 
 
+
+._script
+	ld a, l
+	ld (_script_n), a
+	ld a, (_tpx)
+	ld c, a
+	ld a, (_tpy)
+	call qtile_do
+	ld a, l
+	ld (_tqt), a
+	call _script_do
+	call _shl_player_coords
+	ret
+
+
+	XDEF script_bytecode
+	XDEF _attr_2
+	XDEF qtile_do
+	XDEF set_map_tile_do
+	XDEF _peta_el_beeper
+	XDEF draw_line_of_text
+	XDEF _tpx
+	XDEF _tpy
+	XDEF _tat
+	XDEF _tqt
+	XDEF _hotspot_t
+	XDEF _scenery_info
+	XDEF _do_extern_action
+	.script_bytecode
+	BINARY "script.spt.bin"
 	; -----------------------------------------------------------------------------
 	; ZX0 decoder by Einar Saukas & Urusergi
 	; "Standard" version (68 bytes only)
@@ -4098,11975 +4128,10 @@
 	rl b
 	jr dzx0s_elias_loop
 	; -----------------------------------------------------------------------------
-;	SECTION	text
-
-._mapa
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	15
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"V"
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	"wwww"
-	defb	17
-
-	defm	""
-	defb	23
-
-	defm	"w"
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"TD6^"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	229
-
-	defm	"6VcDDDA"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	7
-
-	defm	"wwwwwwwe`"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"ea"
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	17
-
-	defm	"DF"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"DA"
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"`"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	15
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"@"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"ec@"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	231
-
-	defm	"wq"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	"ww~e6DC@"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	225
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	"DD4DFSe"
-	defb	241
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	30
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	155
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	155
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	155
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	155
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	"wwwwwww"
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	230
-
-	defm	"fef6VVn"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	7
-
-	defm	"wwwwwww"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"cef"
-	defb	0
-
-	defm	"fSea"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	7
-
-	defm	"wwwwwww"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"VVfVV"
-	defb	0
-
-	defm	"Va"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"e"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	5
-
-	defm	"cD`"
-	defb	7
-
-	defm	"wwv"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	"g"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"V4DDC"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	21
-
-	defm	"ee4DCDDA"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	7
-
-	defm	"wwwwwee"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"P"
-	defb	1
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	22
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"a`"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"6V"
-	defb	0
-
-	defm	"cC"
-	defb	6
-
-	defm	"DA"
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"wwwwwww"
-	defb	22
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	22
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"D5"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"e"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	231
-
-	defm	"wwwwwww"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"V"
-	defb	14
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"`"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	210
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	7
-
-	defm	"wwww"
-	defb	215
-
-	defm	"wr"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	6
-
-	defm	"nV"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	22
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	20
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	34
-
-	defm	"wwwwww"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	" "
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"e"
-	defb	204
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"1"
-	defb	16
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	"D"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	" "
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	7
-
-	defm	"wwww"
-	defb	199
-
-	defm	"ww"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	203
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"f"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	22
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	"D"
-	defb	21
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	""
-	defb	22
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	7
-
-	defm	"wt"
-	defb	21
-
-	defm	"wwww"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"ff`"
-	defb	6
-
-	defm	"V6h"
-	defb	142
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	254
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"`"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	5
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"-"
-	defb	230
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"-"
-	defb	14
-
-	defm	""
-	defb	215
-
-	defm	"wwww-"
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	"]"
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"-"
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	157
-
-	defm	"Vef"
-	defb	15
-
-	defm	""
-	defb	0
-
-	defm	"f0."
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	5
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	5
-
-	defm	"d`"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	29
-
-	defm	"wwwwwcD"
-	defb	205
-
-	defm	"`"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	30
-
-	defm	""
-	defb	194
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"VDD"
-	defb	12
-
-	defm	""
-	defb	230
-
-	defm	"`"
-	defb	0
-
-	defm	"a"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	27
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	210
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	143
-
-	defm	"D4D"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	"fe"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	"DDwwwww"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	"DCe`"
-	defb	6
-
-	defm	"P"
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	4
-
-	defm	"DDD@"
-	defb	132
-
-	defm	"@"
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"e"
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"`"
-	defb	2
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	""
-	defb	14
-
-	defm	"c"
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	135
-
-	defm	"wrww"
-	defb	221
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"n"
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	5
-
-	defm	">"
-	defb	192
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	3
-
-	defm	""
-	defb	131
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	137
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	254
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	15
-
-	defm	""
-	defb	230
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	240
-
-	defm	"&"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	141
-
-	defm	"%"
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	6
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	13
-
-	defm	"'wwww"
-	defb	30
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	13
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"n"
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"n"
-	defb	0
-
-	defm	"8"
-	defb	222
-
-	defm	""
-	defb	227
-
-	defm	"`"
-	defb	6
-
-	defm	"^"
-	defb	11
-
-	defm	""
-	defb	13
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	203
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	207
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	143
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	143
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	143
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	255
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	250
-
-	defm	""
-	defb	175
-
-	defm	""
-	defb	254
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	140
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	248
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	143
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	248
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	143
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	223
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	254
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	15
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	159
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	255
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	147
-
-	defm	""
-	defb	147
-
-	defm	""
-	defb	147
-
-	defm	""
-	defb	147
-
-	defm	""
-	defb	147
-
-	defm	""
-	defb	159
-
-	defm	""
-	defb	15
-
-	defm	""
-	defb	254
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	255
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	187
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	190
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	190
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	190
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	131
-
-	defm	""
-	defb	131
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	34
-
-	defm	"."
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	210
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	210
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	130
-
-	defm	" "
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	"2"
-	defb	237
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	234
-
-	defm	""
-	defb	174
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	2
-
-	defm	"-"
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	" "
-	defb	210
-
-	defm	" "
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	" "
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"888"
-	defb	131
-
-	defm	""
-	defb	131
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"8"
-	defb	131
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	131
-
-	defm	""
-	defb	131
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	"8"
-	defb	142
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	2
-
-	defm	"("
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"8"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	129
-
-	defm	"DH"
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	13
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"0"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	128
-
-	defm	"DD"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	"0"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	24
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	"9"
-	defb	224
-
-	defm	""
-	defb	4
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	140
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	129
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"@"
-	defb	129
-
-	defm	""
-	defb	20
-
-	defm	"@"
-	defb	132
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	"D"
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	132
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	140
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	141
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	131
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	132
-
-	defm	"D@"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	132
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	132
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	"H"
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	132
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	141
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	254
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	143
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	184
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	1
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	14
-
-	defm	"D"
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	141
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	208
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	255
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	15
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	152
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	137
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	147
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	147
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	236
-
-	defm	" "
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	255
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	208
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	142
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	176
-
-	defm	"8"
-	defb	130
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	255
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	128
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	139
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	136
-
-	defm	"8"
-	defb	130
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	137
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	152
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	132
-
-	defm	"@"
-	defb	158
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	180
-
-	defm	"@"
-	defb	153
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	152
-
-	defm	""
-	defb	137
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	155
-
-	defm	""
-	defb	4
-
-	defm	"@"
-	defb	153
-
-	defm	""
-	defb	136
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	34
-
-	defm	""
-	defb	34
-
-	defm	"-"
-	defb	221
-
-	defm	""
-	defb	212
-
-	defm	"N"
-	defb	237
-
-	defm	""
-	defb	239
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	254
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	240
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	"9"
-	defb	233
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	155
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	196
-
-	defm	"D"
-	defb	237
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	216
-
-	defm	""
-	defb	170
-
-	defm	"]"
-	defb	12
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	205
-
-	defm	"x"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	238
-
-	defm	"x"
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	172
-
-	defm	""
-	defb	205
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	":"
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	174
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	":"
-	defb	170
-
-	defm	"J"
-	defb	218
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	174
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	201
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	229
-
-	defm	"v"
-	defb	237
-
-	defm	""
-	defb	237
-
-	defm	">"
-	defb	237
-
-	defm	""
-	defb	229
-
-	defm	"v"
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	"v"
-	defb	138
-
-	defm	"Vx"
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"J:"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	169
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"J)"
-	defb	170
-
-	defm	")"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	18
-
-	defm	""
-	defb	234
-
-	defm	""
-	defb	18
-
-	defm	"!JJ"
-	defb	17
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	211
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	216
-
-	defm	"]"
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	7
-
-	defm	"x"
-	defb	170
-
-	defm	"]"
-	defb	192
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"V}"
-	defb	236
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	234
-
-	defm	"J"
-	defb	163
-
-	defm	":"
-	defb	170
-
-	defm	"V}"
-	defb	237
-
-	defm	"J"
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"JWjJ:J"
-	defb	170
-
-	defm	"C"
-	defb	164
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	26
-
-	defm	"J:"
-	defb	161
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	19
-
-	defm	""
-	defb	25
-
-	defm	"!3"
-	defb	145
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	148
-
-	defm	"M"
-	defb	146
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	214
-
-	defm	"v"
-	defb	220
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	12
-
-	defm	"xJ"
-	defb	165
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	218
-
-	defm	"A"
-	defb	20
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	205
-
-	defm	""
-	defb	237
-
-	defm	"h"
-	defb	161
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	26
-
-	defm	"B"
-	defb	222
-
-	defm	"x"
-	defb	161
-
-	defm	"J"
-	defb	151
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	170
-
-	defm	"V"
-	defb	218
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	154
-
-	defm	"F5"
-	defb	132
-
-	defm	""
-	defb	170
-
-	defm	"E"
-	defb	17
-
-	defm	""
-	defb	157
-
-	defm	"J"
-	defb	161
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	":"
-	defb	169
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	225
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	154
-
-	defm	"4"
-	defb	161
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	28
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	217
-
-	defm	")"
-	defb	157
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	216
-
-	defm	""
-	defb	164
-
-	defm	"]"
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	","
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	"5"
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	205
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	162
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	153
-
-	defm	"J]"
-	defb	236
-
-	defm	""
-	defb	7
-
-	defm	""
-	defb	138
-
-	defm	"J"
-	defb	30
-
-	defm	""
-	defb	218
-
-	defm	"J."
-	defb	224
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	206
-
-	defm	":"
-	defb	165
-
-	defm	"v"
-	defb	202
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	208
-
-	defm	""
-	defb	225
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	"E"
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	19
-
-	defm	"1"
-	defb	25
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	".gm"
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	216
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"Vv"
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	194
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	164
-
-	defm	":"
-	defb	160
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	132
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	"J"
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	218
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	172
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	226
-
-	defm	"J4"
-	defb	164
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	237
-
-	defm	"g"
-	defb	138
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	151
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	26
-
-	defm	"I"
-	defb	218
-
-	defm	""
-	defb	161
-
-	defm	"="
-	defb	205
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	201
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	188
-
-	defm	""
-	defb	7
-
-	defm	"g"
-	defb	220
-
-	defm	""
-	defb	230
-
-	defm	"g"
-	defb	236
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	"x"
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	"g"
-	defb	133
-
-	defm	"zJ"
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	"J"
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	26
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	161
-
-	defm	"J"
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	20
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	":"
-	defb	170
-
-	defm	")"
-	defb	26
-
-	defm	""
-	defb	162
-
-	defm	""
-	defb	154
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	29
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	236
-
-	defm	"!"
-	defb	28
-
-	defm	""
-	defb	233
-
-	defm	")"
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	","
-	defb	13
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	200
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	188
-
-	defm	"]"
-	defb	205
-
-	defm	""
-	defb	133
-
-	defm	"n"
-	defb	205
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	218
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	170
-
-	defm	"^*"
-	defb	173
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	173
-
-	defm	""
-	defb	234
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"X"
-	defb	164
-
-	defm	"-J-"
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	173
-
-	defm	"*"
-	defb	165
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	170
-
-	defm	":X"
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	154
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	":"
-	defb	170
-
-	defm	""
-	defb	18
-
-	defm	""
-	defb	25
-
-	defm	")"
-	defb	154
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	226
-
-	defm	"39"
-	defb	233
-
-	defm	"3"
-	defb	226
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	229
-
-	defm	"v"
-	defb	237
-
-	defm	""
-	defb	237
-
-	defm	">"
-	defb	237
-
-	defm	""
-	defb	229
-
-	defm	"v"
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	"v"
-	defb	138
-
-	defm	"Vx"
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"J:"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	169
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"J)"
-	defb	170
-
-	defm	")"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	18
-
-	defm	""
-	defb	234
-
-	defm	""
-	defb	18
-
-	defm	"!JJ"
-	defb	170
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	154
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	"3"
-	defb	236
-
-	defm	""
-	defb	211
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	206
-
-	defm	"33"
-	defb	226
-
-	defm	""
-	defb	216
-
-	defm	"]"
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	7
-
-	defm	"x"
-	defb	170
-
-	defm	"]"
-	defb	192
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"V}"
-	defb	236
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	234
-
-	defm	"J"
-	defb	163
-
-	defm	":"
-	defb	170
-
-	defm	"V}"
-	defb	237
-
-	defm	"J"
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"JWjJ:J"
-	defb	170
-
-	defm	"C"
-	defb	164
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	26
-
-	defm	"J:"
-	defb	161
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	19
-
-	defm	""
-	defb	25
-
-	defm	"!3"
-	defb	145
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	227
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	148
-
-	defm	"M"
-	defb	146
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	215
-
-	defm	"n"
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	"(X"
-	defb	163
-
-	defm	"^"
-	defb	192
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	216
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	170
-
-	defm	"."
-	defb	0
-
-	defm	""
-	defb	13
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	148
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	192
-
-	defm	"x"
-	defb	164
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	162
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	10
-
-	defm	"J:"
-	defb	156
-
-	defm	""
-	defb	227
-
-	defm	""
-	defb	170
-
-	defm	"Wl"
-	defb	17
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	29
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	26
-
-	defm	"J"
-	defb	164
-
-	defm	"Y"
-	defb	145
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	201
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	201
-
-	defm	""
-	defb	154
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	214
-
-	defm	"v"
-	defb	220
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	12
-
-	defm	"xJ"
-	defb	165
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	218
-
-	defm	"A"
-	defb	20
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	231
-
-	defm	""
-	defb	141
-
-	defm	""
-	defb	237
-
-	defm	"h"
-	defb	161
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	26
-
-	defm	"B"
-	defb	170
-
-	defm	"x"
-	defb	161
-
-	defm	"J"
-	defb	151
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	170
-
-	defm	"TA"
-	defb	17
-
-	defm	""
-	defb	154
-
-	defm	"FE"
-	defb	132
-
-	defm	""
-	defb	170
-
-	defm	"A"
-	defb	153
-
-	defm	""
-	defb	157
-
-	defm	"J"
-	defb	161
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	"1"
-	defb	156
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	227
-
-	defm	"3"
-	defb	147
-
-	defm	"31"
-	defb	158
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	214
-
-	defm	"v"
-	defb	220
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	"xJ"
-	defb	165
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	218
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	17
-
-	defm	"J"
-	defb	206
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	13
-
-	defm	"h"
-	defb	170
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	162
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	13
-
-	defm	""
-	defb	161
-
-	defm	"J"
-	defb	169
-
-	defm	"}"
-	defb	154
-
-	defm	"V"
-	defb	221
-
-	defm	"t"
-	defb	154
-
-	defm	"DdHJE$"
-	defb	173
-
-	defm	"J"
-	defb	170
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	":"
-	defb	168
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	225
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	154
-
-	defm	"4"
-	defb	161
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	217
-
-	defm	")"
-	defb	157
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	237
-
-	defm	"v"
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	204
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	133
-
-	defm	""
-	defb	138
-
-	defm	"5"
-	defb	236
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	214
-
-	defm	""
-	defb	205
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	162
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	216
-
-	defm	""
-	defb	174
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	163
-
-	defm	"JJ]"
-	defb	226
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	138
-
-	defm	"C"
-	defb	170
-
-	defm	"JJ^"
-	defb	138
-
-	defm	""
-	defb	26
-
-	defm	"C"
-	defb	164
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	20
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	25
-
-	defm	"I"
-	defb	164
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	26
-
-	defm	"I"
-	defb	209
-
-	defm	""
-	defb	218
-
-	defm	""
-	defb	161
-
-	defm	"="
-	defb	205
-
-	defm	")"
-	defb	17
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	205
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	156
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	2
-
-	defm	""
-	defb	216
-
-	defm	"]"
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	6
-
-	defm	"x"
-	defb	170
-
-	defm	"]"
-	defb	192
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"V}"
-	defb	236
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	234
-
-	defm	"J"
-	defb	163
-
-	defm	":"
-	defb	170
-
-	defm	"V}"
-	defb	237
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"JWi"
-	defb	26
-
-	defm	"DI"
-	defb	145
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	20
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	210
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	174
-
-	defm	""
-	defb	233
-
-	defm	""
-	defb	158
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	153
-
-	defm	")"
-	defb	17
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	144
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	160
-
-	defm	""
-	defb	14
-
-	defm	"(P"
-	defb	192
-
-	defm	""
-	defb	200
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	185
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	216
-
-	defm	":n"
-	defb	205
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	232
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	"^$"
-	defb	173
-
-	defm	""
-	defb	232
-
-	defm	"x"
-	defb	164
-
-	defm	"4"
-	defb	170
-
-	defm	"X"
-	defb	170
-
-	defm	"-"
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	173
-
-	defm	"*"
-	defb	170
-
-	defm	"JJ"
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	":X"
-	defb	161
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	17
-
-	defm	"1"
-	defb	25
-
-	defm	","
-	defb	9
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	"."
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	202
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	216
-
-	defm	"Uv"
-	defb	237
-
-	defm	""
-	defb	237
-
-	defm	">"
-	defb	153
-
-	defm	"("
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	165
-
-	defm	"v"
-	defb	138
-
-	defm	"U"
-	defb	222
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	162
-
-	defm	""
-	defb	218
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	170
-
-	defm	"J"
-	defb	170
-
-	defm	"JJX"
-	defb	161
-
-	defm	""
-	defb	154
-
-	defm	"J"
-	defb	169
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	163
-
-	defm	"J"
-	defb	170
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	145
-
-	defm	"A)"
-	defb	161
-
-	defm	"!"
-	defb	17
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	210
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	158
-
-	defm	"$"
-	defb	157
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	210
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	205
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	208
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	226
-
-	defm	"hg-u-"
-	defb	133
-
-	defm	""
-	defb	221
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	170
-
-	defm	"E"
-	defb	138
-
-	defm	"E"
-	defb	132
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	164
-
-	defm	"J"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	154
-
-	defm	"J)J)"
-	defb	170
-
-	defm	":"
-	defb	172
-
-	defm	"J"
-	defb	18
-
-	defm	""
-	defb	234
-
-	defm	""
-	defb	18
-
-	defm	"!JJ"
-	defb	196
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	226
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	145
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	16
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	211
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	208
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	218
-
-	defm	""
-	defb	165
-
-	defm	"(]"
-	defb	229
-
-	defm	""
-	defb	206
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	215
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	168
-
-	defm	""
-	defb	170
-
-	defm	"Z"
-	defb	173
-
-	defm	""
-	defb	216
-
-	defm	"R"
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	"X"
-	defb	170
-
-	defm	""
-	defb	138
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	":J"
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	26
-
-	defm	"J"
-	defb	170
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	26
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	163
-
-	defm	""
-	defb	161
-
-	defm	""
-	defb	154
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	19
-
-	defm	""
-	defb	25
-
-	defm	"!3"
-	defb	145
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	169
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	217
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	148
-
-	defm	"M"
-	defb	146
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	133
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	10
-
-	defm	""
-	defb	165
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	162
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	237
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	10
-
-	defm	""
-	defb	170
-
-	defm	"V-m"
-	defb	236
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	164
-
-	defm	""
-	defb	164
-
-	defm	"E"
-	defb	132
-
-	defm	"]"
-	defb	224
-
-	defm	""
-	defb	11
-
-	defm	""
-	defb	10
-
-	defm	"JJ"
-	defb	161
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	238
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	170
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	17
-
-	defm	""
-	defb	157
-
-	defm	""
-	defb	220
-
-	defm	""
-	defb	14
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	10
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	153
-
-	defm	""
-	defb	146
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	25
-
-	defm	""
-	defb	222
-
-	defm	""
-	defb	236
-
-	defm	""
-	defb	224
-
-	defm	""
-	defb	192
-
-	defm	""
-	defb	176
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	9
-
-	defm	"."
-	defb	204
-
-	defm	""
-	defb	12
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-	defm	""
-	defb	0
-
-;	SECTION	code
-
-
-;	SECTION	text
-
-._cerrojos
-	defb	0
-	defb	0
-	defb	2
-	defb	0
-	defb	0
-	defb	0
-	defb	3
-	defb	0
-	defb	2
-	defb	14
-	defb	0
-	defb	0
-	defb	2
-	defb	14
-	defb	1
-	defb	0
-	defb	2
-	defb	14
-	defb	8
-	defb	0
-	defb	3
-	defb	0
-	defb	0
-	defb	0
-	defb	3
-	defb	0
-	defb	1
-	defb	0
-	defb	3
-	defb	0
-	defb	2
-	defb	0
-	defb	14
-	defb	9
-	defb	9
-	defb	0
-	defb	15
-	defb	7
-	defb	8
-	defb	0
-	defb	16
-	defb	8
-	defb	9
-	defb	0
-	defb	19
-	defb	14
-	defb	0
-	defb	0
-	defb	19
-	defb	14
-	defb	1
-	defb	0
-	defb	19
-	defb	14
-	defb	2
-	defb	0
-	defb	19
-	defb	3
-	defb	7
-	defb	0
-	defb	20
-	defb	0
-	defb	1
-	defb	0
-	defb	20
-	defb	0
-	defb	2
-	defb	0
-	defb	20
-	defb	0
-	defb	3
-	defb	0
-	defb	20
-	defb	0
-	defb	4
-	defb	0
-	defb	20
-	defb	0
-	defb	5
-	defb	0
-	defb	20
-	defb	3
-	defb	6
-	defb	0
-	defb	20
-	defb	1
-	defb	7
-	defb	0
-	defb	20
-	defb	3
-	defb	7
-	defb	0
-	defb	20
-	defb	4
-	defb	8
-	defb	0
-	defb	20
-	defb	5
-	defb	8
-	defb	0
-	defb	20
-	defb	6
-	defb	9
-	defb	0
-	defb	20
-	defb	7
-	defb	9
-	defb	0
-	defb	20
-	defb	10
-	defb	9
-	defb	0
-	defb	20
-	defb	11
-	defb	9
-	defb	0
-	defb	21
-	defb	14
-	defb	2
-	defb	0
-	defb	21
-	defb	14
-	defb	5
-	defb	0
-	defb	21
-	defb	14
-	defb	6
-	defb	0
-	defb	21
-	defb	14
-	defb	7
-	defb	0
-	defb	21
-	defb	12
-	defb	9
-	defb	0
-	defb	22
-	defb	13
-	defb	1
-	defb	0
-	defb	22
-	defb	0
-	defb	4
-	defb	0
-	defb	22
-	defb	0
-	defb	5
-	defb	0
-	defb	22
-	defb	0
-	defb	6
-	defb	0
-	defb	22
-	defb	13
-	defb	6
-	defb	0
-	defb	22
-	defb	13
-	defb	7
-	defb	0
-	defb	22
-	defb	14
-	defb	7
-	defb	0
-	defb	22
-	defb	0
-	defb	8
-	defb	0
-	defb	22
-	defb	13
-	defb	8
-	defb	0
-	defb	22
-	defb	0
-	defb	9
-	defb	0
-	defb	22
-	defb	1
-	defb	9
-	defb	0
-	defb	22
-	defb	12
-	defb	9
-	defb	0
-	defb	22
-	defb	13
-	defb	9
-	defb	0
-	defb	22
-	defb	14
-	defb	9
-	defb	0
-	defb	23
-	defb	0
-	defb	1
-	defb	0
-	defb	23
-	defb	0
-	defb	4
-	defb	0
-	defb	23
-	defb	0
-	defb	5
-	defb	0
-	defb	24
-	defb	1
-	defb	6
-	defb	0
-	defb	24
-	defb	2
-	defb	7
-	defb	0
-	defb	24
-	defb	3
-	defb	8
-	defb	0
-	defb	28
-	defb	11
-	defb	6
-	defb	0
-	defb	31
-	defb	11
-	defb	1
-	defb	0
-	defb	34
-	defb	2
-	defb	0
-	defb	0
-	defb	34
-	defb	5
-	defb	0
-	defb	0
-	defb	34
-	defb	6
-	defb	0
-	defb	0
-	defb	34
-	defb	9
-	defb	0
-	defb	0
-	defb	35
-	defb	8
-	defb	0
-	defb	0
-	defb	35
-	defb	11
-	defb	1
-	defb	0
-	defb	35
-	defb	12
-	defb	1
-	defb	0
-	defb	35
-	defb	12
-	defb	3
-	defb	0
-	defb	36
-	defb	8
-	defb	0
-	defb	0
-	defb	36
-	defb	9
-	defb	0
-	defb	0
-	defb	37
-	defb	5
-	defb	0
-	defb	0
-	defb	37
-	defb	6
-	defb	0
-	defb	0
-	defb	37
-	defb	7
-	defb	0
-	defb	0
-	defb	38
-	defb	5
-	defb	1
-	defb	0
-	defb	38
-	defb	4
-	defb	8
-	defb	0
-	defb	39
-	defb	1
-	defb	0
-	defb	0
-	defb	39
-	defb	4
-	defb	0
-	defb	0
-	defb	39
-	defb	3
-	defb	1
-	defb	0
-
-;	SECTION	code
-
+	._mapa
+	BINARY "mapa.map.bin"
+	._cerrojos
+	BINARY "mapa.locks.bin"
 ;	SECTION	text
 
 ._malotes
@@ -17886,7 +5951,7 @@
 	ld	d,0
 	ld	hl,40	;const
 	call	l_ult
-	jp	nc,i_42
+	jp	nc,i_40
 	.m_vert_gravity_do
 	ld hl, (_player + 8)
 	ld de, 32
@@ -17955,8 +6020,8 @@
 	inc a
 	.m_vert_jump_down_done
 	ld (_disable_collide_platform), a
-.i_42
-.i_43
+.i_40
+.i_41
 	ret
 
 
@@ -17967,7 +6032,7 @@
 	ld	d,0
 	ld	hl,40	;const
 	call	l_ult
-	jp	nc,i_44
+	jp	nc,i_42
 	ld c, 3
 	ld a, (_player + 26)
 	ld b, a
@@ -17986,7 +6051,7 @@
 	srl a
 	srl a
 	srl a
-	and 1
+	and 3
 	ld h, 0
 	ld l, a
 	ld de, _player_walk_cycle
@@ -17998,9 +6063,11 @@
 	.m_frame_set
 	ld a, (_player + 22)
 	add c
-	ld (_player + 20), a
-.i_44
-.i_45
+	ld l, a
+	ld h, 0
+	ret
+.i_42
+.i_43
 	ret
 
 
@@ -18008,21 +6075,21 @@
 ._extra_enems_init
 	ld	a,(__en_t)
 	cp	#(5 % 256)
-	jr	z,i_47_uge
-	jp	c,i_47
-.i_47_uge
+	jr	z,i_45_uge
+	jp	c,i_45
+.i_45_uge
 	ld	a,(__en_t)
 	cp	#(8 % 256)
-	jp	z,i_47
-	jr	c,i_48_i_47
-.i_47
-	jp	i_46
-.i_48_i_47
+	jp	z,i_45
+	jr	c,i_46_i_45
+.i_45
+	jp	i_44
+.i_46_i_45
 	ld	hl,(__en_t)
 	ld	h,0
 	dec	hl
 	call	_enems_en_an_calc
-.i_46
+.i_44
 	ret
 
 
@@ -18030,33 +6097,33 @@
 ._extra_enems_move
 	ld	a,(__en_t)
 	cp	#(5 % 256)
-	jr	z,i_50_uge
-	jp	c,i_50
-.i_50_uge
+	jr	z,i_48_uge
+	jp	c,i_48
+.i_48_uge
 	ld	a,(__en_t)
 	cp	#(8 % 256)
-	jp	z,i_50
-	jr	c,i_51_i_50
-.i_50
-	jp	i_49
-.i_51_i_50
+	jp	z,i_48
+	jr	c,i_49_i_48
+.i_48
+	jp	i_47
+.i_49_i_48
 	call en_lineal_do
 	ld	a,(__en_t)
 	cp	#(7 % 256)
-	jp	nz,i_52
+	jp	nz,i_50
 	ld	hl,__en_mx
 	call	l_gchar
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jp	c,i_54
+	jp	c,i_52
 	ld	hl,__en_my
 	call	l_gchar
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_53
-.i_54
+	jp	nc,i_51
+.i_52
 	ld a, (_enit)
 	sla a
 	ld b, 0
@@ -18080,9 +6147,9 @@
 	pop de
 	ldi
 	ldi
-.i_53
-.i_52
-.i_49
+.i_51
+.i_50
+.i_47
 	ret
 
 
@@ -18313,15 +6380,15 @@
 	ld	de,15	;const
 	ex	de,hl
 	call	l_eq
-	jp	nc,i_58
+	jp	nc,i_56
 	ld	hl,_player+28
 	call	l_gchar
 	ld	a,h
 	or	l
-	jr	nz,i_59_i_58
-.i_58
-	jp	i_57
-.i_59_i_58
+	jr	nz,i_57_i_56
+.i_56
+	jp	i_55
+.i_57_i_56
 	xor a
 	ld (__t), a
 	ld a, (_comportamiento_tiles) ;; beh [0]
@@ -18332,7 +6399,7 @@
 	ld a, (_rdy)
 	ld (__y), a
 	call set_map_tile_do
-	ld b, 74
+	ld b, 2
 	ld hl, _cerrojos
 	.clear_cerrojo_loop
 	ld c, (hl)
@@ -18366,13 +6433,13 @@
 	ld	(de),a
 	ld	hl,8	;const
 	call	_peta_el_beeper
-.i_57
+.i_55
 	ret
 
 
 
 ._init_cerrojos
-	ld b, 74
+	ld b, 2
 	ld hl, _cerrojos + 3
 	ld de, 4
 	ld a, 1
@@ -18878,6 +6945,29 @@
 	ld a, 1
 	ld (_player + 36), a
 	.m_evil_tile_hit_done
+	ld a, (_gpx)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld c, a
+	ld (_tpx), a
+	ld a, (_gpy)
+	add 8
+	srl a
+	srl a
+	srl a
+	srl a
+	ld (_tpy), a
+	call _attr_2
+	ld a, l
+	ld (_tat), a
+	and 128
+	jr z, nospecial
+	ld hl, 5
+	call _script
+	.nospecial
 	ld	hl,_player+20
 	push	hl
 	call	_player_custom_frame
@@ -18976,7 +7066,7 @@
 	ld l, a
 	push hl
 	ld a, (_rdy)
-	add 2
+	add 4
 	ld h, 0
 	ld l, a
 	push hl
@@ -19081,12 +7171,12 @@
 	ld (__x), a
 	ld a, (_rdy)
 	sla a
-	add 2
+	add 4
 	ld (__y), a
 	ld a, (_hotspot_t_r)
 	ld b, a
 	cp 3
-	ld a, 16
+	ld a, 32
 	jr z, hotspot_paint_set_t
 	add b
 	.hotspot_paint_set_t
@@ -19101,48 +7191,50 @@
 	ld (_rdx), a
 	ld (_rdy), a
 	ld (_rdi), a
-	ld	hl,_mapa
-	push	hl
-	ld	hl,(_n_pant)
-	ld	h,0
-	ld	de,75
-	call	l_mult
-	pop	de
-	add	hl,de
-	ld	(_gp_gen),hl
-	xor a
-	ld (_rdi), a
-	ld (_gpit), a
-	.draw_scr_bg_loop
+	._draw_scr_get_scr_address
+	ld hl, (_n_pant)
+	ld h, 0
+	add hl, hl
+	ld de, _mapa
+	add hl, de ; HL = map + (n_pant << 1)
+	ld e, (hl)
+	inc hl
+	ld d, (hl) ; DE = index
+	ld hl, _mapa
+	add hl, de ; HL = map + index
+	ld (_gp_gen), hl
+	._draw_scr_rle
+	._draw_scr_loop
+	ld a, (_rdi)
+	cp 150
+	jr z, _draw_scr_loop_done
 	ld hl, (_gp_gen)
 	ld a, (hl)
 	inc hl
 	ld (_gp_gen), hl
-	ld b, a
-	srl a
-	srl a
-	srl a
-	srl a
-	ld (_rdt1), a
-	ld a, b
-	and 15
-	ld (_rdt2), a
-	ld a, (_rdt1)
+	ld (_rdn), a
+	and 0x1f
+	ld (_rdc), a
+	._draw_scr_advance_loop
+	ld a, (_rdn)
+	cp 0x20
+	jr c, _draw_scr_advance_loop_done
+	sub 0x20
+	ld (_rdn), a
+	call _advance_worm
+	jr _draw_scr_advance_loop
+	._draw_scr_advance_loop_done
+	call _advance_worm
+	jr _draw_scr_loop
+	._advance_worm
+	ld a, (_rdc)
 	ld (__n), a
 	call _draw_and_advance
-	ld a, (_rdt2)
-	ld (__n), a
-	call _draw_and_advance
-	ld a, (_gpit)
-	inc a
-	ld (_gpit), a
-	cp 75
-	jr nz, draw_scr_bg_loop
-	jr draw_scr_bg_loop_end
-	.draw_scr_bg_loop_end
+	ret
+	._draw_scr_loop_done
 	call	_hotspot_paint
 	ld hl, _cerrojos
-	ld b, 74
+	ld b, 2
 	.draw_scr_bolts_loop
 	; Cerrojos structure is np, x, y, st
 	ld c, (hl) ; np
@@ -19223,18 +7315,18 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_62
-.i_60
+	jp	i_60
+.i_58
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_62
+.i_60
 	ld	a,(_enit)
 	ld	e,a
 	ld	d,0
 	ld	hl,3	;const
 	call	l_ult
-	jp	nc,i_61
+	jp	nc,i_59
 	ld bc, (_enit)
 	xor a
 	ld b, a
@@ -19250,27 +7342,27 @@
 	call enems_get_values
 	ld	hl,(__en_t)
 	ld	h,0
-.i_65
+.i_63
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_66
+	jp	z,i_64
 	cp	#(2% 256)
-	jp	z,i_67
+	jp	z,i_65
 	cp	#(3% 256)
-	jp	z,i_68
+	jp	z,i_66
 	cp	#(4% 256)
-	jp	z,i_69
-	jp	i_70
+	jp	z,i_67
+	jp	i_68
+.i_64
+.i_65
 .i_66
 .i_67
-.i_68
-.i_69
 	ld	hl,(__en_t)
 	ld	h,0
 	dec	hl
 	call	_enems_en_an_calc
-	jp	i_64
-.i_70
+	jp	i_62
+.i_68
 	ld	hl,_en_an_next_frame
 	push	hl
 	ld	hl,(_enit)
@@ -19282,11 +7374,21 @@
 	ld	hl,_spr_empty
 	pop	de
 	call	l_pint
-.i_64
+.i_62
 	call	_extra_enems_init
 	call enems_update_values_store
-	jp	i_60
-.i_61
+	jp	i_58
+.i_59
+	ld	hl,1	;const
+	call	_script
+	ld	a,(_n_pant)
+	ld	e,a
+	ld	d,0
+	ld	l,#(1 % 256)
+	call	l_asl
+	ld	de,16
+	add	hl,de
+	call	_script
 	ret
 
 
@@ -19324,16 +7426,16 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_73
-.i_71
+	jp	i_71
+.i_69
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_73
+.i_71
 	ld	a,(_enit)
 	cp	#(3 % 256)
-	jp	z,i_72
-	jp	nc,i_72
+	jp	z,i_70
+	jp	nc,i_70
 	ld	de,(_enoffs)
 	ld	hl,(_enit)
 	ld	h,0
@@ -19344,7 +7446,7 @@
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_74
+	jp	z,i_72
 	ld a, (_maincounter)
 	and 3
 	jr nz, enems_animate_done
@@ -19361,14 +7463,14 @@
 	ld	d,0
 	ld	hl,4	;const
 	call	l_ule
-	jp	nc,i_75
+	jp	nc,i_73
 	call en_lineal_do
-.i_75
+.i_73
 	call	_enems_calc_frame
 	call	_extra_enems_move
 	ld	a,(__en_t)
 	cp	#(4 % 256)
-	jp	nz,i_77
+	jp	nz,i_75
 	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
@@ -19378,7 +7480,7 @@
 	add	hl,bc
 	pop	de
 	call	l_uge
-	jp	nc,i_77
+	jp	nc,i_75
 	ld	hl,(_gpx)
 	ld	h,0
 	push	hl
@@ -19388,10 +7490,10 @@
 	add	hl,bc
 	pop	de
 	call	l_ule
-	jr	c,i_78_i_77
-.i_77
-	jp	i_76
-.i_78_i_77
+	jr	c,i_76_i_75
+.i_75
+	jp	i_74
+.i_76_i_75
 	.moving_platforms
 	ld a, (_player + 19)
 	or a
@@ -19461,31 +7563,31 @@
 	call withSign
 	ld (_ptgmx), hl
 	.moving_platforms_done
-	jp	i_79
-.i_76
+	jp	i_77
+.i_74
 	call	_collide_enem
 	ld	a,h
 	or	l
-	jp	z,i_80
+	jp	z,i_78
 	ld	hl,(_en_tocado)
 	ld	h,0
 	ld	de,0
 	call	l_eq
-	jp	nc,i_82
+	jp	nc,i_80
 	call	_this_enemy_kills
 	ld	a,h
 	or	l
-	jp	z,i_82
+	jp	z,i_80
 	ld	a,(__en_t)
 	cp	#(128 % 256)
-	jp	z,i_82
-	jr	c,i_83_i_82
-.i_82
-	jp	i_81
-.i_83_i_82
+	jp	z,i_80
+	jr	c,i_81_i_80
+.i_80
+	jp	i_79
+.i_81_i_80
 	ld	a,(_player+23)
 	and	a
-	jp	nz,i_84
+	jp	nz,i_82
 	ld	a,#(1 % 256 % 256)
 	ld	(_en_tocado),a
 	ld	hl,_player+36
@@ -19498,17 +7600,19 @@
 	ld	(hl),#(2 % 256 % 256)
 	ld	l,(hl)
 	ld	h,0
-.i_84
-.i_81
-.i_80
+.i_82
 .i_79
+	ld	hl,8	;const
+	call	_script
+.i_78
+.i_77
 	call	_extra_enems_checks
-.i_74
-.i_85
+.i_72
+.i_83
 	.enems_update_values_and_exit
 	call enems_update_values_store
-	jp	i_71
-.i_72
+	jp	i_69
+.i_70
 	ret
 
 
@@ -19774,6 +7878,11 @@
 	.en_linear_vertical_axis_done
 	.en_linear_done
 	ret
+
+._do_extern_action
+	ret
+
+
 	._s_title
 	BINARY "titlec.bin"
 	._s_marco
@@ -19813,22 +7922,22 @@
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_gpit),a
-	jp	i_88
-.i_86
+	jp	i_86
+.i_84
 	ld	hl,_gpit
 	ld	a,(hl)
 	inc	(hl)
-.i_88
+.i_86
 	ld	a,(_gpit)
 	cp	#(4 % 256)
-	jp	z,i_87
-	jp	nc,i_87
+	jp	z,i_85
+	jp	nc,i_85
 	ld	hl,7	;const
 	call	_peta_el_beeper
 	ld	hl,2	;const
 	call	_peta_el_beeper
-	jp	i_86
-.i_87
+	jp	i_84
+.i_85
 	ld	hl,9	;const
 	call	_peta_el_beeper
 	call	_no_break
@@ -19880,21 +7989,30 @@
 ._main
 	ld sp, 61936
 	call	_system_init
-.i_89
+.i_87
 	call	_title_screen
 	call	_blackout
 	call SPUpdateNow
 	ld hl, _s_marco
 	call _unpack_screen
+	ld hl, _flags
+	ld de, _flags + 1
+	ld bc, 16 - 1
+	xor a
+	ld (hl), a
+	ldir
 	ld	hl,1 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_init_player
 	call	_init_hotspots
 	call	_init_cerrojos
-	ld	hl,0 % 256	;const
-	ld	a,l
+	ld	a,#(0 % 256 % 256)
 	ld	(_n_pant),a
+	ld	a,#(0 % 256 % 256)
+	ld	(_script_result),a
+	ld	hl,0	;const
+	call	_script
 	xor a
 	ld (_maincounter), a
 	ld (_half_life), a
@@ -19907,12 +8025,12 @@
 	ld (_killed_old), a
 	ld (_flag_old), a
 	ld (_on_pant), a
-.i_91
+.i_89
 	ld	hl,(_playing)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_92
+	jp	z,i_90
 	ld a, (_n_pant)
 	ld c, a
 	ld a, (_on_pant)
@@ -19930,10 +8048,10 @@
 	ld	hl,(_objs_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_93
-	ld	hl,18	;const
+	jp	nc,i_91
+	ld	hl,14	;const
 	push	hl
-	ld	hl,1	;const
+	ld	hl,2	;const
 	push	hl
 	ld	hl,_player+27
 	call	l_gchar
@@ -19951,31 +8069,31 @@
 	ld	h,0
 	ld	a,l
 	ld	(_objs_old),a
-.i_93
+.i_91
 	ld	de,(_player+29)
 	ld	hl,(_life_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_94
+	jp	nc,i_92
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	m,i_95
+	jp	m,i_93
 	or	l
-	jp	z,i_95
+	jp	z,i_93
 	ld	hl,(_player+29)
 	ld	h,0
 	ld	a,l
 	ld	(_pti),a
-	jp	i_96
-.i_95
+	jp	i_94
+.i_93
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_pti),a
-.i_96
+.i_94
 	ld	hl,7	;const
 	push	hl
-	ld	hl,1	;const
+	ld	hl,2	;const
 	push	hl
 	ld	hl,(_pti)
 	ld	h,0
@@ -19988,22 +8106,22 @@
 	ld	h,0
 	ld	a,l
 	ld	(_life_old),a
-.i_94
+.i_92
 	ld	hl,_player+28
 	call	l_gchar
 	ex	de,hl
 	ld	hl,(_keys_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_97
-	ld a, 28
+	jp	nc,i_95
+	ld a, 21
 	ld (__x), a
-	ld a, 1
+	ld a, 2
 	ld (__y), a
 	ld a, (_player + 28)
 	ld (_keys_old), a
 	call draw_2_digits_shortcut
-.i_97
+.i_95
 	ld hl, _maincounter
 	inc (hl)
 	ld a, (_half_life)
@@ -20042,21 +8160,21 @@
 	jp c, _hotspots_else
 	ld	a,(_hotspot_t)
 	and	a
-	jp	z,i_98
+	jp	z,i_96
 	ld	a,#(0 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,(_hotspot_t)
 	ld	h,0
-.i_101
+.i_99
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_102
+	jp	z,i_100
 	cp	#(2% 256)
-	jp	z,i_103
+	jp	z,i_101
 	cp	#(3% 256)
-	jp	z,i_104
-	jp	i_100
-.i_102
+	jp	z,i_102
+	jp	i_98
+.i_100
 	ld	hl,_player+27
 	push	hl
 	call	l_gchar
@@ -20066,8 +8184,8 @@
 	ld	(de),a
 	ld	hl,7	;const
 	call	_peta_el_beeper
-	jp	i_100
-.i_103
+	jp	i_98
+.i_101
 	ld	hl,_player+28
 	push	hl
 	call	l_gchar
@@ -20077,8 +8195,8 @@
 	ld	(de),a
 	ld	hl,8	;const
 	call	_peta_el_beeper
-	jp	i_100
-.i_104
+	jp	i_98
+.i_102
 	ld	hl,_player+29
 	inc	(hl)
 	ld	a,(hl)
@@ -20091,18 +8209,18 @@
 	ld	de,99	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_105
+	jp	nc,i_103
 	ld	hl,99	;const
 	ld	(_player+29),hl
-.i_105
+.i_103
 	ld	a,#(2 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,9	;const
 	call	_peta_el_beeper
-.i_100
+.i_98
 	ld	a,(_rdi)
 	cp	#(1 % 256)
-	jp	z,i_106
+	jp	z,i_104
 	ld	a,(_hotspot_x)
 	ld	e,a
 	ld	d,0
@@ -20116,7 +8234,7 @@
 	ld	d,0
 	ld	l,#(3 % 256)
 	call	l_asr_u
-	ld	de,2
+	ld	de,4
 	add	hl,de
 	push	hl
 	ld	hl,(_orig_tile)
@@ -20145,10 +8263,10 @@
 	ld	a,(hl)
 	pop	de
 	ld	(de),a
-	ld	l,a
-	ld	h,0
-.i_106
-.i_98
+	ld	hl,3	;const
+	call	_script
+.i_104
+.i_96
 	._hotspots_finally
 	ld a, 1
 	ld (_hotspot_flag), a
@@ -20180,17 +8298,32 @@
 	.player_flicker_ct_write
 	ld (_player + 24), a
 	.player_flicker_check_done
+	ld	hl,_pad_this_frame
+	ld	a,(hl)
+	rlca
+	jp	c,i_105
+	ld	hl,2	;const
+	call	_script
+	ld	a,(_n_pant)
+	ld	e,a
+	ld	d,0
+	ld	l,#(1 % 256)
+	call	l_asl
+	ld	de,17
+	add	hl,de
+	call	_script
+.i_105
 	ld	a,(_gpx)
 	cp	#(0 % 256)
-	jp	nz,i_108
+	jp	nz,i_107
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jr	c,i_109_i_108
-.i_108
-	jp	i_107
-.i_109_i_108
+	jr	c,i_108_i_107
+.i_107
+	jp	i_106
+.i_108_i_107
 	ld hl, _n_pant
 	dec (hl)
 	ld a, 224
@@ -20198,19 +8331,19 @@
 	ld hl, #(224*64)
 	ld (_player), hl
 	.flick_left_done
-	jp	i_110
-.i_107
+	jp	i_109
+.i_106
 	ld	a,(_gpx)
 	cp	#(224 % 256)
-	jp	nz,i_112
+	jp	nz,i_111
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_113_i_112
-.i_112
-	jp	i_111
-.i_113_i_112
+	jr	c,i_112_i_111
+.i_111
+	jp	i_110
+.i_112_i_111
 	ld hl, _n_pant
 	inc (hl)
 	xor a
@@ -20218,25 +8351,25 @@
 	ld hl, 0
 	ld (_player), hl
 	.flick_right_done
-.i_111
 .i_110
+.i_109
 	ld	a,(_gpy)
 	cp	#(0 % 256)
-	jp	nz,i_115
+	jp	nz,i_114
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_115
+	jp	nc,i_114
 	ld	a,(_n_pant)
 	cp	#(20 % 256)
-	jr	z,i_115_uge
-	jp	c,i_115
-.i_115_uge
-	jr	i_116_i_115
-.i_115
-	jp	i_114
-.i_116_i_115
+	jr	z,i_114_uge
+	jp	c,i_114
+.i_114_uge
+	jr	i_115_i_114
+.i_114
+	jp	i_113
+.i_115_i_114
 	ld a, (_n_pant)
 	sub 20
 	ld (_n_pant), a
@@ -20245,19 +8378,19 @@
 	ld hl, #(144*64)
 	ld (_player+2), hl
 	.flick_up_done
-	jp	i_117
-.i_114
+	jp	i_116
+.i_113
 	ld	a,(_gpy)
 	cp	#(144 % 256)
-	jp	nz,i_119
+	jp	nz,i_118
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_120_i_119
-.i_119
-	jp	i_118
-.i_120_i_119
+	jr	c,i_119_i_118
+.i_118
+	jp	i_117
+.i_119_i_118
 	ld a, (_n_pant)
 	add 20
 	ld (_n_pant), a
@@ -20266,26 +8399,26 @@
 	ld hl, 0
 	ld (_player+2),hl
 	.flick_down_done
-.i_118
 .i_117
-	ld	hl,_player+27
-	call	l_gchar
-	ld	de,24	;const
-	ex	de,hl
+.i_116
+	ld	a,(_script_result)
+	ld	e,a
+	ld	d,0
+	ld	hl,1	;const
 	call	l_eq
-	jp	nc,i_121
+	jp	nc,i_120
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_cortina
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_game_ending
-.i_121
+.i_120
 	ld	hl,(_player+36)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_122
+	jp	z,i_121
 	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
@@ -20304,23 +8437,28 @@
 	pop	de
 	call	l_pint
 	call	_player_flicker
-.i_122
+.i_121
 	ld	hl,(_player+29)
-	xor	a
-	or	h
-	jp	p,i_123
+	ld	de,0	;const
+	ex	de,hl
+	call	l_lt
+	jp	c,i_123
+	ld	a,(_script_result)
+	cp	#(2 % 256)
+	jp	nz,i_122
+.i_123
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_123
+.i_122
 	xor a
 	ld (_pant_just_rendered), a
-	jp	i_91
-.i_92
 	jp	i_89
 .i_90
+	jp	i_87
+.i_88
 	ret
 
 
@@ -20981,6 +9119,8 @@
 ._tat	defs	1
 ._rdd	defs	1
 ._rdb	defs	1
+._rdc	defs	1
+._rdn	defs	1
 ._pti	defs	1
 ._ptj	defs	1
 ._tqt	defs	1
@@ -21211,6 +9351,7 @@
 	XDEF	_render_this_enemy
 	XDEF	_pad_this_frame
 	XDEF	_fix_sprites
+	XREF	_script_n
 	XDEF	_qtile
 	XDEF	_init_cerrojos
 	XDEF	_cm_two_points
@@ -21368,30 +9509,34 @@
 	XDEF	_rdd
 	XDEF	_tileset
 	XDEF	_rdb
-	XDEF	_pti
+	XDEF	_rdc
 	XDEF	_comportamiento_tiles
+	XDEF	_rdn
+	XDEF	_pti
 	XDEF	_ptj
 	LIB	sp_Initialize
 	LIB	sp_SwapEndian
 	LIB	sp_ComputePos
 	LIB	sp_JoyTimexLeft
+	XDEF	_bitmask
 	LIB	sp_JoyTimexRight
 	LIB	sp_SetMousePosKempston
-	XDEF	_bitmask
 	LIB	sp_CharDown
 	LIB	sp_CharLeft
 	LIB	sp_PixelRight
 	LIB	sp_HeapSiftDown
 	LIB	sp_HuffCreate
 	LIB	sp_HuffEncode
-	XDEF	_draw_2_digits
-	XDEF	_no_break
 	XDEF	_tqt
-	XDEF	_player_flicker
+	XDEF	_draw_2_digits
 	XDEF	_tpx
 	XDEF	_tpy
-	XDEF	_check_lock_or_box_horz
+	XDEF	_no_break
 	XDEF	_enoffsmasi
+	XREF	_script_result
+	XDEF	_script
+	XDEF	_player_flicker
+	XDEF	_check_lock_or_box_horz
 	XDEF	_init_player_values
 	XDEF	_init_hotspots
 	LIB	sp_IntIntervals
@@ -21407,15 +9552,20 @@
 	LIB	sp_RegisterHookFirst
 	XDEF	__baddies_pointer
 	LIB	sp_HashLookup
+	XREF	_script_do
 	XDEF	_any_key
 	LIB	sp_PFill
 	LIB	sp_HashRemove
 	LIB	sp_CharUp
 	XDEF	_orig_tile
+	XREF	_script_tn
 	XDEF	_en_an_frame
 	defc	_en_an_frame	=	23600
 	XDEF	_success
 	LIB	sp_MoveSprRelNC
+	XREF	_script_tx
+	XREF	_script_ty
+	XDEF	_do_extern_action
 	XDEF	_platform_get_player
 	XDEF	_en_an_count
 	defc	_en_an_count	=	23603

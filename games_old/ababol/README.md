@@ -16,12 +16,12 @@ Esta es una lista de las criptas y la pantalla en la que está el cerrojo:
 
 Esta es una lista de donde voy a poner las llaves:
 
-- "I"
+- "I" P3 @ (8, 1)
 - "II"
 - "III"
 - "IV"
 
-El sistema de inventario será el de Cheril Perils (el Inventario Cutre MSC4 (TM)).
+El sistema de inventario será el de Cheril Perils (el Inventario Cutre MSC4 (TM)). Se pinta en 25,1
 
 Los tiles para las llaves son 36+N (37...) y para los cerrojos 41+N (42 ...)
 

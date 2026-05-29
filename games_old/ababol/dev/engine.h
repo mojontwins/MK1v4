@@ -1882,7 +1882,7 @@ void move (void) {
 					call l_div_u
 					ld  c, e 				// (_gpx >> 3) % 3
 			#else
-					and 1 
+					and 3 
 					ld  h, 0 
 					ld  l, a 
 					ld  de, _player_walk_cycle 

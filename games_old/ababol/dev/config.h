@@ -73,7 +73,7 @@
 // Scripting
 // ---------
 
-//#define ACTIVATE_SCRIPTING				// Activates msc scripting and flag related stuff.
+#define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
 //#define SCRIPTING_DOWN					// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 											// If none are selected, FIRE is used.
@@ -116,15 +116,15 @@
 // It's good practice to comment what you are not using!
 
 #define VIEWPORT_X					1		//
-#define VIEWPORT_Y					2		// Viewport character coordinates
+#define VIEWPORT_Y					4		// Viewport character coordinates
 #define LIFE_X						7		//
-#define LIFE_Y						1		// Life gauge counter character coordinates
-#define OBJECTS_X					18		//
-#define OBJECTS_Y					1		// Objects counter character coordinates
+#define LIFE_Y						2		// Life gauge counter character coordinates
+#define OBJECTS_X					14		//
+#define OBJECTS_Y					2		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			9		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-#define KEYS_X						28		//
-#define KEYS_Y						1		// Keys counter character coordinates
+#define KEYS_X						21		//
+#define KEYS_Y						2		// Keys counter character coordinates
 //#define KILLED_X					20		//
 //#define KILLED_Y					21		// Kills counter character coordinates
 //#define ITEM_X 					7		// 
@@ -139,11 +139,11 @@
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
-//#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
+#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
 //#define NO_MASKS		sp_OR_SPRITE 	// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
-//#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16
+#define HOTSPOTS_FIRST_TILE			32 	// Override default value of 16
 #define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
 //#define ENABLE_ANIMATED_TILES 	46  // Must be EVEN
 //#define TILANIM_PERIOD 			16  // Must be power of two
