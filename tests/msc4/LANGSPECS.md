@@ -85,6 +85,7 @@ Definimos estas variables especiales, codificadas internamente como "flags" fuer
 * $ED = EN_N = `_en_it`
 * $EC = EN_X = `_en_x`
 * $EB = EN_Y = `_en_y`
+* $EA = OPANT = on_pant
 
 Sólo rvalue: Asignar a F2-F4, F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING. El resto debe poder ser lvalue (se debe poder asignar a NPANT, KILLED, etc).
 

@@ -773,6 +773,13 @@ XDEF _script_result
 	ret
 .rvb_set_en_y_done
 
+	; OPANT RVALUE
+	cp  0xEA
+	jr  nz, rvb_set_on_pant_done
+	ld  a, (_on_pant)
+	ret
+.rvb_set_on_pant_done
+
 	ld  d, 0 
 	ld  e, a 
 	ld  hl, _flags 
@@ -840,24 +847,31 @@ XDEF _script_result
 
 	; EN_T LVALUE
 	cp  0xEE
-	jr  nz, riv_set_player_life_done
+	jr  nz, riv_set_en_t_done
 	ld  hl, __en_t
 	jr  read_i_v_cont
-.riv_set_player_life_done
+.riv_set_en_t_done
 
 	; EN_X LVALUE
 	cp  0xEC
-	jr  nz, riv_set_player_life_done
+	jr  nz, riv_set_en_x_done
 	ld  hl, __en_x
 	jr  read_i_v_cont
-.riv_set_player_life_done
+.riv_set_en_x_done
 
 	; EN_Y LVALUE
 	cp  0xEB
-	jr  nz, riv_set_player_life_done
+	jr  nz, riv_set_en_y_done
 	ld  hl, __en_y
 	jr  read_i_v_cont
-.riv_set_player_life_done
+.riv_set_en_y_done
+
+	; OPANT LVALUE
+	cp  0xEA
+	jr  nz, riv_set_on_pant_done
+	ld  hl, _on_pant
+	jr  read_i_v_cont
+.riv_set_on_pant_done
 
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags

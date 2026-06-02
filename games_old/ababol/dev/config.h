@@ -19,7 +19,7 @@
 #define MAP_H						3		// Map dimmensions in screens
 #define SCR_INICIO					0		// Initial screen
 #define PLAYER_INI_X				2		//
-#define PLAYER_INI_Y				2		// Initial tile coordinates
+#define PLAYER_INI_Y				7		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
@@ -191,9 +191,9 @@
 // 128|N = Special tile (scripting)
 
 unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 8, 8, 1, 8, 8,
+	0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 4, 8, 1, 8, 8,
 	8, 0, 8, 1, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8,
-	0, 0, 0, 0, 0
+	0, 0, 0, 0, 0,128,128,128,128,128,136,136,136,136,136, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes

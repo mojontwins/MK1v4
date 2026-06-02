@@ -193,6 +193,8 @@ Sub parseScriptLine (linea As String)
 			tokens (i) = "$236"
 		ElseIf Ucase(tokens (i)) = "EN_Y" Then
 			tokens (i) = "$235"
+		ElseIf Ucase(tokens (i)) = "OPANT" Or Ucase(tokens (i)) = "O_PANT" Then
+			tokens (i) = "$234"
 		End If
 
 		' Static identifiers
@@ -1089,7 +1091,7 @@ Dim As Integer fIn, fOut, i
 Dim As String fileIns(127)
 Dim As String fileText
 
-Print "msc v4.1.20260528 ~ ";
+Print "msc v4.1.20260602 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
@@ -1143,7 +1145,7 @@ fOut = FreeFile
 Open interpreterFn For Output As #fOut
 
 writeAssemblyString fOut, "defc PLAYER_LIFE=99 ;; Find a way to solve this"
-writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y|XREF _decode_text"
+writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _on_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y|XREF _decode_text"
 
 writeAssemblyString fOut, "XREF script_bytecode"
 
@@ -1249,6 +1251,7 @@ If RV(&HEE) Then writeAssemblyString fOut, "; EN_T RVALUE|cp  0xEE|jr  nz, rvb_s
 If RV(&HED) Then writeAssemblyString fOut, "; EN_N RVALUE|cp  0xED|jr  nz, rvb_set_en_n_done|ld  a, (_en_it)|ret|.rvb_set_en_n_done"
 If RV(&HEC) Then writeAssemblyString fOut, "; EN_X RVALUE|cp  0xEC|jr  nz, rvb_set_en_x_done|ld  a, (__en_x)|ret|.rvb_set_en_x_done"
 If RV(&HEB) Then writeAssemblyString fOut, "; EN_Y RVALUE|cp  0xEB|jr  nz, rvb_set_en_y_done|ld  a, (__en_y)|ret|.rvb_set_en_y_done"
+If RV(&HEA) Then writeAssemblyString fOut, "; OPANT RVALUE|cp  0xEA|jr  nz, rvb_set_on_pant_done|ld  a, (_on_pant)|ret|.rvb_set_on_pant_done"
 
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
@@ -1262,9 +1265,10 @@ If LV(&HFA) Then writeAssemblyString fOut, "; OBJS LVALUE|cp  0xFA|jr  nz, riv_s
 If LV(&HF9) Then writeAssemblyString fOut, "; LIFE LVALUE|cp  0xF9|jr  nz, riv_set_player_life_done|ld  hl, _player + 29	; player.life LSB|jr  read_i_v_cont|.riv_set_player_life_done"
 If LV(&HF0) Then writeAssemblyString fOut, "; HIDE_HOTSPOTS LVALUE|cp  0xF0|jr  nz, riv_set_hide_hotspots_done|ld  hl, _scenery_info + 0	; scenery_info.hide_hotspots|jr  read_i_v_cont|.riv_set_hide_hotspots_done"
 If LV(&HEF) Then writeAssemblyString fOut, "; DONT_MAKE_FANTIES LVALUE|cp  0xEF|jr  nz, riv_set_dont_make_fanties_done|ld  hl, _scenery_info + 1	; scenery_info.dont_make_rr|jr  read_i_v_cont|.riv_set_dont_make_fanties_done"
-If LV(&HEE) Then writeAssemblyString fOut, "; EN_T LVALUE|cp  0xEE|jr  nz, riv_set_player_life_done|ld  hl, __en_t|jr  read_i_v_cont|.riv_set_player_life_done"
-If LV(&HEC) Then writeAssemblyString fOut, "; EN_X LVALUE|cp  0xEC|jr  nz, riv_set_player_life_done|ld  hl, __en_x|jr  read_i_v_cont|.riv_set_player_life_done"
-If LV(&HEB) Then writeAssemblyString fOut, "; EN_Y LVALUE|cp  0xEB|jr  nz, riv_set_player_life_done|ld  hl, __en_y|jr  read_i_v_cont|.riv_set_player_life_done"
+If LV(&HEE) Then writeAssemblyString fOut, "; EN_T LVALUE|cp  0xEE|jr  nz, riv_set_en_t_done|ld  hl, __en_t|jr  read_i_v_cont|.riv_set_en_t_done"
+If LV(&HEC) Then writeAssemblyString fOut, "; EN_X LVALUE|cp  0xEC|jr  nz, riv_set_en_x_done|ld  hl, __en_x|jr  read_i_v_cont|.riv_set_en_x_done"
+If LV(&HEB) Then writeAssemblyString fOut, "; EN_Y LVALUE|cp  0xEB|jr  nz, riv_set_en_y_done|ld  hl, __en_y|jr  read_i_v_cont|.riv_set_en_y_done"
+If LV(&HEA) Then writeAssemblyString fOut, "; OPANT LVALUE|cp  0xEA|jr  nz, riv_set_on_pant_done|ld  hl, _on_pant|jr  read_i_v_cont|.riv_set_on_pant_done"
 
 writeAssemblyString fOut, "ld  b, 0 				; BC = flag index|ld  hl, _flags|add hl, bc 				; HL -> FLAGS [X]"
 writeAssemblyString fOut, ".read_i_v_cont|ld  a, (sc_y) 			; A = value|ret"

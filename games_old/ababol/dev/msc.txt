@@ -1,4 +1,4 @@
-msc v4.1.20260528 ~ Processing script.spt
+msc v4.1.20260602 ~ Processing script.spt
 ==========================================
 LINEA ROOMS = 60
 T0=[rooms]
@@ -113,13 +113,27 @@ Parsing: %G = 0
 T0=[$16]
 T1=[=]
 T2=[0]
-Bytecode: 16 F0 FF 00 0B 00 00 0C 00 00 0D 00 00 0E 00 00 0F 00 00 10 00 FF FF 
+Parsing: IF NPANT < 40
+T0=[IF]
+T1=[$254]
+T2=[<]
+T3=[40]
+Parsing: IF OPANT > 39
+T0=[IF]
+T1=[$234]
+T2=[>]
+T3=[39]
+Parsing: EXTERN 0 0
+T0=[EXTERN]
+T1=[0]
+T2=[0]
+Bytecode: 16 F0 FF 00 0B 00 00 0C 00 00 0D 00 00 0E 00 00 0F 00 00 10 00 FF 0E 02 FF FE 28 02 27 FF EA FF E4 00 00 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 3
 T0=[entering]
 T1=[screen]
 T2=[3]
-Adding 61 @ sect 22
+Adding 75 @ sect 22
 Parsing: IF %MEDA1 = 0
 T0=[IF]
 T1=[$6]
@@ -154,7 +168,7 @@ LINEA ENTERING SCREEN 22
 T0=[entering]
 T1=[screen]
 T2=[22]
-Adding 85 @ sect 60
+Adding 99 @ sect 60
 Parsing: IF %GATE1 = 0
 T0=[IF]
 T1=[$1]
@@ -189,7 +203,7 @@ LINEA ENTERING SCREEN 31
 T0=[entering]
 T1=[screen]
 T2=[31]
-Adding 109 @ sect 78
+Adding 123 @ sect 78
 Parsing: IF %GATE2 = 0
 T0=[IF]
 T1=[$2]
@@ -224,7 +238,7 @@ LINEA ENTERING SCREEN 15
 T0=[entering]
 T1=[screen]
 T2=[15]
-Adding 133 @ sect 46
+Adding 147 @ sect 46
 Parsing: IF %GATE3 = 0
 T0=[IF]
 T1=[$3]
@@ -259,7 +273,7 @@ LINEA ENTERING SCREEN 19
 T0=[entering]
 T1=[screen]
 T2=[19]
-Adding 157 @ sect 54
+Adding 171 @ sect 54
 Parsing: IF %GATE4 = 0
 T0=[IF]
 T1=[$4]
@@ -295,7 +309,7 @@ T0=[press]
 T1=[fire]
 T2=[at]
 T3=[any]
-Adding 181 @ sect 2
+Adding 195 @ sect 2
 Parsing: IF %GX <> 0
 T0=[IF]
 T1=[$13]
@@ -364,7 +378,7 @@ T1=[=]
 T2=[1]
 Bytecode: 1E 04 FF 0D 00 23 FF 0D FF 0E 01 FF 00 FF 0F FF 00 00 2F 20 FF 0D FF 0E 00 00 FF 10 01 FF 1C 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 00 00 FF 0F 20 00 00 00 00 FF 10 01 FF FF 
 Index section: 272 bytes
-Bytecode section: 240 bytes
-Wrote 512 bytes to script.spt.bin
+Bytecode section: 254 bytes
+Wrote 526 bytes to script.spt.bin
 Writing interpreter
 DONE!

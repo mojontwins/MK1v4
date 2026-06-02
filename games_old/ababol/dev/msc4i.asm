@@ -3,6 +3,7 @@
 ; Imports
 	XREF _flags
 	XREF _n_pant
+	XREF _on_pant
 	XREF _gpx
 	XREF _gpy
 	XREF _tpx
@@ -134,6 +135,21 @@
 	jp  script_clausule
 .copcode_01_end
 
+;; OPCODE 0x02
+;; IF A < B
+	cp  0x02
+	jr  nz, copcode_02_end
+.copcode_02
+	call read_vbyte
+	ld  c, a
+	call read_vbyte
+	ld  b, a
+	ld  a, c
+	cp  b
+	jp  nc, skip_clausule
+	jp  script_clausule
+.copcode_02_end
+
 ;; OPCODE 0x04
 ;; IF A <> B
 	cp  0x04
@@ -218,6 +234,26 @@
 	jp  script_actions
 .aopcode_20_end
 
+;; OPCODE 0xE4
+;; EXTERN N M
+	cp  0xE4
+	jr  nz, aopcode_E4_end
+.aopcode_E4
+	call read_x_y
+	ld  a, (sc_x)
+	ld  h, 0
+	ld  l, a
+	push hl
+	ld  a, (sc_y)
+	ld  h, 0
+	ld  l, a
+	push hl
+	call _do_extern_action
+	pop bc
+	pop bc
+	jp script_actions
+.aopcode_E4_end
+
 ;; UNKNOWN
 	jp script_actions
 
@@ -239,6 +275,20 @@
 
 .read_vbyte_rec
 	call read_vbyte
+
+; NPANT RVALUE
+	cp  0xFE
+	jr  nz, rvb_set_n_pant_done
+	ld  a, (_n_pant)
+	ret
+.rvb_set_n_pant_done
+
+; OPANT RVALUE
+	cp  0xEA
+	jr  nz, rvb_set_on_pant_done
+	ld  a, (_on_pant)
+	ret
+.rvb_set_on_pant_done
 
 	ld  d, 0
 	ld  e, a

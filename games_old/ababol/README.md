@@ -79,3 +79,7 @@ Hay cuatro paletas en juego:
 * pal.png -> pal_general.h
 * pal-marco.png es la paleta principal y se utilizará para pintar el marco antes del split -> pal_hud.h
 * pal-fuera.png, pal-cueva.png y pal-agua.png se utilizarán tras el split en las filas 0, 1 y 2 del mapa.
+
+# Cosas:
+
+Poner el movimiento vertical del N2 que salta mejor no?

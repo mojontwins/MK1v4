@@ -42,6 +42,12 @@ ENTERING ANY
 		%K = 0
 		%G = 0
 	END
+
+	IF NPANT < 40
+	IF OPANT > 39
+	THEN
+		EXTERN 0 0
+	END
 END
 
 # Draw medallions

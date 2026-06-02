@@ -1,8 +1,11 @@
 // MTE MK1 v3.2
 // Copyleft 2011 by The Mojon Twins
 
-
 #ifdef PLAYER_CUSTOM_VENG
+
+	#define PLAYER_MAX_VSWIM		128
+	#define PLAYER_ASWIM			16
+
 	void player_custom_veng (void) {
 		// Modify vy as needed
 
@@ -135,7 +138,23 @@
 		} else {
 			// DX Swim
 
-			// TODO
+			if ((pad0 & sp_DOWN) && (pad0 & sp_UP)) {
+				if(player.y > 512) {
+					player.vy -= (PLAYER_ASWIM >> 1);
+					if (player.vy < (PLAYER_MAX_VSWIM >> 1)) player.vy = -(PLAYER_MAX_VSWIM >> 1);
+				}
+				thrusting = 0;
+			}
+
+			if ((pad0 & sp_DOWN) == 0) {
+				if (player.vy < PLAYER_MAX_VSWIM) player.vy += PLAYER_ASWIM;
+				thrusting = 1;
+			}
+
+			if ((pad0 & sp_UP) == 0) {
+				if (player.vy > -PLAYER_MAX_VSWIM) player.vy -= PLAYER_ASWIM;
+				thrusting = 1;
+			}
 		}
 	}
 #endif
@@ -200,7 +219,29 @@
 			#endasm 
 		} else {
 			// DX Swim 
+			#asm
+					ld  c, 8
 
+					ld  a, (_thrusting)
+					or  a 
+					jr  nz, m_frame_set 		// Not thrusting -> still
+
+					ld  a, (_gpx)
+					srl a
+					srl a
+					srl a 
+					and 3
+
+					ld  h, 0 
+					ld  l, a 
+					ld  de, _player_walk_cycle 
+					add hl, de 
+					ld  a, (hl)
+					add c
+					ld  c, a 
+
+					jr  m_frame_set
+			#endasm
 		}
 	}
 #endif
