@@ -23,8 +23,8 @@
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			24		// Objects to get to finish game
-#define PLAYER_LIFE 				10		// Max and starting life gauge.
+#define PLAYER_NUM_OBJETOS			25		// Objects to get to finish game
+#define PLAYER_LIFE 				20		// Max and starting life gauge.
 #define PLAYER_REFILL				1		// Life recharge
 
 // ============================================================================
@@ -127,9 +127,9 @@
 #define KEYS_Y						2		// Keys counter character coordinates
 //#define KILLED_X					20		//
 //#define KILLED_Y					21		// Kills counter character coordinates
-//#define ITEM_X 					7		// 
-//#define ITEM_Y 					0 		//
-//#define ITEM_FLAG 				0 		// Show item @ flag
+#define ITEM_X 						25		// 
+#define ITEM_Y 						1 		//
+#define ITEM_FLAG 					0 		// Show item @ flag
 //#define TEXT_X 					4		//
 //#define TEXT_Y					3		// To use TEXT from the script
 //#define TEXT_A 					71      // (Speccy only) text atribute.
@@ -193,7 +193,7 @@
 unsigned char comportamiento_tiles [] = {
 	0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 4, 8, 1, 8, 8,
 	8, 0, 8, 1, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8,
-	0, 0, 0, 0, 0,128,128,128,128,128,136,136,136,136,136, 0
+	0, 0, 0, 0, 0,128,128,128,128,128,8,8,8,8,8, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes

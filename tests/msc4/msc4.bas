@@ -85,6 +85,7 @@ Function addOrResolveAlias (salias As String) As Integer
 	' Find
 	For i = 0 To uBound (aliases)
 		If aliases (i) = salias Then 
+			'Print salias & " resolved to " & i
 			Return i 
 		End If 
 	Next 
@@ -93,6 +94,7 @@ Function addOrResolveAlias (salias As String) As Integer
 	For i = 0 To uBound (aliases)
 		If aliases (i) = "" Then
 			aliases (i) = salias 
+			'Print salias & " resolved to " & i
 			Return i 
 		End If 
 	Next 
@@ -101,6 +103,13 @@ Function addOrResolveAlias (salias As String) As Integer
 	
 End Function
 
+Sub debugPrintAliases ()
+	Dim i As Integer
+	For i = 0 To uBound(aliases)
+		If aliases(i) <> "" Then Print "%" & aliases(i) & " -> $" & i
+	Next i
+End Sub 
+
 Sub parseScriptLine (linea As String)
 	Dim As Integer i
 	Dim As Integer index
@@ -108,6 +117,8 @@ Sub parseScriptLine (linea As String)
 	Dim As String curToken, prefix, sufix
 	Dim As String indirec
 	Dim As String m
+	Dim As String tokenAlias
+	Dim As Integer aliasPos
 
 	If debug Then Print "Parsing: " & linea
 
@@ -153,14 +164,19 @@ Sub parseScriptLine (linea As String)
 
 	parseTokenizeString linea, tokens (), ",()[]", "#"
 
-	' Process to solve %ALIAS -> $n
+	' Process to solve %ALIAS -> $n, even if it is prepended by an arbitrary amount of "$"
 	' Also to solve &%ALIAS -> n
 	' Also do special vars here
 	i = 0: While i < uBound (tokens) And tokens (i) <> ""
-		If Len(tokens(i)) > 1 And Left (tokens (i), 1) = "%" Then 
-			tokens (i) = "$" & addOrResolveAlias (Right (tokens (i), Len (tokens (i)) - 1))
-		ElseIf Len(tokens(i)) > 2 And Left (tokens(i), 2) = "&%" Then
+		aliasPos = Instr(tokens(i), "%")
+
+		If Len(tokens(i)) > 2 And Left (tokens(i), 2) = "&%" Then
 			tokens(i) = Str (addOrResolveAlias (Right (tokens (i), Len (tokens (i)) - 2)))
+		ElseIf aliasPos > 0 Then
+			' Alias preprocessing
+			tokenAlias = Right (tokens (i), Len (tokens(i)) - aliasPos)
+			prefix = "": If aliasPos > 1 Then prefix = Left(tokens (i), aliasPos - 1)
+			tokens (i) = prefix & "$" & addOrResolveAlias (tokenAlias)
 		ElseIf Ucase(tokens(i)) = "NPANT" Or Ucase(tokens (i)) = "N_PANT" Then
 			tokens (i) = "$254"
 		ElseIf Ucase(tokens (i)) = "PX" Then 
@@ -1091,7 +1107,7 @@ Dim As Integer fIn, fOut, i
 Dim As String fileIns(127)
 Dim As String fileText
 
-Print "msc v4.1.20260602 ~ ";
+Print "msc v4.1.20260603 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
@@ -1126,6 +1142,7 @@ i = 0: While i < 127 And fileIns(i) <> ""
 	processScript (fIn)
 	Close #fIn
 	writeScript fileIns(i) & ".bin"
+	If debug Then debugPrintAliases
 
 	i = i + 1
 Wend 
@@ -1189,8 +1206,8 @@ If CU(&H23) Then writeAssemblyString fOut, ";; OPCODE 0x23|;; IF PLAYER AT (X, Y
 If CU(&H24) Then writeAssemblyString fOut, ";; OPCODE 0x24|;; IF PLAYER FALLING|cp  0x24|jr  nz, copcode_24_end|.copcode_24|;; Player falling if not possee|ld  a, (_player + 26) 	; player.possee|or  a|jp  z, skip_clausule|jp  script_clausule|.copcode_24_end"
 If CU(&H25) Then writeAssemblyString fOut, ";; OPCODE 0x25|;; IF PLAYER NOT FALLING|cp  0x25|jr  nz, copcode_25_end|.copcode_25|;; Player not falling if possee|ld  a, (_player + 16)	; player.possee|or  a|jp  nz, skip_clausule|jp  script_clausule|.copcode_25_end"
 If CU(&H26) Then writeAssemblyString fOut, ";; OPCODE 0x26|;; PLAYER_STILL|cp  0x26|jr  nz, copcode_26_end|.copcode_26|ld  a, (_player + 6) 	; player.vx LSB|ld  hl, (_player + 7)	; player.vx MSB|or  (hl)|ld  hl, (_player + 8) 	; player.vy LSB|or  (hl)|ld  hl, (_player + 9) 	; player.vy MSB|or  (hl)|jp  nz, skip_clausule|jp  script_clausule|.copcode_26_end"
-If CU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; TILE AT (X, Y) = T|cp  0x30|jr  nz, copcode_30_end|.copcode_30|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call _attr_2|ld  c, l|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_30_end"
-If CU(&H31) Then writeAssemblyString fOut, ";; OPCODE 0x31|;; BEH AT (X, Y) = T|cp  0x31|jr  nz, copcode_31_end|.copcode_31|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call qtile_do|ld  c, l|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_31_end"
+If CU(&H30) Then writeAssemblyString fOut, ";; OPCODE 0x30|;; TILE AT (X, Y) = T|cp  0x30|jr  nz, copcode_30_end|.copcode_30|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call qtile_do|ld  c, l|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_30_end"
+If CU(&H31) Then writeAssemblyString fOut, ";; OPCODE 0x31|;; BEH AT (X, Y) = T|cp  0x31|jr  nz, copcode_31_end|.copcode_31|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call _attr_2|ld  c, l|call read_vbyte|cp  c|jp  nz, skip_clausule|jp  script_clausule|.copcode_31_end"
 'If CU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; TRUE|cp  0xf0|jr  z, script_clausule"
 
 ''

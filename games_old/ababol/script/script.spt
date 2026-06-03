@@ -28,6 +28,10 @@ ENTERING GAME
 		%MEDA3 = 0
 		%MEDA4 = 0
 		%MEDA5 = 0
+
+		## Debug ##
+		NPANT = 3
+		PX = 16
 	END
 END
 
@@ -39,14 +43,26 @@ ENTERING ANY
 		%MY = 0
 		%GX = 0
 		%GY = 0
+		# This coordinate is where "touching gate" is detected. 
+		%DGX = 0 
 		%K = 0
 		%G = 0
 	END
 
+	# If getting to row 2 from row 3...
 	IF NPANT < 40
 	IF OPANT > 39
+	# on_pant is 0xff when starting a new game so this is needed:
+	IF OPANT < 60
 	THEN
 		EXTERN 0 0
+	END
+
+	# Luna
+	IF NPANT < 20
+	IF TILE AT (11, 2) = 0
+	THEN
+		SET TILE (11, 2) = 35
 	END
 END
 
@@ -64,6 +80,39 @@ ENTERING SCREEN 3
 	END
 END
 
+ENTERING SCREEN 14
+	IF %MEDA2 = 0
+	THEN
+		SET TILE (3, 8) = 38
+		%MX = 3
+		%MY = 8
+		%K = 38
+		%G = &%MEDA2
+	END
+END
+
+ENTERING SCREEN 29
+	IF %MEDA3 = 0
+	THEN
+		SET TILE (13, 5) = 39
+		%MX = 13
+		%MY = 5
+		%K = 39
+		%G = &%MEDA3
+	END
+END
+
+ENTERING SCREEN 28
+	IF %MEDA4 = 0
+	THEN
+		SET TILE (3, 8) = 40
+		%MX = 3
+		%MY = 8
+		%K = 40
+		%G = &%MEDA4
+	END
+END
+
 # Draw gates
 # Note how we use & to know the actual flag #
 
@@ -72,6 +121,7 @@ ENTERING SCREEN 22
 	THEN
 		SET TILE (13, 8) = 42
 		%GX = 13
+		%DGX = 14
 		%GY = 8
 		%K = 37
 		%G = &%GATE1
@@ -83,6 +133,7 @@ ENTERING SCREEN 31
 	THEN
 		SET TILE (11, 1) = 43
 		%GX = 11
+		%DGX = 12
 		%GY = 1
 		%K = 38
 		%G = &%GATE2
@@ -94,6 +145,7 @@ ENTERING SCREEN 15
 	THEN
 		SET TILE (7, 8) = 44
 		%GX = 7
+		%DGX = 6
 		%GY = 8
 		%K = 39
 		%G = &%GATE3
@@ -105,6 +157,7 @@ ENTERING SCREEN 19
 	THEN
 		SET TILE (3, 7) = 45
 		%GX = 3
+		%DGX = 4
 		%GY = 7
 		%K = 40
 		%G = &%GATE4
@@ -121,8 +174,10 @@ END
 # Works the same way
 
 PRESS FIRE AT ANY
-	IF %GX <> 0
-	IF PLAYER TOUCHES (%GX, %GY)
+	# Even thought the actual gate is a (%GX, %GY),
+	# The pos of the player should be (%DGX, %DGY)
+	IF %DGX <> 0
+	IF PLAYER TOUCHES (%DGX, %GY)
 	IF %CARRYING = %K
 	THEN
 		# Clear inventory 
@@ -132,20 +187,18 @@ PRESS FIRE AT ANY
 		SET TILE (%GX, %GY), 0
 
 		# Set the right GATE flag.
-		FLAG %G = 1
-	END
+		$%G = 1
 
+		SOUND 2
+	END
+END
+
+SPECIAL TILE TOUCHED
 	IF %MX <> 0
 	IF PLAYER TOUCHES (%MX, %MY)
 	IF %CARRYING = EMPTY
 	THEN
-		# Get medallion
-		%CARRYING = %K
-
-		# Delete tile
-		SET TILE (MX%, MY%), 0
-
-		# Set the right MEDALLION flag
-		FLAG %G = 1
+		GET ITEM SET $%G
+		SOUND 8
 	END
 END

@@ -183,6 +183,23 @@
 	jp  script_clausule
 .copcode_23_end
 
+;; OPCODE 0x30
+;; TILE AT (X, Y) = T
+	cp  0x30
+	jr  nz, copcode_30_end
+.copcode_30
+	call read_x_y
+	ld  a, (sc_x)
+	ld  c, a
+	ld  a, (sc_y)
+	call qtile_do
+	ld  c, l
+	call read_vbyte
+	cp  c
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_30_end
+
 ;; UNKNOWN
 	jp  script_clausule
 
@@ -233,6 +250,52 @@
 	call set_map_tile_do
 	jp  script_actions
 .aopcode_20_end
+
+;; OPCODE 0x30
+;; GET ITEM SET $F <- [FILL I]
+	cp  0x30
+	jr  nz, aopcode_30_end
+.aopcode_30
+;; Get LValue: Flag to modify
+	call read_vbyte
+	ld  b, 0
+	ld  c, a
+	ld  hl, _flags
+	add hl, bc
+; No item in slot?
+	ld  a, (_flags + 0)
+	cp  47
+	jr  nz, aopcode_30_end
+; Write 1 to LValue
+	inc a
+	ld  (hl), a
+; Assign item
+	ld  a, (_tqt)
+	ld  (_flags + 0), a
+; Clear from screen
+	xor a
+	ld  (__n), a
+	ld  (__t), a
+	ld  a, (_tpx)
+	ld  c, a
+	ld  (__x), a
+	ld  a, (_tpy)
+	ld  (__y), a
+	call set_map_tile_do
+	jp  script_actions
+.aopcode_30_end
+
+;; OPCODE 0xE0
+;; SOUND N
+	cp  0xE0
+	jr  nz, aopcode_E0_end
+.aopcode_E0
+	call read_vbyte
+	ld  h, 0
+	ld  l, a
+	call _peta_el_beeper
+	jp  script_actions
+.aopcode_E0_end
 
 ;; OPCODE 0xE4
 ;; EXTERN N M
@@ -312,6 +375,20 @@
 	ld  (sc_y), a
 
 	ld  a, c  				; C = flag index
+
+; NPANT LVALUE
+	cp  0xFE
+	jr  nz, riv_set_n_pant_done
+	ld  hl, _n_pant
+	jr  read_i_v_cont
+.riv_set_n_pant_done
+
+; PX LVALUE
+	cp  0xFD
+	jr  nz, riv_set_gpx_done
+	ld  hl, _gpx
+	jr  read_i_v_cont
+.riv_set_gpx_done
 
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags

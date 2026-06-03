@@ -1,4 +1,4 @@
-msc v4.1.20260602 ~ Processing script.spt
+msc v4.1.20260603 ~ Processing script.spt
 ==========================================
 LINEA ROOMS = 60
 T0=[rooms]
@@ -80,12 +80,21 @@ Parsing: %MEDA5 = 0
 T0=[$10]
 T1=[=]
 T2=[0]
-Bytecode: 25 F0 FF 00 00 2F 00 01 00 00 02 00 00 03 00 00 04 00 00 05 00 00 06 00 00 07 00 00 08 00 00 09 00 00 0A 00 FF FF 
+Parsing: ## Debug ##
+Parsing: NPANT = 3
+T0=[$254]
+T1=[=]
+T2=[3]
+Parsing: PX = 16
+T0=[$253]
+T1=[=]
+T2=[16]
+Bytecode: 2B F0 FF 00 00 2F 00 01 00 00 02 00 00 03 00 00 04 00 00 05 00 00 06 00 00 07 00 00 08 00 00 09 00 00 0A 00 00 FE 03 00 FD 10 FF FF 
 ==========================================
 LINEA ENTERING ANY
 T0=[entering]
 T1=[any]
-Adding 38 @ sect 1
+Adding 44 @ sect 1
 Parsing: IF TRUE
 T0=[IF]
 T1=[TRUE]
@@ -105,12 +114,17 @@ Parsing: %GY = 0
 T0=[$14]
 T1=[=]
 T2=[0]
-Parsing: %K = 0
+Parsing: # This coordinate is where "touching gate" is detected.
+Parsing: %DGX = 0
 T0=[$15]
 T1=[=]
 T2=[0]
-Parsing: %G = 0
+Parsing: %K = 0
 T0=[$16]
+T1=[=]
+T2=[0]
+Parsing: %G = 0
+T0=[$17]
 T1=[=]
 T2=[0]
 Parsing: IF NPANT < 40
@@ -123,17 +137,42 @@ T0=[IF]
 T1=[$234]
 T2=[>]
 T3=[39]
+Parsing: IF OPANT < 60
+T0=[IF]
+T1=[$234]
+T2=[<]
+T3=[60]
 Parsing: EXTERN 0 0
 T0=[EXTERN]
 T1=[0]
 T2=[0]
-Bytecode: 16 F0 FF 00 0B 00 00 0C 00 00 0D 00 00 0E 00 00 0F 00 00 10 00 FF 0E 02 FF FE 28 02 27 FF EA FF E4 00 00 FF FF 
+Parsing: IF NPANT < 20
+T0=[IF]
+T1=[$254]
+T2=[<]
+T3=[20]
+Parsing: IF TILE AT (11, 2) = 0
+T0=[IF]
+T1=[TILE]
+T2=[AT]
+T3=[11]
+T4=[2]
+T5=[=]
+T6=[0]
+Parsing: SET TILE (11, 2) = 35
+T0=[SET]
+T1=[TILE]
+T2=[11]
+T3=[2]
+T4=[=]
+T5=[35]
+Bytecode: 19 F0 FF 00 0B 00 00 0C 00 00 0D 00 00 0E 00 00 0F 00 00 10 00 00 11 00 FF 12 02 FF FE 28 02 27 FF EA 02 FF EA 3C FF E4 00 00 FF 0F 02 FF FE 14 30 0B 02 00 FF 20 0B 02 23 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 3
 T0=[entering]
 T1=[screen]
 T2=[3]
-Adding 75 @ sect 22
+Adding 103 @ sect 22
 Parsing: IF %MEDA1 = 0
 T0=[IF]
 T1=[$6]
@@ -155,20 +194,125 @@ T0=[$12]
 T1=[=]
 T2=[1]
 Parsing: %K = 37
-T0=[$15]
+T0=[$16]
 T1=[=]
 T2=[37]
 Parsing: %G = &%MEDA1
-T0=[$16]
+T0=[$17]
 T1=[=]
 T2=[6]
-Bytecode: 17 01 FF 06 00 FF 20 08 01 25 00 0B 08 00 0C 01 00 0F 25 00 10 06 FF FF 
+Bytecode: 17 01 FF 06 00 FF 20 08 01 25 00 0B 08 00 0C 01 00 10 25 00 11 06 FF FF 
+==========================================
+LINEA ENTERING SCREEN 14
+T0=[entering]
+T1=[screen]
+T2=[14]
+Adding 127 @ sect 44
+Parsing: IF %MEDA2 = 0
+T0=[IF]
+T1=[$7]
+T2=[=]
+T3=[0]
+Parsing: SET TILE (3, 8) = 38
+T0=[SET]
+T1=[TILE]
+T2=[3]
+T3=[8]
+T4=[=]
+T5=[38]
+Parsing: %MX = 3
+T0=[$11]
+T1=[=]
+T2=[3]
+Parsing: %MY = 8
+T0=[$12]
+T1=[=]
+T2=[8]
+Parsing: %K = 38
+T0=[$16]
+T1=[=]
+T2=[38]
+Parsing: %G = &%MEDA2
+T0=[$17]
+T1=[=]
+T2=[7]
+Bytecode: 17 01 FF 07 00 FF 20 03 08 26 00 0B 03 00 0C 08 00 10 26 00 11 07 FF FF 
+==========================================
+LINEA ENTERING SCREEN 29
+T0=[entering]
+T1=[screen]
+T2=[29]
+Adding 151 @ sect 74
+Parsing: IF %MEDA3 = 0
+T0=[IF]
+T1=[$8]
+T2=[=]
+T3=[0]
+Parsing: SET TILE (13, 5) = 39
+T0=[SET]
+T1=[TILE]
+T2=[13]
+T3=[5]
+T4=[=]
+T5=[39]
+Parsing: %MX = 13
+T0=[$11]
+T1=[=]
+T2=[13]
+Parsing: %MY = 5
+T0=[$12]
+T1=[=]
+T2=[5]
+Parsing: %K = 39
+T0=[$16]
+T1=[=]
+T2=[39]
+Parsing: %G = &%MEDA3
+T0=[$17]
+T1=[=]
+T2=[8]
+Bytecode: 17 01 FF 08 00 FF 20 0D 05 27 00 0B 0D 00 0C 05 00 10 27 00 11 08 FF FF 
+==========================================
+LINEA ENTERING SCREEN 28
+T0=[entering]
+T1=[screen]
+T2=[28]
+Adding 175 @ sect 72
+Parsing: IF %MEDA4 = 0
+T0=[IF]
+T1=[$9]
+T2=[=]
+T3=[0]
+Parsing: SET TILE (3, 8) = 40
+T0=[SET]
+T1=[TILE]
+T2=[3]
+T3=[8]
+T4=[=]
+T5=[40]
+Parsing: %MX = 3
+T0=[$11]
+T1=[=]
+T2=[3]
+Parsing: %MY = 8
+T0=[$12]
+T1=[=]
+T2=[8]
+Parsing: %K = 40
+T0=[$16]
+T1=[=]
+T2=[40]
+Parsing: %G = &%MEDA4
+T0=[$17]
+T1=[=]
+T2=[9]
+Bytecode: 17 01 FF 09 00 FF 20 03 08 28 00 0B 03 00 0C 08 00 10 28 00 11 09 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 22
 T0=[entering]
 T1=[screen]
 T2=[22]
-Adding 99 @ sect 60
+Adding 199 @ sect 60
 Parsing: IF %GATE1 = 0
 T0=[IF]
 T1=[$1]
@@ -185,25 +329,29 @@ Parsing: %GX = 13
 T0=[$13]
 T1=[=]
 T2=[13]
+Parsing: %DGX = 14
+T0=[$15]
+T1=[=]
+T2=[14]
 Parsing: %GY = 8
 T0=[$14]
 T1=[=]
 T2=[8]
 Parsing: %K = 37
-T0=[$15]
+T0=[$16]
 T1=[=]
 T2=[37]
 Parsing: %G = &%GATE1
-T0=[$16]
+T0=[$17]
 T1=[=]
 T2=[1]
-Bytecode: 17 01 FF 01 00 FF 20 0D 08 2A 00 0D 0D 00 0E 08 00 0F 25 00 10 01 FF FF 
+Bytecode: 1A 01 FF 01 00 FF 20 0D 08 2A 00 0D 0D 00 0F 0E 00 0E 08 00 10 25 00 11 01 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 31
 T0=[entering]
 T1=[screen]
 T2=[31]
-Adding 123 @ sect 78
+Adding 226 @ sect 78
 Parsing: IF %GATE2 = 0
 T0=[IF]
 T1=[$2]
@@ -220,25 +368,29 @@ Parsing: %GX = 11
 T0=[$13]
 T1=[=]
 T2=[11]
+Parsing: %DGX = 12
+T0=[$15]
+T1=[=]
+T2=[12]
 Parsing: %GY = 1
 T0=[$14]
 T1=[=]
 T2=[1]
 Parsing: %K = 38
-T0=[$15]
+T0=[$16]
 T1=[=]
 T2=[38]
 Parsing: %G = &%GATE2
-T0=[$16]
+T0=[$17]
 T1=[=]
 T2=[2]
-Bytecode: 17 01 FF 02 00 FF 20 0B 01 2B 00 0D 0B 00 0E 01 00 0F 26 00 10 02 FF FF 
+Bytecode: 1A 01 FF 02 00 FF 20 0B 01 2B 00 0D 0B 00 0F 0C 00 0E 01 00 10 26 00 11 02 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 15
 T0=[entering]
 T1=[screen]
 T2=[15]
-Adding 147 @ sect 46
+Adding 253 @ sect 46
 Parsing: IF %GATE3 = 0
 T0=[IF]
 T1=[$3]
@@ -255,25 +407,29 @@ Parsing: %GX = 7
 T0=[$13]
 T1=[=]
 T2=[7]
+Parsing: %DGX = 6
+T0=[$15]
+T1=[=]
+T2=[6]
 Parsing: %GY = 8
 T0=[$14]
 T1=[=]
 T2=[8]
 Parsing: %K = 39
-T0=[$15]
+T0=[$16]
 T1=[=]
 T2=[39]
 Parsing: %G = &%GATE3
-T0=[$16]
+T0=[$17]
 T1=[=]
 T2=[3]
-Bytecode: 17 01 FF 03 00 FF 20 07 08 2C 00 0D 07 00 0E 08 00 0F 27 00 10 03 FF FF 
+Bytecode: 1A 01 FF 03 00 FF 20 07 08 2C 00 0D 07 00 0F 06 00 0E 08 00 10 27 00 11 03 FF FF 
 ==========================================
 LINEA ENTERING SCREEN 19
 T0=[entering]
 T1=[screen]
 T2=[19]
-Adding 171 @ sect 54
+Adding 280 @ sect 54
 Parsing: IF %GATE4 = 0
 T0=[IF]
 T1=[$4]
@@ -290,42 +446,46 @@ Parsing: %GX = 3
 T0=[$13]
 T1=[=]
 T2=[3]
+Parsing: %DGX = 4
+T0=[$15]
+T1=[=]
+T2=[4]
 Parsing: %GY = 7
 T0=[$14]
 T1=[=]
 T2=[7]
 Parsing: %K = 40
-T0=[$15]
+T0=[$16]
 T1=[=]
 T2=[40]
 Parsing: %G = &%GATE4
-T0=[$16]
+T0=[$17]
 T1=[=]
 T2=[4]
-Bytecode: 17 01 FF 04 00 FF 20 03 07 2D 00 0D 03 00 0E 07 00 0F 28 00 10 04 FF FF 
+Bytecode: 1A 01 FF 04 00 FF 20 03 07 2D 00 0D 03 00 0F 04 00 0E 07 00 10 28 00 11 04 FF FF 
 ==========================================
 LINEA PRESS FIRE AT ANY
 T0=[press]
 T1=[fire]
 T2=[at]
 T3=[any]
-Adding 195 @ sect 2
-Parsing: IF %GX <> 0
+Adding 307 @ sect 2
+Parsing: IF %DGX <> 0
 T0=[IF]
-T1=[$13]
+T1=[$15]
 T2=[<>]
 T3=[0]
-Parsing: IF PLAYER TOUCHES (%GX, %GY)
+Parsing: IF PLAYER TOUCHES (%DGX, %GY)
 T0=[IF]
 T1=[PLAYER]
 T2=[TOUCHES]
-T3=[$13]
+T3=[$15]
 T4=[$14]
 Parsing: IF %CARRYING = %K
 T0=[IF]
 T1=[$0]
 T2=[=]
-T3=[$15]
+T3=[$16]
 Parsing: # Clear inventory
 Parsing: %CARRYING = EMPTY
 T0=[$0]
@@ -339,10 +499,20 @@ T2=[$13]
 T3=[$14]
 T4=[0]
 Parsing: # Set the right GATE flag.
-Parsing: FLAG %G = 1
-T0=[$$16]
+Parsing: $%G = 1
+T0=[$$17]
 T1=[=]
 T2=[1]
+Parsing: SOUND 2
+T0=[SOUND]
+T1=[2]
+Bytecode: 20 04 FF 0F 00 23 FF 0F FF 0E 01 FF 00 FF 10 FF 00 00 2F 20 FF 0D FF 0E 00 00 FF 11 01 E0 02 FF FF 
+==========================================
+LINEA SPECIAL TILE TOUCHED
+T0=[special]
+T1=[tile]
+T2=[touched]
+Adding 340 @ sect 5
 Parsing: IF %MX <> 0
 T0=[IF]
 T1=[$11]
@@ -359,26 +529,35 @@ T0=[IF]
 T1=[$0]
 T2=[=]
 T3=[47]
-Parsing: # Get medallion
-Parsing: %CARRYING = %K
-T0=[$0]
-T1=[=]
-T2=[$15]
-Parsing: # Delete tile
-Parsing: SET TILE (MX%, MY%), 0
-T0=[SET]
-T1=[TILE]
-T2=[MX%]
-T3=[MY%]
-T4=[0]
-Parsing: # Set the right MEDALLION flag
-Parsing: FLAG %G = 1
-T0=[$$16]
-T1=[=]
-T2=[1]
-Bytecode: 1E 04 FF 0D 00 23 FF 0D FF 0E 01 FF 00 FF 0F FF 00 00 2F 20 FF 0D FF 0E 00 00 FF 10 01 FF 1C 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 00 00 FF 0F 20 00 00 00 00 FF 10 01 FF FF 
+Parsing: GET ITEM SET $%G
+T0=[GET]
+T1=[ITEM]
+T2=[SET]
+T3=[$$17]
+Parsing: SOUND 8
+T0=[SOUND]
+T1=[8]
+Bytecode: 15 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 30 FF 11 E0 08 FF FF 
 Index section: 272 bytes
-Bytecode section: 254 bytes
-Wrote 526 bytes to script.spt.bin
+Bytecode section: 362 bytes
+Wrote 634 bytes to script.spt.bin
+%carrying -> $0
+%gate1 -> $1
+%gate2 -> $2
+%gate3 -> $3
+%gate4 -> $4
+%gate5 -> $5
+%meda1 -> $6
+%meda2 -> $7
+%meda3 -> $8
+%meda4 -> $9
+%meda5 -> $10
+%mx -> $11
+%my -> $12
+%gx -> $13
+%gy -> $14
+%dgx -> $15
+%k -> $16
+%g -> $17
 Writing interpreter
 DONE!

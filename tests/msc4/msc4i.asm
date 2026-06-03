@@ -289,7 +289,7 @@ XDEF _script_result
 	ld  a, (sc_x)
 	ld  c, a
 	ld  a, (sc_y)
-	call _attr_2
+	call qtile_do
 	ld  c, l 
 	call read_vbyte
 	cp  c
@@ -306,7 +306,7 @@ XDEF _script_result
 	ld  a, (sc_x)
 	ld  c, a
 	ld  a, (sc_y)
-	call qtile_do
+	call _attr_2
 	ld  c, l 
 	call read_vbyte
 	cp  c

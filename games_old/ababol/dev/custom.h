@@ -226,7 +226,7 @@
 					or  a 
 					jr  nz, m_frame_set 		// Not thrusting -> still
 
-					ld  a, (_gpx)
+					ld  a, (_maincounter)
 					srl a
 					srl a
 					srl a 
@@ -274,7 +274,7 @@
 
 			if (_en_t == 7) {
 				// Look right if going right
-				if (_en_mx > 0 || _en_my > 0) {
+				if (_en_mx < 0 || _en_my < 0) {
 					// en_an_next_frame [enit] = sprite_cells [en_an_base_frame [enit] + en_an_frame [enit] + 2];
 					#asm
 							ld  a, (_enit)
