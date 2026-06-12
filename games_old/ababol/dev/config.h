@@ -9,6 +9,9 @@
 //#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
 //#define NO_PAL_MAP 						// For CPC, with AUTO_SPLIT, only one pal (my_inks)
 
+// TURN THIS OFF FOR RELEASE!!!!
+#define DEBUG_NAVIGATOR 					// s + directions (ZX) or x + directions (CPC) to nav map
+
 // ============================================================================
 // I. General configuration
 // ============================================================================
@@ -104,6 +107,7 @@
 //#define PLAYER_CUSTOM_HENG 				// Replace Horizontal axis for your own
 #define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
 //#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
+#define ENABLE_CUSTOM_HOTSPOTS 				// Add your own hotspots!
 
 #define CUSTOM_SPRITE_CELLS 				// Use your own sprite cell luts from custom_sprite_cells.h
 #define ENEMS_CELL_OFFSET 			16 		// If the above is defined, this is the 1st cell for the enemies.

@@ -6,6 +6,11 @@
 	#define PLAYER_MAX_VSWIM		128
 	#define PLAYER_ASWIM			16
 
+	#define PLAYER_G_JUMPING 		16
+	#define PLAYER_VY_JUMP_INITIAL 	384
+	#define PLAYER_VY_JUMP_STEPS 	8
+	#define PLAYER_VY_JUMP_RELEASE 	192
+
 	void player_custom_veng (void) {
 		// Modify vy as needed
 
@@ -13,8 +18,119 @@
 		// and a new, custom one for 40<=n_pant<60.
 
 		if (n_pant < 40) {
-			// Vanilla
+			// Vanilla Nin Nin!
 
+			// Gravity is reduced while jumping
+
+			#asm
+				.player_veng_gravity
+
+					// player.vy = player.vy + (player.saltando ? PLAYER_G_JUMPING : PLAYER_G);
+
+					ld  hl, (_player + 8)			// player.vy
+					ld  de, PLAYER_G
+
+					ld  a, (_player + 19) 			// player.saltando
+					or  a 
+					jr  z, player_veng_gravity_add
+
+					ld  de, PLAYER_G_JUMPING
+
+				.player_veng_gravity_add
+					add hl, de 
+					push hl 						// New vy
+
+					// Limit
+
+					// player.vy >= PLAYER_MAX_VY_CAYENDO --->
+					// player.vy - PLAYER_MAX_VY_CAYENDO >= 0
+					ld  de, -PLAYER_MAX_VY_CAYENDO
+					add hl, de 
+					bit 7, h 
+					pop hl  						// Retrieve vy
+					jr  nz, player_veng_gravity_done 
+
+					ld  hl, PLAYER_MAX_VY_CAYENDO
+
+				.player_veng_gravity_done 
+					ld  (_player + 8), hl
+			#endasm
+
+				// Jumping is a big boost
+
+			#asm
+				.player_jump_start
+					ld  a, (_pad_this_frame)
+					and #(sp_UP | sp_FIRE)
+					cp  #(sp_UP | sp_FIRE)
+					jr  nz, player_jump_start_done
+
+					ld  a, (_player + 19) 			// player.saltando 
+					or  a 
+					jr  nz, player_jump_start_done
+
+					ld  a, (_player + 26) 			// player.possee 
+					or  a 
+					jr  nz, player_jump_start_do
+
+					ld  a, (_player + 25) 			// player.gotten
+					or  a 
+					jr  z, player_jump_start_done
+
+				.player_jump_start_do
+					xor a 
+					ld  (_player + 14), a			// player.cont_salto
+					inc a 
+					ld  (_player + 19), a 			// player.saltando;
+					ld  (_player + 43), a 			// player.just_jumped;
+					ld  hl, -PLAYER_VY_JUMP_INITIAL
+					ld  (_player + 8), hl 			// player.vy
+			
+					ld  l, 3 
+					call _peta_el_beeper
+
+				.player_jump_start_done
+			#endasm 
+
+			#asm
+				.player_jump_pressing
+					ld  a, (_pad0) 
+					and #(sp_UP | sp_FIRE)
+					cp  #(sp_UP | sp_FIRE)
+					jr  nz, player_jump_not_pressing 
+
+					ld  a, (_player + 19) 			// player.saltando
+					or  a 
+					jr  z, player_jump_done
+
+					ld  a, (_player + 14)			// player.cont_salto 
+					inc a 
+					ld  (_player + 14), a 			// player.cont_salto 
+
+					cp PLAYER_VY_JUMP_STEPS 
+					jr  nz, player_jump_done
+
+					xor a 
+					ld  (_player + 19), a 			// player.saltando
+					jr  player_jump_done
+
+				.player_jump_not_pressing
+					ld  a, (_player + 19) 			// player.saltando
+					or  a 
+					jr  z, player_jump_done 
+
+					ld  hl, -PLAYER_VY_JUMP_RELEASE
+					ld  (_player + 8), hl 			// player.vy
+
+					xor a 
+					ld  (_player + 19), a  			// player.saltando
+
+				.player_jump_done
+			#endasm
+
+			// Original vanilla code
+
+			/*
 			// Apply gravity
 		
 			#asm
@@ -117,6 +233,7 @@
 				.m_jump_perform_done
 
 			#endasm
+			*/
 
 			// Jump down platform
 
@@ -332,4 +449,11 @@
 		return 1;
 	}
 
+#endif
+
+#ifdef ENABLE_CUSTOM_HOTSPOTS
+	unsigned char custom_hotspots() {
+		// hotspot type is hotspot_t.
+		// set rdi to prevent clearing the hotspot.
+	}
 #endif

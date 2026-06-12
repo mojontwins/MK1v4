@@ -30,8 +30,8 @@ ENTERING GAME
 		%MEDA5 = 0
 
 		## Debug ##
-		NPANT = 3
-		PX = 16
+		#NPANT = 3
+		#PX = 16
 	END
 END
 
@@ -192,6 +192,8 @@ PRESS FIRE AT ANY
 		SOUND 2
 	END
 END
+
+# Get items
 
 SPECIAL TILE TOUCHED
 	IF %MX <> 0

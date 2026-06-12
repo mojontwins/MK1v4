@@ -376,20 +376,6 @@
 
 	ld  a, c  				; C = flag index
 
-; NPANT LVALUE
-	cp  0xFE
-	jr  nz, riv_set_n_pant_done
-	ld  hl, _n_pant
-	jr  read_i_v_cont
-.riv_set_n_pant_done
-
-; PX LVALUE
-	cp  0xFD
-	jr  nz, riv_set_gpx_done
-	ld  hl, _gpx
-	jr  read_i_v_cont
-.riv_set_gpx_done
-
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags
 	add hl, bc 				; HL -> FLAGS [X]
