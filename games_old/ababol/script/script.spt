@@ -29,6 +29,9 @@ ENTERING GAME
 		%MEDA4 = 0
 		%MEDA5 = 0
 
+		# Enemies can't be killed
+		$31 = 8
+
 		## Debug ##
 		#NPANT = 3
 		#PX = 16

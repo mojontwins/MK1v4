@@ -94,8 +94,8 @@
 
 #define PLAYER_HAS_JUMP 					// If defined, player is able to jump.
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
-//#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
-//#define PLAYER_MIN_KILLABLE 	3			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
+#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
+#define PLAYER_MIN_KILLABLE 	(flags[31])			// Only kill enemies with id >= PLAYER_MIN_KILLABLE
 #define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 //#define AVOID_PLATFORM_HOP 				// Only works if SIMPLE_PLATFORMS is DISABLED!
 #define JUMP_DOWN_PLATFORM 					// Use down on type 4s to jump down.

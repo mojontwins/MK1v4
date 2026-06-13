@@ -4,7 +4,8 @@
 #ifdef PLAYER_CUSTOM_VENG
 
 	#define PLAYER_MAX_VSWIM		128
-	#define PLAYER_ASWIM			16
+	#define PLAYER_ASWIM			32
+	#define PLAYER_AFLOAT 			8
 
 	#define PLAYER_G_JUMPING 		16
 	#define PLAYER_VY_JUMP_INITIAL 	384
@@ -63,7 +64,7 @@
 					ld  a, (_pad_this_frame)
 					and #(sp_UP | sp_FIRE)
 					cp  #(sp_UP | sp_FIRE)
-					jr  nz, player_jump_start_done
+					jr  z, player_jump_start_done
 
 					ld  a, (_player + 19) 			// player.saltando 
 					or  a 
@@ -97,7 +98,7 @@
 					ld  a, (_pad0) 
 					and #(sp_UP | sp_FIRE)
 					cp  #(sp_UP | sp_FIRE)
-					jr  nz, player_jump_not_pressing 
+					jr  z, player_jump_not_pressing 
 
 					ld  a, (_player + 19) 			// player.saltando
 					or  a 
@@ -257,7 +258,7 @@
 
 			if ((pad0 & sp_DOWN) && (pad0 & sp_UP)) {
 				if(player.y > 512) {
-					player.vy -= (PLAYER_ASWIM >> 1);
+					player.vy -= PLAYER_AFLOAT;
 					if (player.vy < (PLAYER_MAX_VSWIM >> 1)) player.vy = -(PLAYER_MAX_VSWIM >> 1);
 				}
 				thrusting = 0;
@@ -341,7 +342,7 @@
 
 					ld  a, (_thrusting)
 					or  a 
-					jr  nz, m_frame_set 		// Not thrusting -> still
+					jr  z, m_frame_set 			// Not thrusting -> still
 
 					ld  a, (_maincounter)
 					srl a
@@ -455,5 +456,15 @@
 	unsigned char custom_hotspots() {
 		// hotspot type is hotspot_t.
 		// set rdi to prevent clearing the hotspot.
+		if (hotspot_t == 4) {
+			// Coger botas
+			// Poner texto y bla bla
+
+			// Con esto los enemigos se pueden matar.
+			flags [31] = 0; 
+
+			// Hay que poner `flags [31]` a 8 en el scripting 
+			// en la sección ENTERING GAME
+		}
 	}
 #endif

@@ -83,3 +83,18 @@ Hay cuatro paletas en juego:
 # Cosas:
 
 Poner el movimiento vertical del N2 que salta mejor no?
+
+# Las botas
+
+Si defino así:
+
+```c
+	#define PLAYER_MIN_KILLABLE 	(flags[31])
+```
+
+Controlo si se puede matar enemigos con `flags [31]`. Además defino `ENABLE_CUSTOM_HOTSPOTS` y uso un hotspot tipo 4 para las botas.
+
+Hay que poner `flags[31]` a  un número alto en el scripting al empezar el juego y a 0 al coger el hotspot 4 en `custom.h`.
+
+
+
