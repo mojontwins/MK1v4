@@ -96,5 +96,8 @@ Controlo si se puede matar enemigos con `flags [31]`. Además defino `ENABLE_CUS
 
 Hay que poner `flags[31]` a  un número alto en el scripting al empezar el juego y a 0 al coger el hotspot 4 en `custom.h`.
 
+# Textos
 
+Msc4 los integra perfectamente, pero está sin probar. ¡Esto me viene de muerte! Voy a usar las rutinas ramiras para imprimir el texto descomprimido y tal y a ver qué tal resulta . . .
 
+Necesito modificar la fuente para reordenar los caracteres tal y como se documenta en msc4.
