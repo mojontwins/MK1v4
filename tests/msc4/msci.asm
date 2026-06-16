@@ -3,6 +3,7 @@
 ; Imports
 	XREF _flags
 	XREF _n_pant
+	XREF _on_pant
 	XREF _gpx
 	XREF _gpy
 	XREF _tpx
@@ -29,6 +30,7 @@
 	XREF _en_it
 	XREF __en_x
 	XREF __en_y
+	XREF _decode_text
 
 	XREF script_bytecode
 
@@ -137,6 +139,20 @@
 	jp  z, script_loop
 
 ;;; Decode OPCODE & jump to interpreter
+
+;; OPCODE 0xE6
+;; TEXT BOX LSB MSB
+	cp  0xE6
+	jr  nz, aopcode_E6_end
+.aopcode_E6
+	call read_x_y
+	ld  a, (sc_x)
+	ld  l, a
+	ld  a, (sc_y)
+	ld  h, a
+	call _decode_text
+	jp script_actions
+.aopcode_E6_end
 
 ;; UNKNOWN
 	jp script_actions

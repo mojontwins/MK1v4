@@ -95,7 +95,7 @@ Function encode5BitEsc (text As String, wrap As Integer) As String
 			curWord = ""
 
 			If i = Len(text) Then 
-				binaryString = binaryString & "00000000"    ' ESC 0 = EOL
+				binaryString = binaryString & "0000000000"    ' ESC 0 = EOL
 			ElseIf curLinLen < wrap Then 
 				binaryString = binaryString & "11111"       ' 31 = SPACE
 				curLinLen = curLinLen + 1
