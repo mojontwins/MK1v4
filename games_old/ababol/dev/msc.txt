@@ -100,24 +100,15 @@ T0=[$31]
 T1=[=]
 T2=[8]
 Parsing: ## Debug ##
-Parsing: NPANT = 39
-T0=[$254]
-T1=[=]
-T2=[39]
-Parsing: PX = 12
-T0=[$253]
-T1=[=]
-T2=[12]
-Parsing: PY = 5
-T0=[$252]
-T1=[=]
-T2=[5]
-Bytecode: 31 F0 FF 00 00 2F 00 01 00 00 02 00 00 03 00 00 04 00 00 05 00 00 06 00 00 07 00 00 08 00 00 09 00 00 0A 00 00 1F 08 00 FE 27 00 FD 0C 00 FC 05 FF FF 
+Parsing: #NPANT = 39
+Parsing: #PX = 12
+Parsing: #PY = 5
+Bytecode: 28 F0 FF 00 00 2F 00 01 00 00 02 00 00 03 00 00 04 00 00 05 00 00 06 00 00 07 00 00 08 00 00 09 00 00 0A 00 00 1F 08 FF FF 
 ==========================================
 LINEA ENTERING ANY
 T0=[entering]
 T1=[any]
-Adding 50 @ sect 1
+Adding 41 @ sect 1
 Parsing: IF TRUE
 T0=[IF]
 T1=[TRUE]
@@ -195,7 +186,7 @@ LINEA ENTERING SCREEN 3
 T0=[entering]
 T1=[screen]
 T2=[3]
-Adding 109 @ sect 22
+Adding 100 @ sect 22
 Parsing: IF %MEDA1 = 0
 T0=[IF]
 T1=[$6]
@@ -230,7 +221,7 @@ LINEA ENTERING SCREEN 14
 T0=[entering]
 T1=[screen]
 T2=[14]
-Adding 133 @ sect 44
+Adding 124 @ sect 44
 Parsing: IF %MEDA2 = 0
 T0=[IF]
 T1=[$7]
@@ -265,7 +256,7 @@ LINEA ENTERING SCREEN 29
 T0=[entering]
 T1=[screen]
 T2=[29]
-Adding 157 @ sect 74
+Adding 148 @ sect 74
 Parsing: IF %MEDA3 = 0
 T0=[IF]
 T1=[$8]
@@ -300,7 +291,7 @@ LINEA ENTERING SCREEN 28
 T0=[entering]
 T1=[screen]
 T2=[28]
-Adding 181 @ sect 72
+Adding 172 @ sect 72
 Parsing: IF %MEDA4 = 0
 T0=[IF]
 T1=[$9]
@@ -335,7 +326,7 @@ LINEA ENTERING SCREEN 22
 T0=[entering]
 T1=[screen]
 T2=[22]
-Adding 205 @ sect 60
+Adding 196 @ sect 60
 Parsing: IF %GATE1 = 0
 T0=[IF]
 T1=[$1]
@@ -374,7 +365,7 @@ LINEA ENTERING SCREEN 31
 T0=[entering]
 T1=[screen]
 T2=[31]
-Adding 232 @ sect 78
+Adding 223 @ sect 78
 Parsing: IF %GATE2 = 0
 T0=[IF]
 T1=[$2]
@@ -413,7 +404,7 @@ LINEA ENTERING SCREEN 15
 T0=[entering]
 T1=[screen]
 T2=[15]
-Adding 259 @ sect 46
+Adding 250 @ sect 46
 Parsing: IF %GATE3 = 0
 T0=[IF]
 T1=[$3]
@@ -452,7 +443,7 @@ LINEA ENTERING SCREEN 19
 T0=[entering]
 T1=[screen]
 T2=[19]
-Adding 286 @ sect 54
+Adding 277 @ sect 54
 Parsing: IF %GATE4 = 0
 T0=[IF]
 T1=[$4]
@@ -492,7 +483,7 @@ T0=[press]
 T1=[fire]
 T2=[at]
 T3=[any]
-Adding 313 @ sect 2
+Adding 304 @ sect 2
 Parsing: IF %DGX <> 0
 T0=[IF]
 T1=[$15]
@@ -535,7 +526,7 @@ LINEA ENTERING SCREEN 39
 T0=[entering]
 T1=[screen]
 T2=[39]
-Adding 346 @ sect 94
+Adding 337 @ sect 94
 Parsing: IF %CANKILL = 8
 T0=[IF]
 T1=[$31]
@@ -554,7 +545,7 @@ LINEA SPECIAL TILE TOUCHED
 T0=[special]
 T1=[tile]
 T2=[touched]
-Adding 358 @ sect 5
+Adding 349 @ sect 5
 Parsing: IF NPANT = 39
 T0=[IF]
 T1=[$254]
@@ -611,8 +602,8 @@ T0=[SOUND]
 T1=[8]
 Bytecode: 18 01 FF FE 27 01 FF 1F 08 FF 00 1F 00 20 0D 05 00 E0 08 E6 00 00 F2 FF 15 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 30 FF 11 E0 08 FF FF 
 Index section: 272 bytes
-Bytecode section: 404 bytes
-Wrote 676 bytes to script.spt.bin
+Bytecode section: 395 bytes
+Wrote 667 bytes to script.spt.bin
 %carrying -> $0
 %gate1 -> $1
 %gate2 -> $2

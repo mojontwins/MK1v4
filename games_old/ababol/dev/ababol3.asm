@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Jun 26 18:10:35 2026
+;	Module compile time: Fri Jun 26 19:03:36 2026
 
 
 
@@ -6803,6 +6803,9 @@
 
 
 ._check_lock_or_box_horz
+	ld a, (_pad_this_frame)
+	and 0x80
+	ret nz
 	ld a, (_cx1)
 	ld (_rdx), a
 	ld c, a
@@ -6826,6 +6829,9 @@
 
 
 ._check_lock_or_box_vert
+	ld a, (_pad_this_frame)
+	and 0x80
+	ret nz
 	ld a, (_gpx)
 	add 8
 	srl a
@@ -8409,7 +8415,7 @@
 	ld a, 4
 	ld (__x), a
 	ld hl, _top_string
-	ld a, 5
+	ld a, 7
 	ld (__n), a
 	call draw_text_loop
 	ld a, 7
@@ -8426,7 +8432,7 @@
 	ld a, 4
 	ld (__x), a
 	ld hl, _temp_string
-	ld a, 5
+	ld a, 7
 	ld (__n), a
 	call draw_text_loop
 	.stb_notop
@@ -8435,7 +8441,7 @@
 	ld a, 4
 	ld (__x), a
 	ld hl, _temp_string
-	ld a, 5
+	ld a, 7
 	ld (__n), a
 	call draw_text_loop
 	ld a, (_rdy)
@@ -8444,7 +8450,7 @@
 	ld a, 4
 	ld (__x), a
 	ld hl, _bottom_string
-	ld a, 5
+	ld a, 7
 	ld (__n), a
 	call draw_text_loop
 	ld de, _temp_string + 1

@@ -38,9 +38,9 @@ ENTERING GAME
 		%CANKILL = 8
 
 		## Debug ##
-		NPANT = 39
-		PX = 12
-		PY = 5
+		#NPANT = 39
+		#PX = 12
+		#PY = 5
 	END
 END
 

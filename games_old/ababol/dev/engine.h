@@ -584,6 +584,14 @@ unsigned char cm_two_points (void) {
 
 #if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
 	void check_lock_or_box_horz (void) {
+		#ifdef FIRE_TO_USE_KEY
+			#asm
+				ld  a, (_pad_this_frame)
+				and sp_FIRE
+				ret nz
+			#endasm
+		#endif
+
 		#asm
 				ld  a, (_cx1)
 				ld  (_rdx), a 
@@ -645,6 +653,14 @@ unsigned char cm_two_points (void) {
 	}
 
 	void check_lock_or_box_vert (void) {
+		#ifdef FIRE_TO_USE_KEY
+			#asm
+				ld  a, (_pad_this_frame)
+				and sp_FIRE
+				ret nz
+			#endasm
+		#endif
+				
 		#asm
 				ld  a, (_gpx)
 				add 8 
