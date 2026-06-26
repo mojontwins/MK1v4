@@ -50,6 +50,7 @@ Esto sirve para simplificar la tramolla de coger items y usarlos en sitios con u
 
 * En el `SCRIPT` ejecutamos `GET ITEM SET $F`. Esto comprobará que en `$I` no hay un item (vale 0), y en ese caso establecerá `$I = TN`, pondrá el tile 0 en `TX, TY` y pondrá `$F` a 1.
 
+## Texto
 
 ## Ejemplo
 

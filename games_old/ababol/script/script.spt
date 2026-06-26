@@ -6,6 +6,7 @@ ITEM EMPTY = 47
 
 # Explicitly set %CARRYING to ITEM SLOT (FLAG 0).
 ALIAS %CARRYING = 0
+ALIAS %CANKILL = 31
 
 # Gates and medallions should have bit 7 raised in behs
 
@@ -30,11 +31,12 @@ ENTERING GAME
 		%MEDA5 = 0
 
 		# Enemies can't be killed
-		$31 = 8
+		%CANKILL = 8
 
 		## Debug ##
-		#NPANT = 3
-		#PX = 16
+		NPANT = 39
+		PX = 12
+		PY = 5
 	END
 END
 
@@ -196,9 +198,28 @@ PRESS FIRE AT ANY
 	END
 END
 
+# Boots
+
+ENTERING SCREEN 39
+	IF %CANKILL = 8
+	THEN
+		SET TILE (13, 5) = 36
+	END
+END
+
 # Get items
 
 SPECIAL TILE TOUCHED
+	IF NPANT = 39
+	IF %CANKILL = 8
+	THEN
+		%CANKILL = 0
+		SET TILE (13, 5) = 0
+		SOUND 8
+		TEXT BOX "OJETE CUIDAO! CON ESTAS BOTAZAS DE CUERO TENGO EL PODER DE MATAR PISANDO CABEZAS!"
+		BREAK
+	END
+
 	IF %MX <> 0
 	IF PLAYER TOUCHES (%MX, %MY)
 	IF %CARRYING = EMPTY

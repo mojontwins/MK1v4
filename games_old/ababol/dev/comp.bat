@@ -57,8 +57,9 @@ rem custom palettes
 
 echo Making script
 cd ..\script
-..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm debug >..\dev\msc.txt
+..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm text=text.bin debug >..\dev\msc.txt
 copy script.spt.bin ..\dev > nul
+copy text.bin ..\dev > nul
 move msc4i.asm ..\dev > nul
 cd ..\dev
 

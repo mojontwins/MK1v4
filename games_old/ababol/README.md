@@ -101,3 +101,8 @@ Hay que poner `flags[31]` a  un número alto en el scripting al empezar el juego
 Msc4 los integra perfectamente, pero está sin probar. ¡Esto me viene de muerte! Voy a usar las rutinas ramiras para imprimir el texto descomprimido y tal y a ver qué tal resulta . . .
 
 Necesito modificar la fuente para reordenar los caracteres tal y como se documenta en msc4.
+
+# Las botas 2
+
+Quiero un texto custom al coger las botas, así que no lo puedo hacer con `ENABLE_CUSTOM_HOTSPOTS` (o no lo *quiero* hacer). Lo hago en scripting y todo queda en casa.
+

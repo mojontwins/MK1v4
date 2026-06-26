@@ -456,15 +456,5 @@
 	unsigned char custom_hotspots() {
 		// hotspot type is hotspot_t.
 		// set rdi to prevent clearing the hotspot.
-		if (hotspot_t == 4) {
-			// Coger botas
-			// Poner texto y bla bla
-
-			// Con esto los enemigos se pueden matar.
-			flags [31] = 0; 
-
-			// Hay que poner `flags [31]` a 8 en el scripting 
-			// en la sección ENTERING GAME
-		}
 	}
 #endif

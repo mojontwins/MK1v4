@@ -317,6 +317,28 @@
 	jp script_actions
 .aopcode_E4_end
 
+;; OPCODE 0xE6
+;; TEXT BOX LSB MSB
+	cp  0xE6
+	jr  nz, aopcode_E6_end
+.aopcode_E6
+	call read_x_y
+	ld  a, (sc_x)
+	ld  l, a
+	ld  a, (sc_y)
+	ld  h, a
+	call _decode_text
+	jp script_actions
+.aopcode_E6_end
+
+;; OPCODE 0xF2
+;; BREAK
+	cp  0xf2
+	jr  nz, aopcode_F2_end
+.aopcode_F2
+	ret
+.aopcode_F2_end
+
 ;; UNKNOWN
 	jp script_actions
 
@@ -375,6 +397,27 @@
 	ld  (sc_y), a
 
 	ld  a, c  				; C = flag index
+
+; NPANT LVALUE
+	cp  0xFE
+	jr  nz, riv_set_n_pant_done
+	ld  hl, _n_pant
+	jr  read_i_v_cont
+.riv_set_n_pant_done
+
+; PX LVALUE
+	cp  0xFD
+	jr  nz, riv_set_gpx_done
+	ld  hl, _gpx
+	jr  read_i_v_cont
+.riv_set_gpx_done
+
+; PY LVALUE
+	cp  0xFC
+	jr  nz, riv_set_gpy_done
+	ld  hl, _gpy
+	jr  read_i_v_cont
+.riv_set_gpy_done
 
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags

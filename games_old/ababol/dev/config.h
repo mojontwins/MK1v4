@@ -81,7 +81,7 @@
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 											// If none are selected, FIRE is used.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
-//#define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
+#define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
 
 // Top view:
 // ---------
@@ -107,7 +107,7 @@
 //#define PLAYER_CUSTOM_HENG 				// Replace Horizontal axis for your own
 #define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
 //#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
-#define ENABLE_CUSTOM_HOTSPOTS 				// Add your own hotspots!
+//#define ENABLE_CUSTOM_HOTSPOTS 			// Add your own hotspots!
 
 #define CUSTOM_SPRITE_CELLS 				// Use your own sprite cell luts from custom_sprite_cells.h
 #define ENEMS_CELL_OFFSET 			16 		// If the above is defined, this is the 1st cell for the enemies.
@@ -197,7 +197,7 @@
 unsigned char comportamiento_tiles [] = {
 	0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 4, 8, 1, 8, 8,
 	8, 0, 8, 1, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8,
-	0, 0, 0, 0, 0,128,128,128,128,128,8,8,8,8,8, 0
+	0, 0, 0, 0,128,128,128,128,128,128,8,8,8,8,8, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes
