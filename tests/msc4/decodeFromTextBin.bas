@@ -23,4 +23,5 @@ offset = Val(Command (2))
 
 Print "Text in bin from " & offset
 Print "[" & decodeBin (mainBin (), offset) & "]"
+Print "[" & decodeBinDebug (mainBin (), offset) & "]"
 

@@ -33,6 +33,13 @@ T2=[=]
 T3=[31]
 Set alias %cankill for flag $31
 ==========================================
+LINEA TEXT WIDTH = 22
+T0=[text]
+T1=[width]
+T2=[=]
+T3=[22]
+Text width set to 22
+==========================================
 LINEA ENTERING GAME
 T0=[entering]
 T1=[game]
@@ -626,6 +633,6 @@ Wrote 676 bytes to script.spt.bin
 %g -> $17
 %cankill -> $31
 Exporting encoded text
-Wrote 56 bytes to text.bin
+Wrote 54 bytes to text.bin
 Writing interpreter
 DONE!

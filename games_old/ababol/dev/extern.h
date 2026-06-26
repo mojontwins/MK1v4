@@ -9,7 +9,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 
 	// Text box code by The Mojon Twins (auto-nicked from Hobbit)
 
-	#define ATTR_TEXTBOX   5
+	#define ATTR_TEXTBOX   7
 
 	unsigned char top_string []    = "<======================>";
 	unsigned char temp_string []   = "#                      $";
@@ -150,7 +150,11 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		#endif
 	}
 
-	void show_text_box (void) {
+	void __FASTCALL__ textbox (unsigned char *ptr) {
+		#asm
+				ld  (_gp_gen), hl
+		#endasm
+
 		#ifndef CPC
 			saca_a_todo_el_mundo_de_aqui ();
 
@@ -170,44 +174,43 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		// build substrings for draw_text.
 
 		#asm
+
+			// Draw FRAME TOP
 				ld  a, 6
 				ld  (__y), a 
 				ld  a, 4 
 				ld  (__x), a 
-			#ifndef CPC
-					ld  a, ATTR_TEXTBOX
-					ld  (__n), a 
-			#endif
 				ld  hl, _top_string
-
 			#ifdef CPC
 					call draw_text_pre_loop
 			#else
+					ld  a, ATTR_TEXTBOX
+					ld  (__n), a 
 					call draw_text_loop
 			#endif
 		
 				ld  a, 7 
 				ld  (_rdy), a
 		
+			// Main loop to output lines of text
+
 			.stb_loop
 				call _clear_temp_string
 
-				// Clear line above, only if rdb != 0 or rdy > 7
-				ld  a, (_rdb) 
-				or  a
-				jr  nz, stb_top
+			// Clear line above, if rdy > 7
 				ld  a, (_rdy)
 				cp  8
 				jr  c, stb_notop
 
 			.stb_top
+
+			// Draw FRAME INNER
 				ld  a, (_rdy)
 				dec a 
 				ld  (__y), a 
 				ld  a, 4
 				ld  (__x), a 
 				ld  hl, _temp_string 
-
 			#ifdef CPC 
 					call draw_text_pre_loop
 			#else
@@ -216,14 +219,14 @@ void do_extern_action (unsigned char n, unsigned char m) {
 					call draw_text_loop
 			#endif
 
-			.stb_notop			
+			.stb_notop
 
+			// Draw FRAME INNER (text bg)
 				ld  a, (_rdy)
 				ld  (__y), a 
 				ld  a, 4
 				ld  (__x), a 
 				ld  hl, _temp_string 
-			
 			#ifdef CPC
 					call draw_text_pre_loop
 			#else 
@@ -232,13 +235,13 @@ void do_extern_action (unsigned char n, unsigned char m) {
 					call draw_text_loop
 			#endif
 
+			// Draw FRAME BOTTOM
 				ld  a, (_rdy)
 				inc a 
 				ld  (__y), a 
 				ld  a, 4
 				ld  (__x), a 
 				ld  hl, _bottom_string 
-
 			#ifdef CPC
 					call draw_text_pre_loop
 			#else 	
@@ -247,30 +250,23 @@ void do_extern_action (unsigned char n, unsigned char m) {
 					call draw_text_loop
 			#endif
 
-				// Fill buffer
-				ld  de, _temp_string + 1
-				ld  a, (_rdb) 
-				or  a 
-				jr  z, fill_buffer_noinc
-				ld  a, (_rdy)
-				cp  7
-				jr  nz, fill_buffer_noinc
-				inc de 
-				inc de
-			.fill_buffer_noinc
+			// Fill buffer with the next line of text
+
+				ld  de, _temp_string + 1 		// Skip frame border
 				ld  hl, (_gp_gen)				// HL -> current text
 
 			.fill_buffer_loop
 				ld  a, (hl) 					// Read char from text
+				
 				or  a
 				jr  z, fill_buffer_end 			// 0 -> done filling buffer (string end)
 				cp  '%'
 				jr  z, fill_buffer_end 			// % -> done filling buffer (new line)
 
 				ld  (de), a 					// Write to buffer
-
-				inc hl
 				inc de
+				inc hl
+
 				jr  fill_buffer_loop
 
 			.fill_buffer_end
@@ -347,7 +343,4 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		#endasm 
 	}
 
-	void __FASTCALL__ textbox (unsigned char *ptr) {
-		gp_gen = ptr; show_text_box ();	
-	}
 #endif 

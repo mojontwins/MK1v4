@@ -76,6 +76,7 @@ Function encode5BitEsc (text As String, wrap As Integer) As String
 	Dim As String * 1 m
 	Dim As String binaryString
 	Dim As String curWord
+	Dim As Integer spaceAdded
 
 	text = text & " "
 	curWord = ""
@@ -86,6 +87,7 @@ Function encode5BitEsc (text As String, wrap As Integer) As String
 
 		If m = " " Then 
 			If curLinLen + Len (curWord) > wrap Then
+				If spaceAdded Then binaryString = Left(binaryString, Len(binaryString) - 5)
 				binaryString = binaryString & "0000011111" 	' ESC 31 = NL
 				curLinLen = 0
 			End If
@@ -93,12 +95,14 @@ Function encode5BitEsc (text As String, wrap As Integer) As String
 			binaryString = binaryString & encodeWord (curWord)
 			curLinLen = curLinLen + Len (curWord)
 			curWord = ""
+			spaceAdded = 0
 
 			If i = Len(text) Then 
 				binaryString = binaryString & "0000000000"    ' ESC 0 = EOL
 			ElseIf curLinLen < wrap Then 
 				binaryString = binaryString & "11111"       ' 31 = SPACE
 				curLinLen = curLinLen + 1
+				spaceAdded = -1
 			End If
 		Else
 			curWord = curWord & m
@@ -196,3 +200,43 @@ Function decodeBin (mainBin () As uByte, offset As Integer) As String
 	Return decoded
 End Function
 
+Function decodeBinDebug (mainBin () As uByte, offset As Integer) As String
+	' Starts decoding decodeBin from offset
+	Dim As Integer index, i
+	Dim As Integer d
+	Dim As uByte escOn
+	Dim As String decoded
+	Dim As String binaryString
+
+	index = offset 
+	For i = index To uBound (mainBin) 
+		binaryString = binaryString & Bin (mainBin (i), 8)
+	Next i
+
+	For i = 1 To Len (binaryString) Step 5
+		d = Val ("&B" & Mid (binaryString, i, 5))
+
+		If escOn Then
+			escOn = 0
+			Select Case d
+				Case 0: Exit For 
+				Case 1 To 30: decoded = decoded & Chr (32 + d)
+				Case 31: decoded = decoded & "|"
+			End Select
+
+		Else
+			Select case d
+				Case 0: escOn = -1 
+				Case 1 To 26: decoded = decoded & Chr (64 + d)
+				case 27: decoded = decoded & ","
+				case 28: decoded = decoded & "."
+				case 29: decoded = decoded & "?"
+				case 30: decoded = decoded & "!"
+				case 31: decoded = decoded & " "
+			End Select
+
+		End If
+	Next i
+
+	Return decoded
+End Function

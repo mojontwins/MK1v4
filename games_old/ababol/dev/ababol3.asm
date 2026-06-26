@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Fri Jun 26 13:35:35 2026
+;	Module compile time: Fri Jun 26 18:10:35 2026
 
 
 
@@ -4190,7 +4190,7 @@
 	ret
 	.fbsd_done
 	ld (de), a
-	ld hl, (23600 + 3*18)
+	ld hl, #((23600 + 3*18))
 	jp _textbox
 	ret
 
@@ -8394,7 +8394,8 @@
 
 
 
-._show_text_box
+._textbox
+	ld (_gp_gen), hl
 	call	_saca_a_todo_el_mundo_de_aqui
 	LIB SPValidate
 	ld c, 1
@@ -8407,17 +8408,14 @@
 	ld (__y), a
 	ld a, 4
 	ld (__x), a
+	ld hl, _top_string
 	ld a, 5
 	ld (__n), a
-	ld hl, _top_string
 	call draw_text_loop
 	ld a, 7
 	ld (_rdy), a
 	.stb_loop
 	call _clear_temp_string
-	ld a, (_rdb)
-	or a
-	jr nz, stb_top
 	ld a, (_rdy)
 	cp 8
 	jr c, stb_notop
@@ -8450,15 +8448,6 @@
 	ld (__n), a
 	call draw_text_loop
 	ld de, _temp_string + 1
-	ld a, (_rdb)
-	or a
-	jr z, fill_buffer_noinc
-	ld a, (_rdy)
-	cp 7
-	jr nz, fill_buffer_noinc
-	inc de
-	inc de
-	.fill_buffer_noinc
 	ld hl, (_gp_gen)
 	.fill_buffer_loop
 	ld a, (hl)
@@ -8467,14 +8456,14 @@
 	cp '%'
 	jr z, fill_buffer_end
 	ld (de), a
-	inc hl
 	inc de
+	inc hl
 	jr fill_buffer_loop
 	.fill_buffer_end
 	ld (_gp_gen), hl
 	ld a, 4
 	ld (_rdx), a
-	ld a, 5
+	ld a, 7
 	ld (__n), a
 	ld hl, _temp_string
 	call dtcbc_loop
@@ -8507,17 +8496,6 @@
 	.stb_redraw_done
 	ld a, 1
 	ld (_redraw_after_text), a
-	ret
-
-
-
-._textbox
-	pop	bc
-	pop	hl
-	push	hl
-	push	bc
-	ld	(_gp_gen),hl
-	call	_show_text_box
 	ret
 
 
@@ -9929,7 +9907,6 @@
 	XDEF	_en_an_base_frame
 	defc	_en_an_base_frame	=	23651
 	XDEF	_extra_enems_init
-	XDEF	_show_text_box
 	XDEF	_hotspot_t
 	XDEF	_spritesClip
 	XDEF	_hotspot_x

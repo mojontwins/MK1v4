@@ -94,7 +94,7 @@ extern void script_do (void);
 			.fbsd_done
 				ld  (de), a 	// End of string
 
-				ld  hl, TEXT_BUFFER
+				ld  hl, #(TEXT_BUFFER)
 				jp  _textbox
 		#endasm
 	}

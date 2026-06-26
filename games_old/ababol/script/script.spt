@@ -1,5 +1,6 @@
 # Script Abadol!
 
+# Main shit
 ROOMS = 60
 ITEM SLOT = 0
 ITEM EMPTY = 47
@@ -8,7 +9,10 @@ ITEM EMPTY = 47
 ALIAS %CARRYING = 0
 ALIAS %CANKILL = 31
 
-# Gates and medallions should have bit 7 raised in behs
+# For text boxes
+TEXT WIDTH = 22
+
+# Boots and medallions should have bit 7 raised in behs
 
 ENTERING GAME
 	IF TRUE 
