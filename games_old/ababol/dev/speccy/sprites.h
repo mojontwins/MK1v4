@@ -771,6 +771,7 @@ extern unsigned char sprite_32_c [];
     ._sprite_9_a
         defb 0, 255
         defb 0, 255
+        defb 0, 255
         defb 0, 1
         defb 124, 0
         defb 66, 0
@@ -784,7 +785,6 @@ extern unsigned char sprite_32_c [];
         defb 0, 224
         defb 15, 224
         defb 15, 224
-        defb 8, 224
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -796,6 +796,7 @@ extern unsigned char sprite_32_c [];
  
 ; Segunda columna
     ._sprite_9_b
+        defb 0, 255
         defb 0, 193
         defb 20, 128
         defb 42, 0
@@ -811,7 +812,6 @@ extern unsigned char sprite_32_c [];
         defb 128, 31
         defb 128, 31
         defb 0, 63
-        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -852,6 +852,8 @@ extern unsigned char sprite_32_c [];
 ; Primera columna
     ._sprite_10_a
         defb 0, 255
+        defb 0, 255
+        defb 0, 255
         defb 0, 15
         defb 112, 1
         defb 76, 0
@@ -865,8 +867,6 @@ extern unsigned char sprite_32_c [];
         defb 31, 192
         defb 6, 224
         defb 0, 240
-        defb 4, 240
-        defb 0, 241
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -878,6 +878,8 @@ extern unsigned char sprite_32_c [];
  
 ; Segunda columna
     ._sprite_10_b
+        defb 0, 255
+        defb 0, 255
         defb 0, 193
         defb 20, 128
         defb 42, 0
@@ -892,8 +894,6 @@ extern unsigned char sprite_32_c [];
         defb 32, 15
         defb 96, 15
         defb 192, 15
-        defb 0, 31
-        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -935,6 +935,8 @@ extern unsigned char sprite_32_c [];
     ._sprite_11_a
         defb 0, 255
         defb 0, 255
+        defb 0, 255
+        defb 0, 255
         defb 0, 1
         defb 124, 0
         defb 66, 0
@@ -947,8 +949,6 @@ extern unsigned char sprite_32_c [];
         defb 12, 224
         defb 7, 240
         defb 3, 248
-        defb 0, 252
-        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -960,22 +960,22 @@ extern unsigned char sprite_32_c [];
  
 ; Segunda columna
     ._sprite_11_b
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
         defb 0, 193
         defb 20, 128
         defb 42, 0
         defb 64, 0
         defb 148, 1
         defb 60, 1
-        defb 180, 1
-        defb 128, 1
-        defb 48, 7
+        defb 132, 1
+        defb 48, 1
         defb 176, 7
         defb 0, 7
         defb 160, 15
         defb 160, 15
         defb 64, 15
-        defb 0, 31
-        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1097,22 +1097,22 @@ extern unsigned char sprite_32_c [];
 ; Sprite #12 y máscara
 ; Primera columna
     ._sprite_13_a
+        defb 0, 255
+        defb 0, 255
+        defb 0, 255
         defb 0, 131
         defb 40, 1
         defb 84, 0
         defb 2, 0
         defb 41, 128
         defb 60, 128
-        defb 45, 128
-        defb 1, 128
-        defb 12, 224
+        defb 33, 128
+        defb 12, 128
         defb 13, 224
         defb 0, 224
         defb 5, 240
         defb 5, 240
         defb 2, 240
-        defb 0, 248
-        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1124,6 +1124,8 @@ extern unsigned char sprite_32_c [];
  
 ; Segunda columna
     ._sprite_13_b
+        defb 0, 255
+        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 128
@@ -1138,8 +1140,6 @@ extern unsigned char sprite_32_c [];
         defb 48, 7
         defb 224, 15
         defb 192, 31
-        defb 0, 63
-        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1179,6 +1179,8 @@ extern unsigned char sprite_32_c [];
 ; Sprite #13 y máscara
 ; Primera columna
     ._sprite_14_a
+        defb 0, 255
+        defb 0, 255
         defb 0, 131
         defb 40, 1
         defb 84, 0
@@ -1193,8 +1195,6 @@ extern unsigned char sprite_32_c [];
         defb 4, 240
         defb 6, 240
         defb 3, 240
-        defb 0, 248
-        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1206,6 +1206,8 @@ extern unsigned char sprite_32_c [];
  
 ; Segunda columna
     ._sprite_14_b
+        defb 0, 255
+        defb 0, 255
         defb 0, 255
         defb 0, 240
         defb 14, 128
@@ -1220,8 +1222,6 @@ extern unsigned char sprite_32_c [];
         defb 248, 3
         defb 96, 7
         defb 0, 15
-        defb 32, 15
-        defb 0, 143
         defb 0, 255
         defb 0, 255
         defb 0, 255
@@ -1261,6 +1261,7 @@ extern unsigned char sprite_32_c [];
 ; Sprite #14 y máscara
 ; Primera columna
     ._sprite_15_a
+        defb 0, 255
         defb 0, 131
         defb 40, 1
         defb 84, 0
@@ -1284,10 +1285,10 @@ extern unsigned char sprite_32_c [];
         defb 0, 255
         defb 0, 255
         defb 0, 255
-        defb 0, 255
  
 ; Segunda columna
     ._sprite_15_b
+        defb 0, 255
         defb 0, 255
         defb 0, 255
         defb 0, 128
@@ -1303,7 +1304,6 @@ extern unsigned char sprite_32_c [];
         defb 0, 7
         defb 240, 7
         defb 240, 7
-        defb 16, 7
         defb 0, 255
         defb 0, 255
         defb 0, 255

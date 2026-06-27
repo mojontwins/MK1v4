@@ -66,8 +66,8 @@ cd ..\dev
 if [%om%]==[cpc] goto :cpc
 
 rem Add msc4i.asm to the list of compiled sources if using scripting!
-zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
-zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm msc4i.asm churromain.c -DSPECCY > nul
+zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2f -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
+zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2f -o %game%.asm msc4i.asm churromain.c -DSPECCY > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

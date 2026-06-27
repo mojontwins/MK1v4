@@ -72,7 +72,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 	void draw_text_cbc (void) {
 		#ifdef CPC 
 			#asm
-					// Text to draw in HL, 0 terminated
+				// Text to draw in HL, 0 terminated
 					
 				.dtcbc_loop
 					ld  a, (_rdx)
@@ -320,10 +320,6 @@ void do_extern_action (unsigned char n, unsigned char m) {
 				inc a 
 				jr  z, stb_waitkey 			// if pad = 0xff, inc pad = 0, so loop.
 
-				ld  a, (_redraw_after_text)
-				or  a 
-				jr  z, stb_redraw_done
-
 				call _redraw_from_buffer
 				call _hotspot_paint
 				call _render_all_sprites
@@ -338,8 +334,6 @@ void do_extern_action (unsigned char n, unsigned char m) {
 			#endif
 			.stb_redraw_done
 
-				ld  a, 1 
-				ld  (_redraw_after_text), a
 		#endasm 
 	}
 
