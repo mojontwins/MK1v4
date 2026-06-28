@@ -61,9 +61,12 @@ ENTERING ANY
 	# If getting to row 2 from row 3...
 	IF NPANT < 40
 	IF OPANT > 39
-	# on_pant is 0xff when starting a new game so this is needed:
+	# "OPANT" is 0xff when starting a new game so this is needed:
 	IF OPANT < 60
 	THEN
+		# This calls C code to give some 
+		# vertical boost when getting out
+		# of the water.
 		EXTERN 0 0
 	END
 
@@ -93,7 +96,6 @@ ENTERING SCREEN 0, 2, 20
 		SET TILE (10, 8) = 46
 	END
 END
-
 
 # Draw medallions
 # Note how we use & to know the actual flag #

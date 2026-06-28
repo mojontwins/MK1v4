@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Jun 27 10:04:19 2026
+;	Module compile time: Sat Jun 27 13:12:29 2026
 
 
 
@@ -4164,8 +4164,8 @@
 	cp 31
 	jr nz, fbsd_nonl
 	ld a, '%'
-	.fbsd_nonl
 	jr fbsd_stor
+	.fbsd_nonl
 	add 32
 	.fbsd_stor
 	ld (de), a
@@ -4996,7 +4996,7 @@
 	defb	128
 	defb	1
 	defb	0
-	defb	1
+	defb	0
 	defb	96
 	defb	128
 	defb	96
@@ -6215,11 +6215,11 @@
 	pop	de
 	call	l_pint
 	ld	hl,(_player+8)
-	ld	de,64	;const
+	ld	de,56	;const
 	ex	de,hl
 	call	l_lt
 	jp	nc,i_46
-	ld	hl,65472	;const
+	ld	hl,65480	;const
 	ld	(_player+8),hl
 .i_46
 .i_45
@@ -6232,14 +6232,14 @@
 	and	#(2 % 256)
 	jp	nz,i_47
 	ld	hl,(_player+8)
-	ld	de,128	;const
+	ld	de,112	;const
 	ex	de,hl
 	call	l_lt
 	jp	nc,i_48
 	ld	hl,_player+8
 	push	hl
 	call	l_gint	;
-	ld	bc,32
+	ld	bc,40
 	add	hl,bc
 	pop	de
 	call	l_pint
@@ -6253,14 +6253,14 @@
 	rrca
 	jp	c,i_49
 	ld	hl,(_player+8)
-	ld	de,65408	;const
+	ld	de,65424	;const
 	ex	de,hl
 	call	l_gt
 	jp	nc,i_50
 	ld	hl,_player+8
 	push	hl
 	call	l_gint	;
-	ld	bc,-32
+	ld	bc,-40
 	add	hl,bc
 	pop	de
 	call	l_pint

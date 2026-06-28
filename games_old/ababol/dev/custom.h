@@ -3,8 +3,8 @@
 
 #ifdef PLAYER_CUSTOM_VENG
 
-	#define PLAYER_MAX_VSWIM		128
-	#define PLAYER_ASWIM			32
+	#define PLAYER_MAX_VSWIM		112
+	#define PLAYER_ASWIM			40
 	#define PLAYER_AFLOAT 			8
 
 	#define PLAYER_G_JUMPING 		16

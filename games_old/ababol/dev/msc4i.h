@@ -60,8 +60,8 @@ extern void script_do (void);
 				cp  31 			// ESC 31 = NL
 				jr  nz, fbsd_nonl
 				ld  a, '%'
-			.fbsd_nonl
 				jr  fbsd_stor 
+			.fbsd_nonl
 
 				// Otherwise, output a + 32
 				add 32
