@@ -34,6 +34,7 @@ Dim Shared As String interpreterFn
 Dim Shared As Integer maxPants
 Dim Shared As Integer noIndexed
 Dim Shared As Integer fastNPant
+Dim Shared As Integer jumptable
 
 Dim Shared As Integer itemSlot
 Dim Shared As Integer itemEmpty = 0
@@ -872,6 +873,7 @@ Sub processScript (fIn As Integer)
 	Dim As Integer listToken, cError
 	Dim As Integer sectOffset
 	Dim As String listRooms (127)
+	Dim As Integer indexSize
 
 	sectBinIdx = 0
 	
@@ -1014,11 +1016,18 @@ Sub processScript (fIn As Integer)
 
 	If maxPants = 0 And noIndexed = 0 Then Print "WARNING! undefined # of rooms! The script won't work!"
 
-	For i = 0 To ENTERING_INDEX_OFFSET + maxPants * 2 - 1
+	If jumptable Then
+		' Don't index rooms in jumptable mode!
+		indexSize = ENTERING_INDEX_OFFSET
+	Else
+		indexSize = ENTERING_INDEX_OFFSET + maxPants * 2
+	End If
+
+	For i = 0 To indexSize - 1
 		If sectOffs (i) < 0 Then 
 			sectOffs (i) = 0 
 		Else 
-			sectOffs (i) = sectOffs (i) + (ENTERING_INDEX_OFFSET + maxPants * 2) * 2
+			sectOffs (i) = sectOffs (i) + indexSize * 2
 		End If
 		WriteToMainBin sectOffs (i) Mod 256
 		WriteToMainBin sectOffs (i) \ 256
@@ -1083,17 +1092,18 @@ End Sub
 Sub usage
 	Print "usage:"
 	Print ""
-	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N "
-	Print "         [interpreter=msci.asm] [noindexed] [fastnpant] [text=text.bin]"
+	Print "msc4.exe in=f1.spt[,f2.spt,...] v=3|4|5 target=cpc|zx rooms=N [text=text.bin]"
+	Print "         [interpreter=msci.asm] [noindexed] [fastnpant] [jumptable]"
 	Print "         in is [a list of|the] input filename."
 	Print "           msc4 will generate a f.bin per input,"
 	Print "           but only one common interpreter."
 	Print "         v is the MK1 base version, 3, 4, or 5"
-	Print "         target is the target OM (zx or cpc)"
-	Print "         rooms is the total of rooms in the map"
-	Print "         interpreter for custom interpreter filename"
-	Print "         noindexed if you are only using general sections (ANY, etc)"
-	Print "         fastnpant generates a (faster) special opcode for IF NPANT"
+	Print "         target: is the target OM (zx or cpc)"
+	Print "         rooms: is the total of rooms in the map"
+	Print "         interpreter: for custom interpreter filename"
+	Print "         noindexed: if you are only using general sections (ANY, etc)"
+	Print "         fastnpant: generates a (faster) special opcode for IF NPANT"
+	Print "         jumptable: code based jump table rather than index"
 End Sub
 
 '' Interfaz
@@ -1106,8 +1116,9 @@ Dim As String mandatory (2) = { "in", "v", "target" }
 Dim As Integer fIn, fOut, i
 Dim As String fileIns(127)
 Dim As String fileText
+Dim As Integer isEntering, room
 
-Print "msc v4.1.20260603 ~ ";
+Print "msc v4.2.20260701 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
@@ -1123,6 +1134,7 @@ outV = Val(sclpGetValue("v"))
 outT = SPECCY: If sclpGetValue("target") = "cpc" Then outT = CPC
 noIndexed = (sclpGetValue("noindexed") <> "")
 fastNPant = (sclpGetValue("fastnpant") <> "")
+jumptable = (sclpGetValue("jumptable") <> "")
 
 fileText = sclpGetValue ("text")
 If fileText = "" Then fileText = "text.bin"
@@ -1179,11 +1191,58 @@ writeAssemblyString fOut, "; Skip to next clausule|.skip|defw 0"
 writeAssemblyString fOut, "; Coordinate pair|.sc_x|defb 0|.sc_y|defb 0"
 writeAssemblyString fOut, "; From the engine|._script_tx|defb 0|._script_ty|defb 0|._script_tn|defb 0"
 writeAssemblyString fOut, "; Control|.sc_terminado|defb 0"
-writeAssemblyString fOut, "._script_do"
-writeAssemblyString fOut, "; Point to offset in script index|ld  hl, (_script_n)|add hl, hl|ld  bc, script_bytecode|add hl, bc"
-writeAssemblyString fOut, "; Read offset|ld  a, (hl)|inc hl|ld  h, (hl)|ld  l, a"
-writeAssemblyString fOut, ";  If zero do abort|or  h|ret z"
-writeAssemblyString fOut, "; Make & store pointer|add hl, bc|ld  (script), hl"
+
+If jumptable Then
+
+	'' Mixed jump based script interpreter
+
+	' Generate jump table
+
+	writeAssemblyString fOut, ".script_jump_table|ld  a, (_script_n)"
+
+	isEntering = -1: room = 0
+	For i = ENTERING_INDEX_OFFSET To ENTERING_INDEX_OFFSET + maxPants * 2 - 1
+		If sectOffs (i) >= 0 Then
+			If isEntering Then 
+				writeAssemblyString fOut, "; ENTERING " & room 
+			Else
+				writeAssemblyString fOut, "; FIRE @   " & room 
+			End If
+
+			writeAssemblyString fOut, "ld  hl, 0x" & Hex (sectOffs (i) + ENTERING_INDEX_OFFSET*2, 4) & "|cp  " & i & "|ret z"
+		End If
+		isEntering = Not isEntering: If isEntering Then room = room + 1
+	Next i
+
+	writeAssemblyString fOut, "ld  a, 0xff|ret"	
+
+	' Common code
+
+	writeAssemblyString fOut, "._script_do"
+	writeAssemblyString fOut, "ld  a, (_script_n)|cp  " & ENTERING_INDEX_OFFSET & "|jr  nc, get_from_jump_table"
+	writeAssemblyString fOut, ".get_from_index|; Point to offset in script index|ld  hl, (_script_n)|add hl, hl|ld  bc, script_bytecode|add hl, bc"
+	writeAssemblyString fOut, "; Read offset|ld  a, (hl)|inc hl|ld  h, (hl)|ld  l, a"
+	writeAssemblyString fOut, ";  If zero do abort|or  h|ret z"
+	writeAssemblyString fOut, "jr make_pointer"
+	writeAssemblyString fOut, ".get_from_jump_table|call script_jump_table"
+	writeAssemblyString fOut, "; If no script, A = 0xff|cp 0xff|ret z"
+	writeAssemblyString fOut, ".make_pointer|; Make & store pointer"
+	writeAssemblyString fOut, "ld  bc, script_bytecode|add hl, bc|ld  (script), hl"
+
+Else
+
+	'' Purely index based script interpreter 
+
+	writeAssemblyString fOut, "._script_do"
+	writeAssemblyString fOut, "; Point to offset in script index|ld  hl, (_script_n)|add hl, hl|ld  bc, script_bytecode|add hl, bc"
+	writeAssemblyString fOut, "; Read offset|ld  a, (hl)|inc hl|ld  h, (hl)|ld  l, a"
+	writeAssemblyString fOut, ";  If zero do abort|or  h|ret z"
+	writeAssemblyString fOut, "; Make & store pointer|add hl, bc|ld  (script), hl"
+
+End If
+
+'' Common interpreter
+
 writeAssemblyString fOut, ".script_loop|; Calculate address of next clausule"
 writeAssemblyString fOut, "ld  hl, (script)|push hl"
 writeAssemblyString fOut, "call read_byte 		; A = clausule size|ld  b, 0|ld  c, a"

@@ -300,3 +300,126 @@ El encoder hará word-wrap automáticamente cada 24 caracteres, pero el ancho de
 # Indirección
 
 &%ALIAS producirá el número real del flag.
+
+# Mejora para el índice.
+
+En juegos de muchas pantallas pero pocas pantallas con script hay unos índices enormes y eso me parece un despilfarro. Quizá se pueda pensar en otro tipo de saltar al script correcto en estas situaciones. Opcional. Voy a pensarlo.
+
+Idea: Brute force jump table:
+
+run_fire_script N->if N = 3 jump to XXX, if N = 10 jump to YYY, ... etc.
+
+```asm
+        ld  a, (_n_pant)
+
+        cp  X
+        jr  nz, _nxt1
+        ld  hl, XXXX
+        jp  end
+
+    ._nxt1
+        cp Y
+        jr  nz, _nxt2
+        ld  hl, YYYY
+        jp end
+
+        ...
+```
+
+Esto es efectivamente más lento y tarda más a medida que sube n_pant, pero puede ser deseable en algunos casos, así que voy a añadirlo.
+
+Rather:
+
+```asm
+        call get_script_address
+        // Script address in HL!
+        cp  0xff
+        jp  next
+        
+        // run HL
+        jp  next
+
+    .get_script_address
+        ld  a, (_n_pant)
+
+        ld  hl, XXXX
+        cp  X
+        ret z
+
+        ld  hl, YYYY
+        cp  Y
+        ret z
+
+        ld  hl, ZZZZ
+        cp  Z
+        ret z
+        
+        ...
+
+        ld  a, 0xff
+        ret
+```
+
+Y en concreto, algo asín... Porque está bien que los scripts por defecto sean más directos (código real de intérprete) ¡La idea es que no haya que tocar para nada el motor! Todo debe resolverse aquí:
+
+```asm
+    .script_jump_table
+        ld  a, (_script_n)
+
+        ld  hl, XXXX
+        cp  X 
+        ret z 
+
+        ...
+
+        ld  a, 0xff
+        ret
+
+
+    ; Existing entry point (indexed mode) still acts as
+    ; the entry point for general scripts.
+    ._script_do
+        ld  a, (_script_n)
+        cp  ENTERING_INDEX_OFFSET ; Fill with the right value!
+        jr  nc, get_from_jump_table
+
+    .get_from_index
+        ; Point to offset in script index
+        ld  hl, (_script_n)
+        add hl, hl
+        ld  bc, script_bytecode
+        add hl, bc
+
+        ; Read offset
+        ld  a, (hl)
+        inc hl 
+        ld  h, (hl)
+        ld  l, a 
+
+        ;  If zero do abort
+        or  h 
+        ret z
+
+        jr make_pointer
+
+    .get_from_jump_table
+        call script_jump_table
+
+        ; If no script, A = 0xff
+        cp 0xff
+        ret z 
+
+    .make_pointer
+        ; Make & store pointer
+
+        ld  bc, script_bytecode
+        add hl, bc
+        ld  (script), hl
+
+    .script_loop
+        ...
+```
+
+# TODO!
+
+* [ ] Encontrar la forma de saber la vida total del jugador desde el intérprete! Ahora hay un defc con una constante placeholder.

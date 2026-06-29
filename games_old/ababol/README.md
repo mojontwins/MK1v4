@@ -110,6 +110,21 @@ Quiero un texto custom al coger las botas, así que no lo puedo hacer con `ENABL
 
 [ ] - Montar música 48K
 [ ] - ampliar el mapa para añadir una pequeña cripta donde encontrar la espada.
-[ ] - Poner ending por scripting, detectar que se cogen todos los ababoles en el script y teleportar a la cripta.
+[X] - Poner ending por scripting, detectar que se cogen todos los ababoles en el script y teleportar a la cripta.
 [ ] - Añadir al tileset la espada, y en el script un WIN GAME al tocar la espada.
 [ ] - Modificar pantalla de título para que refleje SINCLAIR y KEMPSTON
+
+# Remember
+
+Este juego usa "jumptable" al compilar el script, lo que elimina el índice por pantallas y crea una tabla de saltos. En este caso esto ayuda a ahorrar memoria ya que sólo hay 12 de los 160 posibles slots en uso. Ahorramos 240 bytes en índice aunque ocupamos 96 bytes más de código.
+
+Ya que todas las secciones de pantalla son ENTERING, otra opción hubiese sido meter todo el ENTERING ANY y usar IF NPANT = XX, pero hemos optado por lo otro.
+
+# Optimization
+
+Estoy pasando a ensamble y reorganizando cosas para ganar bytes porque la música 48K ocupa demasiado y necesito el espacio para tonterías. Apunto aquí lo que voy tocando para probar luego y ver que no rompí nada. Empezamos con 34238
+
+[ ] 34202 (-36) - custom/extra_enems_move (check movimiento y frames)
+[X] 34186 (-16) - custom/extra_enems_init (check frames)
+[X] 34175 (-9)  - custom/player_custom_frame (check frame del player)
+[X] 34102 (-73) - custom/player_custom_veng/DX Swim.

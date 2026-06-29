@@ -462,6 +462,7 @@ void main (void) {
 					if ((pad_this_frame & sp_DOWN) == 0 && n_pant < MAP_W*MAP_H) { n_pant += MAP_W; }
 					if ((pad_this_frame & sp_LEFT) == 0 && n_pant > 0) { n_pant --; }
 					if ((pad_this_frame & sp_RIGHT) == 0 && n_pant < MAP_W*MAP_H) { n_pant ++; }
+					if ((pad_this_frame & sp_FIRE) == 0) player.objs ++;
 				}
 			#endif
 

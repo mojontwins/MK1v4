@@ -73,8 +73,91 @@
 .sc_terminado
 	defb 0
 
+.script_jump_table
+	ld  a, (_script_n)
+
+; ENTERING 0
+
+	ld  hl, 0x0084
+	cp  16
+	ret z
+
+; ENTERING 2
+
+	ld  hl, 0x0084
+	cp  20
+	ret z
+
+; ENTERING 3
+
+	ld  hl, 0x00A6
+	cp  22
+	ret z
+
+; ENTERING 14
+
+	ld  hl, 0x00C2
+	cp  44
+	ret z
+
+; ENTERING 15
+
+	ld  hl, 0x0140
+	cp  46
+	ret z
+
+; ENTERING 19
+
+	ld  hl, 0x015B
+	cp  54
+	ret z
+
+; ENTERING 20
+
+	ld  hl, 0x0084
+	cp  56
+	ret z
+
+; ENTERING 22
+
+	ld  hl, 0x010A
+	cp  60
+	ret z
+
+; ENTERING 28
+
+	ld  hl, 0x00F2
+	cp  72
+	ret z
+
+; ENTERING 29
+
+	ld  hl, 0x00DA
+	cp  74
+	ret z
+
+; ENTERING 31
+
+	ld  hl, 0x0125
+	cp  78
+	ret z
+
+; ENTERING 39
+
+	ld  hl, 0x0197
+	cp  94
+	ret z
+
+	ld  a, 0xff
+	ret
+
 ._script_do
 
+	ld  a, (_script_n)
+	cp  16
+	jr  nc, get_from_jump_table
+
+.get_from_index
 ; Point to offset in script index
 	ld  hl, (_script_n)
 	add hl, hl
@@ -91,7 +174,19 @@
 	or  h
 	ret z
 
+	jr make_pointer
+
+.get_from_jump_table
+	call script_jump_table
+
+; If no script, A = 0xff
+	cp 0xff
+	ret z
+
+.make_pointer
 ; Make & store pointer
+
+	ld  bc, script_bytecode
 	add hl, bc
 	ld  (script), hl
 
@@ -367,6 +462,13 @@
 	ld  a, (_n_pant)
 	ret
 .rvb_set_n_pant_done
+
+; OBJS RVALUE
+	cp  0xFA
+	jr  nz, rvb_set_player_objs_done
+	ld  a, (_player + 27) 	; player.objs
+	ret
+.rvb_set_player_objs_done
 
 ; OPANT RVALUE
 	cp  0xEA

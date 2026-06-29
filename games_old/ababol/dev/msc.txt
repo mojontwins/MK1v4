@@ -1,4 +1,4 @@
-msc v4.1.20260603 ~ Processing script.spt
+msc v4.2.20260701 ~ Processing script.spt
 ==========================================
 LINEA ROOMS = 60
 T0=[rooms]
@@ -730,9 +730,29 @@ Parsing: SOUND 8
 T0=[SOUND]
 T1=[8]
 Bytecode: 0F 01 FF FE 00 FF E6 00 00 20 05 08 00 F2 FF 0F 01 FF FE 02 FF E6 4B 00 20 0B 08 00 F2 FF 0F 01 FF FE 03 FF E6 94 00 20 09 01 00 F2 FF 0F 01 FF FE 14 FF E6 EB 00 20 0A 08 00 F2 FF 18 01 FF FE 27 01 FF 1F 08 FF 00 1F 00 20 0D 05 00 E0 08 E6 40 01 F2 FF 15 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 30 FF 11 E0 08 FF FF 
-Index section: 272 bytes
-Bytecode section: 493 bytes
-Wrote 765 bytes to script.spt.bin
+==========================================
+LINEA PLAYER GOT SOMETHING
+T0=[player]
+T1=[got]
+T2=[something]
+Adding 493 @ sect 3
+Parsing: IF OBJS = 25
+T0=[IF]
+T1=[$250]
+T2=[=]
+T3=[25]
+Parsing: TEXT BOX "AL COGER EL ULTIMO ABABOL QUE TE QUEDABA, TODO SE NUBLA Y SIENTES UN TIRON MAGICO DEL OMBLIGO QUE TE TRANSPORTA A OTRO LUGAR..."
+T0=[TEXT]
+T1=[BOX]
+T2=[AL COGER EL ULTIMO ABABOL QUE TE QUEDABA, TODO SE NUBLA Y SIENTES UN TIRON MAGICO DEL OMBLIGO QUE TE TRANSPORTA A OTRO LUGAR...]
+Parsing: EXTERN 1 0
+T0=[EXTERN]
+T1=[1]
+T2=[0]
+Bytecode: 0D 01 FF FA 19 FF E6 76 01 E4 01 00 FF FF 
+Index section: 32 bytes
+Bytecode section: 507 bytes
+Wrote 539 bytes to script.spt.bin
 %carrying -> $0
 %gate1 -> $1
 %gate2 -> $2
@@ -753,6 +773,6 @@ Wrote 765 bytes to script.spt.bin
 %g -> $17
 %cankill -> $31
 Exporting encoded text
-Wrote 374 bytes to text.bin
+Wrote 459 bytes to text.bin
 Writing interpreter
 DONE!

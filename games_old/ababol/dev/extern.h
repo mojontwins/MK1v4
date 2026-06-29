@@ -1,8 +1,167 @@
 // MTE MK1 v3.2
 // Copyleft 2011 by The Mojon Twins
 
+#ifndef CPC
+	void sprite_remove_aid (void) {
+		saca_a_todo_el_mundo_de_aqui ();
+
+		// Validate whole screen so sprites stay on next update
+		#asm
+				LIB SPValidate
+				ld  c, VIEWPORT_X
+				ld  b, VIEWPORT_Y
+				ld  d, VIEWPORT_Y+19
+				ld  e, VIEWPORT_X+29
+				ld  iy, fsClipStruct
+				call SPValidate
+		#endasm				
+	}
+#endif
+
+void recuadrius (void) {
+	#ifdef CPC
+		for (rdi = 0; rdi < 10; rdi ++) {
+			for (rdx = rdi; rdx < 30 - rdi; rdx ++) {
+				#asm
+						// sp_PrintAtInv (VIEWPORT_Y + rdi, VIEWPORT_X + rdx, 71, 0);
+						ld  a, (_rdi)
+						add VIEWPORT_Y
+						ld  (__y), a
+						ld  a, (_rdx)
+						add VIEWPORT_X
+						ld  (__x), a
+						call __tile_address	; DE = buffer address
+						xor a
+						ld  (de), a
+						ld  a, (__x)
+						ld  e, a
+						ld  a, (__y)
+						ld  d, a
+						call cpc_UpdTileTable
+					
+						// sp_PrintAtInv (VIEWPORT_Y + 19 - rdi, VIEWPORT_X + rdx, 71, 0);
+						ld  a, (_rdi)
+						ld  c, a
+						ld  a, #(VIEWPORT_Y+19)
+						sub c
+						ld  (__y), a
+						ld  a, (_rdx)
+						add VIEWPORT_X
+						ld  (__x), a
+						call __tile_address	; DE = buffer address
+						xor a
+						ld  (de), a
+						ld  a, (__x)
+						ld  e, a
+						ld  a, (__y)
+						ld  d, a
+						call cpc_UpdTileTable
+				#endasm
+
+				if (rdx < 19 - rdi) {
+					#asm
+							// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + rdi, 71, 0);
+							ld  a, (_rdx)
+							add VIEWPORT_Y
+							ld  (__y), a
+							ld  a, (_rdi)
+							add VIEWPORT_X
+							ld  (__x), a
+							call __tile_address	; DE = buffer address
+							xor a
+							ld  (de), a
+							ld  a, (__x)
+							ld  e, a
+							ld  a, (__y)
+							ld  d, a
+							call cpc_UpdTileTable
+
+							// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + 29 - rdi, 71, 0);
+							ld  a, (_rdx)
+							add VIEWPORT_Y
+							ld  (__y), a
+							ld  a, (_rdi)
+							ld  c, a
+							ld  a, #(VIEWPORT_X+29)
+							sub c						
+							ld  (__x), a
+							call __tile_address	; DE = buffer address
+							xor a
+							ld  (de), a
+							ld  a, (__x)
+							ld  e, a
+							ld  a, (__y)
+							ld  d, a
+							call cpc_UpdTileTable
+					#endasm
+				}
+			}
+			
+			cpc_UpdateNow (0);
+		}
+	#else
+		sprite_remove_aid ();			
+		for (rdi = 0; rdi < 10; rdi ++) {
+			for (rdx = rdi; rdx < 30 - rdi; rdx ++) {
+				#asm
+						// sp_PrintAtInv (VIEWPORT_Y + rdi, VIEWPORT_X + rdx, 71, 0);
+						ld  de, 0x4700
+						ld  a, (_rdx)
+						add VIEWPORT_X
+						ld  c, a
+						ld  a, (_rdi)
+						add VIEWPORT_Y
+						call SPPrintAtInv
+					
+						// sp_PrintAtInv (VIEWPORT_Y + 19 - rdi, VIEWPORT_X + rdx, 71, 0);
+						ld  de, 0x4700
+						ld  a, (_rdx)
+						add VIEWPORT_X
+						ld  c, a
+						ld  a, (_rdi)
+						ld  b, a
+						ld  a, VIEWPORT_Y + 19
+						sub b
+						call SPPrintAtInv
+				#endasm
+
+				if (rdx < 19 - rdi) {
+					#asm
+							// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + rdi, 71, 0);
+							ld  de, 0x4700
+							ld  a, (_rdi)
+							add VIEWPORT_X
+							ld  c, a
+							ld  a, (_rdx)
+							add VIEWPORT_Y
+							call SPPrintAtInv
+
+							// sp_PrintAtInv (VIEWPORT_Y + rdx, VIEWPORT_X + 29 - rdi, 71, 0);
+							ld  de, 0x4700
+							ld  a, (_rdi)
+							ld  b, a
+							ld  a, VIEWPORT_X + 29
+							sub b
+							ld  c, a
+							ld  a, (_rdx)
+							add VIEWPORT_Y							
+							call SPPrintAtInv
+					#endasm
+				}
+			}
+			#asm
+				halt
+				call SPUpdateNow
+			#endasm
+		}
+	#endif
+}
+
 void do_extern_action (unsigned char n, unsigned char m) {
-	if (n == 0) player.vy = -PLAYER_MAX_VY_SALTANDO;
+	switch (n) {
+		case 0: player.vy = -PLAYER_MAX_VY_SALTANDO; break;
+		case 1: recuadrius (); break;
+	}
 }
 
 #ifdef ENABLE_ENCODED_TEXT
@@ -156,18 +315,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		#endasm
 
 		#ifndef CPC
-			saca_a_todo_el_mundo_de_aqui ();
-
-			// Validate whole screen so sprites stay on next update
-			#asm
-					LIB SPValidate
-					ld  c, VIEWPORT_X
-					ld  b, VIEWPORT_Y
-					ld  d, VIEWPORT_Y+19
-					ld  e, VIEWPORT_X+29
-					ld  iy, fsClipStruct
-					call SPValidate
-			#endasm	
+			sprite_remove_aid ();
 		#endif
 
 		// Text renderer will read the string and
