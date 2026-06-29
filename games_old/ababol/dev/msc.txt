@@ -156,6 +156,9 @@ T0=[IF]
 T1=[$234]
 T2=[<]
 T3=[60]
+Parsing: # This calls C code to give some
+Parsing: # vertical boost when getting out
+Parsing: # of the water.
 Parsing: EXTERN 0 0
 T0=[EXTERN]
 T1=[0]

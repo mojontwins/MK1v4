@@ -248,11 +248,6 @@ void main (void) {
 				if(hotspot_t) {
 					rdi = 0;
 					#if !defined DEACTIVATE_OBJECTS || !defined DEACTIVATE_KEYS || !defined DEACTIVATE_REFILLS 
-
-						#ifdef ENABLE_CUSTOM_HOTSPOTS
-							custom_hotspots ();
-						#endif
-
 						switch (hotspot_t) {
 							#ifndef DEACTIVATE_OBJECTS
 								case HOTSPOT_TYPE_OBJECT:
@@ -448,22 +443,6 @@ void main (void) {
 					.flick_down_done
 				#endasm
 			}
-
-			#ifdef DEBUG_NAVIGATOR
-				// lets you navigate the map. Trigger key is KEY_AUX2 (x) in CPC, 0x02fd (s) in ZX.
-				if (
-				#ifdef CPC
-					cpc_TestKey (KEY_AUX2) 
-				#else
-					sp_KeyPressed (0x02fd)
-				#endif
-				) {
-					if ((pad_this_frame & sp_UP) == 0 && n_pant >= MAP_W) { n_pant -= MAP_W; }
-					if ((pad_this_frame & sp_DOWN) == 0 && n_pant < MAP_W*MAP_H) { n_pant += MAP_W; }
-					if ((pad_this_frame & sp_LEFT) == 0 && n_pant > 0) { n_pant --; }
-					if ((pad_this_frame & sp_RIGHT) == 0 && n_pant < MAP_W*MAP_H) { n_pant ++; }
-				}
-			#endif
 
 			// Win game condition
 			

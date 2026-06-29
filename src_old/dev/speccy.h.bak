@@ -248,8 +248,8 @@ void system_init (void) {
 
 	#ifdef PLAYER_CAN_FIRE
 		for (rdi = 0; rdi < MAX_BULLETS; rdi ++) {
-			sp_bullets [rdi] = sp_CreateSpr (sp_OR_SPRITE, 2, spr_bullet, 1);
-			sp_AddColSpr (sp_bullets [rdi], spr_bullet_b);
+			sp_bullets [rdi] = sp_CreateSpr (sp_OR_SPRITE, 2, sprite_19_a, 1);
+			sp_AddColSpr (sp_bullets [rdi], sprite_19_b);
 		}
 	#endif
 }

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #define MAX_ENEMS 3
-#define MAX_FLAGS 32
+#define MAX_FLAGS 16
 
 #if defined PLAYER_KILLS_ENEMIES || defined PLAYER_CAN_FIRE
 	#define ENEMIES_MAY_DIE

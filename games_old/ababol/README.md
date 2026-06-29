@@ -106,3 +106,10 @@ Necesito modificar la fuente para reordenar los caracteres tal y como se documen
 
 Quiero un texto custom al coger las botas, así que no lo puedo hacer con `ENABLE_CUSTOM_HOTSPOTS` (o no lo *quiero* hacer). Lo hago en scripting y todo queda en casa.
 
+# TODO
+
+[ ] - Montar música 48K
+[ ] - ampliar el mapa para añadir una pequeña cripta donde encontrar la espada.
+[ ] - Poner ending por scripting, detectar que se cogen todos los ababoles en el script y teleportar a la cripta.
+[ ] - Añadir al tileset la espada, y en el script un WIN GAME al tocar la espada.
+[ ] - Modificar pantalla de título para que refleje SINCLAIR y KEMPSTON

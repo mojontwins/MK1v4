@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Jun 27 13:12:29 2026
+;	Module compile time: Mon Jun 29 07:12:59 2026
 
 
 
@@ -6112,6 +6112,18 @@
 	ld	hl,40	;const
 	call	l_ult
 	jp	nc,i_40
+	ld a, (_player + 26)
+	or a
+	jr z, m_vert_jump_down_done
+	ld a, (_pad0)
+	and 0x02
+	ld a, 0
+	jr nz, m_vert_jump_down_done
+	ld hl, 64*2
+	ld (_player + 8), hl
+	inc a
+	.m_vert_jump_down_done
+	ld (_disable_collide_platform), a
 	.player_veng_gravity
 	ld hl, (_player + 8)
 	ld de, 32
@@ -6180,15 +6192,6 @@
 	xor a
 	ld (_player + 19), a
 	.player_jump_done
-	ld a, (_pad0)
-	and 0x02
-	ld a, 0
-	jr nz, m_vert_jump_down_done
-	ld hl, 64
-	ld (_player + 8), hl
-	inc a
-	.m_vert_jump_down_done
-	ld (_disable_collide_platform), a
 	jp	i_41
 .i_40
 	ld	hl,_pad0

@@ -60,10 +60,3 @@
 	}
 
 #endif
-
-#ifdef ENABLE_CUSTOM_HOTSPOTS
-	unsigned char custom_hotspots() {
-		// hotspot type is hotspot_t.
-		// set rdi to prevent clearing the hotspot.
-	}
-#endif

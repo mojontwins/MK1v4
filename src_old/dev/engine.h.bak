@@ -584,14 +584,6 @@ unsigned char cm_two_points (void) {
 
 #if !defined DEACTIVATE_KEYS || defined PLAYER_PUSH_BOXES
 	void check_lock_or_box_horz (void) {
-		#ifdef FIRE_TO_USE_KEY
-			#asm
-				ld  a, (_pad_this_frame)
-				and sp_FIRE
-				ret nz
-			#endasm
-		#endif
-
 		#asm
 				ld  a, (_cx1)
 				ld  (_rdx), a 
@@ -653,14 +645,6 @@ unsigned char cm_two_points (void) {
 	}
 
 	void check_lock_or_box_vert (void) {
-		#ifdef FIRE_TO_USE_KEY
-			#asm
-				ld  a, (_pad_this_frame)
-				and sp_FIRE
-				ret nz
-			#endasm
-		#endif
-				
 		#asm
 				ld  a, (_gpx)
 				add 8 
@@ -1898,7 +1882,7 @@ void move (void) {
 					call l_div_u
 					ld  c, e 				// (_gpx >> 3) % 3
 			#else
-					and 3 
+					and 1 
 					ld  h, 0 
 					ld  l, a 
 					ld  de, _player_walk_cycle 
@@ -2668,7 +2652,7 @@ void draw_scr (void) {
 				enems_en_an_calc (_en_t - 1);
 				break;
 			default:
-				en_an_next_frame [enit] = spr_empty;
+				en_an_next_frame [enit] = sprite_18_a;
 		}
 
 		#ifdef ENABLE_CUSTOM_ENEMS
@@ -2752,7 +2736,7 @@ void draw_scr (void) {
 
 		// Update frame
 		
-		en_an_next_frame [enit] = spr_boom;											
+		en_an_next_frame [enit] = sprite_17_a;											
 												
 		#asm
 				ld  a, (__en_x)
@@ -2785,7 +2769,7 @@ void draw_scr (void) {
 			#endif 
 
 			// Sprite empty
-			en_an_next_frame [enit] = spr_empty;
+			en_an_next_frame [enit] = sprite_18_a;
 			
 			// Mark dead
 			_en_t |= 128;			// dead

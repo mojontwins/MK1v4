@@ -21,6 +21,28 @@
 		if (n_pant < 40) {
 			// Vanilla Nin Nin!
 
+			// Jump down platform
+
+			#asm
+					
+					ld  a, (_player + 26) 		// player.possee
+					or  a
+					jr  z, m_vert_jump_down_done
+
+					ld  a, (_pad0)
+					and sp_DOWN
+					ld  a, 0
+					jr  nz, m_vert_jump_down_done
+
+					ld  hl, PLAYER_VY_INICIAL_SALTO*2
+					ld  (_player + 8), hl 		// player.vy
+
+					inc a
+
+				.m_vert_jump_down_done
+					ld  (_disable_collide_platform), a
+			#endasm
+
 			// Gravity is reduced while jumping
 
 			#asm
@@ -235,23 +257,6 @@
 
 			#endasm
 			*/
-
-			// Jump down platform
-
-			#asm
-					ld  a, (_pad0)
-					and sp_DOWN
-					ld  a, 0
-					jr  nz, m_vert_jump_down_done
-
-					ld  hl, PLAYER_VY_INICIAL_SALTO
-					ld  (_player + 8), hl 		// player.vy
-
-					inc a 
-
-				.m_vert_jump_down_done
-					ld  (_disable_collide_platform), a
-			#endasm
 
 		} else {
 			// DX Swim
