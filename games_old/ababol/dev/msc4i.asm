@@ -102,13 +102,13 @@
 
 ; ENTERING 15
 
-	ld  hl, 0x0140
+	ld  hl, 0x0141
 	cp  46
 	ret z
 
 ; ENTERING 19
 
-	ld  hl, 0x015B
+	ld  hl, 0x015C
 	cp  54
 	ret z
 
@@ -120,7 +120,7 @@
 
 ; ENTERING 22
 
-	ld  hl, 0x010A
+	ld  hl, 0x010B
 	cp  60
 	ret z
 
@@ -138,13 +138,13 @@
 
 ; ENTERING 31
 
-	ld  hl, 0x0125
+	ld  hl, 0x0126
 	cp  78
 	ret z
 
 ; ENTERING 39
 
-	ld  hl, 0x0197
+	ld  hl, 0x0198
 	cp  94
 	ret z
 
@@ -380,6 +380,28 @@
 	jp  script_actions
 .aopcode_30_end
 
+;; OPCODE 0x6D
+;; WARP TO N, X, Y
+	cp  0x6D
+	jr  nz, aopcode_6D_end
+.aopcode_6D
+	call read_vbyte
+	ld  (_n_pant), a
+	call read_vbyte
+	sla a
+	sla a
+	sla a
+	sla a
+	ld  (_gpx), a
+	call read_vbyte
+	sla a
+	sla a
+	sla a
+	sla a
+	ld  (_gpy), a
+	jp  script_actions
+.aopcode_6D_end
+
 ;; OPCODE 0xE0
 ;; SOUND N
 	cp  0xE0
@@ -425,6 +447,16 @@
 	call _decode_text
 	jp script_actions
 .aopcode_E6_end
+
+;; OPCODE 0xF0
+;; WIN GAME
+	cp  0xf0
+	jr  nz, aopcode_F0_end
+.aopcode_F0
+	ld  a, 1
+	ld  (_script_result), a
+	ret
+.aopcode_F0_end
 
 ;; OPCODE 0xF2
 ;; BREAK

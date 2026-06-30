@@ -18,230 +18,219 @@
 		// For this game, we use the normal sideways jumping engine if n_pant < 40,
 		// and a new, custom one for 40<=n_pant<60.
 
-		if (n_pant < 40) {
-			// Vanilla Nin Nin!
+		#asm
+		
+			ld  a, (_n_pant)
+			cp  40
+			jr  c, player_movement_ninnin
+
+			cp  60
+			jp  c, player_movement_dx_swim
+
+			//
+			// Vanilla Nin Nin! Engine!
+			//
+
+			.player_movement_ninnin
 
 			// Jump down platform
+				
+				ld  a, (_player + 26) 		// player.possee
+				or  a
+				jr  z, m_vert_jump_down_done
 
-			#asm
-					
-					ld  a, (_player + 26) 		// player.possee
-					or  a
-					jr  z, m_vert_jump_down_done
+				ld  a, (_pad0)
+				and sp_DOWN
+				ld  a, 0
+				jr  nz, m_vert_jump_down_done
 
-					ld  a, (_pad0)
-					and sp_DOWN
-					ld  a, 0
-					jr  nz, m_vert_jump_down_done
+				ld  hl, PLAYER_VY_INICIAL_SALTO*2
+				ld  (_player + 8), hl 		// player.vy
 
-					ld  hl, PLAYER_VY_INICIAL_SALTO*2
-					ld  (_player + 8), hl 		// player.vy
+				inc a
 
-					inc a
-
-				.m_vert_jump_down_done
-					ld  (_disable_collide_platform), a
-			#endasm
-
+			.m_vert_jump_down_done
+				ld  (_disable_collide_platform), a
+	
 			// Gravity is reduced while jumping
 
-			#asm
-				.player_veng_gravity
+			.player_veng_gravity
 
-					// player.vy = player.vy + (player.saltando ? PLAYER_G_JUMPING : PLAYER_G);
+				// player.vy = player.vy + (player.saltando ? PLAYER_G_JUMPING : PLAYER_G);
 
-					ld  hl, (_player + 8)			// player.vy
-					ld  de, PLAYER_G
+				ld  hl, (_player + 8)			// player.vy
+				ld  de, PLAYER_G
 
-					ld  a, (_player + 19) 			// player.saltando
-					or  a 
-					jr  z, player_veng_gravity_add
+				ld  a, (_player + 19) 			// player.saltando
+				or  a 
+				jr  z, player_veng_gravity_add
 
-					ld  de, PLAYER_G_JUMPING
+				ld  de, PLAYER_G_JUMPING
 
-				.player_veng_gravity_add
-					add hl, de 
-					push hl 						// New vy
+			.player_veng_gravity_add
+				add hl, de 
+				push hl 						// New vy
 
-					// Limit
+				// Limit
 
-					// player.vy >= PLAYER_MAX_VY_CAYENDO --->
-					// player.vy - PLAYER_MAX_VY_CAYENDO >= 0
-					ld  de, -PLAYER_MAX_VY_CAYENDO
-					add hl, de 
-					bit 7, h 
-					pop hl  						// Retrieve vy
-					jr  nz, player_veng_gravity_done 
+				// player.vy >= PLAYER_MAX_VY_CAYENDO --->
+				// player.vy - PLAYER_MAX_VY_CAYENDO >= 0
+				ld  de, -PLAYER_MAX_VY_CAYENDO
+				add hl, de 
+				bit 7, h 
+				pop hl  						// Retrieve vy
+				jr  nz, player_veng_gravity_done 
 
-					ld  hl, PLAYER_MAX_VY_CAYENDO
+				ld  hl, PLAYER_MAX_VY_CAYENDO
 
-				.player_veng_gravity_done 
-					ld  (_player + 8), hl
-			#endasm
+			.player_veng_gravity_done 
+				ld  (_player + 8), hl
+		
+			// Jumping is a big boost
 
-				// Jumping is a big boost
+			.player_jump_start
+				ld  a, (_pad_this_frame)
+				and #(sp_UP | sp_FIRE)
+				cp  #(sp_UP | sp_FIRE)
+				jr  z, player_jump_start_done
 
-			#asm
-				.player_jump_start
-					ld  a, (_pad_this_frame)
-					and #(sp_UP | sp_FIRE)
-					cp  #(sp_UP | sp_FIRE)
-					jr  z, player_jump_start_done
+				ld  a, (_player + 19) 			// player.saltando 
+				or  a 
+				jr  nz, player_jump_start_done
 
-					ld  a, (_player + 19) 			// player.saltando 
-					or  a 
-					jr  nz, player_jump_start_done
+				ld  a, (_player + 26) 			// player.possee 
+				or  a 
+				jr  nz, player_jump_start_do
 
-					ld  a, (_player + 26) 			// player.possee 
-					or  a 
-					jr  nz, player_jump_start_do
+				ld  a, (_player + 25) 			// player.gotten
+				or  a 
+				jr  z, player_jump_start_done
 
-					ld  a, (_player + 25) 			// player.gotten
-					or  a 
-					jr  z, player_jump_start_done
+			.player_jump_start_do
+				xor a 
+				ld  (_player + 14), a			// player.cont_salto
+				inc a 
+				ld  (_player + 19), a 			// player.saltando;
+				ld  (_player + 43), a 			// player.just_jumped;
+				ld  hl, -PLAYER_VY_JUMP_INITIAL
+				ld  (_player + 8), hl 			// player.vy
+		
+				ld  l, 3 
+				call _peta_el_beeper
 
-				.player_jump_start_do
-					xor a 
-					ld  (_player + 14), a			// player.cont_salto
-					inc a 
-					ld  (_player + 19), a 			// player.saltando;
-					ld  (_player + 43), a 			// player.just_jumped;
-					ld  hl, -PLAYER_VY_JUMP_INITIAL
-					ld  (_player + 8), hl 			// player.vy
-			
-					ld  l, 3 
-					call _peta_el_beeper
+			.player_jump_start_done
 
-				.player_jump_start_done
-			#endasm 
+			.player_jump_pressing
+				ld  a, (_pad0) 
+				and #(sp_UP | sp_FIRE)
+				cp  #(sp_UP | sp_FIRE)
+				jr  z, player_jump_not_pressing 
 
-			#asm
-				.player_jump_pressing
-					ld  a, (_pad0) 
-					and #(sp_UP | sp_FIRE)
-					cp  #(sp_UP | sp_FIRE)
-					jr  z, player_jump_not_pressing 
+				ld  a, (_player + 19) 			// player.saltando
+				or  a 
+				jr  z, player_jump_done
 
-					ld  a, (_player + 19) 			// player.saltando
-					or  a 
-					jr  z, player_jump_done
+				ld  a, (_player + 14)			// player.cont_salto 
+				inc a 
+				ld  (_player + 14), a 			// player.cont_salto 
 
-					ld  a, (_player + 14)			// player.cont_salto 
-					inc a 
-					ld  (_player + 14), a 			// player.cont_salto 
+				cp PLAYER_VY_JUMP_STEPS 
+				jr  nz, player_jump_done
 
-					cp PLAYER_VY_JUMP_STEPS 
-					jr  nz, player_jump_done
+				xor a 
+				ld  (_player + 19), a 			// player.saltando
+				jr  player_jump_done
 
-					xor a 
-					ld  (_player + 19), a 			// player.saltando
-					jr  player_jump_done
+			.player_jump_not_pressing
+				ld  a, (_player + 19) 			// player.saltando
+				or  a 
+				jr  z, player_jump_done 
 
-				.player_jump_not_pressing
-					ld  a, (_player + 19) 			// player.saltando
-					or  a 
-					jr  z, player_jump_done 
+				ld  hl, -PLAYER_VY_JUMP_RELEASE
+				ld  (_player + 8), hl 			// player.vy
 
-					ld  hl, -PLAYER_VY_JUMP_RELEASE
-					ld  (_player + 8), hl 			// player.vy
+				xor a 
+				ld  (_player + 19), a  			// player.saltando
 
-					xor a 
-					ld  (_player + 19), a  			// player.saltando
+			.player_jump_done
 
-				.player_jump_done
-			#endasm
+				ret
 
-		} else {
+			//
 			// DX Swim
-			/*
-			if ((pad0 & sp_DOWN) && (pad0 & sp_UP)) {
-				if(player.y > 512) {
-					player.vy -= PLAYER_AFLOAT;
-					if (player.vy < (PLAYER_MAX_VSWIM >> 1)) player.vy = -(PLAYER_MAX_VSWIM >> 1);
-				}
-				thrusting = 0;
-			}
+			//
 
-			if ((pad0 & sp_DOWN) == 0) {
-				if (player.vy < PLAYER_MAX_VSWIM) player.vy += PLAYER_ASWIM;
-				thrusting = 1;
-			}
+			.player_movement_dx_swim
 
-			if ((pad0 & sp_UP) == 0) {
-				if (player.vy > -PLAYER_MAX_VSWIM) player.vy -= PLAYER_ASWIM;
-				thrusting = 1;
-			}
-			*/
-			#asm
-				.swim_check_idle
-					ld  a, (_pad0)
-					and #(sp_DOWN | sp_UP)
-					cp  #(sp_DOWN | sp_UP)
-					jr  nz, swim_no_idle
+			.swim_check_idle
+				ld  a, (_pad0)
+				and #(sp_DOWN | sp_UP)
+				cp  #(sp_DOWN | sp_UP)
+				jr  nz, swim_no_idle
 
-					//if(player.y > 512) -> MSB >= 2
-					ld  hl, (_player + 2)		// player.y
-					ld  a, h 
-					cp  2 
-					jr  c, swim_float_end
+				//if(player.y > 512) -> MSB >= 2
+				ld  hl, (_player + 2)		// player.y
+				ld  a, h 
+				cp  2 
+				jr  c, swim_float_end
 
-					ld  hl, (_player + 8) 		// player.vy
+				ld  hl, (_player + 8) 		// player.vy
 
-					ld  de, #(-PLAYER_AFLOAT);
-					add hl, de 
+				ld  de, #(-PLAYER_AFLOAT);
+				add hl, de 
 
-					//if (player.vy < (PLAYER_MAX_VSWIM >> 1)) ->
-					//if (PLAYER_MAX_VSWIM >> 1) > player.vy
-					ld  de, #(PLAYER_MAX_VSWIM * 2)
-					call l_gt 						// C if DE > HL
-					jr  nc, swim_float_vy_set
+				//if (player.vy < (PLAYER_MAX_VSWIM >> 1)) ->
+				//if (PLAYER_MAX_VSWIM >> 1) > player.vy
+				ld  de, #(PLAYER_MAX_VSWIM * 2)
+				call l_gt 						// C if DE > HL
+				jr  nc, swim_float_vy_set
 
-					ld  hl, #(-(PLAYER_MAX_VSWIM / 2))
+				ld  hl, #(-(PLAYER_MAX_VSWIM / 2))
 
-				.swim_float_vy_set
-					ld  (_player + 8), hl
+			.swim_float_vy_set
+				ld  (_player + 8), hl
 
-				.swim_float_end
-					xor a
-					ld  (_thrusting), a
+			.swim_float_end
+				xor a
+				ld  (_thrusting), a
 
-				.swim_no_idle
+			.swim_no_idle
 
-					ld  a, (_pad0)
-					and sp_DOWN 
-					jr  nz, swim_down_done
+				ld  a, (_pad0)
+				and sp_DOWN 
+				jr  nz, swim_down_done
 
-				.swim_down
-					ld  hl, (_player + 8)
-					// if (player.vy < PLAYER_MAX_VSWIM) -> PLAYER_MAX_VSWIM > player.vy)
-					ld  de, PLAYER_MAX_VSWIM 
-					call l_gt 						// C if DE > HL
-					jr  nc, swim_down_done
+			.swim_down
+				ld  hl, (_player + 8)
+				// if (player.vy < PLAYER_MAX_VSWIM) -> PLAYER_MAX_VSWIM > player.vy)
+				ld  de, PLAYER_MAX_VSWIM 
+				call l_gt 						// C if DE > HL
+				jr  nc, swim_down_done
 
-					ld  de, PLAYER_ASWIM
-					add hl, de 
-					ld  (_player + 8), hl
+				ld  de, PLAYER_ASWIM
+				add hl, de 
+				ld  (_player + 8), hl
 
-				.swim_down_done
+			.swim_down_done
 
-					ld  a, (_pad0)
-					and sp_UP
-					jr  nz, swim_up_done
+				ld  a, (_pad0)
+				and sp_UP
+				jr  nz, swim_up_done
 
-				.swim_up
-					ld  hl, (_player + 8)
-					// if (player.vy > -PLAYER_MAX_VSWIM) -> -PLAYER_MAX_VSWIM < player.vy)
-					ld  de, #(-PLAYER_MAX_VSWIM)
-					call l_lt 						// C if DE < HL
-					jr  nc, swim_up_done
+			.swim_up
+				ld  hl, (_player + 8)
+				// if (player.vy > -PLAYER_MAX_VSWIM) -> -PLAYER_MAX_VSWIM < player.vy)
+				ld  de, #(-PLAYER_MAX_VSWIM)
+				call l_lt 						// C if DE < HL
+				jr  nc, swim_up_done
 
-					ld  de, #(-PLAYER_ASWIM)
-					add hl, de 
-					ld  (_player + 8), hl
+				ld  de, #(-PLAYER_ASWIM)
+				add hl, de 
+				ld  (_player + 8), hl
 
-				.swim_up_done
-			#endasm
-		}
+			.swim_up_done
+		#endasm
+
 	}
 #endif
 
@@ -257,8 +246,11 @@
 
 		#asm 
 				ld  a, (_n_pant)
-				cp  40 
-				jr  nc, _player_custom_frame_swim
+				cp  40
+				jr  c, _player_custom_frame_walk
+
+				cp  60
+				jp  c, _player_custom_frame_swim
 
 			._player_custom_frame_walk
 	

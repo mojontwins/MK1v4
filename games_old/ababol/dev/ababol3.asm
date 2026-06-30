@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Mon Jun 29 14:11:44 2026
+;	Module compile time: Tue Jun 30 12:58:13 2026
 
 
 
@@ -3737,10 +3737,11 @@
 	ld	a,(hl)
 	inc	(hl)
 .i_37
-	ld	a,(_enit)
-	ld	e,a
-	ld	d,0
-	ld	hl,3	;const
+	ld	hl,(_enit)
+	ld	h,0
+	ex	de,hl
+	ld	hl,(_n_enems)
+	ld	h,0
 	call	l_ult
 	jp	nc,i_36
 	ld hl, (_enoffs)
@@ -4297,1626 +4298,929 @@
 ._malotes
 	defb	32
 	defb	48
-	defb	32
-	defb	48
-	defb	112
-	defb	48
+	defb	35
+	defb	115
 	defb	1
 	defb	0
 	defb	2
 	defb	144
 	defb	64
-	defb	144
-	defb	64
-	defb	176
-	defb	64
+	defb	148
+	defb	180
 	defb	1
 	defb	0
 	defb	1
-	defb	208
-	defb	96
-	defb	208
-	defb	96
-	defb	224
-	defb	96
-	defb	2
-	defb	0
-	defb	0
 	defb	64
 	defb	112
-	defb	64
-	defb	112
-	defb	160
-	defb	112
+	defb	71
+	defb	167
 	defb	1
 	defb	0
 	defb	2
 	defb	112
 	defb	112
-	defb	112
-	defb	32
-	defb	112
-	defb	112
+	defb	114
+	defb	119
 	defb	0
 	defb	-2
 	defb	2
 	defb	192
 	defb	128
-	defb	192
-	defb	128
-	defb	208
-	defb	128
+	defb	200
+	defb	216
 	defb	1
 	defb	0
 	defb	3
 	defb	144
 	defb	16
-	defb	144
-	defb	16
-	defb	144
-	defb	128
+	defb	145
+	defb	152
 	defb	0
 	defb	1
 	defb	4
 	defb	144
 	defb	64
-	defb	144
-	defb	64
-	defb	208
-	defb	64
+	defb	148
+	defb	212
 	defb	2
 	defb	0
 	defb	2
 	defb	96
 	defb	64
-	defb	16
-	defb	64
-	defb	96
-	defb	64
+	defb	20
+	defb	100
 	defb	-1
 	defb	0
 	defb	2
 	defb	64
 	defb	48
-	defb	64
-	defb	48
-	defb	208
-	defb	48
+	defb	67
+	defb	211
 	defb	1
 	defb	0
 	defb	2
 	defb	64
 	defb	96
-	defb	64
-	defb	96
-	defb	128
-	defb	96
+	defb	70
+	defb	134
 	defb	1
 	defb	0
 	defb	2
-	defb	144
-	defb	128
-	defb	144
-	defb	128
-	defb	208
-	defb	128
-	defb	1
-	defb	0
-	defb	0
 	defb	16
 	defb	0
 	defb	16
-	defb	0
-	defb	16
-	defb	64
+	defb	20
 	defb	0
 	defb	2
 	defb	2
 	defb	64
 	defb	128
-	defb	64
-	defb	128
-	defb	112
-	defb	128
+	defb	72
+	defb	120
 	defb	1
 	defb	0
 	defb	1
 	defb	144
 	defb	128
-	defb	144
-	defb	128
-	defb	208
-	defb	128
+	defb	152
+	defb	216
 	defb	2
 	defb	0
 	defb	3
 	defb	80
 	defb	128
-	defb	32
-	defb	128
-	defb	80
-	defb	128
+	defb	40
+	defb	88
 	defb	-2
 	defb	0
 	defb	1
 	defb	128
 	defb	128
-	defb	128
-	defb	128
-	defb	160
-	defb	128
+	defb	136
+	defb	168
 	defb	1
 	defb	0
 	defb	3
-	defb	64
-	defb	96
-	defb	64
-	defb	96
-	defb	208
-	defb	96
-	defb	1
-	defb	0
-	defb	0
 	defb	32
 	defb	128
-	defb	32
-	defb	128
-	defb	96
-	defb	128
+	defb	40
+	defb	104
 	defb	1
 	defb	0
 	defb	1
 	defb	208
 	defb	128
-	defb	208
-	defb	128
-	defb	224
-	defb	128
+	defb	216
+	defb	232
 	defb	1
 	defb	0
 	defb	1
 	defb	192
 	defb	96
-	defb	144
-	defb	96
-	defb	192
-	defb	96
+	defb	150
+	defb	198
 	defb	-2
 	defb	0
 	defb	2
 	defb	32
 	defb	112
-	defb	32
-	defb	48
-	defb	48
-	defb	112
+	defb	35
+	defb	55
 	defb	1
 	defb	-1
 	defb	2
 	defb	176
 	defb	48
-	defb	144
-	defb	48
-	defb	176
-	defb	48
+	defb	147
+	defb	179
 	defb	-1
 	defb	0
 	defb	3
 	defb	48
 	defb	128
-	defb	16
-	defb	128
-	defb	48
-	defb	128
+	defb	24
+	defb	56
 	defb	-1
 	defb	0
 	defb	1
 	defb	160
 	defb	128
-	defb	160
-	defb	48
-	defb	160
-	defb	128
+	defb	163
+	defb	168
 	defb	0
 	defb	-2
 	defb	2
 	defb	32
 	defb	128
-	defb	32
-	defb	128
-	defb	48
-	defb	128
+	defb	40
+	defb	56
 	defb	1
 	defb	0
 	defb	3
-	defb	48
-	defb	128
-	defb	16
-	defb	128
-	defb	48
-	defb	128
-	defb	-1
-	defb	0
-	defb	0
 	defb	192
 	defb	128
-	defb	80
-	defb	128
-	defb	192
-	defb	128
+	defb	88
+	defb	200
 	defb	-1
 	defb	0
 	defb	2
 	defb	192
 	defb	96
-	defb	96
-	defb	96
-	defb	192
-	defb	96
+	defb	102
+	defb	198
 	defb	-2
 	defb	0
 	defb	2
 	defb	192
 	defb	64
-	defb	128
-	defb	64
-	defb	192
-	defb	64
+	defb	132
+	defb	196
 	defb	-1
 	defb	0
 	defb	2
 	defb	128
 	defb	96
-	defb	96
-	defb	96
-	defb	128
-	defb	96
+	defb	102
+	defb	134
 	defb	-1
 	defb	0
 	defb	2
 	defb	192
 	defb	80
-	defb	160
-	defb	80
-	defb	192
-	defb	80
+	defb	165
+	defb	197
 	defb	-1
 	defb	0
 	defb	1
-	defb	176
-	defb	48
-	defb	32
-	defb	48
-	defb	176
-	defb	48
-	defb	-1
-	defb	0
-	defb	0
 	defb	64
 	defb	0
 	defb	64
-	defb	0
-	defb	64
-	defb	80
+	defb	69
 	defb	0
 	defb	2
 	defb	2
 	defb	128
 	defb	96
-	defb	112
-	defb	96
-	defb	128
-	defb	96
+	defb	118
+	defb	134
 	defb	-1
 	defb	0
 	defb	2
-	defb	16
-	defb	96
-	defb	16
-	defb	96
-	defb	112
-	defb	96
-	defb	1
-	defb	0
-	defb	0
 	defb	176
 	defb	48
-	defb	80
-	defb	48
-	defb	176
-	defb	48
+	defb	83
+	defb	179
 	defb	-2
 	defb	0
 	defb	2
 	defb	64
 	defb	16
-	defb	64
-	defb	16
-	defb	160
-	defb	16
+	defb	65
+	defb	161
 	defb	2
 	defb	0
 	defb	2
-	defb	48
-	defb	112
-	defb	48
-	defb	64
-	defb	144
-	defb	112
-	defb	1
-	defb	-1
-	defb	0
 	defb	160
 	defb	16
-	defb	160
-	defb	16
-	defb	160
-	defb	96
+	defb	161
+	defb	166
 	defb	0
 	defb	1
 	defb	1
 	defb	96
 	defb	48
-	defb	48
-	defb	48
-	defb	96
-	defb	48
+	defb	51
+	defb	99
 	defb	-1
 	defb	0
 	defb	3
 	defb	208
 	defb	144
-	defb	16
-	defb	144
-	defb	208
-	defb	144
+	defb	25
+	defb	217
 	defb	-1
 	defb	0
 	defb	4
 	defb	192
 	defb	96
-	defb	112
-	defb	96
-	defb	192
-	defb	96
+	defb	118
+	defb	198
 	defb	-1
 	defb	0
 	defb	4
 	defb	80
 	defb	64
-	defb	80
-	defb	64
-	defb	192
-	defb	64
+	defb	84
+	defb	196
 	defb	1
 	defb	0
 	defb	2
 	defb	96
 	defb	128
-	defb	48
-	defb	128
-	defb	96
-	defb	128
+	defb	56
+	defb	104
 	defb	-1
 	defb	0
 	defb	1
-	defb	176
-	defb	16
-	defb	64
-	defb	16
-	defb	176
-	defb	128
-	defb	-2
-	defb	2
-	defb	0
 	defb	80
 	defb	128
-	defb	32
-	defb	128
-	defb	80
-	defb	128
+	defb	40
+	defb	88
 	defb	-2
 	defb	0
 	defb	1
 	defb	128
 	defb	96
-	defb	48
-	defb	96
-	defb	128
-	defb	96
+	defb	54
+	defb	134
 	defb	-1
 	defb	0
 	defb	2
 	defb	144
 	defb	112
-	defb	144
-	defb	112
-	defb	192
-	defb	112
+	defb	151
+	defb	199
 	defb	1
 	defb	0
 	defb	1
 	defb	96
 	defb	112
-	defb	96
-	defb	16
-	defb	96
-	defb	112
+	defb	97
+	defb	103
 	defb	0
 	defb	-2
 	defb	2
 	defb	48
 	defb	32
-	defb	48
-	defb	32
-	defb	48
-	defb	128
+	defb	50
+	defb	56
 	defb	0
 	defb	2
 	defb	2
 	defb	112
 	defb	112
-	defb	112
-	defb	32
-	defb	112
-	defb	112
+	defb	114
+	defb	119
 	defb	0
 	defb	-1
 	defb	4
 	defb	64
-	defb	16
-	defb	64
-	defb	16
-	defb	144
-	defb	96
-	defb	1
-	defb	1
-	defb	0
-	defb	64
 	defb	48
-	defb	16
-	defb	48
-	defb	64
-	defb	48
+	defb	19
+	defb	67
 	defb	-1
 	defb	0
 	defb	3
 	defb	48
 	defb	48
-	defb	48
-	defb	48
-	defb	48
-	defb	112
+	defb	51
+	defb	55
 	defb	0
 	defb	1
 	defb	2
 	defb	80
 	defb	16
-	defb	80
-	defb	16
-	defb	80
-	defb	96
+	defb	81
+	defb	86
 	defb	0
 	defb	2
 	defb	2
 	defb	112
 	defb	16
-	defb	112
-	defb	16
-	defb	112
-	defb	80
+	defb	113
+	defb	117
 	defb	0
 	defb	1
 	defb	2
 	defb	80
 	defb	64
-	defb	80
-	defb	64
-	defb	176
-	defb	64
+	defb	84
+	defb	180
 	defb	2
 	defb	0
 	defb	4
 	defb	80
 	defb	112
-	defb	80
-	defb	112
-	defb	144
-	defb	112
+	defb	87
+	defb	151
 	defb	1
 	defb	0
 	defb	2
 	defb	32
 	defb	48
-	defb	32
-	defb	48
-	defb	208
-	defb	48
+	defb	35
+	defb	211
 	defb	1
 	defb	0
 	defb	2
 	defb	32
 	defb	16
-	defb	32
-	defb	16
-	defb	32
-	defb	96
+	defb	33
+	defb	38
 	defb	0
 	defb	2
 	defb	2
 	defb	96
 	defb	64
-	defb	96
-	defb	64
-	defb	160
-	defb	64
+	defb	100
+	defb	164
 	defb	2
 	defb	0
 	defb	3
-	defb	96
-	defb	128
-	defb	96
-	defb	128
-	defb	208
-	defb	128
-	defb	2
-	defb	0
-	defb	0
 	defb	32
 	defb	128
-	defb	32
-	defb	128
-	defb	176
-	defb	128
+	defb	40
+	defb	184
 	defb	1
 	defb	0
 	defb	4
 	defb	0
 	defb	48
-	defb	0
-	defb	48
-	defb	96
-	defb	48
+	defb	3
+	defb	99
 	defb	2
 	defb	0
 	defb	1
 	defb	192
 	defb	16
-	defb	192
-	defb	16
-	defb	192
-	defb	112
+	defb	193
+	defb	199
 	defb	0
 	defb	4
 	defb	2
 	defb	32
 	defb	112
-	defb	32
-	defb	112
-	defb	176
-	defb	112
+	defb	39
+	defb	183
 	defb	1
 	defb	0
 	defb	2
 	defb	16
 	defb	64
-	defb	16
-	defb	64
-	defb	16
-	defb	128
+	defb	20
+	defb	24
 	defb	0
 	defb	2
 	defb	2
 	defb	192
 	defb	64
-	defb	192
-	defb	64
-	defb	192
-	defb	128
+	defb	196
+	defb	200
 	defb	0
 	defb	2
 	defb	2
 	defb	48
 	defb	128
-	defb	48
-	defb	128
-	defb	192
-	defb	128
+	defb	56
+	defb	200
 	defb	2
 	defb	0
 	defb	4
 	defb	208
 	defb	32
-	defb	80
-	defb	32
-	defb	208
-	defb	32
+	defb	82
+	defb	210
 	defb	-2
 	defb	0
 	defb	2
 	defb	160
 	defb	112
-	defb	64
-	defb	112
-	defb	160
-	defb	112
+	defb	71
+	defb	167
 	defb	-1
 	defb	0
 	defb	2
-	defb	96
-	defb	96
-	defb	96
-	defb	96
-	defb	208
-	defb	96
-	defb	2
-	defb	0
-	defb	0
 	defb	176
 	defb	48
-	defb	176
-	defb	48
-	defb	208
-	defb	48
+	defb	179
+	defb	211
 	defb	1
 	defb	0
 	defb	1
 	defb	80
 	defb	16
-	defb	80
-	defb	16
-	defb	80
-	defb	48
+	defb	81
+	defb	83
 	defb	0
 	defb	1
 	defb	2
 	defb	96
 	defb	48
-	defb	96
-	defb	48
-	defb	192
-	defb	48
+	defb	99
+	defb	195
 	defb	2
 	defb	0
 	defb	3
 	defb	16
 	defb	96
-	defb	16
-	defb	96
-	defb	192
-	defb	96
+	defb	22
+	defb	198
 	defb	2
 	defb	0
 	defb	2
-	defb	112
-	defb	128
-	defb	112
-	defb	128
-	defb	128
-	defb	128
-	defb	1
-	defb	0
-	defb	0
 	defb	96
 	defb	128
-	defb	96
-	defb	128
-	defb	160
-	defb	128
+	defb	104
+	defb	168
 	defb	1
 	defb	0
 	defb	1
 	defb	192
 	defb	32
-	defb	96
-	defb	32
-	defb	192
-	defb	32
+	defb	98
+	defb	194
 	defb	-2
 	defb	0
 	defb	4
 	defb	64
 	defb	128
-	defb	48
-	defb	128
-	defb	64
-	defb	128
+	defb	56
+	defb	72
 	defb	-1
 	defb	0
 	defb	3
 	defb	208
 	defb	80
-	defb	112
-	defb	32
-	defb	208
-	defb	80
+	defb	114
+	defb	213
 	defb	-1
 	defb	-1
 	defb	2
 	defb	96
 	defb	48
-	defb	16
-	defb	48
-	defb	96
-	defb	112
+	defb	19
+	defb	103
 	defb	-1
 	defb	1
 	defb	2
-	defb	64
-	defb	128
-	defb	64
-	defb	128
-	defb	112
-	defb	128
-	defb	1
-	defb	0
-	defb	0
 	defb	224
 	defb	48
-	defb	96
-	defb	48
-	defb	224
-	defb	48
+	defb	99
+	defb	227
 	defb	-1
 	defb	0
 	defb	2
 	defb	16
 	defb	112
-	defb	16
-	defb	48
-	defb	80
-	defb	112
+	defb	19
+	defb	87
 	defb	1
 	defb	-1
 	defb	2
 	defb	176
 	defb	80
-	defb	96
-	defb	80
-	defb	176
-	defb	80
+	defb	101
+	defb	181
 	defb	-1
 	defb	0
 	defb	1
 	defb	0
 	defb	128
-	defb	0
-	defb	128
-	defb	176
-	defb	128
+	defb	8
+	defb	184
 	defb	1
 	defb	0
 	defb	4
-	defb	208
-	defb	112
-	defb	64
-	defb	64
-	defb	208
-	defb	112
-	defb	-1
-	defb	-1
-	defb	0
 	defb	48
 	defb	48
-	defb	16
-	defb	48
-	defb	48
-	defb	48
+	defb	19
+	defb	51
 	defb	-2
 	defb	0
 	defb	1
 	defb	32
 	defb	96
-	defb	32
-	defb	96
-	defb	96
-	defb	96
+	defb	38
+	defb	102
 	defb	1
 	defb	0
 	defb	3
 	defb	128
 	defb	16
-	defb	128
-	defb	16
-	defb	128
-	defb	80
+	defb	129
+	defb	133
 	defb	0
 	defb	1
 	defb	2
 	defb	192
 	defb	32
-	defb	192
-	defb	32
-	defb	192
-	defb	96
+	defb	194
+	defb	198
 	defb	0
 	defb	1
 	defb	2
 	defb	80
 	defb	112
-	defb	32
-	defb	112
-	defb	80
-	defb	112
+	defb	39
+	defb	87
 	defb	-1
 	defb	0
 	defb	2
 	defb	80
 	defb	16
-	defb	32
-	defb	16
-	defb	80
-	defb	16
+	defb	33
+	defb	81
 	defb	-1
 	defb	0
 	defb	2
 	defb	192
 	defb	48
-	defb	192
-	defb	48
-	defb	192
-	defb	112
+	defb	195
+	defb	199
 	defb	0
 	defb	2
 	defb	1
 	defb	192
 	defb	96
-	defb	48
-	defb	96
-	defb	192
-	defb	96
+	defb	54
+	defb	198
 	defb	-2
 	defb	0
 	defb	2
 	defb	80
 	defb	48
-	defb	80
-	defb	48
-	defb	144
-	defb	48
+	defb	83
+	defb	147
 	defb	1
 	defb	0
 	defb	2
 	defb	0
 	defb	128
-	defb	0
-	defb	128
-	defb	224
-	defb	128
-	defb	1
-	defb	0
-	defb	0
-	defb	0
-	defb	128
-	defb	0
-	defb	128
-	defb	224
-	defb	128
+	defb	8
+	defb	232
 	defb	1
 	defb	0
 	defb	4
 	defb	32
 	defb	112
-	defb	32
-	defb	112
-	defb	192
-	defb	112
+	defb	39
+	defb	199
 	defb	1
 	defb	0
 	defb	2
 	defb	176
 	defb	32
-	defb	64
-	defb	32
-	defb	176
-	defb	32
+	defb	66
+	defb	178
 	defb	-2
 	defb	0
 	defb	2
 	defb	0
 	defb	128
-	defb	0
-	defb	128
-	defb	96
-	defb	128
+	defb	8
+	defb	104
 	defb	1
 	defb	0
 	defb	4
 	defb	128
 	defb	112
-	defb	128
-	defb	112
-	defb	192
-	defb	112
+	defb	135
+	defb	199
 	defb	1
 	defb	0
 	defb	2
 	defb	176
 	defb	32
-	defb	176
-	defb	32
-	defb	192
-	defb	112
+	defb	178
+	defb	199
 	defb	1
 	defb	1
 	defb	2
 	defb	176
 	defb	64
-	defb	64
-	defb	64
-	defb	176
-	defb	64
+	defb	68
+	defb	180
 	defb	-2
 	defb	0
 	defb	2
-	defb	192
-	defb	96
-	defb	32
-	defb	96
-	defb	192
-	defb	96
-	defb	-2
-	defb	0
-	defb	0
 	defb	96
 	defb	128
-	defb	96
-	defb	128
-	defb	192
-	defb	128
+	defb	104
+	defb	200
 	defb	2
 	defb	0
 	defb	1
 	defb	48
 	defb	96
-	defb	48
-	defb	96
-	defb	160
-	defb	96
+	defb	54
+	defb	166
 	defb	1
 	defb	0
 	defb	2
 	defb	160
 	defb	32
-	defb	160
-	defb	32
-	defb	160
-	defb	80
+	defb	162
+	defb	165
 	defb	0
 	defb	1
 	defb	2
-	defb	64
-	defb	32
-	defb	64
-	defb	32
-	defb	64
-	defb	80
-	defb	0
-	defb	2
-	defb	0
 	defb	176
 	defb	128
-	defb	16
-	defb	128
-	defb	176
-	defb	128
+	defb	24
+	defb	184
 	defb	-2
 	defb	0
 	defb	1
 	defb	112
 	defb	128
-	defb	48
-	defb	128
-	defb	112
-	defb	128
+	defb	56
+	defb	120
 	defb	-1
 	defb	0
 	defb	3
 	defb	192
 	defb	32
-	defb	112
-	defb	32
-	defb	192
-	defb	32
+	defb	114
+	defb	194
 	defb	-1
 	defb	0
 	defb	2
 	defb	48
 	defb	128
-	defb	48
-	defb	32
-	defb	48
-	defb	128
+	defb	50
+	defb	56
 	defb	0
 	defb	-1
 	defb	4
 	defb	96
 	defb	128
-	defb	96
-	defb	128
-	defb	144
-	defb	128
+	defb	104
+	defb	152
 	defb	1
 	defb	0
 	defb	2
 	defb	192
 	defb	128
-	defb	192
-	defb	48
-	defb	192
-	defb	128
+	defb	195
+	defb	200
 	defb	0
 	defb	-1
 	defb	4
 	defb	0
 	defb	128
-	defb	0
-	defb	128
-	defb	128
-	defb	128
+	defb	8
+	defb	136
 	defb	2
 	defb	0
 	defb	4
 	defb	112
 	defb	48
-	defb	112
-	defb	16
-	defb	112
-	defb	48
+	defb	113
+	defb	115
 	defb	0
 	defb	-1
 	defb	4
 	defb	144
 	defb	96
-	defb	32
-	defb	96
-	defb	144
-	defb	96
+	defb	38
+	defb	150
 	defb	-1
 	defb	0
 	defb	2
 	defb	192
 	defb	48
-	defb	192
-	defb	48
-	defb	192
-	defb	112
+	defb	195
+	defb	199
 	defb	0
 	defb	1
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	192
 	defb	48
-	defb	80
-	defb	48
-	defb	192
-	defb	48
+	defb	83
+	defb	195
 	defb	-1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	112
 	defb	48
-	defb	112
-	defb	48
-	defb	112
-	defb	128
+	defb	115
+	defb	120
 	defb	0
 	defb	1
 	defb	5
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	80
 	defb	32
-	defb	80
-	defb	32
-	defb	160
-	defb	32
+	defb	82
+	defb	162
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	64
 	defb	32
-	defb	64
-	defb	32
-	defb	64
-	defb	112
+	defb	66
+	defb	71
 	defb	0
 	defb	1
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	80
 	defb	64
-	defb	80
-	defb	64
-	defb	80
-	defb	128
+	defb	84
+	defb	88
 	defb	0
 	defb	1
 	defb	6
 	defb	96
 	defb	48
-	defb	96
-	defb	48
-	defb	176
-	defb	48
+	defb	99
+	defb	179
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	64
 	defb	128
-	defb	64
-	defb	128
-	defb	128
-	defb	128
+	defb	72
+	defb	136
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	80
 	defb	32
-	defb	80
-	defb	32
-	defb	80
-	defb	112
+	defb	82
+	defb	87
 	defb	0
 	defb	1
 	defb	5
 	defb	192
 	defb	128
-	defb	192
-	defb	48
-	defb	192
-	defb	128
+	defb	195
+	defb	200
 	defb	0
 	defb	-1
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	176
 	defb	48
-	defb	176
-	defb	48
-	defb	176
-	defb	128
+	defb	179
+	defb	184
 	defb	0
 	defb	2
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	64
 	defb	64
-	defb	64
-	defb	64
-	defb	176
-	defb	64
+	defb	68
+	defb	180
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	144
 	defb	16
-	defb	144
-	defb	16
-	defb	144
-	defb	112
+	defb	145
+	defb	151
 	defb	0
 	defb	1
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	80
 	defb	64
-	defb	80
-	defb	64
-	defb	160
-	defb	64
+	defb	84
+	defb	164
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	48
 	defb	32
-	defb	48
-	defb	32
-	defb	144
-	defb	32
+	defb	50
+	defb	146
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	80
 	defb	32
-	defb	80
-	defb	32
-	defb	80
-	defb	96
+	defb	82
+	defb	86
 	defb	0
 	defb	1
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	112
 	defb	64
-	defb	112
-	defb	64
-	defb	176
-	defb	64
+	defb	116
+	defb	180
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	176
 	defb	32
-	defb	176
-	defb	32
-	defb	176
-	defb	112
+	defb	178
+	defb	183
 	defb	0
 	defb	1
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	48
 	defb	64
-	defb	48
-	defb	64
-	defb	192
-	defb	64
+	defb	52
+	defb	196
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	48
 	defb	64
-	defb	48
-	defb	64
-	defb	160
-	defb	64
+	defb	52
+	defb	164
 	defb	1
 	defb	0
 	defb	7
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
 	defb	176
 	defb	32
-	defb	160
-	defb	32
-	defb	176
-	defb	80
+	defb	162
+	defb	181
 	defb	-1
 	defb	1
 	defb	6
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
-	defb	0
+	defb	255
+	defs	1
+	defs	1
+	defs	1
+	defs	1
+	defs	1
+	defs	1
 
 ;	SECTION	code
+
+;	SECTION	text
+
+._enoffs_index
+	defm	""
+	defb	0
+
+	defm	""
+	defb	2
+
+	defm	""
+	defb	5
+
+	defm	""
+	defb	8
+
+	defm	""
+	defb	10
+
+	defm	""
+	defb	13
+
+	defm	""
+	defb	15
+
+	defm	""
+	defb	18
+
+	defm	""
+	defb	21
+
+	defm	""
+	defb	23
+
+	defm	""
+	defb	26
+
+	defm	""
+	defb	28
+
+	defm	""
+	defb	30
+
+	defm	" #&(+-0358;>@BEGJLORTWZ\^adghi"
+	defm	"jklnoqrstuvwxyz{||||||||||||||"
+	defm	"||||||||"
+;	SECTION	code
+
 
 ;	SECTION	text
 
@@ -6101,17 +5405,77 @@
 	defb	86
 	defb	3
 	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
 
 ;	SECTION	code
 
 
 ._player_custom_veng
-	ld	a,(_n_pant)
-	ld	e,a
-	ld	d,0
-	ld	hl,40	;const
-	call	l_ult
-	jp	nc,i_40
+	ld a, (_n_pant)
+	cp 40
+	jr c, player_movement_ninnin
+	cp 60
+	jp c, player_movement_dx_swim
+	.player_movement_ninnin
 	ld a, (_player + 26)
 	or a
 	jr z, m_vert_jump_down_done
@@ -6192,8 +5556,8 @@
 	xor a
 	ld (_player + 19), a
 	.player_jump_done
-	jp	i_41
-.i_40
+	ret
+	.player_movement_dx_swim
 	.swim_check_idle
 	ld a, (_pad0)
 	and #(0x02 | 0x01)
@@ -6240,7 +5604,6 @@
 	add hl, de
 	ld (_player + 8), hl
 	.swim_up_done
-.i_41
 	ret
 
 
@@ -6248,7 +5611,9 @@
 ._player_custom_frame
 	ld a, (_n_pant)
 	cp 40
-	jr nc, _player_custom_frame_swim
+	jr c, _player_custom_frame_walk
+	cp 60
+	jp c, _player_custom_frame_swim
 	._player_custom_frame_walk
 	ld c, 3
 	ld a, (_player + 26)
@@ -6589,15 +5954,15 @@
 	ld	de,15	;const
 	ex	de,hl
 	call	l_eq
-	jp	nc,i_44
+	jp	nc,i_43
 	ld	hl,_player+28
 	call	l_gchar
 	ld	a,h
 	or	l
-	jr	nz,i_45_i_44
-.i_44
-	jp	i_43
-.i_45_i_44
+	jr	nz,i_44_i_43
+.i_43
+	jp	i_42
+.i_44_i_43
 	xor a
 	ld (__t), a
 	ld a, (_comportamiento_tiles) ;; beh [0]
@@ -6642,7 +6007,7 @@
 	ld	(de),a
 	ld	hl,8	;const
 	call	_peta_el_beeper
-.i_43
+.i_42
 	ret
 
 
@@ -6661,13 +6026,13 @@
 
 
 ._init_malotes
-	ld bc, 180
-	ld de, 9
+	ld bc, 124
+	ld de, 7
 	ld ix, _malotes
 	.init_malotes_loop
-	ld a, (ix+8)
+	ld a, (ix+6)
 	and 127
-	ld (ix+8), a
+	ld (ix+6), a
 	add ix, de
 	dec bc
 	ld a, b
@@ -7265,7 +6630,7 @@
 
 
 ._init_hotspots
-	ld b, 20 * 3
+	ld b, 20 * 4
 	ld hl, _hotspots + 2
 	ld de, 3
 	ld a, 1
@@ -7537,28 +6902,32 @@
 	ld	(_seed),hl
 	call	_draw_scr_background
 	._enems_init
-	ld	hl,(_n_pant)
-	ld	h,0
-	ld	b,h
-	ld	c,l
-	add	hl,bc
-	add	hl,bc
-	ld	(_enoffs),hl
+	ld hl, (_n_pant)
+	ld h, 0
+	ld de, _enoffs_index
+	add hl, de
+	ld a, (hl)
+	ld (_enoffs), a
+	inc hl
+	ld b, a
+	ld a, (hl)
+	sub b
+	ld (_n_enems), a
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_enit),a
-	jp	i_48
-.i_46
+	jp	i_47
+.i_45
 	ld	hl,_enit
 	ld	a,(hl)
 	inc	(hl)
-.i_48
+.i_47
 	ld	a,(_enit)
 	ld	e,a
 	ld	d,0
 	ld	hl,3	;const
 	call	l_ult
-	jp	nc,i_47
+	jp	nc,i_46
 	ld bc, (_enit)
 	xor a
 	ld b, a
@@ -7568,6 +6937,14 @@
 	ld hl, _en_an_state
 	add hl, bc
 	ld (hl), a
+	ld	hl,(_enit)
+	ld	h,0
+	ex	de,hl
+	ld	hl,(_n_enems)
+	ld	h,0
+	call	l_uge
+	jp	c,i_45
+.i_48
 	ld hl, (_enoffs)
 	add hl, bc
 	ld (_enoffsmasi), hl
@@ -7609,8 +6986,8 @@
 .i_50
 	call	_extra_enems_init
 	call enems_update_values_store
-	jp	i_46
-.i_47
+	jp	i_45
+.i_46
 	ld	hl,1	;const
 	call	_script
 	ld	a,(_n_pant)
@@ -7722,9 +7099,12 @@
 	ld	a,(hl)
 	inc	(hl)
 .i_61
-	ld	a,(_enit)
-	cp	#(3 % 256)
-	jp	z,i_60
+	ld	hl,(_enit)
+	ld	h,0
+	ex	de,hl
+	ld	hl,(_n_enems)
+	ld	h,0
+	call	l_ult
 	jp	nc,i_60
 	ld	de,(_enoffs)
 	ld	hl,(_enit)
@@ -7966,7 +7346,8 @@
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	add hl, de
+	or a
+	sbc hl, de
 	ld de, _malotes
 	add hl, de
 	ret
@@ -7981,15 +7362,25 @@
 	ld (__en_y), a
 	inc hl
 	ld a, (hl)
+	ld b, a
+	and 0xf0
 	ld (__en_x1), a
-	inc hl
-	ld a, (hl)
+	ld a, b
+	sla a
+	sla a
+	sla a
+	sla a
 	ld (__en_y1), a
 	inc hl
 	ld a, (hl)
+	ld b, a
+	and 0xf0
 	ld (__en_x2), a
-	inc hl
-	ld a, (hl)
+	ld a, b
+	sla a
+	sla a
+	sla a
+	sla a
 	ld (__en_y2), a
 	inc hl
 	ld a, (hl)
@@ -8009,17 +7400,7 @@
 	ld a, (__en_y)
 	ld (hl), a
 	inc hl
-	ld a, (__en_x1)
-	ld (hl), a
 	inc hl
-	ld a, (__en_y1)
-	ld (hl), a
-	inc hl
-	ld a, (__en_x2)
-	ld (hl), a
-	inc hl
-	ld a, (__en_y2)
-	ld (hl), a
 	inc hl
 	ld a, (__en_mx)
 	ld (hl), a
@@ -8588,6 +7969,19 @@
 	call	_blackout
 	ld hl, _s_ending
 	call _unpack_screen
+	ld	hl,14	;const
+	push	hl
+	ld	hl,4	;const
+	push	hl
+	ld	hl,5	;const
+	push	hl
+	ld	hl,i_1+9
+	push	hl
+	call	_draw_text
+	pop	bc
+	pop	bc
+	pop	bc
+	pop	bc
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_gpit),a
@@ -8636,7 +8030,7 @@
 	push	hl
 	ld	hl,79	;const
 	push	hl
-	ld	hl,i_1+9
+	ld	hl,i_1+34
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -9133,7 +8527,7 @@
 	jp	nz,i_137
 	inc	hl
 	ld	a,(_n_pant)
-	cp	#(60 % 256)
+	cp	#(80 % 256)
 	jp	z,i_137
 	jr	c,i_138_i_137
 .i_137
@@ -9174,7 +8568,7 @@
 	jp	nz,i_143
 	inc	hl
 	ld	a,(_n_pant)
-	cp	#(60 % 256)
+	cp	#(80 % 256)
 	jp	z,i_143
 	jr	c,i_144_i_143
 .i_143
@@ -10170,6 +9564,9 @@
 	defm	"MK1 V3.2"
 	defb	0
 
+	defm	"NOS VEMOS EN ICE PALACE!"
+	defb	0
+
 	defm	"GAME OVER!"
 	defb	0
 
@@ -10181,6 +9578,7 @@
 
 ;	SECTION	bss
 
+._n_enems	defs	1
 .__en_t	defs	1
 .__en_x	defs	1
 .__en_y	defs	1
@@ -10287,8 +9685,9 @@
 ; --- Start of Scope Defns ---
 
 	LIB	sp_GetKey
-	LIB	sp_BlockAlloc
+	XDEF	_n_enems
 	XDEF	__en_t
+	LIB	sp_BlockAlloc
 	XDEF	__en_x
 	XDEF	__en_y
 	LIB	sp_ScreenStr
@@ -10334,6 +9733,7 @@
 	LIB	sp_AddMemory
 	LIB	sp_BlockCount
 	XDEF	_sprite_cells
+	XDEF	_enoffs_index
 	XDEF	_en_an_state
 	defc	_en_an_state	=	23645
 	XDEF	_flags

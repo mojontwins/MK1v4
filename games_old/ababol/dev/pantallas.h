@@ -88,6 +88,11 @@ void game_ending (void) {
 			call _unpack_screen
 	#endasm
 
+	draw_text (14, 4, 
+		#ifndef CPC 
+			5,
+		#endif
+	"NOS VEMOS EN ICE PALACE!");
 
 	#ifdef CPC
 		cpc_ShowTileMap (1);

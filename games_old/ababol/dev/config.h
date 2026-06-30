@@ -12,6 +12,10 @@
 // TURN THIS OFF FOR RELEASE!!!!
 #define DEBUG_NAVIGATOR 					// s + directions (ZX) or x + directions (CPC) to nav map
 
+#define PACKED_ENEMS 						// Store x1, y1, x2, y2 as two XY bytes.
+#define FIXED_ENEMS_LIMITS  				// If x1, y1, x2, y2 NEVER change.
+#define INDEXED_ENEMS 						// Don't include empty enems & use index
+
 // ============================================================================
 // I. General configuration
 // ============================================================================
@@ -19,7 +23,7 @@
 // In this section we define map dimmensions, initial and authomatic ending conditions, etc.
 
 #define MAP_W						20		//
-#define MAP_H						3		// Map dimmensions in screens
+#define MAP_H						4		// Map dimmensions in screens
 #define SCR_INICIO					0		// Initial screen
 #define PLAYER_INI_X				2		//
 #define PLAYER_INI_Y				7		// Initial tile coordinates

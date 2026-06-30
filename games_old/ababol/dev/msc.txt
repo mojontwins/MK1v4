@@ -379,11 +379,30 @@ T1=[=]
 T2=[9]
 Bytecode: 17 01 FF 09 00 FF 20 03 08 28 00 0B 03 00 0C 08 00 10 28 00 11 09 FF FF 
 ==========================================
+LINEA ENTERING SCREEN 63
+T0=[entering]
+T1=[screen]
+T2=[63]
+Adding 234 @ sect 142
+Parsing: IF TRUE
+T0=[IF]
+T1=[TRUE]
+Unexpected command @ 152
+Bytecode: FF 
+==========================================
+LINEA END
+T0=[end]
+Wrong section at 153
+==========================================
+LINEA END
+T0=[end]
+Wrong section at 154
+==========================================
 LINEA ENTERING SCREEN 22
 T0=[entering]
 T1=[screen]
 T2=[22]
-Adding 234 @ sect 60
+Adding 235 @ sect 60
 Parsing: IF %GATE1 = 0
 T0=[IF]
 T1=[$1]
@@ -422,7 +441,7 @@ LINEA ENTERING SCREEN 31
 T0=[entering]
 T1=[screen]
 T2=[31]
-Adding 261 @ sect 78
+Adding 262 @ sect 78
 Parsing: IF %GATE2 = 0
 T0=[IF]
 T1=[$2]
@@ -461,7 +480,7 @@ LINEA ENTERING SCREEN 15
 T0=[entering]
 T1=[screen]
 T2=[15]
-Adding 288 @ sect 46
+Adding 289 @ sect 46
 Parsing: IF %GATE3 = 0
 T0=[IF]
 T1=[$3]
@@ -500,7 +519,7 @@ LINEA ENTERING SCREEN 19
 T0=[entering]
 T1=[screen]
 T2=[19]
-Adding 315 @ sect 54
+Adding 316 @ sect 54
 Parsing: IF %GATE4 = 0
 T0=[IF]
 T1=[$4]
@@ -540,7 +559,7 @@ T0=[press]
 T1=[fire]
 T2=[at]
 T3=[any]
-Adding 342 @ sect 2
+Adding 343 @ sect 2
 Parsing: IF %DGX <> 0
 T0=[IF]
 T1=[$15]
@@ -583,7 +602,7 @@ LINEA ENTERING SCREEN 39
 T0=[entering]
 T1=[screen]
 T2=[39]
-Adding 375 @ sect 94
+Adding 376 @ sect 94
 Parsing: IF %CANKILL = 8
 T0=[IF]
 T1=[$31]
@@ -602,16 +621,16 @@ LINEA SPECIAL TILE TOUCHED
 T0=[special]
 T1=[tile]
 T2=[touched]
-Adding 387 @ sect 5
+Adding 388 @ sect 5
 Parsing: IF NPANT = 0
 T0=[IF]
 T1=[$254]
 T2=[=]
 T3=[0]
-Parsing: TEXT BOX "25 ABABOLES SE OCULTAN EN LOS RECOVECOS DEL DESIERTO DE LOS MONEGROS. ENCUENTRALOS TODOS Y RECUPERA TU ESPADA!"
+Parsing: TEXT BOX "25 ABABOLES SE OCULTAN EN LOS RECOVECOS DEL DESIERTO DE LOS MONEGROS. ENCONTRARLOS DEBO PARA RECUPERAR MI ESPADA!"
 T0=[TEXT]
 T1=[BOX]
-T2=[25 ABABOLES SE OCULTAN EN LOS RECOVECOS DEL DESIERTO DE LOS MONEGROS. ENCUENTRALOS TODOS Y RECUPERA TU ESPADA!]
+T2=[25 ABABOLES SE OCULTAN EN LOS RECOVECOS DEL DESIERTO DE LOS MONEGROS. ENCONTRARLOS DEBO PARA RECUPERAR MI ESPADA!]
 Parsing: SET TILE (5, 8) = 0
 T0=[SET]
 T1=[TILE]
@@ -626,10 +645,10 @@ T0=[IF]
 T1=[$254]
 T2=[=]
 T3=[2]
-Parsing: TEXT BOX "PARA ABRIR CANCELAS NECESITAS LLAVES. ESTAN UN POCO OXIDADAS, TIENES QUE EMPUJARLAS MIENTRAS PULSAS 'FIRE'."
+Parsing: TEXT BOX "PARA ABRIR CANCELAS NECESITO LLAVES. ESTAN UN POCO OXIDADAS, TENGO QUE EMPUJARLAS MIENTRAS PULSO 'FIRE'."
 T0=[TEXT]
 T1=[BOX]
-T2=[PARA ABRIR CANCELAS NECESITAS LLAVES. ESTAN UN POCO OXIDADAS, TIENES QUE EMPUJARLAS MIENTRAS PULSAS 'FIRE'.]
+T2=[PARA ABRIR CANCELAS NECESITO LLAVES. ESTAN UN POCO OXIDADAS, TENGO QUE EMPUJARLAS MIENTRAS PULSO 'FIRE'.]
 Parsing: SET TILE (11, 8) = 0
 T0=[SET]
 T1=[TILE]
@@ -729,13 +748,25 @@ T3=[$$17]
 Parsing: SOUND 8
 T0=[SOUND]
 T1=[8]
-Bytecode: 0F 01 FF FE 00 FF E6 00 00 20 05 08 00 F2 FF 0F 01 FF FE 02 FF E6 4B 00 20 0B 08 00 F2 FF 0F 01 FF FE 03 FF E6 94 00 20 09 01 00 F2 FF 0F 01 FF FE 14 FF E6 EB 00 20 0A 08 00 F2 FF 18 01 FF FE 27 01 FF 1F 08 FF 00 1F 00 20 0D 05 00 E0 08 E6 40 01 F2 FF 15 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 30 FF 11 E0 08 FF FF 
+Parsing: IF NPANT = 63
+T0=[IF]
+T1=[$254]
+T2=[=]
+T3=[63]
+Parsing: TEXT BOX "MI FIEL ESPADA! AHORA SI QUE ESTOY LISTO PARA ENFRENTAR A LOS PRINCIPES DEL PALACIO DE HIELO!"
+T0=[TEXT]
+T1=[BOX]
+T2=[MI FIEL ESPADA! AHORA SI QUE ESTOY LISTO PARA ENFRENTAR A LOS PRINCIPES DEL PALACIO DE HIELO!]
+Parsing: WIN GAME
+T0=[WIN]
+T1=[GAME]
+Bytecode: 0F 01 FF FE 00 FF E6 00 00 20 05 08 00 F2 FF 0F 01 FF FE 02 FF E6 4D 00 20 0B 08 00 F2 FF 0F 01 FF FE 03 FF E6 93 00 20 09 01 00 F2 FF 0F 01 FF FE 14 FF E6 EA 00 20 0A 08 00 F2 FF 18 01 FF FE 27 01 FF 1F 08 FF 00 1F 00 20 0D 05 00 E0 08 E6 3F 01 F2 FF 15 04 FF 0B 00 23 FF 0B FF 0C 01 FF 00 2F FF 30 FF 11 E0 08 FF 0B 01 FF FE 3F FF E6 75 01 F0 FF FF 
 ==========================================
 LINEA PLAYER GOT SOMETHING
 T0=[player]
 T1=[got]
 T2=[something]
-Adding 493 @ sect 3
+Adding 505 @ sect 3
 Parsing: IF OBJS = 25
 T0=[IF]
 T1=[$250]
@@ -749,10 +780,16 @@ Parsing: EXTERN 1 0
 T0=[EXTERN]
 T1=[1]
 T2=[0]
-Bytecode: 0D 01 FF FA 19 FF E6 76 01 E4 01 00 FF FF 
+Parsing: WARP TO 60, 5, 5
+T0=[WARP]
+T1=[TO]
+T2=[60]
+T3=[5]
+T4=[5]
+Bytecode: 11 01 FF FA 19 FF E6 B3 01 E4 01 00 6D 3C 05 05 FF FF 
 Index section: 32 bytes
-Bytecode section: 507 bytes
-Wrote 539 bytes to script.spt.bin
+Bytecode section: 523 bytes
+Wrote 555 bytes to script.spt.bin
 %carrying -> $0
 %gate1 -> $1
 %gate2 -> $2
@@ -773,6 +810,6 @@ Wrote 539 bytes to script.spt.bin
 %g -> $17
 %cankill -> $31
 Exporting encoded text
-Wrote 459 bytes to text.bin
+Wrote 520 bytes to text.bin
 Writing interpreter
 DONE!

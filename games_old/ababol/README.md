@@ -108,11 +108,17 @@ Quiero un texto custom al coger las botas, así que no lo puedo hacer con `ENABL
 
 # TODO
 
-[ ] - Montar música 48K
-[ ] - ampliar el mapa para añadir una pequeña cripta donde encontrar la espada.
-[X] - Poner ending por scripting, detectar que se cogen todos los ababoles en el script y teleportar a la cripta.
-[ ] - Añadir al tileset la espada, y en el script un WIN GAME al tocar la espada.
-[ ] - Modificar pantalla de título para que refleje SINCLAIR y KEMPSTON
+* [X] - Montar música 48K
+* [X] - ampliar el mapa para añadir una pequeña cripta donde encontrar la espada.
+* 	[X] - ampliar .ene
+* 	[X] - ampliar .map
+* 	[X] - modificar conversor y config.h
+* 	[X] - El mapa y las colocasiones, script, etc.
+* [X] - Poner ending por scripting, detectar que se cogen todos los ababoles en * el script y teleportar a la cripta.
+* [X] - Añadir al tileset la espada, y en el script un WIN GAME al tocar la espada.
+* [ ] - Modificar pantalla de título para que refleje SINCLAIR y KEMPSTON
+* [X] - Packed enems no funciona, revisar que esté completo.
+* [X] - Indexed no inicializa bien a los enemigos que no existen ?
 
 # Remember
 
@@ -124,7 +130,13 @@ Ya que todas las secciones de pantalla son ENTERING, otra opción hubiese sido m
 
 Estoy pasando a ensamble y reorganizando cosas para ganar bytes porque la música 48K ocupa demasiado y necesito el espacio para tonterías. Apunto aquí lo que voy tocando para probar luego y ver que no rompí nada. Empezamos con 34238
 
-[ ] 34202 (-36) - custom/extra_enems_move (check movimiento y frames)
-[X] 34186 (-16) - custom/extra_enems_init (check frames)
-[X] 34175 (-9)  - custom/player_custom_frame (check frame del player)
-[X] 34102 (-73) - custom/player_custom_veng/DX Swim.
+* [X] 34202 (-36) - custom/extra_enems_move (check movimiento y frames)
+* [X] 34186 (-16) - custom/extra_enems_init (check frames)
+* [X] 34175 (-9)  - custom/player_custom_frame (check frame del player)
+* [X] 34102 (-73) - custom/player_custom_veng/DX Swim.
+
+* [X] 35089 - Con todo dentro ya
+* [X] 34711 - Activando enemigos compactados y limites fijos.
+* [X] 33873 - Con el ending de DX!!
+* [X] 33913 - 
+* [X] 33230 - Packed, indexed, etc. 

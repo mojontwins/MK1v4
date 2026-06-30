@@ -350,17 +350,30 @@ unsigned int __FASTCALL__ abs (int n) {
 
 			ld  bc, TOTAL_EXISTING_ENEMS
 
-			#if (defined PLAYER_CAN_FIRE && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
-					ld  de, 10
+			#ifdef PACKED_ENEMS
+				#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+						ld  de, 8
+				#else
+						ld  de, 7
+				#endif
 			#else
-					ld  de, 9
+				#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+						ld  de, 10
+				#else
+						ld  de, 9
+				#endif
 			#endif
 	
 				ld  ix, _malotes
 			
 			.init_malotes_loop
-				// Clear 'enem is dead' flag				
-				ld  a, (ix+8) 	// .t
+				// Clear 'enem is dead' flag	
+
+				#if defined PACKED_ENEMS
+					ld  a, (ix+6) 	// .t
+				#else			
+					ld  a, (ix+8) 	// .t
+				#endif
 				and 127
 				
 			#ifdef RANDOM_RESPAWN
@@ -371,11 +384,19 @@ unsigned int __FASTCALL__ abs (int n) {
 				.init_malotes_not_5
 			#endif
 
-				ld  (ix+8), a 	// .t
+			#if defined PACKED_ENEMS
+					ld  (ix+6), a 	// .t
+			#else
+					ld  (ix+8), a 	// .t
+			#endif
 			
 			#if (defined PLAYER_CAN_FIRE && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
 					ld  a, ENEMS_LIFE_GAUGE
-					ld  (ix+9), a 	// .life
+				#if defined PACKED_ENEMS
+						ld  (ix+7), a 	// .life
+				#else
+						ld  (ix+9), a 	// .life
+				#endif
 			#endif
 
 				add ix, de
@@ -2633,7 +2654,27 @@ void draw_scr (void) {
 		._enems_init
 	#endasm
 
-	enoffs = n_pant * MAX_ENEMS;
+	#ifdef INDEXED_ENEMS
+		#asm
+				// enoffs = enoffs_index [n_pant];
+				ld  hl, (_n_pant)
+				ld  h, 0 
+				ld  de, _enoffs_index
+				add hl, de 
+				ld  a, (hl) 		// A = enoffs_index [n_pant]
+				ld  (_enoffs), a 
+		
+				// n_enems = enoffs_index [n_pant + 1] - enoffs;
+				inc hl 
+				ld  b, a 
+				ld  a, (hl) 		// A = enoffs [n_pant + 1]
+				sub b 
+				ld  (_n_enems), a
+		#endasm
+	#else 
+		enoffs = n_pant * MAX_ENEMS;
+	#endif
+
 	for (enit = 0; enit < MAX_ENEMS; enit ++) {
 		#asm
 				ld  bc, (_enit)
@@ -2645,7 +2686,16 @@ void draw_scr (void) {
 				ld  hl, _en_an_state
 				add hl, bc
 				ld  (hl), a 				// en_an_state [enit] = 0;
+		#endasm
 
+		#ifdef INDEXED_ENEMS
+			//en_an_next_frame [enit] = sprite_18_a;
+			if (enit >= n_enems) {
+				continue;
+			}
+		#endif
+
+		#asm
 			#ifdef RANDOM_RESPAWN
 					ld  hl, _en_an_fanty_activo
 					add hl, bc 
@@ -2819,7 +2869,12 @@ void mueve_bicharracos (void) {
 	player.gotten = 0;
 	ptgmx = ptgmy = 0;
 	
-	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+	#ifdef INDEXED_ENEMS
+		for (enit = 0; enit < n_enems; enit ++) 
+	#else
+		for (enit = 0; enit < MAX_ENEMS; enit ++) 
+	#endif
+	{
 		enoffsmasi = enoffs + enit;
 
 		// Copy array values to temporary variables as fast as possible
@@ -3766,22 +3821,38 @@ void mueve_bicharracos (void) {
 	// ***********************************************************************
 	
 	._calc_baddies_pointer
-		#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
-			add hl, hl 				// x2
-			ld  d, h
-			ld  e, l 				// DE = x2
-			add hl, hl 				// x4
-			add hl, hl 				// x8
-
-			add hl, de 				// HL = x8 + x2 = x10
+		#ifdef PACKED_ENEMS
+			#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+				add hl, hl 				// x2
+				add hl, hl 				// x4
+				add hl, hl 				// HL = x8
+			#else
+				ld  d, h
+				ld  e, l 				// DE = x1
+				add hl, hl 				// x2		
+				add hl, hl 				// x4
+				add hl, hl 				// x8
+				or  a
+				sbc hl, de 				// HL = x8 - x1 = x7
+			#endif
 		#else
-			ld  d, h
-			ld  e, l 				// DE = x1
-			add hl, hl 				// x2
-			add hl, hl 				// x4
-			add hl, hl 				// x8
+			#if ((defined PLAYER_CAN_FIRE || defined ENABLE_SWORD) && ENEMS_LIFE_GAUGE > 1) || defined FORCE_ENEMS_LIFE
+				add hl, hl 				// x2
+				ld  d, h
+				ld  e, l 				// DE = x2
+				add hl, hl 				// x4
+				add hl, hl 				// x8
 
-			add hl, de 				// HL = x8 + x1 = x9
+				add hl, de 				// HL = x8 + x2 = x10
+			#else
+				ld  d, h
+				ld  e, l 				// DE = x1
+				add hl, hl 				// x2
+				add hl, hl 				// x4
+				add hl, hl 				// x8
+
+				add hl, de 				// HL = x8 + x1 = x9
+			#endif
 		#endif
 
 		ld  de, _malotes
