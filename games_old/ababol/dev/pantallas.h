@@ -55,6 +55,8 @@ void title_screen (void) {
 	#else 
 		#asm 
 				call SPUpdateNow
+				xor a
+				call shiruplay
 				call musicstart
 		#endasm
 	#endif
@@ -88,7 +90,7 @@ void game_ending (void) {
 			call _unpack_screen
 	#endasm
 
-	draw_text (14, 4, 
+	draw_text (4, 14, 
 		#ifndef CPC 
 			5,
 		#endif
@@ -98,6 +100,9 @@ void game_ending (void) {
 		cpc_ShowTileMap (1);
 		AY_PLAY_MUSIC (0);
 	#else
+		#asm 
+				call SPUpdateNow
+		#endasm
 		for (gpit = 0; gpit < 4; gpit ++) {
 			peta_el_beeper (7);
 			peta_el_beeper (2);

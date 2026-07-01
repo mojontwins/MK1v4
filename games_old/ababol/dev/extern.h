@@ -160,7 +160,13 @@ void recuadrius (void) {
 void do_extern_action (unsigned char n, unsigned char m) {
 	switch (n) {
 		case 0: player.vy = -PLAYER_MAX_VY_SALTANDO; break;
-		case 1: recuadrius (); break;
+		case 1: 
+			#asm
+					ld  a, 1
+					call shiruplay
+			#endasm
+			recuadrius (); 
+			break;
 	}
 }
 
@@ -452,12 +458,12 @@ void do_extern_action (unsigned char n, unsigned char m) {
 
 		#ifdef CPC 
 			cpc_UpdateNow (0);
-			wyz_play_sound (7);
+			wyz_play_sound (1);
 		#else
 			#asm 
 					call SPUpdateNow
 			#endasm
-			peta_el_beeper (7);
+			peta_el_beeper (1);
 		#endif
 
 		#asm

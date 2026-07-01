@@ -333,6 +333,11 @@ void main (void) {
 						xor a
 						ld  (_isrc), a
 
+						ld  a, (_n_pant)
+						ld  c, a
+						ld  a, (_on_pant)
+						cp  c
+						jr  nz, skipupd
 						call SPUpdateNow
 					.skipupd
 				#endasm

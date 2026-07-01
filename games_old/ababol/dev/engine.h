@@ -2646,6 +2646,7 @@ void draw_scr (void) {
 	seed = n_pant + 1;
 	
 	// Draw tiles
+	saca_a_todo_el_mundo_de_aqui ();
 	draw_scr_background ();
 
 	// Set up enemies.

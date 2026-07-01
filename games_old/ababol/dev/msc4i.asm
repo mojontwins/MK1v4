@@ -78,74 +78,80 @@
 
 ; ENTERING 0
 
-	ld  hl, 0x0084
+	ld  hl, 0x0090
 	cp  16
 	ret z
 
 ; ENTERING 2
 
-	ld  hl, 0x0084
+	ld  hl, 0x0090
 	cp  20
 	ret z
 
 ; ENTERING 3
 
-	ld  hl, 0x00A6
+	ld  hl, 0x00BE
 	cp  22
 	ret z
 
 ; ENTERING 14
 
-	ld  hl, 0x00C2
+	ld  hl, 0x00E1
 	cp  44
 	ret z
 
 ; ENTERING 15
 
-	ld  hl, 0x0141
+	ld  hl, 0x015F
 	cp  46
 	ret z
 
 ; ENTERING 19
 
-	ld  hl, 0x015C
+	ld  hl, 0x017A
 	cp  54
 	ret z
 
 ; ENTERING 20
 
-	ld  hl, 0x0084
+	ld  hl, 0x0090
 	cp  56
 	ret z
 
 ; ENTERING 22
 
-	ld  hl, 0x010B
+	ld  hl, 0x0129
 	cp  60
 	ret z
 
 ; ENTERING 28
 
-	ld  hl, 0x00F2
+	ld  hl, 0x0111
 	cp  72
 	ret z
 
 ; ENTERING 29
 
-	ld  hl, 0x00DA
+	ld  hl, 0x00F9
 	cp  74
 	ret z
 
 ; ENTERING 31
 
-	ld  hl, 0x0126
+	ld  hl, 0x0144
 	cp  78
 	ret z
 
 ; ENTERING 39
 
-	ld  hl, 0x0198
+	ld  hl, 0x01B6
 	cp  94
+	ret z
+
+; ENTERING 63
+
+	ld  hl, 0x01C2
+	cp  142
 	ret z
 
 	ld  a, 0xff
@@ -501,6 +507,13 @@
 	ld  a, (_player + 27) 	; player.objs
 	ret
 .rvb_set_player_objs_done
+
+; TN RVALUE
+	cp  0xF6
+	jr  nz, rvb_set_tile_done
+	ld  a, (_tqt)
+	ret
+.rvb_set_tile_done
 
 ; OPANT RVALUE
 	cp  0xEA
