@@ -212,6 +212,8 @@ Sub parseScriptLine (linea As String)
 			tokens (i) = "$235"
 		ElseIf Ucase(tokens (i)) = "OPANT" Or Ucase(tokens (i)) = "O_PANT" Then
 			tokens (i) = "$234"
+		ElseIf Ucase(tokens(i)) = "PARAM" Then
+			tokens (i) = "$233"
 		End If
 
 		' Static identifiers
@@ -715,6 +717,15 @@ Function processCommand (linea As String) As String
 			' $F2
 			code = buildAction (1, Chr (&HF2))'
 
+		Case "rerun"
+			' RERUN
+			' $F3 V
+			If isNumberOrVar (tokens (1)) Then
+				code = buildAction (2, Chr (&HF3), pVal (tokens (1)))
+			Else
+				syntaxError
+			End If
+
 	End Select 
 
 	Return code 
@@ -1174,7 +1185,7 @@ fOut = FreeFile
 Open interpreterFn For Output As #fOut
 
 writeAssemblyString fOut, "defc PLAYER_LIFE=99 ;; Find a way to solve this"
-writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _on_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y|XREF _decode_text"
+writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _on_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y|XREF _decode_text|XREF _script_param"
 
 writeAssemblyString fOut, "XREF script_bytecode"
 
@@ -1304,6 +1315,7 @@ If AU(&HE6) Then writeAssemblyString fOut, ";; OPCODE 0xE6|;; TEXT BOX LSB MSB|c
 If AU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|jr  nz, aopcode_F0_end|.aopcode_F0|ld  a, 1|ld  (_script_result), a|ret|.aopcode_F0_end"
 If AU(&HF1) Then writeAssemblyString fOut, ";; OPCODE 0xF1|;; GAME OVER|cp  0xf1|jr  nz, aopcode_F1_end|.aopcode_F1|ld  a, 2|ld  (_script_result), a|ret|.aopcode_F1_end"
 If AU(&HF2) Then writeAssemblyString fOut, ";; OPCODE 0xF2|;; BREAK|cp  0xf2|jr  nz, aopcode_F2_end|.aopcode_F2|ret|.aopcode_F2_end"
+If AU(&HF3) Then writeAssemblyString fOut, ";; OPCODE 0xF3|;; RERUN v|cp  0xf3|jr  nz, aopcode_F3_end|.aopcode_F3|call read_vbyte|ld  (_script_param), a|jp  _script_do|.aopcode_F3_end"
 
 ''
 
@@ -1328,6 +1340,7 @@ If RV(&HED) Then writeAssemblyString fOut, "; EN_N RVALUE|cp  0xED|jr  nz, rvb_s
 If RV(&HEC) Then writeAssemblyString fOut, "; EN_X RVALUE|cp  0xEC|jr  nz, rvb_set_en_x_done|ld  a, (__en_x)|ret|.rvb_set_en_x_done"
 If RV(&HEB) Then writeAssemblyString fOut, "; EN_Y RVALUE|cp  0xEB|jr  nz, rvb_set_en_y_done|ld  a, (__en_y)|ret|.rvb_set_en_y_done"
 If RV(&HEA) Then writeAssemblyString fOut, "; OPANT RVALUE|cp  0xEA|jr  nz, rvb_set_on_pant_done|ld  a, (_on_pant)|ret|.rvb_set_on_pant_done"
+If RV(&HE9) Then writeAssemblyString fOut, "; PARAM RVALUE|cp  0xE9|jr  nz, rvb_set_script_param_done|ld  a, (_script_param)|ret|.rvb_set_script_param_done"
 
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
@@ -1345,6 +1358,7 @@ If LV(&HEE) Then writeAssemblyString fOut, "; EN_T LVALUE|cp  0xEE|jr  nz, riv_s
 If LV(&HEC) Then writeAssemblyString fOut, "; EN_X LVALUE|cp  0xEC|jr  nz, riv_set_en_x_done|ld  hl, __en_x|jr  read_i_v_cont|.riv_set_en_x_done"
 If LV(&HEB) Then writeAssemblyString fOut, "; EN_Y LVALUE|cp  0xEB|jr  nz, riv_set_en_y_done|ld  hl, __en_y|jr  read_i_v_cont|.riv_set_en_y_done"
 If LV(&HEA) Then writeAssemblyString fOut, "; OPANT LVALUE|cp  0xEA|jr  nz, riv_set_on_pant_done|ld  hl, _on_pant|jr  read_i_v_cont|.riv_set_on_pant_done"
+If LV(&HEA) Then writeAssemblyString fOut, "; PARAM LVALUE|cp  0xE9|jr  nz, riv_set_cript_param_done|ld  hl, _script_param|jr  read_i_v_cont|.riv_set_cript_param_done"
 
 writeAssemblyString fOut, "ld  b, 0 				; BC = flag index|ld  hl, _flags|add hl, bc 				; HL -> FLAGS [X]"
 writeAssemblyString fOut, ".read_i_v_cont|ld  a, (sc_y) 			; A = value|ret"

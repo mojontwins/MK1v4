@@ -86,6 +86,7 @@ Definimos estas variables especiales, codificadas internamente como "flags" fuer
 * $EC = EN_X = `_en_x`
 * $EB = EN_Y = `_en_y`
 * $EA = OPANT = on_pant
+* $E9 = PARAM = vale 0xff al entrar en la sección.
 
 Sólo rvalue: Asignar a F2-F4, F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING. El resto debe poder ser lvalue (se debe poder asignar a NPANT, KILLED, etc).
 
@@ -234,8 +235,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $F0 : WIN GAME
 * $F1 : GAME OVER
 
-* $F2 : BREAK"
-
+* $F2 : BREAK
+* $F3 : RERUN RVALUE
 
 # Haciendo esto
 
@@ -419,6 +420,13 @@ Y en concreto, algo asín... Porque está bien que los scripts por defecto sean 
     .script_loop
         ...
 ```
+
+# Reentrando
+
+A veces puede ser interesante volver a ejecutar toda la sección. Además, vamos a introducir un parámetro.
+
+* Cuando se entra en la sección, PARAM vale $FF.
+* Se ejecuta REENTER lv -> PARAM vale lv y se vuelve a ejecutar la sección.
 
 # TODO!
 

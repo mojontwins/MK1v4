@@ -1739,22 +1739,22 @@ void move (void) {
 					ld  a, (_hit_h)
 					or  c 
 					jr  z, m_evil_tile_hit_done
-			
-					.m_evil_tile_hit_do
-						ld  a, (_rdi) 
-						or  a
-						jr  z, m_evil_tile_hit_v
+		
+				.m_evil_tile_hit_do
+					ld  a, (_rdi) 
+					or  a
+					jr  z, m_evil_tile_hit_v
 
-					.m_evil_tile_hit_h
-						ld  hl, (_pvx_total)
-						call l_neg 
-						ld  (_player + 6), hl 		// player.vx
-						jr  m_evil_tile_vel_set
+				.m_evil_tile_hit_h
+					ld  hl, (_pvx_total)
+					call l_neg 
+					ld  (_player + 6), hl 		// player.vx
+					jr  m_evil_tile_vel_set
 
-					.m_evil_tile_hit_v
-						ld  hl, (_pvy_total)
-						call l_neg 
-						ld  (_player + 8), hl 		// player.vy
+				.m_evil_tile_hit_v
+					ld  hl, (_pvy_total)
+					call l_neg 
+					ld  (_player + 8), hl 		// player.vy
 						
 			#else
 				// In side view, vertical hit takes precedence

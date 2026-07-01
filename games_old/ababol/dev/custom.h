@@ -329,6 +329,66 @@
 	unsigned char custom_bg_hit (void) {
 		// check hit_v, hit_h and modify player.x / player.y as you need
 		// Return 1 if hit registered
+
+		// Special hit handling:
+		// Jump'n'run you can only pinch if falling.
+		// Swimming normal top view pinch.
+
+		#asm
+				ld  hl, 0 
+				ld  a, (_n_pant)
+				cp  40
+				jr  c, _player_custom_pinch_walk
+
+				cp  60
+				jp  c, _player_custom_pinch_swim
+
+			._player_custom_pinch_walk
+
+			// Only check hit_v
+
+				ld  a, (_hit_v)
+				or  a 
+				ret z 
+
+				ld  hl, #(-(PLAYER_MAX_VY_SALTANDO / 2))
+				ld  (_player + 8), hl 		// player.vy
+
+				ld  hl, 1 
+				ret
+
+			._player_custom_pinch_swim
+
+			// Max velocity component takes precedence
+
+				ld  a, (_hit_v)
+				ld  c, a 
+				ld  a, (_hit_h)
+				or  c 
+				ret z
+	
+			.m_evil_tile_hit_do
+				ld  a, (_rdi) 
+				or  a
+				jr  z, m_evil_tile_hit_v
+
+			.m_evil_tile_hit_h
+				ld  hl, (_pvx_total)
+				call l_neg 
+				ld  (_player + 6), hl 		// player.vx
+
+				ld  hl, 1
+				ret
+
+			.m_evil_tile_hit_v
+				ld  hl, (_pvy_total)
+				call l_neg 
+				ld  (_player + 8), hl 		// player.vy
+				
+				ld  hl, 1
+				ret
+
+		#endasm
 	}
 #endif
 

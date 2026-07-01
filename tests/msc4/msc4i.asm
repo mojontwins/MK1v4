@@ -3,6 +3,7 @@ defc PLAYER_LIFE=99 ;; Find a way to solve this
 ; Imports
 XREF _flags
 XREF _n_pant
+XREF _on_pant
 XREF _gpx
 XREF _gpy
 XREF _tpx
@@ -30,6 +31,7 @@ XREF _en_it
 XREF __en_x
 XREF __en_y
 XREF _decode_text
+XREF _script_param
 
 ; Target CPC
 XREF _cpc_UpdateNow
@@ -653,6 +655,16 @@ XDEF _script_result
 	ret
 .aopcode_F2_end
 
+	;; OPCODE 0xF3
+	;; RERUN v
+	cp  0xf3
+	jr  nz, aopcode_F3_end
+.aopcode_F3
+	call read_vbyte 
+	ld  (_script_param), a
+	jp  _script_do
+.aopcode_F3_end
+
 	;; UNKNOWN
 	jp script_actions
 
@@ -780,6 +792,13 @@ XDEF _script_result
 	ret
 .rvb_set_on_pant_done
 
+	; PARAM RVALUE
+	cp  0xE9
+	jr  nz, rvb_set_script_param_done
+	ld  a, (_script_param)
+	ret
+.rvb_set_script_param_done
+
 	ld  d, 0 
 	ld  e, a 
 	ld  hl, _flags 
@@ -872,6 +891,13 @@ XDEF _script_result
 	ld  hl, _on_pant
 	jr  read_i_v_cont
 .riv_set_on_pant_done
+
+	; PARAM LVALUE
+	cp  0xE9
+	jr  nz, riv_set_cript_param_done
+	ld  hl, _script_param
+	jr  read_i_v_cont
+.riv_set_cript_param_done
 
 	ld  b, 0 				; BC = flag index
 	ld  hl, _flags

@@ -16,6 +16,7 @@
 extern unsigned char script_n;
 extern unsigned char script_result;
 extern unsigned char script_tx, script_ty, script_tn;
+unsigned char script_param;
 
 extern void script_do (void);
 
@@ -111,6 +112,9 @@ void __FASTCALL__ script (unsigned char a) {
 			call qtile_do
 			ld  a, l 
 			ld  (_tqt), a
+
+			ld  a, 0xff 
+			ld  (_script_param), a
 			
 			call _script_do
 

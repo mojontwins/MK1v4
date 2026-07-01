@@ -43,11 +43,17 @@ void title_screen (void) {
 			call _unpack_screen
 	#endasm
 	
+	#ifdef CPC 
+		draw_text (12, 10, "1\\TECLAS%2\\MANDO");
+	#else 
+		draw_text (11, 10, 70, "1\\TECLADO%2\\KEMPSTON%3\\SINCLAIR");
+	#endif
+
 	draw_text (12, 6, 
 		#ifndef CPC 
 			4,
 		#endif
-	"MK1 V3.2");
+	"MK1 V3\\2");
 
 	#ifdef CPC
 		cpc_UpdateNow (0);
@@ -150,7 +156,7 @@ void game_over (void) {
 		#asm 
 				call SPUpdateNow
 		#endasm
-		peta_el_beeper (10);
+		peta_el_beeper (5);
 	#endif
 
 	no_break ();

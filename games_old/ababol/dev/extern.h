@@ -177,8 +177,9 @@ void do_extern_action (unsigned char n, unsigned char m) {
 	#define ATTR_TEXTBOX   7
 
 	unsigned char top_string []    = "<======================>";
-	unsigned char temp_string []   = "#                      $";
+	unsigned char mid_string []    = "#                      $";
 	unsigned char bottom_string [] = "'(((((((((((((((((((((()";
+	unsigned char temp_string []   = "                      ";
 	unsigned char redraw_after_text;
 
 	void redraw_from_buffer (void) {
@@ -223,17 +224,6 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		#endasm
 	}
 
-	void clear_temp_string (void) {
-		#asm
-				ld  hl, _temp_string+1
-				ld  de, _temp_string+2
-				ld  bc, 21
-				ld  a, 32
-				ld  (hl), a
-				ldir
-		#endasm
-	}
-
 	void draw_text_cbc (void) {
 		#ifdef CPC 
 			#asm
@@ -248,14 +238,14 @@ void do_extern_action (unsigned char n, unsigned char m) {
 					
 					ld  a, (hl) 
 					or  a 
-					jr z, dtcbc_done
+					jr  z, dtcbc_done		// End of line
 					inc hl 
 					sub 32 
+					jr  z, dtcbc_loop		// Skip spaces.
+					
 					halt 
 					halt 
 					
-					jr  z, dtcbc_loop		// Skip spaces.
-
 					push hl 
 
 					// Draw inv tile A @ rdx, rdy
@@ -348,8 +338,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		
 			// Main loop to output lines of text
 
-			.stb_loop
-				call _clear_temp_string
+			.stb_loop				
 
 			// Clear line above, if rdy > 7
 				ld  a, (_rdy)
@@ -364,7 +353,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 				ld  (__y), a 
 				ld  a, 4
 				ld  (__x), a 
-				ld  hl, _temp_string 
+				ld  hl, _mid_string 
 			#ifdef CPC 
 					call draw_text_pre_loop
 			#else
@@ -380,7 +369,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 				ld  (__y), a 
 				ld  a, 4
 				ld  (__x), a 
-				ld  hl, _temp_string 
+				ld  hl, _mid_string 
 			#ifdef CPC
 					call draw_text_pre_loop
 			#else 
@@ -406,7 +395,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 
 			// Fill buffer with the next line of text
 
-				ld  de, _temp_string + 1 		// Skip frame border
+				ld  de, _temp_string 	
 				ld  hl, (_gp_gen)				// HL -> current text
 
 			.fill_buffer_loop
@@ -424,9 +413,12 @@ void do_extern_action (unsigned char n, unsigned char m) {
 				jr  fill_buffer_loop
 
 			.fill_buffer_end
+				xor a 
+				ld  (de), a 					// String end
+
 				ld  (_gp_gen), hl
 
-				ld  a, 4
+				ld  a, 5 						// Left border + 1
 				ld  (_rdx), a
 
 			#ifndef CPC 
