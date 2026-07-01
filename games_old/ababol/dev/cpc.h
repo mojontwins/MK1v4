@@ -1,5 +1,5 @@
 // MTE MK1 v3.2
-// Copyleft 2011 by The Mojon Twins
+// Copyleft 2011, 2026 by The Mojon Twins
 
 // Pestecé specific shit (most of it)
 

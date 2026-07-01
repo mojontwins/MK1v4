@@ -1,4 +1,4 @@
-msc v4.2.20260701 ~ Processing script.spt
+msc v4.3.20260701 ~ Processing script.spt
 ==========================================
 LINEA ROOMS = 64
 T0=[rooms]
@@ -822,13 +822,13 @@ T2=[MI FIEL ESPADA! AHORA SI QUE ESTOY LISTO PARA ENFRENTAR A LOS PRINCIPES DEL 
 Parsing: WIN GAME
 T0=[WIN]
 T1=[GAME]
-Bytecode: 12 01 FF FE 00 FF E6 00 00 20 05 08 00 00 0B 01 F2 FF 12 01 FF FE 02 FF E6 4D 00 20 0B 08 00 00 0C 01 F2 FF 16 01 FF FE 03 01 FF F6 2E FF E6 98 00 20 09 01 00 00 0E 01 F2 FF 12 01 FF FE 14 FF E6 EF 00 20 0A 08 00 00 0D 01 F2 FF 18 01 FF FE 27 01 FF 1F 08 FF 00 1F 00 20 0D 05 00 E0 08 E6 44 01 F2 FF 15 04 FF 0F 00 23 FF 0F FF 10 01 FF 00 2F FF 30 FF 15 E0 08 FF 0B 01 FF FE 3F FF E6 7A 01 F0 FF FF 
+Bytecode: 11 01 FF FE 00 FF E6 00 00 20 05 08 00 00 0B 01 F2 11 01 FF FE 02 FF E6 4D 00 20 0B 08 00 00 0C 01 F2 15 01 FF FE 03 01 FF F6 2E FF E6 98 00 20 09 01 00 00 0E 01 F2 11 01 FF FE 14 FF E6 EF 00 20 0A 08 00 00 0D 01 F2 17 01 FF FE 27 01 FF 1F 08 FF 00 1F 00 20 0D 05 00 E0 08 E6 44 01 F2 15 04 FF 0F 00 23 FF 0F FF 10 01 FF 00 2F FF 30 FF 15 E0 08 FF 0A 01 FF FE 3F FF E6 7A 01 F0 FF 
 ==========================================
 LINEA PLAYER GOT SOMETHING
 T0=[player]
 T1=[got]
 T2=[something]
-Adding 560 @ sect 3
+Adding 554 @ sect 3
 Parsing: IF OBJS = 25
 T0=[IF]
 T1=[$250]
@@ -850,8 +850,8 @@ T3=[5]
 T4=[5]
 Bytecode: 11 01 FF FA 19 FF E6 B8 01 E4 01 00 6D 3C 05 05 FF FF 
 Index section: 32 bytes
-Bytecode section: 578 bytes
-Wrote 610 bytes to script.spt.bin
+Bytecode section: 572 bytes
+Wrote 604 bytes to script.spt.bin
 %carrying -> $0
 %gate1 -> $1
 %gate2 -> $2

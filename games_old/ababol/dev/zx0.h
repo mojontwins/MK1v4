@@ -1,5 +1,5 @@
-// MTE MK1 v4.11
-// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
+// MTE MK1 v3.2
+// Copyleft 2011, 2026 by The Mojon Twins
 
 // zx0.h
 // Cointains the ZX0 decompressor.

@@ -31,6 +31,7 @@
 	XREF __en_x
 	XREF __en_y
 	XREF _decode_text
+	XREF _script_param
 
 	XREF script_bytecode
 
@@ -445,11 +446,7 @@
 	cp  0xE6
 	jr  nz, aopcode_E6_end
 .aopcode_E6
-	call read_x_y
-	ld  a, (sc_x)
-	ld  l, a
-	ld  a, (sc_y)
-	ld  h, a
+	call read_addr
 	call _decode_text
 	jp script_actions
 .aopcode_E6_end
@@ -534,6 +531,14 @@
 	ld  (sc_x), a
 	call read_vbyte
 	ld  (sc_y), a
+	ret
+
+.read_addr
+	call read_byte
+	ld  c, a
+	call read_byte
+	ld  h, a
+	ld  l, c
 	ret
 
 ;; Read flag index and value, returns pointer in HL and value in A.

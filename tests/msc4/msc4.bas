@@ -44,6 +44,7 @@ Dim Shared As Integer textPoolIndex
 Dim Shared As Integer lastTextOffset 
 Dim Shared As String textPool (16384)
 Dim Shared As Integer textOffsets (16384)
+Dim Shared As Integer lastCommandWasTerminator
 
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
@@ -582,6 +583,8 @@ Function processCommand (linea As String) As String
 	cmd = lCase (tokens (0))
 	scmd = lCase (tokens (1))
 
+	lastCommandWasTerminator = 0
+
 	Select Case cmd
 		Case "inc"
 			' INC $A B
@@ -701,6 +704,7 @@ Function processCommand (linea As String) As String
 		Case "game"
 			If scmd = "over" then 
 				code = buildAction (1, Chr (&HF1))
+				lastCommandWasTerminator = -1
 			Else 
 				syntaxError
 			End If
@@ -708,6 +712,7 @@ Function processCommand (linea As String) As String
 		Case "win"
 			If scmd = "game" Then  
 				code = buildAction (1, Chr (&HF0))
+				lastCommandWasTerminator = -1
 			Else 
 				syntaxError
 			End If
@@ -716,12 +721,14 @@ Function processCommand (linea As String) As String
 			' BREAK
 			' $F2
 			code = buildAction (1, Chr (&HF2))'
+			lastCommandWasTerminator = -1
 
 		Case "rerun"
 			' RERUN
 			' $F3 V
 			If isNumberOrVar (tokens (1)) Then
 				code = buildAction (2, Chr (&HF3), pVal (tokens (1)))
+				lastCommandWasTerminator = -1
 			Else
 				syntaxError
 			End If
@@ -770,8 +777,12 @@ Function processCurrentSection (fIn As Integer) As String
 
 				If debug Then Print "Stopped parsing decos"
 			Else
+
 				' Write  END to current clausule
-				clausule = clausule & Chr (&HFF)
+				' New: Only add &HFF if last commaand was NOT a terminator
+				If Not lastCommandWasTerminator Then
+					clausule = clausule & Chr (&HFF)
+				End If
 
 				' Write current clausule
 				sectionCode = sectionCode & Chr (Len (clausule) + 1) & clausule
@@ -791,6 +802,7 @@ Function processCurrentSection (fIn As Integer) As String
 				clausule = clausule & Chr (&HFF)
 
 				state = 2
+				lastCommandWasTerminator = 0
 			Else 
 				wrong = -1: terminado = -1
 				Print "Unexpected THEN @ " & curLineNo
@@ -829,6 +841,9 @@ Function processCurrentSection (fIn As Integer) As String
 
 			ElseIf state = 2 Then
 				' Commands
+				If lastCommandWasTerminator Then
+					Print "Warning! unreachable code @ " & curLineNo
+				End If
 				clausule = clausule & processCommand (linea)
 
 			ElseIf Left (linea, 1) <> "#" Then 
@@ -1129,7 +1144,7 @@ Dim As String fileIns(127)
 Dim As String fileText
 Dim As Integer isEntering, room
 
-Print "msc v4.2.20260701 ~ ";
+Print "msc v4.3.20260701 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
@@ -1311,7 +1326,7 @@ If AU(&HE2) Then writeAssemblyString fOut, ";; OPCODE 0xE2|;; RECHARGE|cp  0xE2|
 If AU(&HE3) Then writeAssemblyString fOut, ";; OPCODE 0xE3|;; TEXT L <CHARS> 0|cp  0xE3|jr  nz, aopcode_E3_end|.aopcode_E3|call read_byte 			; String length|ld  b, 0|ld  c, a|add hl, bc 				; Move after the string|push hl|ld  hl, (script)|call draw_line_of_text|pop hl|ld  (script), hl 		; Get past the string|jp script_actions|.aopcode_E3_end"
 If AU(&HE4) Then writeAssemblyString fOut, ";; OPCODE 0xE4|;; EXTERN N M|cp  0xE4|jr  nz, aopcode_E4_end|.aopcode_E4|call read_x_y|ld  a, (sc_x)|ld  h, 0|ld  l, a|push hl|ld  a, (sc_y)|ld  h, 0|ld  l, a|push hl|call _do_extern_action|pop bc|pop bc|jp script_actions|.aopcode_E4_end"
 If AU(&HE5) Then writeAssemblyString fOut, ";; OPCODE 0xE5|;; PAUSE N|cp  0xE5|jr  nz, aopcode_E5_end|.aopcode_E5|call read_vbyte|ld  b, a|.aopcode_E5_loop|halt|djnz aopcode_E5_loop|jp script_actions|.aopcode_E5_end"
-If AU(&HE6) Then writeAssemblyString fOut, ";; OPCODE 0xE6|;; TEXT BOX LSB MSB|cp  0xE6|jr  nz, aopcode_E6_end|.aopcode_E6|call read_x_y|ld  a, (sc_x)|ld  l, a|ld  a, (sc_y)|ld  h, a|call _decode_text|jp script_actions|.aopcode_E6_end"
+If AU(&HE6) Then writeAssemblyString fOut, ";; OPCODE 0xE6|;; TEXT BOX LSB MSB|cp  0xE6|jr  nz, aopcode_E6_end|.aopcode_E6|call read_addr|call _decode_text|jp script_actions|.aopcode_E6_end"
 If AU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|jr  nz, aopcode_F0_end|.aopcode_F0|ld  a, 1|ld  (_script_result), a|ret|.aopcode_F0_end"
 If AU(&HF1) Then writeAssemblyString fOut, ";; OPCODE 0xF1|;; GAME OVER|cp  0xf1|jr  nz, aopcode_F1_end|.aopcode_F1|ld  a, 2|ld  (_script_result), a|ret|.aopcode_F1_end"
 If AU(&HF2) Then writeAssemblyString fOut, ";; OPCODE 0xF2|;; BREAK|cp  0xf2|jr  nz, aopcode_F2_end|.aopcode_F2|ret|.aopcode_F2_end"
@@ -1344,6 +1359,7 @@ If RV(&HE9) Then writeAssemblyString fOut, "; PARAM RVALUE|cp  0xE9|jr  nz, rvb_
 
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
+IF AU(&HE6) Or AU(&H70) Then writeAssemblyString fOut, ".read_addr|call read_byte|ld  c, a|call read_byte|ld  h, a|ld  l, c|ret"
 writeAssemblyString fOut, ";; Read flag index and value, returns pointer in HL and value in A.|.read_i_v|call read_vbyte  		; Read flag index|ld  c, a|call read_vbyte 		; Read value|ld  (sc_y), a"
 writeAssemblyString fOut, "ld  a, c  				; C = flag index"
 If LV(&HFE) Then writeAssemblyString fOut, "; NPANT LVALUE|cp  0xFE|jr  nz, riv_set_n_pant_done|ld  hl, _n_pant|jr  read_i_v_cont|.riv_set_n_pant_done"

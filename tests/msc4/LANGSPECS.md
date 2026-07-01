@@ -426,8 +426,103 @@ Y en concreto, algo asín... Porque está bien que los scripts por defecto sean 
 A veces puede ser interesante volver a ejecutar toda la sección. Además, vamos a introducir un parámetro.
 
 * Cuando se entra en la sección, PARAM vale $FF.
-* Se ejecuta REENTER lv -> PARAM vale lv y se vuelve a ejecutar la sección.
+* Se ejecuta RERUN lv -> PARAM vale lv y se vuelve a ejecutar la sección.
+
+# Diálogos
+
+Para integrar diálogos se haría como con los textos, que habría que depender de una implementación externa. En principio tendríamos este comando:
+
+```
+    $F = DIAG "OP1" "OP2" "OP3"
+```
+
+Las opciones se codificarán como los textos. Esto llamará a una función de extern que presentará las opciones y devolverá 1, 2 o 3 con la selección del jugador. Ese valor se asignará a $F.
+
+Luego puede utilizarse RERUN $F para volver a ejecutar la sección con el valor del diálogo.
+
+Para ver si esto me sirve voy a simular una situación real.  Hablamos con un personaje haciendo FIRE en una posición y se nos presentan tres opciones. Las dos primeras deberán sacar un texto específico, la segunda además poner un flag, y la tarcera sacar un segundo diálogo, esta vez de dos opciones embéz de tres, que deberá sacar dos textos diferentes.
+
+Voy a tratar de programar eso a ver qué más puedo necesitar o si me vale. Hay que tener en cuenta que todo esto se basa en `RERUN` y en la variable PARAM.
+
+```
+    PRESS FIRE AT 10
+
+        IF $C = 0           # Conversación 0
+        IF PARAM = 1        # "CHARLAR"
+        THEN
+            TEXT BOX "HACE UN DIA ESTUPENDO HOY EH? VAYA, NO RESPONDE."
+            BREAK
+        END
+
+        IF $C = 0
+        IF PARAM = 2        # "AGASAJAR"
+        THEN 
+            TEXT BOX "Y LO GUAPO QUE VA USTED HOY? NO DISIMULE, LE VEO SONREIR"
+            $FELIZ = 1
+            BREAK
+        END
+
+        IF $C = 0
+        IF PARAM = 3        # PREGUNTAR
+        THEN
+            TEXT BOX "AHORA QUE TENGO SU ATENCION..."
+            $C = 1
+            $F = DIALOG "REVOLUCION" "LA REINA"
+            RERUN $F
+        END 
+
+        IF $C = 1
+        IF PARAM = 1
+        THEN 
+            TEXT BOX "VEO QUE NO LE GUSTA HABLAR DE LA ACTUALIDAD"
+            BREAK
+        END
+
+        IF $C = 1
+        IF PARAM = 2
+        THEN 
+            TEXT BOX "SE LE ILUMINA LA CARA CUANDO HABLA DE LA REINA"
+            BREAK
+        END
+
+        # Hablar con el personaje
+        # Lo ponemos al final porque vamos a repetir varias veces
+        IF PLAYER_TOUCHES (5, 6)
+        THEN 
+            # Esta flag lleva el proceso de la conversación
+            $C = 0 
+            $F = DIALOG "CHARLAR" "AGASAJAR" "PREGUNTAR"
+            RERUN $F
+        END
+    END
+```
+
+Puede valer ¿no?
+
+Opcion no existente = FFFF, otro valor apunta al texto.
+
+Si en el motor hacemos `ENABLE_OPTIONS` se activará también `ENABLE_ENCODED_TEXT` ya que habrá que decodificar las opciones. El script manejará tres punteros que se pondrán en $FFFF si no hay opción. El decodificador en el motor manejará tres buffers de 32 caracteres donde decodificará las opciones si valen != $FFFF.
+
+El intérprete podría ser algo parecido a 
+
+```asm
+        cp  0x70
+        jr  nz, aopcode_70_end
+    .aopcode_70
+        ; ADDR1
+        call read_addr
+        ld  (_addr1), hl
+        call read_addr
+        ld  (_addr2), hl
+        call read_addr
+        ld  (_addr3), hl
+        jp  script_actions  
+    .aopcode_70_end
+```
 
 # TODO!
 
 * [ ] Encontrar la forma de saber la vida total del jugador desde el intérprete! Ahora hay un defc con una constante placeholder.
+* [ ] 256 bytes quizá es poco para las clausulas...
+* [ ] BREAK:END debería poder codificarse solo como BREAK. De hecho BREAK debería terminar la cláusula igual que un END sin tener que añadir el byte. Lo mismo con WIN GAME o GAME OVER. Los tres hacen RET.
+

@@ -1,6 +1,8 @@
 // MTE MK1 v3.2
 // Copyleft 2011 by The Mojon Twins
 
+// MSC4 Interface
+
 #define SC_ENTERING_GAME 0
 #define SC_ENTERING_ANY 1
 #define SC_PRESS_FIRE_AT_ANY 2

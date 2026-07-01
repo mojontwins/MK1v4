@@ -1,3 +1,7 @@
+// MTE MK1 v3.2
+// Copyleft 2011, 2026 by The Mojon Twins
+
+// mainloop.h
 
 void main (void) {
 	#ifndef CPC

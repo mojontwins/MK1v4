@@ -1,3 +1,7 @@
+// MTE MK1 v3.2
+// Copyleft 2011, 2026 by The Mojon Twins
+
+// Customise title / game over / ending here
 
 extern unsigned char s_title [];
 extern unsigned char s_marco [];
@@ -146,7 +150,7 @@ void game_over (void) {
 		#ifndef CPC
 			64+1*8+7, 
 		#endif
-		"GAME OVER!");
+		"GAME UNDER");
 	
 
 	#ifdef CPC
@@ -156,7 +160,7 @@ void game_over (void) {
 		#asm 
 				call SPUpdateNow
 		#endasm
-		peta_el_beeper (5);
+		peta_el_beeper (2);
 	#endif
 
 	no_break ();

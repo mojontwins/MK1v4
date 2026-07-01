@@ -1,3 +1,7 @@
+// MTE MK1 v3.2
+// Copyleft 2011, 2026 by The Mojon Twins
+
+// Customise title / game over / ending here
 
 extern unsigned char s_title [];
 extern unsigned char s_marco [];
@@ -43,17 +47,11 @@ void title_screen (void) {
 			call _unpack_screen
 	#endasm
 	
-	#ifdef CPC 
-		draw_text (12, 10, "1\\TECLAS%2\\MANDO");
-	#else 
-		draw_text (11, 10, 70, "1\\TECLADO%2\\KEMPSTON%3\\SINCLAIR");
-	#endif
-
-	draw_text (12, 6, 
+	draw_text (12, 12, 
 		#ifndef CPC 
 			4,
 		#endif
-	"MK1 V3\\2");
+	"MK1 V3.2");
 
 	#ifdef CPC
 		cpc_UpdateNow (0);
@@ -61,8 +59,6 @@ void title_screen (void) {
 	#else 
 		#asm 
 				call SPUpdateNow
-				xor a
-				call shiruplay
 				call musicstart
 		#endasm
 	#endif
@@ -96,19 +92,11 @@ void game_ending (void) {
 			call _unpack_screen
 	#endasm
 
-	draw_text (4, 14, 
-		#ifndef CPC 
-			5,
-		#endif
-	"NOS VEMOS EN ICE PALACE!");
 
 	#ifdef CPC
 		cpc_ShowTileMap (1);
 		AY_PLAY_MUSIC (0);
 	#else
-		#asm 
-				call SPUpdateNow
-		#endasm
 		for (gpit = 0; gpit < 4; gpit ++) {
 			peta_el_beeper (7);
 			peta_el_beeper (2);
@@ -146,7 +134,7 @@ void game_over (void) {
 		#ifndef CPC
 			64+1*8+7, 
 		#endif
-		"GAME OVER!");
+		"GAME OVER");
 	
 
 	#ifdef CPC
@@ -156,7 +144,7 @@ void game_over (void) {
 		#asm 
 				call SPUpdateNow
 		#endasm
-		peta_el_beeper (5);
+		peta_el_beeper (10);
 	#endif
 
 	no_break ();
