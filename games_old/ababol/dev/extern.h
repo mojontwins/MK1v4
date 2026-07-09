@@ -161,10 +161,12 @@ void do_extern_action (unsigned char n, unsigned char m) {
 	switch (n) {
 		case 0: player.vy = -PLAYER_MAX_VY_SALTANDO; break;
 		case 1: 
+			#ifndef CPC
 			#asm
 					ld  a, 1
 					call shiruplay
 			#endasm
+			#endif
 			recuadrius (); 
 			break;
 	}
@@ -223,6 +225,29 @@ void do_extern_action (unsigned char n, unsigned char m) {
 				jr  nz, redraw_from_buffer_loop
 		#endasm
 	}
+
+	#ifdef CPC
+		void print_tile_inv () {
+			#asm
+
+					// Esto obtiene la direccion del tile en DE
+					call __tile_address
+
+					// Escribimos el tile
+					ld  a, (__n)
+					ld  (de), a
+
+					// Invalidamos el tile
+					ld  a, (__x)
+					ld  e, a
+					ld  a, (__y)
+					ld  d, a 
+
+					// Esto invalida el tile en E, D
+					call cpc_UpdTileTable 
+			#endasm
+		}
+	#endif
 
 	void draw_text_cbc (void) {
 		#ifdef CPC 
@@ -450,13 +475,12 @@ void do_extern_action (unsigned char n, unsigned char m) {
 
 		#ifdef CPC 
 			cpc_UpdateNow (0);
-			wyz_play_sound (1);
 		#else
 			#asm 
 					call SPUpdateNow
 			#endasm
-			peta_el_beeper (1);
 		#endif
+		peta_el_beeper (1);
 
 		#asm
 			// do { pad_read (); } while (0xff == pad_this_frame);

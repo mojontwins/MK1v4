@@ -17,6 +17,7 @@ extern unsigned char s_ending [];
 #endasm
 
 void title_screen (void) {
+	
 	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
 		#ifdef ALWAYS_SPLIT
 			#asm

@@ -1,7 +1,7 @@
 @echo off
 
 set game=ababol3
-set om=speccy
+set om=cpc
 set mode=1
 
 if [%mode%]==[0] goto :setmode0 
@@ -40,11 +40,11 @@ goto :compile
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
 
 rem custom palettes
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-fuera.png prefix=inks0 out=%om%\pal0.h silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-cueva.png prefix=inks1 out=%om%\pal1.h silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-agua.png prefix=inks2 out=%om%\pal2.h silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal-marco.png prefix=pal_hud out=%om%\pal_hud.h silent > nul
-..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal.png prefix=pal_general out=%om%\pal_general.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-fuera.png prefix=inks0 out=%om%\pal0.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-cueva.png prefix=inks1 out=%om%\pal1.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-agua.png prefix=inks2 out=%om%\pal2.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-marco.png prefix=pal_hud out=%om%\pal_hud.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal.png prefix=pal_general out=%om%\pal_general.h silent > nul
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\marco.png out=marco.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\ending.png out=ending.bin silent > nul

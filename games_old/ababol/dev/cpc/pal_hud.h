@@ -21,54 +21,6 @@
 		out (c), a
 		ld  a, 0x4B	// 0b0100000 OR B (FFFFFFFF)
 		out (c), a
-		ld  a, 4
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 5
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 6
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 7
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 8
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 9
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 10
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 11
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 12
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 13
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 14
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
-		ld  a, 15
-		out (c), a
-		ld  a, 0x54	// 0b0100000 OR 14 (FF000000)
-		out (c), a
 		ret
 #endasm
 
