@@ -1147,20 +1147,30 @@ void draw_text (unsigned char x, unsigned char y, char *s) {
 			or  a
 			jr  z, print_str_inv 
 			
+			inc hl
+
 			cp  0x25
-			jr  z, draw_text_loop
+			jr  z, draw_text_nl
 			
 			sub 32
 			ld  (de), a
 			
-			inc hl
 			inc de 
 
+		.draw_text_cont
 			ld  a, (__n)
 			inc a
 			ld  (__n), a
 
 			jr  draw_text_loop
+
+		.draw_text_nl
+			ld  a, (__t)
+			ld  (__x), a
+			ld  a, (__y) 
+			inc a 
+			ld  (__y), a
+			jr  draw_text_cont
 
 		#if defined ACTIVATE_SCRIPTING && defined TEXT_X
 			.draw_line_of_text

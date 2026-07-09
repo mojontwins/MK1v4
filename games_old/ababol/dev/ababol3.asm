@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu Jul 09 14:53:00 2026
+;	Module compile time: Thu Jul 09 16:50:07 2026
 
 
 
@@ -2221,16 +2221,24 @@
 	ld a, (hl)
 	or a
 	jr z, print_str_inv
+	inc hl
 	cp 0x25
-	jr z, draw_text_loop
+	jr z, draw_text_nl
 	sub 32
 	ld (de), a
-	inc hl
 	inc de
+	.draw_text_cont
 	ld a, (__n)
 	inc a
 	ld (__n), a
 	jr draw_text_loop
+	.draw_text_nl
+	ld a, (__t)
+	ld (__x), a
+	ld a, (__y)
+	inc a
+	ld (__y), a
+	jr draw_text_cont
 	.print_str_inv
 	; Invalidate cells based upon strlen.
 	ld a, (__y)
@@ -6602,7 +6610,7 @@
 	push	hl
 	ld	hl,6	;const
 	push	hl
-	ld	hl,i_1+16
+	ld	hl,i_1+17
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -6628,7 +6636,7 @@
 	push	hl
 	ld	hl,14	;const
 	push	hl
-	ld	hl,i_1+25
+	ld	hl,i_1+26
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -6665,7 +6673,7 @@
 	push	hl
 	ld	hl,12	;const
 	push	hl
-	ld	hl,i_1+50
+	ld	hl,i_1+51
 	push	hl
 	call	_draw_text
 	pop	bc
@@ -7291,7 +7299,7 @@
 ;	SECTION	text
 
 .i_1
-	defm	"1\TECLAS2\MANDO"
+	defm	"1\TECLAS%2\MANDO"
 	defb	0
 
 	defm	"MK1 V3\2"
