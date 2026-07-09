@@ -497,7 +497,7 @@ Voy a tratar de programar eso a ver qué más puedo necesitar o si me vale. Hay 
     END
 ```
 
-Puede valer ¿no?
+Puede valer ¿no? También se puede usar un flag diferente para almacenar la respuesta de DIALOG y el valor de RERUN para llevar palante una máquina de estados. Lo que mejor venga.
 
 Opcion no existente = FFFF, otro valor apunta al texto.
 
@@ -524,5 +524,5 @@ El intérprete podría ser algo parecido a
 
 * [ ] Encontrar la forma de saber la vida total del jugador desde el intérprete! Ahora hay un defc con una constante placeholder.
 * [ ] 256 bytes quizá es poco para las clausulas...
-* [ ] BREAK:END debería poder codificarse solo como BREAK. De hecho BREAK debería terminar la cláusula igual que un END sin tener que añadir el byte. Lo mismo con WIN GAME o GAME OVER. Los tres hacen RET.
-
+* [X] BREAK:END debería poder codificarse solo como BREAK. De hecho BREAK debería terminar la cláusula igual que un END sin tener que añadir el byte. Lo mismo con WIN GAME o GAME OVER. Los tres hacen RET.
+* [ ] Optimizar WARP TO y todas las que tomen valores de tile pero tengan que producir valores de pixel para precalcular y no tener que hacerlo en el intérprete (siempre que no se refieran a flags).
