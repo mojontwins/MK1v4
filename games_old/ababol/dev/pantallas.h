@@ -48,7 +48,8 @@ void title_screen (void) {
 	#endasm
 	
 	#ifdef CPC 
-		draw_text (12, 10, "1\\TECLAS%2\\MANDO");
+		draw_text (12, 10, "1\\TECLAS");
+		draw_text (12, 11, "2\\MANDO");
 	#else 
 		draw_text (11, 10, 70, "1\\TECLADO%2\\KEMPSTON%3\\SINCLAIR");
 	#endif
@@ -60,7 +61,14 @@ void title_screen (void) {
 	"MK1 V3\\2");
 
 	#ifdef CPC
-		cpc_UpdateNow (0);
+		
+		cpc_UpdScr ();
+		cpc_ShowTileMap (1);
+
+		#asm 
+				xor a
+				call shiruplay
+		#endasm
 		AY_PLAY_MUSIC (0);
 	#else 
 		#asm 
