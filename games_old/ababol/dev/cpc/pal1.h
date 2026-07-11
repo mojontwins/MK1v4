@@ -15,7 +15,7 @@
 		out (c), a
 		ld  a, 2
 		out (c), a
-		ld  a, 0x4C	// 0b0100000 OR C (FFFF0000)
+		ld  a, 0x40	// 0b0100000 OR 0 (FF808080)
 		out (c), a
 		ld  a, 3
 		out (c), a

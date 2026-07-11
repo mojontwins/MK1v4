@@ -8,6 +8,6 @@
 		defw inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0
 		defw inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1
 		defw inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2
-		defw pal_general, pal_general, pal_general, pal_general, pal_general
+		defw inks3, inks3, inks3, inks3, inks3
 #endasm
 		

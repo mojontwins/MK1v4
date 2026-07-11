@@ -43,6 +43,7 @@ rem custom palettes
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-fuera.png prefix=inks0 out=%om%\pal0.h silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-cueva.png prefix=inks1 out=%om%\pal1.h silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-agua.png prefix=inks2 out=%om%\pal2.h silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-lastcave.png prefix=inks3 out=%om%\pal3.h silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal-marco.png prefix=pal_hud out=%om%\pal_hud.h silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% mode=palsasassembly in=..\gfx\%om%\pal.png prefix=pal_general out=%om%\pal_general.h silent > nul
 

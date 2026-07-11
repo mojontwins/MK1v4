@@ -15,11 +15,11 @@
 		out (c), a
 		ld  a, 2
 		out (c), a
-		ld  a, 0x55	// 0b0100000 OR 15 (FF0000FF)
+		ld  a, 0x5D	// 0b0100000 OR 1D (FF8000FF)
 		out (c), a
 		ld  a, 3
 		out (c), a
-		ld  a, 0x53	// 0b0100000 OR 13 (FF00FFFF)
+		ld  a, 0x43	// 0b0100000 OR 3 (FFFFFF80)
 		out (c), a
 		ret
 #endasm

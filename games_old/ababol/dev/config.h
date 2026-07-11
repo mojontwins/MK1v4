@@ -212,5 +212,6 @@ unsigned char comportamiento_tiles [] = {
 	#include "cpc/pal0.h"
 	#include "cpc/pal1.h"
 	#include "cpc/pal2.h"
+	#include "cpc/pal3.h"
 
 #endif

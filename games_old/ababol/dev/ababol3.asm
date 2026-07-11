@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu Jul 09 16:50:07 2026
+;	Module compile time: Fri Jul 10 13:45:54 2026
 
 
 
@@ -175,11 +175,11 @@
 	out (c), a
 	ld a, 2
 	out (c), a
-	ld a, 0x55
+	ld a, 0x5D
 	out (c), a
 	ld a, 3
 	out (c), a
-	ld a, 0x53
+	ld a, 0x43
 	out (c), a
 	ret
 	.inks1
@@ -194,7 +194,7 @@
 	out (c), a
 	ld a, 2
 	out (c), a
-	ld a, 0x4C
+	ld a, 0x40
 	out (c), a
 	ld a, 3
 	out (c), a
@@ -218,6 +218,25 @@
 	ld a, 3
 	out (c), a
 	ld a, 0x5E
+	out (c), a
+	ret
+	.inks3
+	ld b, 0x7f
+	ld a, 0
+	out (c), a
+	ld a, 0x54
+	out (c), a
+	ld a, 1
+	out (c), a
+	ld a, 0x58
+	out (c), a
+	ld a, 2
+	out (c), a
+	ld a, 0x45
+	out (c), a
+	ld a, 3
+	out (c), a
+	ld a, 0x43
 	out (c), a
 	ret
 	XDEF _ts
@@ -803,7 +822,7 @@
 	inc hl
 	ld h, (hl)
 	ld l, a
-	ld de, 0x8800
+	ld de, 0x8C00
 	call depack
 	ld a, 0
 	call CARGA_CANCION
@@ -1761,7 +1780,7 @@
 	defw 96,90,85,81,76,72,68,64,60,57
 	defw 54,51,48,45,43,40,38,36,34,32
 	.TABLA_SONG
-	defw 0x8800
+	defw 0x8C00
 	.TABLA_EFECTOS
 	defw EFECTO0, EFECTO1, EFECTO2, EFECTO3, EFECTO4, EFECTO5, EFECTO6, EFECTO7
 	defw EFECTO8, EFECTO9
@@ -1838,7 +1857,7 @@
 	defw inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0, inks0
 	defw inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1, inks1
 	defw inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2, inks2
-	defw pal_general, pal_general, pal_general, pal_general, pal_general
+	defw inks3, inks3, inks3, inks3, inks3
 
 ._blackout
 	ld	hl,0 % 256	;const
@@ -2450,10 +2469,11 @@
 	ld	a,(hl)
 	inc	(hl)
 .i_21
-	ld	a,(_enit)
-	ld	e,a
-	ld	d,0
-	ld	hl,3	;const
+	ld	hl,(_enit)
+	ld	h,0
+	ex	de,hl
+	ld	hl,(_n_enems)
+	ld	h,0
 	call	l_ult
 	jp	nc,i_20
 	ld hl, (_enoffs)
@@ -7014,10 +7034,16 @@
 	xor a
 	ld (_hotspot_flag), a
 	._hotspots_done
+	ld a, (_n_pant)
+	ld c, a
+	ld a, (_on_pant)
+	cp c
+	jr nz, skipupd
 	ld	hl,1	;const
 	push	hl
 	call	_cpc_UpdateNow
 	pop	bc
+	.skipupd
 	.player_flicker_done_check
 	ld a, (_player + 23)
 	and 2
