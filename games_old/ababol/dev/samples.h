@@ -51,6 +51,19 @@
 		jr z,sfxRoutineSample
 		pop iy
 		pop ix
+
+	#ifdef CPC
+			// Sync with raster to init counter
+			ld  b,0xf5
+		.wait_vsync_s
+			in a,(c)
+			rra
+			jp nc,wait_vsync_s  
+
+			xor a 
+			ld  (isr_c1), a
+	#endif
+
 		ei
 		ret
 

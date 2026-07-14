@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Jul 11 09:39:32 2026
+;	Module compile time: Sat Jul 11 09:42:42 2026
 
 
 
@@ -4413,6 +4413,13 @@
 	jr z,sfxRoutineSample
 	pop iy
 	pop ix
+	ld b,0xf5
+	.wait_vsync_s
+	in a,(c)
+	rra
+	jp nc,wait_vsync_s
+	xor a
+	ld (isr_c1), a
 	ei
 	ret
 	;play sample
