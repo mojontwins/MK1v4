@@ -1362,11 +1362,7 @@ void render_this_enemy (void) {
 }
 
 void render_all_sprites (void) {
-	#ifdef INDEXED_ENEMS
-		for (enit = 0; enit < n_enems; enit ++)
-	#else
-		for (enit = 0; enit < MAX_ENEMS; enit ++)
-	#endif
+	for (enit = 0; enit < MAX_ENEMS; enit ++)
 	{
 		#asm
 				ld  hl, (_enoffs)

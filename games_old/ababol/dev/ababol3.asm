@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Sat Jul 11 09:42:42 2026
+;	Module compile time: Tue Jul 14 13:08:06 2026
 
 
 
@@ -2460,11 +2460,10 @@
 	ld	a,(hl)
 	inc	(hl)
 .i_21
-	ld	hl,(_enit)
-	ld	h,0
-	ex	de,hl
-	ld	hl,(_n_enems)
-	ld	h,0
+	ld	a,(_enit)
+	ld	e,a
+	ld	d,0
+	ld	hl,3	;const
 	call	l_ult
 	jp	nc,i_20
 	ld hl, (_enoffs)
