@@ -322,7 +322,8 @@ void main (void) {
 			// Render to screen
 
 			#ifdef CPC
-				cpc_UpdateNow (1);
+				
+				if (n_pant == on_pant) cpc_UpdateNow (1);
 
 			#else
 				#asm

@@ -2655,6 +2655,7 @@ void draw_scr (void) {
 		._enems_init
 	#endasm
 
+	// Initialising enemies
 	#ifdef INDEXED_ENEMS
 		#asm
 				// enoffs = enoffs_index [n_pant];
@@ -2690,7 +2691,9 @@ void draw_scr (void) {
 		#endasm
 
 		#ifdef INDEXED_ENEMS
-			//en_an_next_frame [enit] = sprite_18_a;
+			#ifdef CPC
+				en_an_next_frame [enit] = spr_empty;
+			#endif
 			if (enit >= n_enems) {
 				continue;
 			}

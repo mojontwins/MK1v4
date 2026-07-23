@@ -230,9 +230,6 @@ typedef struct sprite {
 
 SPR sp_sw [SW_SPRITES_ALL] 					@ BASE_SPRITES;
 unsigned char *spr_next [SW_SPRITES_ALL] 	@ BASE_SPRITES + (SW_SPRITES_ALL)*16;
-unsigned char spr_on [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*18;
-unsigned char spr_x [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*19;
-unsigned char spr_y [SW_SPRITES_ALL]		@ BASE_SPRITES + (SW_SPRITES_ALL)*20;
 
 #ifndef ENEMS_CELL_OFFSET
 	#define ENEMS_CELL_OFFSET 8
@@ -1112,7 +1109,6 @@ void draw_2_digits (unsigned char x, unsigned char y, unsigned char value) {
 }
 
 void draw_text (unsigned char x, unsigned char y, char *s) {
-	// Zero terminated strings, supports newlines with %
 	#asm
 			ld  hl, 6
 			add hl, sp
@@ -1147,15 +1143,14 @@ void draw_text (unsigned char x, unsigned char y, char *s) {
 			or  a
 			jr  z, print_str_inv 
 			
-			cp  0x25
-			jr  z, draw_text_loop
+			inc hl
 			
 			sub 32
 			ld  (de), a
 			
-			inc hl
 			inc de 
 
+		.draw_text_cont
 			ld  a, (__n)
 			inc a
 			ld  (__n), a
@@ -1367,7 +1362,8 @@ void render_this_enemy (void) {
 }
 
 void render_all_sprites (void) {
-	for (enit = 0; enit < MAX_ENEMS; enit ++) {
+	for (enit = 0; enit < MAX_ENEMS; enit ++)
+	{
 		#asm
 				ld  hl, (_enoffs)
 				ld  bc, (_enit)
@@ -1750,11 +1746,6 @@ void __FASTCALL__ enems_en_an_calc (unsigned char n) {
 }
 
 void select_controls (void) {
-	cpc_UpdScr ();
-	cpc_ShowTileMap (1);
-
-	AY_PLAY_MUSIC (0);
-
 	#asm
 		.title_loop
 			call _pad_read 
