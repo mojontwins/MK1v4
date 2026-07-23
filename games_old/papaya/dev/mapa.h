@@ -9,7 +9,7 @@ extern unsigned char mapa [0];
         BINARY "mapa.map.bin"
 #endasm
 
-#define MAX_CERROJOS 93
+#define MAX_CERROJOS 32
 
 typedef struct {
     unsigned char np, x, y, st;

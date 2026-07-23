@@ -16,7 +16,54 @@
 
 #ifdef PLAYER_CUSTOM_FRAME
 	unsigned char player_custom_frame (void) {
-		// Return a frame NUMBER (0-7)
+		#asm
+				ld  c, 1 					// AIRBORNE
+				
+				// if player.possee == 0 && player.gotten == 0
+				ld  a, (_player + 26) 		// player.possee 
+				ld  b, a 
+				ld  a, (_player + 25) 		// player.gotten 
+				or  b
+				jr  z, m_frame_set
+
+			.m_frame_on_something
+
+				ld  a, (_thrusting)
+				or  a 
+				jr  z, m_frame_still 		// Not thrusting -> still
+
+				ld  hl, (_player + 6) 		// player.vx
+				ld  a, h 
+				or  l 
+				jr  z, m_frame_still 		// Not moving -> still
+
+				ld  a, (_gpx)
+				srl a 
+				srl a 
+				srl a 
+
+				// Cycle cells 1 2 3 1 2 3 ...
+
+				// de / hl, module in de 
+				ld  d, 0 
+				ld  e, a 
+				ld  hl, 3 
+				call l_div_u
+				ld  c, e 					// (_gpx >> 3) % 3
+				inc c 						// + 1
+
+				jr  m_frame_set
+
+			.m_frame_still
+				ld  c, 0 					(// IDLE))
+
+			.m_frame_set
+				ld  a, (_player + 22) 		// player.facing
+				add c
+
+				ld  h, 0
+				ld  l, a 					// Return value
+		#endasm 
 	}
 #endif
 

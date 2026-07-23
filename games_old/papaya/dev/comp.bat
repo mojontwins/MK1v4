@@ -15,7 +15,7 @@ echo Making %game%
 
 if [%1]==[justcompile] goto :compile
 
-..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=8,5 scrsize=15,10 tlock=15 mk1h=mapa.h mk1locks > nul
+..\utils\rle53map_sp.exe in=..\map\mapa.map out=mapa.bin size=8,5 scrsize=15,10 tlock=15 mk1h=mapa.h mk1locks fixmappy > nul
 ..\utils\ene2h.exe ..\enems\enems.ene enems.h 2bytes compacted indexed > nul
 
 if [%om%]==[cpc] goto :cpc
@@ -33,8 +33,8 @@ goto :compile
 
 :cpc 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=chars greyordered in=..\gfx\%om%\font.png out=font.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=strait2x2 greyordered in=..\gfx\%om%\work.png out=work.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=17 %mainspritesetmode% silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal_cnvtiles.png mode=strait2x2 greyordered in=..\gfx\%om%\work.png out=work.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal_cnvspr.png mode=sprites in=..\gfx\%om%\sprites.png out=sprites.bin mappings=%om%\spriteset_mappings.h max=17 %mainspritesetmode% gng silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
@@ -78,8 +78,8 @@ goto :noerror
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
 rem Add msc4i.asm to the list of compiled sources if using scripting!
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
-zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_mt -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

@@ -47,3 +47,6 @@ Tabla de combinatoria (para hacer la paleta)
 	11 NEG  11 AMA   F NEG
 ```
 
+Además, para que esto funcione, el conversor de los tiles debe asignar los valores correctos a cada pixel, igual que con los sprites. Los pixeles del fondo deberán ser todos detectados como 0000 (0), 0100 (4), 1000 (8) y 1100 (12). Los píxeles de los sprites deben ser detectados como 0000 (0), 0001 (1), 0010 (2) y 0011 (3). Necesito dos paletas para conversión específicas., pal_cnvtiles,png y pal_cnvspr.png
+
+¡Cuidado! El churumbel sale usando dos colores de sprite, azul oscuro y amarillo claro (01 / 11). Los colocaré en la paleta en esa posición a ver qué pasa. Si veo que la mezcla es fea, cambio el gráfico. También hay naranja en los tiles no traspasables, pero eso los puedo ocultar usando la matriz de pordetrás.

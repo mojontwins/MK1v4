@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Wed Jul 01 14:18:57 2026
+;	Module compile time: Thu Jul 23 14:11:42 2026
 
 
 
@@ -20,6 +20,81 @@
 	defb	0
 
 	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	8
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	8
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	4
+
+	defm	""
+	defb	128
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	0
+
+	defm	""
+	defb	8
+
+	defm	""
+	defb	8
+
+	defm	""
+	defb	8
+
+	defm	""
 	defb	8
 
 	defm	""
@@ -32,37 +107,10 @@
 	defb	0
 
 	defm	""
-	defb	8
+	defb	0
 
 	defm	""
-	defb	8
-
-	defm	""
-	defb	9
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	8
-
-	defm	""
-	defb	8
+	defb	0
 
 	defm	""
 	defb	0
@@ -395,23 +443,23 @@
 ;	SECTION	text
 
 ._sm_updfunc
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
-	defw	cpc_PutTrSp8x16TileMapPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
+	defw	cpc_PutTrSp8x16TileMapGPx
 
 ;	SECTION	code
 
@@ -2018,12 +2066,11 @@
 	ld a, (hl)
 	or a
 	jr z, print_str_inv
-	cp 0x25
-	jr z, draw_text_loop
+	inc hl
 	sub 32
 	ld (de), a
-	inc hl
 	inc de
+	.draw_text_cont
 	ld a, (__n)
 	inc a
 	ld (__n), a
@@ -2481,11 +2528,6 @@
 
 
 ._select_controls
-	call	cpc_UpdScr
-	ld	hl,1	;const
-	call	cpc_ShowTileMap
-	ld	hl,0	;const
-	call	_wyz_play_music
 	.title_loop
 	call _pad_read
 	ld a, (_pad_this_frame)
@@ -2575,635 +2617,19 @@
 
 ._malotes
 	defb	64
-	defb	16
-	defb	65
-	defb	72
-	defb	0
-	defb	4
-	defb	3
-	defb	208
-	defb	16
-	defb	97
-	defb	209
-	defb	-2
-	defb	0
-	defb	1
-	defb	192
-	defb	0
-	defb	112
-	defb	192
-	defb	-2
-	defb	0
-	defb	1
-	defb	128
-	defb	0
-	defb	128
-	defb	132
-	defb	0
-	defb	1
-	defb	2
-	defb	144
-	defb	16
-	defb	145
-	defb	182
-	defb	2
-	defb	2
-	defb	2
-	defb	96
-	defb	0
-	defb	96
-	defb	98
-	defb	0
-	defb	1
-	defb	2
-	defb	16
-	defb	32
-	defb	18
-	defb	98
-	defb	2
-	defb	0
-	defb	1
-	defb	144
-	defb	96
-	defb	144
-	defb	150
-	defb	0
-	defb	-1
-	defb	3
-	defb	176
-	defb	0
-	defb	176
-	defb	181
-	defb	0
-	defb	1
-	defb	2
-	defb	96
-	defb	112
-	defb	55
-	defb	103
-	defb	-1
-	defb	0
-	defb	3
-	defb	48
-	defb	0
-	defb	48
-	defb	50
-	defb	0
-	defb	1
-	defb	1
-	defb	208
-	defb	0
-	defb	208
-	defb	212
-	defb	0
-	defb	2
-	defb	1
-	defb	64
-	defb	0
-	defb	64
-	defb	69
-	defb	0
-	defb	1
-	defb	1
-	defb	96
-	defb	0
-	defb	96
-	defb	100
-	defb	0
-	defb	1
-	defb	1
-	defb	160
-	defb	0
-	defb	160
-	defb	213
-	defb	2
-	defb	2
-	defb	2
-	defb	80
-	defb	112
-	defb	23
-	defb	87
-	defb	-2
-	defb	0
-	defb	2
-	defb	96
-	defb	0
-	defb	0
-	defb	96
-	defb	-1
-	defb	0
-	defb	2
-	defb	224
-	defb	0
-	defb	224
-	defb	227
-	defb	0
-	defb	1
-	defb	2
-	defb	128
-	defb	16
-	defb	129
-	defb	136
-	defb	0
-	defb	2
-	defb	3
-	defb	160
-	defb	16
-	defb	161
-	defb	166
-	defb	0
-	defb	1
-	defb	1
-	defb	16
-	defb	96
-	defb	22
-	defb	88
-	defb	4
-	defb	4
-	defb	2
-	defb	16
-	defb	80
-	defb	19
-	defb	101
-	defb	1
-	defb	-1
-	defb	1
-	defb	16
-	defb	16
-	defb	17
-	defb	97
-	defb	2
-	defb	0
-	defb	2
-	defb	160
-	defb	0
-	defb	160
-	defb	169
-	defb	0
-	defb	2
-	defb	3
-	defb	48
-	defb	32
-	defb	50
-	defb	146
-	defb	2
-	defb	0
-	defb	3
-	defb	112
-	defb	48
-	defb	115
-	defb	120
-	defb	0
-	defb	1
-	defb	2
-	defb	160
-	defb	96
-	defb	160
-	defb	166
-	defb	0
-	defb	-2
-	defb	3
-	defb	96
-	defb	128
-	defb	97
-	defb	104
-	defb	0
-	defb	-2
-	defb	4
-	defb	144
-	defb	16
-	defb	145
-	defb	183
-	defb	2
-	defb	2
-	defb	3
-	defb	112
-	defb	48
-	defb	33
-	defb	115
-	defb	-2
-	defb	-2
-	defb	1
-	defb	64
-	defb	128
-	defb	72
-	defb	216
-	defb	1
-	defb	0
-	defb	4
-	defb	208
-	defb	112
-	defb	119
-	defb	215
-	defb	-1
-	defb	0
-	defb	1
-	defb	64
-	defb	16
-	defb	65
-	defb	97
-	defb	1
-	defb	0
-	defb	3
-	defb	16
-	defb	128
-	defb	24
-	defb	168
-	defb	1
-	defb	0
-	defb	4
-	defb	48
-	defb	112
-	defb	52
-	defb	55
-	defb	0
-	defb	-1
-	defb	4
-	defb	80
-	defb	48
-	defb	83
-	defb	166
-	defb	2
-	defb	2
-	defb	2
-	defb	208
-	defb	112
-	defb	135
-	defb	215
-	defb	-1
-	defb	0
-	defb	3
-	defb	208
-	defb	80
-	defb	209
-	defb	213
-	defb	0
-	defb	-1
-	defb	2
-	defb	16
-	defb	16
-	defb	17
-	defb	104
-	defb	4
-	defb	4
-	defb	3
-	defb	64
-	defb	0
-	defb	64
-	defb	115
-	defb	2
-	defb	2
-	defb	1
-	defb	16
-	defb	64
-	defb	20
-	defb	87
-	defb	1
-	defb	1
-	defb	2
-	defb	208
-	defb	16
-	defb	193
-	defb	216
-	defb	-2
-	defb	2
-	defb	3
-	defb	16
-	defb	0
-	defb	16
-	defb	114
-	defb	1
-	defb	1
-	defb	2
-	defb	208
-	defb	0
-	defb	176
-	defb	211
-	defb	-2
-	defb	2
-	defb	3
-	defb	64
-	defb	64
-	defb	64
-	defb	100
-	defb	1
-	defb	-1
-	defb	1
-	defb	160
-	defb	112
-	defb	164
-	defb	167
-	defb	0
-	defb	-1
-	defb	4
-	defb	192
-	defb	32
-	defb	50
-	defb	194
-	defb	-1
-	defb	0
-	defb	4
-	defb	64
-	defb	0
-	defb	64
-	defb	177
-	defb	1
-	defb	1
-	defb	3
-	defb	192
-	defb	48
-	defb	83
-	defb	195
-	defb	-1
-	defb	0
-	defb	4
-	defb	112
-	defb	32
-	defb	114
-	defb	178
-	defb	1
-	defb	0
-	defb	3
-	defb	64
-	defb	80
-	defb	69
-	defb	199
-	defb	2
-	defb	2
-	defb	2
-	defb	192
-	defb	48
-	defb	35
-	defb	195
-	defb	-1
-	defb	0
-	defb	4
-	defb	16
-	defb	32
-	defb	18
-	defb	130
-	defb	1
-	defb	0
-	defb	1
-	defb	16
-	defb	64
-	defb	20
-	defb	119
-	defb	2
-	defb	2
-	defb	2
-	defb	208
-	defb	64
-	defb	132
-	defb	212
-	defb	-1
-	defb	0
-	defb	2
-	defb	48
-	defb	16
-	defb	49
-	defb	53
-	defb	0
-	defb	2
-	defb	1
-	defb	64
-	defb	32
-	defb	66
-	defb	69
-	defb	0
-	defb	2
-	defb	3
-	defb	16
-	defb	112
-	defb	23
-	defb	119
-	defb	1
-	defb	0
-	defb	1
-	defb	192
-	defb	128
-	defb	193
-	defb	200
-	defb	0
-	defb	-1
-	defb	4
-	defb	112
-	defb	48
-	defb	19
-	defb	115
-	defb	-2
-	defb	0
-	defb	3
-	defb	176
-	defb	48
-	defb	35
-	defb	179
-	defb	-1
-	defb	0
-	defb	1
-	defb	176
-	defb	64
-	defb	52
-	defb	180
-	defb	-1
-	defb	0
-	defb	1
-	defb	16
-	defb	0
-	defb	16
-	defb	194
-	defb	2
-	defb	2
-	defb	2
-	defb	32
-	defb	112
-	defb	39
-	defb	199
-	defb	2
-	defb	0
-	defb	4
-	defb	192
-	defb	32
-	defb	50
-	defb	194
-	defb	-2
-	defb	0
-	defb	4
-	defb	176
-	defb	80
-	defb	53
-	defb	181
-	defb	-1
-	defb	0
-	defb	1
-	defb	208
-	defb	80
-	defb	37
-	defb	213
-	defb	-1
-	defb	0
-	defb	4
-	defb	64
 	defb	64
 	defb	68
-	defb	180
-	defb	1
-	defb	0
-	defb	2
-	defb	16
-	defb	0
-	defb	0
-	defb	25
-	defb	-3
-	defb	3
-	defb	2
-	defb	16
-	defb	48
-	defb	19
-	defb	211
-	defb	1
-	defb	0
-	defb	4
-	defb	96
-	defb	64
-	defb	100
-	defb	104
-	defb	0
-	defb	1
-	defb	1
-	defb	208
-	defb	80
-	defb	133
-	defb	216
-	defb	-2
-	defb	2
-	defb	3
-	defb	96
-	defb	32
-	defb	98
-	defb	102
-	defb	0
-	defb	2
-	defb	1
-	defb	128
-	defb	80
-	defb	133
-	defb	229
-	defb	2
-	defb	0
-	defb	4
-	defb	96
-	defb	112
-	defb	23
-	defb	103
-	defb	-1
-	defb	0
-	defb	3
-	defb	112
-	defb	16
-	defb	113
-	defb	117
-	defb	0
-	defb	1
-	defb	2
-	defb	48
-	defb	96
-	defb	48
-	defb	54
-	defb	0
-	defb	-2
-	defb	1
-	defb	176
-	defb	48
-	defb	179
-	defb	184
-	defb	0
-	defb	2
-	defb	3
-	defb	160
-	defb	32
-	defb	162
-	defb	197
-	defb	2
-	defb	2
-	defb	1
-	defb	96
-	defb	48
-	defb	96
-	defb	99
-	defb	0
-	defb	-1
-	defb	2
-	defb	144
-	defb	144
-	defb	57
-	defb	153
-	defb	-1
-	defb	0
-	defb	3
-	defb	32
-	defb	80
-	defb	33
-	defb	37
-	defb	0
-	defb	-2
-	defb	1
-	defb	192
-	defb	80
-	defb	194
-	defb	197
-	defb	0
-	defb	-2
-	defb	2
-	defb	112
-	defb	80
-	defb	114
-	defb	117
-	defb	0
-	defb	-1
-	defb	3
-	defb	208
-	defb	48
-	defb	35
-	defb	211
-	defb	-1
-	defb	0
-	defb	4
-	defb	64
-	defb	32
-	defb	66
-	defb	194
-	defb	1
-	defb	0
-	defb	2
-	defb	80
-	defb	96
-	defb	86
-	defb	118
+	defb	212
 	defb	1
 	defb	0
 	defb	1
-	defb	112
-	defb	16
-	defb	17
-	defb	117
-	defb	-2
-	defb	2
-	defb	3
-	defb	176
-	defb	64
-	defb	180
-	defb	182
-	defb	0
-	defb	1
-	defb	1
-	defb	208
-	defb	80
-	defb	213
-	defb	216
-	defb	0
-	defb	1
-	defb	1
+	defb	255
+	defs	1
+	defs	1
+	defs	1
+	defs	1
+	defs	1
+	defs	1
 
 ;	SECTION	code
 
@@ -3214,134 +2640,290 @@
 	defb	0
 
 	defm	""
-	defb	3
+	defb	0
 
 	defm	""
-	defb	6
+	defb	1
 
 	defm	""
-	defb	9
+	defb	1
 
 	defm	""
-	defb	12
+	defb	1
 
 	defm	""
-	defb	15
+	defb	1
 
 	defm	""
-	defb	18
+	defb	1
 
 	defm	""
-	defb	21
+	defb	1
 
 	defm	""
-	defb	24
+	defb	1
 
 	defm	""
-	defb	27
+	defb	1
 
 	defm	""
-	defb	30
+	defb	1
 
-	defm	"!$'*-0369<?BEHKNQTWZ"
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
+	defm	""
+	defb	1
+
 ;	SECTION	code
 
 
 ;	SECTION	text
 
 ._hotspots
-	defb	22
-	defb	2
 	defb	0
-	defb	115
-	defb	2
 	defb	0
-	defb	113
-	defb	1
 	defb	0
-	defb	200
-	defb	1
 	defb	0
-	defb	81
-	defb	1
 	defb	0
-	defb	24
-	defb	1
 	defb	0
-	defb	98
-	defb	1
 	defb	0
-	defb	115
-	defb	1
 	defb	0
-	defb	69
-	defb	1
 	defb	0
-	defb	129
-	defb	2
 	defb	0
-	defb	209
-	defb	2
 	defb	0
-	defb	18
-	defb	1
 	defb	0
-	defb	200
-	defb	1
 	defb	0
-	defb	100
-	defb	1
 	defb	0
-	defb	148
-	defb	1
 	defb	0
-	defb	34
-	defb	1
 	defb	0
-	defb	66
-	defb	1
 	defb	0
-	defb	209
-	defb	1
 	defb	0
-	defb	19
-	defb	1
 	defb	0
-	defb	113
-	defb	1
 	defb	0
-	defb	133
-	defb	1
 	defb	0
-	defb	35
-	defb	1
 	defb	0
-	defb	70
-	defb	1
 	defb	0
-	defb	87
-	defb	1
 	defb	0
-	defb	129
-	defb	1
 	defb	0
-	defb	87
-	defb	1
 	defb	0
-	defb	114
-	defb	1
 	defb	0
-	defb	100
-	defb	1
 	defb	0
-	defb	129
-	defb	1
 	defb	0
-	defb	212
-	defb	1
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
+	defb	0
 	defb	0
 
 ;	SECTION	code
+
+
+._player_custom_frame
+	ld c, 1
+	ld a, (_player + 26)
+	ld b, a
+	ld a, (_player + 25)
+	or b
+	jr z, m_frame_set
+	.m_frame_on_something
+	ld a, (_thrusting)
+	or a
+	jr z, m_frame_still
+	ld hl, (_player + 6)
+	ld a, h
+	or l
+	jr z, m_frame_still
+	ld a, (_gpx)
+	srl a
+	srl a
+	srl a
+	ld d, 0
+	ld e, a
+	ld hl, 3
+	call l_div_u
+	ld c, e
+	inc c
+	jr m_frame_set
+	.m_frame_still
+	ld c, 0 (
+	.m_frame_set
+	ld a, (_player + 22)
+	add c
+	ld h, 0
+	ld l, a
+	ret
+
 
 	.HLshr6_A
 	sla h
@@ -3573,7 +3155,7 @@
 	ld a, (_rdy)
 	ld (__y), a
 	call set_map_tile_do
-	ld b, 93
+	ld b, 32
 	ld hl, _cerrojos
 	.clear_cerrojo_loop
 	ld c, (hl)
@@ -3613,7 +3195,7 @@
 
 
 ._init_cerrojos
-	ld b, 93
+	ld b, 32
 	ld hl, _cerrojos + 3
 	ld de, 4
 	ld a, 1
@@ -4152,37 +3734,12 @@
 	ld a, 1
 	ld (_player + 36), a
 	.m_evil_tile_hit_done
-	ld c, 3
-	ld a, (_player + 26)
-	ld b, a
-	ld a, (_player + 25)
-	or b
-	jr z, m_frame_set
-	.m_frame_on_something
-	ld a, (_thrusting)
-	or a
-	jr z, m_frame_still
-	ld hl, (_player + 6)
-	ld a, h
-	or l
-	jr z, m_frame_still
-	ld a, (_gpx)
-	srl a
-	srl a
-	srl a
-	and 3
-	ld h, 0
-	ld l, a
-	ld de, _player_walk_cycle
-	add hl, de
-	ld c, (hl)
-	jr m_frame_set
-	.m_frame_still
-	ld c, 1
-	.m_frame_set
-	ld a, (_player + 22)
-	add c
-	ld (_player + 20), a
+	ld	hl,_player+20
+	push	hl
+	call	_player_custom_frame
+	pop	de
+	ld	a,l
+	ld	(de),a
 	ld hl, (_player + 20)
 	ld h, 0
 	add hl, hl
@@ -4400,48 +3957,50 @@
 	ld (_rdx), a
 	ld (_rdy), a
 	ld (_rdi), a
-	ld	hl,_mapa
-	push	hl
-	ld	hl,(_n_pant)
-	ld	h,0
-	ld	de,75
-	call	l_mult
-	pop	de
-	add	hl,de
-	ld	(_gp_gen),hl
-	xor a
-	ld (_rdi), a
-	ld (_gpit), a
-	.draw_scr_bg_loop
+	._draw_scr_get_scr_address
+	ld hl, (_n_pant)
+	ld h, 0
+	add hl, hl
+	ld de, _mapa
+	add hl, de ; HL = map + (n_pant << 1)
+	ld e, (hl)
+	inc hl
+	ld d, (hl) ; DE = index
+	ld hl, _mapa
+	add hl, de ; HL = map + index
+	ld (_gp_gen), hl
+	._draw_scr_rle
+	._draw_scr_loop
+	ld a, (_rdi)
+	cp 150
+	jr z, _draw_scr_loop_done
 	ld hl, (_gp_gen)
 	ld a, (hl)
 	inc hl
 	ld (_gp_gen), hl
-	ld b, a
-	srl a
-	srl a
-	srl a
-	srl a
-	ld (_rdt1), a
-	ld a, b
-	and 15
-	ld (_rdt2), a
-	ld a, (_rdt1)
+	ld (_rdn), a
+	and 0x1f
+	ld (_rdc), a
+	._draw_scr_advance_loop
+	ld a, (_rdn)
+	cp 0x20
+	jr c, _draw_scr_advance_loop_done
+	sub 0x20
+	ld (_rdn), a
+	call _advance_worm
+	jr _draw_scr_advance_loop
+	._draw_scr_advance_loop_done
+	call _advance_worm
+	jr _draw_scr_loop
+	._advance_worm
+	ld a, (_rdc)
 	ld (__n), a
 	call _draw_and_advance
-	ld a, (_rdt2)
-	ld (__n), a
-	call _draw_and_advance
-	ld a, (_gpit)
-	inc a
-	ld (_gpit), a
-	cp 75
-	jr nz, draw_scr_bg_loop
-	jr draw_scr_bg_loop_end
-	.draw_scr_bg_loop_end
+	ret
+	._draw_scr_loop_done
 	call	_hotspot_paint
 	ld hl, _cerrojos
-	ld b, 93
+	ld b, 32
 	.draw_scr_bolts_loop
 	; Cerrojos structure is np, x, y, st
 	ld c, (hl) ; np
@@ -4548,6 +4107,17 @@
 	ld hl, _en_an_state
 	add hl, bc
 	ld (hl), a
+	ld	hl,_en_an_next_frame
+	push	hl
+	ld	hl,(_enit)
+	ld	h,0
+	add	hl,hl
+	pop	de
+	add	hl,de
+	push	hl
+	ld	hl,_spr_empty
+	pop	de
+	call	l_pint
 	ld	hl,(_enit)
 	ld	h,0
 	ex	de,hl
@@ -5370,21 +4940,29 @@
 	xor a
 	ld (_hotspot_flag), a
 	._hotspots_done
+	ld	hl,(_n_pant)
+	ld	h,0
+	ex	de,hl
+	ld	hl,(_on_pant)
+	ld	h,0
+	call	l_eq
+	jp	nc,i_76
 	ld	hl,1	;const
 	push	hl
 	call	_cpc_UpdateNow
 	pop	bc
+.i_76
 	ld	a,(_gpx)
 	cp	#(0 % 256)
-	jp	nz,i_77
+	jp	nz,i_78
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jr	c,i_78_i_77
-.i_77
-	jp	i_76
-.i_78_i_77
+	jr	c,i_79_i_78
+.i_78
+	jp	i_77
+.i_79_i_78
 	ld hl, _n_pant
 	dec (hl)
 	ld a, 224
@@ -5392,19 +4970,19 @@
 	ld hl, #(224*64)
 	ld (_player), hl
 	.flick_left_done
-	jp	i_79
-.i_76
+	jp	i_80
+.i_77
 	ld	a,(_gpx)
 	cp	#(224 % 256)
-	jp	nz,i_81
+	jp	nz,i_82
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_82_i_81
-.i_81
-	jp	i_80
-.i_82_i_81
+	jr	c,i_83_i_82
+.i_82
+	jp	i_81
+.i_83_i_82
 	ld hl, _n_pant
 	inc (hl)
 	xor a
@@ -5412,25 +4990,25 @@
 	ld hl, 0
 	ld (_player), hl
 	.flick_right_done
+.i_81
 .i_80
-.i_79
 	ld	a,(_gpy)
 	cp	#(0 % 256)
-	jp	nz,i_84
+	jp	nz,i_85
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_84
+	jp	nc,i_85
 	ld	a,(_n_pant)
 	cp	#(8 % 256)
-	jr	z,i_84_uge
-	jp	c,i_84
-.i_84_uge
-	jr	i_85_i_84
-.i_84
-	jp	i_83
-.i_85_i_84
+	jr	z,i_85_uge
+	jp	c,i_85
+.i_85_uge
+	jr	i_86_i_85
+.i_85
+	jp	i_84
+.i_86_i_85
 	ld a, (_n_pant)
 	sub 8
 	ld (_n_pant), a
@@ -5439,19 +5017,19 @@
 	ld hl, #(144*64)
 	ld (_player+2), hl
 	.flick_up_done
-	jp	i_86
-.i_83
+	jp	i_87
+.i_84
 	ld	a,(_gpy)
 	cp	#(144 % 256)
-	jp	nz,i_88
+	jp	nz,i_89
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_89_i_88
-.i_88
-	jp	i_87
-.i_89_i_88
+	jr	c,i_90_i_89
+.i_89
+	jp	i_88
+.i_90_i_89
 	ld a, (_n_pant)
 	add 8
 	ld (_n_pant), a
@@ -5460,26 +5038,128 @@
 	ld hl, 0
 	ld (_player+2),hl
 	.flick_down_done
+.i_88
 .i_87
-.i_86
+	ld	hl,9	;const
+	call	cpc_TestKey
+	ld	a,h
+	or	l
+	jp	z,i_91
+	ld	hl,_pad_this_frame
+	ld	a,(hl)
+	and	#(4 % 256)
+	cp	#(0 % 256)
+	ld	hl,0
+	jp	nz,i_93
+	inc	hl
+	ld	a,(_n_pant)
+	cp	#(8 % 256)
+	jr	z,i_93_uge
+	jp	c,i_93
+.i_93_uge
+	jr	i_94_i_93
+.i_93
+	jp	i_92
+.i_94_i_93
+	ld	hl,(_n_pant)
+	ld	h,0
+	ld	bc,-8
+	add	hl,bc
+	ld	h,0
+	ld	a,l
+	ld	(_n_pant),a
+.i_92
+	ld	hl,_pad_this_frame
+	ld	a,(hl)
+	and	#(8 % 256)
+	cp	#(0 % 256)
+	ld	hl,0
+	jp	nz,i_96
+	inc	hl
+	ld	a,(_n_pant)
+	cp	#(40 % 256)
+	jp	z,i_96
+	jr	c,i_97_i_96
+.i_96
+	jp	i_95
+.i_97_i_96
+	ld	hl,(_n_pant)
+	ld	h,0
+	ld	bc,8
+	add	hl,bc
+	ld	h,0
+	ld	a,l
+	ld	(_n_pant),a
+.i_95
+	ld	hl,_pad_this_frame
+	ld	a,(hl)
+	and	#(1 % 256)
+	cp	#(0 % 256)
+	ld	hl,0
+	jp	nz,i_99
+	inc	hl
+	ld	a,(_n_pant)
+	cp	#(0 % 256)
+	jp	z,i_99
+	jp	c,i_99
+	jr	i_100_i_99
+.i_99
+	jp	i_98
+.i_100_i_99
+	ld	hl,_n_pant
+	ld	a,(hl)
+	dec	(hl)
+.i_98
+	ld	hl,_pad_this_frame
+	ld	a,(hl)
+	and	#(2 % 256)
+	cp	#(0 % 256)
+	ld	hl,0
+	jp	nz,i_102
+	inc	hl
+	ld	a,(_n_pant)
+	cp	#(40 % 256)
+	jp	z,i_102
+	jr	c,i_103_i_102
+.i_102
+	jp	i_101
+.i_103_i_102
+	ld	hl,_n_pant
+	ld	a,(hl)
+	inc	(hl)
+.i_101
+	ld	hl,_pad_this_frame
+	ld	a,(hl)
+	and	#(16 % 256)
+	jp	nz,i_104
+	ld	hl,_player+27
+	push	hl
+	call	l_gchar
+	inc	hl
+	pop	de
+	ld	a,l
+	ld	(de),a
+	dec	hl
+.i_104
+.i_91
 	ld	hl,_player+27
 	call	l_gchar
 	ld	de,26	;const
 	ex	de,hl
 	call	l_eq
-	jp	nc,i_90
+	jp	nc,i_105
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_cortina
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_game_ending
-.i_90
+.i_105
 	ld	hl,(_player+36)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_91
+	jp	z,i_106
 	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
@@ -5497,17 +5177,17 @@
 	sbc	hl,de
 	pop	de
 	call	l_pint
-.i_91
+.i_106
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	p,i_92
+	jp	p,i_107
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_92
+.i_107
 	xor a
 	ld (_pant_just_rendered), a
 	jp	i_60
@@ -5613,10 +5293,12 @@
 ._player	defs	47
 ._rda	defs	1
 ._rdb	defs	1
+._rdc	defs	1
 ._gpx	defs	1
 ._gpy	defs	1
 ._rdd	defs	1
 ._rdi	defs	1
+._rdn	defs	1
 ._keys_old	defs	1
 ._tat	defs	1
 ._rdx	defs	1
@@ -5743,6 +5425,7 @@
 	XDEF	_sm_sprptr
 	LIB	cpc_PrintGphStrXYM1
 	LIB	cpc_PutTrSp12x24TileMapGCA
+	XDEF	_player_custom_frame
 	LIB	cpc_UpdScrP
 	LIB	cpc_PutSpriteXOR
 	LIB	cpc_TestKey
@@ -5776,10 +5459,6 @@
 	LIB	cpc_PutTrSp8x24TileMapGPx
 	XDEF	_init_player
 	XDEF	_gp_gen
-	XDEF	_spr_x
-	defc	_spr_x	=	58956
-	XDEF	_spr_y
-	defc	_spr_y	=	58960
 	XDEF	_on_pant
 	XDEF	_render_this_enemy
 	XDEF	_enoffs
@@ -5900,11 +5579,13 @@
 	LIB	cpc_UpdateTileMap
 	XDEF	_rda
 	XDEF	_rdb
+	XDEF	_rdc
 	XDEF	_gpx
 	XDEF	_gpy
 	XDEF	_rdd
 	LIB	cpc_PutSpTileMap8x8Px
 	XDEF	_rdi
+	XDEF	_rdn
 	XDEF	_keys_old
 	XDEF	_init_player_values
 	XDEF	_en_tocado
@@ -5960,8 +5641,6 @@
 	defc	_en_an_count	=	54787
 	LIB	cpc_GetTiles
 	XDEF	_render_all_sprites
-	XDEF	_spr_on
-	defc	_spr_on	=	58952
 	LIB	cpc_PutSpXOR
 	LIB	cpc_PrintStr
 	XDEF	_draw_scr_background

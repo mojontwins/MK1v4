@@ -10,7 +10,7 @@
 //#define NO_PAL_MAP 						// For CPC, with AUTO_SPLIT, only one pal (my_inks)
 
 // TURN THIS OFF FOR RELEASE!!!!
-//#define DEBUG_NAVIGATOR 					// s + directions (ZX) or x + directions (CPC) to nav map
+#define DEBUG_NAVIGATOR 					// s + directions (ZX) or x + directions (CPC) to nav map
 
 #define PACKED_ENEMS 						// Store x1, y1, x2, y2 as two XY bytes.
 #define FIXED_ENEMS_LIMITS  				// If x1, y1, x2, y2 NEVER change.
@@ -110,7 +110,7 @@
 
 //#define PLAYER_CUSTOM_VENG 				// Replace Vertical axis for your own 
 //#define PLAYER_CUSTOM_HENG 				// Replace Horizontal axis for your own
-//#define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
+#define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
 //#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
 //#define ENABLE_CUSTOM_HOTSPOTS 			// Add your own hotspots!
 
@@ -148,7 +148,7 @@
 //#define USE_AUTO_SHADOWS				// Automatic shadows made of darker attributes
 //#define USE_AUTO_TILE_SHADOWS			// Automatic shadows using specially defined tiles 32-47.
 //#define UNPACKED_MAP					// Full, uncompressed maps. Shadows settings are ignored.
-//#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
+#define RLE_MAP 					53 	// Use RLE compression (values 44, 54, 62; see docs)
 //#define NO_MASKS		sp_OR_SPRITE 	// Sprites are rendered using OR instead of masks.
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
@@ -200,7 +200,8 @@
 // 128|N = Special tile (scripting)
 
 unsigned char comportamiento_tiles [] = {
-	0, 8, 8, 0, 0, 8, 8, 9, 8, 8, 8, 8, 8, 8, 8, 8,
+	0, 0, 4, 4, 4, 0, 4, 8, 0, 0, 0, 8, 0, 0, 0, 0,
+	0, 0, 4,128,0, 0, 0, 8, 8, 8, 8, 8, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
@@ -209,8 +210,6 @@ unsigned char comportamiento_tiles [] = {
 #if defined CPC && defined MODE_1 && defined AUTO_SPLIT
 
 	#include "cpc/pal0.h"
-	#include "cpc/pal1.h"
-	#include "cpc/pal2.h"
-	#include "cpc/pal3.h"
+	// etc
 
 #endif
