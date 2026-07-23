@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Tue Jul 14 13:08:06 2026
+;	Module compile time: Thu Jul 23 13:00:29 2026
 
 
 
@@ -6875,6 +6875,7 @@
 	pop	bc
 	pop	bc
 	pop	bc
+	call	cpc_UpdScr
 	ld	hl,1	;const
 	call	cpc_ShowTileMap
 	ld	hl,0	;const

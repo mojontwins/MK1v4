@@ -115,6 +115,7 @@ void game_ending (void) {
 	"NOS VEMOS EN ICE PALACE!");
 
 	#ifdef CPC
+		cpc_UpdScr ();
 		cpc_ShowTileMap (1);
 		AY_PLAY_MUSIC (0);
 	#else
