@@ -43,15 +43,15 @@
 		out (c), a
 		ld  a, 9
 		out (c), a
-		ld  a, 0x44	// 0b0100000 OR 4 (FF000080)
+		ld  a, 0x5C	// 0b0100000 OR 1C (FF800000)
 		out (c), a
 		ld  a, 10
 		out (c), a
-		ld  a, 0x4E	// 0b0100000 OR E (FFFF8000)
+		ld  a, 0x5C	// 0b0100000 OR 1C (FF800000)
 		out (c), a
 		ld  a, 11
 		out (c), a
-		ld  a, 0x43	// 0b0100000 OR 3 (FFFFFF80)
+		ld  a, 0x5C	// 0b0100000 OR 1C (FF800000)
 		out (c), a
 		ld  a, 12
 		out (c), a

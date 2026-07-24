@@ -795,6 +795,32 @@ XDEF _script_result
 	ret
 .rvb_set_script_param_done
 
+	; TILE AT EXPRESION RVALUE
+	cp 0xE8
+	jr  nz, rvb_set_script_tile_at_done
+	; Read two rvalues
+	call read_x_y
+	d  a, (sc_x)
+	ld  c, a
+	ld  a, (sc_y)
+	call qtile_do
+	ld  a, l 
+	ret
+.rvb_set_script_tile_at_done
+
+	; BEH AT EXPRESION RVALUE
+	cp 0xE7
+	jr  nz, rvb_set_script_beh_at_done
+	; Read two rvalues
+	call read_x_y
+	ld  a, (sc_x)
+	ld  c, a
+	ld  a, (sc_y)
+	call _attr_2
+	ld  a, l 
+	ret
+.rvb_set_script_beh_at_done
+
 	ld  d, 0 
 	ld  e, a 
 	ld  hl, _flags 

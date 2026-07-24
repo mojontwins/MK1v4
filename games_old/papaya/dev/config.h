@@ -25,12 +25,12 @@
 #define MAP_W						8		//
 #define MAP_H						5		// Map dimmensions in screens
 #define SCR_INICIO					0		// Initial screen
-#define PLAYER_INI_X				2		//
+#define PLAYER_INI_X				1		//
 #define PLAYER_INI_Y				2		// Initial tile coordinates
 //#define SCR_FIN 					99		// Last screen. 99 = deactivated.
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
-#define PLAYER_NUM_OBJETOS			26		// Objects to get to finish game
+#define PLAYER_NUM_OBJETOS			99		// Objects to get to finish game
 #define PLAYER_LIFE 				99		// Max and starting life gauge.
 #define PLAYER_REFILL				10		// Life recharge
 
@@ -48,7 +48,7 @@
 
 //#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
 //#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
-//#define DEACTIVATE_KEYS					// If defined, keys are not present.
+#define DEACTIVATE_KEYS						// If defined, keys are not present.
 //#define FIRE_TO_USE_KEY 					// If defined, press fire to use key.
 //#define DEACTIVATE_OBJECTS				// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
@@ -76,17 +76,17 @@
 
 // Make your own!
 // --------------
-//#define ENABLE_CUSTOM_ENEMS					// Create your custom enemies in `custom.h`
+#define ENABLE_CUSTOM_ENEMS					// Create your custom enemies in `custom.h`
 
 // Scripting
 // ---------
 
-//#define ACTIVATE_SCRIPTING				// Activates msc scripting and flag related stuff.
-//#define SCRIPTING_DOWN					// Use DOWN as the action key.
+#define ACTIVATE_SCRIPTING					// Activates msc scripting and flag related stuff.
+#define SCRIPTING_DOWN						// Use DOWN as the action key.
 //#define SCRIPTING_KEY_M					// Use M as the action key instead.
 											// If none are selected, FIRE is used.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
-//#define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
+#define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
 
 // Top view:
 // ---------
@@ -101,9 +101,10 @@
 //#define PLAYER_HAS_JETPAC 				// If defined, player can thrust a vertical jetpac
 //#define PLAYER_KILLS_ENEMIES		  		// If defined, stepping on enemies kills them
 //#define PLAYER_MIN_KILLABLE 		3		// Only kill enemies with id >= PLAYER_MIN_KILLABLE
-#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
-//#define AVOID_PLATFORM_HOP 				// Only works if SIMPLE_PLATFORMS is DISABLED!
+//#define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
+#define AVOID_PLATFORM_HOP 					// Only works if SIMPLE_PLATFORMS is DISABLED!
 //#define JUMP_DOWN_PLATFORM 				// Use down on type 4s to jump down.
+#define DEACTIVATE_MOVING_PLATFORMS 		// No moving platforms, type 4s are normal linear.
 
 // Custom:
 // -------
@@ -153,7 +154,7 @@
 //#define PLAYER_ALTERNATE_ANIMATION	// If defined, animation is 1,2,3,1,2,3... 
 #define NO_ALT_BG 						// No subs 0 for 19 at random
 //#define HOTSPOTS_FIRST_TILE		32 	// Override default value of 16
-#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
+//#define REVERSE_OBJECT_COUNT 			// Count objects left rather than objects got
 //#define ENABLE_ANIMATED_TILES 	46  // Must be EVEN
 //#define TILANIM_PERIOD 			16  // Must be power of two
 
@@ -169,11 +170,11 @@
 // IV.1. Vertical movement. Only for side-view.
 
 #define PLAYER_MAX_VY_CAYENDO	512 	// Max falling speed (512/64 = 8 pixels/frame)
-#define PLAYER_G				32		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
+#define PLAYER_G				64		// Gravity acceleration (32/64 = 0.5 píxeles/frame^2)
 
-#define PLAYER_VY_INICIAL_SALTO 192		// Initial junp velocity (64/64 = 1 píxel/frame)
-#define PLAYER_MAX_VY_SALTANDO	312 	// Max jump velocity (320/64 = 5 píxels/frame)
-#define PLAYER_INCR_SALTO		32		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
+#define PLAYER_VY_INICIAL_SALTO 160		// Initial junp velocity (64/64 = 1 píxel/frame)
+#define PLAYER_MAX_VY_SALTANDO	240 	// Max jump velocity (320/64 = 5 píxels/frame)
+#define PLAYER_INCR_SALTO		72		// acceleration while JUMP is pressed (48/64 = 0.75 píxeles/frame^2)
 
 #define PLAYER_INCR_JETPAC		32		// Vertical jetpac gauge
 #define PLAYER_MAX_VY_JETPAC	256 	// Max vertical jetpac speed
@@ -201,8 +202,8 @@
 
 unsigned char comportamiento_tiles [] = {
 	0, 0, 4, 4, 4, 0, 4, 8, 0, 0, 0, 8, 0, 0, 0, 0,
-	0, 0, 4,128,0, 0, 0, 8, 8, 8, 8, 8, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	128, 4, 4, 128, 0, 0, 0, 8, 8, 8, 8, 8, 0, 0, 0, 0,
+	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes

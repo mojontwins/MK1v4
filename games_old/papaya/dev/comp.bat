@@ -49,18 +49,19 @@ goto :compile
 
 :compile 
 
-rem echo Making script
-rem cd ..\script
-rem ..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm debug >..\dev\msc.txt
-rem copy script.spt.bin ..\dev > nul
-rem move msc4i.asm ..\dev > nul
-rem cd ..\dev
+echo Making script
+cd ..\script
+..\utils\msc4.exe in=script.spt v=3 target=%om% interpreter=msc4i.asm text=text.bin jumptable debug >..\dev\msc.txt
+copy script.spt.bin ..\dev > nul
+copy text.bin ..\dev > nul
+move msc4i.asm ..\dev > nul
+cd ..\dev
 
 if [%om%]==[cpc] goto :cpc
 
 rem Add msc4i.asm to the list of compiled sources if using scripting!
-zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin churromain.c -DSPECCY > nul
-zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm churromain.c -DSPECCY > nul
+zcc +zx -m -vn -unsigned -zorg=24200 -lsplib2 -o %game%.bin msc4i.asm churromain.c -DSPECCY > nul
+zcc +zx -a -vn -unsigned -zorg=24200 -lsplib2 -o %game%.asm msc4i.asm churromain.c -DSPECCY > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin
@@ -78,8 +79,8 @@ goto :noerror
 ..\utils\wyzTrackerParser.exe ..\ogt\instrumentos.asm wyz\instrumentos.h
 
 rem Add msc4i.asm to the list of compiled sources if using scripting!
-zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.bin system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
-zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.asm system\tilemap_conf.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.bin system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
+zcc +cpc -a -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.asm system\tilemap_conf.asm msc4i.asm churromain.c -DCPC -DMODE_%mode% > nul
 if %errorlevel% neq 0 goto :error
 
 ..\utils\printsize.exe %game%.bin

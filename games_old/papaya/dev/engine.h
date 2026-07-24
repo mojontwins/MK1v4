@@ -3308,7 +3308,7 @@ void mueve_bicharracos (void) {
 				extra_enems_move ();
 			#endif		
 
-			#ifndef PLAYER_MOGGY_STYLE	
+			#if !defined (PLAYER_MOGGY_STYLE) && !defined (DEACTIVATE_MOVING_PLATFORMS)
 				if ( (_en_t == 4
 					) && gpx >= _en_x - 15 && gpx <= _en_x + 15
 				) {
@@ -3612,9 +3612,18 @@ void mueve_bicharracos (void) {
 					}
 
 					#ifdef ACTIVATE_SCRIPTING
-						script (SC_ENEMY_TOUCHED);
+						// en_int are flags that make sure script is just called once per collision
+						// and not once per frame!
+
+						if (en_int [enit] == 0) script (SC_ENEMY_TOUCHED);
+						en_int [enit] = 1;
 					#endif
-				}
+				} 
+				#ifdef ACTIVATE_SCRIPTING
+					else {
+						en_int [enit] = 0;
+					}
+				#endif
 
 				#ifdef PLAYER_CAN_FIRE
 					// Collision with bullets
@@ -3624,7 +3633,7 @@ void mueve_bicharracos (void) {
 					#else
 						(_en_t < 128)
 					#endif
-					#ifndef PLAYER_MOGGY_STYLE
+					#if !defined (PLAYER_MOGGY_STYLE) && !defined (DEACTIVATE_MOVING_PLATFORMS)
 						&& _en_t != 4
 					#endif
 					) {

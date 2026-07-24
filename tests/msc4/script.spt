@@ -6,8 +6,8 @@ ENTERING GAME
 END
 
 ENTERING ANY
-	IF $2 = 1
+	IF $2 = TILE AT ($1, $2)
 	THEN
-		SET TILE (3, 3) = 16
+		SET TILE (3, 3) = TILE AT ($1, $2)
 	END
 END

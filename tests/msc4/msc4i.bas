@@ -78,6 +78,8 @@ writeAssemblyString fOut, "; EN_X RVALUE|cp  0xEC|jr  nz, rvb_set_en_x_done|ld  
 writeAssemblyString fOut, "; EN_Y RVALUE|cp  0xEB|jr  nz, rvb_set_en_y_done|ld  a, (__en_y)|ret|.rvb_set_en_y_done"
 writeAssemblyString fOut, "; OPANT RVALUE|cp  0xEA|jr  nz, rvb_set_on_pant_done|ld  a, (_on_pant)|ret|.rvb_set_on_pant_done"
 writeAssemblyString fOut, "; PARAM RVALUE|cp  0xE9|jr  nz, rvb_set_script_param_done|ld  a, (_script_param)|ret|.rvb_set_script_param_done"
+writeAssemblyString fOut, "; TILE AT EXPRESION RVALUE|cp 0xE8|jr  nz, rvb_set_script_tile_at_done|; Read two rvalues|call read_x_y|d  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call qtile_do|ld  a, l|ret|.rvb_set_script_tile_at_done"
+writeAssemblyString fOut, "; BEH AT EXPRESION RVALUE|cp 0xE7|jr  nz, rvb_set_script_beh_at_done|; Read two rvalues|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call _attr_2|ld  a, l|ret|.rvb_set_script_beh_at_done"
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"
 writeAssemblyString fOut, ".read_addr|call read_byte|ld  c, a|call read_byte|ld  h, a|ld  l, c|ret"

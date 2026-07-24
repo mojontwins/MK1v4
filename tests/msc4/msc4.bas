@@ -225,6 +225,20 @@ Sub parseScriptLine (linea As String)
 		i = i + 1
 	Wend		
 
+	' Process to encode TILE AT and BEH AT
+	' TILE AT A B -> TILE=AT=A=B, shift tokens 3 times
+	i = 0: While i < uBound (tokens) And tokens (i) <> ""
+		If (Ucase (tokens (i)) = "TILE" Or Ucase (tokens (i)) = "BEH") And Ucase (tokens (i + 1)) = "AT" Then
+			indirec = "=" & tokens (i) & "=" & tokens (i + 2) & "=" & tokens (i + 3)
+			shiftTokens i
+			shiftTokens i
+			shiftTokens i
+			tokens (i) = indirec
+		End If
+
+		i = i + 1
+	Wend
+
 	' Process to solve FLAG n -> $n
 	' This should be made recursively so FLAG FLAG FLAG n -> $$$n
 
@@ -259,8 +273,19 @@ Function isNumber (s As String) As Integer
 	Return -1
 End Function
 
+Function correctSuBExpresion (s As String) As Integer
+	If Len (s) < 2 Then Return 0
+	If Left (s, 1) <> "=" Then Return 0 
+
+	' For now we accept anything.
+
+	Return -1	
+
+End Function
+
 Function isNumberOrVar (s As String) As Integer
 
+	If correctSubExpresion (s) Then Return -1
 	If correctLvalue (s) Then Return -1 
 	If isNumber (s) Then Return -1
 
@@ -328,7 +353,32 @@ Function readNewLine (fIn As Integer) As String
 End Function
 
 Function pVal (expresion As String) As String 
-	If Len (expresion) > 1 And Left (expresion, 1) = "$" Then 
+	Dim As String subTokens(16)
+	Dim As Integer i
+	Dim As String result
+
+	If Len (expresion) > 1 And Left (expresion, 1) = "=" Then
+		If debug Then Print "Parsing expresion "  & expresion
+		' Special Complex Expresion
+		' =BLA=BLA=BLA=...
+
+		parseTokenizeString expresion & "=", subTokens (), "=", "#"'
+
+		If subTokens (0) = "TILE" Then  
+			result = Chr (&HFF) & Chr (&HE8) & pVal(subTokens (1)) & pVal (subTokens (2))
+			RV (&HE8) = -1
+		ElseIf subTokens (0) = "BEH" Then 
+			result = Chr (&HFF) & Chr (&HE7) & pVal(subTokens (1)) & pVal (subTokens (2))
+			RV (&HE7) = -1
+		Else 
+			Print "Wrong expresion @ " & curLineNo
+			Return Chr (0)
+		End If
+
+		If debug Then Print "Result bytecode = ";: printBinStr result
+		Return result
+
+	ElseIf Len (expresion) > 1 And Left (expresion, 1) = "$" Then 
 		Return Chr (&HFF) & pVal (Right (expresion, Len (expresion) - 1)) 
 	Else
 		If Val (expresion) <= 254 Then 
@@ -336,6 +386,7 @@ Function pVal (expresion As String) As String
 			Return Chr (Val (expresion)) 
 		Else 
 			Print "Wrong value @ " & curLineNo
+			Return Chr (0)
 		End If
 	End If
 End Function
@@ -1144,7 +1195,7 @@ Dim As String fileIns(127)
 Dim As String fileText
 Dim As Integer isEntering, room
 
-Print "msc v4.3.20260701 ~ ";
+Print "msc v4.4.20260724 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
@@ -1356,6 +1407,9 @@ If RV(&HEC) Then writeAssemblyString fOut, "; EN_X RVALUE|cp  0xEC|jr  nz, rvb_s
 If RV(&HEB) Then writeAssemblyString fOut, "; EN_Y RVALUE|cp  0xEB|jr  nz, rvb_set_en_y_done|ld  a, (__en_y)|ret|.rvb_set_en_y_done"
 If RV(&HEA) Then writeAssemblyString fOut, "; OPANT RVALUE|cp  0xEA|jr  nz, rvb_set_on_pant_done|ld  a, (_on_pant)|ret|.rvb_set_on_pant_done"
 If RV(&HE9) Then writeAssemblyString fOut, "; PARAM RVALUE|cp  0xE9|jr  nz, rvb_set_script_param_done|ld  a, (_script_param)|ret|.rvb_set_script_param_done"
+If RV(&HE8) Then writeAssemblyString fOut, "; TILE AT EXPRESION RVALUE|cp 0xE8|jr  nz, rvb_set_script_tile_at_done|push bc|; Read two rvalues|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call qtile_do|ld  a, l|pop bc|ret|.rvb_set_script_tile_at_done"
+If RV(&HE7) Then writeAssemblyString fOut, "; BEH AT EXPRESION RVALUE|cp 0xE7|jr  nz, rvb_set_script_beh_at_done|push bc|; Read two rvalues|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call _attr_2|ld  a, l|pop bc|ret|.rvb_set_script_beh_at_done"
+
 
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"

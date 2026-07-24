@@ -31,11 +31,12 @@
 	XREF __en_x
 	XREF __en_y
 	XREF _decode_text
+	XREF _script_param
 
 	XREF script_bytecode
 
-; Target SPECCY
-	LIB SPUpdateNow
+; Target CPC
+	XREF _cpc_UpdateNow
 
 ; Exports
 	XDEF _script_do
@@ -122,6 +123,19 @@
 
 ;;; Decode OPCODE & jump to interpreter
 
+;; OPCODE 0x01
+;; IF A = B
+	cp  0x01
+	jr  nz, copcode_01_end
+.copcode_01
+	call read_vbyte
+	ld  b, a
+	call read_vbyte
+	cp  b
+	jp  nz, skip_clausule
+	jp  script_clausule
+.copcode_01_end
+
 ;; UNKNOWN
 	jp  script_clausule
 
@@ -140,19 +154,38 @@
 
 ;;; Decode OPCODE & jump to interpreter
 
-;; OPCODE 0xE6
-;; TEXT BOX LSB MSB
-	cp  0xE6
-	jr  nz, aopcode_E6_end
-.aopcode_E6
+;; OPCODE 0x00
+;; FLAGS[N] = V
+	cp  0x00
+	jr  nz, aopcode_00_end
+.aopcode_00
+	call read_i_v		; HL -> FLAGS[N], A -> V
+	ld  (hl), a
+	jp  script_actions
+.aopcode_00_end
+
+;; OPCODE 0x20
+;; SET TILE (X, Y) = T
+	cp  0x20
+	jr  nz, aopcode_20_end
+.aopcode_20
 	call read_x_y
+	call read_vbyte
+	ld  (__t), a
+	ld  b, 0
+	ld  c, a
+	ld  hl, _comportamiento_tiles
+	add hl, bc
+	ld  a, (hl)
+	ld  (__n), a
 	ld  a, (sc_x)
-	ld  l, a
+	ld  (__x), a
+	ld  c, a
 	ld  a, (sc_y)
-	ld  h, a
-	call _decode_text
-	jp script_actions
-.aopcode_E6_end
+	ld  (__y), a
+	call set_map_tile_do
+	jp  script_actions
+.aopcode_20_end
 
 ;; UNKNOWN
 	jp script_actions

@@ -87,10 +87,14 @@ Definimos estas variables especiales, codificadas internamente como "flags" fuer
 * $EB = EN_Y = `_en_y`
 * $EA = OPANT = on_pant
 * $E9 = PARAM = vale 0xff al entrar en la sección.
+* $E8 = TILE AT (*)
+* $E7 = BEH AT (*)
 
 Sólo rvalue: Asignar a F2-F4, F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING. El resto debe poder ser lvalue (se debe poder asignar a NPANT, KILLED, etc).
 
 El intérprete debe reconocer las y codificar el flag correcto. Luego el intérprete debería resolverlas al valor del motor.
+
+(*) Cuidado con TILE AT. Debe codificarse $FF $E8 X Y, el código que lo interprete debe leer el par de coordenadas (que pueden ser flags) y obtener el tile correspondiente.
 
 ## Escribiendo el compilador
 
@@ -200,8 +204,8 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $25 : PLAYER NOT_FALLING
 * $26 : PLAYER STILL
 
-* $30 X Y T : TILE AT (X, Y) = T
-* $31 X Y T : BEH AT (X, Y) = T
+* (ELIMINADO) $30 X Y T : TILE AT (X, Y) = T
+* (ELIMINADO) $31 X Y T : BEH AT (X, Y) = T
 
 * $F0 : TRUE
 
@@ -526,3 +530,8 @@ El intérprete podría ser algo parecido a
 * [ ] 256 bytes quizá es poco para las clausulas...
 * [X] BREAK:END debería poder codificarse solo como BREAK. De hecho BREAK debería terminar la cláusula igual que un END sin tener que añadir el byte. Lo mismo con WIN GAME o GAME OVER. Los tres hacen RET.
 * [-] Optimizar WARP TO y todas las que tomen valores de tile pero tengan que producir valores de pixel para precalcular y no tener que hacerlo en el intérprete (siempre que no se refieran a flags).
+
+# Cambio TILE AT y BEH AT.
+
+Me conviene que esto sean expresiones, así que voy a eliminar los opcodes de IF TILE AT y IF BEH AT y reimplementarlo como expresiones especiales.
+

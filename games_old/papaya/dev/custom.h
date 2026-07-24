@@ -103,6 +103,9 @@
 		// return 0 for enemies which shouldn't collide.
 		// Collide means they will kill the player or get squashed.
 
+		// Viejo no mata.
+		if (_en_t == 1) return 0;
+
 		return 1;
 	}
 

@@ -1,14 +1,149 @@
-# Título tonto
-# Copyleft 201X tu grupo roneón soft.
-# MTE MK1 3.1
+# Script papayas!
 
-# flags:
-# 1	- 
+# Main shit
+ROOMS = 64
+
+# For text boxes
+TEXT WIDTH = 22
+
+# The box
+# =======
+
+# This game adds a box to the gameplay. The box is initialised
+# for each "level" in the screen it first appears if %NEWLEVEL = 1.
+# %BOXP, %BOXX, %BOXY, %BOXT control the location and the tile it overwrites.
+# On entering any the box must be set if %NEWLEVEL = 0.
+
+# Well use %BOXP = 99 to signify we have the box.
+
+# Note that ENTERING ANY is run before ENTERING SCREEN X, so this works.
 
 ENTERING GAME
 	IF TRUE
 	THEN
-		SET FLAG 1 = 0
+		%TOTAL_PAPAYAS = 0
+
+		# Init map: (re-)place papayas.
+		EXTERN 0
+
+		# New game = new level
+		%NEWLEVEL = 1
+	END
+
+	IF FLAG 1 = 1
+	THEN
+		TEXT BOX "ENCODE TEST"
 	END
 END
 
+# For every screen
+
+ENTERING ANY
+
+	# Let's clear the papayas
+	IF TRUE
+	THEN
+		EXTERN 2
+	END
+
+	# Let's place the box.
+	IF %NEWLEVEL = 0
+	IF NPANT = %BOXP
+	THEN
+		%BOXT = TILE AT (%BOXX, %BOXY)
+		SET TILE (%BOXX, %BOXY) = 32
+	END
+
+END
+
+# Per screen. Place box, etc.
+
+ENTERING SCREEN 1
+	IF %NEWLEVEL = 1
+	THEN
+		%BOXP = 1
+		%BOXT = TILE AT (13, 4)
+		%BOXX = 13
+		%BOXY = 4
+		%NEWLEVEL = 0
+		SET TILE (%BOXX, %BOXY) = 32
+	END 
+END
+
+# Place box
+
+PRESS_FIRE AT ANY
+	# We don't have expressions so...
+	IF TRUE
+	THEN
+		%YY = TY
+		INC %YY,1
+	END
+
+	# Get the box
+	IF %BOX9 <> 99 					# Not really needed but makes debugging easier.
+	IF TILE AT (TX, %YY) = 32
+	THEN
+		%BOXP = 99
+		SET TILE (TX, %YY) = %BOXT
+		SOUND 1
+		BREAK
+	END
+
+	# Place the box
+	IF %BOXP = 99
+	IF BEH AT (TX, %YY) <> 0
+	IF TY > 0
+	THEN
+		%BOXP = NPANT
+		%BOXX = TX
+		%BOXY = TY
+		%BOXT = TILE AT (TX, TY)
+		DEC PY, 20
+		SOUND 1
+		SET TILE (%BOXX, %BOXY) = 32
+	END
+
+END IF
+
+# Special BG interaction
+
+SPECIAL TILE TOUCHED
+
+	# The barro!
+
+	IF TN = 19
+	IF OBJS > 0
+	THEN
+		OBJS = 0
+		SOUND 2
+		BREAK
+	END
+
+	# The papayas!
+
+	IF TN = 16
+	IF OBJS < 16
+	THEN
+		SET TILE(TX, TY) = 12
+		INC OBJS, 1
+		SOUND 7
+		EXTERN 1 					# Persist!
+		BREAK
+	END
+END
+
+# Special character interaction
+
+ENEMY TOUCHED
+
+	# The vieho!
+	IF EN_T = 1
+	IF OBJS > 0
+	THEN
+		INC %TOTAL_PAPAYAS, OBJS
+		OBJS = 0
+		SOUND 8
+	END
+
+END
