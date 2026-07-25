@@ -113,31 +113,31 @@ void do_extern_action (unsigned char n, unsigned char m) {
 					// Coincidence: clear papaya
 					push de 
 
+					// Safe...
+					ld  a, (_tpx)
+					cp  15
+					jr  z, skipthis
+					
+					ld  (__x), a 
+					ld  c, a 
+
 					ld  a, 12
 					ld  (__t), a 
 					xor a 
 					ld  (__n), a 
-					ld  a, (_tpx)
-					ld  (__x), a 
-					ld  c, a 
 					ld  a, (_tpy)
 					ld  (__y), a 
 					call set_map_tile_do
-
+				.skipthis
 					pop de 
 
 				.clear_papayas_subloop_cont
-					pop bc 
-					inc bc 
-					ld  a, c 
-					cp  8
-					jr  nz, clear_papayas_subloop
 
 					// Move cursor
 
 					ld  a, (_tpx)
 					inc a 
-					cp  15 
+					cp  16 
 					jr  nz, clear_papayas_no_nl
 					ld  a, (_tpy)
 					inc a 
@@ -145,6 +145,13 @@ void do_extern_action (unsigned char n, unsigned char m) {
 					xor a 
 				.clear_papayas_no_nl
 					ld  (_tpx), a 
+
+					// Next
+					pop bc 
+					inc bc 
+					ld  a, c 
+					cp  8
+					jr  nz, clear_papayas_subloop
 
 					pop hl 
 					pop bc
