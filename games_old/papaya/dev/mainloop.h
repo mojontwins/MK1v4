@@ -321,6 +321,8 @@ void main (void) {
 			
 			// Render to screen
 
+			before_vsync ();
+
 			#ifdef CPC
 				
 				if (n_pant == on_pant) cpc_UpdateNow (1);

@@ -201,9 +201,9 @@
 // 128|N = Special tile (scripting)
 
 unsigned char comportamiento_tiles [] = {
-	0, 0, 4, 4, 4, 0, 4, 8, 0, 0, 0, 8, 0, 0, 0, 0,
-	128, 4, 4, 128, 0, 0, 0, 8, 8, 8, 8, 8, 0, 0, 0, 0,
-	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	0, 0, 0, 4, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0,
+	128, 4, 4, 128, 4, 4, 4, 8, 8, 8, 8, 8, 0, 0, 0, 0,
+	128, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0
 };
 
 // On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes

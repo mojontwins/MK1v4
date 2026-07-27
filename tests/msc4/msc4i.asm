@@ -661,6 +661,28 @@ XDEF _script_result
 	jp  _script_do
 .aopcode_F3_end
 
+	;; OPCODE 0xF4
+	;; CALL lsb msb
+	cp  0xf4
+	jr  nz, aopcode_F4_end
+.aopcode_F4
+	call read_addr 	; Subroutine offset in HL
+	ex  de, hl 		; Subroutine offset in DE
+	; Save script pointer
+	ld  hl, (script)
+	push hl 		
+	; Calculate new script ponter
+	ld  hl, script_bytecode
+	add hl, de 
+	ld  (script), hl
+	; Call this interpreter recursively!
+	call script_loop
+	; Restore script pointer
+	pop hl  		
+	ld  (script), hl
+	jp script_actions
+.aopcode_F4_end
+
 	;; UNKNOWN
 	jp script_actions
 

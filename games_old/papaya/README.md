@@ -84,3 +84,13 @@ Dados X, Y a nivel de tiles,
 
 Hmmm, si limitamos a las 8 filas superiores el cálculo es más sencillo y ocuparía 16 bytes por pantalla, 640 bytes en total. Tendría que tener cuidado de no poner papayas en las dos filas inferiores.
 
+# La caja más
+
+Más caja. Al final lo hago con tiles. Tengo una subrutina en el script que detecta qué tile hay por si hay que poner un tile "caja con algo delante" para que quede más mejor. A saber:
+
+1->34
+5->35
+17->36
+20->37
+21->38
+22->39

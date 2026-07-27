@@ -36,10 +36,30 @@ ENTERING GAME
 	END
 END
 
+SUB PLACEBOX
+	# Make sure the box is placed using the right tile
+	IF TRUE
+	THEN
+		%BOXT = TILE AT (%BOXX, %BOXY)
+		%AUX = 33
+	END
+
+	IF %BOXT > 0
+	IF %BOXT < 7
+	THEN
+		%AUX = %BOXT
+		INC %AUX, 33		
+	END
+
+	IF TRUE
+	THEN		
+		SET TILE (%BOXX, %BOXY) = %AUX
+	END 
+END
+
 # For every screen
 
 ENTERING ANY
-
 	# Let's clear the papayas
 	IF TRUE
 	THEN
@@ -50,10 +70,8 @@ ENTERING ANY
 	IF %NEWLEVEL = 0
 	IF NPANT = %BOXP
 	THEN
-		%BOXT = TILE AT (%BOXX, %BOXY)
-		SET TILE (%BOXX, %BOXY) = 32
+		CALL PLACEBOX
 	END
-
 END
 
 # Per screen. Place box, etc.
@@ -62,11 +80,10 @@ ENTERING SCREEN 1
 	IF %NEWLEVEL = 1
 	THEN
 		%BOXP = 1
-		%BOXT = TILE AT (13, 4)
 		%BOXX = 13
 		%BOXY = 4
 		%NEWLEVEL = 0
-		SET TILE (%BOXX, %BOXY) = 32
+		CALL PLACEBOX
 	END 
 END
 
@@ -76,32 +93,33 @@ PRESS_FIRE AT ANY
 	# We don't have expressions so...
 	IF TRUE
 	THEN
-		%YY = TY
-		INC %YY,1
+		%AUX = TY
+		INC %AUX,1
+		%TAUX = TILE AT (TX, %AUX)
 	END
 
 	# Get the box
 	IF %BOX9 <> 99 					# Not really needed but makes debugging easier.
-	IF TILE AT (TX, %YY) = 32
+	IF %TAUX > 32
+	IF %TAUX < 41
 	THEN
 		%BOXP = 99
-		SET TILE (TX, %YY) = %BOXT
+		SET TILE (TX, %AUX) = %BOXT
 		SOUND 1
 		BREAK
 	END
 
 	# Place the box
 	IF %BOXP = 99
-	IF BEH AT (TX, %YY) <> 0
+	IF BEH AT (TX, %AUX) <> 0
 	IF TY > 0
 	THEN
 		%BOXP = NPANT
 		%BOXX = TX
 		%BOXY = TY
-		%BOXT = TILE AT (TX, TY)
 		DEC PY, 20
 		SOUND 1
-		SET TILE (%BOXX, %BOXY) = 32
+		CALL PLACEBOX
 	END
 
 END IF

@@ -241,6 +241,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 
 * $F2 : BREAK
 * $F3 : RERUN RVALUE
+* $F4 : CALL OFFSET
 
 # Haciendo esto
 
@@ -535,3 +536,30 @@ El intérprete podría ser algo parecido a
 
 Me conviene que esto sean expresiones, así que voy a eliminar los opcodes de IF TILE AT y IF BEH AT y reimplementarlo como expresiones especiales.
 
+Esto me abre la posibilidad de implementar más expresiones de este tipo en el futuro.
+
+# Subrutinas
+
+La idea es teber grupos especiales de cláusulas que se añadan al binario ¿al final? y que se puedan llamar en cualquier momento.
+
+La ejecución de la llamada almacenará en la pila el puntero del script actual, calculará un nuevo puntero script, ejecutará el intérprete (en una llamada recursiva) y al terminal lo restaurará todo.
+
+El primer problema que tengo que solventar es el de la codificación en el script. Lo idela sería tener la dirección de salto de la rutina a la que quiero saltar precalculada en el bytecode, pero tengo que ver cuándo tendré esa información disponible.
+
+El orden de las secciones en el binario he visto que no es importante, por lo que puedo procesar linealmente la subrutina y añadirla al binario y almacenar su dirección en una lista que relacione nombres de subrutina con direcciones. Esto obliga por supuesto a predefinir la subrutina antes de poder usarla.
+
+```
+    sub dummySub
+        if true
+        then
+            $2 = 0
+        end
+    end
+
+    entering game
+        if true
+        then
+            call dummySub
+        end
+    end
+```

@@ -164,28 +164,27 @@
 	jp  script_actions
 .aopcode_00_end
 
-;; OPCODE 0x20
-;; SET TILE (X, Y) = T
-	cp  0x20
-	jr  nz, aopcode_20_end
-.aopcode_20
-	call read_x_y
-	call read_vbyte
-	ld  (__t), a
-	ld  b, 0
-	ld  c, a
-	ld  hl, _comportamiento_tiles
-	add hl, bc
-	ld  a, (hl)
-	ld  (__n), a
-	ld  a, (sc_x)
-	ld  (__x), a
-	ld  c, a
-	ld  a, (sc_y)
-	ld  (__y), a
-	call set_map_tile_do
-	jp  script_actions
-.aopcode_20_end
+;; OPCODE 0xF4
+;; CALL lsb msb
+	cp  0xf4
+	jr  nz, aopcode_F4_end
+.aopcode_F4
+	call read_addr 	; Subroutine offset in HL
+	ex  de, hl 		; Subroutine offset in DE
+; Save script pointer
+	ld  hl, (script)
+	push hl
+; Calculate new script ponter
+	ld  hl, script_bytecode
+	add hl, de
+	ld  (script), hl
+; Call this interpreter recursively!
+	call script_loop
+; Restore script pointer
+	pop hl
+	ld  (script), hl
+	jp script_actions
+.aopcode_F4_end
 
 ;; UNKNOWN
 	jp script_actions
@@ -208,6 +207,13 @@
 
 .read_vbyte_rec
 	call read_vbyte
+
+; NPANT RVALUE
+	cp  0xFE
+	jr  nz, rvb_set_n_pant_done
+	ld  a, (_n_pant)
+	ret
+.rvb_set_n_pant_done
 
 	ld  d, 0
 	ld  e, a

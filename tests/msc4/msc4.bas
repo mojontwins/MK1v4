@@ -11,6 +11,11 @@ Const CPC = 1
 Const ENTERING_INDEX_OFFSET = 16
 Const PRESS_FIRE_INDEX_OFFSET = 17
 
+Type TypeSubroutineInfo
+	subName As String 
+	binAddress As Integer
+End Type 
+
 Dim Shared As Integer debug = -1
 Dim Shared As Integer textDebug = 0
 
@@ -45,6 +50,28 @@ Dim Shared As Integer lastTextOffset
 Dim Shared As String textPool (16384)
 Dim Shared As Integer textOffsets (16384)
 Dim Shared As Integer lastCommandWasTerminator
+
+Dim Shared As TypeSubroutineInfo subInfo (128)
+Dim Shared As Integer subInfoIdx = 0
+
+Sub addSubInfo (subName As String, binAddress As Integer)
+	subInfo (subInfoIdx).subName = subName
+	subInfo (subInfoIdx).binAddress = binAddress
+	subInfoIdx = subInfoIdx + 1
+	If subInfoIdx > 128 Then 
+		Print "Warning! Too manu Subroutines!"
+		subInfoIdx = 128
+	End If
+End Sub
+
+Function getSubAddressByName (subName As String) As Integer
+	Dim As Integer i
+	subName = Lcase (subName)
+	For i = 0 To subInfoIdx - 1
+		If Lcase (subInfo (i).subName) = subName Then Return subInfo (i).binAddress
+	Next i 
+	Return -1
+End Function
 
 Sub shiftTokens (from As Integer)
 	' Moves all tokens from `from` to last one step forward
@@ -619,6 +646,7 @@ End Function
 Function processCommand (linea As String) As String
 	Dim As String code = ""
 	Dim As String cmd, scmd 
+	Dim As Integer subBinIndex, indexSize
 
 	parseScriptLine linea
 
@@ -780,6 +808,24 @@ Function processCommand (linea As String) As String
 			If isNumberOrVar (tokens (1)) Then
 				code = buildAction (2, Chr (&HF3), pVal (tokens (1)))
 				lastCommandWasTerminator = -1
+			Else
+				syntaxError
+			End If
+
+		Case "call"
+			' CALL SUBRUTINE
+			' $F4 LSB MSB 
+
+			If jumptable Then
+				' Don't index rooms in jumptable mode!
+				indexSize = ENTERING_INDEX_OFFSET
+			Else
+				indexSize = ENTERING_INDEX_OFFSET + maxPants * 2
+			End If
+			subBinIndex = getSubAddressByName (tokens (1)) + indexSize * 2
+
+			If subBinIndex > -1 Then
+				code = buildAction (3, Chr (&HF4), Chr(subBinIndex And &HFF), Chr (subBinIndex \ 256))				
 			Else
 				syntaxError
 			End If
@@ -1008,6 +1054,27 @@ Sub processScript (fIn As Integer)
 				If debug Then Print "Text width set to " & Val (tokens (3))
 				textWidth = Val (tokens (3))
 
+			ElseIf tokens (0) = "sub" Then
+
+				' Subroutines are added to the main binary in order, 
+				' their base address remembered and used in `call` commands.
+
+				If tokens (1) <> "" Then
+
+					Print "Adding Sub " & tokens (1) & " @ " & sectBinIdx
+					addSubInfo tokens(1), sectBinIdx
+
+					' Parse sub
+					sectionBytecode = processCurrentSection (fIn)
+					If debug Then Print "Sub Bytecode: ";: printBinStr sectionBytecode
+
+					' Write to binary
+					writeToSectBinary sectionBytecode
+
+				Else
+					Print "Nameless sub at " & curLineNo
+				End If
+
 			Else
 				If startsWith (tokens (), "entering screen") Or startsWith (tokens (), "press fire at screen") Then 
 					' Find comma separated list
@@ -1195,7 +1262,7 @@ Dim As String fileIns(127)
 Dim As String fileText
 Dim As Integer isEntering, room
 
-Print "msc v4.4.20260724 ~ ";
+Print "msc v4.5.20260727 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
@@ -1382,6 +1449,7 @@ If AU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|
 If AU(&HF1) Then writeAssemblyString fOut, ";; OPCODE 0xF1|;; GAME OVER|cp  0xf1|jr  nz, aopcode_F1_end|.aopcode_F1|ld  a, 2|ld  (_script_result), a|ret|.aopcode_F1_end"
 If AU(&HF2) Then writeAssemblyString fOut, ";; OPCODE 0xF2|;; BREAK|cp  0xf2|jr  nz, aopcode_F2_end|.aopcode_F2|ret|.aopcode_F2_end"
 If AU(&HF3) Then writeAssemblyString fOut, ";; OPCODE 0xF3|;; RERUN v|cp  0xf3|jr  nz, aopcode_F3_end|.aopcode_F3|call read_vbyte|ld  (_script_param), a|jp  _script_do|.aopcode_F3_end"
+If AU(&HF4) Then writeAssemblyString fOut, ";; OPCODE 0xF4|;; CALL lsb msb|cp  0xf4|jr  nz, aopcode_F4_end|.aopcode_F4|call read_addr 	; Subroutine offset in HL|ex  de, hl 		; Subroutine offset in DE|; Save script pointer|ld  hl, (script)|push hl|; Calculate new script ponter|ld  hl, script_bytecode|add hl, de|ld  (script), hl|; Call this interpreter recursively!|call script_loop|; Restore script pointer|pop hl|ld  (script), hl|jp script_actions|.aopcode_F4_end"
 
 ''
 

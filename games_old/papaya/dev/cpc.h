@@ -27,6 +27,7 @@
 
 unsigned char isr_player_on;
 unsigned char wyz_beat_ct;
+unsigned char wyz_signal;
 
 #define WYZ_FX_CHANNEL 1
 #define AY_INIT()        wyz_init ()

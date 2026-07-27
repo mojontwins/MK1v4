@@ -1,6 +1,14 @@
 // MTE MK1 v3.2
 // Copyleft 2011, 2026 by The Mojon Twins
 
+unsigned char rand (void);
+void before_vsync (void) {
+	// Run every game loop right before vsync.
+	if (wyz_signal) {
+		wyz_stop_sound ();
+		wyz_play_music (1 + (rand () & 1));
+	}
+}
 
 #ifdef PLAYER_CUSTOM_VENG
 	void player_custom_veng (void) {

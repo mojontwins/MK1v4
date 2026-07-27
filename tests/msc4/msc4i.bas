@@ -58,6 +58,7 @@ writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|jr  nz, aopcode_F
 writeAssemblyString fOut, ";; OPCODE 0xF1|;; GAME OVER|cp  0xf1|jr  nz, aopcode_F1_end|.aopcode_F1|ld  a, 2|ld  (_script_result), a|ret|.aopcode_F1_end"
 writeAssemblyString fOut, ";; OPCODE 0xF2|;; BREAK|cp  0xf2|jr  nz, aopcode_F2_end|.aopcode_F2|ret|.aopcode_F2_end"
 writeAssemblyString fOut, ";; OPCODE 0xF3|;; RERUN v|cp  0xf3|jr  nz, aopcode_F3_end|.aopcode_F3|call read_vbyte|ld  (_script_param), a|jp  _script_do|.aopcode_F3_end"
+writeAssemblyString fOut, ";; OPCODE 0xF4|;; CALL lsb msb|cp  0xf4|jr  nz, aopcode_F4_end|.aopcode_F4|call read_addr 	; Subroutine offset in HL|ex  de, hl 		; Subroutine offset in DE|; Save script pointer|ld  hl, (script)|push hl|; Calculate new script ponter|ld  hl, script_bytecode|add hl, de|ld  (script), hl|; Call this interpreter recursively!|call script_loop|; Restore script pointer|pop hl|ld  (script), hl|jp script_actions|.aopcode_F4_end"
 writeAssemblyString fOut, ";; UNKNOWN|jp script_actions"
 writeAssemblyString fOut, ";; Reads a byte from pointer, inc pointer, return value in A|.read_byte|ld  hl, (script)|ld  a, (hl)|inc hl|ld  (script), hl|ret"
 writeAssemblyString fOut, ";; Reads a value (may be recursive flag), inc pointer, return value in A|;; New flags encoding is $FF means next value is flag (can be $FF, etc)|.read_vbyte|call read_byte|cp  0xff|jr  z, read_vbyte_rec|ret"

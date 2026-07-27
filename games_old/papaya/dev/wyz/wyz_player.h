@@ -25,6 +25,7 @@ void __FASTCALL__ wyz_play_music (unsigned char m) {
 		call depack
 
 		ld  a, 0
+		ld  (_wyz_signal), a
 		call CARGA_CANCION
 		ld  a, 1
 		ld  (_isr_player_on), a
@@ -714,6 +715,10 @@ nonewblack:
 		JP LOCALIZA_NOTA
 		
 	.FIN_CANAL_A 
+		; Signal the main loop 
+		ld  a, 1 
+		ld  (_wyz_signal), a
+
 		LD HL,INTERR ;LOOP?
 		BIT 4,(HL) 
 		JR NZ,FCA_CONT
