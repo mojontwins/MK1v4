@@ -1466,7 +1466,7 @@ If RV(&HF9) Then writeAssemblyString fOut, "; LIFE RVALUE|cp  0xF9|jr  nz, rvb_s
 If RV(&HF8) Then writeAssemblyString fOut, "; TX RVALUE|cp  0xF8|jr  nz, rvb_set_tx_done|ld  a, (_tpx)|ret|.rvb_set_tx_done"
 If RV(&HF7) Then writeAssemblyString fOut, "; TY RVALUE|cp  0xF7|jr  nz, rvb_set_ty_done|ld  a, (_tpy)|ret|.rvb_set_ty_done"
 If RV(&HF6) Then writeAssemblyString fOut, "; TN RVALUE|cp  0xF6|jr  nz, rvb_set_tile_done|ld  a, (_tqt)|ret|.rvb_set_tile_done"
-If RV(&HF5) Then writeAssemblyString fOut, "; HOTSPOT RVALUE|cp  0xF5|jr  nz, rvb_set_tile_done|ld  a, (_hotspot_t)|ret|.rvb_set_tile_done"
+If RV(&HF5) Then writeAssemblyString fOut, "; HOTSPOT RVALUE|cp  0xF5|jr  nz, rvb_set_hotspot_done|ld  a, (_hotspot_t)|ret|.rvb_set_hotspot_done"
 If RV(&HF0) Then writeAssemblyString fOut, "; HIDE_HOTSPOTS RVALUE|cp  0xF0|jr  nz, rvb_set_hide_hotspots_done|ld  a, (_scenery_info + 0)|ret|.rvb_set_set_hide_hotspots"
 If RV(&HEF) Then writeAssemblyString fOut, "; DONT_MAKE_FANTIES RVALUE|cp  0xEF|jr  nz, rvb_set_dont_make_fanties_done|ld  a, (_scenery_info + 1)|ret|.rvb_set_dont_make_fanties_done"
 If RV(&HEE) Then writeAssemblyString fOut, "; EN_T RVALUE|cp  0xEE|jr  nz, rvb_set_en_t_done|ld  a, (__en_t)|ret|.rvb_set_en_t_done"

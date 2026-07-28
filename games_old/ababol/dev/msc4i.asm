@@ -79,79 +79,79 @@
 
 ; ENTERING 0
 
-	ld  hl, 0x0090
+	ld  hl, 0x0092
 	cp  16
 	ret z
 
 ; ENTERING 2
 
-	ld  hl, 0x0090
+	ld  hl, 0x0092
 	cp  20
 	ret z
 
 ; ENTERING 3
 
-	ld  hl, 0x00BE
+	ld  hl, 0x00C0
 	cp  22
 	ret z
 
 ; ENTERING 14
 
-	ld  hl, 0x00E1
+	ld  hl, 0x00E3
 	cp  44
 	ret z
 
 ; ENTERING 15
 
-	ld  hl, 0x015F
+	ld  hl, 0x0161
 	cp  46
 	ret z
 
 ; ENTERING 19
 
-	ld  hl, 0x017A
+	ld  hl, 0x017C
 	cp  54
 	ret z
 
 ; ENTERING 20
 
-	ld  hl, 0x0090
+	ld  hl, 0x0092
 	cp  56
 	ret z
 
 ; ENTERING 22
 
-	ld  hl, 0x0129
+	ld  hl, 0x012B
 	cp  60
 	ret z
 
 ; ENTERING 28
 
-	ld  hl, 0x0111
+	ld  hl, 0x0113
 	cp  72
 	ret z
 
 ; ENTERING 29
 
-	ld  hl, 0x00F9
+	ld  hl, 0x00FB
 	cp  74
 	ret z
 
 ; ENTERING 31
 
-	ld  hl, 0x0144
+	ld  hl, 0x0146
 	cp  78
 	ret z
 
 ; ENTERING 39
 
-	ld  hl, 0x01B6
+	ld  hl, 0x01B8
 	cp  94
 	ret z
 
 ; ENTERING 63
 
-	ld  hl, 0x01C2
+	ld  hl, 0x01C4
 	cp  142
 	ret z
 
@@ -284,23 +284,6 @@
 	jp  nz, skip_clausule
 	jp  script_clausule
 .copcode_23_end
-
-;; OPCODE 0x30
-;; TILE AT (X, Y) = T
-	cp  0x30
-	jr  nz, copcode_30_end
-.copcode_30
-	call read_x_y
-	ld  a, (sc_x)
-	ld  c, a
-	ld  a, (sc_y)
-	call qtile_do
-	ld  c, l
-	call read_vbyte
-	cp  c
-	jp  nz, skip_clausule
-	jp  script_clausule
-.copcode_30_end
 
 ;; UNKNOWN
 	jp  script_clausule
@@ -512,12 +495,34 @@
 	ret
 .rvb_set_tile_done
 
+; HOTSPOT RVALUE
+	cp  0xF5
+	jr  nz, rvb_set_hotspot_done
+	ld  a, (_hotspot_t)
+	ret
+.rvb_set_hotspot_done
+
 ; OPANT RVALUE
 	cp  0xEA
 	jr  nz, rvb_set_on_pant_done
 	ld  a, (_on_pant)
 	ret
 .rvb_set_on_pant_done
+
+; TILE AT EXPRESION RVALUE
+	cp 0xE8
+	jr  nz, rvb_set_script_tile_at_done
+	push bc
+; Read two rvalues
+	call read_x_y
+	ld  a, (sc_x)
+	ld  c, a
+	ld  a, (sc_y)
+	call qtile_do
+	ld  a, l
+	pop bc
+	ret
+.rvb_set_script_tile_at_done
 
 	ld  d, 0
 	ld  e, a

@@ -39,10 +39,12 @@ goto :compile
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=sprites in=..\gfx\%om%\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
 ..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal.png prefix=my_inks out=%om%\pal.h silent > nul 
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal_title.png prefix=pal_general out=%om%\pal_general.h silent > nul 
+..\utils\mkts_om.exe platform=cpc mode=palsasassembly in=..\gfx\%om%\pal_title.png prefix=pal_hud out=%om%\pal_hud.h silent > nul 
 
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\marco.png out=marco.bin silent > nul
 ..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\ending.png out=ending.bin silent > nul
-..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal.png mode=superbuffer in=..\gfx\%om%\title.png out=title.bin silent > nul
+..\utils\mkts_om.exe platform=cpc cpcmode=%mode% pal=..\gfx\%om%\pal_title.png mode=superbuffer in=..\gfx\%om%\title.png out=title.bin silent > nul
 ..\utils\zx0.exe title.bin titlec.bin > nul
 ..\utils\zx0.exe marco.bin marcoc.bin > nul
 ..\utils\zx0.exe ending.bin endingc.bin > nul

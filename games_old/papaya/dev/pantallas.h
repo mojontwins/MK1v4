@@ -11,7 +11,6 @@ extern unsigned char s_ending [];
 	._s_title
 		BINARY "titlec.bin"
 	._s_marco
-
 	#ifndef DIRECT_TO_PLAY
 			BINARY "marcoc.bin"
 	#endif
@@ -21,7 +20,7 @@ extern unsigned char s_ending [];
 #endasm
 
 void title_screen (void) {
-	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+	#if defined CPC && defined AUTO_SPLIT
 		#ifdef ALWAYS_SPLIT
 			#asm
 					ld  hl, pal_general
@@ -48,7 +47,7 @@ void title_screen (void) {
 	#endasm
 	
 	#ifdef CPC 
-		draw_text (12, 10, "1\\TECLAS%2\\MANDO");
+		//draw_text (12, 10, "1\\TECLAS%2\\MANDO");
 	#else 
 		draw_text (11, 10, 70, "1\\TECLADO%2\\KEMPSTON%3\\SINCLAIR");
 	#endif
@@ -60,8 +59,8 @@ void title_screen (void) {
 	"MK1 V3\\2");
 
 	#ifdef CPC
-		cpc_UpdateNow (0);
-		AY_PLAY_MUSIC (0);
+		cpc_UpdScr ();
+		cpc_ShowTileMap (1);
 	#else 
 		#asm 
 				call SPUpdateNow
@@ -75,7 +74,7 @@ void title_screen (void) {
 }
 
 void game_ending (void) {
-	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+	#if defined CPC && defined AUTO_SPLIT
 		#ifdef ALWAYS_SPLIT
 			#asm
 					ld  hl, pal_general

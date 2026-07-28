@@ -7,7 +7,7 @@
 
 #include "config.h"
 
-#define MAX_ENEMS 4
+#define MAX_ENEMS 3
 #define MAX_FLAGS 32
 
 #if defined PLAYER_KILLS_ENEMIES || defined PLAYER_CAN_FIRE

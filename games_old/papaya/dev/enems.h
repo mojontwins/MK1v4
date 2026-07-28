@@ -18,19 +18,27 @@ MALOTE malotes [] = {
 	// Pantalla 0
 
 	// Pantalla 1
- 	{64, 64, 0x44, 0xD4, 1, 0, 1},
+ 	{64, 64, 0x44, 0x94, 1, 0, 1},
 
 	// Pantalla 2
+ 	{48, 32, 0x32, 0xA2, 1, 0, 3},
 
 	// Pantalla 3
+ 	{160, 96, 0x56, 0xA6, -1, 0, 2},
 
 	// Pantalla 4
+ 	{160, 112, 0x57, 0xA7, -1, 0, 3},
+ 	{80, 48, 0x53, 0x83, 1, 0, 2},
 
 	// Pantalla 5
+ 	{112, 80, 0x55, 0x75, -1, 0, 2},
 
 	// Pantalla 6
+ 	{64, 96, 0x46, 0x96, 1, 0, 3},
 
 	// Pantalla 7
+ 	{48, 32, 0x32, 0x72, 1, 0, 2},
+ 	{32, 128, 0x28, 0x58, 1, 0, 3},
 
 	// Pantalla 8
 
@@ -101,18 +109,18 @@ MALOTE malotes [] = {
 
 // enoffs index, contains enoffs for each screen
 unsigned char enoffs_index [] = {
-	0, 0, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1 // <- total number of enems to make coding easier
+	0, 0, 1, 2, 3, 5, 6, 7, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9 // <- total number of enems to make coding easier
 };
 
-#define N_ENEMS_TYPE_0 119
+#define N_ENEMS_TYPE_0 111
 #define N_ENEMS_TYPE_1 1
-#define N_ENEMS_TYPE_2 0
-#define N_ENEMS_TYPE_3 0
+#define N_ENEMS_TYPE_2 4
+#define N_ENEMS_TYPE_3 4
 #define N_ENEMS_TYPE_5 0
 #define N_ENEMS_TYPE_6 0
 #define N_ENEMS_TYPE_7 0
@@ -121,7 +129,7 @@ unsigned char enoffs_index [] = {
 // You may want to add type 5 or 6's below.
 #define BADDIES_COUNT (N_ENEMS_TYPE_1+N_ENEMS_TYPE_2+N_ENEMS_TYPE_3)
 
-#define TOTAL_EXISTING_ENEMS 1
+#define TOTAL_EXISTING_ENEMS 9
 
 typedef struct {
 	unsigned char xy, tipo, act;

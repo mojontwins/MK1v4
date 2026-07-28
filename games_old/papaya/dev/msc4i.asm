@@ -79,7 +79,7 @@
 
 ; ENTERING 1
 
-	ld  hl, 0x007C
+	ld  hl, 0x00A6
 	cp  18
 	ret z
 

@@ -94,3 +94,8 @@ Más caja. Al final lo hago con tiles. Tengo una subrutina en el script que dete
 20->37
 21->38
 22->39
+
+# Inicio del juego
+
+Podemos poner que hasta que no se habla con el viejo el camino adonde están las papayas esté bloqueado. Podemos poner además que el viejo no esté en el camino y que haya que ir explícitamente a por él.
+

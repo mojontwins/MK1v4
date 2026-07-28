@@ -5,9 +5,9 @@
 
 #define MIN_FAPS_PER_FRAME 			2		// 50 / N fps if possible
 #define BLACK_PEN		 			1		// For CPC, which pen is black?
-//#define AUTO_SPLIT 						// For CPC, but hud must be 32 raster on top and MODE 1
-//#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
-//#define NO_PAL_MAP 						// For CPC, with AUTO_SPLIT, only one pal (my_inks)
+#define AUTO_SPLIT 							// For CPC, but hud must be 32 raster on top and MODE 1
+#define ALWAYS_SPLIT 						// Useful for DIRECT_TO_PLAY
+#define NO_PAL_MAP 							// For CPC, with AUTO_SPLIT, only one pal (my_inks)
 
 // TURN THIS OFF FOR RELEASE!!!!
 #define DEBUG_NAVIGATOR 					// s + directions (ZX) or x + directions (CPC) to nav map
@@ -31,8 +31,8 @@
 //#define PLAYER_FIN_X				99		//
 //#define PLAYER_FIN_Y				99		// Player tile coordinates to finish game
 #define PLAYER_NUM_OBJETOS			99		// Objects to get to finish game
-#define PLAYER_LIFE 				99		// Max and starting life gauge.
-#define PLAYER_REFILL				10		// Life recharge
+#define PLAYER_LIFE 				5		// Max and starting life gauge.
+#define PLAYER_REFILL				1		// Life recharge
 
 // ============================================================================
 // II. Engine type
@@ -47,15 +47,15 @@
 // -------------------
 
 //#define PLAYER_PUSH_BOXES 				// If defined, tile #14 is pushable
-//#define DIRECT_TO_PLAY					// If defined, title screen is also the game frame.
+#define DIRECT_TO_PLAY						// If defined, title screen is also the game frame.
 #define DEACTIVATE_KEYS						// If defined, keys are not present.
 //#define FIRE_TO_USE_KEY 					// If defined, press fire to use key.
 //#define DEACTIVATE_OBJECTS				// If defined, objects are not present.
 //#define ONLY_ONE_OBJECT					// If defined, only one object can be carried at a time.
 //#define OBJECT_COUNT				1		// Defines which FLAG will be used to store the object count.
 //#define DEACTIVATE_EVIL_TILE				// If defined, no killing tiles (behaviour 1) are detected.
-#define PLAYER_BOUNCES						// If defined, collisions make player bounce
-//#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
+//#define PLAYER_BOUNCES					// If defined, collisions make player bounce
+#define PLAYER_FLICKERS 				 	// If defined, collisions make player flicker instead.
 //#define ENABLE_BOTIBOINS					// If defined, enable botiboins on beh 2.
 
 // Shooting behaviour (only side view!)
@@ -126,20 +126,20 @@
 // It's good practice to comment what you are not using!
 
 #define VIEWPORT_X					1		//
-#define VIEWPORT_Y					2		// Viewport character coordinates
-#define LIFE_X						4		//
-#define LIFE_Y						0		// Life gauge counter character coordinates
-#define OBJECTS_X					11		//
-#define OBJECTS_Y					0		// Objects counter character coordinates
+#define VIEWPORT_Y					4		// Viewport character coordinates
+#define LIFE_X						20		//
+#define LIFE_Y						2		// Life gauge counter character coordinates
+#define OBJECTS_X					5		//
+#define OBJECTS_Y					2		// Objects counter character coordinates
 //#define OBJECTS_ICON_X			9		// 
 //#define OBJECTS_ICON_Y			21		// Objects icon character coordinates (use with ONLY_ONE_OBJECT)
-#define KEYS_X						17		//
-#define KEYS_Y						0		// Keys counter character coordinates
+//#define KEYS_X					17		//
+//#define KEYS_Y					0		// Keys counter character coordinates
 //#define KILLED_X					20		//
 //#define KILLED_Y					21		// Kills counter character coordinates
-//#define ITEM_X 					7		// 
-//#define ITEM_Y 					0 		//
-//#define ITEM_FLAG 				0 		// Show item @ flag
+#define ITEM_X 						28		// 
+#define ITEM_Y 					 	1 		//
+#define ITEM_FLAG 					0 		// Show item @ flag
 //#define TEXT_X 					4		//
 //#define TEXT_Y					3		// To use TEXT from the script
 //#define TEXT_A 					71      // (Speccy only) text atribute.
@@ -206,9 +206,9 @@ unsigned char comportamiento_tiles [] = {
 	128, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0
 };
 
-// On CPC, using MODE_1 and AUTO_SPLIT, add here your custom palete includes
+// On CPC, using AUTO_SPLIT, add here your custom palete includes
 // Then change cpc/palmap.h
-#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+#if defined CPC && defined AUTO_SPLIT && !defined NO_PAL_MAP
 
 	#include "cpc/pal0.h"
 	// etc

@@ -1,10 +1,15 @@
 # Script papayas!
 
 # Main shit
-ROOMS = 64
+ROOMS = 40
 
 # For text boxes
 TEXT WIDTH = 22
+
+# Explicitly set %CARRYING to FLAG 0 (as defined in ITEM_FLAG @ config.h)
+# Explicitly set %TOTAL_PAPAYAS to FLAG 1
+ALIAS %CARRYING = 0
+ALIAS %TOTAL_PAPAYAS = 31
 
 # The box
 # =======
@@ -21,20 +26,24 @@ TEXT WIDTH = 22
 ENTERING GAME
 	IF TRUE
 	THEN
+		# Reset total & show
 		%TOTAL_PAPAYAS = 0
+		EXTERN 3
 
 		# Init map: (re-)place papayas.
 		EXTERN 0
 
 		# New game = new level
 		%NEWLEVEL = 1
+
+		# Info texts / etc
+		%FLAG_PAPAI = 0
+		%FLAG_VIEJO = 0
 	END
 
-	IF FLAG 1 = 1
-	THEN
-		TEXT BOX "ENCODE TEST"
-	END
 END
+
+# Script subroutines
 
 SUB PLACEBOX
 	# Make sure the box is placed using the right tile
@@ -57,6 +66,23 @@ SUB PLACEBOX
 	END 
 END
 
+SUB VIEJO
+	IF %FLAG_VIEJO = 0
+	THEN
+		%FLAG_VIEJO = 1
+		TEXT BOX "EU VENDO MAM*ES, MAS O ESTO QUE ACABOU. SEI ONDE VOCE PODE /ENCON- TRAR/ ALGUNS. TRAGA ALGUNA PAR MIM, VOCE FICA COM UNA PARTE PARA A CRIAN+A E DIVI- DIMOS O RESTO!"
+		BREAK
+	END
+
+	IF OBJS > 0
+	THEN
+		INC %TOTAL_PAPAYAS, OBJS
+		OBJS = 0
+		SOUND 8
+		EXTERN 3 					# Update HUD
+	END
+END
+
 # For every screen
 
 ENTERING ANY
@@ -64,6 +90,12 @@ ENTERING ANY
 	IF TRUE
 	THEN
 		EXTERN 2
+	END
+
+	# Reset Carrying
+	IF %NEWLEVEL = 1
+	THEN
+		%CARRYING = 47
 	END
 
 	# Let's place the box.
@@ -106,6 +138,7 @@ PRESS_FIRE AT ANY
 		%BOXP = 99
 		SET TILE (TX, %AUX) = %BOXT
 		SOUND 1
+		%CARRYING = 33
 		BREAK
 	END
 
@@ -120,6 +153,7 @@ PRESS_FIRE AT ANY
 		DEC PY, 20
 		SOUND 1
 		CALL PLACEBOX
+		%CARRYING = 47
 	END
 
 END IF
@@ -156,12 +190,9 @@ END
 ENEMY TOUCHED
 
 	# The vieho!
-	IF EN_T = 1
-	IF OBJS > 0
+	IF EN_T = 1	
 	THEN
-		INC %TOTAL_PAPAYAS, OBJS
-		OBJS = 0
-		SOUND 8
+		CALL VIEJO
 	END
 
 END

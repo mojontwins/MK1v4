@@ -161,13 +161,29 @@ void do_extern_action (unsigned char n, unsigned char m) {
 	switch (n) {
 		case 0: player.vy = -PLAYER_MAX_VY_SALTANDO; break;
 		case 1: 
-			#ifndef CPC
+			#ifdef CPC
+				wyz_stop_sound ();
+			#endif
 			#asm
 					ld  a, 1
 					call shiruplay
 			#endasm
-			#endif
 			recuadrius (); 
+			#ifdef CPC
+				wyz_play_music (1);
+			#endif
+			break;
+		case 2:
+			#ifdef CPC
+				wyz_stop_sound ();
+			#endif
+			#asm
+					ld  a, 2
+					call shiruplay
+			#endasm
+			#ifdef CPC
+				wyz_play_music (1);
+			#endif
 			break;
 	}
 }

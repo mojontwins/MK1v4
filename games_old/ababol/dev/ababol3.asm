@@ -3,7 +3,7 @@
 ;
 ;	Reconstructed for z80 Module Assembler
 ;
-;	Module compile time: Thu Jul 23 13:00:29 2026
+;	Module compile time: Tue Jul 28 11:43:40 2026
 
 
 
@@ -4454,6 +4454,7 @@
 	.SoundEffectsData
 	defw SoundEffect0Data
 	defw SoundEffect1Data
+	defw SoundEffect2Data
 	.SoundEffect0Data
 	defb 3 ;sample
 	defw 740
@@ -4464,6 +4465,12 @@
 	defb 3 ;sample
 	defw 1043
 	defw Sample1Data+0
+	defb 32
+	defb 0
+	.SoundEffect2Data
+	defb 3 ;sample
+	defw 867
+	defw Sample2Data+0
 	defb 32
 	defb 0
 	.Sample0Data
@@ -4581,6 +4588,62 @@
 	defb 7,255,193,255,63,252,1,255,195,255,192,255,199,255,0,63
 	defb 248,255,252,127,248,127,224,3,255,159,255,207,255,239,255,0
 	defb 15,255,253
+	.Sample2Data
+	defb 255,255,255,255,127,253,255,131,225,255,255,251,255,255,0,0
+	defb 63,255,255,255,151,195,248,0,1,255,255,253,175,224,255,0
+	defb 192,127,255,255,214,190,15,224,60,7,255,255,246,191,131,252
+	defb 15,1,255,255,254,247,240,127,129,224,31,255,255,183,252,31
+	defb 224,56,7,255,255,253,191,7,248,15,0,255,191,246,191,131
+	defb 252,7,128,127,143,254,255,131,252,3,192,127,143,254,63,135
+	defb 248,15,128,255,15,249,252,127,192,60,7,248,191,252,159,240
+	defb 7,129,254,219,254,15,252,3,192,127,205,255,135,254,0,240
+	defb 63,249,255,135,254,0,13,255,199,254,63,248,0,63,220,127
+	defb 195,255,192,7,252,31,193,255,192,15,249,31,131,255,192,31
+	defb 242,110,15,255,128,31,242,96,31,252,0,255,182,1,255,224
+	defb 15,254,192,31,254,0,127,236,1,255,224,13,254,128,63,254
+	defb 0,255,216,3,255,192,15,252,128,127,252,1,254,70,79,255
+	defb 128,31,208,251,63,254,0,253,3,248,63,240,15,192,127,225
+	defb 255,224,30,1,255,255,255,224,20,1,255,255,255,128,32,15
+	defb 190,63,254,0,0,124,127,255,248,3,132,27,248,127,224,31
+	defb 14,60,31,248,31,195,254,15,252,63,225,252,15,248,63,131
+	defb 240,31,224,255,15,192,255,131,248,124,15,248,63,223,1,255
+	defb 7,255,192,63,224,127,240,31,248,31,252,7,255,15,255,255
+	defb 255,255,255,223,255,255,255,255,255,255,255,255,255,255,255,255
+	defb 255,254,127,255,255,255,255,255,255,255,255,255,255,255,255,254
+	defb 239,255,238,107,210,255,131,255,31,224,127,224,63,1,254,15
+	defb 252,15,225,255,240,63,135,247,240,127,31,231,224,126,61,167
+	defb 224,252,62,39,192,252,63,29,224,63,31,7,142,7,231,194
+	defb 241,192,252,120,255,143,3,247,255,199,28,7,254,248,196,60
+	defb 15,255,225,194,30,15,254,61,1,143,3,255,30,16,135,129
+	defb 255,199,16,97,192,255,227,136,48,224,127,241,204,48,224,127
+	defb 241,228,49,224,255,240,124,67,193,255,242,247,15,7,255,199
+	defb 56,240,63,124,119,142,7,227,205,227,193,249,242,249,224,124
+	defb 124,63,192,252,124,175,129,248,123,159,3,241,254,124,31,135
+	defb 179,192,124,63,62,7,195,243,224,252,126,126,15,135,223,129
+	defb 240,63,240,126,129,252,31,192,127,7,240,63,129,252,31,192
+	defb 127,7,248,63,193,252,15,224,255,131,255,3,254,63,224,127
+	defb 239,252,255,255,201,255,240,119,247,252,15,255,248,31,255,229
+	defb 63,255,200,127,255,128,255,255,33,255,254,67,255,252,135,255
+	defb 216,15,255,248,15,255,176,31,255,164,63,255,32,63,255,64
+	defb 127,255,64,127,255,0,255,254,0,255,254,0,255,254,0,255
+	defb 254,0,255,254,0,255,254,128,255,246,128,255,63,0,127,191
+	defb 192,127,159,192,63,143,224,63,207,112,31,231,176,15,231,248
+	defb 71,243,252,7,249,252,35,252,254,17,252,127,0,254,63,128
+	defb 255,63,128,127,31,192,63,143,224,63,199,240,31,231,248,15
+	defb 227,248,7,241,252,7,241,252,3,248,254,3,248,254,1,252
+	defb 127,1,252,127,0,254,63,128,254,63,128,126,31,192,127,31
+	defb 192,63,143,224,63,143,224,31,207,240,31,199,240,15,227,248
+	defb 15,227,252,7,241,252,3,248,254,3,252,96,127,15,248,31
+	defb 195,252,7,240,255,1,248,63,192,127,15,192,31,135,244,7
+	defb 225,253,3,248,63,64,126,15,240,31,195,248,7,240,255,1
+	defb 252,31,160,127,15,248,15,225,252,3,248,127,64,254,31,240
+	defb 31,195,248,15,240,255,128,254,31,224,63,135,244,23,240,254
+	defb 3,252,63,160,255,135,244,31,241,254,131,252,63,192,255,135
+	defb 240,23,240,254,131,254,31,208,255,195,250,27,248,127,67,255
+	defb 15,248,111,225,255,5,252,63,224,191,199,254,27,248,127,195
+	defb 127,143,248,127,240,255,135,255,31,248,127,241,255,7,255,15
+	defb 224,127,240,255,135,255,135,252,63,252,127,193,255,231,255,127
+	defb 255,63,251
 	.HLshr6_A
 	sla h
 	sla h
@@ -6580,13 +6643,27 @@
 	jp	z,i_76
 	cp	#(1% 256)
 	jp	z,i_77
+	cp	#(2% 256)
+	jp	z,i_78
 	jp	i_74
 .i_76
 	ld	hl,65216	;const
 	ld	(_player+8),hl
 	jp	i_74
 .i_77
+	call	_wyz_stop_sound
+	ld a, 1
+	call shiruplay
 	call	_recuadrius
+	ld	hl,1	;const
+	call	_wyz_play_music
+	jp	i_74
+.i_78
+	call	_wyz_stop_sound
+	ld a, 2
+	call shiruplay
+	ld	hl,1	;const
+	call	_wyz_play_music
 .i_74
 	ret
 
@@ -6931,7 +7008,7 @@
 
 ._main
 	call	_system_init
-.i_82
+.i_83
 	call	_title_screen
 	call	_blackout
 	ld	hl,1 % 256	;const
@@ -6974,12 +7051,12 @@
 	ld (_on_pant), a
 	ld	hl,1	;const
 	call	_wyz_play_music
-.i_84
+.i_85
 	ld	hl,(_playing)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_85
+	jp	z,i_86
 	ld a, (_n_pant)
 	ld c, a
 	ld a, (_on_pant)
@@ -6998,7 +7075,7 @@
 	ld	hl,(_objs_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_86
+	jp	nc,i_87
 	ld	hl,14	;const
 	push	hl
 	ld	hl,2	;const
@@ -7019,28 +7096,28 @@
 	ld	h,0
 	ld	a,l
 	ld	(_objs_old),a
-.i_86
+.i_87
 	ld	de,(_player+29)
 	ld	hl,(_life_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_87
+	jp	nc,i_88
 	ld	hl,(_player+29)
 	xor	a
 	or	h
-	jp	m,i_88
+	jp	m,i_89
 	or	l
-	jp	z,i_88
+	jp	z,i_89
 	ld	hl,(_player+29)
 	ld	h,0
 	ld	a,l
 	ld	(_pti),a
-	jp	i_89
-.i_88
+	jp	i_90
+.i_89
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_pti),a
-.i_89
+.i_90
 	ld	hl,7	;const
 	push	hl
 	ld	hl,2	;const
@@ -7056,14 +7133,14 @@
 	ld	h,0
 	ld	a,l
 	ld	(_life_old),a
-.i_87
+.i_88
 	ld	hl,_player+28
 	call	l_gchar
 	ex	de,hl
 	ld	hl,(_keys_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_90
+	jp	nc,i_91
 	ld a, 21
 	ld (__x), a
 	ld a, 2
@@ -7071,14 +7148,14 @@
 	ld a, (_player + 28)
 	ld (_keys_old), a
 	call draw_2_digits_shortcut
-.i_90
+.i_91
 	ld	hl,(_flags)
 	ld	h,0
 	ex	de,hl
 	ld	hl,(_flag_old)
 	ld	h,0
 	call	l_ne
-	jp	nc,i_91
+	jp	nc,i_92
 	ld	hl,25	;const
 	push	hl
 	ld	hl,1	;const
@@ -7094,7 +7171,7 @@
 	ld	h,0
 	ld	a,l
 	ld	(_flag_old),a
-.i_91
+.i_92
 	ld hl, _maincounter
 	inc (hl)
 	ld a, (_half_life)
@@ -7133,21 +7210,21 @@
 	jp c, _hotspots_else
 	ld	a,(_hotspot_t)
 	and	a
-	jp	z,i_92
+	jp	z,i_93
 	ld	a,#(0 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,(_hotspot_t)
 	ld	h,0
-.i_95
+.i_96
 	ld	a,l
 	cp	#(1% 256)
-	jp	z,i_96
-	cp	#(2% 256)
 	jp	z,i_97
-	cp	#(3% 256)
+	cp	#(2% 256)
 	jp	z,i_98
-	jp	i_94
-.i_96
+	cp	#(3% 256)
+	jp	z,i_99
+	jp	i_95
+.i_97
 	ld	hl,_player+27
 	push	hl
 	call	l_gchar
@@ -7157,8 +7234,8 @@
 	ld	(de),a
 	ld	hl,7	;const
 	call	_peta_el_beeper
-	jp	i_94
-.i_97
+	jp	i_95
+.i_98
 	ld	hl,_player+28
 	push	hl
 	call	l_gchar
@@ -7168,8 +7245,8 @@
 	ld	(de),a
 	ld	hl,8	;const
 	call	_peta_el_beeper
-	jp	i_94
-.i_98
+	jp	i_95
+.i_99
 	ld	hl,_player+29
 	inc	(hl)
 	ld	a,(hl)
@@ -7182,18 +7259,18 @@
 	ld	de,99	;const
 	ex	de,hl
 	call	l_gt
-	jp	nc,i_99
+	jp	nc,i_100
 	ld	hl,99	;const
 	ld	(_player+29),hl
-.i_99
+.i_100
 	ld	a,#(2 % 256 % 256)
 	ld	(_rdi),a
 	ld	hl,9	;const
 	call	_peta_el_beeper
-.i_94
+.i_95
 	ld	a,(_rdi)
 	cp	#(1 % 256)
-	jp	z,i_100
+	jp	z,i_101
 	ld	a,(_hotspot_x)
 	ld	e,a
 	ld	d,0
@@ -7238,8 +7315,8 @@
 	ld	(de),a
 	ld	hl,3	;const
 	call	_script
-.i_100
-.i_92
+.i_101
+.i_93
 	._hotspots_finally
 	ld a, 1
 	ld (_hotspot_flag), a
@@ -7254,12 +7331,12 @@
 	ld	hl,(_on_pant)
 	ld	h,0
 	call	l_eq
-	jp	nc,i_101
+	jp	nc,i_102
 	ld	hl,1	;const
 	push	hl
 	call	_cpc_UpdateNow
 	pop	bc
-.i_101
+.i_102
 	.player_flicker_done_check
 	ld a, (_player + 23)
 	and 2
@@ -7275,7 +7352,7 @@
 	ld	hl,_pad_this_frame
 	ld	a,(hl)
 	and	#(16 % 256)
-	jp	nz,i_102
+	jp	nz,i_103
 	ld	hl,2	;const
 	call	_script
 	ld	a,(_n_pant)
@@ -7286,18 +7363,18 @@
 	ld	de,17
 	add	hl,de
 	call	_script
-.i_102
+.i_103
 	ld	a,(_gpx)
 	cp	#(0 % 256)
-	jp	nz,i_104
+	jp	nz,i_105
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jr	c,i_105_i_104
-.i_104
-	jp	i_103
-.i_105_i_104
+	jr	c,i_106_i_105
+.i_105
+	jp	i_104
+.i_106_i_105
 	ld hl, _n_pant
 	dec (hl)
 	ld a, 224
@@ -7305,19 +7382,19 @@
 	ld hl, #(224*64)
 	ld (_player), hl
 	.flick_left_done
-	jp	i_106
-.i_103
+	jp	i_107
+.i_104
 	ld	a,(_gpx)
 	cp	#(224 % 256)
-	jp	nz,i_108
+	jp	nz,i_109
 	ld	hl,(_player+6)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_109_i_108
-.i_108
-	jp	i_107
-.i_109_i_108
+	jr	c,i_110_i_109
+.i_109
+	jp	i_108
+.i_110_i_109
 	ld hl, _n_pant
 	inc (hl)
 	xor a
@@ -7325,25 +7402,25 @@
 	ld hl, 0
 	ld (_player), hl
 	.flick_right_done
+.i_108
 .i_107
-.i_106
 	ld	a,(_gpy)
 	cp	#(0 % 256)
-	jp	nz,i_111
+	jp	nz,i_112
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	nc,i_111
+	jp	nc,i_112
 	ld	a,(_n_pant)
 	cp	#(20 % 256)
-	jr	z,i_111_uge
-	jp	c,i_111
-.i_111_uge
-	jr	i_112_i_111
-.i_111
-	jp	i_110
-.i_112_i_111
+	jr	z,i_112_uge
+	jp	c,i_112
+.i_112_uge
+	jr	i_113_i_112
+.i_112
+	jp	i_111
+.i_113_i_112
 	ld a, (_n_pant)
 	sub 20
 	ld (_n_pant), a
@@ -7352,19 +7429,19 @@
 	ld hl, #(144*64)
 	ld (_player+2), hl
 	.flick_up_done
-	jp	i_113
-.i_110
+	jp	i_114
+.i_111
 	ld	a,(_gpy)
 	cp	#(144 % 256)
-	jp	nz,i_115
+	jp	nz,i_116
 	ld	hl,(_player+8)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_gt
-	jr	c,i_116_i_115
-.i_115
-	jp	i_114
-.i_116_i_115
+	jr	c,i_117_i_116
+.i_116
+	jp	i_115
+.i_117_i_116
 	ld a, (_n_pant)
 	add 20
 	ld (_n_pant), a
@@ -7373,29 +7450,29 @@
 	ld hl, 0
 	ld (_player+2),hl
 	.flick_down_done
+.i_115
 .i_114
-.i_113
 	ld	hl,9	;const
 	call	cpc_TestKey
 	ld	a,h
 	or	l
-	jp	z,i_117
+	jp	z,i_118
 	ld	hl,_pad_this_frame
 	ld	a,(hl)
 	and	#(4 % 256)
 	cp	#(0 % 256)
 	ld	hl,0
-	jp	nz,i_119
+	jp	nz,i_120
 	inc	hl
 	ld	a,(_n_pant)
 	cp	#(20 % 256)
-	jr	z,i_119_uge
-	jp	c,i_119
-.i_119_uge
-	jr	i_120_i_119
-.i_119
-	jp	i_118
-.i_120_i_119
+	jr	z,i_120_uge
+	jp	c,i_120
+.i_120_uge
+	jr	i_121_i_120
+.i_120
+	jp	i_119
+.i_121_i_120
 	ld	hl,(_n_pant)
 	ld	h,0
 	ld	bc,-20
@@ -7403,21 +7480,21 @@
 	ld	h,0
 	ld	a,l
 	ld	(_n_pant),a
-.i_118
+.i_119
 	ld	hl,_pad_this_frame
 	ld	a,(hl)
 	and	#(8 % 256)
 	cp	#(0 % 256)
 	ld	hl,0
-	jp	nz,i_122
+	jp	nz,i_123
 	inc	hl
 	ld	a,(_n_pant)
 	cp	#(80 % 256)
-	jp	z,i_122
-	jr	c,i_123_i_122
-.i_122
-	jp	i_121
-.i_123_i_122
+	jp	z,i_123
+	jr	c,i_124_i_123
+.i_123
+	jp	i_122
+.i_124_i_123
 	ld	hl,(_n_pant)
 	ld	h,0
 	ld	bc,20
@@ -7425,48 +7502,48 @@
 	ld	h,0
 	ld	a,l
 	ld	(_n_pant),a
-.i_121
+.i_122
 	ld	hl,_pad_this_frame
 	ld	a,(hl)
 	and	#(1 % 256)
 	cp	#(0 % 256)
 	ld	hl,0
-	jp	nz,i_125
+	jp	nz,i_126
 	inc	hl
 	ld	a,(_n_pant)
 	cp	#(0 % 256)
-	jp	z,i_125
-	jp	c,i_125
-	jr	i_126_i_125
-.i_125
-	jp	i_124
-.i_126_i_125
+	jp	z,i_126
+	jp	c,i_126
+	jr	i_127_i_126
+.i_126
+	jp	i_125
+.i_127_i_126
 	ld	hl,_n_pant
 	ld	a,(hl)
 	dec	(hl)
-.i_124
+.i_125
 	ld	hl,_pad_this_frame
 	ld	a,(hl)
 	and	#(2 % 256)
 	cp	#(0 % 256)
 	ld	hl,0
-	jp	nz,i_128
+	jp	nz,i_129
 	inc	hl
 	ld	a,(_n_pant)
 	cp	#(80 % 256)
-	jp	z,i_128
-	jr	c,i_129_i_128
-.i_128
-	jp	i_127
-.i_129_i_128
+	jp	z,i_129
+	jr	c,i_130_i_129
+.i_129
+	jp	i_128
+.i_130_i_129
 	ld	hl,_n_pant
 	ld	a,(hl)
 	inc	(hl)
-.i_127
+.i_128
 	ld	hl,_pad_this_frame
 	ld	a,(hl)
 	and	#(16 % 256)
-	jp	nz,i_130
+	jp	nz,i_131
 	ld	hl,_player+27
 	push	hl
 	call	l_gchar
@@ -7475,26 +7552,26 @@
 	ld	a,l
 	ld	(de),a
 	dec	hl
-.i_130
-.i_117
+.i_131
+.i_118
 	ld	a,(_script_result)
 	ld	e,a
 	ld	d,0
 	ld	hl,1	;const
 	call	l_eq
-	jp	nc,i_131
+	jp	nc,i_132
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_cortina
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
 	call	_game_ending
-.i_131
+.i_132
 	ld	hl,(_player+36)
 	ld	h,0
 	ld	a,h
 	or	l
-	jp	z,i_132
+	jp	z,i_133
 	.player_is_dead
 	ld	hl,_player+36
 	ld	(hl),#(0 % 256 % 256)
@@ -7513,28 +7590,28 @@
 	pop	de
 	call	l_pint
 	call	_player_flicker
-.i_132
+.i_133
 	ld	hl,(_player+29)
 	ld	de,0	;const
 	ex	de,hl
 	call	l_lt
-	jp	c,i_134
+	jp	c,i_135
 	ld	a,(_script_result)
 	cp	#(2 % 256)
-	jp	nz,i_133
-.i_134
+	jp	nz,i_134
+.i_135
 	call	_saca_a_todo_el_mundo_de_aqui
 	call	_game_over
 	ld	hl,0 % 256	;const
 	ld	a,l
 	ld	(_playing),a
-.i_133
+.i_134
 	xor a
 	ld (_pant_just_rendered), a
-	jp	i_84
-.i_85
-	jp	i_82
-.i_83
+	jp	i_85
+.i_86
+	jp	i_83
+.i_84
 	ret
 
 
