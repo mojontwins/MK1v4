@@ -33,6 +33,12 @@ XREF __en_y
 XREF _decode_text
 XREF _script_param
 
+; Dialogs
+XREF _addr1
+XREF _addr2
+XREF _addr3
+XRED _run_dialog
+
 ; Target CPC
 XREF _cpc_UpdateNow
 
@@ -842,6 +848,23 @@ XDEF _script_result
 	ld  a, l 
 	ret
 .rvb_set_script_beh_at_done
+
+	; DIALOG EXPRESION RVALUE
+	cp 0xE8
+	jr  nz, rvb_set_script_dialog_done
+	; Read three addresses
+	call read_addr
+    ld  (_addr1), hl
+    call read_addr
+    ld  (_addr2), hl
+    call read_addr
+    ld  (_addr3), hl
+    ; this is a C function in the engine:
+    call _run_dialog
+    ; run dialog returns result in L
+    ld  a, l
+    ret
+.rvb_set_script_dialog_done
 
 	ld  d, 0 
 	ld  e, a 

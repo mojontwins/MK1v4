@@ -106,6 +106,14 @@ Sub resetAliases ()
 	Next i 
 End Sub
 
+Function encodeSpaces (b as String) As String
+	Return replace (b, " ", "_")
+End Function
+
+Function decodeSpaces (b as String) As String
+	Return replace (b, "_", " ")
+End Function
+
 Function addOrResolveAlias (salias As String) As Integer
 	Dim i As Integer
 
@@ -252,11 +260,18 @@ Sub parseScriptLine (linea As String)
 		i = i + 1
 	Wend		
 
-	' Process to encode TILE AT and BEH AT
-	' TILE AT A B -> TILE=AT=A=B, shift tokens 3 times
+	' Process to encode expressions TILE AT and BEH AT
+	' TILE AT A B -> =TILE=AT=A=B, shift tokens 3 times
+	' DIALOG A B C -> =DIALOG=A=B=C, shift tokens 3 times'
 	i = 0: While i < uBound (tokens) And tokens (i) <> ""
 		If (Ucase (tokens (i)) = "TILE" Or Ucase (tokens (i)) = "BEH") And Ucase (tokens (i + 1)) = "AT" Then
 			indirec = "=" & tokens (i) & "=" & tokens (i + 2) & "=" & tokens (i + 3)
+			shiftTokens i
+			shiftTokens i
+			shiftTokens i
+			tokens (i) = indirec
+		ElseIf Ucase (tokens (i)) = "DIALOG" Then
+			indirec = "=" & tokens (i) & "=" & encodeSpaces (tokens (i + 1)) & "=" & encodeSpaces (tokens (i + 2)) & "=" & encodeSpaces (tokens (i + 3))
 			shiftTokens i
 			shiftTokens i
 			shiftTokens i
@@ -265,6 +280,8 @@ Sub parseScriptLine (linea As String)
 
 		i = i + 1
 	Wend
+
+	' Process to encode expressions DIALOG'
 
 	' Process to solve FLAG n -> $n
 	' This should be made recursively so FLAG FLAG FLAG n -> $$$n
@@ -379,6 +396,46 @@ Function readNewLine (fIn As Integer) As String
 	Return linea
 End Function
 
+Function getTextOffset (text As String) As String
+	Dim As String encodedText
+	Dim As Integer offset, i
+
+	' if text is empty, return &HFFFF
+	If text = "" Then Return Chr(&HFF) & Chr (&HFF)
+
+	' encode this text
+	encodedText = encode5BitEsc (text, textWidth)
+
+	' return offset
+	offset = -1
+
+	For i = 0 To textPoolIndex - 1
+		If textPool (i) = encodedText Then 
+			offset = textOffsets (i)
+			Exit For
+		End If
+	Next i
+
+	If offset = -1 Then
+		' New text! store offset, add text, return offset 
+		offset = lastTextOffset 
+		textOffsets (textPoolIndex) = lastTextOffset 
+		textPool (textPoolIndex) = encodedText
+
+		If textdebug Then
+			Print "Encoded text: " & encodedText
+			Print "Pretty Print: "
+			prettyPrintEncodedString encodedText
+		End If
+
+		lastTextOffset = lastTextOffset + Len (encodedText)
+		textPoolIndex = textPoolIndex + 1
+	End If 
+
+	Return Chr (offset Mod 256) & Chr (offset \ 256)
+
+End Function
+
 Function pVal (expresion As String) As String 
 	Dim As String subTokens(16)
 	Dim As Integer i
@@ -391,7 +448,12 @@ Function pVal (expresion As String) As String
 
 		parseTokenizeString expresion & "=", subTokens (), "=", "#"'
 
-		If subTokens (0) = "TILE" Then  
+		IF subTokens (0) = "DIALOG" Then 
+			result = Chr (&HFF) & Chr (&HE6) & getTextOffset (decodeSpaces (subTokens (1))) & _
+				getTextOffset (decodeSpaces (subTokens (2))) & _
+				getTextOffset (decodeSpaces (subTokens (3)))
+			RV (&HE6) = -1
+		ElseIf subTokens (0) = "TILE" Then  
 			result = Chr (&HFF) & Chr (&HE8) & pVal(subTokens (1)) & pVal (subTokens (2))
 			RV (&HE8) = -1
 		ElseIf subTokens (0) = "BEH" Then 
@@ -446,97 +508,21 @@ Function makeFlag (encoded As String) As String
 	Return Chr (&HFF) & encoded
 End Function
 
-Function buildCond CDecl (count As Integer, ...) As String
-	Dim As String code = ""
-	Dim As Integer i
-	Dim As String b
-
-	Dim As Any Ptr arg = VA_First ()
-
-	For i = 1 To count
-		b = *VA_Arg (arg, ZString Ptr)
-
-		' This is bollocks, C strings are used for this and they can't contain zeros!
-		If b = "" Then b = Chr (0)
-		If Len(b) >= 1 And Right (b, 1) = Chr (&HFF) Then b = b & Chr (0)
-
-		code = code & b
-
-		arg = VA_Next (arg, ZString Ptr)
-	Next i
-
-	If Len (code) >= 1 Then
-		CU (Asc (Left (code, 1))) = -1
+Function buildCond (bytecode As String) As String
+	If Len (bytecode) >= 1 Then
+		CU (Asc (Left (bytecode, 1))) = -1
 	End If
 
-	'If debug Then Print "BuildCond ";: printBinStr (code)
-
-	Return code
+	Return byteCode
 End Function
 
-Function getTextOffset (text As String) As String
-	Dim As String encodedText
-	Dim As Integer offset, i
 
-	' encode this text
-	encodedText = encode5BitEsc (text, textWidth)
-
-	' return offset
-	offset = -1
-
-	For i = 0 To textPoolIndex - 1
-		If textPool (i) = text Then 
-			offset = textOffsets (i)
-			Exit For
-		End If
-	Next i
-
-	If offset = -1 Then
-		' New text! store offset, add text, return offset 
-		offset = lastTextOffset 
-		textOffsets (textPoolIndex) = lastTextOffset 
-		textPool (textPoolIndex) = encodedText
-
-		If textdebug Then
-			Print "Encoded text: " & encodedText
-			Print "Pretty Print: "
-			prettyPrintEncodedString encodedText
-		End If
-
-		lastTextOffset = lastTextOffset + Len (encodedText)
-		textPoolIndex = textPoolIndex + 1
-	End If 
-
-	Return Chr (offset Mod 256) & Chr (offset \ 256)
-
-End Function
-
-Function buildAction CDecl (ByVal count As Integer, ...) As String
-	Dim As String code = ""
-	Dim As Integer i
-	Dim As String b
-
-	Dim As Any Ptr arg = VA_First ()
-
-	For i = 1 To count
-		b = *VA_Arg (arg, ZString Ptr)
-		
-		' This is bollocks, C strings are used for this and they can't contain zeros!
-		If b = "" Then b = Chr (0)
-		If Len(b) >= 1 And Right (b, 1) = Chr (&HFF) Then b = b & Chr (0)
-
-		code = code & b
-
-		arg = VA_Next (arg, ZString Ptr)
-	Next i
-
-	If Len (code) >= 1 Then
-		AU (Asc (Left (code, 1))) = -1
+Function buildAction (bytecode As String) As String
+	If Len (bytecode) >= 1 Then
+		AU (Asc (Left (bytecode, 1))) = -1
 	End If
 
-	'If debug Then Print "BuildAction ";: printBinStr (code)
-
-	Return code
+	Return byteCode
 End Function
 
 Sub syntaxError 
@@ -551,41 +537,41 @@ Function processIf (linea As String) As String
 
 	' First of all, override IF NPANT if desired
 	If fastNPant And lCase (tokens (1)) = "$254" And tokens (2) = "=" Then 
-		code = buildCond (2, Chr(&H05), pVal (tokens (3)))
+		code = buildCond (Chr(&H05) & pVal (tokens (3)))
 
 	' Detect numeric conditions IF a OP b 
 	ElseIf isNumberOrVar (tokens (1)) And isComp (tokens(2)) And isNumberOrVar (tokens (3)) Then
 		Select Case tokens (2)
 			Case "=" 
 				' $01 A B
-				code = buildCond (3, Chr(&H01), pVal (tokens (1)), pVal (tokens (3)))
+				code = buildCond (Chr(&H01) & pVal (tokens (1)) & pVal (tokens (3)))
 
 			Case "<":
 				' $02 A B
-				code = buildCond (3, Chr(&H02), pVal (tokens (1)), pVal (tokens (3)))
+				code = buildCond (Chr(&H02) & pVal (tokens (1)) & pVal (tokens (3)))
 
 			Case ">" 
 				' $02 B A 
-				code = buildCond (3, Chr(&H02), pVal (tokens (3)), pVal (tokens (1)))
+				code = buildCond (Chr(&H02) & pVal (tokens (3)) & pVal (tokens (1)))
 
 			Case ">="
 				' $03 A B
-				code = buildCond (3, Chr(&H03), pVal (tokens (1)), pVal (tokens (3)))
+				code = buildCond (Chr(&H03) & pVal (tokens (1)) & pVal (tokens (3)))
 
 			Case "<="
 				' $03 B A
-				code = buildCond (3, Chr(&H03), pVal (tokens (3)), pVal (tokens (1)))
+				code = buildCond (Chr(&H03) & pVal (tokens (3)) & pVal (tokens (1)))
 
 			Case "<>", "!="
 				' $04 A B
-				code = buildCond (3, Chr(&H04), pVal (tokens (1)), pVal (tokens (3)))
+				code = buildCond (Chr(&H04) & pVal (tokens (1)) & pVal (tokens (3)))
 		End Select
 
 	Else
 		cmd = lCase (tokens (1))
 		Select Case cmd
 			Case "true"
-				code = buildCond (1, Chr (&HF0))
+				code = buildCond (Chr (&HF0))
 
 			Case "player"
 				' Detect player conditions
@@ -595,27 +581,27 @@ Function processIf (linea As String) As String
 					Case "in_x"
 						' $21 X Y
 						' Otherwise use special OPCODE 20
-						code = buildCond (3, Chr (&H21), pVal (tokens (3)), pVal (tokens (4)))
+						code = buildCond (Chr (&H21) & pVal (tokens (3)) & pVal (tokens (4)))
 					
 					Case "in_y"
 						' $22 X Y
-						code = buildCond (3, Chr (&H22), pVal (tokens (3)), pVal (tokens (4)))
+						code = buildCond (Chr (&H22) & pVal (tokens (3)) & pVal (tokens (4)))
 					
 					Case "touches", "at"
 						' $23 X Y
-						code = buildCond (3, Chr (&H23), pVal (tokens (3)), pVal (tokens (4)))
+						code = buildCond (Chr (&H23) & pVal (tokens (3)) & pVal (tokens (4)))
 					
 					Case "falling"
 						' $24 X Y
-						code = buildCond (1, Chr (&H24))
+						code = buildCond (Chr (&H24))
 		
 					Case "not_falling"
 						' $25 X Y
-						code = buildCond (1, Chr (&H25))
+						code = buildCond (Chr (&H25))
 					
 					Case "still"
 						' $26 X Y
-						code = buildCond (1, Chr (&H26))
+						code = buildCond (Chr (&H26))
 				End Select
 
 			Case "tile"
@@ -623,7 +609,7 @@ Function processIf (linea As String) As String
 				Select Case lCase (tokens (2))
 					Case "at"
 						' $30 X Y T
-						code = buildCond (4, Chr (&H30), pVal (tokens (3)), pVal (tokens (4)), pVal (tokens (6)))
+						code = buildCond (Chr (&H30) & pVal (tokens (3)) & pVal (tokens (4)) & pVal (tokens (6)))
 
 				End Select
 
@@ -632,7 +618,7 @@ Function processIf (linea As String) As String
 				Select Case lCase (tokens (2))
 					Case "at"
 						' $31 X Y T
-						code = buildCond (4, Chr (&H31), pVal (tokens (3)), pVal (tokens (4)), pVal (tokens (6)))
+						code = buildCond (Chr (&H31) & pVal (tokens (3)) & pVal (tokens (4)) & pVal (tokens (6)))
 
 				End Select
 
@@ -653,7 +639,7 @@ Function processCommand (linea As String) As String
 	' Detect direct numeric asignation $A = B 
 	If tokens (1) = "=" Then 
 		If correctLvalue (tokens (0)) And isNumberOrVar (tokens (2)) Then
-			code = buildAction (3, Chr(&H00), lVal (tokens(0)), pVal (tokens (2)))
+			code = buildAction (Chr(&H00) & lVal (tokens(0)) & pVal (tokens (2)))
 		Else
 			syntaxError
 		End If
@@ -669,7 +655,7 @@ Function processCommand (linea As String) As String
 			' INC $A B
 			' $01 A B
 			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
-				code = buildAction (3, Chr(&H01), lVal (tokens (1)), pVal (tokens (2)))
+				code = buildAction (Chr(&H01) & lVal (tokens (1)) & pVal (tokens (2)))
 			Else
 				syntaxError
 			End If
@@ -678,7 +664,7 @@ Function processCommand (linea As String) As String
 			' DEC $A B
 			' $02 A B 
 			If correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
-				code = buildAction (3, Chr(&H02), lVal (tokens (1)), pVal (tokens (2)))
+				code = buildAction (Chr(&H02) & lVal (tokens (1)) & pVal (tokens (2)))
 			Else
 				syntaxError
 			End If
@@ -686,11 +672,11 @@ Function processCommand (linea As String) As String
 		Case "add"
 			' First deprecated construct add flags x y -> inc $X $Y 
 			If scmd = "flags" Then 
-				code = buildAction (3, Chr (&H01), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
+				code = buildAction (Chr (&H01) & pVal (tokens (2)) & makeFlag (pVal (tokens (3))))
 
 			ElseIf correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
 				' Alias for inc 
-				code = buildAction (3, Chr(&H01), lVal (tokens (1)), pVal (tokens (2)))
+				code = buildAction (Chr(&H01) & lVal (tokens (1)) & pVal (tokens (2)))
 			Else
 				syntaxError
 			End If 
@@ -698,11 +684,11 @@ Function processCommand (linea As String) As String
 		Case "sub"
 			' First deprecated construct sub flags x y -> dec $X $Y 
 			If scmd = "flags" Then 
-				code = buildAction (3, Chr (&H02), pVal (tokens (2)), makeFlag (pVal (tokens (3))))
+				code = buildAction (Chr (&H02) & pVal (tokens (2)) & makeFlag (pVal (tokens (3))))
 
 			ElseIf correctLvalue (tokens(1)) And isNumberOrVar (tokens (2)) Then
 				' Alias for dec 
-				code = buildAction (3, Chr(&H02), lVal (tokens (1)), pVal (tokens (2)))
+				code = buildAction (Chr(&H02) & lVal (tokens (1)) & pVal (tokens (2)))
 			Else
 				syntaxError
 			End If '
@@ -710,15 +696,15 @@ Function processCommand (linea As String) As String
 		Case "set"
 			If scmd = "tile" Then
 				' SET TILE X Y = N
-				code = buildAction (4, Chr (&H20), pVal (tokens(2)), pVal (tokens (3)), pVal (tokens (5)))
+				code = buildAction (Chr (&H20) & pVal (tokens(2)) & pVal (tokens (3)) & pVal (tokens (5)))
 
 			ElseIf scmd = "beh" Then
 				' SET BEH X Y = N
-				code = buildAction (4, Chr (&H21), pVal (tokens(2)), pVal (tokens (3)), pVal (tokens (5)))
+				code = buildAction (Chr (&H21) & pVal (tokens(2)) & pVal (tokens (3)) & pVal (tokens (5)))
 
 			ElseIf correctLvalue (tokens (1)) And tokens (2) = "=" And isNumberOrVar (tokens (3)) Then
 				' SET $A = B
-				code = buildAction (3, Chr(&H00), lVal (tokens(1)), pVal (tokens (3)))
+				code = buildAction (Chr(&H00) & lVal (tokens(1)) & pVal (tokens (3)))
 			Else
 				syntaxError
 			End If
@@ -727,21 +713,21 @@ Function processCommand (linea As String) As String
 			If scmd = "item" Then
 				' GET ITEM SET f
 				' $30 F (lvalue)
-				code = buildAction (2, Chr (&H30), lVal (tokens(3)))
+				code = buildAction (Chr (&H30) & lVal (tokens(3)))
 			End If
 
 		Case "print"
 			If scmd = "tile" Then 
 				' PRINT TILE X Y = T
 				' $50 X Y T
-				code = buildAction (4, Chr (&H50), pVal (tokens (2)), pVal (tokens (3)), pVal (tokens (5)))
+				code = buildAction (Chr (&H50) & pVal (tokens (2)) & pVal (tokens (3)) & pVal (tokens (5)))
 			End If
 
 		Case "warp"
 			If scmd = "to" And isNumberOrVar (tokens (2)) And isNumberOrVar (tokens (3))And isNumberOrVar (tokens (4)) Then
 				' WARP TO N, X, Y
 				' $6D N X Y
-				code = buildAction (4, Chr (&H6D), pVal (tokens (2)), pVal (tokens (3)), pVal (tokens (4)))
+				code = buildAction (Chr (&H6D) & pVal (tokens (2)) & pVal (tokens (3)) & pVal (tokens (4)))
 			Else
 				syntaxError
 			End If
@@ -749,40 +735,40 @@ Function processCommand (linea As String) As String
 		Case "sound"
 			' SOUND N
 			' $E0 N
-			code = buildAction (2, Chr (&HE0), pVal (tokens(1)))
+			code = buildAction (Chr (&HE0) & pVal (tokens(1)))
 
 		Case "show"
 			' $E1
-			code = buildAction (1, Chr (&HE1))
+			code = buildAction (Chr (&HE1))
 
 		Case "recharge"
 			' $E2
-			code = buildAction (1, Chr (&HE2))
+			code = buildAction (Chr (&HE2))
 
 		Case "text"
 
 			If scmd = "box" Then
 				' $E6 LSB MSB
-				code = buildAction (1, Chr (&HE6)) & getTextOffset (tokens (2))
+				code = buildAction (Chr (&HE6)) & getTextOffset (tokens (2))
 
 			Else
 				' $E3 L <TEXT> 0
-				code = buildAction (1, Chr (&HE3)) & Chr(1 + Len(tokens (1))) & tokens (1) & Chr (0)
+				code = buildAction (Chr (&HE3)) & Chr(1 + Len(tokens (1))) & tokens (1) & Chr (0)
 			End If
 				
 		Case "extern"
 			' EXTERN N M
 			' $E4 N M'
-			code = buildAction (3, Chr (&HE4), pVal (tokens(1)), pVal (tokens (2)))
+			code = buildAction (Chr (&HE4) & pVal (tokens(1)) & pVal (tokens (2)))
 
 		Case "pause"
 			' PAUSE N
 			' $E5 N
-			code = buildAction (2, Chr (&HE5), pVal (tokens(1)))
+			code = buildAction (Chr (&HE5) & pVal (tokens(1)))
 
 		Case "game"
 			If scmd = "over" then 
-				code = buildAction (1, Chr (&HF1))
+				code = buildAction (Chr (&HF1))
 				lastCommandWasTerminator = -1
 			Else 
 				syntaxError
@@ -790,7 +776,7 @@ Function processCommand (linea As String) As String
 
 		Case "win"
 			If scmd = "game" Then  
-				code = buildAction (1, Chr (&HF0))
+				code = buildAction (Chr (&HF0))
 				lastCommandWasTerminator = -1
 			Else 
 				syntaxError
@@ -799,14 +785,14 @@ Function processCommand (linea As String) As String
 		Case "break"
 			' BREAK
 			' $F2
-			code = buildAction (1, Chr (&HF2))'
+			code = buildAction (Chr (&HF2))'
 			lastCommandWasTerminator = -1
 
 		Case "rerun"
 			' RERUN
 			' $F3 V
 			If isNumberOrVar (tokens (1)) Then
-				code = buildAction (2, Chr (&HF3), pVal (tokens (1)))
+				code = buildAction (Chr (&HF3) & pVal (tokens (1)))
 				lastCommandWasTerminator = -1
 			Else
 				syntaxError
@@ -825,7 +811,7 @@ Function processCommand (linea As String) As String
 			subBinIndex = getSubAddressByName (tokens (1)) + indexSize * 2
 
 			If subBinIndex > -1 Then
-				code = buildAction (3, Chr (&HF4), Chr(subBinIndex And &HFF), Chr (subBinIndex \ 256))				
+				code = buildAction (Chr (&HF4) & Chr(subBinIndex And &HFF) & Chr (subBinIndex \ 256))				
 			Else
 				syntaxError
 			End If
@@ -1026,6 +1012,9 @@ Sub processScript (fIn As Integer)
 
 			ElseIf tokens (0) = "alias" Then 
 				' ALIAS %A = B
+				' Needs reparsing
+				parseTokenizeString lcase (linea), tokens (), ",()[]", "#"
+
 				If Len (tokens (1)) > 0 And Left (tokens (1), 1) = "%" Then tokens (1) = Right (tokens (1), Len (tokens (1)) - 1)
 				If Len (tokens (1)) > 0 And tokens (2) = "=" And isNumber (tokens (3)) Then
 					aliases (Val (tokens (3))) = lCase (tokens (1))
@@ -1262,7 +1251,7 @@ Dim As String fileIns(127)
 Dim As String fileText
 Dim As Integer isEntering, room
 
-Print "msc v4.5.20260727 ~ ";
+Print "msc v4.6.20260729 ~ ";
 
 sclpParseAttrs
 If Not sclpCheck (mandatory ()) Then usage: End 
@@ -1318,7 +1307,10 @@ fOut = FreeFile
 Open interpreterFn For Output As #fOut
 
 writeAssemblyString fOut, "defc PLAYER_LIFE=99 ;; Find a way to solve this"
-writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _on_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y|XREF _decode_text|XREF _script_param"
+writeAssemblyString fOut, "; Imports|XREF _flags|XREF _n_pant|XREF _on_pant|XREF _gpx|XREF _gpy|XREF _tpx|XREF _tpy|XREF _tat|XREF _tqt|XREF _player|XREF _attr_2|XREF qtile_do|XREF set_map_tile_do|XREF _draw_coloured_tile|XREF __x|XREF __y|XREF __t|XREF __n|XREF _comportamiento_tiles|XREF _map_attr|XREF _peta_el_beeper|XREF _do_extern_action|XREF draw_line_of_text|XREF _hotspot_t|XREF _scenery_info|XREF __en_t|XREF _en_it|XREF __en_x|XREF __en_y|XREF _script_param"
+
+If RV(&HE6) Or AU(&HE6) Then writeAssemblyString fOut, "; 5bit text decoder|XREF _run_text_box"
+If RV(&HE6) Then writeAssemblyString fOut, "; Dialogs|XREF _addr1|XREF _addr2|XREF _addr3|XREF _run_dialog"
 
 writeAssemblyString fOut, "XREF script_bytecode"
 
@@ -1444,7 +1436,7 @@ If AU(&HE2) Then writeAssemblyString fOut, ";; OPCODE 0xE2|;; RECHARGE|cp  0xE2|
 If AU(&HE3) Then writeAssemblyString fOut, ";; OPCODE 0xE3|;; TEXT L <CHARS> 0|cp  0xE3|jr  nz, aopcode_E3_end|.aopcode_E3|call read_byte 			; String length|ld  b, 0|ld  c, a|add hl, bc 				; Move after the string|push hl|ld  hl, (script)|call draw_line_of_text|pop hl|ld  (script), hl 		; Get past the string|jp script_actions|.aopcode_E3_end"
 If AU(&HE4) Then writeAssemblyString fOut, ";; OPCODE 0xE4|;; EXTERN N M|cp  0xE4|jr  nz, aopcode_E4_end|.aopcode_E4|call read_x_y|ld  a, (sc_x)|ld  h, 0|ld  l, a|push hl|ld  a, (sc_y)|ld  h, 0|ld  l, a|push hl|call _do_extern_action|pop bc|pop bc|jp script_actions|.aopcode_E4_end"
 If AU(&HE5) Then writeAssemblyString fOut, ";; OPCODE 0xE5|;; PAUSE N|cp  0xE5|jr  nz, aopcode_E5_end|.aopcode_E5|call read_vbyte|ld  b, a|.aopcode_E5_loop|halt|djnz aopcode_E5_loop|jp script_actions|.aopcode_E5_end"
-If AU(&HE6) Then writeAssemblyString fOut, ";; OPCODE 0xE6|;; TEXT BOX LSB MSB|cp  0xE6|jr  nz, aopcode_E6_end|.aopcode_E6|call read_addr|call _decode_text|jp script_actions|.aopcode_E6_end"
+If AU(&HE6) Then writeAssemblyString fOut, ";; OPCODE 0xE6|;; TEXT BOX LSB MSB|cp  0xE6|jr  nz, aopcode_E6_end|.aopcode_E6|call read_addr|call _run_text_box|jp script_actions|.aopcode_E6_end"
 If AU(&HF0) Then writeAssemblyString fOut, ";; OPCODE 0xF0|;; WIN GAME|cp  0xf0|jr  nz, aopcode_F0_end|.aopcode_F0|ld  a, 1|ld  (_script_result), a|ret|.aopcode_F0_end"
 If AU(&HF1) Then writeAssemblyString fOut, ";; OPCODE 0xF1|;; GAME OVER|cp  0xf1|jr  nz, aopcode_F1_end|.aopcode_F1|ld  a, 2|ld  (_script_result), a|ret|.aopcode_F1_end"
 If AU(&HF2) Then writeAssemblyString fOut, ";; OPCODE 0xF2|;; BREAK|cp  0xf2|jr  nz, aopcode_F2_end|.aopcode_F2|ret|.aopcode_F2_end"
@@ -1477,7 +1469,7 @@ If RV(&HEA) Then writeAssemblyString fOut, "; OPANT RVALUE|cp  0xEA|jr  nz, rvb_
 If RV(&HE9) Then writeAssemblyString fOut, "; PARAM RVALUE|cp  0xE9|jr  nz, rvb_set_script_param_done|ld  a, (_script_param)|ret|.rvb_set_script_param_done"
 If RV(&HE8) Then writeAssemblyString fOut, "; TILE AT EXPRESION RVALUE|cp 0xE8|jr  nz, rvb_set_script_tile_at_done|push bc|; Read two rvalues|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call qtile_do|ld  a, l|pop bc|ret|.rvb_set_script_tile_at_done"
 If RV(&HE7) Then writeAssemblyString fOut, "; BEH AT EXPRESION RVALUE|cp 0xE7|jr  nz, rvb_set_script_beh_at_done|push bc|; Read two rvalues|call read_x_y|ld  a, (sc_x)|ld  c, a|ld  a, (sc_y)|call _attr_2|ld  a, l|pop bc|ret|.rvb_set_script_beh_at_done"
-
+If RV(&HE6) Then writeAssemblyString fOut, "; DIALOG EXPRESION RVALUE|cp 0xE6|jr  nz, rvb_set_script_dialog_done|; Read three addresses|call read_addr|ld  (_addr1), hl|call read_addr|ld  (_addr2), hl|call read_addr|ld  (_addr3), hl|; this is a C function in the engine:|call _run_dialog|; run dialog returns result in L|ld  a, l|ret|.rvb_set_script_dialog_done"
 
 writeAssemblyString fOut, "ld  d, 0|ld  e, a|ld  hl, _flags|add hl, de|ld  a, (hl)|ret"
 writeAssemblyString fOut, ".read_x_y|call read_vbyte|ld  (sc_x), a|call read_vbyte|ld  (sc_y), a|ret"

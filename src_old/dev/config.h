@@ -87,6 +87,7 @@
 											// If none are selected, FIRE is used.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 //#define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
+#define ENABLE_DIALOG						// Add support for DIALOG
 
 // Top view:
 // ---------
@@ -104,6 +105,7 @@
 #define SIMPLE_PLATFORMS 					// No type 4 tiles or no type 8s over type 4s.
 //#define AVOID_PLATFORM_HOP 				// Only works if SIMPLE_PLATFORMS is DISABLED!
 //#define JUMP_DOWN_PLATFORM 				// Use down on type 4s to jump down.
+//#define DEACTIVATE_MOVING_PLATFORMS 		// No moving platforms, type 4s are normal linear.
 
 // Custom:
 // -------

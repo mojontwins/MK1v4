@@ -326,6 +326,7 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		#endif
 	}
 
+	// Text has been decoded in a 256 bytes buffer pointed by ptr.
 	void __FASTCALL__ textbox (unsigned char *ptr) {
 		#asm
 				ld  (_gp_gen), hl
@@ -478,28 +479,143 @@ void do_extern_action (unsigned char n, unsigned char m) {
 		#endif
 		peta_el_beeper (1);
 
-		#asm
-			// do { pad_read (); } while (0xff == pad_this_frame);
-			.stb_waitkey
-				call _pad_read 
-				ld  a, (_pad_this_frame)
-				inc a 
-				jr  z, stb_waitkey 			// if pad = 0xff, inc pad = 0, so loop.
+		// Custom : In this game. if `flag [2]` is set, no wait / restore is performed
 
-				call _redraw_from_buffer
-				call _hotspot_paint
-				call _render_all_sprites
+		if (flags [2] == 0) {
+			#asm
+				// do { pad_read (); } while (0xff == pad_this_frame);
+				.stb_waitkey
+					call _pad_read 
+					ld  a, (_pad_this_frame)
+					inc a 
+					jr  z, stb_waitkey 			// if pad = 0xff, inc pad = 0, so loop.
 
-			#ifdef CPC
-					ld  hl, 1 
-					push hl 
-					call _cpc_UpdateNow
-					pop hl 
-			#else
-					call SPUpdateNow
-			#endif
-			.stb_redraw_done
+					call _redraw_from_buffer
+					call _hotspot_paint
+					call _render_all_sprites
 
-		#endasm 
+				#ifdef CPC
+						ld  hl, 1 
+						push hl 
+						call _cpc_UpdateNow
+						pop hl 
+				#else
+						call SPUpdateNow
+				#endif
+
+			#endasm 
+		}
+
+		flags [2] = 0;
 	}
+
+	#ifdef ENABLE_DIALOG
+		// Options have been decoded in three 32 bytes buffers pointed by ptr.
+		unsigned char __FASTCALL__ dialog (unsigned char *ptr) {
+			#asm 
+					ld (_gp_gen), hl
+
+					// Draw FRAME TOP
+					ld  a, 16
+					ld  (__y), a 
+					ld  a, 4 
+					ld  (__x), a 
+					ld  hl, _top_string
+				#ifdef CPC
+						call draw_text_pre_loop
+				#else
+						ld  a, ATTR_TEXTBOX
+						ld  (__n), a 
+						call draw_text_loop
+				#endif
+
+					ld  b, 1
+					ld  a, 17
+					ld  (__y), a
+				.dialog_show_loop
+					push bc 
+
+					// Skip empty option
+					ld  hl, (_gp_gen)
+					ld  a, (hl)
+					or  a 
+					jr  z, dialog_show_continue
+
+					ld  a, 4
+					ld  (__x), a 
+					ld  hl, _mid_string 
+				#ifdef CPC
+						call draw_text_pre_loop
+				#else 
+						ld  a, ATTR_TEXTBOX
+						ld  (__n), a 
+						call draw_text_loop
+				#endif
+
+					// Print option number
+					pop bc 
+					push bc 
+				#ifdef CPC
+					
+					ld  a, 9 
+					ld  (__x), a 
+					call __tile_address 
+					ld  a, b 
+					add 16
+					ld  (de), a 
+				#else
+					ld  a, b 
+					add 16 
+					ld  d, a 
+					ld  e, ATTR_TEXTBOX
+					ld  c, 9 
+					ld  a, (__y)
+					call SPPrintAtInv
+				#endif
+
+					// Printo option text
+					ld  a, 12 
+					ld  (__x), a 
+					ld  hl, (_gp_gen)
+
+				#ifdef CPC
+						call draw_text_pre_loop
+				#else 
+						ld  a, ATTR_TEXTBOX
+						ld  (__n), a 
+						call draw_text_loop
+				#endif	
+
+					ld  a, (__y)
+					inc a
+					ld  (__y), a
+
+				.dialog_show_continue
+					ld  hl, (_gp_gen)
+					ld  bc, 32
+					add hl, bc 
+					ld  (_gp_gen), hl
+
+					pop bc 
+					ld  a, b 
+					inc a  
+					ld  b, a
+					cp  4
+					jr  nz, dialog_show_loop
+
+					// Draw FRAME BOTTOM
+					ld  a, 4
+					ld  (__x), a 
+					ld  hl, _bottom_string 
+				#ifdef CPC
+						call draw_text_pre_loop
+				#else 	
+						ld  a, ATTR_TEXTBOX
+						ld  (__n), a 
+						call draw_text_loop
+				#endif
+
+			#endasm 
+		}
+	#endif
 #endif 

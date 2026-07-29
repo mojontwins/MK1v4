@@ -116,7 +116,7 @@ void main (void) {
 					ld  a, 1
 					ld  (_pant_just_rendered), a
 
-				#if defined MODE_1 && defined AUTO_SPLIT && !defined ALWAYS_SPLIT
+				#if defined AUTO_SPLIT && !defined ALWAYS_SPLIT
 						ld  (_do_split), a
 				#endif
 
@@ -320,6 +320,8 @@ void main (void) {
 			#endasm
 			
 			// Render to screen
+
+			before_vsync ();
 
 			#ifdef CPC
 				

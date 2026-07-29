@@ -20,16 +20,20 @@ extern unsigned char script_result;
 extern unsigned char script_tx, script_ty, script_tn;
 unsigned char script_param;
 
+#ifdef ENABLE_DIALOG
+	#ifndef ENABLE_ENCODED_TEXT 
+		#define ENABLE_ENCODED_TEXT
+	#endif
+	unsigned char *addr1;
+	unsigned char *addr2;
+	unsigned char *addr3;
+#endif
+
 extern void script_do (void);
 
 #ifdef ENABLE_ENCODED_TEXT
 	void __FASTCALL__ decode_text (unsigned char *ptr) {
 		#asm
-				ld  de, script_encoded_text
-				add hl, de 
-
-				ld  de, #(TEXT_BUFFER)
-
 				// 5 bit escaped depacker v2 by na_th_an
 				// Contains code by A. Villena.
 
@@ -96,11 +100,71 @@ extern void script_do (void);
 
 			.fbsd_done
 				ld  (de), a 	// End of string
-
-				ld  hl, #(TEXT_BUFFER)
-				jp  _textbox
 		#endasm
 	}
+
+	void __FASTCALL__ run_text_box (void) {
+		#asm
+			ld  de, script_encoded_text
+			add hl, de 
+
+			ld  de, #(TEXT_BUFFER)
+
+			call _decode_text
+
+			ld  hl, #(TEXT_BUFFER)
+
+			// extern.h should provide a working `void __FASTCALL__ textbox (unsigned char *ptr);`
+			jp  _textbox
+		#endasm
+	}
+
+	#ifdef ENABLE_DIALOG
+		void __FASTCALL__ run_dialog (void) {
+			#asm
+				// Deco de options in temporal buffer, 3*32 bytes
+				ld  hl, (_addr1)
+				ld  a, h 
+				ld  de, script_encoded_text
+				add hl, de 				
+				ld  de, #(TEXT_BUFFER)
+				inc a 
+				ld  (de), a 				
+				jr  z, run_dialog_decode_ptr_1_done
+				call _decode_text
+			.run_dialog_decode_ptr_1_done
+				
+				ld  hl, (_addr2)
+				ld  a, h 
+				ld  de, script_encoded_text
+				add hl, de 				
+				ld  de, #(TEXT_BUFFER + 32)
+				inc a 
+				ld  (de), a 
+				jr  z, run_dialog_decode_ptr_2_done		
+				call _decode_text
+			.run_dialog_decode_ptr_2_done
+
+				ld  hl, (_addr3)
+				ld  a, h 
+				ld  de, script_encoded_text
+				add hl, de 				
+				ld  de, #(TEXT_BUFFER + 64)
+				inc a 
+				ld  (de), a 
+				jr  z, run_dialog_decode_ptr_3_done
+				call _decode_text
+			.run_dialog_decode_ptr_3_done
+
+				ld  hl, #(TEXT_BUFFER)
+
+				// extern.h should provide a working `unsigned char dialog (void);`
+				// be sure to `return res;` or put it into `l`. 
+				jp  _dialog
+			#endasm 
+		}
+	#endif
+
 #endif
 
 void __FASTCALL__ script (unsigned char a) {
@@ -139,6 +203,13 @@ void __FASTCALL__ script (unsigned char a) {
 	XDEF _hotspot_t
 	XDEF _scenery_info
 	XDEF _do_extern_action
+
+	#ifdef ENABLE_ENCODED_TEXT
+		XDEF _run_text_box
+		#ifdef ENABLE_DIALOG
+			XDEF _run_dialog
+		#endif
+	#endif
 
 	#ifdef CPC
 		XDEF _cpc_UpdateNow

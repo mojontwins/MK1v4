@@ -27,6 +27,7 @@
 
 unsigned char isr_player_on;
 unsigned char wyz_beat_ct;
+unsigned char wyz_signal;
 
 #define WYZ_FX_CHANNEL 1
 #define AY_INIT()        wyz_init ()
@@ -248,10 +249,13 @@ unsigned char *spr_next [SW_SPRITES_ALL] 	@ BASE_SPRITES + (SW_SPRITES_ALL)*16;
 	#endasm
 #endif
 
-#if defined MODE_1 && defined AUTO_SPLIT
-	#include "cpc/pal_hud.h"
+#if defined AUTO_SPLIT
 	#include "cpc/pal_general.h"
-	#include "cpc/palmap.h"
+	#include "cpc/pal_hud.h"
+	
+	#if !defined NO_PAL_MAP
+		#include "cpc/palmap.h"
+	#endif
 
 	#ifndef ALWAYS_SPLIT
 		unsigned char do_split;
@@ -334,7 +338,7 @@ void system_init (void) {
 			ld  a, (isr_c1)
 			inc a
 
-		#if defined MODE_1 && defined AUTO_SPLIT
+		#if defined AUTO_SPLIT
 				cp  RASTER_SPLIT
 				jr  z, _set_game_pal
 		#endif
@@ -353,7 +357,7 @@ void system_init (void) {
 			call WYZ_PLAYER_ISR
 		._skip_ay_player
 
-		#if defined MODE_1 && defined AUTO_SPLIT
+		#if defined AUTO_SPLIT
 				// Set hud pal
 			#ifndef ALWAYS_SPLIT
 					ld  a, (_do_split)
@@ -378,7 +382,7 @@ void system_init (void) {
 			ei
 			ret
 
-		#if defined MODE_1 && defined AUTO_SPLIT
+		#if defined AUTO_SPLIT
 	
 			._set_game_pal
 			#ifndef ALWAYS_SPLIT
@@ -423,7 +427,7 @@ void system_init (void) {
 
 	blackout ();
 
-	#if !(defined MODE_1 && defined AUTO_SPLIT)
+	#if !defined AUTO_SPLIT
 		#asm
 				call my_inks
 		#endasm
@@ -457,7 +461,7 @@ void system_init (void) {
 			ld    c, 42			; VALUE = 42
 			out   (c), c
 
-		#if defined MODE_1 && defined AUTO_SPLIT
+		#if defined AUTO_SPLIT
 				; Vertical pos (4), CRTC REG #5
 				ld    b, 0xbc
 				ld    c, 5			; REG = 5
@@ -1618,7 +1622,7 @@ void cpc_UpdateNow (unsigned char sprites) {
 	#endif
 
 	// Set up palette for AUTO_SPLIT
-	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+	#if defined CPC && defined AUTO_SPLIT
 		#asm
 				ld  a, (_pant_just_rendered)
 				or  a 

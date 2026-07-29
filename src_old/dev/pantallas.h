@@ -21,7 +21,7 @@ extern unsigned char s_ending [];
 #endasm
 
 void title_screen (void) {
-	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+	#if defined CPC && defined AUTO_SPLIT
 		#ifdef ALWAYS_SPLIT
 			#asm
 					ld  hl, pal_general
@@ -67,7 +67,7 @@ void title_screen (void) {
 }
 
 void game_ending (void) {
-	#if defined CPC && defined MODE_1 && defined AUTO_SPLIT
+	#if defined CPC && defined AUTO_SPLIT
 		#ifdef ALWAYS_SPLIT
 			#asm
 					ld  hl, pal_general
@@ -92,11 +92,13 @@ void game_ending (void) {
 			call _unpack_screen
 	#endasm
 
-
 	#ifdef CPC
 		cpc_ShowTileMap (1);
 		AY_PLAY_MUSIC (0);
 	#else
+		#asm 
+				call SPUpdateNow
+		#endasm
 		for (gpit = 0; gpit < 4; gpit ++) {
 			peta_el_beeper (7);
 			peta_el_beeper (2);
@@ -134,7 +136,7 @@ void game_over (void) {
 		#ifndef CPC
 			64+1*8+7, 
 		#endif
-		"GAME OVER");
+		"GAME OVER!");
 	
 
 	#ifdef CPC
@@ -144,7 +146,7 @@ void game_over (void) {
 		#asm 
 				call SPUpdateNow
 		#endasm
-		peta_el_beeper (10);
+		peta_el_beeper (5);
 	#endif
 
 	no_break ();

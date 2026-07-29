@@ -1,6 +1,8 @@
 // MTE MK1 v3.2
 // Copyleft 2011, 2026 by The Mojon Twins
 
+void before_vsync (void) {
+}
 
 #ifdef PLAYER_CUSTOM_VENG
 	void player_custom_veng (void) {

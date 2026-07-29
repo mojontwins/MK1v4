@@ -9,4 +9,5 @@ Declare Function parserFindTokenInTokens (token As String, tokens () As String, 
 Declare Sub parseCleanTokens (tokens () As String)
 Declare Function parseGlueTokens (tokens () As String) As String
 Declare Function initialWhiteSpace (line As String) As String
+Declare function replace(byval SearchString as string,FromChar as string,ToChar as string) as string
 

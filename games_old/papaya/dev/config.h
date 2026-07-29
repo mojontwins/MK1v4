@@ -87,6 +87,7 @@
 											// If none are selected, FIRE is used.
 //#define NO_INDEXED_SCRIPTING 				// You aren't using * SCREEN * sections.
 #define ENABLE_ENCODED_TEXT 				// Add support for TEXT BOX
+#define ENABLE_DIALOG						// Add support for DIALOG
 
 // Top view:
 // ---------

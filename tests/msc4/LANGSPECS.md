@@ -89,12 +89,15 @@ Definimos estas variables especiales, codificadas internamente como "flags" fuer
 * $E9 = PARAM = vale 0xff al entrar en la sección.
 * $E8 = TILE AT (*)
 * $E7 = BEH AT (*)
+* $E6 = DIALOG (**)
 
 Sólo rvalue: Asignar a F2-F4, F6-F8 no tiene sentido. Se escriben en variables de msc antes de llamar por fire u otro especial. No tienen sentido en ENTERING. El resto debe poder ser lvalue (se debe poder asignar a NPANT, KILLED, etc).
 
 El intérprete debe reconocer las y codificar el flag correcto. Luego el intérprete debería resolverlas al valor del motor.
 
-(*) Cuidado con TILE AT. Debe codificarse $FF $E8 X Y, el código que lo interprete debe leer el par de coordenadas (que pueden ser flags) y obtener el tile correspondiente.
+(*) BEH/TILE AT debe codificarse $FF $E8 X Y, el código que lo interprete debe leer el par de coordenadas (que pueden ser flags) y obtener el tile correspondiente.
+
+(*) DIALOG debe codificarse $FF $E6 LSB MSB LSB MSB LSB MSB, con "FF FF" si algún texto va vacío.
 
 ## Escribiendo el compilador
 
@@ -235,6 +238,7 @@ Si cuando vayamos a leer el tamaño de la cláusula leemos FF será que hemos te
 * $E4 N M : EXTERN N M
 * $E5 N : PAUSE N
 * $E6 LSB MSB : TEXT BOX "ASDJADFJSODHAFDJHA"
+* $E7 LSB MSB LSB MSB LSB MSB : DIALOG "TEXT1", "TEXT2", "TEXT3"
 
 * $F0 : WIN GAME
 * $F1 : GAME OVER
@@ -508,23 +512,6 @@ Opcion no existente = FFFF, otro valor apunta al texto.
 
 Si en el motor hacemos `ENABLE_OPTIONS` se activará también `ENABLE_ENCODED_TEXT` ya que habrá que decodificar las opciones. El script manejará tres punteros que se pondrán en $FFFF si no hay opción. El decodificador en el motor manejará tres buffers de 32 caracteres donde decodificará las opciones si valen != $FFFF.
 
-El intérprete podría ser algo parecido a 
-
-```asm
-        cp  0x70
-        jr  nz, aopcode_70_end
-    .aopcode_70
-        ; ADDR1
-        call read_addr
-        ld  (_addr1), hl
-        call read_addr
-        ld  (_addr2), hl
-        call read_addr
-        ld  (_addr3), hl
-        jp  script_actions  
-    .aopcode_70_end
-```
-
 # TODO!
 
 * [ ] Encontrar la forma de saber la vida total del jugador desde el intérprete! Ahora hay un defc con una constante placeholder.
@@ -563,3 +550,7 @@ El orden de las secciones en el binario he visto que no es importante, por lo qu
         end
     end
 ```
+
+# Más diálogos
+
+Menos mal que metí las expresiones porque DIALOG es una expresión :D

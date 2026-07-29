@@ -178,3 +178,14 @@ Function parserFindTokenInTokens (token As String, tokens () As String, modifier
 
 	parserFindTokenInTokens = found
 End Function
+
+function replace(byval SearchString as string,FromChar as string,ToChar as string) as string
+   if len(SearchString) = 0 or len(FromChar) = 0  or len(ToChar) = 0 then return ""
+   dim as integer fc=asc(FromChar), tc=asc(ToChar)
+   for Ctr as integer = 1 to len(SearchString) - 1
+      if SearchString[Ctr] = fc then
+         SearchString[Ctr] = tc
+      end if
+   next
+   Return SearchString
+end function

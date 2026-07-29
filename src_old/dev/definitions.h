@@ -126,9 +126,10 @@ unsigned char en_an_fanty_activo [MAX_ENEMS] 		@ (BASE_ARRAYS + MAX_ENEMS*14);
 unsigned char en_an_state [MAX_ENEMS]				@ (BASE_ARRAYS + MAX_ENEMS*15);
 unsigned char en_an_ff [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*16);
 unsigned char en_an_base_frame [MAX_ENEMS] 			@ (BASE_ARRAYS + MAX_ENEMS*17);
+unsigned char en_int [MAX_ENEMS] 					@ (BASE_ARRAYS + MAX_ENEMS*18);
 
 #ifdef ENABLE_ANIMATED_TILES
-	#define BASE_ANIMATED_TILES (BASE_ARRAYS + MAX_ENEMS*18)
+	#define BASE_ANIMATED_TILES (BASE_ARRAYS + MAX_ENEMS*19)
 	unsigned char ta_x [MAX_ANIMATED_TILES] 		@ BASE_ANIMATED_TILES;
 	unsigned char ta_y [MAX_ANIMATED_TILES] 		@ (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES);
 	unsigned char ta_t [MAX_ANIMATED_TILES] 		@ (BASE_ANIMATED_TILES + MAX_ANIMATED_TILES*2);
