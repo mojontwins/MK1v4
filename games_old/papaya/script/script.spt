@@ -17,13 +17,17 @@ ALIAS %TOTAL_PAPAYAS = 1
 # (must be reset explicitly in the engine!)
 ALIAS %SIGNAL_TEXTBOX = 2
 
+# Use this flag to reset the player to the first
+# screen in the level when caught by the guard
+ALIAS %FIRST_SCREEN = 3
+
 # The box
 # =======
 
 # This game adds a box to the gameplay. The box is initialised
-# for each "level" in the screen it first appears if %NEWLEVEL = 1.
+# for each "level" in the screen it first appears if %NEW_LEVEL = 1.
 # %BOXP, %BOXX, %BOXY, %BOXT control the location and the tile it overwrites.
-# On entering any the box must be set if %NEWLEVEL = 0.
+# On entering any the box must be set if %NEW_LEVEL = 0.
 
 # Well use %BOXP = 99 to signify we have the box.
 
@@ -40,13 +44,22 @@ ENTERING GAME
 		EXTERN 0
 
 		# New game = new level
-		%NEWLEVEL = 1
+		%NEW_LEVEL = 1
 
 		# Info texts / etc
 		%FLAG_PAPAI = 0
 		%FLAG_VIEJO = 1  #########DEBUG!
 		%FLAG_MAMOES = 0
 		%FLAG_LEAVE = 0
+		%FLAG_BARRO = 0
+
+		# Where to return if caught
+		# Player will be reset to 2,2 so
+		# make sure this makes sense when
+		# designing the map!
+		# Also don't forget to reset this when
+		# going to the next level!
+		%FIRST_SCREEN = 0
 	END
 
 END
@@ -74,12 +87,26 @@ SUB PLACEBOX
 	END 
 END
 
+SUB ADVERTENCIAS
+	# Level 1 is general introduction
+	IF %FIRST_SCREEN = 0
+	THEN
+		TEXT BOX "VIEJO: SIM, EU VENDO MAM*ES... MAS O ESTO QUE ACABOU. SEI ONDE VOCE PODE /ENCONTRAR/ ALGUNS."
+		TEXT BOX "VIEJO: VOCE VAI LA, PEGA OS MAM*ES, GUARDA ALGUNS PARA LA CRIAN+A, E DIVIDIMOS O RESTO MEIO A MEIO!"
+	END
+
+	# In level 2 he warns you about the guard!
+	IF %FIRST_SCREEN = 8
+	THEN
+		TEXT BOX ""
+	END
+END
+
 SUB VIEJO
 	IF %FLAG_VIEJO = 0
 	THEN
 		%FLAG_VIEJO = 1
-		TEXT BOX "VIEJO: SIM, EU VENDO MAM*ES... MAS O ESTO QUE ACABOU. SEI ONDE VOCE PODE /ENCONTRAR/ ALGUNS."
-		TEXT BOX "VIEJO: VOCE VAI LA, PEGA OS MAM*ES, GUARDA ALGUNS PARA LA CRIAN+A, E DIVIDIMOS O RESTO MEIO A MEIO!"
+		CALL ADVERTENCIAS
 		%FLAG_LEAVE = 1
 		BREAK
 	END
@@ -97,6 +124,41 @@ SUB VIEJO
 	END
 END
 
+SUB BARRO
+	IF %FLAG_BARRO = 0
+	THEN
+		%FLAG_BARRO = 1
+		TEXT BOX "AL CAER AL BARRO PURULENTO SE HAN ESTROPEADO TODAS LAS PAPAYAS! ESTAS YA NO SIRVEN!"
+	END
+END
+
+SUB MAMOES
+	IF OBJS = 16
+	IF %FLAG_MAMOES = 0
+	THEN 
+		TEXT BOX "YA NO PUEDO ACARREAR MAS PAPAYAS. MEJOR SE LAS DEJO AL VIEJO Y VUELVO A POR MAS..."
+		%FLAG_MAMOES = 1
+		BREAK
+	END
+
+	IF OBJS < 16
+	THEN
+		SET TILE(TX, TY) = 12
+		INC OBJS, 1
+		SOUND 7
+		EXTERN 1 					# Persist!
+		BREAK
+	END
+END
+
+SUB NEXT_LEVEL_DO
+	IF %FIRST_SCREEN = 0
+	THEN
+		%JUMP_TO = 8
+		BREAK
+	END
+END
+
 # For every screen
 
 ENTERING ANY
@@ -110,13 +172,13 @@ ENTERING ANY
 	END
 
 	# Reset Carrying
-	IF %NEWLEVEL = 1
+	IF %NEW_LEVEL = 1
 	THEN
 		%CARRYING = 47
 	END
 
 	# Let's place the box.
-	IF %NEWLEVEL = 0
+	IF %NEW_LEVEL = 0
 	IF NPANT = %BOXP
 	THEN
 		CALL PLACEBOX
@@ -125,15 +187,33 @@ END
 
 # Per screen. Place box, etc.
 
+# First level starts in screen 0, but
+# box is placed in screen 1...
+
 ENTERING SCREEN 1
-	IF %NEWLEVEL = 1
+	IF %NEW_LEVEL = 1
 	THEN
 		%BOXP = 1
 		%BOXX = 13
 		%BOXY = 4
-		%NEWLEVEL = 0
+		%NEW_LEVEL = 0
 		CALL PLACEBOX
 	END 
+END
+
+# Second level starts in screen 8, it also
+# contains the box.
+
+ENTERING SCREEN 8
+	IF %NEW_LEVEL = 1
+	THEN
+		%FIRST_SCREEN = 8
+		%BOXP = 8
+		%BOXX = 2
+		%BOXY = 8
+		%NEW_LEVEL = 0
+		CALL PLACEBOX
+	END
 END
 
 # Place box
@@ -184,6 +264,7 @@ SPECIAL TILE TOUCHED
 	IF TN = 19
 	IF OBJS > 0
 	THEN
+		CALL BARRO
 		OBJS = 0
 		SOUND 2
 		BREAK
@@ -191,28 +272,22 @@ SPECIAL TILE TOUCHED
 
 	# The papayas!
 
-	IF %FLAG_MAMOES = 0
 	IF TN = 16
-	IF OBJS = 16
-	THEN 
-		TEXT BOX "YA NO PUEDO ACARREAR MAS PAPAYAS. MEJOR SE LAS DEJO AL VIEJO Y VUELVO A POR MAS..."
-		%FLAG_MAMOES = 1
-	END
-
-	IF TN = 16
-	IF OBJS < 16
 	THEN
-		SET TILE(TX, TY) = 12
-		INC OBJS, 1
-		SOUND 7
-		EXTERN 1 					# Persist!
+		CALL MAMOES
 		BREAK
 	END
+
 END
 
 # Special character interaction
 
 ENEMY TOUCHED
+	IF TRUE 
+	THEN
+		%DIALOG_RES = 0
+		%JUMP_TO = 0
+	END
 
 	# The vieho!
 	IF EN_T = 1	
@@ -220,4 +295,20 @@ ENEMY TOUCHED
 		CALL VIEJO
 	END
 
+	# We talked to the viejo and selected 2 (GO)
+	IF %DIALOG_RES = 2
+	THEN
+		' warp to next level
+		' decide which is the next level
+		' and return it in %JUMP_TO
+		CALL NEXT_LEVEL_DO
+	END
+
+	# Next level 1st screen
+	IF %JUMP_TO > 0
+	THEN
+		WARP_TO %JUMP_TO, 1, 1
+		%NEW_LEVEL = 1
+		%FLAG_VIEJO = 0
+	END
 END

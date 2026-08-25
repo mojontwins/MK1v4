@@ -87,8 +87,14 @@
 
 ; ENTERING 1
 
-	ld  hl, 0x00C8
+	ld  hl, 0x0123
 	cp  18
+	ret z
+
+; ENTERING 8
+
+	ld  hl, 0x013A
+	cp  32
 	ret z
 
 	ld  a, 0xff

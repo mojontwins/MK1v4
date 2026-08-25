@@ -99,3 +99,23 @@ Más caja. Al final lo hago con tiles. Tengo una subrutina en el script que dete
 
 Podemos poner que hasta que no se habla con el viejo el camino adonde están las papayas esté bloqueado. Podemos poner además que el viejo no esté en el camino y que haya que ir explícitamente a por él.
 
+# El dueño de la finca
+
+Enemigo más complejo, que si te coge te quita las papayas y te expulsa.
+
+* ¿Adónde te expulsa? -> Lo más fácil es que te tire al principio de la fila del mapa, pero ¿y si hago alguna fase con ótra organización? Mejor almacenar esto en algún sitio... Como el enemigo es custom, puedo almacenar esto en variables normales y llamar desde el script a un extern que las establezca... O usar directamente flags.
+
+* El enemigo te persigue a velocidad constante horizontalmente, y puede caer. Si estás más arriba o encuentra un borde de plataforma, salta. Voy a ver cómo eran los enemigos en el Calavera de v4 inacabado. -- Los puedo usar casi directamente, redefiniendo el estado `Z_APPEARING` - En el original emergían del suelo. Aquí hay que darle una vuelta. O quiza simplemente lo pongo en la pantalla y no hay estado `Z_APPEARING`. 
+
+* El enemigo este aparecerá a partir de la segunda fase. Podemos aprovechar para que el viejo te avise.
+
+# Activar / desactivar conexiones de pantalla.
+
+Voy a necesitar algún tipo de hook que me permita invalidar una transición de pantalla, para así impedir que se cambie de pantalla verticalente en determinadas filas. 
+
+```c
+	#define ENABLE_CUSTOM_FLICK 				// define flick_* in custom_flicks.h, return 0 to override flick
+```
+
+Llamará a `flick_*` según la dirección en `custom_flick.h`. Ahí podremos hacer lo que nos plazca. Si devolvemos 0, invalidaremos el cambio de pantalla.
+

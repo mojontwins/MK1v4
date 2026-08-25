@@ -115,6 +115,7 @@
 #define PLAYER_CUSTOM_FRAME 				// Replace frame number selection for your own
 //#define PLAYER_CUSTOM_BG_HIT 				// Implement your own bounce.
 //#define ENABLE_CUSTOM_HOTSPOTS 			// Add your own hotspots!
+#define ENABLE_CUSTOM_FLICK 				// define flick_* in custom_flicks.h, return 0 to override flick
 
 //#define CUSTOM_SPRITE_CELLS 				// Use your own sprite cell luts from custom_sprite_cells.h
 //#define ENEMS_CELL_OFFSET 		8 		// If the above is defined, this is the 1st cell for the enemies.

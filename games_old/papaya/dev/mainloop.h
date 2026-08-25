@@ -399,7 +399,11 @@ void main (void) {
 
 			// Flick screen
 
-			if (gpx == 0 && player.vx < 0) {
+			if (gpx == 0 && player.vx < 0
+				#ifdef ENABLE_CUSTOM_FLICK
+					&& flick_left ()
+				#endif
+			) {
 				#asm
 						ld  hl, _n_pant
 						dec (hl)
@@ -411,7 +415,11 @@ void main (void) {
 						ld  (_player), hl 		// player.x = 224<<6
 					.flick_left_done
 				#endasm
-			} else if (gpx == 224 && player.vx > 0) {
+			} else if (gpx == 224 && player.vx > 0
+				#ifdef ENABLE_CUSTOM_FLICK
+					&& flick_right ()
+				#endif	
+			) {
 				#asm
 						ld  hl, _n_pant
 						inc (hl)
@@ -426,7 +434,11 @@ void main (void) {
 				#endasm
 			}
 
-			if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W) {
+			if (gpy == 0 && player.vy < 0 && n_pant >= MAP_W
+				#ifdef ENABLE_CUSTOM_FLICK
+					&& flick_up ()
+				#endif
+			) {
 				#asm
 						ld  a, (_n_pant)
 						sub MAP_W
@@ -440,7 +452,11 @@ void main (void) {
 
 					.flick_up_done
 				#endasm				
-			} else if (gpy == 144 && player.vy > 0) {
+			} else if (gpy == 144 && player.vy > 0
+				#ifdef ENABLE_CUSTOM_FLICK
+					&& flick_down ()
+				#endif
+			) {
 				#asm
 					#ifdef CUSTOM_SCREEN_CONNECTIONS
 							call _override_flick_down

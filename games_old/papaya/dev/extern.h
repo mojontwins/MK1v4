@@ -616,6 +616,24 @@ void do_extern_action (unsigned char n, unsigned char m) {
 				#endif
 
 			#endasm 
+
+			// Keys 1-2-3 select option
+			// CPC: 
+			// KEY_AUX3: 1, KEY_AUX4: 2, KEY_AUX2: 3
+			// ZX:
+			// key_1, key_2, key_3
+
+			while (1) {
+				#ifdef CPC
+					if (cpc_TestKey (KEY_AUX3)) return 1;
+					if (cpc_TestKey (KEY_AUX4)) return 2;
+					if (cpc_TestKey (KEY_AUX2)) return 3;
+				#else 
+					if (sp_KeyPressed (key_1)) return 1;
+					if (sp_KeyPressed (key_2)) return 2;
+					if (sp_KeyPressed (key_3)) return 3;
+				#endif
+			}
 		}
 	#endif
 #endif 
