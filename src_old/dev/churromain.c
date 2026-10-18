@@ -47,6 +47,9 @@
 	#include "extern.h"
 #endif
 #include "pantallas.h"
+#ifdef ENABLE_CUSTOM_FLICK
+	#include "custom_flick.h"
+#endif
 #include "mainloop.h" 	// Main is here!
 #ifndef CPC
 	#include "music.h"

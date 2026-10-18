@@ -428,9 +428,17 @@ unsigned int __FASTCALL__ abs (int n) {
 				jr  nz, fire_bullet_search_loop
 				ret
 
+			// Found empty slot, set it to 1
+
 			.fire_bullet_found
 				inc a
 				ld  (hl), a 			// bullets_estado [gpit] = 1;
+
+			// Now do the thing.
+
+			#ifdef SHOOT_4_WAY
+				// Test for UP or DOWN
+			#endif
 
 				ld  a, (_player + 22)	// player.facing
 				or  a

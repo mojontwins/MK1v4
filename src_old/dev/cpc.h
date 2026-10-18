@@ -175,7 +175,7 @@ extern unsigned char def_keys [0];
 		defw $4802 		; KEY_AUX4 2
 
 		defw $4880		; KEY_AUX1 Z
-		defw $4780 		; KEY_AUX2 X
+		defw $4804 		; KEY_AUX2 3
 
 		defw $4204		; KEY_ENTER
 		defw $4804		; KEY_ESC	

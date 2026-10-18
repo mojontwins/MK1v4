@@ -11,6 +11,7 @@ extern unsigned char s_ending [];
 	._s_title
 		BINARY "titlec.bin"
 	._s_marco
+
 	#ifndef DIRECT_TO_PLAY
 			BINARY "marcoc.bin"
 	#endif

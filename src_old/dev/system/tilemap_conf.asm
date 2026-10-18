@@ -133,3 +133,10 @@
 	defw posicion_inicial_superbuffer+8*ancho_pantalla_bytes*23
 	
 ;Rutinas para transferir bloques independientes a la pantalla
+	
+.behindtilemasks
+XDEF behindtilemasks
+; TODO: generate this automaticly
+
+;; ADD 256 byte 0 = normal 1 = behind for each tile.
+	
