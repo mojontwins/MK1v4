@@ -81,6 +81,8 @@ typedef struct {
 	unsigned char sword_g;								// 44
 	unsigned char coins;								// 45
 	unsigned char drain_amount; 						// 46
+	unsigned char on_stairs; 							// 47
+	unsigned char hit_stairs; 							// 48
 } INERCIA;
 
 typedef struct {
