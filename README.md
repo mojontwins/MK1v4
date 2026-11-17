@@ -1,7 +1,11 @@
 MTE MK1 v4
 ==========
 
+<<<<<<< HEAD
 Copyleft 2010-2013, 2020-2024 by The Mojon Twins
+=======
+Copyleft 2010-2013, 2020-2023 by The Mojon Twins
+>>>>>>> master
 
 Esta versión se conserva aquí por motivos históricos.
 
