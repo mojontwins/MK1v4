@@ -1,0 +1,38 @@
+// BY HAND
+
+// A list of MK1v4-friendly macros
+#define SPRITE_00 (_sprites + 0x0000)
+#define SPRITE_01 (_sprites + 0x0040)
+#define SPRITE_02 (_sprites + 0x0080)
+#define SPRITE_03 (_sprites + 0x00C0)
+#define SPRITE_04 (_sprites + 0x0100)
+#define SPRITE_05 (_sprites + 0x0140)
+#define SPRITE_06 (_sprites + 0x0180)
+#define SPRITE_07 (_sprites + 0x01C0)
+#define SPRITE_08 (_sprites + 0x0200)
+#define SPRITE_09 (_sprites + 0x0240)
+#define SPRITE_0A (_sprites + 0x0280)
+#define SPRITE_0B (_sprites + 0x02C0)
+#define SPRITE_0C (_sprites + 0x0300)
+#define SPRITE_0D (_sprites + 0x0340)
+#define SPRITE_0E (_sprites + 0x0380)
+#define SPRITE_0F (_sprites + 0x03C0)
+
+#define sprite_1_a (sprites + 0x0000)
+#define sprite_2_a (sprites + 0x0040)
+#define sprite_3_a (sprites + 0x0080)
+#define sprite_4_a (sprites + 0x00C0)
+#define sprite_5_a (sprites + 0x0100)
+#define sprite_6_a (sprites + 0x0140)
+#define sprite_7_a (sprites + 0x0180)
+#define sprite_8_a (sprites + 0x01C0)
+#define sprite_9_a (sprites + 0x0200)
+#define sprite_10_a (sprites + 0x0240)
+#define sprite_11_a (sprites + 0x0280)
+#define sprite_12_a (sprites + 0x02C0)
+#define sprite_13_a (sprites + 0x0300)
+#define sprite_14_a (sprites + 0x0340)
+#define sprite_15_a (sprites + 0x0380)
+#define sprite_16_a (sprites + 0x03C0)
+
+

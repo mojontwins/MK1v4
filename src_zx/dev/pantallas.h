@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // pantallas.h
 // Includes the binary of the aplib-compressed static screens.
@@ -65,6 +65,8 @@ void title_screen (void) {
 	#endasm
 	
 	while (1) {
+		rand ();
+
 		if (sp_KeyPressed (key_1)) {
 			joyfunc = sp_JoyKeyboard; break;
 		} else if (sp_KeyPressed (key_2)) {

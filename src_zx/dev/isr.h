@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.11
+// Copyleft 2010-2013, 2020-2025 by The Mojon Twins
 
 // ISR routine
 // isr
@@ -15,17 +15,17 @@ void ISR (void) {
 				inc (hl)
 			#if defined MODE_128K_DUAL 
 				#if defined ENABLE_ARKOS
-					ld  a, (_ay_player_on)
-					or  a
-					jr  z, skip_arkos
-					
-					ld  b, ARKOS_RAM
-					call SetRAMBank
-					call ARKOS_ADDRESS_ATPLAY
-					ld  b, 0
-					call SetRAMBank
+						ld  a, (_ay_player_on)
+						or  a
+						jr  z, skip_arkos
+						
+						ld  b, ARKOS_RAM
+						call SetRAMBank
+						call ARKOS_ADDRESS_ATPLAY
+						ld  b, 0
+						call SetRAMBank
 
-				.skip_arkos
+					.skip_arkos
 				#endif
 
 				#if defined ENABLE_WYZ

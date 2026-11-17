@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // printer.h
 // Miscellaneous printing functions (tiles, status, etc).
@@ -58,6 +58,62 @@ void draw_rectangle (void) {
 			ld  hl, __y
 			inc (hl)
 			jr  dr_outter_loop
+	#endasm
+}
+
+void fix_sprites() {
+	#asm
+		// In: HL -> sprite base pointer
+		//     B  -> # of members to skip (6 for 16x16, 8 for 16x24)
+		.vtc
+			ld  c, 0 						// This will be our counter
+			ld  a, 6
+			add a, l
+			ld  l, a
+			jp  nc, vtc_noinc1
+			inc h
+		.vtc_noinc1 						// Now HL -> sp_SS.first
+
+		.vtc_loop
+			// Run accross the linked list. Stop at 0:
+			ld  a, (hl)
+			or  a 
+			jr  z, vtc_fin 					// If 0 -> EOL
+
+			inc hl 
+			ld  l, (hl)
+			ld  h, a 						// Now HL points to sp_CS
+
+			// Note that sp_CS's first member is the pointer to the next item
+			// So we save it:
+			push hl 
+
+			// We want to modify sp_CS->graphic, which @ offset 7,
+			// But only for members "B", onwards.
+			ld  a, c 
+			cp  b
+			jr  c, vtc_next
+
+			// Skip to sp_CS->graphic, offset 7
+			ld  a, 7
+			add a, l
+			ld  l, a
+			jp  nc, vtc_noinc2 
+			inc h
+		.vtc_noinc2 
+
+			// No point to SPCompNullSprPtr
+			ld (hl), SPNullSprPtr%256
+			inc hl
+			ld (hl), SPNullSprPtr/256
+
+		.vtc_next
+			// Next item
+			inc c
+			pop hl 
+			jr  vtc_loop
+
+		.vtc_fin
 	#endasm
 }
 

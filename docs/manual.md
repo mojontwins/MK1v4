@@ -551,6 +551,7 @@ Estas dos directivas especifican cuánta vida restan los enemigos al colisionar 
 ```c
     //#define ENABLE_CODE_HOOKS             // Hooks @ init, entering game, screen & loop @ custom.h
     //#define ENABLE_CUSTOM_ENEMS           // Hooks for custom enemies @ custom.h
+    //#define ENABLE_CUSTOM_LINEAR_ENEM_CELLS        // Call `custom.h/get_cell_n ()` for linear
 ```
 
 Estas dos directivas implican conocimientos más avanzados: sirven para activar los enganches generales y de enemigos custom en el archivo `custom.h`.
@@ -569,7 +570,13 @@ Si activas `ENABLE_CODE_HOOKS`, algunas funciones de `custom.h` serán llamadas 
 
 * `void hook_entering (void);` se ejecuta una vez cada vez que entramos en la pantalla, cuando ya se ha dibujado el mapa e inicializado los enemigos y los *hotspots*, pero antes de que nada sea visible.
 
-¡Ojo! Si activas `ENABLE_CODE_HOOKS`, puedes forzar *Game Over* poniendo `game_loop_flag` a 1, pero **el juego sólo terminará (pantalla de final) si pones `game_loop_flag` a 1**. La comprobación de "juego terminado" tendrás que ponerla tú, a menos que definas `WIN_ON_SCRIPTING`, en cuyo caso sólo se podrá "ganar" desde el script o haciendo `script_result = 1`. 
+* `void hook_hotspots (void);` se ejecuta justo tras tocar un hotspot. Puedes usarlo para hacer comprobaciones previas o meter los tuyos propios. Por ejemplo en **El Hobbit** lo usamos para que no se pueda coger objetos hasta que no se haya hablado con Gandalf poniendo `hotspot_t` a 0.
+
+* `unsigned char hook_game_over (void);` se ejecuta antes del game over. Si devuelves 0 se interrumpirá el game over.
+
+* `unsigned char hook_just_died (void);` se ejecuta justo al morir, cada vez que se pierde una vida. Si devuelves 0 se interrumpe la ejecución normal (que consiste en los respawns especiales si están activados y en poner al jugador a parpadear, si está activado).
+
+¡Ojo! Si activas `ENABLE_CODE_HOOKS`, puedes forzar *Game Over* poniendo `player.life` a -1, pero **el juego sólo terminará (pantalla de final) si pones `game_loop_flag` a 1**. La comprobación de "juego terminado" tendrás que ponerla tú, **el engine no hará ninguna** a menos que definas `WIN_ON_SCRIPTING`, en cuyo caso sólo se podrá "ganar" desde el script o haciendo `script_result = 1`. 
 
 ### Enganches de enemigos custom `ENABLE_CUSTOM_ENEMS`
 
@@ -638,6 +645,14 @@ Aquí tenemos un ejemplo tonto de un enemigo que sólo "tirita" y cambia de fram
     }
 
 ```
+
+### Enganches de cells custom `ENABLE_CUSTOM_LINEAR_ENEM_CELLS`
+
+Normalmente los enemigos lineales son `_en_t` con valores 1-4, y llevan asignados por defecto las 4 primeras parejas de cells del spriteset. Si se activa esta directiva se llamará a una función `get_cell_n ()` que deberá devolver un número en base a `_en_t` que indique qué pareja de cells del spriteset debe usarse.
+
+Si se devuelve `n`, los cells del spriteset que se emplearán serán `ENEMS_OFFSET + n * 2` (si se define `ENEMS_OFFSET`). **Nótese que empezamos a contar en 0**.
+
+Esto puede usarse para tener más de 4 parejas de cells en el spriteset y poder combinarlos de diferentes maneras dependiendo de nivel o pantalla.
 
 ### Datos disponibles
 
@@ -734,7 +749,7 @@ Si se define, se añade código que comprueba que los enemigos no colisionen con
 Por defecto, los enemigos colisionarán con obstáculos (8) y tiles que matan (1). Si quieres cambiar este comportamiento debes añadir la definición de otra macro,
 
 ```c
-	#define ENEMIES_COLLIDE_MASK 	9
+    #define ENEMIES_COLLIDE_MASK    9
 ```
 
 Donde colocar el valor que se hará "AND" con el comportamiento del tile para detectar colisión. Por ejemplo, para detectar sólo con obstáculos sería 8, para obstáculos y tiles que matan 9 (8 + 1), para obstáculos y plataformas 12 (8 + 4), para obstáculos, plataformas, y tiles que matan 13 (8 + 4 + 1), etc.
@@ -888,6 +903,8 @@ Cada proyectil necesitará 5 bloques adicionales de memoria dinámica, por lo qu
 
 **Sir Ababol 2** empezó como prototipo en **MTE MK1 v4**, aunque luego se desarrolló sobre un motor específico. Parte de los trabajos para apañar la versión 4.8 de **MTE MK1** ha tenido que ver con reintegrar los añadidos de la demo técnica de **Sir Ababol**, entre ellos la espada. Además, se ha añadido lo necesario para que puedas usarla también en modo genital, algo que planeamos ya en 2011 para un juego tipo Zelda.
 
+Conceptualmente, la espada es un sprite de 8x8 píxeles (lógicos, en CPC bla bla bla ya tu sabeh) que sobresaldrá 8 píxeles del sprite del jugador en la dirección en la que se "lance", y que "golpeará" en el pixel más alejado del sprite por el lado que salga.
+
 Para poder usar la espada necesitaremos añadir los gráficos para pintarla. Para ello tendremos que poner en `gfx` un nuevo spriteset de 8x8 con los cells necesarios, que serán, dependiendo del modo (lateral o genital):
 
 * **Vista lateral**: 3 (izquierda, derecha, arriba) en el caso de que la espada pueda lanzarse hacia arriba (`SWORD UP`) o 2 en el caso de que no (izquierda, derecha). El punto que "golpea" de la espada es (0, 4) a la izquierda, (7, 4) a la derecha, y (4, 0) arriba. Algo así:
@@ -934,15 +951,39 @@ Hecho esto, la espada se configura con estas macros:
 
 * `SWORD_HIT_FRAME` usar este frame del jugador para la animación de golpear 0-3, **en modo de vista lateral**.
 
-* `GENITAL_HIT_FRAMES`: Si defines esta macro, **en modo genital**, tendrás que añadir 4 frames al spriteset como sprites 17 a 20 con nuevos cells de animación para que el muñeco golpée con la espada a la derecha, izquierda, arriba y abajo, respectivamente. Si haces esto tendrás que modificar `comp.bat` para convertir el spriteset (que ahora tendrá 20 cells más los que añadas por tu cuenta) con `sprcnv2.exe`:
+* `GENITAL_HIT_FRAMES`: Si defines esta macro, **en modo genital**, tendrás que añadir 4 frames al spriteset como sprites 17 a 20 con nuevos cells de animación para que el muñeco golpée con la espada a la derecha, izquierda, arriba y abajo, respectivamente. Si haces esto tendrás que modificar `comp.bat` para convertir el spriteset (que ahora tendrá 20 cells más los que añadas por tu cuenta) con `sprcnv_exp.exe`:
 
 ```cmd
-    ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra > nul
+    ..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 20 extra > nul
 ```
 
 * `SWORD_STAB` apuñalar en lugar de balancear la espada. La espada sale recta a una altura de N pixels desde la parte superior del sprite del jugador.
 
 Si queremos controlar a qué enemigos afectará la espada, podemos usar `PLAYER_MIN_KILLABLE` (ver más adelante).
+
+A partir de `4.9` hay más todavía:
+
+```c
+    // #define SWORD_DEPLETES               // Can only hit when player.sword_g > 0 & decs
+    // #define SWORD_CUSTOM_HIT             // use code @ sword_custom_hit.h before default
+    // #define SWORD_DISABLE_HIT            // Disable default hit code.
+```
+
+* `SWORD_DEPLETES` hará que la espada sólo funcione si `player.sword_g` no vale 0. Se entiende que mantener `player.sword_g` es responsabilidad del programador. El engine vanilla no hace NADA con esta variable salvo comprobar esto.
+
+* `SWORD_CUSTOM_HIT` hará que se elecute el código contenido en `sword_custom_hit.h` cuando la espada impacte contra un enemigo.
+
+* `SWORD_DISABLE_HIT` desactivará todo el código que se ejecuta normalmente cuando la espada impacta con un enemigo, por si quieres implementar toda la lógica por tu cuenta.
+
+La posición de la espada con respecto al jugador se controla usando un par de arrays que están en `config.h`, `swoffs_x` y `swoffs_y`. Para entendernos más fácilmente, estos offsets representan una animación de 9 frames en los que la posición de la espada se calculará sumando dichos offsets a las coordenadas `gpx, gpy` del sprite principal cuando éste mira a la derecha. A la coordenada X (la que aleja a la espada del muñeco cuando mira a la derecha) se le añadirá también, si está definido, un SWORD_OFFS que nos ayudará a finar un poco más.
+
+Puedes personalizar la animación y el momento en el que la espada esté golpeando tocando `NUM_SWORD_FRAMES` (que corresponderá con el tamaño de los arrays `swoffs_x` y `swoffs_y`) y `MIN_SWORD_HIT_FRAME` y `MAX_SWORD_HIT_FRAME`, teniendo en cuenta que la espada golpeará si `MIN_SWORD_HIT_FRAME` <= frame < `MAX_SWORD_HIT_FRAME`.
+
+### El puñito
+
+El puñito de Ninjajar es en realidad una espada con `SWORD_STAB` activado. Además, si dejamos comentado `SWORD_HIT_FRAME` no se modificará el cell activo cuando se saca el puñito.
+
+Sin embargo hay dos cosas más a tener en cuenta que se introdujeron precisamente para **Ninjajar: The Lost Levels**, que es en modo 0 y tiene un puño que ocupa 6x8 pixeles en un cuadro de 8x8: `SWORD_W` define el ancho lógico del puño, que en este caso no es 8 sino 16 píxels. `SWORD_W` sólo se utiliza para calcular la posición del "punto caliente", que es el que registra la colisión, con respecto a la coordenada del sprite cuando se está mirando hacia la derecha. `SWORD_WIDE` hace que se emplée un sprite de 8x8 en lugar del normal de 4x8.
 
 ### Tiles que se rompen
 
@@ -956,6 +997,7 @@ Si se activa este motor, los tiles de comportamiento `& 32` se podrán romper. L
     //#define MAX_BREAKABLE_FRAMES  8       // N = frames to display this tile:
     //#define BREAKABLE_BREAKING_TILE 45    // display this for N frames
     //#define BREAKABLE_ERASE_TILE  0       // The substitute by this tile.
+    //#define BREAKABLE_SPAWN_ONLY_IF   12  // If defined, spawn only if broken tile is N
     //#define BREAKABLE_SPAWN_CHANCE  3     // Must be a power of 2 - 1, ifdef there's a chance to spawn...
     //#define BREAKABLE_SPAWN_TILE    46    // Throw this tile if rand() & chance == 1.
     //#define BREAKABLE_PERSISTENT          // Turns on PERSISTENCE which takes 20*MAP_W*MAP_H bytes.
@@ -968,6 +1010,8 @@ Si se activa este motor, los tiles de comportamiento `& 32` se podrán romper. L
 * `BREAKABLE_BREAKING_TILE` que tile del tileset representa el estado "rompiéndose".
 
 * `BREAKABLE_ERASE_TILE` con qué tile borramos el tile una vez que han pasado `MAX_BREAKABLE_FRAMES` cuadros de juego.
+
+* `BREAKABLE_SPAWN_ONLY_IF` (opcional): El tile roto debe ser "N" para que pueda producir `BREAKABLE_SPAWN_TILE`.
 
 * `BREAKABLE_SPAWN_CHANCE` (opcional): Si se define, el valor que se le asigna debe ser una potencia de 2 menos 1 "N". Al romper un tile, si `rand () & N == 1`, aparece un tile específico tras `MAX_BREAKABLE_FRAMES` en lugar de `BREAKABLE_ERASE_TILE`. Se diseñó para que apareciera una moneda, pero puedes poner cualquier cosa:
 
@@ -1089,7 +1133,7 @@ Permite activar y configurar *fantys*.
 
 * `FANTY_MAX_V` y `FANTY_A` definen la velocidad máxima y la aceleración de los *fantys*.
 
-* `FANTIES_LIFE_GAUGE` dice cuánta vida tienen los *fantys*.
+* `FANTIES_LIFE_GAUGE` dice cuánta vida tienen los *fantys*. **OJO - Esto sólo funciona con los fantys originales de tipo 5 `RANDOM_RESPAWN`**. 
 
 * `MAKE_TYPE_6` es un custom de **Ramiro 2**. Si se activa y `scenery_info.make_type_6` vale 1, se creará un *fanty* en lugar de cada enemigo *que no esté colocado* en cada pantalla. O sea, si en una pantalla hay por ejemplo 2 enemigos, aparecerá un tercero que será un *fanty*.
 
@@ -1184,7 +1228,9 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 
 ```c
     //#define PLAYER_HAS_JUMP               // If defined, player is able to jump.
-    //#define SHORT_PLAYER                  // Bounding box 12x16
+    //#define TIGHT_BOUNDING_BOX            // Bounding box 12x16
+    //#define TIGHT_LOWER               4
+    //#define TIGHT_UPPER               12      // For horizontal BB against BG
     //#define FIRE_TO_JUMP                  // Jump using the fire button, only if no PLAYER_CAN_FIRE
     //#define BOTH_KEYS_JUMP                // Jump using UP *or* FIRE, beware, deact if PLAYER_CAN_FIRE!
     //#define RAMIRO_HOP                    // press jump when reaching a type 4 platform to jump again 
@@ -1195,12 +1241,12 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
     //#define JETPAC_DRAIN_OFFSET   8       // Drain after X frames.
     //#define PLAYER_KILLS_ENEMIES          // If defined, stepping on enemies kills them
     //#define PLAYER_MIN_KILLABLE   3       // Only kill enemies with id >= PLAYER_MIN_KILLABLE
-    //#define PLAYER_MAX_KILLABLE 	6 		// Only kill enemies if id <= PLAYER_MAX_KILLABLE
+    //#define PLAYER_MAX_KILLABLE   6       // Only kill enemies if id <= PLAYER_MAX_KILLABLE
 ```
 
 * `PLAYER_HAS_JUMP`: el jugador puede saltar pulsando "arriba".
 
-* `SHORT_PLAYER`: El jugador colisiona con el escenario con una caja más pequeña, de 8x12 pixels. Esto permite tener un control más agradable en motores de vista lateral cuando el sprite no suele ocupar todo el ancho de la caja de 16x16. Además, permite entrar por huecos de un sólo tile más fácilmente.
+* `TIGHT_BOUNDING_BOX`: El jugador colisiona con el escenario con una caja más pequeña, de 8x12 pixels. Esto permite tener un control más agradable en motores de vista lateral cuando el sprite no suele ocupar todo el ancho de la caja de 16x16. Además, permite entrar por huecos de un sólo tile más fácilmente. `TIGHT_LOWER` y `TIGHT_UPPER` permiten afinar esto horizontalmente. Los valores por defecto de 4 y 12 definen la zona dentro del los 16 pixeles de ancho donde el personaje es "sólido".
 
 * `FIRE_TO_JUMP`: se usa con `PLAYER_HAS_JUMP` para saltar pulsando el botón de disparo en vez de "arriba".
 
@@ -1227,11 +1273,11 @@ Además de todos los motores que hemos visto más arriba, podemos configurar el 
 Son customizaciones misceláneas que se añadieron para algunos juegos que te pueden servir. Recordad que v5 era "la churrera Vanilla que podrás completar" y v4 era "la churrera frankenstein que manteníamos internamente".
 
 ```c
-	#define MASTER_OF_KEYS 						// If master_of_keys == 1, no keys are needed to open bolts
-												// and keys = refills.
-	#define PARALYZED_DONT_KILL_ON_VAR 			// If paralyzed_dont_kill == 1, paralyzed enemies don't kill
-	#define RAMIRO_HOVER_ON_VAR 				// If ramiro_hover == 1 player can hover.
-	#define DISABLE_SLIPPERY_ON_VAR 			// If disable_slippery == 1, slippery tiles are disabled
+    #define MASTER_OF_KEYS                      // If master_of_keys == 1, no keys are needed to open bolts
+                                                // and keys = refills.
+    #define PARALYZED_DONT_KILL_ON_VAR          // If paralyzed_dont_kill == 1, paralyzed enemies don't kill
+    #define RAMIRO_HOVER_ON_VAR                 // If ramiro_hover == 1 player can hover.
+    #define DISABLE_SLIPPERY_ON_VAR             // If disable_slippery == 1, slippery tiles are disabled
 ```
 
 * `MASTER_OF_KEYS`: Si se define, la variable `master_of_keys` controlará si el jugador puede abrir cerrojos sin llaves. `master_of_keys` debe ser puesta a 0 explícitamente por el programador para que el comportamiento llaves/cerrojos sea el normal. Si `master_of_keys` está activo, los hotspots que contengan llaves se cambiarán por recargas de vida al entrar en las pantallas de nuevo.
@@ -1367,11 +1413,12 @@ La diferencia entre `TWO_SETS` y `TWO_SETS_REAL` es que la primera sólo introdu
 ```c
     // Stupid animated tiles
     #define ENABLE_ANIMATED_TILES           // Enables them
-    #define ANIMATED_TILE           11      // Which tile. Alternates with N + 16
+    #define ANIMATED_TILE           30      // Which tile. Alternates with N + 16 / + 1 depending on:
+    #define ANIMATED_NEXT                   // Alternate with N + 1 rather than N + 16
     #define MAX_ANIMATED_TILES      16      // Must be a power of two
 ```
 
-El soporte de tiles animados es muy rudimentario y se activa definiendo la macro `ENABLE_ANIMATED_TILES`. Se puede elegir un tile `ANIMATED_TILE` para ser el tile animado. Este tile puede aparecer hasta `MAX_ANIMATED_TILES` veces en pantalla (debe ser potencia de 2). Cada frame se selecciona uno de los tiles y se alterna entre `ANIMATED_TILE` y `ANIMATED_TILE + 16`.
+El soporte de tiles animados es muy rudimentario y se activa definiendo la macro `ENABLE_ANIMATED_TILES`. Se puede elegir un tile `ANIMATED_TILE` para ser el tile animado. Este tile puede aparecer hasta `MAX_ANIMATED_TILES` veces en pantalla (debe ser potencia de 2). Cada frame se selecciona uno de los tiles y se alterna entre `ANIMATED_TILE` y `ANIMATED_TILE + 16` o `ANIMATED_TILE` y `ANIMATED_TILE + 1` si se activó `ANIMATED_NEXT`.
 
 ### Modo sin máscaras
 
@@ -2124,10 +2171,10 @@ Las tareas de convertir, importar y definir sprites varían levemente dependiend
 
 Si son de 16x16, podemos añadirlos al final de nuestro spriteset básico de `sprites.png`, sencillamente poniéndolos a continuación en nuevas filas:
 
-Luego, modificaremos `comp.bat` para que, en lugar de convertir con `sprcnv.exe`, utilice `sprcnv2.exe` (nótese el 2), al que pasaremos además el número total de gráficos y el parámetro `extra` (esto último es obligatorio para que sean compatibles con **MTE MK1 v4**):
+Luego, modificaremos `comp.bat` para que, en lugar de convertir con `sprcnv.exe`, utilice `sprcnv_exp.exe` (nótese el 2), al que pasaremos además el número total de gráficos y el parámetro `extra` (esto último es obligatorio para que sean compatibles con **MTE MK1 v4**):
 
 ```cmd
-    ..\utils\sprcnv2.exe ..\gfx\sprites.png sprites.h 20 extra  > nul
+    ..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 20 extra  > nul
 ```
 
 Esto importará los 16 gráficos estándar normalmente, y los gráficos extra a partir del 17 en tres columnas como `extra_sprite_N_a`, `extra_sprite_N_b` y `extra_sprite_N_c`, con N el número de gráfico. Serán estos punteros los que necesitaremos posteriormente para definir los sprites.
@@ -2175,7 +2222,7 @@ Si queremos sacar el sprite de la pantalla haremos literalmente eso:
     sp_MoveSprAbs (sp_extra, spritesClip, 0, VIEWPORT_X + 30, VIEWPORT_Y + 20, 0, 0);
 ```
 
-### Sprites de 8x8
+#### Sprites de 8x8
 
 En el caso de los sprites de 8x8 la conversión e importación es más enrevesada, la definición muy parecida, y la utilización idéntica a la de los sprites de 16x16.
 
@@ -2220,6 +2267,20 @@ El manejo es igual que en los sprites de 16x16 que hemos visto antes, con el det
 `sprite_extra` + N * 64
 
 Donde N es el número de gráfico, empezando por 0.
+
+### Sprite principal de 16x24
+
+A partir de la v4.9, y en el caso de que sólo vayas a usar los 8 *cells* básicos para tu sprite, puedes hacer que estos sean de 16x24 en lugar de 16x16. Si haces esto, además, la colisión pasará a ser de 8x16 en el caso de haber activado (seguirá siendo de 16x16 en caso contrario) centrada enla parte inferior del cuadro.
+
+En esta iteración el tema es aún un poco hack, y por eso tenemos la restricción de que sólo puede usarse en los 8 primeros *cells* del spriteset. Tu spriteset debe tener, por tanto, este aspecto:
+
+Y debe convertirse indicando `tall` como parámetro extra en `sprcnv_exp`, por ejemplo:
+
+```cmd
+    ..\utils\sprcnv_exp.exe ..\gfx\sprites.png sprites.h 16 tall > nul
+```
+
+Una vez hecho esto, sólo hay que activar la directiva `TALL_PLAYER` en `config.h`.
 
 ### La estructura `scenery_info`
 
@@ -2416,7 +2477,7 @@ Cuando queramos "pasar de fase", que según el juego será cumpliendo la condici
 
 ## Ganar o perder
 
-Si quieres ganar o perder dede tus customs, sólo tienes que asignar un valor a `game_loop_flag`. Normalmente vale 0, pero si vale 1 ganarás el juego (se mostrará `game_ending`) y si vale 2 perderás (el mensaje de *Game Over*).
+Si quieres ganar o perder desde tus customs, sólo tienes que asignar un valor a `game_loop_flag`. Normalmente vale 0, pero si vale 1 ganarás el juego (se mostrará `game_ending`) y si vale 2 perderás (el mensaje de *Game Over*).
 
 ## Como hacer continues
 
@@ -2556,6 +2617,22 @@ Como ejemplo tonto puedes ver esta reimplementación del modo genital, que leen 
     }
 ```
 
+### Importante sobre `DIE_AND_RESPAWN`
+
+Cuando tienes un axis vertical personaliado y estás usando `DIE_AND_RESPAWN` tienes que ocuparte de encontrar el momento de salvar la última posición segura, por ejemplo al iniciar el salto o al aterrizar sobre una plataforma, con un código parecido a:
+
+```c
+    #asm
+        // Save safe spot for respawn!
+            ld  a, (_n_pant)
+            ld  (_safe_n_pant), a
+            ld  a, (_gpx)
+            ld  (_safe_x), a 
+            ld  a, (_gpy)
+            ld  (_safe_y), a
+    #endasm
+```
+
 ## Selección de sprite personalizada
 
 Para invalidar el código por defecto y usar el tuyo propio, debes añadir esto al principio de `config.h` (no viene por defecto):
@@ -2587,7 +2664,7 @@ y crear un archivo `custom_player_cells.h` donde se defina este array, que debe 
 De la misma forma, añadiendo
 
 ```c
-	#define ENEMS_CUSTOM_CELLS
+    #define ENEMS_CUSTOM_CELLS
 ```
 
 y creando un archivo `custom_enem_cells.h` donde se defina este array, con punteros `sprite_N_a` o `extra_sprite_N_a`:
@@ -2601,6 +2678,16 @@ y creando un archivo `custom_enem_cells.h` donde se defina este array, con punte
 ```
 
 Podrás definir tu propio array de gráficos para sprites de enemigos. Con esto podrás usar la API de MK1v4 para calcular el frame (`enems_calc_frame ()` para la animación y `enems_en_an_calc ()` para inicializarlos) con más de 4 gráficos diferentes.
+
+## Colisión con enemigos personalizada
+
+Si definimos
+
+```c
+    #define ENEMS_CUSTOM_COLLISION
+```
+
+al colisionar contra un enemigo se llamará a la función `enems_custom_collision` de `custom.h`. Sólo si esta función devuelve 0 se ejecutará el código normal al colisionar, con lo que puedes controlar esto fácilmente.
 
 ## Conexiones de pantalla personalizadas
 
@@ -2670,6 +2757,16 @@ Es este juego, la fase 4 ocupa las dos últimas filas del mapa de 8x12 pantallas
 
 De forma parecida, las pantallas a los extremos de estas filas conectan con la del extremo opuesto, de forma cíclica.
 
+## Conexiones de pantalla personalizadas, mark 2
+
+Si lo que quieres es sustituir todo el código que cambia de pantalla (por ejemplo si estás manejando varios niveles de diferentes tamaños de forma que, utilizando el anterior método, los overrides siempre devolviesen 1), activa 
+
+```c
+    #define CUSTOM_FLICK_SCREEN_HANDLER
+```
+
+E implementa tus cambios en `custom_flick_screen_handler` dentro de `custom.h`.
+
 ## Enemigos empaquetados
 
 Los enemigos empaquetados se activan con `#define PACKED_ENEMS` en `config.h` y almacenan los pares (`x1`, `y1`) y (`x2`, `y2`) cada uno en un byte. Esto añade algo de overhead, sobre todo si no activamos `FIXED_ENEMS_LIMITS` (con lo que el motor asume que los limites no cambian y no tratará de reempaquetarlos tras cada vuelta de bucle), pero ahorra 2 bytes por cada enemigo del juego, algo que viene muy bien para juegos con muchas pantallas o si queremos subir el número de enemigos por pantalla. Por ejemplo, en un juego de 96 pantallas ahorraría 576 bytes (los enemigos pasarían de ocupar 2880 bytes a ocupar 2304 bytes).
@@ -2681,13 +2778,105 @@ Obviamente tendremos que comunicarle nuestra decisión al conversor `ene2h` con 
 En cada bucle del juego, al llegar a nuestra rutina de código custom, y si el jugador acaba de perdir vida, la variable `player_just_died` habrá tomado uno de estos valores:
 
 ```c
-	#define PLAYER_KILLED_BY_BG 	1 	// Murió por el escenario (pinchos)
-	#define PLAYER_KILLED_BY_ENEM 	2	// Le hostió un enemigo
-	#define PLAYER_KILLED_BY_EZ 	4 	// Perdió vida por Evil Zone
-	#define PLAYER_KILLED_BY_SELF 	8 	// Se hirió a si mismo (*_DRAINS_LIFE)
+    #define PLAYER_KILLED_BY_BG     1   // Murió por el escenario (pinchos)
+    #define PLAYER_KILLED_BY_ENEM   2   // Le hostió un enemigo
+    #define PLAYER_KILLED_BY_EZ     4   // Perdió vida por Evil Zone
+    #define PLAYER_KILLED_BY_SELF   8   // Se hirió a si mismo (*_DRAINS_LIFE)
 ```
 
 En la siguiente vuelta del bucle de juego, `player_just_died` volverá a 0.
+
+## Tileset comprimido
+
+Puede que necesites sustituir el tileset principal del juego. Como luego necesitarás volver a poner el inicial, ofrecemos esta opción:
+
+```c
+    #define COMPRESSED_TS n
+```
+
+Si se activa, con `n` = 1 o 2, se obrarán los siguientes cambios dependiendo de `n`:
+
+### Con `n` = 1
+
+* El tileset principal será cargado con 2048+256 ceros.
+* A continuación se cargará tilesetc.bin con el tileset comprimido, apuntado por `tilesetc`.
+* Durante la inicialización del motor, se descomprimirá automáticamente tilesetc.bin en su sitio, esto es, sobre los 2048+256 bytes reservados a partir de `tileset`. 
+
+### Con `n` = 2
+
+* Se cargará `tileset.bin` con la fuente (512 bytes) en `tileset`. Idealmente sólo contendrá la fuente y el resto a 0.
+* Se rellenará con 0 el resto hasta 2304 bytes.
+* Se cargará `ts_attrsc.bin` que llevará los caracteres 64-256 más los atributos (total 1536+256 bytes) comprimidos en `tilesetc`.
+* Durante la inicialización del motor, se descomprimirá automáticamente ts_attrs.bin en su sitio (esto es, `tileset + 512`).
+
+`tileset.bin` conteniendo sólo la fuente y el resto a 0 se puede generar usando:
+
+```cmd
+    ..\utils\ts2bin.exe ..\gfx\font.png blank tileset.bin 7
+```
+
+`ts_attrs.bin`, omitiendo los primeros 512 bytes de la fuente, puede generarse usando:
+
+```cmd
+    ..\utils\ts2bin.exe nofont ..\gfx\work.png ts_attrs.bin 7
+```
+
+### En CPC
+
+En CPC la fuente y el resto de los tiles están separados así que sólo basta con definir `COMPRESSED_TS` (sin un valor) y actuará como `n = 2`. Puedes verlo en acción en el `Hobbit` de CPC. 
+
+## Organización custom de Mapas
+
+Esto te sirve para hacer multinivel usando varios mapas en RLE. Si defines 
+
+```c
+    #define CUSTOM_MAP_POINTER_CALCULATOR
+```
+
+el motor llamará a la función `custom_flick_screen_handler` de `custom.h` y dibujará la pantalla apuntada por `gp_gen` en el formato que esté activo. Es decir, se espera que calcules la dirección de la pantalla. Por ejemplo, podrías tener un array de punteros a mapas packed indexada por el número de nivel `level` y hacer algo así:
+
+```c
+    void custom_map_pointer_calculator (void) {
+        gp_gen = mapas [level] + (n_pant * 75);
+    }
+```
+
+o algo un poco más complejo para RLE (que llevan un ínidice). En la misma situación anterior en la que tienes un array `mapas` con un puntero al mapa de cada nivel podrías hacer:
+
+```c
+    void custom_map_pointer_calculator (void) {
+        #asm
+            ._draw_scr_get_scr_address
+                ld  hl, (_level)
+                ld  h, 0
+                add hl, hl
+                ld  de, _maps
+                add hl, de      ; HL -> mapas [level]
+
+                ld  e, (hl)
+                inc hl 
+                ld  d, (hl)     ; DE = mapas [level]
+
+                push de         ; Save mapas [level]
+
+                ld  hl, (_n_pant)
+                ld  h, 0
+                add hl, hl
+                
+                add hl, de      ; HL = mapas [level] + (n_pant << 1)
+
+                ld  e, (hl)
+                inc hl
+                ld  d, (hl)     ; DE = index
+
+                pop hl          ; HL = mapas [level]
+                
+                add hl, de      ; HL = mapas [level] + index
+
+                ld  (_gp_gen), hl
+        #endasm
+    }
+```
 
 # Capítulo 9 - `MODE_128K_DUAL`
 
@@ -3071,9 +3260,9 @@ Seguidamente se procesa el tileset en modo `strait2x2`. Al igual que con la fuen
 
 ```cmd
     ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites.png out=sprites.bin mappings=spriteset_mappings.h max=22 pixelperfectm0 silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
 ```
 
 Estas tres lineas procesan los sprites: el archivo con el spriteset principal `gfx/sprites.png`, que se convertirá a `sprites.bin`, la explosión `gfx/sprites_extra.png` a `sprites_extra.bin`, el proyectil `gfx/sprites_bullet.png` a `sprites_bullet.bin` y la espada `gfx/sprites_sword.png` a `sprites_sword.bin`.
@@ -3083,12 +3272,12 @@ Nótese que se define el tamaño del gráfico que estamos recortando con el par�
 El parámetro `mappings` es para que el conversor genere una serie de estructuras que el motor necesita para conocer el offset de cada sprite en el binario y las funciones que debe emplear para pintarlo. Dichas estructuras deberán generarse en `dev/spriteset_mappings.h`. Además, empleamos el parámetro `pixelperfectm0`, que hace que en mappings se incluya las versiones de las rutinas que permiten posicionar los sprites pixel-perfect, que es lo que espera el motor.
 
 ```cmd
-	..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=marco.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
-	..\utils\apack.exe title.bin titlec.bin > nul
-	..\utils\apack.exe marco.bin marcoc.bin > nul
-	..\utils\apack.exe ending.bin endingc.bin > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=marco.bin silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=0 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
+    ..\utils\apack.exe title.bin titlec.bin > nul
+    ..\utils\apack.exe marco.bin marcoc.bin > nul
+    ..\utils\apack.exe ending.bin endingc.bin > nul
 ```
 
 Esta sección convierte las tres pantallas fijas y posteriormente las comprime usando apack. `mtks_om` trabaja en esta ocasión en modo `superbuffer` produciendo una imagen binaria directamente compatible con el sistema empleado en `MK1` (básicamente, 192 lineas de 64 bytes).
@@ -3285,7 +3474,7 @@ Para montar el sistema de sonido necesitaremos:
 
 ```c
     #define WYZ_SONG_BUFFER 0x8800
-	[...]
+    [...]
     #define BASE_WYZ        0xDF80
 ```
 
@@ -3351,16 +3540,16 @@ Se puede definir que caracteres del tileset sean de primer plano, o sea, que los
 Creamos el archivo `dev/system/behindtilemasks.asm` con un contenido parecido a este (que corresponde a **Ramiro 3**):
 
 ```s
-	; TODO: generate this automaticly
+    ; TODO: generate this automaticly
 
-	defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-	defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-	defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1
-	defb 1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1
-	defb 1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-	defb 0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1
-	defb 0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1
-	defb 1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1
+    defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1
+    defb 1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1
+    defb 1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    defb 0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1
+    defb 0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1
+    defb 1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1
 ```
 
 Marca con un 0 los caracteres que son "de fondo" o normales (los sprites pasan por encima) y con 1 los de "primer plano" (los sprites pasan por detrás). Hay que tener en cuenta cómo funciona el charset: los 64 primeros caracteres contienen la fuente de sistema. A partir del sexagésimo quinto (tercera fila) está el tileset. Cada 4 caracteres hacen un tile. Si empezamos a contar por 0, el tile 0 estará formado por los cuatro primeros caracteres de la tercera fila, esto es, por los que tienen índice 64, 65, 66 y 67. 
@@ -3370,9 +3559,9 @@ Marca con un 0 los caracteres que son "de fondo" o normales (los sprites pasan p
 Editamos `dev/system/tilemap_conf.asm` y añadimos al final:
 
 ```s
-		XDEF behindtilemasks	
-	.behindtilemasks
-		INCLUDE "system/behindtilemasks.asm"
+        XDEF behindtilemasks    
+    .behindtilemasks
+        INCLUDE "system/behindtilemasks.asm"
 ```
 
 ### Linkar contra `cpcrslib_fg.lib`
@@ -3380,7 +3569,7 @@ Editamos `dev/system/tilemap_conf.asm` y añadimos al final:
 Por último editamos `comp.bat` y cambiamos la linea que llama a `zcc` para que linke contra `cpcrslib_fg.lib` en lugar de `cpcrslib.lib`:
 
 ```bat
-	zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg -o %game%.bin system\tilemap_conf.asm churromain.c > nul
+    zcc +cpc -m -vn -unsigned -zorg=1024 -lcpcrslib_fg_mt -o %game%.bin system\tilemap_conf.asm churromain.c > nul
 ```
 
 ## ¡Y ya está!
@@ -3402,21 +3591,21 @@ En `games_cpc/ababol` tienes una conversión del primer Sir Ababol para CPC que 
 Lo siguiente será modificar la parte de `comp.bat` en la que se hacen las importaciones para que el conversor trabaje en modo 1.
 
 ```cmd
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\font.png out=font.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal1.png mode=strait2x2 greyordered in=..\gfx\work.png out=work.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites.png out=sprites.bin mappings=spriteset_mappings.h max=16 pixelperfectm0 silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
-	..\utils\mkts_om.exe platform=cpc mode=pals in=..\gfx\pal.png prefix=my_inks out=pal.h silent > nul
-	..\utils\mkts_om.exe platform=cpc mode=pals in=..\gfx\pal1.png prefix=my_inks_1 out=pal1.h silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=chars greyordered in=..\gfx\font.png out=font.bin silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal1.png mode=strait2x2 greyordered in=..\gfx\work.png out=work.bin silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites.png out=sprites.bin mappings=spriteset_mappings.h max=16 pixelperfectm0 silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_extra.png out=sprites_extra.bin max=2 silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_bullet.png out=sprites_bullet.bin metasize=1,1 max=1 silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=sprites in=..\gfx\sprites_sword.png out=sprites_sword.bin metasize=1,1 max=4 silent > nul
+    ..\utils\mkts_om.exe platform=cpc mode=pals in=..\gfx\pal.png prefix=my_inks out=pal.h silent > nul
+    ..\utils\mkts_om.exe platform=cpc mode=pals in=..\gfx\pal1.png prefix=my_inks_1 out=pal1.h silent > nul
 
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=marco.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
-	..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
-	..\utils\apack.exe title.bin titlec.bin > nul
-	..\utils\apack.exe marco.bin marcoc.bin > nul
-	..\utils\apack.exe ending.bin endingc.bin > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=marco.bin silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\ending.png out=ending.bin silent > nul
+    ..\utils\mkts_om.exe platform=cpc cpcmode=1 pal=..\gfx\pal.png mode=superbuffer in=..\gfx\title.png out=title.bin silent > nul
+    ..\utils\apack.exe title.bin titlec.bin > nul
+    ..\utils\apack.exe marco.bin marcoc.bin > nul
+    ..\utils\apack.exe ending.bin endingc.bin > nul
 ```
 
 ### Modo 1 del motor
@@ -3424,6 +3613,6 @@ Lo siguiente será modificar la parte de `comp.bat` en la que se hacen las impor
 En `config.h` añadimos este define (no aparece por defecto):
 
 ```c
-	#define MODE_1 
+    #define MODE_1 
 ```
 

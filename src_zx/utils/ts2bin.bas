@@ -1,4 +1,4 @@
-' ts2bin v0.7.20210416
+' ts2bin v0.8.20241105
 ' Tileset to bin
 
 #include "file.bi"
@@ -148,7 +148,7 @@ End Function
 Sub usage
 	Print "Usage: "
 	Print 
-	Print "$ ts2bin font.png/nofont work.png|notiles|blank ts.bin defaultink [onlyattrs|noattrs]"
+	Print "$ ts2bin font.png/nofont work.png|notiles|blank ts.bin defaultink [onlyattrs|noattrs] [straittiles]"
 	Print
 	Print "where:"
 	Print "   * font.png is a 256x16 file with 64 chars ascii 32-95"
@@ -163,6 +163,7 @@ Sub usage
 	Print "     - User inverted:N for inverted mode, default N. This makes PAPER>INK"
 	Print "   * onlyattrs: if specified, only output attributes"
 	Print "   * noattrs: if specified, don't output attributes"
+	Print "   * straittiles: process tileset as charset"
 End Sub
 
 ' VARS.
@@ -178,7 +179,7 @@ Dim As Integer switchToDefaultInk
 
 ' DO
 
-Print "ts2bin v0.7.20210416 ~ ";
+Print "ts2bin v0.8.20241105 ~ ";
 
 If Len (Command (3)) = 0 Then
 	usage
@@ -241,13 +242,22 @@ If command (2) <> "notiles" then
 	inverted = switchToInverted
 	defaultink = switchToDefaultInk
 	x = 0: y = 0: idx = 64
-	For i = 0 to 47
-		getUDGIntoCharset img, x, y, tileset (), idx: idx = idx + 1
-		getUDGIntoCharset img, x + 8, y, tileset (), idx: idx = idx + 1
-		getUDGIntoCharset img, x, y + 8, tileset (), idx: idx = idx + 1
-		getUDGIntoCharset img, x + 8, y + 8, tileset (), idx: idx = idx + 1
-		x = x + 16: If x = 256 Then x = 0: y = y + 16		
-	Next i	
+
+	If inCommand("straittiles") Then
+		For y = 0 To 5
+			For x = 0 To 31
+				getUDGIntoCharset img, x*8, y*8, tileset(), idx: idx = idx + 1
+			Next x
+		Next y
+	Else
+		For i = 0 to 47
+			getUDGIntoCharset img, x, y, tileset (), idx: idx = idx + 1
+			getUDGIntoCharset img, x + 8, y, tileset (), idx: idx = idx + 1
+			getUDGIntoCharset img, x, y + 8, tileset (), idx: idx = idx + 1
+			getUDGIntoCharset img, x + 8, y + 8, tileset (), idx: idx = idx + 1
+			x = x + 16: If x = 256 Then x = 0: y = y + 16		
+		Next i	
+	End If
 	finByte = 2303
 Else 
 	finByte = 64*8-1

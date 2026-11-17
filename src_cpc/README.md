@@ -12,7 +12,7 @@ Lo primero es adaptar el sistema gráfico de la pestecera a MK1v4, y antes de na
 
 ### Pantallas fijas
 
-Marco, ending y title se convierten y se comprimen en aplib (com `apack` o `apultra`):
+Marco, ending y title se convierten y se comprimen en aplib (con `apack` o `apultra`) (o `ZX0`):
 
 ```
 	..\utils\mkts_om.exe platform=cpc cpcmode=%cpc_gfx_mode% pal=..\gfx\pal.png mode=superbuffer in=..\gfx\marco.png out=marco.bin silent > nul
@@ -175,3 +175,6 @@ Estas son las subrutinas que habrá que exportar:
 
 ```
 
+# 20250321
+
+¡Y cuatro años más tarde lo he hecho! *bueno, al menos compila*.

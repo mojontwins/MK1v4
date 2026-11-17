@@ -695,10 +695,6 @@ void draw_text (unsigned char x, unsigned char y, unsigned char c, char *s) {
 	#endasm
 }
 
-void any_key (void) {
-	return cpc_AnyKeyPressed ();
-}
-
 void pad_read (void) {
 	pad_this_frame = pad1;
 

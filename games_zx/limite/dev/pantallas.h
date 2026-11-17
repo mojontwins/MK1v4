@@ -1,5 +1,5 @@
-// MTE MK1 v4.8
-// Copyleft 2010-2013, 2020-2021 by The Mojon Twins
+// MTE MK1 v4.9
+// Copyleft 2010-2013, 2020-2023 by The Mojon Twins
 
 // pantallas.h
 // Includes the binary of the aplib-compressed static screens.
@@ -31,7 +31,11 @@ void unpack (void) {
 
 			ld hl, (_asm_int)
 			ld de, 16384
+		#ifdef DECOMPRESSOR_ZX0
+			jp dzx0_standard
+		#else
 			jp depack
+		#endif
 
 		.blackout
 			ld hl, 22528

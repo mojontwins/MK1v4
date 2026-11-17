@@ -1,0 +1,9 @@
+00_title_c.bin
+01_cuts_c.bin
+02_stage_1_c.bin
+03_stage_2_c.bin
+04_stage_3_c.bin
+05_stage_4_c.bin
+06_stage_clear_c.bin
+07_final_stage_clear_c.bin
+08_game_over_c.bin
